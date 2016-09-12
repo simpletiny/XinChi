@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 创建项目
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>创建项目<a href="/projects" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">项目名称</label>
+                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: projectIntro().projectName" placeholder="项目名称" name="projectName" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">委托企业</label>
+                        <div class="ip"><select class="form-control" data-bind="options: companies, optionsCaption: '-- 请选择 --', optionsText: 'name', optionsValue: 'id', value: chosenCompanyId" name="companyName" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">岗位名称</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: projectIntro().jobName" placeholder="岗位名称" name="projectIntroName" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required ">
+                        <label class="l">招聘人数</label>
+                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: projectIntro().hiringCount" placeholder="招聘人数" name="hiringCount" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">项目开始时间</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: projectIntro().startTime" placeholder="年-月-日" name="startTime" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">项目结束时间</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: projectIntro().endTime" placeholder="年-月-日" name="endTime" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">薪资待遇</label>
+                        <div class="ip"><select class="form-control" data-bind="options: wagesLevels, optionsCaption: '-- 请选择 --', value: projectIntro().wages" name="wages" required="required"></select></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">劳动关系</label>
+                        <div class="ip"><select class="form-control" data-bind="options: laborRelations, optionsCaption: '-- 请选择 --', value: projectIntro().laborRelation" name="laborRelation" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">五险一金</label>
+                        <div class="ip"><select class="form-control" data-bind="options: insurances, optionsCaption: '-- 请选择 --', value: projectIntro().insurance" name="insurance" required="required"></select></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">工作地点</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: projectIntro().workingLocation" placeholder="工作地点" name="workingLocation" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">学历</label>
+                        <div class="ip"><select class="form-control" data-bind="options: degrees, optionsCaption: '-- 请选择 --', value: projectIntro().degree" name="degree" required="required"></select></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">性别</label>
+                        <div class="ip"><select class="form-control" data-bind="options: genders, optionsCaption: '-- 请选择 --', value: projectIntro().gender" name="gender" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">最低年龄</label>
+                        <div class="ip"><input type="number" min="1" max="100" class="ip-" data-bind="value: projectIntro().fromAge" placeholder="最低年龄" name="fromAge" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">最高年龄</label>
+                        <div class="ip"><input type="number" min="1" max="100" class="ip-" data-bind="value: projectIntro().toAge" placeholder="最高年龄" name="toAge" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">项目进度</label>
+                        <div class="ip"><select class="form-control" data-bind="options: allProjectProgress, optionsCaption: '-- 请选择 --', value: project().progress" name="projectProgress" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">项目经理</label>
+                        <div class="ip">
+                            <div data-bind="foreach: projectManagers">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data.id}, checked: $root.chosenProjectManagers"/><label data-bind="text: $data.employeeName"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">其它信息</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="15" data-bind="value: projectIntro().other" placeholder="详细说明招聘要求"></textarea></div>
+                    </div>
+                </div>
+            </form>
+
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createProject">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".projects").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/projects/project-creation.js{{ _suffix_ }}"></script>
+{% endblock %}

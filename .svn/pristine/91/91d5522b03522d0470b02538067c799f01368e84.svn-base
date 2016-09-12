@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsPutresumeBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsPutresumeBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="user_id" property="user_id" jdbcType="CHAR" />
+		<result column="res_id" property="res_id" jdbcType="CHAR" />
+		<result column="etp_id" property="etp_id" jdbcType="CHAR" />
+		<result column="job_id" property="job_id" jdbcType="CHAR" />
+		<result column="putdatetime" property="putdatetime" jdbcType="TIMESTAMP" />
+		<result column="issend" property="issend" jdbcType="VARCHAR" />
+		<result column="issee" property="issee" jdbcType="VARCHAR" />
+		<result column="lastseedatetime" property="lastseedatetime"
+			jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResumeForEntMap"
+		type="seentao.xhsn.enterprise.manageresume.bean.ManageResumeBean">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="res_id" property="res_id" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="job_name" property="job_name" jdbcType="VARCHAR" />
+		<result column="exp_year" property="exp_year" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="max_edu" property="max_edu" jdbcType="VARCHAR" />
+		<result column="isFollow" property="isFollow" jdbcType="VARCHAR" />
+		<result column="id_card" property="id_card" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="putdatetime" property="putdatetime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		user_id,
+		res_id,
+		etp_id,
+		job_id,
+		putdatetime,
+		issend,
+		issee,
+		lastseedatetime,
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_putresume
+		where id = #{id,jdbcType=CHAR}
+	</select>
+	<!-- 根据公司和职位id取得投放的简历个数 -->
+	<select id="selectPutCntByComRelId" resultType="java.lang.Integer"
+		parameterType="seentao.xhsn.bean.HsPutresumeBO">
+		select count(*) as cnt
+		from hs_putresume
+		<where>
+			<if test="etp_id!=null">
+				etp_id = #{etp_id,jdbcType=CHAR}
+			</if>
+			<if test="job_id!=null">
+				and job_id = #{job_id,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		hs_putresume
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsPutresumeBO">
+
+		insert into hs_putresume
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="res_id != null">
+				res_id,
+			</if>
+			<if test="etp_id != null">
+				etp_id,
+			</if>
+			<if test="job_id != null">
+				job_id,
+			</if>
+			<if test="putdatetime != null">
+				putdatetime,
+			</if>
+			<if test="issend != null">
+				issend,
+			</if>
+			<if test="issee != null">
+				issee,
+			</if>
+			<if test="lastseedatetime != null">
+				lastseedatetime,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				#{res_id,jdbcType=CHAR},
+			</if>
+			<if test="etp_id != null">
+				#{etp_id,jdbcType=CHAR},
+			</if>
+			<if test="job_id != null">
+				#{job_id,jdbcType=CHAR},
+			</if>
+			<if test="putdatetime != null">
+				#{putdatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="issend != null">
+				#{issend,jdbcType=VARCHAR},
+			</if>
+			<if test="issee != null">
+				#{issee,jdbcType=VARCHAR},
+			</if>
+			<if test="lastseedatetime != null">
+				#{lastseedatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsPutresumeBO">
+		update hs_putresume
+		<set>
+			<if test="user_id != null">
+				user_id = #{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				res_id = #{res_id,jdbcType=CHAR},
+			</if>
+			<if test="etp_id != null">
+				etp_id = #{etp_id,jdbcType=CHAR},
+			</if>
+			<if test="job_id != null">
+				job_id = #{job_id,jdbcType=CHAR},
+			</if>
+			<if test="putdatetime != null">
+				putdatetime = #{putdatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="issend != null">
+				issend = #{issend,jdbcType=VARCHAR},
+			</if>
+			<if test="issee != null">
+				issee = #{issee,jdbcType=VARCHAR},
+			</if>
+			<if test="lastseedatetime != null">
+				lastseedatetime = #{lastseedatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="seentao.xhsn.bean.HsPutresumeBO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hs_putresume
+		<where>
+			<if test="user_id !=null">
+				user_id = #{user_id,jdbcType=CHAR}
+			</if>
+			<if test="res_id !=null">
+				and res_id = #{res_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectByPage" parameterType="seentao.xhsn.tools.Page"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hs_putresume
+		<where>
+			<if test="params.bo.user_id !=null">
+				user_id = #{params.bo.user_id,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.res_id !=null">
+				and res_id = #{params.bo.res_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCountByParam" parameterType="seentao.xhsn.bean.HsPutresumeBO"
+		resultType="java.lang.Integer">
+		select count(*) from hs_putresume
+		<where>
+			<if test="user_id !=null">
+				user_id = #{user_id,jdbcType=CHAR}
+			</if>
+			<if test="res_id !=null">
+				and res_id = #{res_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 企业搜索简历信息 -->
+	<select id="selectReceivedResumeByPage" parameterType="seentao.xhsn.tools.Page"
+		resultMap="ResumeForEntMap">
+		SELECT A.id AS id,A.res_id as res_id,D.user_name AS name ,D.user_gender AS
+		gender,C.ub_birthday AS birthday,B.rel_name AS job_name,C.job_exp_year
+		AS exp_year,C.ub_address AS address,D.user_degree AS max_edu,A.putdatetime
+		AS putdatetime,D.user_idnum as id_card,D.id as user_id FROM hs_putresume A LEFT JOIN hs_etp_releasejob B ON
+		A.job_id=B.id
+		LEFT JOIN hs_subjoin C ON A.user_id= C.user_id
+		LEFT JOIN hs_userbasicinfo D ON A.user_id = D.sys_user_id
+		<where>
+			1=1
+			<if test='params.bo.issee !=null and params.bo.issee != "0"'>
+				and A.issee = #{params.bo.issee,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.com_id !=null">
+				and B.com_id = #{params.bo.com_id,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.max_edu !=null and params.bo.max_edu != "0"'>
+				and D.user_degree = #{params.bo.max_edu,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.job_id !=null and params.bo.job_id != ""'>
+				and A.job_id = #{params.bo.job_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectCareResumeByPage" parameterType="seentao.xhsn.tools.Page"
+		resultMap="ResumeForEntMap">
+		SELECT A.id AS id,A.res_id as res_id,D.user_name AS name ,D.user_gender AS
+		gender,C.ub_birthday AS birthday,C.job_exp_year AS
+		exp_year,C.ub_address AS address,D.user_degree AS max_edu,
+		E.job_type AS job_name,A.datetime AS putdatetime,D.user_idnum as id_card,D.id as user_id
+		FROM hs_etp_follow_resume A LEFT JOIN hs_resume B ON A.res_id=B.id
+		LEFT JOIN hs_subjoin C ON B.user_id= C.user_id
+		LEFT JOIN hs_userbasicinfo D ON B.user_id = D.sys_user_id
+		LEFT JOIN hs_desired_position E ON A.res_id = E.res_id AND B.user_id=E.user_id
+		<where>
+			1=1
+			<if test="params.bo.com_id !=null">
+				and A.etp_id = #{params.bo.com_id,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.max_edu !=null and params.bo.max_edu !="0"'>
+				and D.user_degree = #{params.bo.max_edu,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectEntSearchResumeByPage" parameterType="seentao.xhsn.tools.Page"
+		resultMap="ResumeForEntMap">
+		SELECT IF(E.id IS NULL,'N','Y') AS isFollow, A.id AS id,C.user_name AS name,C.user_gender AS
+		gender,D.ub_birthday AS birthday,B.job_type AS job_name,D.job_exp_year
+		AS exp_year,D.ub_address AS address,C.user_degree AS max_edu,A.modify_time
+		AS modify_time,C.user_idnum as id_card,C.id as user_id
+		FROM hs_resume A
+		LEFT JOIN hs_desired_position B ON A.user_id = B.user_id AND A.id=
+		B.res_id
+		LEFT JOIN hs_userbasicinfo C ON A.user_id=C.sys_user_id
+		LEFT JOIN hs_subjoin D ON A.user_id=D.user_id
+		LEFT JOIN hs_etp_follow_resume E ON A.id=E.res_id 
+		<if test="params.bo.com_id !=null and params.bo.com_id !=''">
+			AND E.etp_id=#{params.bo.com_id,jdbcType=CHAR}
+		</if>
+		<where>
+			1=1 and B.job_type  IS NOT NULL
+			<if test="params.bo.update_date !=null and params.bo.update_date !=''">
+				and A.modify_time like concat('%',#{params.bo.update_date,jdbcType=TIMESTAMP},'%')
+			</if>
+			<if test="params.bo.edu_degree !=null and params.bo.edu_degree !=''">
+				and C.user_degree = #{params.bo.edu_degree,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.job_exp !=null and params.bo.job_exp !=''">
+				and D.job_exp_year = #{params.bo.job_exp,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.present_address !=null and params.bo.present_address !=''">
+				and D.aear_code = #{params.bo.present_address,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.work_satus !=null and params.bo.work_satus !=''">
+				and B.state = #{params.bo.work_satus,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.desired_area !=null and params.bo.desired_area !=''">
+				and B.desired_city REGEXP CONCAT('(',REPLACE(#{params.bo.desired_area,jdbcType=VARCHAR},',','|'),')')
+			</if>
+			<if
+				test="params.bo.desired_position_property !=null and params.bo.desired_position_property !=''">
+				and B.employment_type =#{params.bo.desired_position_property,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.job_type !=null and params.bo.job_type !=''">
+				and B.job_type REGEXP CONCAT('(',REPLACE(#{params.bo.job_type,jdbcType=VARCHAR},',','|'),')')
+			</if>
+			<if test="params.bo.trade_code !=null and params.bo.trade_code !=''">
+				and B.desired_trade REGEXP CONCAT('(',REPLACE(#{params.bo.trade_code,jdbcType=VARCHAR},',','|'),')')
+			</if>
+			<if test="params.bo.user_name !=null and params.bo.user_name !=''">
+				and C.user_name like CONCAT('%',#{params.bo.user_name,jdbcType=VARCHAR},'%')
+			</if>
+				
+		</where>
+			
+	</select>
+	
+	<select id="selectCountByDate" parameterType="seentao.xhsn.bean.HsPutresumeBO"
+		resultType="java.lang.Integer">
+		select count(id) from hs_putresume
+		<where>
+			<if test="putdatetime !=null">
+				DATE_FORMAT(putdatetime, '%Y-%m-%d') >=  DATE_FORMAT(#{putdatetime}, '%Y-%m-%d')
+			</if>
+			<if test="res_id !=null">
+				and res_id = #{res_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

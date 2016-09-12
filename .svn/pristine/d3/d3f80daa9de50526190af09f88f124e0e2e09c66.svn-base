@@ -1,0 +1,84 @@
+package seentao.xhsn.person.certificate.service.impl;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsCertificateBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.certificate.dao.ICertificateDAO;
+import seentao.xhsn.person.certificate.service.ICertificateService;
+import seentao.xhsn.sys.filedata.dao.IFileDataDAO;
+import seentao.xhsn.sys.files.dao.IFilesDAO;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+@Service
+public class CertificateServiceImpl implements ICertificateService{
+
+	@Autowired
+	private ICertificateDAO dao;
+	@Autowired
+	private ILeftMenuService lmService;
+	@Autowired
+	private IFilesDAO filesDao;
+	@Autowired
+	private IFileDataDAO fileDataDao;
+	
+	@Override
+	@Transactional
+	public void insert(HsCertificateBO bo) {
+		dao.insert(bo);
+		lmService.updateByParam(bo.getTable_name(),DictionaryEnum.MENU_TOTALLY.getStringValue());
+	}
+
+	@Override
+	public void update(HsCertificateBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	@Transactional
+	public void delCertificate(String id) {
+		//删除附件信息
+		HsCertificateBO certificateBO = this.selectByPrimaryKey(id);
+		if(StringUtils.isNotEmpty(certificateBO.getCerti_file_id())){
+			filesDao.delete(certificateBO.getCerti_file_id());
+			fileDataDao.deleteByFileID(certificateBO.getCerti_file_id());
+		}
+		
+		this.delete(id);
+		//更新菜单
+		HsCertificateBO paramBO=new HsCertificateBO();
+		UserSessionBean sessionBean=(UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		paramBO.setRes_id(sessionBean.getRes_id());
+		paramBO.setUser_id(sessionBean.getUser_sys_id());
+		 List<HsCertificateBO> list = this.getAllByParam(paramBO);
+		if(list!=null&&list.size()>0){
+			lmService.updateByParam(paramBO.getTable_name(), DictionaryEnum.MENU_TOTALLY.getStringValue());
+		}else{
+			lmService.updateByParam(paramBO.getTable_name(), DictionaryEnum.MENU_NEVER.getStringValue());
+		}
+	}
+	
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsCertificateBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsCertificateBO> getAllByParam(HsCertificateBO bo) {
+		return dao.getAllByParam(bo);
+	}
+	
+}

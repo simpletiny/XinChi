@@ -1,0 +1,64 @@
+package seentao.xhsn.person.customskill.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsCustomSkillBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.customskill.dao.ICustomSkillDAO;
+
+@Repository
+public class CustomSkillDAOImpl extends SqlSessionDaoSupport implements ICustomSkillDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public void insert(HsCustomSkillBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsCustomSkillBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsCustomSkillBO selectByPrimaryKey(String id) {
+		return (HsCustomSkillBO) daoUtil.selectByPK(
+				"seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsCustomSkillBO> getAllByParam(HsCustomSkillBO bo) {
+		List<HsCustomSkillBO> list = daoUtil.selectByBOParamT(
+				"seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.selectByPram", bo);
+		return list;
+	}
+
+	@Override
+	public List<HsCustomSkillBO> findByUserIdAndResId(String user_id, String res_id) {
+		HsCustomSkillBO bo = new HsCustomSkillBO();
+		bo.setUser_id(user_id);
+		bo.setRes_id(res_id);
+		List<HsCustomSkillBO> list = daoUtil.selectByBOParamT(
+				"seentao.xhsn.bean.mappers.HsCustomSkillBOMapper.selectByPram", bo);
+		return list;
+	}
+
+}

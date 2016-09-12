@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 企业招聘管理
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="/static/vendor/rater-star/rater-star.css">
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+  <input type="hidden" id="hidden_participantId" value="{{ participantId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>面试反馈<a href="/client-portal/projects/{{ projectId }}/phases/interview" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="left-box form-box info-form">
+            <div class="input-row clearfloat col-md-12">
+                <label class="l">求职者简历</label>
+            </div>
+            <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="100%" color=#987cb9 SIZE=3>
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">姓名</label>
+                    <p class="ip-" data-bind="text: resume().name"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">手机</label>
+                    <p class="ip-" data-bind="text: resume().mobile"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">邮箱</label>
+                    <p class="ip-" data-bind="text: resume().email"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">性别</label>
+                    <p class="ip-" data-bind="text: resume().gender"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">生日</label>
+                    <p class="ip-" data-bind="text: resume().dob"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">工作经验</label>
+                    <p class="ip-" data-bind="text: resume().workingExp"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">学历</label>
+                    <p class="ip-" data-bind="text: resume().degree"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">居住地</label>
+                    <p class="ip-" data-bind="text: resume().location"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">户口</label>
+                    <p class="ip-" data-bind="text: resume().hukou"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">婚姻状况</label>
+                    <p class="ip-" data-bind="text: resume().maritalStatus"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">QQ</label>
+                    <p class="ip-" data-bind="text: resume().qq"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">期望工作地点 </label>
+                    <p class="ip-" data-bind="text: resume().targetWorkLocation"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">期望工作薪水</label>
+                    <p class="ip-" data-bind="text: resume().targetSalary"></p>
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12">
+                    <label class="l">技能</label>
+                    <p class="ip-" data-bind="text: resume().skills"></p>
+                </div>
+            </div>
+
+            <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="100%" color=#987cb9 SIZE=3>
+
+            <div class="input-row clearfloat" style="padding-top: 0px;">
+                <div class="col-md-12" style="padding-left: 160px;">
+                    <label class="l"><a href="javascript:void(0)" data-bind="text: '查看完整简历', attr: {href: '/resumes/'+resume().id+'/view'}" target="_blank"></a></label>
+                </div>
+            </div>
+        </div>
+        <div class="right-box">
+            <div class="input-row clearfloat">
+                <label class="l">本轮面试官</label>
+                <div class="ip"><p class="ip-" data-bind="text: interview().interviewerNames"></p></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">面试官QQ</label>
+                <div class="ip"><p class="ip-" data-bind="text: interview().interviewerQQ ? interview().interviewerQQ : '非在线视频面试'"></p></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">面试结果</label>
+                <div class="ip"><select class="form-control" data-bind="options: interviewStatuses, value: interview().status"></select></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">综合评价:</label>
+                <div class="ip"><label class="l">稳定性</label><div id="star-stability"></div></div>
+                <div class="ip"><label class="l">沟通能力</label><div id="star-communicationSkill"></div></div>
+                <div class="ip"><label class="l">学习能力</label><div id="star-learningCapacity"></div></div>
+                <div class="ip"><label class="l">业务能力</label><div id="star-professionalAbility"></div></div>
+                <input type="hidden" id="stability-input" data-bind="value: interview().stability" />
+                <input type="hidden" id="communicationSkill-input" data-bind="value: interview().communicationSkill" />
+                <input type="hidden" id="learningCapacity-input" data-bind="value: interview().learningCapacity" />
+                <input type="hidden" id="professionalAbility-input" data-bind="value: interview().professionalAbility" />
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">是否给offer</label>
+               <div class="ip">
+                    <em class="small-box"><input type="radio" name="offer" data-bind="checked: interview().offered, checkedValue: true"/><label>是</label></em>
+                    <em class="small-box"><input type="radio" name="offer" data-bind="checked: interview().offered, checkedValue: false"/><label>否</label></em>
+               </div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">面试评价</label>
+                <div class="ip"><textarea type="text" class="ip-default" rows="7" data-bind="value: interview().evaluation" placeholder="面试评价"></textarea></div>
+            </div>
+            <div class="input-row clearfloat">
+                <div align="right"><a class="btn btn-green btn-r" data-bind="click: saveInterviewResult">保存</a></div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/rater-star/rater-star.js"></script>
+  <script>
+    $(".client-portal").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/client/participant-interview.js{{ _suffix_ }}"></script>
+{% endblock %}

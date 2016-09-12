@@ -1,0 +1,89 @@
+/**
+ * 搜索简历
+ */
+function searchResume() {
+	var param = $("#form_search").serialize();
+	param += "&page.pageSize=10";
+	$.ajax({
+		url : "searchResume",
+		data : param,
+		type : "post",
+		success : function(data) {
+			$("#div_container").html(data);
+			$("#Pagination").pagination($("#hid_sum_cnt").val() - 0, {
+				callback : searchData,// PageCallback() 为翻页调用次函数。
+				items_per_page : 10, // 每页的数据个数
+				num_display_entries : 3, // 两侧首尾分页条目数
+				current_page : 0, // 当前页码
+				num_edge_entries : 2
+			});
+		}
+	});
+}
+
+function searchData(page_id, jq) {
+	var param = $("#form_search").serialize();
+	param += "&page.pageSize=10";
+	param += "&page.pageNo=" + (page_id + 1);
+	$.ajax({
+		url : "searchResume",
+		data : param,
+		type : "post",
+		success : function(data) {
+			$("#div_container").html(data);
+		}
+	});
+}
+/**
+ * 关闭简历
+ * 
+ * @param span
+ */
+function closeResume(span) {
+	var tr = $(span).parents("tr:first");
+	var res_id = $(tr).find("input.txtResId:first").val();
+
+	$.ajax({
+		url : "closeResume",
+		data : "res_id=" + res_id,
+		type : "get",
+		success : function(r) {
+			if (r == "OK") {
+				alert("关闭成功，将在3个月后自动开启！");
+			}
+		}
+	});
+}
+/**
+ * 开启简历
+ * 
+ * @param span
+ */
+function openResume(span) {
+	var tr = $(span).parents("tr:first");
+	var res_id = $(tr).find("input.txtResId:first").val();
+	$.ajax({
+		url : "openResume",
+		data : "res_id=" + res_id,
+		type : "get",
+		success : function(r) {
+			if (r == "OK") {
+				alert("开启成功");
+			}
+		}
+	});
+}
+/**
+ * 导出Excel
+ */
+function exportExcel() {
+	var param = $("#form_search").serialize();
+	window.location.href = "exportPersonInfo?" + param;
+	// $.ajax({
+	// url : "exportPersonInfo",
+	// type : "get",
+	// success : function(r) {
+	//			
+	// }
+	// });
+}

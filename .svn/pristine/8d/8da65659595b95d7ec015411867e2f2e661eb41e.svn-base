@@ -1,0 +1,18 @@
+package seentao.xhsn.person.collect.dao;
+
+import seentao.xhsn.bean.HsPositionCollectBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月10日 下午3:35:42 
+ * @note 
+ */
+public interface IPositionCollectDAO {
+
+	/**插入一条职位收藏信息
+	 * @param collectBO
+	 * @return id
+	 */
+	public  String insert(HsPositionCollectBO collectBO);
+
+}

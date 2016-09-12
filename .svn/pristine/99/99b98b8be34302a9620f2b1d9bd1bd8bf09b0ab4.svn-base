@@ -1,0 +1,71 @@
+$(document).ready(function(){
+	$("#user_email").focus();
+	
+});
+
+
+function validateEmail(value,element){
+	if (value==''||value=='请输入您的邮箱') {
+		var tip="邮箱不能为空!";
+		element.text(tip);
+		element.attr("title",tip);
+		return false;
+	}
+	var reg=/[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
+	if(!value.match(reg)){
+		var tip="输入的邮箱格式不正确!";
+		element.text(tip);
+		element.attr("title",tip);
+		return false;
+	}
+	if(value.length>45){
+		var tip="输入的邮箱位数太长!";
+		element.text(tip);
+		element.attr("title",tip);
+		return false;
+	}
+	element.text("");
+	element.attr("title","");
+	return true;
+}
+function validateverification_code(value,element){
+	if (value=='' || value == '请输入您的验证码') {
+		var tip="验证码不能为空!";
+		element.text(tip);
+		element.attr("title",tip);
+		return false;
+	}
+	element.text("");
+	element.attr("title","");
+	return true;
+}
+
+function formsub(action){
+	var user_email = $("#user_email").val();
+	var verification_code = $("#verification_code").val();
+	if(validateEmail(user_email, $("#user_email_tip")) && 
+			validateverification_code(verification_code, $("#verification_code_tip"))){
+		document.getElementById("myform").action = action;
+		document.getElementById("myform").submit();
+	}
+}
+
+function sendEmail(action){
+	var user_email = $("#user_email").val();
+	if(validateEmail(user_email, $("#user_email_tip"))){
+		var dataParam = "bo.user_email=" + user_email;
+		$.ajax({
+	        url: action,
+	        data: dataParam,
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	alert(data.tip);
+	        },
+	        error:function(data){
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+	}
+}
+

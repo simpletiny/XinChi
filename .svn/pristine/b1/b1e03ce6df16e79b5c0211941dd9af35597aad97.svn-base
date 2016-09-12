@@ -1,0 +1,151 @@
+package seentao.xhsn.person.info.service.impl;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsSubjoinBO;
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.person.info.dao.IUBInfoDao;
+import seentao.xhsn.person.info.service.IUBInfoService;
+import seentao.xhsn.person.subjoin.dao.ISubjoinDAO;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+import seentao.xhsn.tools.PropertiesUtil;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月26日 上午11:14:07 
+ * @note 个人信息service的实现类
+ */
+/**
+ * @author Administrator
+ * 
+ */
+@Service
+public class UBInfoServiceImpl implements IUBInfoService {
+	private static Logger logger=Logger.getLogger(UBInfoServiceImpl.class);
+	@Autowired
+	private IUBInfoDao dao;
+	@Autowired
+	private ISubjoinDAO subjoinDao;
+	@Autowired
+	private ILeftMenuService lmService;
+
+	@Override
+	@Transactional
+	public void save(HsUserbasicinfoBO bo, HsSubjoinBO subjoinBO) {
+		this.update(bo);
+		if (subjoinBO.getId() != null && subjoinBO.getId().trim().length() > 0) {
+			subjoinDao.update(subjoinBO);
+		} else {
+			subjoinDao.insert(subjoinBO);
+		}
+		lmService.updateByParam(bo.getTable_name(), DictionaryEnum.MENU_TOTALLY.getStringValue());
+	}
+
+	@Override
+	public void inster(HsUserbasicinfoBO bo) {
+		dao.inster(bo);
+	}
+
+	@Override
+	@Transactional
+	public void update(HsUserbasicinfoBO bo) {
+		dao.update(bo);
+		// 将公共的信息更新到公共注册
+		updateUserForRegist(bo);
+	}
+
+	/**
+	 * 将信息更新到公共的注册平台
+	 * 
+	 * @param bo
+	 */
+	private void updateUserForRegist(HsUserbasicinfoBO bo) {
+		// 1：将登录信息转换成json
+		JSONObject paramBean = new JSONObject();
+		paramBean.put("user_passport", bo.getUser_passport());
+		paramBean.put("user_name", bo.getUser_name());
+		paramBean.put("user_gender", bo.getUser_gender());
+		paramBean.put("user_phone", bo.getUser_phone());
+		paramBean.put("user_email", bo.getUser_email());
+		paramBean.put("user_idnum", bo.getUser_idnum());
+		paramBean.put("user_photo", bo.getUser_photo().replace(PropertiesUtil.getProperty("filesys_project_url"), ""));
+		this.updatePersonUser(paramBean);
+	}
+
+	@Override
+	@Transactional
+	public void updatePersonUser(JSONObject paramBean) {
+		StringBuilder sb = new StringBuilder();
+		String spec = PropertiesUtil.getProperty("login_project_url")
+				+ PropertiesUtil.getProperty("update_userbasic_url");
+		try {
+			URL url = new URL(spec);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			conn.setRequestMethod("POST"); // 设置提交方式为post
+			conn.setConnectTimeout(10000);
+			conn.setUseCaches(false);
+			conn.connect();
+			BufferedOutputStream out = new BufferedOutputStream(conn.getOutputStream());
+			String mob = null;
+			mob = URLEncoder.encode(paramBean.toString(), "UTF-8");
+			String r = "user_json=" + new String(mob.getBytes());
+			out.write(r.getBytes());
+			out.close();
+			out.flush();
+			InputStream is = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			// 如果返回值中包含 result:"SUCCESS" 说明返回成功
+			JSONObject result = JSONObject.fromObject(sb.toString());
+			if (result.has("result") && "SUCCESS".equals(result.get("result"))) {
+				System.out.println("-------------------------修改信息接口调用成功------------------------------");
+			} else {
+				throw new BusinessException("注册平台修改信息接口没有调用成功。");
+			}
+			reader.close();
+		} catch (IOException e) {
+			logger.error("注册平台修改信息接口有问题。",e);
+			throw new BusinessException("注册平台修改信息接口有问题。");
+		}
+	}
+
+	@Override
+	public HsUserbasicinfoBO getByUserIdAndResId(String user_id, String res_id) {
+		return dao.getByUserSysId(user_id);
+	}
+
+	@Override
+	public HsUserbasicinfoBO getByPK(String id) {
+		return dao.getByPK(id);
+	}
+
+	@Override
+	public HsSubjoinBO getSubjoinBOByUIDAndRID(String user_id, String res_id) {
+		HsSubjoinBO param = new HsSubjoinBO();
+		param.setUser_id(user_id);
+		param.setRes_id(res_id);
+		return subjoinDao.getByParam(param);
+	}
+
+}

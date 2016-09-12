@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 简历预览模板 -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${htmltitle}</title>
+<link rel="stylesheet" type="text/css" href="${basePath}common/css/basic.css"  />
+<link rel="stylesheet" type="text/css" href="${basePath}common/css/jlyl.css"  />
+<script src="${basePath}common/js/jquery-1.8.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="${basePath}common/js/major_arr.js"></script>
+<script src="${basePath}common/js/city_arr.js" type="text/javascript"></script>
+<script src="${basePath}common/js/funtype_arr.js" type="text/javascript"></script>
+<script src="${basePath}common/js/industry_arr.js" type="text/javascript"></script>
+<script>
+	$(document).ready(function(){
+		//转化求职意向信息
+		var jobType = $("td.tdDesireJobType").html();
+		if($.trim(jobType)!=""){
+			var arrJob = $.trim(jobType).split(",");
+			var jobTypes = "";
+			$.each(arrJob,function(n,each){
+				jobTypes +=","+fun_a[each];
+			});
+			$("td.tdDesireJobType").html(jobTypes.substring(1));
+		}
+		$.each($("div"),function(n,div){
+				$(div).width($(div).width()*0.7)
+		});
+		$.each($("table"),function(n,table){
+				$(table).width($(table).width()*0.7)
+		});
+		$.each($("td"),function(n,td){
+				$(td).width($(td).width()*0.7)
+		});
+		$.each($("img"),function(n,img){
+			$(img).width($(img).width()*0.7);
+			$(img).height($(img).height()*0.7);
+		});
+		$.each($("h2"),function(n,h2){
+			$(h2).width($(h2).width()*0.7);
+		});
+		$.each($("h4"),function(n,h4){
+			$(h4).width($(h4).width()*0.7);
+		});
+		$("body").width($("body").width()*0.7);
+	});
+		
+</script>
+</head>
+
+<body>
+<div style="margin-right:70px;">
+	<a href="#" onclick="PrintNoHdr();" style="float:right">打印</a>
+</div>
+	<br/>
+	<!--startprint1-->
+      <div id="main">
+      		<h2>${res.name}</h2>
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/grxx.png);"></h4>
+                <table width="954" cellspacing="0px"  style="border-collapse:collapse; border:0; font-size:10px; color:#565555; margin-left:70px;">
+                <tr>
+                	<td width="390" height="30">姓名：${ub.user_name}</td>
+                	<td width="304">性别：${ub.user_gender}</td>
+                	<td width="260" rowspan="7" style="vertical-align:top;">
+                    	<img src="${ub.user_photo}" style="height:149px;width:124px"/>
+                    </td>
+                </tr>
+                <tr>
+                	<td width="390" height="30">出生年月：${sub.ub_birthday[0..6]} </td>
+                	<td width="304" class="tdArea">籍贯：<script type="text/javascript">
+            				document.write(ja['${sub.aear_code}']);
+            				document.close();
+          			</script></td>
+               	  </tr>
+                <tr>
+                	<td width="390" height="30">最高学历：${ub.user_degree}</td>
+                	<td width="304">专业：${ub.major_name}</td>
+               	  </tr>
+                <tr>
+                	<td width="390" height="30">毕业院校：${ub.school_name} </td>
+                	<td width="304">政治面貌：${sub.political_id}</td>
+               	  </tr>
+                <tr>
+                	<td width="390" height="30">邮       箱：${ub.user_email}</td>
+                	<td width="304">联系电话：${ub.user_phone}</td>
+               	  </tr>
+                <tr>
+                	<td width="390" height="30">婚姻状况：${sub.ub_marrystate} </td>
+                	<!--<td width="304">国籍：{sub.ub_country}</td>-->
+               	  </tr>
+                <!-- <tr>
+                	<td width="390" height="30">海外工作／经历：${sub.overseas_exp}</td>
+                	<td width="304"></td>
+               	  </tr>-->
+                </table>
+            </div>
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/qzyx2.png);"></h4>
+                <table width="954" cellspacing="0px"  style="border-collapse:collapse; border:0; font-size:10px; color:#565555; margin-left:70px;">
+                <!--求职意向 -->
+                <tr>
+                	<td width="390" height="30" class="tdDesireJobType">
+	                	${desire.job_type}
+                	</td>
+                	<td width="304"></td>
+                	<td width="260"></td>
+                </tr>
+                </table>
+            </div>
+            <!-- 培训经历-->
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/pxjl2.png);"></h4>
+                 <#list trainlist as train>
+                <p>${train.begintime}~~${train.endtime}<span><b>${train.institution_name}&nbsp;&nbsp;&nbsp;${train.course_name}</b></span></p>
+              	<p>${train.details}</p>
+              	 </#list>
+            </div>
+       
+            
+         	<!-- 项目经验 -->
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/xmjy2.png);"></h4>
+                <#list jobexperiencelist as je>
+	                <p>${je.exp_begintime}~~${je.exp_endtime}<span><b>${je.exp_proname}</b></span></p>
+	      			<p>${je.exp_description}</p>
+	      			<p>${je.duty_description}</p>
+      			</#list>
+            </div>
+          
+          <!-- 任职经历   实习经历 -->
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/xxgz.png);"></h4>
+                <#list jclist as jc>
+                <p>${jc.begindate}~~${jc.enddate}<span><b>${jc.com_name}</b></span></p>
+                <p><script type="text/javascript">
+            				document.write(ind_a['${jc.trade_code}']);
+            				document.close();
+          			</script>| ${jc.com_type} | 规模:${jc.com_size}| ${jc.salary_scope}</p>
+                <p>${jc.job_description}</p>
+                </#list>
+            </div>
+        <div>
+          <!--个人技能-->
+       	  <h4 style="background:url(${basePath}common/images/resume/images/wdjn.png);"></h4>
+            <#list cslist as cs>
+            <p>${cs.professional_value} | ${cs.level_value}  | ${cs.usetime}月</p>
+            </#list>
+          </div>
+          <!--教育经历 -->        
+          <div>
+       	  <h4 style="background:url(${basePath}common/images/resume/images/jybj2.png);"></h4>
+           <#list edulist as edu>
+            <p>${edu.edu_begintime}~~${edu.edu_endtime}：${edu.edu_school_name} | 
+            <script type="text/javascript">
+            	document.write(m_a['${edu.main_major_code}']);
+            	document.close();
+            </script>
+             | ${edu.edu_degree_value}</p>
+         	</#list>
+          </div>
+          
+	      <!-- 自我评价-->
+	      <#if (evaluateBO??) >
+          <div>
+       	  <h4 style="background:url(${basePath}common/images/resume/images/zwpj2.png);"></h4>
+              <p>${evaluateBO.content}</p>
+          </div>
+          </#if>
+          
+            <div>
+       	  <h4 style="background:url(${basePath}common/images/resume/images/xxlj2.png);"></h4>
+       	  
+          <table width="700" cellspacing="0px"  style="border-collapse:collapse; border:0;  text-align:center; margin-left:50px;">
+            
+            <tr>
+	            <#list pathlist as path>
+	            	<td width="140" height="45">${path.scoreCatalogBO.score_name}</td>
+	             </#list>
+            </tr>
+       
+            <tr>
+            	<#list pathlist as path>
+            	<td width="140" height="45" style="color:#059e81;">${path.score}</td>
+            	</#list>
+            </tr>
+           </table>
+          </div>
+          <#if (cerlist?size>0) >
+          <div>
+       	  <h4 style="background:url(${basePath}common/images/resume/images/zs.png);"></h4>
+           <#list cerlist as cer>
+              <p>${cer.gain_month}：${cer.certi_code_value}</p>
+            </#list>
+          </div>
+          </#if>
+      </div>
+      <!--endprint1-->
+</body>
+</html>
+ <script type="text/javascript">
+	function PrintNoHdr(){
+		  bdhtml=window.document.body.innerHTML;
+			
+				sprnstr="<!--startprint1-->"; 
+				eprnstr="<!--endprint1-->"; 
+			
+			prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+18); 
+			prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr)); 
+			window.document.body.innerHTML=prnhtml; 
+
+			window.print();
+      		window.opener=null;       
+      		window.open('', '_self', '');       
+      		window.close();
+      		location.reload();
+    }
+</script>

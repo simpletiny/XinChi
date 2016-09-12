@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="user" extends="default" namespace="/user">
+		<!-- 登录 -->
+		<action name="login" class="loginAction" method="login">
+			<interceptor-ref name="mystack" />
+			<interceptor-ref name="token" />
+			<result name="invalid.token">/login.jsp</result>
+			<result name="SUCCESS" type="redirect">/${afterLoginUrl}</result>
+			<result name="FAIL" >/login.jsp</result>
+			<result name="CONFIRM" >/share/mailvalidate/validatemail.jsp</result>
+			<result name="CONFIRM_PERSON" type="redirect">${afterLoginUrl}</result>
+		</action>
+		<!-- 邮箱验证 -->
+		<action name="confirm" class="mailConfirmAction" method="confirm">
+			<result name="SUCCESS" type="redirect">/login.jsp</result>
+			<result name="ERROR" >/share/mailvalidate/validateEoor.jsp</result>
+		</action>
+		<!-- 重发邮件 -->
+		<action name="resend" class="mailConfirmAction" method="resend">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		<!-- 退出 -->
+		<action name="logout" class="loginAction" method="logout">
+			<result name="SUCCESS" type="redirect">/login.jsp</result>
+		</action>
+		<!-- 密码修改 -->
+		<action name="findAndcheckPwd" class="passwordAction" method="findAndcheckPwd">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		<action name="modifyPWD" class="passwordAction" method="modifyPWD">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		
+	</package> 
+</struts>

@@ -1,0 +1,77 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsEtpFollowResumeBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String res_id;
+		  
+		 
+		  private java.lang.String etp_id;
+		  
+		 
+		  private java.sql.Timestamp datetime;
+		  
+		 
+		  private java.lang.Integer follow_duration;
+		  
+		 
+		  private java.lang.String follow_sources;
+		  
+		 
+		  private java.lang.String search_id;
+		  
+		 
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+		 
+		  public  java.lang.String getEtp_id() {
+				return etp_id;
+			}
+			
+			public void setEtp_id( java.lang.String etp_id) {
+				this.etp_id = etp_id;
+			}
+		 
+		  public  java.sql.Timestamp getDatetime() {
+				return datetime;
+			}
+			
+			public void setDatetime( java.sql.Timestamp datetime) {
+				this.datetime = datetime;
+			}
+		 
+		  public  java.lang.Integer getFollow_duration() {
+				return follow_duration;
+			}
+			
+			public void setFollow_duration( java.lang.Integer follow_duration) {
+				this.follow_duration = follow_duration;
+			}
+		 
+		  public  java.lang.String getFollow_sources() {
+				return follow_sources;
+			}
+			
+			public void setFollow_sources( java.lang.String follow_sources) {
+				this.follow_sources = follow_sources;
+			}
+		 
+		  public  java.lang.String getSearch_id() {
+				return search_id;
+			}
+			
+			public void setSearch_id( java.lang.String search_id) {
+				this.search_id = search_id;
+			}
+	
+
+}

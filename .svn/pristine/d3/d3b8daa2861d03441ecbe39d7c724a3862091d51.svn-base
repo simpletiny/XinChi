@@ -1,0 +1,153 @@
+var st_type = "0";
+/**
+ * 切换显示内容
+ * 
+ * @param type
+ */
+function showContent(type) {
+	st_type = type;
+	$.ajax({
+		url : "fetchCenterDetail",
+		data : "type=" + type,
+		type : "post",
+		success : function(data) {
+			$("#div_content").html(data);
+			// $("#Pagination").pagination($("#hid_sum_cnt").val() - 0, {
+			// callback : searchData,// PageCallback() 为翻页调用次函数。
+			// items_per_page : 6, // 每页的数据个数
+			// num_display_entries : 3, // 两侧首尾分页条目数
+			// current_page : 0, // 当前页码
+			// num_edge_entries : 2
+			//			});
+		}
+	});
+}
+
+function searchData(page_id, jq) {
+	var param = "type=" + st_type;
+	param += "&" + "page.pageNo=" + (page_id + 1);
+	$.ajax({
+		url : "fetchCenterDetail",
+		data : param,
+		type : "post",
+		success : function(data) {
+			$("#div_content").html(data);
+		}
+	});
+}
+/**
+ * 预览简历
+ */
+function resumeReview() {
+	window
+			.open("resumeReview", 'newwindow',
+					'width=800,height=700,top=100,left=200,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,status=no');
+}
+/**
+ * 刷新页面
+ */
+function refresh() {
+	location.href = "centerInit";
+}
+/**
+ * 申请职位
+ * 
+ * @param btn
+ */
+function applyJob(btn) {
+	var jobIds = $(btn).parent().find("input.jobId").val();
+	$.ajax({
+		url : "applyJob",
+		data : "job_ids=" + jobIds,
+		type : "GET",
+		success : function(r) {
+			// 如果申请成功
+			if (r == "OK") {
+				alert("申请成功");
+				location.href = "centerInit";
+			}
+		}
+	});
+}
+/**
+ * 批量申请工作
+ */
+function applyJobs() {
+	var jobIds = new Array();
+	$.each($("#div_content input[name='chkJob']"), function(n, value) {
+		if ($(value).attr("checked")) {
+			var id = $($(value).parent().prev("input.jobId")).val();
+			jobIds.push(id);
+		}
+	});
+	$.ajax({
+		url : "applyJob",
+		data : "job_ids=" + jobIds,
+		type : "GET",
+		success : function(r) {
+			// 如果申请成功
+			if (r == "OK") {
+				alert("申请成功");
+				location.href = "centerInit";
+			}
+		}
+	});
+}
+
+/**
+ * 选择全部
+ */
+function checkAll() {
+	$.each($("#div_content input[name='chkJob']"), function(n, value) {
+		$(value).attr("checked", !!$("#chk_all").attr("checked"));
+	});
+}
+$(document).ready(function() {
+	switchTab(2);
+	showContent("0");
+	$("#tanchu").hide();
+	$(".transparent").hide();
+	$(".close").click(function(){
+		$("#tanchu").hide();
+		$(".transparent").hide();
+	})
+});
+
+
+function seeLetters(id,alink){
+	
+	$.ajax({
+		url : "getInform",
+		data : "informId=" + id,
+		type : "POST",
+		success : function(data) {
+			// 如果申请成功
+			if (data != null && data.informBO != null) {
+				$("#ent_name").text(data.informBO.ent_name);
+				$("#ent_address").text(data.informBO.ent_address);
+				$("#job_name").text(data.informBO.job_name);
+				$("#interviewer").text(data.informBO.interviewer);
+				$("#interviewer_phone").text(data.informBO.interviewer_phone);
+				$("#attach").text(data.informBO.attach);
+				$("#inform_date").text(data.informBO.inform_date);
+				show_div();
+				var td = $(alink).parents("tr:first").find("td.tdNotSee");
+				td.html("已查看");
+				td.css("color","#029e80");
+			}
+		}
+	});
+}
+
+function show_div(){
+	var bodyWidth = $("body").width();
+	var transheight = $(document.body).outerHeight(true);
+	var loginWidth = $("#tanchu").width();
+	var num = (bodyWidth-(loginWidth))/2;
+	$(".transparent").show();
+	$(".transparent").css("width",bodyWidth);
+	$(".transparent").css("height",transheight);
+	$("#tanchu").css("left",num);
+	$("#tanchu").css("top","110px");
+	$("#tanchu").show();
+}

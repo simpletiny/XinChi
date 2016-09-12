@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsMajorBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsMajorBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="parent_code" property="parent_code" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+    	<result column="sort_no" property="sort_no" jdbcType="INTEGER" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	name, 
+    	code, 
+    	parent_code, 
+    	modify_time,
+    	sort_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_major
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_major
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsMajorBO" >
+  	
+    insert into hs_major
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="name != null">
+	        name,
+	      </if>
+	 	<if test="code != null">
+	        code,
+	      </if>
+	 	<if test="parent_code != null">
+	        parent_code,
+	      </if>
+	 	<if test="sort_no != null">
+	        sort_no,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="name != null">
+	        #{name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="code != null">
+	        #{code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parent_code != null">
+	        #{parent_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sort_no != null">
+	        #{sort_no,jdbcType=INTEGER},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsMajorBO" >
+    update hs_major
+    <set >
+    	<if test="name != null">
+	        name = #{name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="code != null">
+	        code = #{code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parent_code != null">
+	        parent_code = #{parent_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sort_no != null">
+	        sort_no = #{sort_no,jdbcType=INTEGER},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsMajorBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_major
+   </select>
+ <select id="selectBigMajor" parameterType="seentao.xhsn.bean.HsMajorBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_major where parent_code is NULL order by sort_no
+   </select>
+ <select id="selectSmallMajor" parameterType="seentao.xhsn.bean.HsMajorBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_major 
+    <where>
+    	1=1 
+    	<if test="parent_code!=null and parent_code!=''">
+    		and parent_code = #{parent_code,jdbcType=VARCHAR}
+    	</if>
+    </where>
+    order by sort_no
+   </select>
+   
+   <select id="selectExists" parameterType="seentao.xhsn.bean.HsMajorBO" resultMap="BaseResultMap">
+   	select 
+    <include refid="Base_Column_List" />
+    from hs_major
+    <where>
+    	1=1
+    	<if test="parent_code != null and parent_code != ''">
+			and parent_code = #{parent_code,jdbcType=VARCHAR}
+		</if>
+		and (name=#{name,jdbcType=VARCHAR} or code = #{code,jdbcType=VARCHAR})
+		<if test="id!=null and id!=''">
+			and id != #{id,jdbcType=CHAR}
+		</if>
+    </where>
+   </select>
+</mapper>

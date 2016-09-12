@@ -1,0 +1,44 @@
+package seentao.xhsn.sys.person.service;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import seentao.xhsn.sys.person.bean.PersonResumeBean;
+import seentao.xhsn.sys.person.bean.PersonSearchBean;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 个人管理
+ * 
+ * @author niushixing 2015-1-19 13:15:55
+ *
+ */
+public interface IPersonService {
+
+	public List<PersonResumeBean> searchResume(Page page);
+
+	/**
+	 * 自动开启简历方法
+	 * 
+	 * @param param
+	 */
+	public void autoOpenResume(String[] param);
+
+	/**
+	 * 关闭简历
+	 * 
+	 * @param res_id
+	 * @return
+	 */
+	public String closeResume(String res_id);
+
+	/**
+	 * 开启简历
+	 * 
+	 * @param res_id
+	 * @return
+	 */
+	public String openResume(String res_id);
+
+	public void exportExcel(ByteArrayOutputStream output, PersonSearchBean ps);
+}

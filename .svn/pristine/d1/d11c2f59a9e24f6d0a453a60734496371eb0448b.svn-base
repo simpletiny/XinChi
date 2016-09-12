@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsSysLogBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsSysLogBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="sys_user_id" property="sys_user_id" jdbcType="CHAR" />
+	    <result column="do_datetime" property="do_datetime" jdbcType="TIMESTAMP" />
+	    <result column="log_describe" property="log_describe" jdbcType="VARCHAR" />
+	    <result column="do_type" property="do_type" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	sys_user_id, 
+    	do_datetime, 
+    	log_describe, 
+    	do_type, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_sys_log
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_sys_log
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsSysLogBO" >
+  	
+    insert into hs_sys_log
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="sys_user_id != null">
+	        sys_user_id,
+	      </if>
+	 	<if test="do_datetime != null">
+	        do_datetime,
+	      </if>
+	 	<if test="log_describe != null">
+	        log_describe,
+	      </if>
+	 	<if test="do_type != null">
+	        do_type,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="sys_user_id != null">
+	        #{sys_user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="do_datetime != null">
+	        #{do_datetime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="log_describe != null">
+	        #{log_describe,jdbcType=VARCHAR},
+	      </if>
+    	<if test="do_type != null">
+	        #{do_type,jdbcType=VARCHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsSysLogBO" >
+    update hs_sys_log
+    <set >
+    	<if test="sys_user_id != null">
+	        sys_user_id = #{sys_user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="do_datetime != null">
+	        do_datetime = #{do_datetime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="log_describe != null">
+	        log_describe = #{log_describe,jdbcType=VARCHAR},
+	      </if>
+    	<if test="do_type != null">
+	        do_type = #{do_type,jdbcType=VARCHAR},
+	      </if>
+       <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ 
+</mapper>

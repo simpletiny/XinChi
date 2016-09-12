@@ -1,0 +1,217 @@
+package seentao.xhsn.person.evaluate.action;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.bean.HsEvaluateBO;
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.evaluate.service.IEvaluateService;
+import seentao.xhsn.person.resume.service.IResumeService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月24日 下午3:22:03 
+ * @note 自我评价action
+ */
+@Controller
+@Scope("prototype")
+public class EvaluateAction extends ActionSupport {
+
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private IEvaluateService evaluateService;
+
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+	
+	@Autowired
+	private ILeftMenuService lmService;
+
+	private Map<String, List<HsDictionaryDataBO>> dicts;
+	
+	private HsEvaluateBO bo ;
+	
+	private String id;
+	
+	private String user_id;
+	
+	private String res_id;
+	
+	private String lm_tab_name;
+
+	private Boolean edit_flag;
+	
+	private List<HsPersonLeftMenuBO> leftmenus;
+	/**
+	 * 简历完成度
+	 */
+	private String res_completeness;
+	
+	private String err_msg;
+	
+	
+	public String edit(){
+		res_completeness = lmService.getCompletenessByPK();
+		leftmenus = lmService.findLeftMenuByParams();
+		UserSessionBean user = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		user_id = user.getUser_sys_id();
+		res_id = user.getRes_id();
+		bo = evaluateService.getByUserIdAndResId(user_id, res_id);
+		if(bo == null ){
+			edit_flag = true;
+			bo = new HsEvaluateBO();
+			bo.setUser_id(user_id);
+			bo.setRes_id(res_id);
+		}else{
+			if(bo.getTitle() != null && bo.getTitle().trim().length() > 0){
+				bo.setTitle_code_value(bo.getTitle());
+			}else{
+				bo.setTitle_code_value(dictFieldMapService.getDictValueByParam(bo.getTable_name(), "title_code", bo.getTitle_code()).get("value"));
+			}
+			edit_flag = false;
+		}
+		lm_tab_name = bo.getTable_name();
+		dicts = dictFieldMapService.findDictDataByParam(new HsEvaluateBO().getTable_name());
+		return "SUCCESS";
+	}
+	@Autowired
+	private IResumeService resumeService;
+	public String save(){
+		if(validateSaveForm(bo)){
+			evaluateService.save(bo);
+			if(bo.getTitle() != null && bo.getTitle().trim().length() > 0){
+				bo.setTitle_code_value(bo.getTitle());
+			}else{
+				bo.setTitle_code_value(dictFieldMapService.getDictValueByParam(bo.getTable_name(), "title_code", bo.getTitle_code()).get("value"));
+			}
+			edit_flag = false;
+			dicts = dictFieldMapService.findDictDataByParam(new HsEvaluateBO().getTable_name());
+			lmService.updateByParam(bo.getTable_name(),  DictionaryEnum.MENU_TOTALLY.getStringValue());
+			leftmenus = lmService.findLeftMenuByParams();
+			res_completeness = lmService.getCompletenessByPK();
+			UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+			resumeService.generateEvaluate(resBo);
+			lm_tab_name = bo.getTable_name();
+			return "SUCCESS";
+		}else{
+			return "FAIL";
+		}
+	}
+	
+	/**
+	 * 校验提交的表单
+	 */
+	public boolean validateSaveForm(HsEvaluateBO bo){
+		
+		dicts = dictFieldMapService.findDictDataByParam(new HsEvaluateBO().getTable_name());
+		if(bo.getTitle_code() == null || bo.getTitle_code().trim().length() <= 0){
+			err_msg = "标题不能为空";
+			return false;
+		}
+		if(bo.getContent() == null || bo.getContent().trim().length() <= 0){
+			err_msg = "自我评价不能为空";
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	public HsEvaluateBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsEvaluateBO bo) {
+		this.bo = bo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getDicts() {
+		return dicts;
+	}
+
+	public void setDicts(Map<String, List<HsDictionaryDataBO>> dicts) {
+		this.dicts = dicts;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getLm_tab_name() {
+		return lm_tab_name;
+	}
+
+	public void setLm_tab_name(String lm_tab_name) {
+		this.lm_tab_name = lm_tab_name;
+	}
+
+	public List<HsPersonLeftMenuBO> getLeftmenus() {
+		return leftmenus;
+	}
+
+	public void setLeftmenus(List<HsPersonLeftMenuBO> leftmenus) {
+		this.leftmenus = leftmenus;
+	}
+
+	public Boolean getEdit_flag() {
+		return edit_flag;
+	}
+
+	public void setEdit_flag(Boolean edit_flag) {
+		this.edit_flag = edit_flag;
+	}
+
+	public String getRes_completeness() {
+		return res_completeness;
+	}
+
+	public void setRes_completeness(String res_completeness) {
+		this.res_completeness = res_completeness;
+	}
+
+	public String getErr_msg() {
+		return err_msg;
+	}
+
+	public void setErr_msg(String err_msg) {
+		this.err_msg = err_msg;
+	}
+	
+	
+}

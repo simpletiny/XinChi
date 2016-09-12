@@ -1,0 +1,28 @@
+$(document).ready(function() {
+	$('.close').hide();
+	$('.close_b,.on_b').removeClass('active');
+	$('.on_b').addClass('active');
+
+	$('.on_b').click(function() {
+		$('.on_b,.close_b').removeClass('active');
+		$(this).addClass('active');
+		$('.on,.close').hide();
+		$('.on').show();
+	});
+
+	$('.close_b').click(function() {
+		$('.on_b,.close_b').removeClass('active');
+		$(this).addClass('active');
+		$('.on,.close').hide();
+		$('.close').show();
+	});
+	if ($("#logo_name").val() != "") {
+		$("#img_logo").attr("src", $("#logo_name").val());
+	}
+	if ($("#trade_code").val() != "") {
+		$("#li_trade_name").html($("#li_trade_name").html() + ind_a[$("#trade_code").val()]);
+	}
+	$('#btn_publish').click(function() {
+		location.href = "releaseJobInit";
+	});
+});

@@ -1,0 +1,75 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>My JSP 'dictionary.jsp' starting page</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<!--
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	-->
+	<style type="text/css">
+	td{
+		padding-left:10px;
+		padding-right:15px;
+		padding-top:5px;
+		padding-bottom:5px;
+	}
+	</style>
+ 	<script src="<%=basePath%>common/js/jquery-1.8.1.min.js" type="text/javascript"></script>.
+		<script src="<%=basePath%>common/js/layer-v1.8.1/layer/layer.min.js"></script>
+		<script src="<%=basePath%>common/js/common.js"></script>
+  </head>
+  <script type="text/javascript">
+  	function handleUpdateResponse(data){
+  		$("#dic_catalog").attr("readonly",true);
+	        	 $("#key").val(data.bo.id);
+	        	 $("#dic_catalog").val(data.bo.dic_catalog);
+	        	 $("#name").val(data.bo.name);
+  	}
+  
+  </script>
+  
+  <body>
+   <table >
+    	<tr>
+    		<td>编目</td>
+    		<td>名称</td>
+    		<td>   </td>
+    	</tr>
+    	<s:if test="boList!=null&&boList.size()>0">
+	    	<s:iterator id="bean" value="boList"> 
+	    		<tr>
+	    			<td>${bean.dic_catalog }</td>
+	    			<td>${bean.name }</td>
+	    			<td><a style="cursor:pointer;" onclick="update('sys/getDictionary','bo.id=${bean.id }')">修改</a>||
+	    				<a style="cursor:pointer;" onclick="deleteBo('sys/delDictionary','bo.id=${bean.id }')">删除</a>||
+	    				<a href="sys/getAllDictionaryData?bo.dictionary_catalog=${bean.dic_catalog }" target="_blank">数据编辑</a>
+	    			</td>
+	    		</tr>
+	    	</s:iterator>
+    	</s:if>
+    </table>
+    <br/>
+    <form id="myForm" action="sys/addOrUpdateDictionary" method="POST">
+    	<input type="hidden" value="" id="key" name="bo.id">
+    	<input type="text" id="dic_catalog" name="bo.dic_catalog" >
+    	<input type="text" id="name" name="bo.name" >
+    	<br/>
+    	<input type="button" onclick="save('sys/addOrUpdateDictionary');" value="保存"/>
+    </form>
+    
+  </body>
+</html>

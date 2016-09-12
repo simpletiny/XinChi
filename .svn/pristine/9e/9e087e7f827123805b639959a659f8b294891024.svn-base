@@ -1,0 +1,60 @@
+package seentao.xhsn.sys.dictionary.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsDictionaryBO;
+import seentao.xhsn.bean.HsJobBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.sys.dictionary.dao.IDictionaryDAO;
+import seentao.xhsn.tools.Page;
+
+
+@Repository
+public class DictionaryDAOImpl extends SqlSessionDaoSupport implements IDictionaryDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsDictionaryBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsDictionaryBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsDictionaryBO selectByPrimaryKey(String id) {
+		return (HsDictionaryBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsDictionaryBO> getAllByParam(HsDictionaryBO bo) {
+		List<HsDictionaryBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.selectByPram", bo);
+		return list;
+	}
+
+	@Override
+	public List<HsDictionaryBO> getAllByPage(Page<HsJobBO> page) {
+		List<HsDictionaryBO> list=daoUtil.selectByParam("seentao.xhsn.bean.mappers.HsDictionaryBOMapper.selectByPage", page);
+		return list;
+	}
+	
+}

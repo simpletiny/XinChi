@@ -1,0 +1,44 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsDictionaryDataBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String dictionary_catalog;
+		  
+		 
+		  private java.lang.String dictionary_code;
+		  
+		 
+		  private java.lang.String value;
+		  
+		 
+		  public  java.lang.String getDictionary_catalog() {
+				return dictionary_catalog;
+			}
+			
+			public void setDictionary_catalog( java.lang.String dictionary_catalog) {
+				this.dictionary_catalog = dictionary_catalog;
+			}
+		 
+		  public  java.lang.String getDictionary_code() {
+				return dictionary_code;
+			}
+			
+			public void setDictionary_code( java.lang.String dictionary_code) {
+				this.dictionary_code = dictionary_code;
+			}
+		 
+		  public  java.lang.String getValue() {
+				return value;
+			}
+			
+			public void setValue( java.lang.String value) {
+				this.value = value;
+			}
+	
+
+}

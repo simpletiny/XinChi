@@ -1,0 +1,81 @@
+$(document).ready(function() {
+	//参数1 action地址  
+	//参数2 参数信息 不包括分页参数 
+	//参数3 从第几页开始
+	//参数4 每页记录数
+	
+	fenye('sys/findAllTrade','',1,10);
+});
+
+function saveTrade(formid){
+	document.getElementById(formid).submit();
+}
+
+function editTrade(id){
+	var dataParam = "id=" + id ;
+	var action = "sys/editTrade";
+	$.ajax({
+        url: action,
+        data: dataParam,
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	//handleResponse(data,action,param);
+        	if(data.bo){
+        		var bo = data.bo;
+        		$("#td_" + bo.id).empty();
+        		var content = "<form id='form_" + bo.id + "' action='sys/saveTrade' method='post'>" +
+        				"<input name='bo.id' type='hidden' value='" + bo.id + "' />" +
+        				"<table border=0 cellpadding=0 cellspacing=0>" +
+        				"<tr>" +
+        				"<td>行业名称：<input type='text' name='bo.trade_name' value='" + bo.trade_name + "'/></td>" +
+        				"<td>行业编码：<input type='text' name='bo.trad_code' value='" + bo.trad_code + "'/></td>" +
+        				"<td>行业排序：<input type='text' name='bo.sort' value='" + bo.sort + "'/></td>" +
+        				"<td><input type='button' value='保存' onclick=saveTrade('form_" + bo.id + "')  /></td>" +
+        				"</tr>" +
+        				"</table>" +
+        				"</form>";
+        		$("#td_" + bo.id).append(content);
+        	}
+        },
+        error:function(data){
+        	alert("操作失败，请稍后重试！");
+        }
+	}); 
+}
+
+function handleResponse(data,action,param){
+	$("#content").empty();
+	var html = "<table class='top' border=0 cellpadding=0 cellspacing=0 style='width:100%;line-height:24px;'>" +
+			"		<tr>" +
+			"			<th width='340px'>行业名称</th>" +
+			"			<th width='300px' >行业编码</th>" +
+			"			<th width='300px' >排序</th>" +
+			"			<th colspan='2'>操作</th>" +
+			"		</tr>";
+	$.each(data.trades, function(i, item) {
+		html = html + "<tr>" +
+		"			<td>" + item.trade_name + "</td>" +
+		"			<td>" + item.trad_code + " </td>" +
+		"			<td>" + item.sort + " </td>" +
+		"			<td width='100px'><a href=javascript:editTrade('" + item.id  + "') >编辑</a></td>" +
+		/*"			<td width='100px'><a href=javascript:deleteTrade('" + item.id  + "') >删除</a></td>" +*/
+		"			<td width='100px'>&nbsp;</td>" +
+		"		</tr>" +
+		"		<tr><td colspan='5' width='100%' align='right' id='td_" + item.id  + "'></td></tr>";
+	});
+	html = html + "</table>";
+	$("#content").append(html);
+	appendPage(data.page,action,param);
+}
+
+function deleteTrade(id){
+	$("#delete_id").val(id);
+	document.getElementById("deleteForm").submit();
+}
+
+function addTrade(){
+	$("#div_newTrade").css("display", "block");
+}
+
+

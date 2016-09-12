@@ -1,0 +1,75 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsCollegeResourceBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String college_name;
+		  
+		 
+		  private java.sql.Date graduate_date;
+		  
+		 
+		  private java.lang.String city_code;
+		  
+		  private java.lang.String city_name;
+		 
+		  private java.lang.String product_name;
+		  
+		 
+		  private java.lang.Integer graduate_count;
+		  
+		 
+		  public  java.lang.String getCollege_name() {
+				return college_name;
+			}
+			
+			public void setCollege_name( java.lang.String college_name) {
+				this.college_name = college_name;
+			}
+		 
+		  public  java.sql.Date getGraduate_date() {
+				return graduate_date;
+			}
+			
+			public void setGraduate_date( java.sql.Date graduate_date) {
+				this.graduate_date = graduate_date;
+			}
+		 
+		  public  java.lang.String getCity_code() {
+				return city_code;
+			}
+			
+			public void setCity_code( java.lang.String city_code) {
+				this.city_code = city_code;
+			}
+		 
+		  public  java.lang.String getProduct_name() {
+				return product_name;
+			}
+			
+			public void setProduct_name( java.lang.String product_name) {
+				this.product_name = product_name;
+			}
+		 
+		  public  java.lang.Integer getGraduate_count() {
+				return graduate_count;
+			}
+			
+			public void setGraduate_count( java.lang.Integer graduate_count) {
+				this.graduate_count = graduate_count;
+			}
+
+			public java.lang.String getCity_name() {
+				return city_name;
+			}
+
+			public void setCity_name(java.lang.String city_name) {
+				this.city_name = city_name;
+			}
+	
+
+}

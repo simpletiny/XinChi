@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsUbCompanyBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsUbCompanyBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="user_id" property="user_id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="com_name" property="com_name" jdbcType="VARCHAR" />
+	    <result column="com_address" property="com_address" jdbcType="VARCHAR" />
+	    <result column="begindate" property="begindate" jdbcType="VARCHAR" />
+	    <result column="enddate" property="enddate" jdbcType="VARCHAR" />
+	    <result column="trade_extend" property="trade_extend" jdbcType="VARCHAR" />
+	    <result column="trade_code" property="trade_code" jdbcType="VARCHAR" />
+	    <result column="position_name" property="position_name" jdbcType="VARCHAR" />
+	    <result column="position_code" property="position_code" jdbcType="VARCHAR" />
+	    <result column="position_extend" property="position_extend" jdbcType="VARCHAR" />
+	    <result column="com_size" property="com_size" jdbcType="VARCHAR" />
+	    <result column="com_type" property="com_type" jdbcType="VARCHAR" />
+	    <result column="salary_scope" property="salary_scope" jdbcType="VARCHAR" />
+	    <result column="job_description" property="job_description" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	user_id, 
+    	res_id, 
+    	com_name, 
+    	com_address, 
+    	begindate, 
+    	enddate, 
+    	trade_extend, 
+    	trade_code, 
+    	position_name, 
+    	position_code, 
+    	position_extend, 
+    	com_size, 
+    	com_type, 
+    	salary_scope, 
+    	job_description, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_ub_company
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_ub_company
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsUbCompanyBO" >
+  	
+    insert into hs_ub_company
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="user_id != null">
+	        user_id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="com_name != null">
+	        com_name,
+	      </if>
+	 	<if test="com_address != null">
+	        com_address,
+	      </if>
+	 	<if test="begindate != null">
+	        begindate,
+	      </if>
+	 	<if test="enddate != null">
+	        enddate,
+	      </if>
+	 	<if test="trade_extend != null">
+	        trade_extend,
+	      </if>
+	 	<if test="trade_code != null">
+	        trade_code,
+	      </if>
+	 	<if test="position_name != null">
+	        position_name,
+	      </if>
+	 	<if test="position_code != null">
+	        position_code,
+	      </if>
+	 	<if test="position_extend != null">
+	        position_extend,
+	      </if>
+	 	<if test="com_size != null">
+	        com_size,
+	      </if>
+	 	<if test="com_type != null">
+	        com_type,
+	      </if>
+	 	<if test="salary_scope != null">
+	        salary_scope,
+	      </if>
+	 	<if test="job_description != null">
+	        job_description,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="user_id != null">
+	        #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="com_name != null">
+	        #{com_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_address != null">
+	        #{com_address,jdbcType=VARCHAR},
+	      </if>
+    	<if test="begindate != null">
+	        #{begindate,jdbcType=VARCHAR},
+	      </if>
+    	<if test="enddate != null">
+	        #{enddate,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_extend != null">
+	        #{trade_extend,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_code != null">
+	        #{trade_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_name != null">
+	        #{position_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_code != null">
+	        #{position_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_extend != null">
+	        #{position_extend,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_size != null">
+	        #{com_size,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_type != null">
+	        #{com_type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="salary_scope != null">
+	        #{salary_scope,jdbcType=VARCHAR},
+	      </if>
+    	<if test="job_description != null">
+	        #{job_description,jdbcType=VARCHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsUbCompanyBO" >
+    update hs_ub_company
+    <set >
+    	<if test="user_id != null">
+	        user_id = #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="com_name != null">
+	        com_name = #{com_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_address != null">
+	        com_address = #{com_address,jdbcType=VARCHAR},
+	      </if>
+    	<if test="begindate != null">
+	        begindate = #{begindate,jdbcType=VARCHAR},
+	      </if>
+    	<if test="enddate != null">
+	        enddate = #{enddate,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_extend != null">
+	        trade_extend = #{trade_extend,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_code != null">
+	        trade_code = #{trade_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_name != null">
+	        position_name = #{position_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_code != null">
+	        position_code = #{position_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_extend != null">
+	        position_extend = #{position_extend,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_size != null">
+	        com_size = #{com_size,jdbcType=VARCHAR},
+	      </if>
+    	<if test="com_type != null">
+	        com_type = #{com_type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="salary_scope != null">
+	        salary_scope = #{salary_scope,jdbcType=VARCHAR},
+	      </if>
+    	<if test="job_description != null">
+	        job_description = #{job_description,jdbcType=VARCHAR},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByPram" parameterType="seentao.xhsn.bean.HsUbCompanyBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_ub_company
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

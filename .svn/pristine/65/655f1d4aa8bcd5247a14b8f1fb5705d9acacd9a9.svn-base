@@ -1,0 +1,77 @@
+$(document).ready(function(){
+	switchTab(3);
+		$(" body").click(function(){
+			$("#selectbox").hide();
+		});
+		$("#title_value").click(function(e){
+			if($("#selectbox").css("display")=="none")
+				$("#selectbox").show();
+			else
+				$("#selectbox").hide();
+			e.stopPropagation();//阻止冒泡到body
+		});
+
+		$("#other_title").bind('input propertychange', function() {
+			if($("#other_title").val().length>10){
+				$("#tip").text("超过字数限制！");
+				$("#other_title").val($("#other_title").val().substring(0,10));
+			}
+			if($("#other_title").val().length<10){
+				$("#tip").text("");
+			}
+		}); 
+		
+		$("#description").bind('input propertychange', function() {
+			if($("#description").val().length>500){
+				$("#destip").text("超过字数限制！");
+				$("#description").val($("#description").val().substring(0,500));
+			}
+			if($("#description").val().length<500){
+				$("#destip").text("");
+			}
+		}); 
+})
+
+
+function pick(code,value) {
+	$("#title_value").val(value);
+ $("#title").val(code);
+ $("#selectbox").hide();
+ if(value=='其他'){
+		$("#other_title").css("display","block");
+	}else{
+		$("#other_title").css("display","none");
+	}
+}
+
+function handleUpdateResponse(data){
+	$("#key").val(data.bo.id);
+	 $("#title").val(data.bo.title);
+	 $("#description").val(data.bo.description);
+	 $("#title_value").val(data.bo.title_value);
+	 if(data.bo.title_value=='其他'){
+			$("#other_title").css("display","block");
+		}else{
+			$("#other_title").css("display","none");
+		}
+	 $("#other_title").val(data.bo.other_title);
+	}
+
+function validate(){
+	if($("#title").val().length==0){
+		$("#errorTip").text("标题不能为空！");
+		return false;
+	}
+	if ($("#title").val() == '99'&&$("#other_title").val().length == 0) {
+		$("#errorTip").text("请输入其他标题！");
+		return false;
+	}
+	if($("#description").val().length==0){
+		$("#errorTip").text("描述不能为空！");
+		return false;
+	}
+	if ($("#title").val() != '99') {
+		$("#other_title").val("");
+	}
+	return true;
+}

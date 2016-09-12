@@ -1,0 +1,69 @@
+package seentao.xhsn.regist.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.common.SupperBO;
+import seentao.xhsn.regist.dao.IRegistDao;
+
+
+@Repository
+public class RegistDaoImpl extends SqlSessionDaoSupport implements IRegistDao {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	public SupperBO getBoById(String id) {
+		SupperBO bo = daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsUserBOMapper.selectByPrimaryKey", id);
+		return bo;
+	}
+
+	public String insert(HsUserBO bo) {
+		String pk = daoUtil.insertBO("seentao.xhsn.bean.mappers.HsUserBOMapper.insert", bo);
+		return pk;
+	}
+
+	@Override
+	public List<HsUserBO> findUserByParam(HsUserBO bo) {
+		HsUserBO param = new HsUserBO();
+		//param.setUser_name(bo.getUser_email());
+		param.setUser_email(bo.getUser_email());
+		param.setUser_type(bo.getUser_type());
+		return daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsUserBOMapper.selectByPram", param);
+	}
+
+	@Override
+	public HsUserBO getUserByIdentityCard(String identitycard) {
+		HsUserBO param = new HsUserBO();
+		param.setIdentity_card(identitycard);
+		return daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsUserBOMapper.selectByPram", param);
+	}
+
+	@Override
+	public int update(HsUserBO bo) {
+		return daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsUserBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public HsUserBO getUserByEamil(String user_email,Integer user_type) {
+		HsUserBO param = new HsUserBO();
+		param.setUser_email(user_email);
+		param.setUser_type(user_type);
+		return daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsUserBOMapper.selectByPram", param);
+	}
+	
+	
+}

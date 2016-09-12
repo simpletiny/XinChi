@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsEtpReleasejobBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="com_id" property="com_id" jdbcType="CHAR" />
+		<result column="company_name" property="company_name" jdbcType="VARCHAR" />
+		<result column="rel_name" property="rel_name" jdbcType="VARCHAR" />
+		<result column="rel_createtime" property="rel_createtime" jdbcType="TIMESTAMP" />
+		<result column="rel_edittime" property="rel_edittime" jdbcType="TIMESTAMP" />
+		<result column="job_id" property="job_id" jdbcType="VARCHAR" />
+		<result column="trade_id" property="trade_id" jdbcType="VARCHAR" />
+		<result column="rel_property" property="rel_property" jdbcType="VARCHAR" />
+		<result column="rel_endtime" property="rel_endtime" jdbcType="VARCHAR" />
+		<result column="rel_number" property="rel_number" jdbcType="VARCHAR" />
+		<result column="rel_description" property="rel_description" jdbcType="VARCHAR" />
+		<result column="salary_code" property="salary_code" jdbcType="VARCHAR" />
+		<result column="education_code" property="education_code" jdbcType="VARCHAR" />
+		<result column="rel_deal" property="rel_deal" jdbcType="VARCHAR" />
+		<result column="exp_id" property="exp_id" jdbcType="VARCHAR" />
+		<result column="qua_id" property="qua_id" jdbcType="VARCHAR" />
+		<result column="lan_id" property="lan_id" jdbcType="VARCHAR" />
+		<result column="rel_count" property="rel_count" jdbcType="VARCHAR" />
+		<result column="linkman_email" property="linkman_email" jdbcType="VARCHAR" />
+		<result column="county_code" property="county_code" jdbcType="VARCHAR" />
+ 		<result column="rel_status" property="rel_status" jdbcType="CHAR" />		
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		com_id,
+		rel_name,
+		rel_createtime,
+		rel_edittime,
+		job_id,
+		trade_id,
+		rel_property,
+		rel_endtime,
+		rel_number,
+		rel_description,
+		salary_code,
+		education_code,
+		rel_deal,
+		exp_id,
+		qua_id,
+		lan_id,
+		rel_count,
+		linkman_email,
+		county_code,
+		company_name,
+		rel_status, 
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_etp_releasejob
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from hs_etp_releasejob
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsEtpReleasejobBO">
+
+		insert into hs_etp_releasejob
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="com_id != null">
+				com_id,
+			</if>
+			<if test="rel_name != null">
+				rel_name,
+			</if>
+			<if test="rel_createtime != null">
+				rel_createtime,
+			</if>
+			<if test="rel_edittime != null">
+				rel_edittime,
+			</if>
+			<if test="job_id != null">
+				job_id,
+			</if>
+			<if test="trade_id != null">
+				trade_id,
+			</if>
+			<if test="rel_property != null">
+				rel_property,
+			</if>
+			<if test="rel_endtime != null">
+				rel_endtime,
+			</if>
+			<if test="rel_number != null">
+				rel_number,
+			</if>
+			<if test="rel_description != null">
+				rel_description,
+			</if>
+			<if test="salary_code != null">
+				salary_code,
+			</if>
+			<if test="education_code != null">
+				education_code,
+			</if>
+			<if test="rel_deal != null">
+				rel_deal,
+			</if>
+			<if test="exp_id != null">
+				exp_id,
+			</if>
+			<if test="qua_id != null">
+				qua_id,
+			</if>
+			<if test="lan_id != null">
+				lan_id,
+			</if>
+			<if test="rel_count != null">
+				rel_count,
+			</if>
+			<if test="linkman_email != null">
+				linkman_email,
+			</if>
+			<if test="county_code != null">
+				county_code,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+			<if test="company_name != null">
+				company_name,
+			</if>
+			<if test="rel_status != null">
+				rel_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="com_id != null">
+				#{com_id,jdbcType=CHAR},
+			</if>
+			<if test="rel_name != null">
+				#{rel_name,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_createtime != null">
+				#{rel_createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rel_edittime != null">
+				#{rel_edittime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="job_id != null">
+				#{job_id,jdbcType=VARCHAR},
+			</if>
+			<if test="trade_id != null">
+				#{trade_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_property != null">
+				#{rel_property,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_endtime != null">
+				#{rel_endtime,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_number != null">
+				#{rel_number,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_description != null">
+				#{rel_description,jdbcType=VARCHAR},
+			</if>
+			<if test="salary_code != null">
+				#{salary_code,jdbcType=VARCHAR},
+			</if>
+			<if test="education_code != null">
+				#{education_code,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_deal != null">
+				#{rel_deal,jdbcType=VARCHAR},
+			</if>
+			<if test="exp_id != null">
+				#{exp_id,jdbcType=VARCHAR},
+			</if>
+			<if test="qua_id != null">
+				#{qua_id,jdbcType=VARCHAR},
+			</if>
+			<if test="lan_id != null">
+				#{lan_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_count != null">
+				#{rel_count,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman_email != null">
+				#{linkman_email,jdbcType=VARCHAR},
+			</if>
+			<if test="county_code != null">
+				#{county_code,jdbcType=VARCHAR},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+			<if test="company_name != null">
+				#{company_name,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_status != null">
+				#{rel_status,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsEtpReleasejobBO">
+		update hs_etp_releasejob
+		<set>
+			<if test="com_id != null">
+				com_id = #{com_id,jdbcType=CHAR},
+			</if>
+			<if test="rel_name != null">
+				rel_name = #{rel_name,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_createtime != null">
+				rel_createtime = #{rel_createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rel_edittime != null">
+				rel_edittime = #{rel_edittime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="job_id != null">
+				job_id = #{job_id,jdbcType=VARCHAR},
+			</if>
+			<if test="trade_id != null">
+				trade_id = #{trade_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_property != null">
+				rel_property = #{rel_property,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_endtime != null">
+				rel_endtime = #{rel_endtime,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_number != null">
+				rel_number = #{rel_number,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_description != null">
+				rel_description = #{rel_description,jdbcType=VARCHAR},
+			</if>
+			<if test="salary_code != null">
+				salary_code = #{salary_code,jdbcType=VARCHAR},
+			</if>
+			<if test="education_code != null">
+				education_code = #{education_code,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_deal != null">
+				rel_deal = #{rel_deal,jdbcType=VARCHAR},
+			</if>
+			<if test="exp_id != null">
+				exp_id = #{exp_id,jdbcType=VARCHAR},
+			</if>
+			<if test="qua_id != null">
+				qua_id = #{qua_id,jdbcType=VARCHAR},
+			</if>
+			<if test="lan_id != null">
+				lan_id = #{lan_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_count != null">
+				rel_count = #{rel_count,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman_email != null">
+				linkman_email = #{linkman_email,jdbcType=VARCHAR},
+			</if>
+			<if test="county_code != null">
+				county_code = #{county_code,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+			<if test="company_name != null">
+				company_name = #{company_name,jdbcType=VARCHAR},
+			</if>
+			<if test="rel_status != null">
+				rel_status = #{rel_status,jdbcType=CHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<select id="selectByParamByPage" parameterType="seentao.xhsn.tools.Page"
+		resultMap="BaseResultMap">
+		select
+		job.id,job.create_time, job.creater, job.modifier, job.com_id, job.rel_name, job.rel_createtime, 
+		job.rel_edittime, job.job_id, job.trade_id, job.rel_property, job.rel_endtime, job.rel_number, 
+		job.rel_description, job.salary_code, job.education_code, job.rel_deal, job.exp_id, 
+		job.qua_id, job.lan_id, job.rel_count, job.linkman_email, job.county_code, 
+		ent.ent_name, job.rel_status, job.modify_time 
+		from hs_etp_releasejob job left join hs_enterprise ent on job.com_id = ent.id
+		<where>
+			<if test="params.bo.keyword != null and params.bo.keyword != ''">
+				(job.rel_name like CONCAT('%',#{params.bo.keyword,jdbcType=VARCHAR},'%')  
+				or ent.ent_name like CONCAT('%',#{params.bo.keyword,jdbcType=VARCHAR},'%')  ) 
+			</if>
+			<if test="params.bo.county_code != null and params.bo.county_code != ''">
+				and <foreach collection="params.bo.county_code_list" index="index" item="code" open="("
+				    separator="or" close=")">
+				   job.county_code like CONCAT('%',${code},'%')  
+				</foreach>
+				<!-- and county_code = #{params.bo.county_code,jdbcType=VARCHAR} -->
+			</if>
+			<if test="params.bo.job_id != null and params.bo.job_id != ''">
+				and <foreach collection="params.bo.job_id_list" index="index" item="code" open="("
+				    separator="or" close=")">
+				   job.job_id like CONCAT('%',${code},'%')  
+				</foreach>
+				<!-- and job_id = #{params.bo.job_id,jdbcType=VARCHAR} -->
+			</if>
+			<if test="params.bo.trade_id != null and params.bo.trade_id != ''">
+				and <foreach collection="params.bo.trade_id_list" index="index" item="code" open="("
+				    separator="or" close=")">
+				   job.trade_id like CONCAT('%',${code},'%')  
+				</foreach>
+				<!-- and trade_id = #{params.bo.trade_id,jdbcType=VARCHAR} -->
+			</if>
+			<if test="params.bo.com_id!=null and params.bo.com_id!=''">
+				and job.com_id = #{params.bo.com_id,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.rel_status!=null and params.bo.rel_status!=''">
+				and job.rel_status = #{params.bo.rel_status,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.salary_code != null and params.bo.salary_code != ''">
+				and job.salary_code = #{params.bo.salary_code,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.rel_property != null and params.bo.rel_property != ''">
+				and job.rel_property = #{params.bo.rel_property,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by rel_createtime desc
+	</select>
+	<select id="selectRecommendedJobByPage" resultMap="BaseResultMap"
+		parameterType="seentao.xhsn.bean.HsEtpReleasejobBO">
+		select
+		<include refid="Base_Column_List" />
+		from hs_etp_releasejob
+		<where>
+			id NOT IN (SELECT job_id FROM hs_putresume)
+			<if test="params.bo.job_id!=null">
+				and job_id REGEXP CONCAT('(',REPLACE(#{params.bo.job_id,jdbcType=VARCHAR},',','|'),')')
+			</if>
+			<if test="params.bo.county_code!=null">
+				and county_code REGEXP CONCAT('(',REPLACE(#{params.bo.county_code,jdbcType =VARCHAR},',','|'),')')
+			</if>
+		</where>
+		order by salary_code desc
+	</select>
+</mapper>

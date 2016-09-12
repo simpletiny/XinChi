@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 发布职位信息
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_project_id" value="{{ projectId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>发布职位信息<a href="/projects/{{ projectId }}/job" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="form-all">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat required">
+                    <label class="l">职位名称</label>
+                    <div class="ip"><input type="text" class="ip-default" data-bind="value: job().jobName" placeholder="职位名称" name="jobName" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作城市</label>
+                    <div class="ip"><select class="form-control" data-bind="options: cities, optionsCaption: '-- 请选择 --', value: job().city" name="city" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作地点</label>
+                    <div class="ip"><input type="text" class="ip-" data-bind="value: job().workingLocation" placeholder="地区选择" name="workingLocation" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">月薪范围</label>
+                    <div class="ip"><input type="text" class="ip-default" style="width: 40%" data-bind="value: job().minSalary" name="minSalary" placeholder="如:5" required="required"/>K-<input type="text" class="ip-default" style="width: 40%" data-bind="value: job().maxSalary" name="maxSalary" placeholder="如:10" required="required"/>K</div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作性质</label>
+                    <div class="ip"><select class="form-control" data-bind="options: allJobCategorys, optionsCaption: '-- 请选择 --', value: job().jobCategory" name="jobCategory" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">学历要求</label>
+                    <div class="ip"><select class="form-control" data-bind="options: allDegree, optionsCaption: '-- 请选择 --', value: job().degree" name="degree" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作年限</label>
+                    <div class="ip"><select class="form-control" data-bind="options: allWorkingYear, optionsCaption: '-- 请选择 --', value: job().workingYear" name="workingYear" required="required"></select></div>
+                </div>
+                <!--<div class="input-row clearfloat required">-->
+                    <!--<label class="l">面试类型</label>-->
+                    <!--<div class="ip"><select class="form-control" data-bind="options: interviewTypes, optionsCaption: '&#45;&#45; 请选择 &#45;&#45;', value: job().interviewType" name="interviewType" required="required"></select></div>-->
+                <!--</div>-->
+                <!--<div class="input-row clearfloat required">-->
+                    <!--<label class="l">职位类别</label>-->
+                    <!--<div class="ip">-->
+                        <!--<div data-bind="foreach: allJobTypes">-->
+                            <!--<em class="small-box">-->
+                                <!--<input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.job().jobTypes" name="jobTypes" required="required"/><label data-bind="text: $data"></label>-->
+                            <!--</em>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="input-row clearfloat required">-->
+                    <!--<label class="l">职位标签</label>-->
+                    <!--<div class="ip" style="padding-top: 4px;">-->
+                        <!--<div data-bind="foreach: allJobTags">-->
+                            <!--<em class="small-box">-->
+                                <!--<input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.job().tags" name="jobTags" required="required"/><label data-bind="text: $data"></label>-->
+                            <!--</em>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="input-row clearfloat required">
+                    <label class="l">职位序列</label>
+                    <div class="ip"><input type="number" min="1" class="ip-" data-bind="value: job().sequenceNumber" placeholder="职位序列" name="sequenceNumber" required="required"/></div>
+                </div>
+                <!--<div class="input-row clearfloat required">-->
+                    <!--<label class="l">预约截止日期</label>-->
+                    <!--<div class="ip"><input type="text" class="ip- datetime-picker" data-bind="value: job().deadline" placeholder="年-月-日" name="deadline" required="required"/></div>-->
+                <!--</div>-->
+
+                <!--<div class="input-row clearfloat required">-->
+                    <!--<label class="l">面试日期</label>-->
+                    <!--<div class="ip"><input type="text" class="ip- date-picker" data-bind="value: job().interviewDate" placeholder="年-月-日" name="deadline" required="required"/></div>-->
+                <!--</div>-->
+                <!--<div class="input-row clearfloat">-->
+                    <!--<label class="l">面试时间段</label>-->
+                    <!--<div class="ip">-->
+                        <!--<div data-bind="foreach: interviewTimeSlots">-->
+                            <!--<em class="small-box">-->
+                                <!--<input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.job().interviewTimeSlots"/><label data-bind="text: $data" name="interviewTimeSlots"></label>-->
+                            <!--</em>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="input-row clearfloat required">
+                    <label class="l">时段开始时间</label>
+                    <div class="ip"><input type="text" class="ip- datetime-picker" data-bind="value: job().signInStartTime" placeholder="年-月-日 时:分" name="signInStartTime" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">时段结束时间</label>
+                    <div class="ip"><input type="text" class="ip- datetime-picker" data-bind="value: job().signInEndTime" placeholder="年-月-日 时:分" name="signInEndTime" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">已添加时段</label>
+                    <div class="ip" style="height: 100px;"><input type="text" class="ip-" style="height: 100px;" data-bind="value: job().interviewTimeSlots" readonly/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">面试地址</label>
+                    <div class="ip"><input type="text" class="ip-" data-bind="value: job().interviewLocation" placeholder="面试地址" name="interviewLocation"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">发布状态</label>
+                    <div class="ip"><select class="form-control" data-bind="options: publishStatus, optionsCaption: '-- 请选择 --', value: job().publishStatus" name="publishStatus" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">工作内容</label>
+                    <div class="ip"><textarea  class="ckeditor ip-default" rows="5" data-bind="richText: job().content" name="content" placeholder="需支持富文本编辑"></textarea></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">招聘标准</label>
+                    <div class="ip"><textarea class="ckeditor ip-default" rows="5" data-bind="richText: job().criteria" name="criteria" placeholder="需支持富文本编辑"></textarea></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">薪资福利诱惑</label>
+                    <div class="ip"><textarea class="ckeditor ip-default" rows="5" data-bind="richText: job().jobTemptation" name="jobTemptation" placeholder="需支持富文本编辑"></textarea></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">晋升通道</label>
+                    <div class="ip"><textarea class="ckeditor ip-default" rows="5" data-bind="richText: job().promotion" name="promotion" placeholder="需支持富文本编辑"></textarea></div>
+                </div>
+            </form>
+
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: updateJob">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".projects").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/vendor/ckeditor/ckeditor.js"></script>
+  <script src="/static/vendor/ckeditor/adapters/jquery.js"></script>
+  <script src="/static/js/projects/job-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

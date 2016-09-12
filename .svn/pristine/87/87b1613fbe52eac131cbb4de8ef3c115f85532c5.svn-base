@@ -1,0 +1,76 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+
+import seentao.xhsn.common.SupperBO;
+
+public class HsEvaluateBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String user_id;
+
+	private java.lang.String res_id;
+
+	private java.lang.String title;
+
+	private java.lang.String title_code;
+	
+	private String title_code_value;
+
+	private java.lang.String content;
+
+	public HsEvaluateBO(){
+		setTable_name("hs_evaluate");
+	}
+	
+	public java.lang.String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(java.lang.String user_id) {
+		this.user_id = user_id;
+	}
+
+	public java.lang.String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(java.lang.String res_id) {
+		this.res_id = res_id;
+	}
+
+	public java.lang.String getTitle() {
+		return title;
+	}
+
+	public void setTitle(java.lang.String title) {
+		this.title = title;
+	}
+
+	public java.lang.String getTitle_code() {
+		return title_code;
+	}
+
+	public void setTitle_code(java.lang.String title_code) {
+		this.title_code = title_code;
+	}
+
+	public java.lang.String getContent() {
+		return content;
+	}
+
+	public void setContent(java.lang.String content) {
+		this.content = content;
+	}
+
+	public String getTitle_code_value() {
+		return title_code_value;
+	}
+
+	public void setTitle_code_value(String title_code_value) {
+		this.title_code_value = title_code_value;
+	}
+	
+	
+
+}

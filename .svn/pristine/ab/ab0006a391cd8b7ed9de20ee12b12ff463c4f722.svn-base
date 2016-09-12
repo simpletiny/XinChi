@@ -1,0 +1,68 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+pageContext.setAttribute("basePath", basePath);
+%>
+	<div>
+			<table style="border:1px solid #7E9CF7;border-collapse:collapse;background-color: #D9E2FD">
+				<tr>
+					<th style="width:200px;border:1px solid #7E9CF7">名称</th>
+					<th style="width:100px;border:1px solid #7E9CF7">编码</th>
+					<th style="width:100px;border:1px solid #7E9CF7">排序号</th>
+					<th style="width:120px;border:1px solid #7E9CF7">操作</th>
+					<th style="width:200px;border:1px solid #7E9CF7">名称</th>
+					<th style="width:100px;border:1px solid #7E9CF7">编码</th>
+					<th style="width:100px;border:1px solid #7E9CF7">排序号</th>
+					<th style="width:120px;border:1px solid #7E9CF7">操作</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:300px;overflow: auto;width:1100px">
+<table  style="border:1px solid;border-collapse:collapse">
+				<s:iterator value="smallMajorList" id="major" status="no">
+				<s:if test="#no.Odd">
+				<tr>
+					<td style="width:200px;border:1px solid #7E9CF7;">
+						<s:property value="#major.name"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;">
+						<s:property value="#major.code"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;">
+						<s:property value="#major.sort_no"/>
+					</td>
+					<td style="width:120px;border:1px solid #7E9CF7;">
+						<span style="cursor:pointer;color:blue" onclick="deleteMajor(this)">删除</span>
+						&nbsp;&nbsp;
+						<span style="cursor:pointer;color:blue" onclick="editMajor(this)">编辑</span>
+					</td>
+					<td style="display:none">
+						<s:property value="#major.id"/>
+					</td>
+				</s:if>
+				<s:else>
+						<td style="width:200px;border:1px solid #7E9CF7;">
+						<s:property value="#major.name"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;">
+						<s:property value="#major.code"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;">
+						<s:property value="#major.sort_no"/>
+					</td>
+					<td style="width:120px;border:1px solid #7E9CF7;">
+						<span style="cursor:pointer;color:blue" onclick="deleteMajor(this)">删除</span>
+						&nbsp;&nbsp;
+						<span style="cursor:pointer;color:blue" onclick="editMajor(this)">编辑</span>
+					</td>
+					<td style="display:none">
+						<s:property value="#major.id"/>
+					</td>
+				</tr>
+				</s:else>
+		
+				</s:iterator>
+			</table>
+		</div>

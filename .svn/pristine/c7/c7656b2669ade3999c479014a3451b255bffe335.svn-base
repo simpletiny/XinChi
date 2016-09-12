@@ -1,0 +1,86 @@
+package seentao.xhsn.person.put.action;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.person.put.service.IPutResumeService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * @author wjx
+ * @date 2014年12月5日 下午2:02:04
+ * @note 投放简历action
+ */
+@Controller
+@Scope("prototype")
+public class PutResumeAction extends ActionSupport {
+
+	private static final long serialVersionUID = -2234693722225943914L;
+
+	@Autowired
+	private IPutResumeService putService;
+
+	private String res_id;
+	private String job_id;
+	private String job_ids;
+	private int put_count;
+
+	/**
+	 * 申请职位（批量投放简历）
+	 * 
+	 * @return
+	 */
+	public String putResumes() {
+		put_count = putService.putResumeByParam(res_id, job_ids.split(","));
+		return "SUCCESS";
+	}
+
+	/**
+	 * 申请职位（单独投放简历）
+	 * 
+	 * @return
+	 */
+	public String putResume() {
+		put_count = putService.putResumeByParam(res_id, job_id);
+		return "SUCCESS";
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getJob_id() {
+		return job_id;
+	}
+
+	public void setJob_id(String job_id) {
+		this.job_id = job_id;
+	}
+
+	public String getJob_ids() {
+		return job_ids;
+	}
+
+	public void setJob_ids(String job_ids) {
+		this.job_ids = job_ids;
+	}
+
+	public int getPut_count() {
+		return put_count;
+	}
+
+	public void setPut_count(int put_count) {
+		this.put_count = put_count;
+	}
+	
+	
+}

@@ -1,0 +1,47 @@
+package seentao.xhsn.enterprise.collegeresource.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsCollegeResourceBO;
+
+/**
+ * @Description:院校人才发布操作DAO接口
+ * @author niushixing 2015-1-6 13:55:44
+ */
+public interface ICollegeResourceDAO {
+
+	/**
+	 * 新增
+	 * 
+	 * @param bo
+	 */
+	public void insert(HsCollegeResourceBO bo);
+
+	/**
+	 * 修改
+	 * 
+	 * @param bo
+	 */
+	public void update(HsCollegeResourceBO bo);
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 */
+	public void delete(String id);
+
+	/**
+	 * 根据主键查找
+	 * 
+	 * @param id
+	 */
+	public HsCollegeResourceBO selectByPrimaryKey(String id);
+
+	/**
+	 * 根据条件查找
+	 * 
+	 * @param bo
+	 */
+	public List<HsCollegeResourceBO> getAllByParam(HsCollegeResourceBO bo);
+}

@@ -1,0 +1,55 @@
+package seentao.xhsn.person.center.bean;
+
+/**
+ * 投放简历展示用bean
+ * 
+ * @author niushixing 2014-12-10 下午1:09:25
+ * 
+ */
+public class PutResumeBean {
+	private String putDate;
+	private String jobName;
+	private String comName;
+	private String jobArea;
+	private String resName;
+
+	public String getPutDate() {
+		return putDate;
+	}
+
+	public void setPutDate(String putDate) {
+		this.putDate = putDate;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public String getComName() {
+		return comName;
+	}
+
+	public void setComName(String comName) {
+		this.comName = comName;
+	}
+
+	public String getJobArea() {
+		return jobArea;
+	}
+
+	public void setJobArea(String jobArea) {
+		this.jobArea = jobArea;
+	}
+
+	public String getResName() {
+		return resName;
+	}
+
+	public void setResName(String resName) {
+		this.resName = resName;
+	}
+}

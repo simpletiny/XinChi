@@ -1,0 +1,52 @@
+package seentao.xhsn.fusioncharts.dateset;
+
+import java.beans.PropertyDescriptor;
+
+import org.apache.commons.beanutils.PropertyUtils;
+
+import seentao.xhsn.fusioncharts.element.GraphElement;
+import seentao.xhsn.fusioncharts.element.SetElement;
+
+import com.thoughtworks.xstream.XStream;
+
+/**
+ * @Description:报表数据源	
+ * @author 李君彦
+ * @date 2014-11-27 下午4:54:21 
+ * @version V1.0   
+ */
+public abstract class ModelDateSet {
+
+	/**
+	 * 获取业务数据何报表信息数据
+	 * @return
+	 */
+	public abstract GraphElement getData();
+	
+	/**
+	 * 将业务数据转换为xml
+	 * @param graph
+	 * @return
+	 */
+	public String convertDataToXml(GraphElement graph) {
+		XStream xstream = new XStream();
+		xstream.alias("graph", GraphElement.class);
+		xstream.alias("set", SetElement.class);
+
+		PropertyDescriptor[] beans = PropertyUtils
+				.getPropertyDescriptors(GraphElement.class);
+		for (PropertyDescriptor bean : beans) {
+			if (bean.getName().equals("class"))
+				continue;
+			xstream.useAttributeFor(GraphElement.class, bean.getName());
+		}
+		beans = PropertyUtils.getPropertyDescriptors(SetElement.class);
+		for (PropertyDescriptor bean : beans) {
+			if (bean.getName().equals("class"))
+				continue;
+			xstream.useAttributeFor(SetElement.class, bean.getName());
+		}
+		xstream.addImplicitCollection(GraphElement.class, "list");
+		return xstream.toXML(graph);
+	}
+}

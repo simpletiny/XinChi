@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 查看职位信息
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_project_id" value="{{ projectId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>职位描述<a href="/projects/{{ projectId }}/detail" class="cancel-create">返回</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div align="right" style="padding-bottom: 10px;"><a href="/projects/{{ projectId }}/job/edit" class="btn btn-green btn-r">编辑</a></div>
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                  <div class="col-md-6">
+                    <label class="l">职位名称</label>
+                    <div class="ip"><p class="ip-default" data-bind="text: job().jobName"></p></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="l">工作性质</label>
+                    <div class="ip"><p class="ip-default" data-bind="text: job().jobCategory"></p></div>
+                  </div>
+                  <!--<div class="col-md-6">-->
+                    <!--<label class="l">职位类别</label>-->
+                    <!--<div class="ip"><p class="ip-default" data-bind="text: job().jobTypes"></p></div>-->
+                  <!--</div>-->
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">工作地点</label>
+                        <div class="ip"><p class="ip-" data-bind="text: job().workingLocation"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">工作城市</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: job().city"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                  <!--<div class="col-md-6">-->
+                    <!--<label class="l">职位标签</label>-->
+                    <!--<div class="ip"><p class="ip-default" data-bind="text: job().tags"></p></div>-->
+                  <!--</div>-->
+
+                <div class="col-md-6">
+                    <label class="l">工作年限</label>
+                    <div class="ip"><p class="ip-default" data-bind="text: job().workingYear"></p></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="l">职位序列</label>
+                    <div class="ip"><p class="ip-" data-bind="text: job().sequenceNumber"></p></div>
+                  </div>
+                </div>
+
+                <!--<div class="input-row clearfloat">-->
+                    <!--<div class="col-md-6">-->
+                        <!--<label class="l">预约截止日期</label>-->
+                        <!--<div class="ip"><p class="ip-" data-bind="text: job().deadline"></p></div>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-6">-->
+                        <!--<label class="l">面试类型</label>-->
+                        <!--<div class="ip"><p class="ip-default" data-bind="text: job().interviewType"></p></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="input-row clearfloat">-->
+                    <!--<div class="col-md-6">-->
+                        <!--<label class="l">面试日期</label>-->
+                        <!--<div class="ip"><p class="ip-default" data-bind="text: job().interviewDate"></p></div>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-6">-->
+                        <!--<label class="l">面试时间段</label>-->
+                        <!--<div class="ip"><p class="ip-" data-bind="text: job().interviewTimeSlots"></p></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">预约开始时段</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: job().signInStartTime"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">预约结束时段</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: job().signInEndTime"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">薪资</label>
+                        <div class="ip"><p class="ip-default" style="width: 10%;display: inline-block;" data-bind="text: job().minSalary"></p>K-<p class="ip-default" style="width: 10%;display: inline-block;" data-bind="text: job().maxSalary"></p>K</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">面试地址</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: job().interviewLocation"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                      <label class="l">工作内容</label>
+                      <div class="ip"><p class="ip-default" data-bind="html: job().content"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">发布状态</label>
+                        <div class="ip"><p class="ip-default" data-bind="html: job().publishStatus"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                  <div class="col-md-12">
+                    <label class="l">招聘标准</label>
+                    <div class="ip"><p class="ip-default" data-bind="html: job().criteria"></p></div>
+                  </div>
+                </div>
+                <div class="input-row clearfloat">
+                  <div class="col-md-12">
+                    <label class="l">薪资福利</label>
+                    <div class="ip"><p class="ip-default" data-bind="html: job().jobTemptation"></p></div>
+                  </div>
+                </div>
+                <div class="input-row clearfloat">
+                  <div class="col-md-12">
+                    <label class="l">晋升通道</label>
+                    <div class="ip"><p class="ip-default" data-bind="html: job().promotion"></p></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".projects").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/vendor/ckeditor/ckeditor.js"></script>
+  <script src="/static/vendor/ckeditor/adapters/jquery.js"></script>
+  <script src="/static/js/projects/job-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

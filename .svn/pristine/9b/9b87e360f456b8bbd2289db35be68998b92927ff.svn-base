@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="enterprise" extends="default" namespace="/enterprise">
+		<!-- 企业首页初始化 -->
+		<action name="entIndexInit" class="entIndexAction" method="init">
+			<result name="success">index/index.jsp</result>
+		</action>
+		<!-- 企业信息初始化 -->
+		<action name="companyInfoInit" class="infoAction" method="init">
+			<result name="success">info/companyinfo.jsp</result>
+			<result name="input">info/edit.jsp</result>
+			<result name="error">../404.jsp</result>
+		</action>
+		<!-- 保存编辑的企业信息 -->
+		<action name="saveEdit" class="infoAction" method="update">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 上传企业logo -->
+		<action name="entLogoUpload" class="infoAction" method="entLogoUpload">
+		</action>
+
+		<!-- 企业职位管理页面初始化 -->
+		<action name="manageJobInit" class="manageJobAction" method="init">
+			<result name="success">managejob/manage_job.jsp</result>
+		</action>
+		<!-- 搜寻职位列表 -->
+		<action name="findJobList" class="manageJobAction" method="findJobList">
+			<result name="success">managejob/${target}.jsp</result>
+		</action>
+		<!-- 删除职位 -->
+		<action name="deleteJob" class="manageJobAction" method="delete">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 结束职位 -->
+		<action name="endJob" class="manageJobAction" method="end">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 刷新职位 -->
+		<action name="refreshJob" class="manageJobAction" method="refresh">
+			<result name="success">managejob/refresh.jsp</result>
+		</action>
+		<!--发布职位 -->
+		<action name="publishJob" class="manageJobAction" method="publish">
+			<result name="success" type="json"></result>
+		</action>
+		<!--取得收到的某项单个工作的简历 -->
+		<action name="getReceivedResume" class="manageJobAction" method="getReceivedResume">
+			<result name="success">managejob/received_resume.jsp</result>
+		</action>
+		<action name="getReceivedResumeSub" class="manageJobAction" method="getReceivedResumeSub">
+			<result name="success">managejob/received.jsp</result>
+		</action>
+		<!-- 企业发布职位页面初始化 -->
+		<action name="releaseJobInit" class="releaseJobAction" method="init">
+			<result name="success">newjob/new_job.jsp</result>
+		</action>
+		<action name="saveJob" class="releaseJobAction" method="saveJob">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 企业简历管理页面初始化 -->
+		<action name="manageResumeInit" class="manageResumeAction"
+			method="init">
+			<result name="success">manageresume/manage_resume.jsp</result>
+		</action>
+		<!-- 搜索企业用简历 -->
+		<action name="findJobListForEnt" class="manageResumeAction"
+			method="search">
+			<result name="success">manageresume/${target}.jsp</result>
+		</action>
+		<!-- 批量发送面试通知 -->
+		<action name="sendInforms" class="manageResumeAction" method="sendInforms">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 批量收藏简历 -->
+		<action name="storeResumes" class="manageResumeAction" method="storeResumes">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 批量关注简历 -->
+		<action name="followResumes" class="manageResumeAction" method="followResumes">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 取消关注简历 -->
+		<action name="cancelFollowResume" class="manageResumeAction" method="cancelFollowResume">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 企业端预览简历 -->
+		<action name="viewResume" class="manageResumeAction" method="viewResume">
+			<result name="success">../person/resume/resumeReview.jsp</result>
+		</action>
+
+		<!-- 企业发送面试通知页面初始化 -->
+		<action name="sendInformInit" class="sendInformAction" method="init">
+			<result name="SUCCESS">sendInform/sendinform.jsp</result>
+		</action>
+		<!-- 企业发送面试通知 -->
+		<action name="sentInterviewInfo" class="sendInformAction"
+			method="sentInterviewInfo">
+			<result name="SUCCESS">sendInform/sendinform.jsp</result>
+		</action>
+		<!-- 简历搜索页面初始化 -->
+		<action name="searchResumeInit" class="resumeSearchAction"
+			method="init">
+			<result name="success">resumesearch/resumesearch.jsp</result>
+		</action>
+		<!-- 搜索简历 -->
+		<action name="searchResumeForEnt" class="resumeSearchAction"
+			method="search">
+			<result name="success">resumesearch/resumeresult.jsp</result>
+		</action>
+		<!-- 关注单个简历 -->
+		<action name="followResumeInSearch" class="resumeSearchAction"
+			method="followResume">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+
+	</package>
+</struts>

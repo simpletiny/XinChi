@@ -1,0 +1,21 @@
+package seentao.xhsn.mail.service;
+
+import seentao.xhsn.bean.HsUserBO;
+
+/**
+ * @Description:邮箱验证service接口	
+ * @author 李君彦
+ * @date 2014-11-20 上午11:33:46 
+ * @version V1.0   
+ */
+public interface IMailConfirmService {
+
+	/**
+	 * 根据主键查询用户
+	 * @param user_id 主键
+	 * @return 
+	 */
+	public HsUserBO getUserByPrimaryKey(String user_id);
+
+	
+}

@@ -1,0 +1,143 @@
+package seentao.xhsn.password.action;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.json.annotations.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.login.bean.LoginBean;
+import seentao.xhsn.login.service.ILoginService;
+import seentao.xhsn.login.util.PassWordUtil;
+import seentao.xhsn.password.service.IPasswordService;
+import seentao.xhsn.person.info.service.IUBInfoService;
+
+/**
+ * @Description:	密码修改
+ * @author 李君彦
+ * @date 2014-12-16 下午5:44:04 
+ * @version V1.0   
+ */
+@Controller
+@Scope("prototype")
+public class PasswordAction {
+
+	private LoginBean bean;
+	
+	private String errTip;
+	//新密码
+	private String newpwd;
+	//密码确认输入
+	private String repwd;
+	 
+	@Autowired
+	private ILoginService loginService;
+	@Autowired
+	private IPasswordService passwordService;
+	@Autowired
+	private IUBInfoService infoService;
+	
+	/**
+	 * 校验原密码
+	 * @return
+	 */
+	public String findAndcheckPwd(){
+		errTip="";
+		UserSessionBean sessionBean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		Object resultBO = this.checkOldPwd(sessionBean);
+		if(resultBO==null){
+			errTip="原密码错误!";
+		}
+		return "SUCCESS";
+	}
+
+	/**
+	 * 校验原密码是否正确
+	 * @return
+	 */
+	private Object checkOldPwd(UserSessionBean sessionBean) {
+		Object resultBO=null;
+		String type=sessionBean.getUser_type().toString();
+		if(DictionaryEnum.PERSON_TYPE.getStringValue().equals(type)){
+			//个人修改密码
+			bean.setUser_mail(sessionBean.getUser_email());
+			String json_result=loginService.selectLoginBean(bean);
+			JSONObject result_obj = JSONObject.fromObject(json_result);
+			JSONObject result_bo = result_obj.getJSONObject("bo");
+			resultBO=JSONObject.toBean(result_bo);
+		}else{
+			resultBO=loginService.getUserBeanByLoginInfo(bean.getUser_mail(), bean.getUser_pwd(),type);
+		}
+		return resultBO;
+	}
+
+	public String modifyPWD(){
+		UserSessionBean sessionBean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String type=sessionBean.getUser_type().toString();
+		if(!newpwd.equals(repwd)){
+			errTip="两次输入密码不一致!";
+			return "SUCCESS";
+		}
+		Object resultBO = this.checkOldPwd(sessionBean);
+		if(resultBO==null){
+			errTip="原密码错误!";
+			return "SUCCESS";
+		}
+		if(DictionaryEnum.PERSON_TYPE.getStringValue().equals(type)){
+			//个人修改密码
+			JSONObject paramBean = new JSONObject();
+			paramBean.put("user_passport", sessionBean.getUser_email());
+			paramBean.put("user_pwd",PassWordUtil.createPassword(newpwd));
+			infoService.updatePersonUser(paramBean);
+		}else{
+			HsUserBO bo=new HsUserBO();
+//			bo.setUser_email(sessionBean.getUser_email());
+			bo.setUser_pwd(PassWordUtil.createPassword(newpwd));
+			bo.setId(sessionBean.getUser_sys_id());
+			passwordService.modifyPwd(bo);
+		}
+		errTip="修改成功!";
+		return "SUCCESS";
+	}
+	
+	@JSON(serialize=false)
+	public LoginBean getBean() {
+		return bean;
+	}
+
+	public void setBean(LoginBean bean) {
+		this.bean = bean;
+	}
+
+	public String getErrTip() {
+		return errTip;
+	}
+
+	public void setErrTip(String errTip) {
+		this.errTip = errTip;
+	}
+
+	public String getNewpwd() {
+		return newpwd;
+	}
+
+	public void setNewpwd(String newpwd) {
+		this.newpwd = newpwd;
+	}
+
+	public String getRepwd() {
+		return repwd;
+	}
+
+	public void setRepwd(String repwd) {
+		this.repwd = repwd;
+	}
+	
+	
+}

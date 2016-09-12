@@ -1,0 +1,28 @@
+package seentao.xhsn.person.jobexp.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+import seentao.xhsn.person.jobexp.dao.IAJobExpDao;
+import seentao.xhsn.person.jobexp.service.IJobExpService;
+
+@Service
+public class JobExpServiceImpl implements IJobExpService{
+	
+	@Autowired
+	private IAJobExpDao dao;
+	
+	@Transactional
+	public void insert(HsResumejobexperienceBO bo) {
+		//TODO: 1、判断学校在数据库学校表中是否存在，如果存在，记录学校的编号
+		
+		//TODO: 2、判断专业在数据库专业表中是否存在，如果存在，记录专业编号
+		
+		//插入数据库中
+		dao.insert(bo);
+		
+	}
+
+}

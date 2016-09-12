@@ -1,0 +1,128 @@
+package seentao.xhsn.sys.job.action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsJobBO;
+import seentao.xhsn.sys.job.service.IJobService;
+import seentao.xhsn.tools.Page;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月8日 上午9:43:33 
+ * @note 职位管理
+ */
+@Controller
+@Scope("prototype")
+public class JobAction extends ActionSupport {
+	
+private static final long serialVersionUID = -8269563180340734332L;
+	
+	private List<HsJobBO> jobs ;
+	private List<HsJobBO> jobChildrens ;
+	private String id;
+	private String parent_code;
+	private HsJobBO bo;
+	private Page<HsJobBO> page;
+
+	@Autowired
+	private IJobService jobService;
+	
+	
+	/**查找所有的职位
+	 * @return
+	 */
+	public String findJobChildren(){
+		if(page == null){
+			page = new Page<HsJobBO>();
+			bo = new HsJobBO();
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", bo);
+		page.setParams(params );
+		jobChildrens =  jobService.findJobChildrenByParent(page);
+		return "SUCCESS";
+	}
+	/**查找所有的职位
+	 * @return
+	 */
+	public String findAllJob(){
+		bo = new HsJobBO();
+		bo.setLevel(1);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", bo);
+		page.setParams(params );
+		jobs =  jobService.findAllJob(page);
+		return "SUCCESS";
+	}
+	
+	/**根据id获取职位信息，并进行编辑
+	 * @return
+	 */
+	public String editJob(){
+		bo = jobService.getByPK(id);
+		return "SUCCESS";
+	}
+	
+	/**根据bo保存职位信息
+	 * @return
+	 */
+	public String saveJob(){
+		jobService.saveJob(bo);
+		return "SUCCESS";
+	}
+	
+	/**删除职位信息
+	 * @return
+	 */
+	public String deleteJob(){
+		jobService.deleteJob(id);
+		return "SUCCESS";
+	}
+	public List<HsJobBO> getJobs() {
+		return jobs;
+	}
+	public void setJobs(List<HsJobBO> jobs) {
+		this.jobs = jobs;
+	}
+	public List<HsJobBO> getJobChildrens() {
+		return jobChildrens;
+	}
+	public void setJobChildrens(List<HsJobBO> jobChildrens) {
+		this.jobChildrens = jobChildrens;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getParent_code() {
+		return parent_code;
+	}
+	public void setParent_code(String parent_code) {
+		this.parent_code = parent_code;
+	}
+	public HsJobBO getBo() {
+		return bo;
+	}
+	public void setBo(HsJobBO bo) {
+		this.bo = bo;
+	}
+	public Page<HsJobBO> getPage() {
+		return page;
+	}
+	public void setPage(Page<HsJobBO> page) {
+		this.page = page;
+	}
+	
+	
+	
+}

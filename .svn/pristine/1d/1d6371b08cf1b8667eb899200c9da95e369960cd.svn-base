@@ -1,0 +1,49 @@
+package seentao.xhsn.person.jobsearch.service;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.person.jobsearch.bean.JobDetailBean;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 职位搜索Service
+ * 
+ * @author niushixing 2014-12-2 上午11:05:20
+ * 
+ */
+public interface IJobSearchService {
+
+	/**
+	 * 取得职位详情信息
+	 * 
+	 * @param releaseJobId
+	 * @return
+	 */
+	public JobDetailBean getJobDetail(String releaseJobId);
+
+	/**
+	 * 保存搜索的相关信息
+	 * @author wjx
+	 * @param user_id
+	 * @param jobDetail
+	 */
+	public void insert(String user_id, HsEtpReleasejobBO params);
+
+	/**根据条件，返回相关的职位信息
+	 * @author wjx
+	 * @param jobDetail
+	 * @return
+	 */
+	public List<JobDetailBean> searchAllByParam(Page<HsEtpReleasejobBO> page);
+
+	/**根据用户的求职意向，查找相关的职业
+	 * @param page
+	 * @param desiredBO
+	 * @return
+	 */
+	public List<JobDetailBean> searchAllByDesired(Page<HsEtpReleasejobBO> page,
+			HsDesiredPositionBO desiredBO);
+
+}

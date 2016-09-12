@@ -1,0 +1,59 @@
+package seentao.xhsn.person.desired.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.desired.dao.IDesiredPositionDao;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月24日 下午1:58:04 
+ * @note 
+ */
+@Service
+public class DesiredPositionDaoImpl extends SqlSessionDaoSupport implements IDesiredPositionDao {
+	
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public String insert(HsDesiredPositionBO bo) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsDesiredPositionBOMapper.insert", bo);
+	}
+
+	@Override
+	public int delete(String id) {
+		return daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsDesiredPositionBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public int update(HsDesiredPositionBO bo) {
+		return daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsDesiredPositionBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public HsDesiredPositionBO getBOById(String id) {
+		return (HsDesiredPositionBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsDesiredPositionBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsDesiredPositionBO> findByUserIdAndResId(String userid, String resid) {
+		HsDesiredPositionBO bo = new HsDesiredPositionBO();
+		bo.setUser_id(userid);
+		bo.setRes_id(resid);
+		return  daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsDesiredPositionBOMapper.selectByParam", bo);
+	}
+
+}

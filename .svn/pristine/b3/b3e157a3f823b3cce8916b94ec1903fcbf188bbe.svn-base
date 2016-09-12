@@ -1,0 +1,45 @@
+package seentao.xhsn.sys.dictionary.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsDictionaryBO;
+import seentao.xhsn.sys.dictionary.dao.IDictionaryDAO;
+import seentao.xhsn.sys.dictionary.service.IDictionaryService;
+
+@Service
+@Transactional
+public class DictionaryServiceImpl implements IDictionaryService{
+
+	@Autowired
+	private IDictionaryDAO dao;
+	
+	@Override
+	public void insert(HsDictionaryBO bo) {
+		dao.insert(bo);
+	}
+
+	@Override
+	public void update(HsDictionaryBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsDictionaryBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsDictionaryBO> getAllByParam(HsDictionaryBO bo) {
+		return dao.getAllByParam(bo);
+	}
+	
+}

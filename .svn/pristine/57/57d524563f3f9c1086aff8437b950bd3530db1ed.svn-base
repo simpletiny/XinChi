@@ -1,0 +1,32 @@
+package seentao.xhsn.person.certificate.bean;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsCertificateBO;
+
+public class HsCertificateExtendBO extends HsCertificateBO {
+
+	private static final long serialVersionUID = 1L;
+
+	private String certi_code_value;
+	
+	private List<String> files;
+
+	public String getCerti_code_value() {
+		return certi_code_value;
+	}
+
+	public void setCerti_code_value(String certi_code_value) {
+		this.certi_code_value = certi_code_value;
+	}
+
+	public List<String> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<String> files) {
+		this.files = files;
+	}
+	
+	
+}

@@ -1,0 +1,51 @@
+package seentao.xhsn.person.collect.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsPositionCollectBO;
+import seentao.xhsn.person.collect.dao.IPositionCollectDAO;
+import seentao.xhsn.person.collect.service.IPositionCollectService;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月10日 下午3:33:26 
+ * @note 
+ */
+@Service
+public class PositionCollectServiceImpl implements IPositionCollectService {
+	
+	@Autowired
+	private IPositionCollectDAO collectDAO;
+	
+	@Override
+	public int collectByJobID(String res_id, String user_id, String job_id) {
+		int count = 0;
+		HsPositionCollectBO collectBO = new HsPositionCollectBO();
+		collectBO.setUser_id(user_id);
+		collectBO.setRes_id(res_id);
+		collectBO.setJob_id(job_id);
+		String id = collectDAO.insert(collectBO);
+		if(id != null && id.trim().length() > 0){
+			count ++;
+		}
+		return count;
+	}
+
+	@Override
+	public int collectByJobIDs(String res_id, String user_id, String[] job_ids) {
+		int count = 0;
+		for(int i = 0; i < job_ids.length; i++){
+			HsPositionCollectBO collectBO = new HsPositionCollectBO();
+			collectBO.setUser_id(user_id);
+			collectBO.setRes_id(res_id);
+			collectBO.setJob_id(job_ids[i]);
+			String id = collectDAO.insert(collectBO);
+			if(id != null && id.trim().length() > 0){
+				count ++;
+			}
+		}
+		return count;
+	}
+
+}

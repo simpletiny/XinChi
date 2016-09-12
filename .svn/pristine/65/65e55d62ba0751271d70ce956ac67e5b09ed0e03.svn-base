@@ -1,0 +1,268 @@
+package seentao.xhsn.person.center.action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.struts2.json.annotations.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.bean.HsInterviewInformBO;
+import seentao.xhsn.bean.HsPutresumeBO;
+import seentao.xhsn.bean.HsResumeVisitorBO;
+import seentao.xhsn.common.BaseAction;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.enterprise.sendInform.service.ISendInformService;
+import seentao.xhsn.person.center.bean.PersonBean;
+import seentao.xhsn.person.center.bean.PutResumeBean;
+import seentao.xhsn.person.center.bean.RecommendedJobBean;
+import seentao.xhsn.person.center.bean.ResumeVisitorBean;
+import seentao.xhsn.person.center.service.IPersonCenterService;
+import seentao.xhsn.person.desired.service.IDesiredPositionService;
+import seentao.xhsn.person.put.service.IPutResumeService;
+import seentao.xhsn.tools.ArrayBoUtil;
+
+/**
+ * 个人中心Action
+ * 
+ * @author niushixing 2014-12-9 下午2:19:15
+ * 
+ */
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class PersonCenterAction extends BaseAction {
+	private static final long serialVersionUID = 582377441598904200L;
+	private PersonBean bean;
+	@Autowired
+	private IPersonCenterService pcservice;
+	private String user_id;
+	private String res_id;
+	private String type;
+	private String target;
+	private List<PutResumeBean> putlist;
+	private String resultStr;
+	private List<RecommendedJobBean> recommendedJobList;
+	private String informId;
+	private HsInterviewInformBO informBO;
+	@Autowired
+	private ISendInformService sendInformService;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+		user_id = SeentaoApplicationContext.getCurrentUser();
+		res_id = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+				.getRes_id();
+		bean = pcservice.getPersonBean(user_id, res_id);
+		if(bean!=null){
+			if(bean.getDesire_job()!=null){
+				bean.setDesire_job(ArrayBoUtil.getJobByCode(bean.getDesire_job()));
+			}
+		}
+		return SUCCESS;
+	}
+
+	private final static int pageSize = 6;
+	private List<ResumeVisitorBean> visitlist;
+	private List<HsInterviewInformBO> interviewlist;
+	@Autowired
+	private IDesiredPositionService desireService;
+
+	/**
+	 * 取得个人中心简历申请记录，人事来信等详细信息
+	 * 
+	 * @return
+	 */
+	public String fetchDetail() {
+		user_id = SeentaoApplicationContext.getCurrentUser();
+		res_id = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+				.getRes_id();
+		Map<String, Object> pagePar = new HashMap<String, Object>();
+		page.setPageSize(pageSize);
+		if ("0".equals(type)) {
+			HsEtpReleasejobBO bo = new HsEtpReleasejobBO();
+			HsDesiredPositionBO desire = desireService.getByUserIdAndResId(user_id, res_id);
+			if (null != desire) {
+				bo.setJob_id(desire.getJob_type());
+				bo.setCounty_code(desire.getDesired_city());
+			}
+			pagePar.put("bo", bo);
+			page.setParams(pagePar);
+			recommendedJobList = pcservice.findRecommendedJobs(page);
+			target = "recommendedjob";
+		} else if ("1".equals(type)) {
+			HsResumeVisitorBO bo = new HsResumeVisitorBO();
+			bo.setUser_id(user_id);
+			bo.setRes_id(res_id);
+			pagePar.put("bo", bo);
+			page.setParams(pagePar);
+			visitlist = pcservice.findVisitorByPage(page);
+			target = "visit";
+		} else if ("2".equals(type)) {
+			HsPutresumeBO bo = new HsPutresumeBO();
+			bo.setUser_id(user_id);
+			bo.setRes_id(res_id);
+			pagePar.put("bo", bo);
+			page.setParams(pagePar);
+			putlist = pcservice.findPutResumeByPage(page);
+			target = "applyhistory";
+		} else if ("3".equals(type)) {
+			HsInterviewInformBO bo = new HsInterviewInformBO();
+			bo.setUser_id(user_id);
+			bo.setRes_id(res_id);
+			pagePar.put("bo", bo);
+			page.setParams(pagePar);
+			interviewlist = pcservice.findInterviewByPage(page);
+			target = "letters";
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private IPutResumeService putService;
+	private String job_ids;
+
+	/**
+	 * 申请职位
+	 * 
+	 * @return
+	 */
+	public String applyJob() {
+		if (res_id == null) {
+			res_id = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+					.getRes_id();
+		}
+		String[] arrJobId = job_ids.split(",");
+		putService.putResumeByParam(res_id, arrJobId);
+		resultStr = "OK";
+		return SUCCESS;
+	}
+	
+	/**
+	 * 根据面试通知id获取投放的记录，获取简历信息，并进行显示
+	 * @return
+	 */
+	public String getBeanByParam(){
+		informBO = sendInformService.getByPK(informId);
+		informBO.setState(DictionaryEnum.INFORM_STATE_SEE.getStringValue());
+		sendInformService.updateByParam(informBO);
+		return SUCCESS;
+	}
+
+	@JSON(serialize = false)
+	public PersonBean getBean() {
+		return bean;
+	}
+
+	public void setBean(PersonBean bean) {
+		this.bean = bean;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public String getResultStr() {
+		return resultStr;
+	}
+
+	public void setResultStr(String resultStr) {
+		this.resultStr = resultStr;
+	}
+
+	public List<PutResumeBean> getPutlist() {
+		return putlist;
+	}
+
+	public void setPutlist(List<PutResumeBean> putlist) {
+		this.putlist = putlist;
+	}
+
+	public List<ResumeVisitorBean> getVisitlist() {
+		return visitlist;
+	}
+
+	public void setVisitlist(List<ResumeVisitorBean> visitlist) {
+		this.visitlist = visitlist;
+	}
+
+	public List<HsInterviewInformBO> getInterviewlist() {
+		return interviewlist;
+	}
+
+	public void setInterviewlist(List<HsInterviewInformBO> interviewlist) {
+		this.interviewlist = interviewlist;
+	}
+
+	public List<RecommendedJobBean> getRecommendedJobList() {
+		return recommendedJobList;
+	}
+
+	public void setRecommendedJobList(List<RecommendedJobBean> recommendedJobList) {
+		this.recommendedJobList = recommendedJobList;
+	}
+
+	public String getJob_ids() {
+		return job_ids;
+	}
+
+	public void setJob_ids(String job_ids) {
+		this.job_ids = job_ids;
+	}
+
+	public String getInformId() {
+		return informId;
+	}
+
+	public void setInformId(String informId) {
+		this.informId = informId;
+	}
+
+	public HsInterviewInformBO getInformBO() {
+		return informBO;
+	}
+
+	public void setInformBO(HsInterviewInformBO informBO) {
+		this.informBO = informBO;
+	}
+
+}

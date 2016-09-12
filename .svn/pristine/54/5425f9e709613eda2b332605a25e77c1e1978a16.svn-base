@@ -1,0 +1,50 @@
+package seentao.xhsn.sys.filedata.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsFileDataBO;
+
+/**
+ * @Description:附件操作DAO接口
+ * @author 李君彦
+ * @date 2014-11-24 下午3:08:23 
+ * @version V1.0   
+ */
+public interface IFileDataDAO{
+	
+	/**
+	 * 新增
+	 * @param bo
+	 */
+	public void insert(HsFileDataBO bo);
+	
+	/**
+	 * 修改
+	 * @param bo
+	 */
+	public void update(HsFileDataBO bo);
+	
+	/**
+	 * 删除
+	 * @param id
+	 */
+	public void delete(String id);
+	
+	/**
+	 * 根据附件主表ID删除附件
+	 * @param fileID
+	 */
+	public void deleteByFileID(String fileID);
+	
+	/**
+	 * 根据主键查找
+	 * @param id
+	 */
+	public HsFileDataBO selectByPrimaryKey(String id);
+	
+	/**
+	 * 根据条件查找
+	 * @param bo
+	 */
+	public List<HsFileDataBO> getAllByParam(HsFileDataBO bo);
+}

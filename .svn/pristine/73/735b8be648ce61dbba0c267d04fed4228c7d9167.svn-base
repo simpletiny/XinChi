@@ -1,0 +1,67 @@
+$(document).ready(function(){
+	switchTab(3);
+	$(" body").click(function(){
+		$("#show_div").hide();
+	});
+	$("#btn_div").click(function(e){
+		$("#show_div").show();
+		e.stopPropagation();//阻止冒泡到body
+	});
+})
+
+function formsub() {
+	var validate_flag = false;
+	validate_flag = validateform();
+	if (validate_flag) {
+		var layIndex=layer.load('信息保存中,请稍候...', -1);
+		document.getElementById("myform").action = "person/saveevaluate";
+		document.getElementById("myform").submit();
+	}
+}
+
+function validateform() {
+	//验证表单
+	var title_text = $("#btn_div").val();
+	if(title_text == null || $.trim(title_text).length <= 0){
+		$("#err_msg").text("标题不能为空");
+		return false;
+	}
+	var oEditor = CKEDITOR.instances.content_text;  
+    var content_text = oEditor.getData() ;  
+	if(content_text == null || $.trim(content_text).length <= 0){
+		$("#err_msg").text("内容不能为空");
+		return false;
+	}
+	return true;
+}
+
+
+function optionchange(){
+	if($("#title_code").find("option:selected").text()){
+		$("#title_text").css("display", "inline");
+	}else{
+		$("#title_text").css("display", "none");
+	}
+}
+
+function pick(code , text) {
+	document.getElementById('btn_div').value = text;
+	document.getElementById('title_code').value = code;
+	if(text == "自定义标题"){
+		 $("#title_text").css("display", "inline");
+	}else{
+		$("#title_text").val("");
+		$("#title_text").css("display", "none");
+	}
+	 
+}
+
+function editform() {
+	editflag = true;
+	$("#info_show").css("display", "none");
+	$("#info_edit").css("display", "block");
+}
+
+function goback(){
+	window.history.back();
+}

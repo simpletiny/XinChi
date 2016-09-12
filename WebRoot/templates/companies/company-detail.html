@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 企业信息
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/static/vendor/rater-star/rater-star.css">
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>查看企业信息<a href="/companies" class="cancel-create">返回</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <a href="/companies/{{ companyId }}/hrs" class="btn btn-green btn-r">HR联系人</a>
+            <a href="/companies/{{ companyId }}/contracts" class="btn btn-green btn-r">合同管理</a>
+            <a href="/companies/{{ companyId }}/info/create" class="btn btn-green btn-r">发布信息</a>
+            <a href="/companies/{{ companyId }}/edit" class="btn btn-green btn-r">编辑</a>
+            <a href="/companies/{{ companyId }}/milestone/detail" class="btn btn-green btn-r">销售里程碑</a>
+            <hr>
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业名称</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().name"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">企业简称</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().briefName"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业网站</label>
+                        <div class="ip"><p class="ip-"><a data-bind="attr: { href: company().website }" target="_blank">点击访问</a></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">企业性质</label>
+                        <div class="ip"><p class="ip-" data-bind="text: company().nature"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业成立日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: company().fundingTime"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">企业总机</label>
+                        <div class="ip"><p class="ip-" data-bind="text: company().phone"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业LOGO</label>
+                        <div class="ip"><p class="ip-"><img data-bind="attr: { src: company().logoUrl ? company().logoUrl : '/static/img/default-logo.png' }" width="64px" height="64px"/></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">企业LOGO图标</label>
+                        <div class="ip"><p class="ip-"><img data-bind="attr: { src: company().smallLogoUrl ? company().smallLogoUrl : '/static/img/default-logo.png' }" width="64px" height="64px"/></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业等级</label>
+                        <div class="ip" id="company-grade" style="padding-top: 8px;"></div>
+                        <input type="hidden" id="company-grade-input" data-bind="value: company().grade" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">发布状态</label>
+                        <div class="ip"><p class="ip-" data-bind="text: company().publishStatus"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业地址</label>
+                        <div class="ip"><p class="ip-" data-bind="text: company().location"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="ll">所属销售</label>
+                        <div class="ip"><p class="ip-" data-bind="text: company().salesName"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="ll">企业规模</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().size"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="ll">企业组织架构</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().organization"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="ll">企业发展规划</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().plan"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="ll">产品介绍及行业地位</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().product"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l" style="width: 140px;">企业文化和用人风格</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: company().culture"></p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/rater-star/rater-star.js"></script>
+  <script>
+      $(".companies").addClass("current").children("ol").css("display", "block");
+      $(".tab-title").on("click", function() {
+          $(this).parent().addClass("active").siblings(".active").removeClass("active");
+          $("#" + $(this).data("id")).show().siblings(".list-result").hide();
+      });
+  </script>
+  <script src="/static/js/companies/company-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

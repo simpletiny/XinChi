@@ -1,0 +1,58 @@
+package seentao.xhsn.person.customskill.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsCustomSkillBO;
+
+/**
+ * @Description:专业技能操作DAO接口
+ * @author 李君彦
+ * @date 2014-11-24 下午3:08:23
+ * @version V1.0
+ */
+public interface ICustomSkillDAO {
+
+	/**
+	 * 新增
+	 * 
+	 * @param bo
+	 */
+	public void insert(HsCustomSkillBO bo);
+
+	/**
+	 * 修改
+	 * 
+	 * @param bo
+	 */
+	public void update(HsCustomSkillBO bo);
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 */
+	public void delete(String id);
+
+	/**
+	 * 根据主键查找
+	 * 
+	 * @param id
+	 */
+	public HsCustomSkillBO selectByPrimaryKey(String id);
+
+	/**
+	 * 根据条件查找
+	 * 
+	 * @param bo
+	 */
+	public List<HsCustomSkillBO> getAllByParam(HsCustomSkillBO bo);
+
+	/**
+	 * 通过用户Id和简历id查找个人技能列表
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public List<HsCustomSkillBO> findByUserIdAndResId(String user_id, String res_id);
+
+}

@@ -1,0 +1,104 @@
+@charset "utf-8";
+/* CSS Document */
+select, option {
+	font-size: 16px;
+	color: #636262;
+}
+
+table tr td {
+	font-size: 14px;
+	color: #636262;
+}
+
+#main .nav, #main .info {
+	float: left;
+}
+
+#main .info {
+	width: 780px;
+}
+
+#main .info h4 {
+	width: 780px;
+	height: 40px;
+	position: relative;
+	margin-bottom: 5px;
+}
+
+#main .info .gr {
+	background: url(../images/zwpj.png) no-repeat left center;
+}
+
+#main .info h4 a {
+	position: absolute;
+	left: 720px;
+	top: 7px;
+	display: block;
+	width: 59px;
+	height: 28px;
+	background: url(../images/change.jpg) no-repeat;
+}
+
+#main .info .info_inner {
+	width: 780px;
+	font-size: 16px;
+}
+
+#main .info .info_inner .jl_inner {
+	width: 750px;
+	padding: 15px;
+	background: #fdfdfd;
+	border-bottom: 2px solid #e5e4e4;
+	margin-bottom: 10px;
+}
+
+#main .info .info_inner .jl_inner p {
+	line-height: 2em;
+}
+
+#main .info .info_inner1 {
+	width: 740px;
+	background: #fdfdfd;
+	padding: 25px 0;
+	padding-left: 40px;
+	border-bottom: 2px solid #e5e4e4;
+	font-size: 16px;
+}
+
+#main .info .info_inner1 table input {
+	width: 420px;
+	padding-left: 5px;
+	height: 33px;
+	line-height: 33px;
+	background: url(../images/srlong.jpg);
+	font-size: 16px;
+	color: #636262;
+}
+
+#main .info .info_inner1 table td .cur {
+	cursor: pointer;
+	display: block;
+	line-height: 1.8em;
+}
+
+#main .info .info_inner1 table td .cur:hover {
+	color: #FFF;
+	background: #38ac96;
+}
+
+#main .info .info_inner1 table td ul li {
+	line-height: 1.8em;
+	padding-left: 15px;
+}
+
+#main .info .info_inner1 table td ul li:hover {
+	background: #38ac96;
+}
+
+#main .info .info_inner1 table td ul li:hover a {
+	color: #FFF;
+}
+
+#main .info .info_inner1 table td ul li a {
+	color: #636262;
+}

@@ -1,0 +1,111 @@
+package seentao.xhsn.person.put.dao;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import seentao.xhsn.bean.HsPutresumeBO;
+import seentao.xhsn.enterprise.manageresume.bean.ManageResumeBean;
+import seentao.xhsn.enterprise.resumesearch.bean.ResumeSearchBean;
+import seentao.xhsn.tools.Page;
+
+/**
+ * @author wjx
+ * @date 2014年12月4日 下午3:28:30
+ * @note 投放简历的DAO
+ */
+public interface IPutResumeDAO {
+
+	/**
+	 * 增加
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public abstract String insert(HsPutresumeBO bo);
+
+	/**
+	 * 修改
+	 * 
+	 * @param bo
+	 */
+	public abstract void update(HsPutresumeBO bo);
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 */
+	public abstract void delete(String id);
+
+	/**
+	 * 根据id获取投放简历的详细信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public abstract HsPutresumeBO selectByPrimaryKey(String id);
+
+	/**
+	 * 根据条件查找
+	 * 
+	 * @param bo
+	 */
+	public List<HsPutresumeBO> getAllByParam(HsPutresumeBO bo);
+
+	/**
+	 * 根据用户id和简历id取得投放简历信息
+	 * 
+	 * @param user_id
+	 * @param res_id
+	 * @return
+	 */
+	public List<HsPutresumeBO> findByUserIdAndResId(String user_id, String res_id);
+
+	/**
+	 * 取得投放简历个数
+	 * 
+	 * @param user_id
+	 * @param res_id
+	 * @return
+	 */
+	public int getPutCnt(String user_id, String res_id);
+
+	/**
+	 * 为企业搜索收到简历
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public List<ManageResumeBean> getReceivedResumeByPage(Page<ManageResumeBean> page);
+
+	/**
+	 * 为企业搜索关注简历
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public List<ManageResumeBean> getCareResumeByPage(Page<ManageResumeBean> page);
+
+	/**
+	 * 企业搜索简历
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public List<ManageResumeBean> getEntSearchResumeByPage(Page<ResumeSearchBean> page);
+
+	/**
+	 * 通过Page查询
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public abstract List<HsPutresumeBO> findPutResumeByPage(Page<HsPutresumeBO> page);
+	
+	/**根据投放时间，查询投放数量
+	 * @param timestamp
+	 * @param res_id
+	 * @return
+	 */
+	public int getCountByPutData(Timestamp putdata, String res_id);
+}

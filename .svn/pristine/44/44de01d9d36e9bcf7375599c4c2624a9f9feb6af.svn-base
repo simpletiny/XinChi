@@ -1,0 +1,30 @@
+package seentao.xhsn.enterprise.resumesearch.service;
+
+import java.util.List;
+
+import seentao.xhsn.enterprise.manageresume.bean.ManageResumeBean;
+import seentao.xhsn.enterprise.resumesearch.bean.ResumeSearchBean;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 简历搜索Service
+ * 
+ * @author niushixing 2014-12-15 下午3:32:55
+ * 
+ */
+public interface IResumeSearchService {
+	/**
+	 * 搜索简历信息
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public List<ManageResumeBean> getResumeSearchResult(Page<ResumeSearchBean> page);
+	/**
+	 * 关注搜索到的简历
+	 * @param res_id
+	 * @return
+	 */
+	public String followResume(String res_id);
+
+}

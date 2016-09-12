@@ -1,0 +1,45 @@
+package seentao.xhsn.sys.files.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsFilesBO;
+import seentao.xhsn.sys.files.dao.IFilesDAO;
+import seentao.xhsn.sys.files.service.IFilesService;
+
+@Service
+@Transactional
+public class FilesServiceImpl implements IFilesService{
+
+	@Autowired
+	private IFilesDAO dao;
+	
+	@Override
+	public void insert(HsFilesBO bo) {
+		dao.insert(bo);
+	}
+
+	@Override
+	public void update(HsFilesBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsFilesBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsFilesBO> getAllByParam(HsFilesBO bo) {
+		return dao.getAllByParam(bo);
+	}
+	
+}

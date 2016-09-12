@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 新增合同
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>合同信息录入<a href="/companies/{{ companyId }}/contracts" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">合同编号</label>
+                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: contract().number" placeholder="合同编号" name="number" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">合同状态</label>
+                        <div class="ip"><select class="form-control" data-bind="options: allContractStatus, optionsCaption: '-- 请选择 --', value: contract().contractStatus" name="contractStatus" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">客户经理</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: contract().customerManager" placeholder="客户经理" name="customerManager" required="required" id="autocomplete-sales-name"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">审批状态</label>
+                        <div class="ip"><select class="form-control" data-bind="options: allApproveStatus, optionsCaption: '-- 请选择 --', value: contract().approveStatus" name="approveStatus" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">开始日期</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: contract().startDate" placeholder="年-月-日" name="startDate" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">结束日期</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: contract().endDate" placeholder="年-月-日" name="endDate" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">收费方式</label>
+                        <div class="ip"><textarea class="ckeditor ip-default" rows="5" data-bind="richText: contract().paymentMethod" name="paymentMethod" required="required"></textarea></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">保证期</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: contract().guaranteePeriod" placeholder="保证期"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">备注信息</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: contract().comment" placeholder="备注信息"></textarea></div>
+                    </div>
+                </div>
+            </form>
+
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createContract">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/vendor/ckeditor/ckeditor.js"></script>
+  <script src="/static/vendor/ckeditor/adapters/jquery.js"></script>
+  <script src="/static/js/contracts/contract-creation.js{{ _suffix_ }}"></script>
+{% endblock %}

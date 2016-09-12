@@ -1,0 +1,44 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsScoreCatalogBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String score_code;
+		  
+		 
+		  private java.lang.String score_name;
+		  
+		 
+		  private java.lang.Integer catalog_index;
+		  
+		 
+		  public  java.lang.String getScore_code() {
+				return score_code;
+			}
+			
+			public void setScore_code( java.lang.String score_code) {
+				this.score_code = score_code;
+			}
+		 
+		  public  java.lang.String getScore_name() {
+				return score_name;
+			}
+			
+			public void setScore_name( java.lang.String score_name) {
+				this.score_name = score_name;
+			}
+		 
+		  public  java.lang.Integer getCatalog_index() {
+				return catalog_index;
+			}
+			
+			public void setCatalog_index( java.lang.Integer catalog_index) {
+				this.catalog_index = catalog_index;
+			}
+	
+
+}

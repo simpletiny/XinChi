@@ -1,0 +1,90 @@
+function update(ele,action,dataParam){
+	var layIndex=layer.load('查询中,请稍候...', -1);
+	$("."+ele).css("display","block");
+	  $.ajax({
+	        url: action,
+	        data: dataParam,
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	 handleUpdateResponse(data);
+	        	 layer.close(layIndex);
+	        },
+	        error:function(data){
+	        	layer.close(layIndex);
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+  }
+  
+   function deleteBo(action,dataParam){
+	   var layIndex=layer.load('删除中,请稍候...', -1);
+		  $.ajax({
+		        url: action,
+		        data: dataParam,
+		        type: "post",
+		        dataType: "json",
+		        success: function(data){
+		        	layer.close(layIndex);
+		        	alert('删除成功！');
+		        	reload();
+		        },
+		        error:function(data){
+		        	layer.close(layIndex);
+		        	alert("操作失败，请稍后重试！");
+		        }
+			}); 
+	}	
+   
+   function save(action,returnUrl){
+	   if(!validate())
+		   return;
+	   var layIndex=layer.load('保存中,请稍候...', -1);
+	  $.ajax({
+	        url: action,
+	        data: $("#myForm").serialize(),
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	layer.close(layIndex);
+	        	 alert("保存成功！");
+	        	 window.location.href=returnUrl+"&isAdd=n";
+	        },
+	        error:function(data){
+	        	layer.close(layIndex);
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+   }
+   
+   function reload(){
+   	 location.reload();
+   }
+   
+   function saveAndAdd(action,returnUrl){
+	   if(!validate())
+		   return;
+	   var layIndex=layer.load('保存中,请稍候...', -1);
+	   $.ajax({
+	        url: action,
+	        data: $("#myForm").serialize(),
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	layer.close(layIndex);
+	        	 alert("保存成功！");
+	        	 window.location.href=returnUrl+"&isAdd=y";
+	        },
+	        error:function(data){
+	        	layer.close(layIndex);
+	        	 alert("操作失败，请稍后重试！");
+	        }
+		}); 
+   }
+   
+   function add(ele){
+	   if($("."+ele).css("display")=="none")
+		   $("."+ele).css("display","block");
+	   else
+		   $("."+ele).css("display","none");
+   }

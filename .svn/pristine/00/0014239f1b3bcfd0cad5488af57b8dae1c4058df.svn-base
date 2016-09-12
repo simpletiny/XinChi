@@ -1,0 +1,58 @@
+#maskLayer{position: absolute;left:0px;top:0px}
+#alphadiv{position:absolute;background:#000;z-index: 2000}
+#drag{position:absolute;background:#fff;z-index: 2001;width:580px;border:1px solid #ccc}
+#drag_h{line-height:28px;height:28px;cursor:move;color:#fff;background:#38ac96;border-bottom:1px dashed #babcbc;padding:0 10px;}
+#drag h3 b{float:left; color:#FFF;}
+#drag h3 span{font-weight:normal;float:right;cursor:pointer; color:#FFF;}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+#btn_hukou{background:url(../../../common/images/select.jpg) no-repeat;width:198px; padding-left:5px;height:35px;border:none;cursor:pointer; font-size:14px; text-align:left;}
+/* 选择居住地 */
+#residencyAlpha{padding:10px 4px}
+#residencyAlpha h4{color:#454545;font-size:14px; font-weight:bold;}
+#residencyAlpha dl{zoom:1;overflow:hidden;line-height:25px}
+#residencyAlpha dt{float:left;width:80px;font-weight:bold}
+#residencyAlpha dd{float:left;width:492px}
+#residencyAlpha dd li{float:left;width:82px;cursor:pointer;text-indent:4px;height:25px;overflow:Hidden}
+#residencyAlpha dd li.over{background:#38ac96;color:#fff}
+#allProv{border-top:1px dashed #ccc;margin-top:6px;padding-top:10px}
+/* 居住地 悬浮子菜单 */
+#sub_city{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_city h4{border-bottom:1px dashed #ccc}
+#sub_city ul{overflow:hidden;zoom:1}
+#sub_city ul li{float:left;width:60px;height:25px;}
+#sub_city ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:4px}
+#sub_city ul a:hover{background:#38ac96;color:#fff}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+
+.btn{width: 88px;
+height: 28px;
+background: #fea201;
+font-size: 14px;
+color: #fdfdfd;
+margin-top: 10px;
+cursor: pointer;}
+
+/* 选择工作地区 */
+#jobAreaAlpha{padding:10px 4px}
+#jobAreaAlpha h4{color:#38ac96;font-size:14px;}
+#jobAreaAlpha dl{zoom:1;overflow:hidden;line-height:25px}
+#jobAreaAlpha dt{float:left;width:80px;font-weight:bold}
+#jobAreaAlpha dd{float:left;width:492px}
+#jobAreaAlpha dd li{float:left;width:82px;cursor:pointer;text-indent:16px;height:25px;overflow:Hidden}
+#jobAreaAlpha dd li.over{background-color:#38ac96;color:#fff}
+
+#jobAreSelected{border-bottom:1px dashed #ccc;margin-bottom:10px;padding-bottom:6px}
+#jobAreSelected dt{font-size:14px;color:#38ac96}
+#maincity2 li,#jobAreSelected li{background-image:url(../images/chk_off.gif);background-repeat:no-repeat;background-position:2px 6px}
+#maincity2 li.chkON,#jobAreSelected li.chkON{background-image:url(../images/chk_on.gif)}
+#allProv2{border-top:1px dashed #ccc;margin-top:6px;padding-top:10px}
+/* 工作地区 悬浮子菜单 */
+#sub_jobArea{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_jobArea h4{ color:#38ac96; border-bottom:1px dashed #ccc}
+#sub_jobArea ul{overflow:hidden;zoom:1}
+#sub_jobArea ul li{float:left;width:80px;height:25px}
+#sub_jobArea ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:16px; background-repeat:no-repeat;background-position:2px 6px}
+#sub_jobArea ul a:hover{background-color:#38ac96;color:#fff}
+#sub_jobArea ul a.chkON{background-image:url(../images/chk_on.gif)}

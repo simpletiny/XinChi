@@ -1,0 +1,28 @@
+package seentao.xhsn.login.dao;
+
+import seentao.xhsn.bean.HsUserBO;
+
+
+/**
+ * @Description:登录DAO接口	
+ * @author 李君彦
+ * @date 2014-11-18 上午9:57:47 
+ * @version V1.0   
+ */
+public interface ILoginDAO {
+
+	/**
+	 * 验证登录信息
+	 * @param userName 用户名
+	 * @param userPwd 密码
+	 * @param type 类型 企业或个人登录
+	 * @return
+	 */
+	public HsUserBO getUserBeanByLoginInfo(String user_mail,String userPwd,String type);
+
+	/**
+	 * 更新登陆信息
+	 * @param hsUserBO
+	 */
+	public void updateLoginInfo(HsUserBO hsUserBO);
+}

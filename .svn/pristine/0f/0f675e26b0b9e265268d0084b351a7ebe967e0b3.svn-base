@@ -1,0 +1,61 @@
+package seentao.xhsn.person.education.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsEducationBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.education.dao.IEducationDAO;
+
+
+@Repository
+public class EducationDAOImpl extends SqlSessionDaoSupport implements IEducationDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsEducationBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsEducationBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsEducationBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsEducationBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsEducationBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsEducationBO selectByPrimaryKey(String id) {
+		return (HsEducationBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsEducationBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsEducationBO> getAllByParam(HsEducationBO bo) {
+		List<HsEducationBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsEducationBOMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public List<HsEducationBO> findByUserIdAndResId(String user_id, String res_id) {
+		HsEducationBO bo =new HsEducationBO();
+		bo.setUser_id(user_id);
+		bo.setRes_id(res_id);
+		List<HsEducationBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsEducationBOMapper.selectByParam", bo);
+		return list;
+	}
+	
+}

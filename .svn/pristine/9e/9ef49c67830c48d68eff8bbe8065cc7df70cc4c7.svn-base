@@ -1,0 +1,64 @@
+package seentao.xhsn.person.hssubjoin.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsSubjoinBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.hssubjoin.dao.IHsSubjoinDAO;
+
+
+@Repository
+public class HsSubjoinDAOImpl extends SqlSessionDaoSupport implements IHsSubjoinDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsSubjoinBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsSubjoinBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsSubjoinBO selectByPrimaryKey(String id) {
+		return (HsSubjoinBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsSubjoinBO> getAllByParam(HsSubjoinBO bo) {
+		List<HsSubjoinBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.selectByPram", bo);
+		return list;
+	}
+
+	@Override
+	public HsSubjoinBO findByUserIdAndResId(String user_id, String res_id) {
+		HsSubjoinBO bo = new HsSubjoinBO();
+		bo.setUser_id(user_id);
+		bo.setRes_id(res_id);
+		List<HsSubjoinBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsSubjoinBOMapper.selectByPram", bo);
+		if(null!=list&&list.size()>0){
+			return list.get(0);
+		}
+		return null;
+	}
+	
+}

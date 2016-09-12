@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsResumejobexperienceBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsResumejobexperienceBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="user_id" property="user_id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="exp_proname" property="exp_proname" jdbcType="VARCHAR" />
+	    <result column="position_code" property="position_code" jdbcType="VARCHAR" />
+	    <result column="position_name" property="position_name" jdbcType="VARCHAR" />
+	    <result column="trade_code" property="trade_code" jdbcType="VARCHAR" />
+	    <result column="trade_name" property="trade_name" jdbcType="VARCHAR" />
+	    <result column="size_id" property="size_id" jdbcType="VARCHAR" />
+	    <result column="exp_begintime" property="exp_begintime" jdbcType="VARCHAR" />
+	    <result column="exp_endtime" property="exp_endtime" jdbcType="VARCHAR" />
+	    <result column="exp_companyname" property="exp_companyname" jdbcType="VARCHAR" />
+	    <result column="exp_description" property="exp_description" jdbcType="VARCHAR" />
+	    <result column="duty_description" property="duty_description" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	user_id, 
+    	res_id, 
+    	exp_proname, 
+    	position_code, 
+    	position_name, 
+    	trade_code, 
+    	trade_name, 
+    	size_id, 
+    	exp_begintime, 
+    	exp_endtime, 
+    	exp_companyname, 
+    	exp_description, 
+    	duty_description, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_resumejobexperience
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_resumejobexperience
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsResumejobexperienceBO" >
+  	
+    insert into hs_resumejobexperience
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="user_id != null">
+	        user_id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="exp_proname != null">
+	        exp_proname,
+	      </if>
+	 	<if test="position_code != null">
+	        position_code,
+	      </if>
+	 	<if test="position_name != null">
+	        position_name,
+	      </if>
+	 	<if test="trade_code != null">
+	        trade_code,
+	      </if>
+	 	<if test="trade_name != null">
+	        trade_name,
+	      </if>
+	 	<if test="size_id != null">
+	        size_id,
+	      </if>
+	 	<if test="exp_begintime != null">
+	        exp_begintime,
+	      </if>
+	 	<if test="exp_endtime != null">
+	        exp_endtime,
+	      </if>
+	 	<if test="exp_companyname != null">
+	        exp_companyname,
+	      </if>
+	 	<if test="exp_description != null">
+	        exp_description,
+	      </if>
+	 	<if test="duty_description != null">
+	        duty_description,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="user_id != null">
+	        #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="exp_proname != null">
+	        #{exp_proname,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_code != null">
+	        #{position_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_name != null">
+	        #{position_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_code != null">
+	        #{trade_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_name != null">
+	        #{trade_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="size_id != null">
+	        #{size_id,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_begintime != null">
+	        #{exp_begintime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_endtime != null">
+	        #{exp_endtime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_companyname != null">
+	        #{exp_companyname,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_description != null">
+	        #{exp_description,jdbcType=VARCHAR},
+	      </if>
+    	<if test="duty_description != null">
+	        #{duty_description,jdbcType=VARCHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsResumejobexperienceBO" >
+    update hs_resumejobexperience
+    <set >
+    	<if test="user_id != null">
+	        user_id = #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="exp_proname != null">
+	        exp_proname = #{exp_proname,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_code != null">
+	        position_code = #{position_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="position_name != null">
+	        position_name = #{position_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_code != null">
+	        trade_code = #{trade_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trade_name != null">
+	        trade_name = #{trade_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="size_id != null">
+	        size_id = #{size_id,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_begintime != null">
+	        exp_begintime = #{exp_begintime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_endtime != null">
+	        exp_endtime = #{exp_endtime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_companyname != null">
+	        exp_companyname = #{exp_companyname,jdbcType=VARCHAR},
+	      </if>
+    	<if test="exp_description != null">
+	        exp_description = #{exp_description,jdbcType=VARCHAR},
+	      </if>
+    	<if test="duty_description != null">
+	        duty_description = #{duty_description,jdbcType=VARCHAR},
+	      </if>
+       <if test="modifier != null">
+        modifier=#{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time=#{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsResumejobexperienceBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_resumejobexperience
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

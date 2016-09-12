@@ -1,0 +1,43 @@
+package seentao.xhsn.login.service;
+
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.login.bean.LoginBean;
+
+
+/**
+ * @Description:登陆service接口	
+ * @author 李君彦
+ * @date 2014-11-18 上午9:55:15 
+ * @version V1.0   
+ */
+public interface ILoginService {
+
+	/**
+	 * 验证登录信息
+	 * @param userName 用户名
+	 * @param userPwd 密码
+	 * @param type 类型 企业或个人登录
+	 * @return
+	 */
+	public HsUserBO getUserBeanByLoginInfo(String user_mail,String userPwd,String type);
+
+	/**
+	 * 更新登陆信息
+	 * @param hsUserBO
+	 */
+	public void updateLoginInfo(HsUserBO hsUserBO);
+
+	/**调用注册平台的借口，验证用户名密码是否正确，并接受用户传过来的值
+	 * @param person
+	 * @return
+	 */
+	public HsUserBO login_user(LoginBean person);
+	
+	/**
+	 * 调用注册平台的借口，获取登录bean
+	 * @param person
+	 * @return
+	 */
+	public String selectLoginBean(LoginBean person);
+	
+}

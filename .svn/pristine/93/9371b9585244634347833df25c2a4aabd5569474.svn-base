@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsEtpFollowResumeBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsEtpFollowResumeBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="etp_id" property="etp_id" jdbcType="CHAR" />
+	    <result column="datetime" property="datetime" jdbcType="TIMESTAMP" />
+	    <result column="follow_duration" property="follow_duration" jdbcType="INTEGER" />
+	    <result column="follow_sources" property="follow_sources" jdbcType="VARCHAR" />
+	    <result column="search_id" property="search_id" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	res_id, 
+    	etp_id, 
+    	datetime, 
+    	follow_duration, 
+    	follow_sources, 
+    	search_id, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_etp_follow_resume
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_etp_follow_resume
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsEtpFollowResumeBO" >
+  	
+    insert into hs_etp_follow_resume
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="etp_id != null">
+	        etp_id,
+	      </if>
+	 	<if test="datetime != null">
+	        datetime,
+	      </if>
+	 	<if test="follow_duration != null">
+	        follow_duration,
+	      </if>
+	 	<if test="follow_sources != null">
+	        follow_sources,
+	      </if>
+	 	<if test="search_id != null">
+	        search_id,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="etp_id != null">
+	        #{etp_id,jdbcType=CHAR},
+	      </if>
+    	<if test="datetime != null">
+	        #{datetime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="follow_duration != null">
+	        #{follow_duration,jdbcType=INTEGER},
+	      </if>
+    	<if test="follow_sources != null">
+	        #{follow_sources,jdbcType=VARCHAR},
+	      </if>
+    	<if test="search_id != null">
+	        #{search_id,jdbcType=CHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsEtpFollowResumeBO" >
+    update hs_etp_follow_resume
+    <set >
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="etp_id != null">
+	        etp_id = #{etp_id,jdbcType=CHAR},
+	      </if>
+    	<if test="datetime != null">
+	        datetime = #{datetime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="follow_duration != null">
+	        follow_duration = #{follow_duration,jdbcType=INTEGER},
+	      </if>
+    	<if test="follow_sources != null">
+	        follow_sources = #{follow_sources,jdbcType=VARCHAR},
+	      </if>
+    	<if test="search_id != null">
+	        search_id = #{search_id,jdbcType=CHAR},
+	      </if>
+       <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ 
+</mapper>

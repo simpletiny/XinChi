@@ -1,0 +1,218 @@
+@charset "utf-8";
+/* CSS Document */
+a {text-decoration:none; font-size:14px; cursor:pointer;}
+a { blr:expression(this.onFocus=this.blur()) } /*针对 IE*/
+a { outline:none; } /*针对firefox等*/
+body,div,ul,li { padding: 0; margin: 0; }
+img { border: none; }
+*{ margin:0; padding:0; font-family:"微软雅黑",Arial; color:#606162;}
+ul,ol,li{list-style:none;}
+br{clear:both; font-size:0; line-height:0;}
+input,textarea{ border:none; margin:0px; overflow:hidden; color:#888888; font-size:14px;}
+body{ background:#f0f3f6;}
+#wrap{ width:100%;}
+#top{ width:100%; background:url(../images/topbg.jpg) repeat-x;}
+.top_inner{ width:970px; height:97px; margin:0 auto;}
+#main{width:970px; margin:0 auto; padding:15px 0 30px 0;}
+#main ul{  width:456px; height:45px; margin-left:215px;}
+#main ul li{ float:left;}
+#main ul li a{ display:block; width:228px; height:45px; line-height:45px; font-size:16px; text-align:center; color:#767676;}
+#main ul li .active{ color:#FFF;}
+#main  table td .cur{ cursor:pointer;display:block; line-height:1.8em; padding-left:5px; width:504px;}
+#main table td .cur:hover{ color:#FFF; background:#38ac96;}
+#choose-box-wrapper{
+		width: 652px;
+		background-color:#000;
+		background-color: rgba(0, 0, 0, 0.5);
+		display:none;
+		z-index:1000;
+	}
+	#choose-box-wrapper2{
+		width: 652px;
+		background-color:#000;
+		background-color: rgba(0, 0, 0, 0.5);
+		display:none;
+		z-index:1000;
+	}
+	#choose-box{
+		border: 1px solid #1abc9c;
+		width:650px;
+		background-color:white;
+	}
+	#choose-box-title{
+		background:#1abc9c;
+		color: white;
+		padding: 4px 10px 5px;
+		font-size: 14px;
+		font-weight: 700;
+		margin: 0;
+	}
+	#choose-box-title span{
+		font-family: Tahoma, Verdana, STHeiTi, simsun, sans-serif; color:#FFF;
+	}
+
+	#choose-a-province, #choose-a-school{
+		margin:5px 8px 10px 8px;
+		border: 1px solid #C3C3C3;
+	}
+	#choose-a-province a{
+		display:inline-block;
+		height: 18px;
+		line-height: 18px;
+		color:#005EAC;
+		text-decoration: none;
+		font-size: 9pt;
+		font-family: Tahoma, Verdana, STHeiTi, simsun, sans-serif;
+		margin:2px 5px;
+		padding: 1px;
+		text-align: center;
+	}
+	#choose-a-province a:hover{
+		text-decoration:underline;
+		cursor:pointer;
+	}
+	#choose-a-province .choosen{
+		background-color: #1abc9c;
+		color:white;
+	}
+	
+	#choose-a-school{
+		overflow-x: hidden;
+		overflow-y: auto;
+		height: 200px;
+	}
+	#choose-a-school a{
+		height: 18px;
+		line-height: 18px;
+		color:#005EAC;
+		text-decoration: none;
+		font-size: 9pt;
+		font-family: Tahoma, Verdana, STHeiTi, simsun, sans-serif;
+		float: left;
+		width: 160px;
+		margin: 4px 12px;
+		padding-left:10px;
+		background:url(http://pic002.cnblogs.com/images/2012/70278/2012072500060712.gif) no-repeat 0 9px;
+	}
+	#choose-a-school a:hover{
+		background-color:#1abc9c;
+		color:white;
+		cursor:pointer;
+	}
+	
+	#choose-box-bottom{
+		background: #F0F5F8;
+		padding: 8px;
+		text-align: right;
+		border-top: 1px solid #CCC;
+		height:40px;
+	}
+	#choose-box-bottom input{
+		vertical-align: middle;
+		text-align: center;
+		background-color:#1abc9c;
+		color:white;
+		border-top: 1px solid #B8D4E8;
+		border-left: 1px solid #B8D4E8;
+		border-right: 1px solid #114680;
+		border-bottom: 1px solid #114680;
+		cursor: pointer;
+		width: 60px;
+		height: 25px;
+		margin-top: 6px;
+		margin-right: 6px;
+		border:none;
+	}
+#footer{ width:100%; background:#1abc9c;}
+.footer_inner{ width:970px; height:62px; margin:0 auto; text-align:center;}	
+.footer_inner p{ line-height:62px; font-size:12px; color:#FFF; margin-right:20px;}
+
+
+
+@import url(alpha.css);
+#maskLayer{position: absolute;left:0px;top:0px}
+#alphadiv{position:absolute;background:#000;z-index: 2000}
+#drag{position:absolute;background:#fff;z-index: 2001;width:580px;border:1px solid #ccc}
+#drag_h{line-height:28px;height:28px;cursor:move;color:#fff;background:#38ac96;border-bottom:1px dashed #babcbc;padding:0 10px;}
+#drag h3 b{float:left; color:#FFF;}
+#drag h3 span{font-weight:normal;float:right;cursor:pointer; color:#FFF;}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+#btn{background:url(btn.png) no-repeat;width:183px;height:21px;border:none;cursor:pointer}
+#btn_residency,#btn_jobArea,
+#btn_FuntypeID,#btn_FuntypeID_2,
+#btn_IndustryID,#btn_IndustryID_2,
+#btn_hukou,#btn_nation,
+#btn_MajorID,#btn_MajorID_2{background:url(../../images/select.jpg) no-repeat;width:198px;height:35px;border:none;cursor:pointer; font-size:14px;}
+
+/* 遮罩层 */
+#maskLayer{position: absolute;left:0px;top:0px}
+#alphadiv{position:absolute;background:#000;z-index: 2000}
+#drag{position:absolute;background:#fff;z-index: 2001;width:580px;border:1px solid #ccc}
+#drag_h{line-height:28px;height:28px;cursor:move;color:#fff;background:#38ac96;border-bottom:1px dashed #babcbc;padding:0 10px}
+#drag h3 b{float:left; font-size:13px;}
+#drag h3 span{font-weight:normal;float:right;cursor:pointer; font-size:13px;}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+#btn{background:url(btn.png) no-repeat;width:183px;height:21px;border:none;cursor:pointer}
+/* 选择行业列表 */
+#IndustryAlpha{padding:10px 4px}
+#IndustryAlpha dl{zoom:1;overflow:hidden;line-height:25px;border-bottom:1px dashed #ccc}
+#IndustryAlpha dt{float:left;width:200px;font-size:13px;color:#f90}
+#IndustryAlpha dd{float:left;width:450px}
+
+#IndustryAlpha ul{zoom:1;overflow:Hidden;line-height:25px;padding:8px 0}
+#IndustryAlpha li{float:left;width:220px;cursor:pointer;text-indent:20px;height:25px;overflow:Hidden;background-position:6px 6px}
+#IndustryAlpha li.over{background-color:#38ac96;color:#fff}
+#IndustryAlpha li.chkON{background-image:url(chk_on.gif)}
+#IndustryAlpha .radio li{background-image:none}
+/* 选择职能类别列表 */
+#FuntypeAlpha{padding:10px 4px}
+#FuntypeAlpha dl{zoom:1;overflow:hidden;line-height:25px;border-bottom:1px dashed #ccc}
+#FuntypeAlpha dt{float:left;width:200px;font-size:13px;color:#f90}
+#FuntypeAlpha dd{float:left;width:450px;}
+
+#FuntypeAlpha ul{zoom:1;overflow:Hidden;line-height:25px;padding:8px 0}
+#FuntypeAlpha li{float:left;width:220px;cursor:pointer;text-indent:20px;height:25px;overflow:Hidden;background-repeat:no-repeat;background-position:6px 6px}
+#FuntypeAlpha li.over{background-color:#38ac96;color:#fff}
+#FuntypeAlpha li.chkON{background-image:url(chk_on.gif)}
+/* 职能类别 悬浮子菜单 */
+#sub_funtype{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_funtype h4{border-bottom:1px dashed #ccc}
+#sub_funtype ul{overflow:hidden;zoom:1}
+#sub_funtype ul li{float:left;width:220px;height:25px;overflow:hidden}
+#sub_funtype ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:16px;background-image:url(chk_off.gif);background-repeat:no-repeat;background-position:2px 6px}
+#sub_funtype ul a:hover{background-color:#38ac96;color:#fff}
+#sub_funtype ul a.chkON{background-image:url(chk_on.gif)}
+#sublist .radio a{background-image:none}
+
+* 
+        .fl {float:left}
+        .fr {float:right}
+        .dn {display:none}
+        /*日历 begin*/
+.data_box           {width:260px; }
+.showDate           {background:url(../../images/select.jpg) no-repeat; display:block;width:195px; padding-left:3px;height:35px; line-height:35px;border:none;cursor:pointer; font-size:14px;}
+.show_mn            {text-align:center;padding:0 20px;}
+.sel_date           {margin-top:10px;border:1px solid #999;padding:3px; position:absolute; width:200px; top:-2px; background:#FFF;}
+.data_table         {width:100%;margin-top:10px;}
+.data_table td      {text-align:center;cursor:pointer;height:24px;font-size:14px;}
+.data_table td.active      {color:#fff;background-color:#999}
+.data_table td.hover{color:blue;}
+.showDate2          {width:35px;padding:3px 5px;color:#999;border:1px solid #e1e1e1;text-align:center}
+.showDate2.active   {border:1px solid #c50000; }
+.prev_m,.next_m     {width:10px;height:22px;display:block;background-color:#0094ff;color:#fff;cursor:pointer;text-align:center;font: bold 12px/22px "宋体"}
+.prev_y,.next_y     {width:18px;height:22px;display:block;background-color:#0094ff;color:#fff;cursor:pointer;text-align:center;font: bold 12px/22px "宋体";margin:0 5px;}
+/* 选择专业列表 */
+#MajorAlpha{padding:10px 4px}
+#MajorAlpha ul{zoom:1;overflow:Hidden;line-height:25px;padding:8px 0}
+#MajorAlpha li{float:left;width:220px;cursor:pointer;text-indent:20px;height:25px;overflow:Hidden;background-repeat:no-repeat;background-position:6px 6px; font-size:13px;}
+#MajorAlpha li.over{background-color:#38ac96;color:#fff}
+/* 专业 悬浮子菜单 */
+#sub_major{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_major h4{border-bottom:1px dashed #ccc}
+#sub_major ul{overflow:hidden;zoom:1}
+#sub_major ul li{float:left;width:220px;height:25px;overflow:hidden}
+#sub_major ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:16px;background-image:url(chk_off.gif);background-repeat:no-repeat;background-position:2px 6px}
+#sub_major ul a:hover{background-color:#38ac96;color:#fff}
+#sublist .radio a{background-image:none}

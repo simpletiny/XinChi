@@ -1,0 +1,33 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsFilesBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String tab_name;
+		  
+		 
+		  private java.lang.String clm_name;
+		  
+		 
+		  public  java.lang.String getTab_name() {
+				return tab_name;
+			}
+			
+			public void setTab_name( java.lang.String tab_name) {
+				this.tab_name = tab_name;
+			}
+		 
+		  public  java.lang.String getClm_name() {
+				return clm_name;
+			}
+			
+			public void setClm_name( java.lang.String clm_name) {
+				this.clm_name = clm_name;
+			}
+	
+
+}

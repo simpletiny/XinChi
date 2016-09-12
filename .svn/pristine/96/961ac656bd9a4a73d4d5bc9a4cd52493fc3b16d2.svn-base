@@ -1,0 +1,64 @@
+$(document).ready(function() {
+	//参数1 action地址  
+	//参数2 参数信息 不包括分页参数 
+	//参数3 从第几页开始
+	//参数4 每页记录数
+	
+	fenye('sys/getAllDictionary','',1,10);
+});
+
+function handleResponse(data,action,param){
+	$("#content").empty();
+	html = "<table >" +
+			"    	<tr>" +
+			"    		<td>编目</td>" +
+			"    		<td>名称</td>" +
+			"    		<td>   </td>" +
+			"    	</tr>";
+	$.each(data.boList, function(i, item) {
+		
+		html = html + "<tr>" +
+					"	<td>" + item.dic_catalog + "</td>" +
+					"	<td>" + item.name + "</td>" +
+					"	<td><a style='cursor:pointer;' onclick=update('myForm','sys/getDictionary','bo.id=" + item.id + "') >修改</a>||" +
+					"	    <a style='cursor:pointer;' onclick=deleteBo('sys/delDictionary','bo.id=" + item.id + "') >删除</a>||" +
+					"		<a href='sys/getAllDictionaryData?bo.dictionary_catalog=" + item.dic_catalog + "' >数据编辑</a>" +
+					"	</td>" +
+					"</tr>";
+	});
+	html = html + "</table>";
+	$("#content").append(html);
+	appendPage(data.page,action,param);
+}
+
+function handleUpdateResponse(data){
+		$("#dic_catalog").attr("readonly",true);
+        	 $("#key").val(data.bo.id);
+        	 $("#dic_catalog").val(data.bo.dic_catalog);
+        	 $("#name").val(data.bo.name);
+	}
+
+function validate(){
+	
+	return true;
+}
+function savedict(action,returnUrl){
+	   if(!validate())
+		   return;
+	   var layIndex=layer.load('保存中,请稍候...', -1);
+	  $.ajax({
+	        url: action,
+	        data: $("#myForm").serialize(),
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	layer.close(layIndex);
+	        	 alert("保存成功！");
+	        	 window.location.href=returnUrl;
+	        },
+	        error:function(data){
+	        	layer.close(layIndex);
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+}

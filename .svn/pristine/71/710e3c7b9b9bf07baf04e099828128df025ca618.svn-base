@@ -1,0 +1,114 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsEducationBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String user_id;
+
+	private java.lang.String res_id;
+
+	private java.lang.String edu_begintime;
+
+	private java.lang.String edu_endtime;
+
+	private java.lang.String edu_school_name;
+
+	private java.lang.String edu_school_code;
+
+	private java.lang.String main_major_code;
+
+	private java.lang.String main_major_name;
+
+	private java.lang.String edu_degree;
+
+	private java.lang.String certificate_file_id;
+
+	public HsEducationBO() {
+		super();
+		setTable_name("hs_education");
+	}
+
+	public java.lang.String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(java.lang.String user_id) {
+		this.user_id = user_id;
+	}
+
+	public java.lang.String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(java.lang.String res_id) {
+		this.res_id = res_id;
+	}
+
+	public java.lang.String getEdu_begintime() {
+		return edu_begintime;
+	}
+
+	public void setEdu_begintime(java.lang.String edu_begintime) {
+		this.edu_begintime = edu_begintime;
+	}
+
+	public java.lang.String getEdu_endtime() {
+		return edu_endtime;
+	}
+
+	public void setEdu_endtime(java.lang.String edu_endtime) {
+		this.edu_endtime = edu_endtime;
+	}
+
+	public java.lang.String getEdu_school_name() {
+		return edu_school_name;
+	}
+
+	public void setEdu_school_name(java.lang.String edu_school_name) {
+		this.edu_school_name = edu_school_name;
+	}
+
+	public java.lang.String getEdu_school_code() {
+		return edu_school_code;
+	}
+
+	public void setEdu_school_code(java.lang.String edu_school_code) {
+		this.edu_school_code = edu_school_code;
+	}
+
+	public java.lang.String getMain_major_code() {
+		return main_major_code;
+	}
+
+	public void setMain_major_code(java.lang.String main_major_code) {
+		this.main_major_code = main_major_code;
+	}
+
+	public java.lang.String getMain_major_name() {
+		return main_major_name;
+	}
+
+	public void setMain_major_name(java.lang.String main_major_name) {
+		this.main_major_name = main_major_name;
+	}
+
+	public java.lang.String getEdu_degree() {
+		return edu_degree;
+	}
+
+	public void setEdu_degree(java.lang.String edu_degree) {
+		this.edu_degree = edu_degree;
+	}
+
+	public java.lang.String getCertificate_file_id() {
+		return certificate_file_id;
+	}
+
+	public void setCertificate_file_id(java.lang.String certificate_file_id) {
+		this.certificate_file_id = certificate_file_id;
+	}
+
+}

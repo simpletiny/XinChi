@@ -1,0 +1,60 @@
+package seentao.xhsn.person.jobexp.action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.jobexp.service.IJobExpService;
+import seentao.xhsn.person.resume.service.IResumeService;
+
+@Controller
+@Scope("prototype")
+public class JobExpAction  extends ActionSupport {
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private IJobExpService jobexpService;
+	
+	private HsResumejobexperienceBO bo;
+	@Autowired
+	private IResumeService resumeService;
+	private String id;
+	
+	public String addJobExp(){
+		jobexpService.insert(bo);
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateProject(resBo);
+		return "SUCCESS";
+	}
+	
+	public void validateAddJobExp(){
+		//TODO: 对传进来的参数进行验证
+	}
+
+	public HsResumejobexperienceBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsResumejobexperienceBO bo) {
+		this.bo = bo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	
+}

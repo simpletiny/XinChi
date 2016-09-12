@@ -1,0 +1,159 @@
+$(document).ready(function() {
+	// 如果是修改状态，加载已选择的信息
+	var industryIds = $('#IndustryID_2').val().split(",");
+	var funtypeIds = $('#FuntypeID').val().split(",");
+	var jobAreaIds = $('#jobAreaID').val().split(",");
+	var industryName = "";
+	var funtypeName = "";
+	var jobAreaName = "";
+	for ( var i = 0; i < industryIds.length; i++) {
+		var id = industryIds[i];
+		if (id == "")
+			continue;
+		industryName += ind_a[id] + ",";
+	}
+	for ( var i = 0; i < funtypeIds.length; i++) {
+		var id = funtypeIds[i];
+		if (id == "")
+			continue;
+		funtypeName += fun_a[id] + ",";
+	}
+
+	for ( var i = 0; i < jobAreaIds.length; i++) {
+		var id = jobAreaIds[i];
+		if (id == "")
+			continue;
+		jobAreaName += ja[id] + ",";
+	}
+	industryName.endWith(",") ? industryName = industryName.substring(0, industryName.length - 1) : '';
+	funtypeName.endWith(",") ? funtypeName = funtypeName.substring(0, funtypeName.length - 1) : '';
+	jobAreaName.endWith(",") ? jobAreaName = jobAreaName.substring(0, jobAreaName.length - 1) : '';
+
+	$('#btn_IndustryID_2').val(industryName != "" ? industryName : $('#btn_IndustryID_2').val());
+	$('#btn_FuntypeID').val(funtypeName != "" ? funtypeName : $('#btn_FuntypeID').val());
+	$('#btn_jobArea').val(jobAreaName != "" ? jobAreaName : $('#btn_jobArea').val());
+
+	$('#btn_publish').click(function() {
+		saveJob('1');
+	});
+	$('#btn_save').click(function() {
+		saveJob('2');
+	});
+	switchTab(3);
+});
+String.prototype.endWith = function(str) {
+	var reg = new RegExp(str + "$");
+	return reg.test(this);
+}
+function saveJob(type) {
+	if ($('#IndustryID_2').val() == "") {
+		alert("请选择行业类别");
+		return;
+	}
+	if ($('#FuntypeID').val() == "") {
+		alert("请选择职位类别");
+		return;
+	}
+	if ($('#rel_name').val() == "") {
+		alert("请填写职位名称");
+		return;
+	}
+	if ($('#salary_code').val() == "" || $('#salary_code').val() == "0") {
+		alert("请选择月薪范围");
+		return;
+	}
+	if ($('#jobAreaID').val() == "") {
+		alert("请选择工作地点");
+		return;
+	}
+
+	if ($("#txt_linkman_email").val() == "") {
+		alert("投递邮箱不能为空");
+		return;
+	}
+	var reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
+	if (!$("#txt_linkman_email").val().match(reg)) {
+		alert("输入的邮箱格式不正确!");
+		return;
+	}
+	if (type == "1") {
+		$('#rel_status').val("1");
+	} else if (type == "2") {
+		if ($("#rel_status").val() == "") {
+			$('#rel_status').val("0");
+		}
+	}
+	var param = $('#edit_form').serialize();
+	$.ajax({
+		url : 'saveJob',
+		data : param,
+		type : 'post',
+		success : function(r) {
+			var data = eval(r);
+			var result = data.result;
+			if (result == "OK") {
+				if (type == "1") {
+					alert("发布成功");
+				} else if (type == "2") {
+					alert("保存成功");
+				}
+				location.href = "manageJobInit";
+			}
+		},
+		error : function(data) {
+			alert("操作失败，请稍后重试！");
+		}
+	});
+}
+
+function hide(id) {
+	$(id).is(":visible") ? $(id).hide() : $(id).show();
+}
+/**
+ * 选择学历
+ * 
+ * @param v
+ * @param span
+ */
+function pickEdu(v, span) {
+	$("#bm").val($(span).html());
+	$("#education_code").val(v);
+	hide('#HMF-2')
+}
+function pickExp(v,span){
+	$("#cm").val($(span).html());
+	$("#exp_id").val(v);
+	hide('#HMF-3')
+}
+/**
+ * 选择月薪
+ * 
+ * @param v
+ * @param span
+ */
+function pickSalary(v, span) {
+	$("#am").val($(span).html());
+	$("#salary_code").val(v);
+	hide('#HMF-1');
+}
+/**
+ * 只能是数字的约束
+ * 
+ * @param e
+ * @returns
+ */
+function onlynumber(e){
+	var keynum;
+	var keychar;
+	var numcheck;
+
+	if(window.event){
+	  keynum = e.keyCode;
+	  }else if(e.which)  {
+		  keynum = e.which;
+	  }
+
+	keychar = String.fromCharCode(keynum);
+	numcheck = /\d/;
+	return numcheck.test(keychar);
+}

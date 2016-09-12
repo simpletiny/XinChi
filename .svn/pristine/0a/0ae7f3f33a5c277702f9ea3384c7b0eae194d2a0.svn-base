@@ -1,0 +1,95 @@
+package seentao.xhsn.person.home.service.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.enterprise.info.dao.IInfoDAO;
+import seentao.xhsn.enterprise.releasejob.dao.IReleasejobDAO;
+import seentao.xhsn.person.home.service.IHomePageService;
+import seentao.xhsn.person.jobsearch.bean.JobDetailBean;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.tools.Page;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月5日 下午4:17:09 
+ * @note 
+ */
+@Service
+@Transactional
+public class HomePageServiceImpl implements IHomePageService {
+	@Autowired
+	private IReleasejobDAO releasejobDAO;
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+	@Autowired
+	private IInfoDAO infoDAO;
+	
+	@Override
+	public List<JobDetailBean> findAllJobByCityCode(
+			Page<HsEtpReleasejobBO> page) {
+		List<JobDetailBean> jobDetails = new ArrayList<JobDetailBean>();
+		List<HsEtpReleasejobBO> releaseJobs = releasejobDAO.getAllByParam(page);
+		for (int i = 0; i < releaseJobs.size(); i++) {
+			HsEtpReleasejobBO etpReleaseJob = (HsEtpReleasejobBO) releaseJobs.get(i);
+			JobDetailBean jobDetail = getJobDetail(etpReleaseJob.getId());
+			jobDetails.add(jobDetail);
+		}
+		return jobDetails;
+	}
+	
+	public JobDetailBean getJobDetail(String releaseJobId) {
+		HsEtpReleasejobBO etpReleasejob = new HsEtpReleasejobBO();
+		HsEnterpriseBO enterprise = new HsEnterpriseBO();
+		JobDetailBean jb = new JobDetailBean();
+
+		etpReleasejob = releasejobDAO.selectByPrimaryKey(releaseJobId);
+		enterprise = infoDAO.selectByPrimaryKey(etpReleasejob.getCom_id());
+		jb.setJobName(etpReleasejob.getRel_name());
+		jb.setCompanyName(enterprise.getEnt_name());
+		// String companyType =
+		// dictFieldMapService.getDictValueByParam(enterprise.getTable_name(),
+		// "com_type", enterprise.getTrade_code()).get("value");
+		// jb.setCompanyType(companyType);
+		String comSize = dictFieldMapService.getDictValueByParam(enterprise.getTable_name(), "size_id",
+				enterprise.getSize_id()).get("value");
+		jb.setCompanySize(comSize);
+		String monthSalary = dictFieldMapService.getDictValueByParam("hs_etp_releasejob", "salary_code",
+				etpReleasejob.getSalary_code()).get("value");
+		jb.setMonthlyPay(monthSalary);
+		jb.setJobAddress(etpReleasejob.getCounty_code());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date createtime = new Date(etpReleasejob.getRel_createtime().getTime());
+		jb.setPublishDate(sdf.format(createtime));
+
+		jb.setJobProperty(etpReleasejob.getRel_property());
+		if (null != etpReleasejob.getExp_id()) {
+			String jobExp = dictFieldMapService.getDictValueByParam("hs_userbasicinfo", "job_exp_year",
+					etpReleasejob.getExp_id()).get("value");
+			jb.setJobExp(jobExp);
+		}
+		if (null != etpReleasejob.getEducation_code()) {
+			String jobEducation = dictFieldMapService.getDictValueByParam("hs_etp_releasejob", "education_code",
+					etpReleasejob.getEducation_code()).get("value");
+			jb.setJobEducation(jobEducation);
+		}
+
+		jb.setNeedCnt(etpReleasejob.getRel_count());
+		jb.setJobType(etpReleasejob.getJob_id());
+		jb.setId(etpReleasejob.getId());
+		jb.setJobDuty(etpReleasejob.getRel_description());
+		jb.setJobDutyShort(jb.getJobDuty());
+		jb.setCompanySummary(enterprise.getCom_info());
+		return jb;
+	}
+
+}

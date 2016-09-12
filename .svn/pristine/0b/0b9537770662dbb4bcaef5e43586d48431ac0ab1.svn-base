@@ -1,0 +1,38 @@
+package seentao.xhsn.sys.city.action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.common.BaseAction;
+import seentao.xhsn.sys.city.bean.CityDataBean;
+import seentao.xhsn.sys.city.service.ICityService;
+
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class CityAction extends BaseAction {
+	private static final long serialVersionUID = 6589694992514132089L;
+	private CityDataBean cdbean;
+
+	@Autowired
+	private ICityService cityService;
+
+	/**
+	 * 取得数据json
+	 * 
+	 * @return
+	 */
+	public String getDataJson() {
+		cdbean = cityService.getCdBean();
+		return SUCCESS;
+	}
+
+	public CityDataBean getCdbean() {
+		return cdbean;
+	}
+
+	public void setCdbean(CityDataBean cdbean) {
+		this.cdbean = cdbean;
+	}
+}

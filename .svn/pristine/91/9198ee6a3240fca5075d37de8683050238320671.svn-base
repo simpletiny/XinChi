@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsSubjoinBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsSubjoinBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="user_id" property="user_id" jdbcType="CHAR" />
+		<result column="res_id" property="res_id" jdbcType="CHAR" />
+		<result column="max_edu" property="max_edu" jdbcType="VARCHAR" />
+		<result column="max_degree" property="max_degree" jdbcType="VARCHAR" />
+		<result column="graduationt_y" property="graduationt_y"
+			jdbcType="CHAR" />
+		<result column="graduationt_m" property="graduationt_m"
+			jdbcType="CHAR" />
+		<result column="position_id" property="position_id" jdbcType="VARCHAR" />
+		<result column="con_name" property="con_name" jdbcType="VARCHAR" />
+		<result column="ub_contactnumber" property="ub_contactnumber"
+			jdbcType="VARCHAR" />
+		<result column="ub_evaluation" property="ub_evaluation"
+			jdbcType="VARCHAR" />
+		<result column="experience_y" property="experience_y" jdbcType="CHAR" />
+		<result column="experience_m" property="experience_m" jdbcType="CHAR" />
+		<result column="photo_file_id" property="photo_file_id"
+			jdbcType="CHAR" />
+		<result column="ub_marrystate" property="ub_marrystate"
+			jdbcType="VARCHAR" />
+		<result column="ub_birthday" property="ub_birthday" jdbcType="TIMESTAMP" />
+		<result column="ub_country" property="ub_country" jdbcType="VARCHAR" />
+		<result column="mz_id" property="mz_id" jdbcType="VARCHAR" />
+		<result column="aear_code" property="aear_code" jdbcType="VARCHAR" />
+		<result column="ub_telephone" property="ub_telephone" jdbcType="VARCHAR" />
+		<result column="political_id" property="political_id" jdbcType="VARCHAR" />
+		<result column="ub_address" property="ub_address" jdbcType="VARCHAR" />
+		<result column="ub_postcode" property="ub_postcode" jdbcType="VARCHAR" />
+		<result column="job_exp_year" property="job_exp_year" jdbcType="VARCHAR" />
+		<result column="overseas_exp" property="overseas_exp" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		user_id,
+		res_id,
+		max_edu,
+		max_degree,
+		graduationt_y,
+		graduationt_m,
+		position_id,
+		con_name,
+		ub_contactnumber,
+		ub_evaluation,
+		experience_y,
+		experience_m,
+		photo_file_id,
+		ub_marrystate,
+		ub_birthday,
+		ub_country,
+		mz_id,
+		aear_code,
+		ub_telephone,
+		political_id,
+		ub_address,
+		ub_postcode,
+		job_exp_year,
+		overseas_exp,
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_subjoin
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from hs_subjoin
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsSubjoinBO">
+
+		insert into hs_subjoin
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="res_id != null">
+				res_id,
+			</if>
+			<if test="max_edu != null">
+				max_edu,
+			</if>
+			<if test="max_degree != null">
+				max_degree,
+			</if>
+			<if test="graduationt_y != null">
+				graduationt_y,
+			</if>
+			<if test="graduationt_m != null">
+				graduationt_m,
+			</if>
+			<if test="position_id != null">
+				position_id,
+			</if>
+			<if test="con_name != null">
+				con_name,
+			</if>
+			<if test="ub_contactnumber != null">
+				ub_contactnumber,
+			</if>
+			<if test="ub_evaluation != null">
+				ub_evaluation,
+			</if>
+			<if test="experience_y != null">
+				experience_y,
+			</if>
+			<if test="experience_m != null">
+				experience_m,
+			</if>
+			<if test="photo_file_id != null">
+				photo_file_id,
+			</if>
+			<if test="ub_marrystate != null">
+				ub_marrystate,
+			</if>
+			<if test="ub_birthday != null">
+				ub_birthday,
+			</if>
+			<if test="ub_country != null">
+				ub_country,
+			</if>
+			<if test="mz_id != null">
+				mz_id,
+			</if>
+			<if test="aear_code != null">
+				aear_code,
+			</if>
+			<if test="ub_telephone != null">
+				ub_telephone,
+			</if>
+			<if test="political_id != null">
+				political_id,
+			</if>
+			<if test="ub_address != null">
+				ub_address,
+			</if>
+			<if test="ub_postcode != null">
+				ub_postcode,
+			</if>
+			<if test="job_exp_year != null">
+				job_exp_year,
+			</if>
+			<if test="overseas_exp != null">
+				overseas_exp,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				#{res_id,jdbcType=CHAR},
+			</if>
+			<if test="max_edu != null">
+				#{max_edu,jdbcType=VARCHAR},
+			</if>
+			<if test="max_degree != null">
+				#{max_degree,jdbcType=VARCHAR},
+			</if>
+			<if test="graduationt_y != null">
+				#{graduationt_y,jdbcType=CHAR},
+			</if>
+			<if test="graduationt_m != null">
+				#{graduationt_m,jdbcType=CHAR},
+			</if>
+			<if test="position_id != null">
+				#{position_id,jdbcType=VARCHAR},
+			</if>
+			<if test="con_name != null">
+				#{con_name,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_contactnumber != null">
+				#{ub_contactnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_evaluation != null">
+				#{ub_evaluation,jdbcType=VARCHAR},
+			</if>
+			<if test="experience_y != null">
+				#{experience_y,jdbcType=CHAR},
+			</if>
+			<if test="experience_m != null">
+				#{experience_m,jdbcType=CHAR},
+			</if>
+			<if test="photo_file_id != null">
+				#{photo_file_id,jdbcType=CHAR},
+			</if>
+			<if test="ub_marrystate != null">
+				#{ub_marrystate,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_birthday != null">
+				#{ub_birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ub_country != null">
+				#{ub_country,jdbcType=VARCHAR},
+			</if>
+			<if test="mz_id != null">
+				#{mz_id,jdbcType=VARCHAR},
+			</if>
+			<if test="aear_code != null">
+				#{aear_code,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_telephone != null">
+				#{ub_telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="political_id != null">
+				#{political_id,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_address != null">
+				#{ub_address,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_postcode != null">
+				#{ub_postcode,jdbcType=VARCHAR},
+			</if>
+			<if test="job_exp_year != null">
+				#{job_exp_year,jdbcType=VARCHAR},
+			</if>
+			<if test="overseas_exp != null">
+				#{overseas_exp,jdbcType=VARCHAR},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsSubjoinBO">
+		update hs_subjoin
+		<set>
+			<if test="user_id != null">
+				user_id = #{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				res_id = #{res_id,jdbcType=CHAR},
+			</if>
+			<if test="max_edu != null">
+				max_edu = #{max_edu,jdbcType=VARCHAR},
+			</if>
+			<if test="max_degree != null">
+				max_degree = #{max_degree,jdbcType=VARCHAR},
+			</if>
+			<if test="graduationt_y != null">
+				graduationt_y = #{graduationt_y,jdbcType=CHAR},
+			</if>
+			<if test="graduationt_m != null">
+				graduationt_m = #{graduationt_m,jdbcType=CHAR},
+			</if>
+			<if test="position_id != null">
+				position_id = #{position_id,jdbcType=VARCHAR},
+			</if>
+			<if test="con_name != null">
+				con_name = #{con_name,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_contactnumber != null">
+				ub_contactnumber = #{ub_contactnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_evaluation != null">
+				ub_evaluation = #{ub_evaluation,jdbcType=VARCHAR},
+			</if>
+			<if test="experience_y != null">
+				experience_y = #{experience_y,jdbcType=CHAR},
+			</if>
+			<if test="experience_m != null">
+				experience_m = #{experience_m,jdbcType=CHAR},
+			</if>
+			<if test="photo_file_id != null">
+				photo_file_id = #{photo_file_id,jdbcType=CHAR},
+			</if>
+			<if test="ub_marrystate != null">
+				ub_marrystate = #{ub_marrystate,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_birthday != null">
+				ub_birthday = #{ub_birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ub_country != null">
+				ub_country = #{ub_country,jdbcType=VARCHAR},
+			</if>
+			<if test="mz_id != null">
+				mz_id = #{mz_id,jdbcType=VARCHAR},
+			</if>
+			<if test="aear_code != null">
+				aear_code = #{aear_code,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_telephone != null">
+				ub_telephone = #{ub_telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="political_id != null">
+				political_id = #{political_id,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_address != null">
+				ub_address = #{ub_address,jdbcType=VARCHAR},
+			</if>
+			<if test="ub_postcode != null">
+				ub_postcode = #{ub_postcode,jdbcType=VARCHAR},
+			</if>
+			<if test="job_exp_year != null">
+				job_exp_year = #{job_exp_year,jdbcType=VARCHAR},
+			</if>
+			<if test="overseas_exp != null">
+				overseas_exp = #{overseas_exp,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<select id="selectByPram" parameterType="seentao.xhsn.bean.HsSubjoinBO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hs_subjoin
+		<where>
+			<if test="user_id !=null">
+				user_id = #{user_id,jdbcType=CHAR}
+			</if>
+			<if test="res_id !=null">
+				and res_id = #{res_id,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

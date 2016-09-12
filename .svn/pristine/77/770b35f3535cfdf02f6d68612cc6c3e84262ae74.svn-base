@@ -1,0 +1,44 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsSearchBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String sys_user_id;
+		  
+		 
+		  private java.lang.String type;
+		  
+		 
+		  private java.sql.Timestamp search_time;
+		  
+		 
+		  public  java.lang.String getSys_user_id() {
+				return sys_user_id;
+			}
+			
+			public void setSys_user_id( java.lang.String sys_user_id) {
+				this.sys_user_id = sys_user_id;
+			}
+		 
+		  public  java.lang.String getType() {
+				return type;
+			}
+			
+			public void setType( java.lang.String type) {
+				this.type = type;
+			}
+		 
+		  public  java.sql.Timestamp getSearch_time() {
+				return search_time;
+			}
+			
+			public void setSearch_time( java.sql.Timestamp search_time) {
+				this.search_time = search_time;
+			}
+	
+
+}

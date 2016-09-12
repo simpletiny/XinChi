@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 发布企业信息
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>发布企业信息<a href="/companies/{{ companyId }}/detail" class="cancel-create"><i class="ic-cancel"></i>取消</a><a href="/companies/{{ companyId }}/detail" class="cancel-create">返回</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="form-all">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat required">
+                    <label class="l">企业名称</label>
+                    <div class="ip"><input type="text" class="ip-default" data-bind="value: company().name" placeholder="企业名称" disabled/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">显示名称</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().publishName" class="ip-default" placeholder="显示名称" name="publishName" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">公司性质</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().nature" class="ip-default" placeholder="公司性质" name="nature" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">公司规模</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().size" class="ip-default" placeholder="公司规模" name="size" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作地点</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().workingLocation" class="ip-default" placeholder="工作地点" name="workingLocation" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作地点(略)</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().briefWorkingLocation" class="ip-default" placeholder="工作地点(略)" name="briefWorkingLocation" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">公司网址</label>
+                    <div class="ip"><input type="text" data-bind="value: companyIntro().website" class="ip-default" placeholder="公司网址" name="website" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">公司优势展示</label>
+                    <div class="ip"><textarea type="text" data-bind="value: companyIntro().advantage" class="ip-default" rows="5" placeholder="公司优势展示" name="advantage" required="required"></textarea></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">公司介绍</label>
+                    <div class="ip"><textarea data-bind="richText: companyIntro().intro" name="intro" class="ckeditor ip-default" rows="5" placeholder="公司介绍" name="intro" required="required"></textarea></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">工作环境</label>
+                    <div class="ip"><textarea data-bind="richText: companyIntro().workingEnvironment" name="workingEnvironment" class="ckeditor ip-default" rows="5" placeholder="工作环境" name="workingEnvironment" required="required"></textarea></div>
+                </div>
+            </form>
+
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createCompanyIntro">发布</a></div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/ckeditor/ckeditor.js"></script>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/vendor/ckeditor/adapters/jquery.js"></script>
+  <script src="/static/js/companies/company-intro.js{{ _suffix_ }}"></script>
+{% endblock %}

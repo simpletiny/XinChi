@@ -1,0 +1,58 @@
+package seentao.xhsn.enterprise.info.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+
+/**
+ * @Description:企业信息操作DAO接口
+ * @author niushixing
+ * @date 2014-12-2 10:59:46
+ * @version V1.0
+ */
+public interface IInfoDAO {
+
+	/**
+	 * 新增
+	 * 
+	 * @param bo
+	 * @return 
+	 */
+	public String insert(HsEnterpriseBO bo);
+
+	/**
+	 * 修改
+	 * 
+	 * @param bo
+	 */
+	public void update(HsEnterpriseBO bo);
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 */
+	public void delete(String id);
+
+	/**
+	 * 根据主键查找
+	 * 
+	 * @param id
+	 */
+	public HsEnterpriseBO selectByPrimaryKey(String id);
+
+	/**
+	 * 根据条件查找
+	 * 
+	 * @param bo
+	 */
+	public List<HsEnterpriseBO> getAllByParam(HsEnterpriseBO bo);
+
+	/**
+	 * 通过系统Id取得企业信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public HsEnterpriseBO getBySysUserId(String id);
+}

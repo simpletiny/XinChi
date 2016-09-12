@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 添加员工
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>添加员工<a href="/employees" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-box info-form">
+               <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">员工姓名</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: employee().employeeName" placeholder="员工姓名" name="name" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">登录名</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: employee().username" placeholder="登录名" name="username" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">登录密码</label>
+                        <div class="ip"><input style="width: 100%" type="password" class="ip-default" data-bind="value: employee().password" placeholder="登录密码" name="password" id="password" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">确认登录密码</label>
+                        <div class="ip"><input style="width: 100%" type="password" class="ip-default" placeholder="确认登录密码" name="c_password" id="c_password" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">员工角色</label>
+                        <div class="ip">
+                            <div data-bind="foreach: allRoles" style="padding-top: 4px;">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.employee().roles"/><label data-bind="text: $root.roleMapping[$data]"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createEmployee">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script>
+      $(".employees").addClass("current").children("ol").css("display", "block");
+      $(".tab-title").on("click", function() {
+          $(this).parent().addClass("active").siblings(".active").removeClass("active");
+          $("#" + $(this).data("id")).show().siblings(".list-result").hide();
+      });
+  </script>
+  <script src="/static/js/employees/employee-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

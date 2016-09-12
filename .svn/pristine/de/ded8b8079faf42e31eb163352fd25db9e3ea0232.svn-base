@@ -1,0 +1,143 @@
+$(document).ready(function() {
+	//参数1 action地址  
+	//参数2 参数信息 不包括分页参数 
+	//参数3 从第几页开始
+	//参数4 每页记录数
+	var formparam = $("#myform").serialize();
+	fenye('person/jobsearchByDesired',formparam,1,5);
+});
+
+
+function handleResponse(data,action,param){
+	$("#content").empty();
+	$("#res_id").val(data.res_id);
+	for (var key in data.desiredBO) {  //遍历json字符串
+		 $("[name='desiredBO." + key + "']").val(data.desiredBO[key]);
+	}
+	$.each(data.result_jobs, function(i, item) {
+		var tr = "<li>" ;
+		var desired_city_code = item.jobAddress;
+		var desired_city_txt = getTextByCodes(desired_city_code, ja);
+		tr = tr+
+            "<h4><input name='job' type='checkbox' value='" + item.id + "' />" + item.jobName + "(" + desired_city_txt + ")<span>" + item.publishDate + "</span></h4>" +
+        	"<h5>" + item.companyName + "<a href='javascript:sczw(\"" + item.id + "\")'>收藏职位</a></h5>" +
+        	"<p>地点：" + desired_city_txt +"&nbsp;&nbsp;公司性质：" + item.companyType + "&nbsp;&nbsp;公司规模：" + item.companySize + "  经验：" + item.jobExp + "&nbsp;&nbsp;学历：" + item.jobEducation + "&nbsp;&nbsp;职位月薪：" + item.monthlyPay + "</p>"+
+        	"<p id='duty_all'>岗位职责：" + item.jobDuty + "</p>" +
+            "<br />" +
+            "<input name='' type='button' value='立即申请' onclick='putresume()' " +
+            "style=' width:88px; height:28px; background:#fea201; margin-left:55px; margin-top:10px; cursor:pointer; color:#fdfdfd;'/>";
+       	 $("#content").append(tr+"</li>");
+      });
+	 appendPage(data.page,action,param);  
+}
+
+
+function jobSelectAll(elem){
+	if($("#btn_job").attr("checked")){
+		$("[name='job']").attr("checked",'true');//全选
+	}else{
+		$("[name='job']").removeAttr("checked");//取消全选
+	}
+}
+
+//申请职位
+function putresume(){
+	var action = "person/putresumes";
+	//1、获取已选中的
+	var job_ids = "";
+	$("input[name='job']:checked").each(function () {
+		job_ids += "," + this.value;
+	})
+	if(job_ids.length > 0){
+		job_ids = job_ids.substring(1);
+		var res_id = $("#res_id").val();
+		var dataParam = "job_ids=" + job_ids + "&res_id=" + res_id;
+		$.ajax({
+	        url: action,
+	        data: dataParam,
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	//handleResponse(data,action,param);
+	        	if(data.put_count){
+	        		alert("职位申请成功！ 已经申请了" + data.put_count + " 个职位！");
+	        	}
+	        },
+	        error:function(data){
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+	}else{
+		alert("请选择一条记录！");
+	}
+	
+}
+
+function goback(){
+	window.history.back();
+}
+
+
+//将编码转换成字符串
+function getTextByCodes(codes, arraytext) {
+	var arr = codes.split(",");
+	var texts = "";
+	for (var i = 0; i < arr.length; i++) {
+		var code = arr[i];
+		texts += "," + arraytext[code];
+	}
+	texts = texts.substring(1);
+	return texts;
+}
+
+function sczw(job_id){
+	var action = "person/positionCollect";
+	var dataParam = "job_id=" + job_id;
+	$.ajax({
+        url: action,
+        data: dataParam,
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	//handleResponse(data,action,param);
+        	if(data.collent_count){
+        		alert("收藏职位成功！ 已经收藏了" + data.collent_count + " 个职位！");
+        	}
+        },
+        error:function(data){
+        	alert("操作失败，请稍后重试！");
+        }
+	}); 
+}
+
+function plsczw(){
+	
+	var action = "person/positionCollectByIDs";
+	//1、获取已选中的
+	var job_ids = "";
+	$("input[name='job']:checked").each(function () {
+		job_ids += "," + this.value;
+	})
+	if(job_ids.length > 0){
+		job_ids = job_ids.substring(1);
+		var dataParam = "job_ids=" + job_ids;
+		$.ajax({
+	        url: action,
+	        data: dataParam,
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	//handleResponse(data,action,param);
+	        	if(data.collent_count){
+	        		alert("收藏职位成功！ 已经收藏了" + data.collent_count + " 个职位！");
+	        	}
+	        },
+	        error:function(data){
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+	}else{
+		alert("请选择一条记录！");
+	}
+	
+}

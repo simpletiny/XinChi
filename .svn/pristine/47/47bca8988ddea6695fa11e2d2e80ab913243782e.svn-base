@@ -1,0 +1,36 @@
+package seentao.xhsn.person.evaluate.service;
+
+import seentao.xhsn.bean.HsEvaluateBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月24日 下午3:25:30 
+ * @note 自我评价service
+ */
+public interface IEvaluateService {
+	
+	/**
+	 * 保存对象（如果对象的id为空就添加，如果不为空就更新）
+	 * @param bo 
+	 */
+	public void save(HsEvaluateBO bo);
+	
+	/**添加对象
+	 * @param bo
+	 */
+	public void insert(HsEvaluateBO bo);
+	
+	/**
+	 * 更新对象
+	 * @param bo 
+	 */
+	public void update(HsEvaluateBO bo);
+	
+	/**
+	 * 根据用户id和简历id获取用户的自我评价
+	 * @param user_id 用户id
+	 * @param res_id 简历id
+	 * @return 自我评价
+	 */
+	public HsEvaluateBO getByUserIdAndResId(String user_id, String res_id);
+}

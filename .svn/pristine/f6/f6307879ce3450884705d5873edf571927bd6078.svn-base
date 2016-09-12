@@ -1,0 +1,44 @@
+package seentao.xhsn.person.resumeother.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsResumeOtherBO;
+
+/**
+ * @Description:其他信息操作DAO接口
+ * @author 李君彦
+ * @date 2014-11-24 下午3:08:23 
+ * @version V1.0   
+ */
+public interface IResumeOtherDAO{
+	
+	/**
+	 * 新增
+	 * @param bo
+	 */
+	public void insert(HsResumeOtherBO bo);
+	
+	/**
+	 * 修改
+	 * @param bo
+	 */
+	public void update(HsResumeOtherBO bo);
+	
+	/**
+	 * 删除
+	 * @param id
+	 */
+	public void delete(String id);
+	
+	/**
+	 * 根据主键查找
+	 * @param id
+	 */
+	public HsResumeOtherBO selectByPrimaryKey(String id);
+	
+	/**
+	 * 根据条件查找
+	 * @param bo
+	 */
+	public List<HsResumeOtherBO> getAllByParam(HsResumeOtherBO bo);
+}

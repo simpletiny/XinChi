@@ -1,0 +1,53 @@
+$(document).ready(function() {
+	$('.srmm').focus(function(){
+		$('.mima').css('display','none')
+	});
+	$('.srmm').blur(function(){
+		
+		if($('.srmm').val()!=""){
+			$('.mima').css('display','none');
+		}else{
+			$('.mima').css('display','block');
+		}
+	});
+	$('.srmm1').focus(function(){
+		$('.mima1').css('display','none')
+	});
+	$('.srmm1').blur(function(){
+		
+		if($('.srmm1').val()!=""){
+			$('.mima1').css('display','none');
+		}else{
+			$('.mima1').css('display','block');
+		}
+	});
+	$('#main .company_inner').css('display','none')	
+	$('#main .person').addClass('active');	
+	$('#main .person').click(function(){
+		$('#main .company').removeClass('active');
+		$('#main .person').addClass('active');
+		$('#main .company_inner').css('display','none');
+		$('#main .person_inner').css('display','block');
+	});
+		
+	$('#main .company').click(function(){
+		$('#main .person').removeClass('active');
+		$('#main .company').addClass('active');
+		$('#main .person_inner').css('display','none');
+		$('#main .company_inner').css('display','block');
+	});	
+	//判断上次登录失败的是公司还是个人
+	var type=$("#type").val();
+	if("2"==type){
+		$('#main .person').removeClass('active');
+		$('#main .company').addClass('active');
+		$('#main .person_inner').css('display','none');
+		$('#main .company_inner').css('display','block');
+	}
+
+})
+
+function openurl(url){
+	location.href = url;
+}
+

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsEducationBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsEducationBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="user_id" property="user_id" jdbcType="CHAR" />
+		<result column="res_id" property="res_id" jdbcType="CHAR" />
+		<result column="edu_begintime" property="edu_begintime"
+			jdbcType="VARCHAR" />
+		<result column="edu_endtime" property="edu_endtime" jdbcType="VARCHAR" />
+		<result column="edu_school_name" property="edu_school_name"
+			jdbcType="VARCHAR" />
+		<result column="edu_school_code" property="edu_school_code"
+			jdbcType="VARCHAR" />
+		<result column="main_major_code" property="main_major_code"
+			jdbcType="VARCHAR" />
+		<result column="main_major_name" property="main_major_name"
+			jdbcType="VARCHAR" />
+		<result column="edu_degree" property="edu_degree" jdbcType="VARCHAR" />
+		<result column="certificate_file_id" property="certificate_file_id"
+			jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		user_id,
+		res_id,
+		edu_begintime,
+		edu_endtime,
+		edu_school_name,
+		edu_school_code,
+		main_major_code,
+		main_major_name,
+		edu_degree,
+		certificate_file_id,
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_education
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from hs_education
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsEducationBO">
+
+		insert into hs_education
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="res_id != null">
+				res_id,
+			</if>
+			<if test="edu_begintime != null">
+				edu_begintime,
+			</if>
+			<if test="edu_endtime != null">
+				edu_endtime,
+			</if>
+			<if test="edu_school_name != null">
+				edu_school_name,
+			</if>
+			<if test="edu_school_code != null">
+				edu_school_code,
+			</if>
+			<if test="main_major_code != null">
+				main_major_code,
+			</if>
+			<if test="main_major_name != null">
+				main_major_name,
+			</if>
+			<if test="edu_degree != null">
+				edu_degree,
+			</if>
+			<if test="certificate_file_id != null">
+				certificate_file_id,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				#{res_id,jdbcType=CHAR},
+			</if>
+			<if test="edu_begintime != null">
+				#{edu_begintime,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_endtime != null">
+				#{edu_endtime,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_school_name != null">
+				#{edu_school_name,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_school_code != null">
+				#{edu_school_code,jdbcType=VARCHAR},
+			</if>
+			<if test="main_major_code != null">
+				#{main_major_code,jdbcType=VARCHAR},
+			</if>
+			<if test="main_major_name != null">
+				#{main_major_name,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_degree != null">
+				#{edu_degree,jdbcType=VARCHAR},
+			</if>
+			<if test="certificate_file_id != null">
+				#{certificate_file_id,jdbcType=CHAR},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsEducationBO">
+		update hs_education
+		<set>
+			<if test="user_id != null">
+				user_id = #{user_id,jdbcType=CHAR},
+			</if>
+			<if test="res_id != null">
+				res_id = #{res_id,jdbcType=CHAR},
+			</if>
+			<if test="edu_begintime != null">
+				edu_begintime = #{edu_begintime,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_endtime != null">
+				edu_endtime = #{edu_endtime,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_school_name != null">
+				edu_school_name = #{edu_school_name,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_school_code != null">
+				edu_school_code = #{edu_school_code,jdbcType=VARCHAR},
+			</if>
+			<if test="main_major_code != null">
+				main_major_code = #{main_major_code,jdbcType=VARCHAR},
+			</if>
+			<if test="main_major_name != null">
+				main_major_name = #{main_major_name,jdbcType=VARCHAR},
+			</if>
+			<if test="edu_degree != null">
+				edu_degree = #{edu_degree,jdbcType=VARCHAR},
+			</if>
+			<if test="certificate_file_id != null">
+				certificate_file_id = #{certificate_file_id,jdbcType=CHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="seentao.xhsn.bean.HsEducationBO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hs_education
+		<where>
+			<if test="user_id !=null">
+				user_id = #{user_id,jdbcType=VARCHAR}
+			</if>
+			<if test="res_id !=null">
+				and res_id = #{res_id,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+</mapper>

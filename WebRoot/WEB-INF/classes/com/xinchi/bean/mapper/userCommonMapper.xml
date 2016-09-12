@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.UserCommonMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.UserCommonBean" >
+    	<id column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="login_name" property="login_name" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="user_number" property="user_number" jdbcType="VARCHAR" />
+	    <result column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+	    <result column="sex" property="sex" jdbcType="CHAR" />
+	    <result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+	    <result column="user_status" property="user_status" jdbcType="CHAR" />
+		<result column="id_file_name" property="id_file_name" jdbcType="VARCHAR" />
+		<result column="user_right" property="user_right" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nick_name" jdbcType="VARCHAR" />
+		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		A.pk,
+    	A.login_name, 
+    	A.password, 
+    	A.user_number, 
+    	A.id, 
+    	A.user_name, 
+    	A.sex, 
+    	A.delete_flg, 
+    	A.user_status,
+		B.id_file_name,
+		B.user_right,
+		B.nick_name,
+		B.cellphone
+  </sql>
+    <select id="selectAllByParam" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id
+  </select>
+</mapper>

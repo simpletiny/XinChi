@@ -1,0 +1,39 @@
+package seentao.xhsn.sys.resume.action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.sys.resume.service.IResumeManagerService;
+
+/**
+ * @Description:	简历管理
+ * @author 李君彦
+ * @date 2015-1-14 下午2:54:59 
+ * @version V1.0   
+ */
+@Controller
+@Scope("prototype")
+public class ResumeManagerAction {
+
+	@Autowired
+	private IResumeManagerService resumeManagerService;
+	private String tip;
+	/**
+	 * 所有学生的导出简历模板初始化
+	 * @return
+	 */
+	public String templetInit(){
+		//生成所有学生的导出模板
+		resumeManagerService.generateTemplet();
+		tip="简历初始化成功！";
+		return "SUCCESS";
+	}
+	public String getTip() {
+		return tip;
+	}
+	public void setTip(String tip) {
+		this.tip = tip;
+	}
+
+}

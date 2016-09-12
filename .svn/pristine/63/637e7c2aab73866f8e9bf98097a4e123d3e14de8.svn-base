@@ -1,0 +1,132 @@
+$(document).ready(function() {
+	switchTab(3);
+	$(" body").click(function() {
+		$(".bm").hide();
+	});
+	$("#certi_code_value").click(function(e) {
+		if ($("#proselectbox").css("display") == "none")
+			$("#proselectbox").show();
+		else
+			$("#proselectbox").hide();
+		e.stopPropagation();// 阻止冒泡到body
+	});
+
+})
+
+var ShowImage = function() {
+	xOffset = 10;
+	yOffset = 30;
+	$("#imglist").find("img").hover(function(e) {
+		$("<img id='imgshow' src='" + this.src + "' />").appendTo("body");
+		$("#imgshow").css({
+			"top" : (e.pageY - xOffset) + "px",
+			"left" : (e.pageX + yOffset) + "px"
+		}).fadeIn("slow");
+	}, function() {
+		$("#imgshow").remove();
+	});
+};
+
+function pickPro(code, value) {
+	$("#certi_code_value").val(value);
+	$("#certi_code").val(code);
+	$(".bm").hide();
+	if (value == '其他') {
+		$("#certi_name").css("display", "block");
+	} else {
+		$("#certi_name").css("display", "none");
+	}
+}
+
+function validate() {
+	if ($("#certi_code").val().length == 0) {
+		$("#errorTip").text("请选择证书名称！");
+		return false;
+	}
+	if ($("#certi_code").val() == '99'&&$("#certi_name").val().length == 0) {
+		$("#errorTip").text("请输入其他证书名称！");
+		return false;
+	}
+	if ($("#gain_month").val().length == 0) {
+		$("#errorTip").text("请选择获得时间！");
+		return false;
+	}
+	if ($("#certi_code").val() != '99') {
+		$("#certi_name").val("");
+	}
+	return true;
+}
+function handleUpdateResponse(data) {
+	$("#key").val(data.bo.id);
+	$("#certi_file_id").val(data.bo.certi_file_id);
+	$("#certi_code").val(data.bo.certi_code);
+	$("#certi_code_value").val(data.bo.certi_code_value);
+	$("#gain_month").val(data.bo.gain_month);
+	if (data.bo.certi_code_value == '其他') {
+		$("#certi_name").css("display", "block");
+	} else {
+		$("#certi_name").css("display", "none");
+	}
+	$("#certi_name").val(data.bo.certi_name);
+	$("#imglist").empty();
+	if (data.fileDataList.length > 0) {
+		for ( var i = 0; i < data.fileDataList.length; i++) {
+			var imageHtml ="<li id=\"" + data.fileDataList[i].id+ "\"><a> <img src=\"" + data.fileDataList[i].file_path+ data.fileDataList[i].file_name_now+ "\"/></a>"+
+			"<A style=\"CURSOR: pointer\" onclick=\"delImg('"+ data.fileDataList[i].id + "')\">X</A></li>"; 
+			$("#imglist").append(imageHtml);
+		}
+	}
+	ShowImage();
+}
+
+function upload2() {
+	var layIndex=layer.load('上传中,请稍候...', -1);
+	$("#myForm").ajaxSubmit(
+			{
+				type : 'post',
+				url : "person/certificateUpload",
+				dataType : "json",
+				success : function(data) {
+					layer.close(layIndex);
+					if(data.error){
+						alert("上传文件大小超过限制！");
+					}else{
+						$("#certi_file_id").val(data.certi_file_id);
+						var imageHtml ="<li id=\"" + data.fileDataID+ "\"><a> <img src=\"" + data.path+ "\"/></a>"+
+						"<A style=\"CURSOR: pointer\" onclick=\"delImg('"+ data.fileDataID + "')\">X</A></li>"; 
+						$("#imglist").append(imageHtml);
+						
+						ShowImage();
+					}
+					
+				},
+				error : function(XmlHttpRequest, textStatus, errorThrown) {
+					layer.close(layIndex);
+					alert("上传失败，请重新上传！");
+				}
+			});
+}
+function upload() {
+	var ele=document.getElementById("hidBtn");
+	ele.click();
+}
+
+function delImg(fileDataID, cerID) {
+	var layIndex=layer.load('删除中,请稍候...', -1);
+	var param = "fileDataID=" + fileDataID;
+	$.ajax({
+		url : "person/delCertificateFile",
+		data : param,
+		type : "post",
+		dataType : "json",
+		success : function(data) {
+			layer.close(layIndex);
+			alert("删除成功！")
+			$("#" + fileDataID).remove();
+		},
+		error : function(data) {
+			layer.close(layIndex);
+			alert("操作失败，请稍后重试！");
+		}
+	});
+}

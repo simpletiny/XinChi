@@ -1,0 +1,59 @@
+package seentao.xhsn.enterprise.index.action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.common.BaseAction;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.enterprise.index.bean.EntTopBean;
+import seentao.xhsn.enterprise.index.service.IEntIndexService;
+
+/**
+ * 企业端首页Action
+ * 
+ * @author niushixing 2015-1-5 15:55:02
+ *
+ */
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class EntIndexAction extends BaseAction {
+	private static final long serialVersionUID = -8317650815510925498L;
+	private EntTopBean top;
+	@Autowired
+	private IEntIndexService entIndexService;
+	private String ent_id;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+		if (null == ent_id || ent_id.equals("")) {
+			ent_id = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+					.getUser_id();
+		}
+		top = entIndexService.getEntTopInfo(ent_id);
+		return SUCCESS;
+	}
+
+	public EntTopBean getTop() {
+		return top;
+	}
+
+	public void setTop(EntTopBean top) {
+		this.top = top;
+	}
+
+	public String getEnt_id() {
+		return ent_id;
+	}
+
+	public void setEnt_id(String ent_id) {
+		this.ent_id = ent_id;
+	}
+}

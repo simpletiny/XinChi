@@ -1,0 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page isErrorPage="true" %>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+ <%@ page import="org.apache.log4j.Logger" %> 
+ <%
+	Logger logger = Logger.getLogger("error.jsp");
+	//int status_code = ((Integer)request.getAttribute("javax.servlet.error.status_code")).intValue();
+	//String exception_type = (String)request.getAttribute("javax.servlet.error.exception_type").toString();
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>系统执行发生错误</title>
+</head>
+
+<body>
+  <s:property value="exception.message"/>
+  <s:property value="exception"/>
+</body>
+</html>

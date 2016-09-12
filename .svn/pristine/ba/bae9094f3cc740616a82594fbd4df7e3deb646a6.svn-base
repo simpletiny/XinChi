@@ -1,0 +1,104 @@
+package seentao.xhsn.enterprise.index.action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsCollegeResourceBO;
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.common.BaseAction;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.enterprise.index.bean.EntTopBean;
+import seentao.xhsn.enterprise.index.service.IEntIndexService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+
+/**
+ * 企业端首页Action
+ * 
+ * @author niushixing 2015-1-5 15:55:02
+ *
+ */
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class EntIndexAction extends BaseAction {
+	private static final long serialVersionUID = -8317650815510925498L;
+	private EntTopBean entTop;
+	@Autowired
+	private IEntIndexService entIndexService;
+	private String ent_id;
+	private List<HsDictionaryDataBO> jobExpList;
+	@Autowired
+	private IDictionaryFieldMapService dfmService;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+		if (null == ent_id || ent_id.equals("")) {
+			ent_id = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+					.getUser_id();
+		}
+		entTop = entIndexService.getEntTopInfo(ent_id);
+		Map<String, List<HsDictionaryDataBO>> mapDic = new HashMap<String, List<HsDictionaryDataBO>>();
+
+		mapDic = dfmService.findDictDataByParam("hs_userbasicinfo");
+		if (null != mapDic && mapDic.size() > 0) {
+			jobExpList = mapDic.get("user_jobexp");
+		}
+		return SUCCESS;
+	}
+
+	// 院校人才信息列表
+	private List<HsCollegeResourceBO> crlist;
+
+	/**
+	 * 搜索下边信息
+	 * 
+	 * @return
+	 */
+	public String searchInfo() {
+		crlist = entIndexService.searchCollegeResource();
+		return SUCCESS;
+	}
+
+	public String getEnt_id() {
+		return ent_id;
+	}
+
+	public void setEnt_id(String ent_id) {
+		this.ent_id = ent_id;
+	}
+
+	public List<HsDictionaryDataBO> getJobExpList() {
+		return jobExpList;
+	}
+
+	public void setJobExpList(List<HsDictionaryDataBO> jobExpList) {
+		this.jobExpList = jobExpList;
+	}
+
+	public EntTopBean getEntTop() {
+		return entTop;
+	}
+
+	public void setEntTop(EntTopBean entTop) {
+		this.entTop = entTop;
+	}
+
+	public List<HsCollegeResourceBO> getCrlist() {
+		return crlist;
+	}
+
+	public void setCrlist(List<HsCollegeResourceBO> crlist) {
+		this.crlist = crlist;
+	}
+}

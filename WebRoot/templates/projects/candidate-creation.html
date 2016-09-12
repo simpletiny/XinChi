@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <title></title>
+</head>
+<body>
+    <input type="hidden" id="hidden_apiurl" value="{{ config.APIURL }}">
+    <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+    <div>
+        <form class="form-box info-form">
+            <div class="input-row clearfloat required">
+                <label class="l">姓名</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: candidate().name" name="name" placeholder="姓名" required="required"/></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">性别</label>
+                <div class="ip"><select class="form-control"  data-bind="options: genders, optionsCaption: '不限', value: candidate().gender"></select></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">求职类型</label>
+                <div class="ip"><select class="form-control"  data-bind="options: allPositionTypes, optionsCaption: '不限', value: candidate().positionType"></select></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">手机</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: candidate().mobile" name="mobile" placeholder="手机"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">微信 OpenId</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: candidate().openId" placeholder="微信 OpenId"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">学历</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: candidate().degree" placeholder="学历"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">所在地</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: candidate().location" placeholder="所在地"/></div>
+            </div>
+        </form>
+        <div align="right" style="padding-right: 60px;">
+            <a type="submit" class="btn btn-green btn-r" data-bind="click: createCandidate">保存</a>
+        </div>
+    </div>
+    <script src="/static/vendor/jquery-1.11.1.min.js"></script>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="/static/vendor/knockout-3.2.0.js"></script>
+    <script src="/static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/messages_zh.min.js"></script>
+    <script src="/static/js/utils.js{{ _suffix_ }}"></script>
+    <script src="/static/js/validation.js{{ _suffix_ }}"></script>
+    <script src="/static/js/projects/candidate-creation.js{{ _suffix_ }}"></script>
+</body>
+</html>

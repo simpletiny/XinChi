@@ -1,0 +1,163 @@
+package seentao.xhsn.sys.job.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsJobBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.sys.job.dao.IJobDAO;
+import seentao.xhsn.sys.job.service.IJobService;
+import seentao.xhsn.tools.ArrayBoUtil;
+import seentao.xhsn.tools.Page;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月8日 上午10:35:32 
+ * @note 
+ */
+@Transactional
+@Service
+public class JobServiceImpl implements IJobService {
+	
+	@Autowired
+	private IJobDAO jobDao;
+	
+	@Override
+	public List<HsJobBO> findAllJob(Page<HsJobBO> page) {
+		return jobDao.findAllJob(page);
+	}
+
+	@Override
+	public HsJobBO getByPK(String id) {
+		return jobDao.getByPK(id);
+	}
+
+	@Override
+	public void saveJob(HsJobBO bo) {
+		if(bo.getId() != null && bo.getId().length() > 0){
+			jobDao.updateJobByPK(bo);
+			ArrayBoUtil.updateByObject(ResourcesConstants.ARRAY_JOB, bo);
+		}else{
+			/*String code = "";
+			if(DictionaryEnum.LEVEL_FIRST.getIntValue() == bo.getLevel()){
+				code = getNextFirstCode();
+				bo.setParent_code("0");
+			}else if(DictionaryEnum.LEVEL_SECOND.getIntValue() == bo.getLevel()){
+				code = getNextSecondCodeByParent(bo.getParent_code());
+			}
+			bo.setJob_code(code);*/
+			// 校验code是否符合规范
+			if(validateCode(bo)){
+				if(DictionaryEnum.LEVEL_FIRST.getIntValue() == bo.getLevel()){
+					bo.setParent_code("0");
+				}
+				ResourcesConstants.ARRAY_JOB.add(bo);
+				jobDao.insert(bo);
+			}
+		}
+
+	}
+
+	/**根据对象校验code是否符合规范
+	 * @param bo
+	 * @return
+	 */
+	private boolean validateCode(HsJobBO bo) {
+		boolean flag = true;
+		// 1、根据级别校验code规范
+		if(bo == null || bo.getLevel() == null){
+			flag = false;
+			System.err.println("error================参数不能为空！");
+		}else{
+			if(DictionaryEnum.LEVEL_FIRST.getIntValue() == bo.getLevel()){
+				//如果是一级菜单
+				String code = bo.getJob_code();
+				String regex = "^[0-9]{2}00$";
+				if(!code.matches(regex)){
+					System.err.println("error================编码格式错误！");
+					return false;
+				}
+			}else if(DictionaryEnum.LEVEL_SECOND.getIntValue() == bo.getLevel()){
+				//如果是二级菜单
+				String code = bo.getJob_code();
+				String parent_code = bo.getParent_code();
+				String regex = "^" + parent_code.substring(0, 2) + "[0-9]{2}$";
+				if(!code.matches(regex)){
+					System.err.println("error================编码格式错误！");
+					return false;
+				}
+			}else{
+				
+				System.err.println("error================级别不正确！");
+				return false;
+			}
+		}
+		// 2、根据code校验数据库是否存在
+		HsJobBO param = new HsJobBO();
+		param.setJob_code(bo.getJob_code());
+		List<HsJobBO> results = jobDao.findAllJobsByParam(param);
+		if(results != null && results.size() > 0 && results.get(0) != null && results.get(0).getId() != null){
+			System.err.println("error================该编码已存在！");
+			return false;
+		}
+		return flag;
+	}
+	
+
+	/**根据父节点获取二级的下一个编码
+	 * @param parent_code
+	 * @return
+	 */
+	private String getNextSecondCodeByParent(String parent_code) {
+		String newCode = "";
+		HsJobBO param = new HsJobBO();
+		param.setParent_code(parent_code);
+		param.setLevel(DictionaryEnum.LEVEL_SECOND.getIntValue());;
+		String currentCode = jobDao.getMaxCodeByParam(param);
+		if(currentCode == null || currentCode.length() <= 0){
+			currentCode = parent_code;
+		}
+		newCode = String.valueOf(Integer.parseInt(currentCode) + 1);
+		return newCode;
+	}
+
+	/**获取下一个一级编码
+	 * @return
+	 */
+	private String getNextFirstCode() {
+		String newCode = "";
+		HsJobBO param = new HsJobBO();
+		param.setLevel(DictionaryEnum.LEVEL_FIRST.getIntValue());;
+		String currentCode = jobDao.getMaxCodeByParam(param);
+		if(currentCode != null && currentCode.length() > 0){
+			int top = Integer.parseInt(currentCode)/100 + 1;
+			newCode = top + "00";
+		}else{
+			throw new BusinessException("编码获取失败~！");
+		}
+		return newCode;
+	}
+
+	@Override
+	public void deleteJob(String id) {
+		jobDao.deleteById(id);
+	}
+
+	@Override
+	public List<HsJobBO> findJobChildrenByParent(Page<HsJobBO> page) {
+		//TODO:添加额外的条件
+		
+		return jobDao.findJobsByPage(page);
+	}
+
+	@Override
+	public List<HsJobBO> findAllJobBean() {
+		return ResourcesConstants.ARRAY_JOB;
+	}
+	
+}

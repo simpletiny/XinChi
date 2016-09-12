@@ -1,0 +1,7 @@
+	<div>
+	  <h4 style="background:url(${basePath}common/images/resume/images/wdjn.png);"></h4>
+	<#list cslist as cs>
+	<p>${cs.professional_value} | ${cs.level_value}  | ${cs.usetime}月</p>
+	</#list>
+	  </div>
+        

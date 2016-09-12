@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <title></title>
+</head>
+<body>
+    <input type="hidden" id="hidden_apiurl" value="{{ config.APIURL }}">
+    <div>
+        <form class="form-box info-form">
+            <div class="input-row clearfloat required">
+                <label class="l">手机</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: blacklistMobile().mobile" placeholder="手机"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">封停起始时间</label>
+                <div class="ip"><input type="text" class="ip-default date-picker" data-bind="value: blacklistMobile().startDate" placeholder="封停起始时间"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">封停终止时间</label>
+                <div class="ip"><input type="text" class="ip-default date-picker" data-bind="value: blacklistMobile().endDate" placeholder="封停终止时间"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">封停原因</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: blacklistMobile().reason" placeholder="封停原因"/></div>
+            </div>
+        </form>
+        <div align="right" style="padding-right: 60px;">
+            <a type="submit" class="btn btn-green btn-r" data-bind="click: createBlacklistMobile">保存</a>
+        </div>
+    </div>
+    <script src="/static/vendor/jquery-1.11.1.min.js"></script>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="/static/vendor/knockout-3.2.0.js"></script>
+    <script src="/static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
+    <script src="/static/js/utils.js{{ _suffix_ }}"></script>
+    <script src="/static/js/datepicker.js{{ _suffix_ }}"></script>
+    <script src="/static/js/resumes/blacklist-mobile-creation.js{{ _suffix_ }}"></script>
+</body>
+</html>

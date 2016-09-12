@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<html>
+<head>
+	<base href="<%=basePath%>"/>
+	<style type="text/css">
+		a {text-decoration:none; font-size:14px;color:blue;}
+		a {color:blue; blr:expression(this.onFocus=this.blur()) } /*针对 IE*/
+		a {color:blue; outline:none; } /*针对firefox等*/
+		a:HOVER{
+			color:red;
+			text-decoration: underline;
+		}
+		a:AFTER{
+			color:blue;
+		}
+		table{
+			line-height : 24px;
+		}
+		
+	</style>
+</head>
+<body>
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td><a href="<%=basePath%>admin/dictionary/dictionary.jsp" target="rmain" onclick="">通用字典管理</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>admin/job/job.jsp" target="rmain" onclick="">职位管理</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>admin/trade/trade.jsp" target="rmain" onclick="">行业管理</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>sys/manageCityInit" target="rmain" onclick="">城市管理</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>sys/manageMajorInit" target="rmain" onclick="">专业管理</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>admin/enterprise/importEnterprise.jsp" target="rmain" onclick="">导入企业</a></td>
+		</tr>
+		<tr>
+			<td><a href="<%=basePath%>admin/learnPath/learnPath.jsp" target="rmain" onclick="">导入成长路径</a></td>
+		</tr>
+		
+	</table>
+</body>
+</html>

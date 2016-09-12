@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsCityBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsCityBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="city_code" property="city_code" jdbcType="VARCHAR" />
+	    <result column="city_name" property="city_name" jdbcType="VARCHAR" />
+	    <result column="province_code" property="province_code" jdbcType="VARCHAR" />
+	    <result column="sort_no" property="sort_no" jdbcType="INTEGER" />
+	    <result column="area" property="area" jdbcType="VARCHAR" />
+	    <result column="main_city" property="main_city" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	city_code, 
+    	city_name, 
+    	province_code, 
+    	sort_no, 
+    	area, 
+    	main_city, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_city
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_city
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsCityBO" >
+  	
+    insert into hs_city
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="city_code != null">
+	        city_code,
+	      </if>
+	 	<if test="city_name != null">
+	        city_name,
+	      </if>
+	 	<if test="province_code != null">
+	        province_code,
+	      </if>
+	 	<if test="sort_no != null">
+	        sort_no,
+	      </if>
+	 	<if test="area != null">
+	        area,
+	      </if>
+	 	<if test="main_city != null">
+	        main_city,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="city_code != null">
+	        #{city_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="city_name != null">
+	        #{city_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="province_code != null">
+	        #{province_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sort_no != null">
+	        #{sort_no,jdbcType=INTEGER},
+	      </if>
+    	<if test="area != null">
+	        #{area,jdbcType=VARCHAR},
+	      </if>
+    	<if test="main_city != null">
+	        #{main_city,jdbcType=CHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsCityBO" >
+    update hs_city
+    <set >
+    	<if test="city_code != null">
+	        city_code = #{city_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="city_name != null">
+	        city_name = #{city_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="province_code != null">
+	        province_code = #{province_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sort_no != null">
+	        sort_no = #{sort_no,jdbcType=INTEGER},
+	      </if>
+    	<if test="area != null">
+	        area = #{area,jdbcType=VARCHAR},
+	      </if>
+    	<if test="main_city != null">
+	        main_city = #{main_city,jdbcType=CHAR},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsCityBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_city
+    <where>
+    	1=1
+    	<if test="city_code!=null and city_code!=''">
+    		and city_code = #{city_code,jdbcType=VARCHAR}
+    	</if>
+    </where>
+     order by sort_no
+   </select>
+ <select id="selectProvince" parameterType="seentao.xhsn.bean.HsCityBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_city where province_code is NULL order by sort_no
+   </select>
+ <select id="selectCity" parameterType="seentao.xhsn.bean.HsCityBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_city
+    <where>
+    	1=1
+    	<if test="province_code != null and province_code != ''">
+			and province_code = #{province_code,jdbcType=VARCHAR}
+		</if>
+    </where>
+     order by sort_no
+   </select>
+    <select id="selectExists" parameterType="seentao.xhsn.bean.HsCityBO" resultMap="BaseResultMap">
+   	select 
+    <include refid="Base_Column_List" />
+    from hs_city
+    <where>
+    	1=1
+    	<if test="province_code != null and province_code != ''">
+			and province_code = #{province_code,jdbcType=VARCHAR}
+		</if>
+		and (city_name=#{city_name,jdbcType=VARCHAR} or city_code = #{city_code,jdbcType=VARCHAR})
+		<if test="id!=null and id!=''">
+			and id != #{id,jdbcType=CHAR}
+		</if>
+    </where>
+   </select>
+</mapper>

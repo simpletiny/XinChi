@@ -1,0 +1,10 @@
+$(document).ready(function() {
+	switchTab(1);
+});
+function hide(id) {
+	$(id).is(":visible") ? $(id).hide() : $(id).show();
+}
+function pick(v) {
+	$('#am').val(v);
+	hide('#HMF-1')
+}

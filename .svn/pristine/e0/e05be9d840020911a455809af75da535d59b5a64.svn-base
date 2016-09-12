@@ -1,0 +1,98 @@
+package seentao.xhsn.sys.city.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsCityBO;
+import seentao.xhsn.sys.city.bean.CityDataBean;
+import seentao.xhsn.sys.city.dao.ICityDAO;
+import seentao.xhsn.sys.city.service.ICityService;
+
+/**
+ * 
+ * @author niushixing 2015-1-7 13:51:18
+ *
+ */
+@Service
+public class CityServiceImpl implements ICityService {
+
+	@Autowired
+	private ICityDAO cityDao;
+
+	@Override
+	public CityDataBean getCdBean() {
+		CityDataBean cdBean = new CityDataBean();
+		List<HsCityBO> cityList = cityDao.getAllByParam(null);
+		List<String> codeList = new ArrayList<String>();
+		List<String> nameList = new ArrayList<String>();
+
+		List<String> mainCityList1 = new ArrayList<String>();
+		List<String> mainCityList2 = new ArrayList<String>();
+		List<String> mainCityList3 = new ArrayList<String>();
+		List<String> mainCityList4 = new ArrayList<String>();
+
+		List<String> provinceList1 = new ArrayList<String>();
+		List<String> provinceList2 = new ArrayList<String>();
+		List<String> provinceList3 = new ArrayList<String>();
+		List<String> provinceList4 = new ArrayList<String>();
+		List<String> provinceList5 = new ArrayList<String>();
+
+		for (HsCityBO city : cityList) {
+			codeList.add(city.getCity_code());
+			nameList.add(city.getCity_name());
+			if (city.getArea().equals(AREA_NORTH_EAST)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList1.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList1.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_EAST_CHINA)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList2.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList2.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_SOUTH_CHINA)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList3.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList3.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_SOUTH_WEST)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList4.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList4.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_OTHER)) {
+				if (city.getCity_code().endsWith("00")||city.getCity_code().equals("99")) {
+					provinceList5.add(city.getCity_code());
+				}
+			}
+		}
+		cdBean.setCodeList(codeList);
+		cdBean.setNameList(nameList);
+		cdBean.setMainCityList1(mainCityList1);
+		cdBean.setMainCityList2(mainCityList2);
+		cdBean.setMainCityList3(mainCityList3);
+		cdBean.setMainCityList4(mainCityList4);
+		cdBean.setProvinceList1(provinceList1);
+		cdBean.setProvinceList2(provinceList2);
+		cdBean.setProvinceList3(provinceList3);
+		cdBean.setProvinceList4(provinceList4);
+		cdBean.setProvinceList5(provinceList5);
+		return cdBean;
+	}
+
+}

@@ -1,0 +1,56 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+pageContext.setAttribute("basePath", basePath);
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>个人管理</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>common/css/page.css"  />
+<script type="text/javascript" src="<%=basePath%>common/js/jquery-1.8.1.min.js"></script>
+<script src="<%=basePath%>common/js/layer-v1.8.1/layer/layer.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>common/js/drag.js"></script>
+<script type="text/javascript" src="<%=basePath%>common/js/WdatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="<%=basePath%>common/js/jquery.pagination.js"></script> 
+<script type="text/javascript" src="<%=basePath%>admin/person/js/person.js"></script> 
+</head>
+<body>
+	<div>
+		<h1>个人管理</h1>
+	</div>
+	<div>
+		<div id="div_search">
+			<form id="form_search">
+			<div>
+				日期范围：<input type="text" onclick="WdatePicker()" name="ps.fromDate"/>~<input name="ps.toDate" type="text" onclick="WdatePicker()"/>
+				快速选择：<s:select list="#{'0':'','1':'本周','2':'本月','3':'本年' }" name="ps.quickStr"></s:select>
+			</div>
+			<div>
+				用户名：<input type="text" name="ps.loginUser"/>身份证号：<input type="text" name="ps.idCard"/> <input type="button" value="搜索" onclick="searchResume()"/>
+			</div>
+			</form>
+		</div>
+		<div style="width:1024px">
+			<table style="border:1px solid #7E9CF7;border-collapse:collapse;background-color: #D9E2FD">
+				<tr>
+					<th style="width:200px;border:1px solid #7E9CF7">用户名</th>
+					<th style="width:100px;border:1px solid #7E9CF7">姓名</th>
+					<th style="width:80px;border:1px solid #7E9CF7">性别</th>
+					<th style="width:200px;border:1px solid #7E9CF7">邮箱</th>
+					<th style="width:100px;border:1px solid #7E9CF7">手机号</th>
+					<th style="width:150px;border:1px solid #7E9CF7">注册时间</th>
+					<th style="width:150px;border:1px solid #7E9CF7">操作</th>
+				</tr>
+			</table>
+		</div>
+		<div id="div_container">
+			<s:include value="resume.jsp"></s:include>
+		</div>
+		<div id="Pagination" class="right flickr" style="margin-top:10px"></div>
+	</div>
+</body>
+</html>

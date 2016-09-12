@@ -1,0 +1,16 @@
+package seentao.xhsn.mail.dao;
+
+import seentao.xhsn.bean.HsUserBO;
+
+/**
+ * @Description:	邮箱验证DAO接口
+ * @author 李君彦
+ * @date 2014-11-20 上午11:37:33 
+ * @version V1.0   
+ */
+public interface IMailConfirmDAO{
+
+	public HsUserBO getUserByPrimaryKey(String user_id);
+	
+	
+}

@@ -1,0 +1,42 @@
+@charset "utf-8";
+/* CSS Document */
+#nav{width:1024px; margin:0 auto; margin-top:20px;}
+#nav .number,#nav .ma{ float:left;}
+#nav .number{ width:705px; padding:30px 0;border-bottom:2px solid #d7d6d6; margin-right:20px; background:#FFF;}
+#nav .number table td a{ font-size:22px; color:#38ac96;}
+#nav .number .zw,#nav .number .jl{ float:left; width:352px; height:210px; padding-top:63px; text-align:center;}
+#nav .number .zw{ border-right:1px solid #d0d1d1;}
+#nav .ma{ width:299px; height:290px; padding-top:43px; background:#FFF;border-bottom:2px solid #d7d6d6; text-align:center;}
+@import url(alpha.css);
+#nav table td .cur{ cursor:pointer;display:block; line-height:1.8em; padding-left:5px;}
+#nav table td .cur:hover{ color:#FFF; background:#38ac96;}
+.zx{ width:1024px; margin:0 auto; background:#f5f5f5; padding-bottom:15px;}
+.zx table{ margin-bottom:5px;}
+#maskLayer{position: absolute;left:0px;top:0px}
+#alphadiv{position:absolute;background:#000;z-index: 2000}
+#drag{position:absolute;background:#fff;z-index: 2001;width:580px;border:1px solid #ccc}
+#drag_h{line-height:28px;height:28px;cursor:move;color:#fff;background:#38ac96;border-bottom:1px dashed #babcbc;padding:0 10px;}
+#drag h3 b{float:left; color:#FFF;}
+#drag h3 span{font-weight:normal;float:right;cursor:pointer; color:#FFF;}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+#btn_residency{background:url(../common/images/select.jpg) no-repeat;width:198px; padding-left:5px;height:35px;border:none;cursor:pointer; font-size:14px; text-align:left;}
+/* 选择居住地 */
+#residencyAlpha{padding:10px 4px}
+#residencyAlpha h4{color:#454545;font-size:14px; font-weight:bold;}
+#residencyAlpha dl{zoom:1;overflow:hidden;line-height:25px}
+#residencyAlpha dt{float:left;width:80px;font-weight:bold}
+#residencyAlpha dd{float:left;width:492px}
+#residencyAlpha dd li{float:left;width:82px;cursor:pointer;text-indent:4px;height:25px;overflow:Hidden}
+#residencyAlpha dd li.over{background:#38ac96;color:#fff}
+#allProv{border-top:1px dashed #ccc;margin-top:6px;padding-top:10px}
+/* 居住地 悬浮子菜单 */
+#sub_city{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_city h4{border-bottom:1px dashed #ccc}
+#sub_city ul{overflow:hidden;zoom:1}
+#sub_city ul li{float:left;width:60px;height:25px;}
+#sub_city ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:4px}
+#sub_city ul a:hover{background:#38ac96;color:#fff}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+

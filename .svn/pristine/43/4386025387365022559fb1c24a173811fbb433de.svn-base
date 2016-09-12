@@ -1,0 +1,33 @@
+package seentao.xhsn.person.collect.dao.impl;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsPositionCollectBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.collect.dao.IPositionCollectDAO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月10日 下午4:08:14 
+ * @note 
+ */
+@Service
+public class PositionCollectDAOImpl extends SqlSessionDaoSupport implements IPositionCollectDAO {
+	
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public String insert(HsPositionCollectBO collectBO) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsPositionCollectBOMapper.insert", collectBO);
+	}
+
+}

@@ -1,0 +1,20 @@
+package seentao.xhsn.person.jobexp.dao;
+
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+
+/**
+ * 项目经验Dao
+ * @author wjx
+ *
+ */
+public interface IAJobExpDao {
+
+	/**
+	 * 插入项目经验
+	 * @param bo 项目经验详细信息
+	 * @return 主键
+	 */
+	public String insert(HsResumejobexperienceBO bo);
+	
+
+}

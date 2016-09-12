@@ -1,0 +1,126 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+pageContext.setAttribute("basePath", basePath);
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新道人才网</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>common/css/basic.css"  />
+<link rel="stylesheet" type="text/css" href="<%=basePath %>admin/managecity/css/manage_city.css"  />
+<script src="<%=basePath %>common/js/jquery-1.8.1.min.js" type="text/javascript"></script>
+<script src="<%=basePath%>common/js/layer-v1.8.1/layer/layer.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>common/js/drag.js"></script>
+<script src="<%=basePath %>common/js/city_arr.js" type="text/javascript"></script>
+<script src="<%=basePath %>common/js/city_func.js" type="text/javascript"></script>
+<script src="<%=basePath %>admin/managecity/js/manage_city.js" type="text/javascript"></script>
+<script type="text/javascript">
+	window['basePath']="<%=basePath%>";
+	// 是否在数组内
+	function in_array(needle, haystack) {
+		if(typeof needle == 'string' || typeof needle == 'number') {
+			for(var i in haystack) {
+				if(haystack[i] == needle) {
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+</script>
+</head>
+<body>
+	<div class="main" style="width:1024px">
+	<div style="width:1024px;text-align:center">
+		<h1>城市管理</h1>
+	</div>
+	<div style="width:1024px;float:left;display:block;margin-bottom: 20px">
+		<div style="width:100px;float:left">
+			<input type="button" class="btn" value="添加城市" onclick="addCity()" />
+		</div>
+		<div style="width:920px;float:left;display:none;height:28px" id="div_add_city">
+		<form id="form_add_city">
+			<table>
+				<tr>
+					<td>
+						选择省份：
+					</td>
+					<td>
+						<s:select name="cityBo.province_code" onchange="changeAddProvince()" theme="simple" id="select_add_province" list="provinceList"></s:select>
+					</td>
+					<td style="width:50px">
+						名称：
+					</td>
+					<td>
+						<input style="width:100px" name="cityBo.city_name" id="txt_city_name" maxlength="50"/>
+					</td>
+					<td style="width:50px">
+						编码：
+					</td>
+					<td>
+						<input style="width:60px" name="cityBo.city_code" id="txt_city_code" maxlength="4"/>
+					</td>
+					<td style="width:60px">
+						排序号：
+					</td>
+					<td>
+						<input style="width:60px" name="cityBo.sort_no" id="txt_sort_no" maxlength="4"/>
+					</td>
+					<td style="width:100px;text-align: right">
+						<input type="button" class="btn" onclick="saveCity()" value="保存"/>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+	</div>
+	<div style="display:block;width:1024px">
+		<table>
+			<tr>
+				<td>
+					选择省份：
+				</td>
+				<td>
+					<s:select theme="simple" id="select_province" list="provinceList" onchange="changeProvince()"></s:select>
+				</td>
+				<td>
+					操作：
+				</td>
+				<td>
+					<s:select theme="simple" list="#{'0':'','1':'标记为主要城市'}" id="select_operate" onchange="operate()"></s:select>
+				</td>
+			</tr>
+		</table>
+		<div>
+		<table style="width:800px;border:1px solid #7E9CF7;border-collapse:collapse;background-color: #D9E2FD">
+			<tr>
+				<th style="width:50px;border:1px solid #7E9CF7;text-align:center;"><input type="checkbox" id="chk_all" onclick="checkAll()"/></th>
+				<th style="width:200px;border:1px solid #7E9CF7">名称</th>
+				<th style="width:150px;border:1px solid #7E9CF7">编码</th>
+				<th style="width:150px;border:1px solid #7E9CF7">排序号</th>
+				<th style="width:200px;border:1px solid #7E9CF7">操作</th>
+			</tr>
+		</table>
+		</div>
+		<div style="height:500px;display:block;width:900px; overflow:auto;" id="city_container">
+			<s:include value="cityList.jsp"></s:include>
+		</div>
+	</div>
+	</div>
+	 <!-- alpha div -->
+<div id="maskLayer" style="display:none">
+<iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+<div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+	<div id="drag">
+		<h3 id="drag_h"></h3>
+		<div id="drag_con"></div><!-- drag_con end -->
+	</div>
+</div><!-- maskLayer end -->
+<!-- alpha div end -->
+<div id="sublist" style="display:none"></div>
+</body>
+</html>

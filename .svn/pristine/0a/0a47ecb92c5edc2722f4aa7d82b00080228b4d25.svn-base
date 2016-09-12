@@ -1,0 +1,179 @@
+package seentao.xhsn.sys.person.action;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.common.BaseAction;
+import seentao.xhsn.sys.person.bean.PersonResumeBean;
+import seentao.xhsn.sys.person.bean.PersonSearchBean;
+import seentao.xhsn.sys.person.service.IPersonService;
+
+/**
+ * 后台个人管理
+ * 
+ * @author niushixing 2015-1-19 09:30:48
+ *
+ */
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class PersonAction extends BaseAction {
+	private static final long serialVersionUID = 1600956073874857361L;
+	private PersonSearchBean ps;
+	private int resumeNewCnt;
+	private int resumeSumCnt;
+	@Autowired
+	private IPersonService personService;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+		resumeNewCnt = 0;
+		resumeSumCnt = 0;
+		return SUCCESS;
+	}
+
+	private List<PersonResumeBean> resumeList;
+
+	/**
+	 * 搜索简历信息
+	 * 
+	 * @return
+	 */
+	public String searchResume() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (null == ps)
+			ps = new PersonSearchBean();
+		ps.setFromDate(ps.getFromDate().replaceAll("-", ""));
+		ps.setToDate(ps.getToDate().replaceAll("-", ""));
+		params.put("bo", ps);
+		page.setParams(params);
+		resumeList = personService.searchResume(page);
+		return SUCCESS;
+	}
+
+	private String res_id;
+
+	/**
+	 * 关闭简历
+	 * 
+	 * @return
+	 */
+	public String closeResume() {
+		resultStr = personService.closeResume(res_id);
+		return SUCCESS;
+	}
+
+	/**
+	 * 开启简历
+	 * 
+	 * @return
+	 */
+	public String openResume() {
+		resultStr = personService.openResume(res_id);
+		return SUCCESS;
+	}
+
+	private InputStream excelFile;
+
+	private String downloadFileName;
+
+	/**
+	 * 导出个人信息Excel
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public String exportExcel() throws Exception {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		ps.setFromDate(ps.getFromDate().replaceAll("-", ""));
+		ps.setToDate(ps.getToDate().replaceAll("-", ""));
+		personService.exportExcel(output, ps);
+		byte[] ba = output.toByteArray();
+		excelFile = new ByteArrayInputStream(ba);
+		output.flush();
+		output.close();
+		return SUCCESS;
+	}
+
+	public PersonSearchBean getPs() {
+		return ps;
+	}
+
+	public void setPs(PersonSearchBean ps) {
+		this.ps = ps;
+	}
+
+	public int getResumeNewCnt() {
+		return resumeNewCnt;
+	}
+
+	public void setResumeNewCnt(int resumeNewCnt) {
+		this.resumeNewCnt = resumeNewCnt;
+	}
+
+	public int getResumeSumCnt() {
+		return resumeSumCnt;
+	}
+
+	public void setResumeSumCnt(int resumeSumCnt) {
+		this.resumeSumCnt = resumeSumCnt;
+	}
+
+	public List<PersonResumeBean> getResumeList() {
+		return resumeList;
+	}
+
+	public void setResumeList(List<PersonResumeBean> resumeList) {
+		this.resumeList = resumeList;
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public InputStream getExcelFile() {
+		return excelFile;
+	}
+
+	public void setExcelFile(InputStream excelFile) {
+		this.excelFile = excelFile;
+	}
+
+	public String getDownloadFileName() {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd ");
+		downloadFileName = (sf.format(new Date()).toString()) + "个人数据.xls";
+		try {
+			downloadFileName = new String(downloadFileName.getBytes(), "ISO8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return downloadFileName;
+	}
+
+	public void setDownloadFileName(String downloadFileName) {
+		this.downloadFileName = downloadFileName;
+	}
+}

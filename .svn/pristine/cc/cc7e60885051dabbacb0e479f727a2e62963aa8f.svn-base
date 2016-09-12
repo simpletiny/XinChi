@@ -1,0 +1,52 @@
+package seentao.xhsn.sys.files.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsFilesBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.sys.files.dao.IFilesDAO;
+
+
+@Repository
+public class FilesDAOImpl extends SqlSessionDaoSupport implements IFilesDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsFilesBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsFilesBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsFilesBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsFilesBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsFilesBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsFilesBO selectByPrimaryKey(String id) {
+		return (HsFilesBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsFilesBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsFilesBO> getAllByParam(HsFilesBO bo) {
+		List<HsFilesBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsFilesBOMapper.selectByParam", bo);
+		return list;
+	}
+	
+}

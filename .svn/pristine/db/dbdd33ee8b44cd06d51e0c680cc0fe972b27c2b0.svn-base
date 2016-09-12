@@ -1,0 +1,87 @@
+package seentao.xhsn.sys.dictionarydata.action;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.sys.dictionarydata.service.IDictionaryDataService;
+import seentao.xhsn.sys.dictionarydata.service.impl.DictionaryDataServiceImpl;
+
+
+/**
+ * @Description:字典值信息填写和修改
+ * @author 李君彦
+ * @date 2014-11-24 下午3:07:41 
+ * @version V1.0   
+ */
+
+@Controller
+@Scope("prototype")
+public class DictionaryDataAction{
+	
+	private HsDictionaryDataBO bo;
+	
+	private List<HsDictionaryDataBO> boList;
+	
+	@Autowired
+	private IDictionaryDataService dictionaryDataService;
+	
+	/**
+	 * 新增
+	 * @return
+	 */
+	public String addOrUpdateDictionaryData(){
+		if(StringUtils.isNotEmpty(bo.getId()))
+			dictionaryDataService.update(bo);
+		else
+			dictionaryDataService.insert(bo);
+		return "SUCCESS";
+	}
+	
+	public String updateDictionaryData(){
+		dictionaryDataService.update(bo);
+		return "SUCCESS";
+	}
+	
+	public String delDictionaryData(){
+		dictionaryDataService.delete(bo.getId());
+		return "SUCCESS";
+	}
+	
+	public String getDictionaryData(){
+		bo=dictionaryDataService.selectByPrimaryKey(bo.getId());
+		return "SUCCESS";
+	}
+	
+	public String getDictionaryDataByCatalog(){
+		boList=dictionaryDataService.getAllByParam(bo);
+		return "SUCCESS";
+	}
+	
+	public String getAllDictionaryData(){
+		boList=dictionaryDataService.getAllByParam(bo);
+		return "SUCCESS";
+	}
+	
+	
+	public HsDictionaryDataBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsDictionaryDataBO bo) {
+		this.bo = bo;
+	}
+
+	public List<HsDictionaryDataBO> getBoList() {
+		return boList;
+	}
+
+	public void setBoList(List<HsDictionaryDataBO> boList) {
+		this.boList = boList;
+	}
+	
+}

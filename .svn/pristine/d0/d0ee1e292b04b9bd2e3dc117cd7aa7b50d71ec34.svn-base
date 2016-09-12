@@ -1,0 +1,9 @@
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/pxjl2.png);"></h4>
+                 <#list trainlist as train>
+                <p>${train.begintime}~~${train.endtime}<span><b>${train.institution_name}&nbsp;&nbsp;&nbsp;${train.course_name}</b></span></p>
+              	<p>${train.details}</p>
+              	 </#list>
+            </div>
+       
+ 

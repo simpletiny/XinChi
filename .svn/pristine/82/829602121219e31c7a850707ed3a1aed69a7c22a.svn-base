@@ -1,0 +1,18 @@
+package seentao.xhsn.sys.mailgroup.service;
+
+import seentao.xhsn.bean.HsGroupMailRecordBO;
+/**
+ * 
+ * @author niushixing 2015-1-23 15:02:26
+ *
+ */
+public interface IMailGroupService {
+	/**
+	 * 群发邮件
+	 * 
+	 * @param mailBo
+	 * @return
+	 */
+	public String sendMailGroup(HsGroupMailRecordBO mailBo);
+
+}

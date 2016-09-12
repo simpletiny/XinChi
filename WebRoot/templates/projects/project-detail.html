@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 项目管理
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <ul class="nav-subtitle">
+          <li role="presentation" class="active"><a data-id="project-detail" class="tab-link-title">项目介绍</a></li>
+          <li role="presentation"><a href="/projects/{{ projectId }}/phases" data-id="project-exec" class="tab-link-title">项目执行</a></li>
+          <li role="presentation"><a href="/projects/{{ projectId }}/report" data-id="project-analysis" class="tab-link-title">项目分析</a></li>
+        </ul>
+
+        <div style="padding: 10px 0 0 350px;"><a href="/projects/{{ projectId }}/job" class="btn btn-green btn-r">职位描述</a></div>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div align="right" style="padding-bottom: 10px;"><a href="/projects/{{ projectId }}/edit" class="btn btn-green btn-r">编辑</a></div>
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">项目名称</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: projectIntro().projectName"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">委托企业</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: chosenCompany().name"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">岗位名称</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().jobName"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">招聘人数</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().hiringCount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">项目开始时间</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().startTime"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">项目结束时间</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().endTime"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">薪资待遇</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().wages"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">劳动关系</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().laborRelation"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">五险一金</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().insurance"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">工作地点</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().workingLocation"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">学历</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().degree"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">性别</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().gender"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">最低年龄</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().fromAge"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">最高年龄</label>
+                        <div class="ip"><p class="ip-" data-bind="text: projectIntro().toAge"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">项目进度</label>
+                        <div class="ip"><p class="ip-" data-bind="text: project().progress"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">项目经理</label>
+                        <div class="ip">
+                            <div data-bind="foreach: projectManagers">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data.id}, checked: $root.chosenProjectManagers" disabled/><label data-bind="text: $data.employeeName"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">其它信息</label>
+                        <div class="ip"><p class="ip-default" rows="15" data-bind="text: projectIntro().other"></p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script>
+        $(".projects").addClass("current").children("ol").css("display", "block");
+        $(".tab-title").on("click", function() {
+            $(this).parent().addClass("active").siblings(".active").removeClass("active");
+            $("#" + $(this).data("id")).show().siblings(".list-result").hide();
+        });
+    </script>
+    <script src="/static/js/projects/project-creation.js{{ _suffix_ }}"></script>
+{% endblock %}

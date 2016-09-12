@@ -1,0 +1,29 @@
+$(document).ready(function() {
+	switchTab(1);
+
+	$("#Pagination").pagination($("#hid_sum_cnt").val() - 0, {
+		callback : searchData,// PageCallback() 为翻页调用次函数。
+		items_per_page : 10, // 每页的数据个数
+		num_display_entries : 3, // 两侧首尾分页条目数
+		current_page : 0, // 当前页码
+		num_edge_entries : 2
+	});
+});
+
+function searchData(page_id, jq) {
+	var param = "page.pageNo=" + (page_id + 1);
+	var layIndex = layer.load('请稍候...', 0);
+	$.ajax({
+		url : 'searchMoreCr',
+		data : param,
+		type : 'get',
+		success : function(data) {
+			layer.close(layIndex);
+			$('#container').html(data);
+		},
+		error : function(data) {
+			alert("操作失败，请稍后重试！");
+		}
+	});
+
+}

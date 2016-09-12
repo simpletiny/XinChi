@@ -1,0 +1,32 @@
+package seentao.xhsn.person.certificate.service;
+
+import java.io.File;
+
+import seentao.xhsn.person.certificate.bean.HsCertificateExtendBO;
+
+
+/**
+ * @Description:所获证书上传SERVICE接口	
+ * @author 李君彦
+ * @date 2014-11-24 下午3:37:32 
+ * @version V1.0   
+ */
+public interface ICertificateUploadService{
+	
+	/**
+	 * 上传并保存附件表
+	 * @param file 上传文件
+	 * @param bo 
+	 * @param fileName
+	 * @param ip
+	 * @return
+	 */
+	public  String saveAndUpload(File file,HsCertificateExtendBO bo,String fileName,String ip);
+
+	/**删除附件操作
+	 * @param bo 
+	 * @param fileDataID 
+	 * 
+	 */
+	public void delCertificateFile(String fileDataID);
+}

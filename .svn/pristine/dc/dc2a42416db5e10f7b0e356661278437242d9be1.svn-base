@@ -1,0 +1,49 @@
+package seentao.xhsn.person.hsuser.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsUserBO;
+
+/**
+ * @Description:用户基本信息操作DAO接口
+ * @author niushixing
+ * @date 2014-12-8 11:11:53
+ * @version V1.0
+ */
+public interface IHsUserDAO {
+
+	/**
+	 * 新增
+	 * 
+	 * @param bo
+	 */
+	public void insert(HsUserBO bo);
+
+	/**
+	 * 修改
+	 * 
+	 * @param bo
+	 */
+	public void update(HsUserBO bo);
+
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 */
+	public void delete(String id);
+
+	/**
+	 * 根据主键查找
+	 * 
+	 * @param id
+	 */
+	public HsUserBO selectByPrimaryKey(String id);
+
+	/**
+	 * 根据条件查找
+	 * 
+	 * @param bo
+	 */
+	public List<HsUserBO> getAllByParam(HsUserBO bo);
+}

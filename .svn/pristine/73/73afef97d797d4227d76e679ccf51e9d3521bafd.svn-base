@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新道人才网</title>
+<link rel="stylesheet" type="text/css" href="css/self_evaluation.css"  />
+<link rel="stylesheet" type="text/css" href="../css/basic.css"  />
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" >
+function $$$$$(_sId){
+ return document.getElementById(_sId);
+ }
+function hide(_sId)
+ {$$$$$(_sId).style.display = $$$$$(_sId).style.display == "none" ? "" : "none";}
+function pick(v) {
+ document.getElementById('am').value=v;
+hide('HMF-1')
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrap">
+    	<div id="top">
+        	<div class="top_inner">
+            	<div class="logo">
+                	<img src="../images/logo.png" />
+                    <ul>
+                    	<li><a href="###">首页</a></li>
+                    	<li><a href="###">个人中心</a></li>
+                    	<li><a href="###" class="bold">简历管理</a></li>
+                    	<li><a href="###">职位搜索</a></li>
+                        <br  />
+                    </ul>
+                    <br />
+                </div>
+            	<div class="person">
+                    <div class="pic"></div>
+                    <div class="name">yangsqa@yonyou.com
+                    	<ul>
+                        <li><a href="#">修改密码</a></li>
+                        <li><a href="#">退出</a></li>
+                        </ul>
+                    </div>
+                    <br />
+                </div>
+                <br />
+            </div>
+      </div>
+      <div id="att">
+      	<p>请注意，您完善个人资料后将自动生成为简历，用于岗位投递。<br />一份完整的个人资料能全面的展现你的能力与经验，并且更容易赢得雇主的青睐。
+</p>
+        <ul>
+        	<li>您的个人资料完成率为 10%</li>
+        	<li>
+            	<div class="percent_box">
+                	<div class="percent"></div>
+                </div>
+            </li>
+            <li>+ 添加您的教育背景(+20%)<a href="###" style="padding:3px; background:#38ac96; font-size:13px; margin-left:8px;">预览简历</a></li>
+        </ul>
+        <br />
+      </div>
+      <div id="main">
+      	<div class="nav">
+        	<div class="big_pic">
+            	<h4></h4>
+              <p>杨世强简历</p>
+              <p><a href="###">修改名称</a><a href="###">刷新</a><a href="###">预览</a></p>
+            </div>
+            <ul class="nav_inner">
+                <li style="height:43px; background:url(../images/jl_head.jpg);"></li>
+            	<li><a href="#">个人信息</a>
+                	<img src="../images/prev.png" class="prev" />
+                </li>
+            	<li><a href="#">求职意向</a><img src="../images/prev.png" class="prev" /></li>
+            	<li class="bjs"><a href="#">自我评价</a><img src="../images/prev.png" class="prev" /></li>
+            	<li><a href="#">工作／实习</a><img src="../images/prev.png" class="prev" /></li>
+            	<li><a href="#">教育背景</a><img src="../images/prev.png" class="prev" /></li>
+            	<li><a href="#">学习路径</a><img src="../images/prev.png" class="prev" /></li>
+            	<li><a href="#" style="background:url(../images/never.png) 19px center no-repeat">所获证书</a><img src="../images/prev.png" class="prev" /></li>
+                <li><a href="#" style="background:url(../images/half.png) 19px center no-repeat">培训经历</a><img src="../images/prev.png" class="prev" /></li>
+                <li><a href="#" style="background:url(../images/xt.png) 19px center no-repeat">项目经验</a><img src="../images/prev.png" class="prev" /></li>
+                <li><a href="#" style="background:url(../images/never.png) 19px center no-repeat">专业技能</a><img src="../images/prev.png" class="prev" /></li>
+                <li><a href="#" style="background:url(../images/never.png) 19px center no-repeat">其他信息</a><img src="../images/prev.png" class="prev" /></li>
+                <img src="../images/tlsm_m.jpg" />
+            </ul>
+        </div>
+      	<div class="info">
+        	<h4 class="gr">
+            	<a href="###"></a>
+            </h4>
+            <div class="info_inner">
+            	
+                <div class="jl_inner">
+                <p style="font-weight:bold;">自我评价</p>
+                	<p>为人诚恳、责任心强、敬业进取，具备较强的沟通、协调及团队精神。善于沟通、敢于表达；为人亲和，有积极的进取心。性格开朗、谦虚、自律、自信。有扎实的美术功底和独特的视觉表现力，想象力丰富； 对创意设计有较深的领悟和理解。色彩敏锐，能够独立地设计图形，富有创意和美感，富有想象力，富有较强的创意能力。</p>
+                </div>
+            </div>
+            <div class="info_inner1">
+            	<table width="745" cellspacing="0px"  style="border-collapse:collapse; border:0; color:#6d6e71;">
+                    <tr>
+                        <td height="45" style="background:url(../images/red.png) no-repeat left center; width:100px; padding-left:25px;">标题：</td>
+                   	  <td width="620"  style="text-align:left; position:relative;">
+                      <input onclick="hide('HMF-1')" name="" value="自我评价" type="text" style="background:url(../images/select.jpg) no-repeat;width:195px; padding-left:3px;height:35px; line-height:35px; border:none;cursor:pointer; font-size:14px;" id="am" class="am"/>
+                            <div id="HMF-1" style="display: none; position:absolute; left:0px; top:40px; width:196px; background:#FFF; " class="bm">
+							 <span id="a1" onclick="pick('自我评价')" class="cur">自我评价</span>
+							 <span id="a2" onclick="pick('职业目标')"  class="cur">职业目标</span>
+							</div>
+                      </td>
+                    </tr>
+                	<tr>
+                        <td style="width:100px; padding-left:25px; vertical-align:top; padding-top:10px;background:url(../images/red.png) no-repeat left 17px;">描述：</td>
+                   	  <td width="620"  style="text-align:left; padding-top:5px;"><textarea name="" cols="" rows="" style=" width:557px; height:121px; padding:5px; background:url(../images/textarea.jpg) no-repeat; font-size:14px; color:#636262; margin-bottom:5px; overflow:auto; overflow-x:hidden;"></textarea>
+                      <p style="margin-top:10px; font-size:12px;">填写文字在100个字以上评定等级，少于不计算，内容越详细，等级越高。</p>
+                            <p style="margin-top:10px; font-size:12px;">（限2000个字）</p>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td height="45" style="width:100px; padding-left:25px;"></td>
+                   	  <td width="620"  style="text-align:left; padding-top:10px;"><input value="保存并新增" name="" type="button" style=" width:112px; height:34px; line-height:34px; font-size:16px; padding:0px; color:#fdfdfd; background:#fea201; cursor:pointer; margin-left:180px; margin-right:25px;" /><input value="保  存" name="" type="button" style=" width:112px; height:34px; line-height:34px; font-size:16px; padding:0px; color:#fdfdfd; background:#fea201; cursor:pointer; margin-right:25px;" /><input value="返 回" name="" type="button" style=" width:112px; height:34px; line-height:34px; font-size:16px; color:#747171; background:#ececec; cursor:pointer; padding-left:0px;" /></td>
+                    </tr>
+                 </table>
+            </div>
+        </div>
+        <br />
+      </div>
+      <div id="footer">
+        	<a href="###">网站地图</a><a href="###">加入新道</a><a href="###">法律声明</a><a href="###">关于我们</a><a href="###">联系我们</a><a href="###">常见问题</a><br />
+            <p>用友新道科技有限公司版权所有   京ICP备120345678号-2</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 项目管理
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/vendor/multiple-select/multiple-select.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+  <input type="hidden" id="hidden_smsId" value="{{ smsId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <ul class="nav-subtitle">
+          <li role="presentation"><a href="/projects/{{ projectId }}/detail" data-id="project-detail" class="tab-link-title">项目详情</a></li>
+          <li role="presentation" class="active"><a data-id="project-exec" class="tab-link-title">项目执行</a></li>
+          <li role="presentation"><a data-id="project-analysis" class="tab-link-title">项目分析</a></li>
+        </ul>
+        <div style="padding: 10px 0 0 350px;"><a href="/projects/{{ projectId }}/jobs/create" class="btn btn-green btn-r">发布职位</a></div>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/candidates" id="tab-candidates" class="tab-title">邀约名单</a></li>
+              <li role="presentation" class="active"><a href="/projects/{{ projectId }}/phases/sms" id="tab-sms" class="tab-title">发送短信</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/appoint" id="tab-appoint" class="tab-title">预约管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/visit" id="tab-visit" class="tab-title">到访管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/interview" id="tab-interview" class="tab-title">面试管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/offer" id="tab-offer" class="tab-title">offer管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/onboard" id="tab-onboard" class="tab-title">入职管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/search-candidates" id="tab-search-candidates" class="tab-title">二次营销</a></li>
+            </ul>
+            <div class="list-result" id="sms">
+                <div style="border-bottom: 1px solid #eee;">
+                    <b style="font-size:14px; padding-left:30px; padding-right: 50px;">微信批次内容</b>
+                    <a href="/projects/{{ projectId }}/phases/sms">返回批次列表</a>
+                </div>
+                <form class="form-box info-form">
+                <div style="width: 800px; text-align: center;">
+                    <div class="input-row clearfloat required">
+                        <label class="l">微信批次名称</label>
+                        <div class="ip"><input type="text" class="ip-default" name="name" data-bind="value: smsBatch().name" placeholder="短信批次名称" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">消息模板编号</label>
+                        <div class="ip"><input type="text" class="ip-default" name="templateId" data-bind="value: smsBatch().messageTemplateId" required="required" placeholder="消息模板编号"/></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">消息参数(JSON)</label>
+                        <div class="ip"><textarea type="text" class="ip-default" name="par" rows="15" data-bind="value: smsBatch().content" required="required" placeholder="微信消息参数 [[姓名]]会替换成用户姓名"></textarea></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">详情链接</label>
+                        <div class="ip"><input type="text" class="ip-default" name="url" data-bind="value: smsBatch().url" placeholder="详情链接" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">面试时间</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" name="interview_time" data-bind="value: smsBatch().batchDate" placeholder="面试时间" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat">
+                        <label class="l">发送状态</label>
+                        <!--<div class="ip"><p class="ip-" data-bind="text: smsBatch().status" style="text-align: left;"/></p></div>-->
+                        <div class="ip"><select class="form-control" data-bind="options: allStatus, optionsCaption: '-- 请选择 --', value: smsBatch().status" name="status"></select></div>
+                    </div>
+                    <div class="input-row clearfloat">
+                        <label class="l">已导入人数</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: smsBatch().targetsCount ? smsBatch().targetsCount : 0" style="text-align: left;"></p></div>
+                    </div>
+                </div>
+                <div>
+                    <div align="center" style="padding-bottom: 5px; padding-top: 20px; padding-left: 120px;">
+                        <a class="btn btn-green btn-r" id="import-record-btn">导入名单</a>
+                        <a class="btn btn-green btn-r" id="send-sms-btn">发送微信</a>
+                        <a class="btn btn-green btn-r" data-bind="click: marketing">营销</a>
+                        <a class="btn btn-green btn-r" data-bind="click: updateBatch">保存</a>
+                    </div>
+                </div>
+                </form>
+        </div>
+            </div>
+    </div>
+  </div>
+    <div>
+        <div id="page-import-records" style=" display: none; width: 550px; padding-top: 30px;">
+            <div class="input-row clearfloat required">
+                <label class="l">名单来源</label>
+                <div class="ip"><select class="form-control" data-bind="options: userSources, optionsText: 'name', value: chosenUserSource ,event: {change:changeType}"></select></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">导入数量</label>
+                <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: query().importNumber" placeholder="导入数量"/></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">性别</label>
+                <div class="ip"><select class="form-control" id="select_gender" data-bind="options: allGenders, optionsCaption: '不限', value: query().gender"></select></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">求职类型</label>
+                <div class="ip"><select class="multi-select" id="multi_type" multiple="multiple" data-bind="options: allPositionTypes, selectedOptions: query().positionTypes"></select></div>
+            </div>
+            <div align="right" style="padding-top: 20px; padding-right: 50px;"><a class="btn btn-green btn-r" data-bind="click: importUserRecord">导入</a></div>
+            <!--<div align="right" style="padding-top: 50px; padding-right: 50px;"><a class="btn btn-green btn-r" data-bind="click: importUserRecord">导入</a></div>-->
+        </div>
+    </div>
+    <script>
+        $(".projects").addClass("current").children("ol").css("display", "block");
+    </script>
+
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="/static/vendor/multiple-select/jquery.multiple.select.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/messages_zh.min.js"></script>
+    <script src="/static/js/validation.js{{ _suffix_ }}"></script>
+    <script src="/static/js/projects/sms-batch-edit.js{{ _suffix_ }}"></script>
+
+{% endblock %}

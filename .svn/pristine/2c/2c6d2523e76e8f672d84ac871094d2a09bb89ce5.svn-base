@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */
+#main{ width:1024px; margin:0 auto; padding-top:20px; margin-bottom:20px;}
+#main ul{ width:1024px; border-bottom:1px solid #d0d1d1; height:55px;}
+#main ul li { float:left;}
+#main ul li a{ display:block; width:150px; height:55px; line-height:55px; font-size:16px; color:#565555; text-align:center;}
+#main ul li .active{border-bottom:1px solid #08b897; color:#08b897;}
+#main p{color:#4d4b4b; line-height:30px; margin-top:20px; margin-left:35px;}
+#main p input{ width:59px; height:28px; color:#636262; font-size:14px; background:url(../images/tiaojian.png); margin-left:30px; cursor:pointer;}
+#main p .active{ background:url(../images/tiaojian_b.png); color:#05a687;}
+#main table{ margin-bottom:5px;}
+.transparent {
+	left: 0;
+	top: 0;
+	position: absolute;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+	background: #000;
+	z-index: 10;
+}
+
+#tanchu {
+	position: fixed;
+	width: 832px;
+	height: 494px;
+	background: url(../images/tanchubg.png) no-repeat;
+	z-index: 1000;
+}
+
+#tanchu h4 {
+	height: 58px;
+	position: relative;
+}
+
+#tanchu h4 a {
+	display: block;
+	width: 32px;
+	height: 32px;
+	background: url(../images/close.png) no-repeat;
+	position: absolute;
+	left: 762px;
+	top: 14px;
+}
+
+.tanchu_inner {
+	width: 582px;
+	background: #FFF;
+	margin-left: 125px;
+	margin-top: 30px;
+}
+
+.tanchu_inner p {
+	line-height: 50px;
+	margin-left: 50px;
+}

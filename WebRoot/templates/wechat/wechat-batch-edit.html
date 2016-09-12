@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+- 批次详情
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+<div class="main-body">
+    <div class="subtitle">
+        <h2>批次详情</h2>
+    </div>
+    <input type="hidden" value="{{batchId}}" id="hidden_batchId">
+    <div class="main-container">
+            <div class="main-box">
+                <form class="info-form">
+                    <div class="input-row clearfloat required">
+                        <label class="l">批次名称</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: batch().name" placeholder="批次名称" name="name" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">模板ID</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: batch().templateId" placeholder="模板ID" name="templateId" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat required">
+                        <label class="l">URL</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: batch().url" placeholder="链接地址" name="url" required="required"/></div>
+                    </div>
+                    <div class="input-row clearfloat">
+                        <span>提示：涉及到姓名的，请用[[姓名]]替代</span>
+                    </div>
+                    <div class="form-group" id="parameter-div" data-bind="foreach: parameters">
+                        <div class="input-row clearfloat">
+                            <label class="l">参数<span data-bind="text:$index() + 1"></span></label>
+                            <div class="col-md-3"><input type="text" class="ip- name" data-bind="value:$data.name" placeholder="参数"/></div>
+                            <label class="l">值：</label>
+                            <div class="col-md-3"><input type="text" class="ip- value" data-bind="value:$data.value" placeholder="值"/></div>
+                        </div>
+                     </div>
+                    <div class="form-group" align="right">
+                        <input type="button" class="btn btn-green btn-r" onclick="addParameter()" value="添加参数"/>
+                    </div>
+                    <div class="input-row clearfloat">
+                        <label class="l">发送状态</label>
+                        <!--<div class="ip"><p class="ip-" data-bind="text: smsBatch().status" style="text-align: left;"/></p></div>-->
+                        <div class="ip"><select class="form-control" data-bind="options: allStatus, optionsCaption: '-- 请选择 --', value: batch().status" name="status"></select></div>
+                    </div>
+                    <div class="input-row clearfloat">
+                        <label class="l">已导入人数</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: batch().targetsCount ? batch().targetsCount : 0" style="text-align: left;"></p></div>
+                    </div>
+                </form>
+                <div class="form-group" align="right">
+                    <a type="submit" class="btn btn-green btn-r" data-bind="click: sendContent">推送</a>
+                    <a type="submit" class="btn btn-green btn-r" data-bind="click: updateBatch">保存</a>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+<script>
+    $(".wechat").addClass("current").children("ol").css("display", "block");
+</script>
+<script type="text/javascript" src="/static/vendor/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/vendor/messages_zh.min.js"></script>
+<script src="/static/js/validation.js{{ _suffix_ }}"></script>
+<script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+<script src="/static/js/wechat/wechat-batch-edit.js{{ _suffix_ }}"></script>
+{% endblock %}

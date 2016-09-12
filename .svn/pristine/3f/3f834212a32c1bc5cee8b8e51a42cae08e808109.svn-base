@@ -1,0 +1,29 @@
+package seentao.xhsn.person.subjoin.dao;
+
+import seentao.xhsn.bean.HsSubjoinBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月12日 上午10:53:58 
+ * @note 
+ */
+public interface ISubjoinDAO {
+
+	/**修改个人附加信息
+	 * @param subjoinBO
+	 */
+	int update(HsSubjoinBO subjoinBO);
+
+	/**
+	 * 插入个人附加信息
+	 * @param subjoinBO
+	 */
+	String insert(HsSubjoinBO subjoinBO);
+
+	/**根据参数获取附加信息
+	 * @param param
+	 * @return
+	 */
+	HsSubjoinBO getByParam(HsSubjoinBO param);
+
+}

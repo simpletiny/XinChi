@@ -1,0 +1,131 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="/struts-tags" prefix="s" %> 
+
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<base href="<%=basePath %>"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>新道人才网</title>
+<link rel="stylesheet" type="text/css" href="person/info/css/personal.css"  />
+<link rel="stylesheet" type="text/css" href="common/css/basic.css"  />
+<script src="common/js/jquery-1.8.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="person/info/js/city_arr.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		switchTab(3);
+		var aear_id = "${subjoinBO.aear_code }";
+		var aear_txt =  ja[aear_id];
+		var addr_id = "${subjoinBO.ub_address }";
+		var addr_txt =  ja[addr_id];
+		$("#aear_code").text(aear_txt);
+		$("#ub_address").text(addr_txt);
+		})
+</script>
+</head>
+
+<body>
+	<div id="wrap">
+   	  	<jsp:include page="/common/page/head_person.jsp" />
+		<jsp:include page="/common/page/hint_person.jsp" />
+      <div id="main">
+      	<jsp:include page="/common/page/leftmenu_person.jsp" />
+      	<div class="info">
+        	<h4 class="gr">
+            	<a href="person/editubinfo?lm_tab_name=${lm_tab_name}"></a>
+            </h4>
+            <div class="info_inner">
+            	<div class="xinxi">
+                	<p>
+                		<span style="background:none;">${bo.user_name }</span>
+	                	<span>
+		                	<%-- <s:iterator value="dicts.sys_sex" id="data">
+								<c:if test="${bo.ub_sex == data.dictionary_code }" >  
+								${data.value}
+								</c:if> 
+							</s:iterator> --%>
+							${bo.user_gender }
+						</span>
+	                	<span>${subjoinBO.ub_birthday }</span>
+	                	<span>
+	                		<%-- <s:iterator value="dicts.user_jobexp" id="data">
+								<c:if test="${bo.job_exp_year == data.dictionary_code }" >  
+								${data.value}
+								</c:if> 
+							</s:iterator> --%>
+							${subjoinBO.job_exp_year}
+						</span>
+	                	<span><b id="aear_code"></b>籍贯</span>
+                	</p>
+                    <p>
+                    	<span style="background:none;">现居<b id="ub_address"></b></span>
+                    	<span>
+							<%-- <s:iterator value="dicts.user_political" id="data">
+								<c:if test="${bo.political_id == data.dictionary_code }" >  
+								${data.value}
+								</c:if> 
+							</s:iterator> --%>
+							${subjoinBO.political_id}
+						</span>
+                    	<span>
+							<%-- <s:iterator value="dicts.sys_marrystate" id="data">
+								<c:if test="${bo.ub_marrystate == data.dictionary_code }" >  
+								${data.value}
+								</c:if> 
+							</s:iterator> --%>
+							${subjoinBO.ub_marrystate }
+						</span>
+                    	<span>
+							<%-- <s:iterator value="dicts.user_code_type" id="data">
+								<c:if test="${bo.ub_code_type == data.dictionary_code }" >  
+								${data.value} : ${bo.ub_code }
+								</c:if> 
+							</s:iterator> --%>
+							身份证号码：${bo.user_idnum }
+						</span>
+                    </p>
+                    <p>
+	                    <span style="background:none;">${bo.user_phone }</span>
+	                    <span>${bo.user_email }</span>
+                    </p>
+                </div>
+            	<div class="touxiang"><img style="padding-top:20px;margin-bottom: 5px; width:124px;height:149px;" src="${bo.user_photo }" /></div>
+                <br />
+            </div>
+          <h4 class="tj">
+            	<a href="###" style="background: url(person/info/images/more.jpg);"></a>
+            </h4>
+            <ul>
+            	<li style="margin-left:0px;">
+                	<a ><img src="person/info/images/classpic.jpg" /></a>
+                    <h4>职业规划</h4>
+                    <p><span>明确问题</span><span>清晰定位</span><span>加速发展</span><span>加速发展</span><span>加速发展</span></p>
+                </li>
+                <li>
+                	<a ><img src="person/info/images/classpic2.jpg" /></a>
+                    <h4>面试技巧</h4>
+                    <p><span>基本礼仪</span><span>语言运用</span><span>加速发展</span><span>加速发展</span><span>加速发展</span></p>
+                </li>
+                <li>
+                	<a ><img src="person/info/images/classpic3.jpg" /></a>
+                    <h4>简历制作</h4>
+                    <p><span>简历模板下载</span><span>个人简历表格</span><span>自我评价</span></p>
+                </li>
+                <br  />
+            </ul>
+        </div>
+        <br  />
+      </div>
+       <jsp:include page="/common/page/footer.jsp" />
+    </div>
+</body>
+</html>

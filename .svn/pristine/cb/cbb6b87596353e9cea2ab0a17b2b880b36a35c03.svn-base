@@ -1,0 +1,68 @@
+package seentao.xhsn.enterprise.collegeresource.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsCollegeResourceBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.enterprise.collegeresource.dao.ICollegeResourceDAO;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 
+ * @author niushixing 2015-1-6 13:56:17
+ *
+ */
+@Repository
+public class CollegeResourceDAOImpl extends SqlSessionDaoSupport implements ICollegeResourceDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public void insert(HsCollegeResourceBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsCollegeResourceBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsCollegeResourceBO selectByPrimaryKey(String id) {
+		return (HsCollegeResourceBO) daoUtil.selectByPK(
+				"seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsCollegeResourceBO> getAllByParam(HsCollegeResourceBO bo) {
+		List<HsCollegeResourceBO> list = daoUtil.selectByBOParamT(
+				"seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public List<HsCollegeResourceBO> getAllByPage(Page page) {
+		List<HsCollegeResourceBO> list = daoUtil.selectByParam(
+				"seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper.selectByPage", page);
+		return list;
+	}
+
+}

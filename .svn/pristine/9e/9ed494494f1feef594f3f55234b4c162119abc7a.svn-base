@@ -1,0 +1,140 @@
+function validateOldpswd(){
+	if($("#oldpswd").val().length>0){
+		$.ajax({
+	        url: "user/findAndcheckPwd",
+	        data: "bean.user_pwd="+$("#oldpswd").val(),
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	if(data.errTip.length>0){
+		        	 $("#oldpswderr").text(data.errTip);
+		        	 $('#oldpswderr').css('display','block');
+		     		 $('#oldpswderr').css('background','url(share/password/images/wrong.png) no-repeat left center'); 
+	        	}else{
+	        		$("#oldpswderr").text("");
+	        		$('#oldpswderr').css('display','none');
+	        	}	 
+	        },
+	        error:function(data){
+	        	alert("操作失败，请稍后重试！");
+	        }
+		}); 
+	}	
+}
+
+//验证密码
+function validatepswd(){
+	var flag_pswd = false;
+	$('#pswderr').text(""); 
+	var pswd_text = $('#newpwd').val();  
+	var pswdlevel=checkPwdLevel(pswd_text); 
+	//验证密码
+	if(pswdlevel== 0){ 
+		flag_pswd = false
+		$('#pswderr').text("6~16个字符，区分大小写！");
+		$('#pswderr').css('display','block');
+		$('#pswderr').css('background','url(share/password/images/wrong.png) no-repeat left center'); 
+	}else if(pswdlevel== 1){ 
+		flag_pswd = true;
+		$('#tdbg').css('background','url(share/password/images/weak.jpg) no-repeat left center');  
+		$('#pswderr').text("");
+		$('#pswderr').css('background','url(share/password/images/correct.png) no-repeat left center'); 
+		$('#pswderr').css('display','block');
+	}else if(pswdlevel==2){ 
+		flag_pswd = true;
+		$('#tdbg').css('background','url(share/password/images/middle.jpg) no-repeat left center');  
+		$('#pswderr').text("");
+		$('#pswderr').css('background','url(share/password/images/correct.png) no-repeat left center'); 
+		$('#pswderr').css('display','block');
+	}else if(pswdlevel==3 ){ 
+		flag_pswd = true;
+		$('#tdbg').css('background','url(share/password/images/strong.jpg) no-repeat left center');  
+		$('#pswderr').text("");
+		$('#pswderr').css('background','url(share/password/images/correct.png) no-repeat left center'); 
+		$('#pswderr').css('display','block');
+	}
+	return flag_pswd;
+}
+//密码强度
+function checkPwdLevel (val){ 
+    var lv = 0;
+    if(val.match(/[a-z]/g)){lv++;}
+    if(val.match(/[0-9]/g)){lv++;}
+    if(val.match(/(.[^a-z0-9])/g)){lv++;}
+    if(val.length < 6){lv=0;}
+    if(lv > 3){lv=3;}
+    return lv;
+};
+
+
+//验证密码2
+function validatepswd2(){
+	var flag_pswd = false;
+	$('#pswd2err').text(""); 
+	var pswd_text = $('#newpwd').val();
+	var pswd2_text = $('#repwd').val(); 
+	if(!pswd2_text || pswd2_text.length <= 0){
+		flag_pswd = false
+		$('#pswd2err').text("6~16个字符，区分大小写！");
+		$('#pswd2err').css('display','block');
+		$('#pswd2err').css('background','url(share/password/images/wrong.png) no-repeat left center'); 
+	}else if( pswd_text != pswd2_text){
+		flag_pswd = false
+		$('#pswd2err').text("密码与确认密码输入不一致！");
+		$('#pswd2err').css('display','block');
+		$('#pswd2err').css('background','url(share/password/images/wrong.png) no-repeat left center'); 
+	}else{
+		flag_pswd = true;
+		$('#pswd2err').text("");
+		$('#pswd2err').css('background','url(share/password/images/correct.png) no-repeat left center'); 
+		$('#pswd2err').css('display','block');
+	}
+	return flag_pswd;
+}
+
+function formsub(){
+	if(!validate()){
+		return ;
+	}
+	var param=$("#myform").serialize();
+	$.ajax({
+        url: "user/modifyPWD",
+        data: param,
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	alert(data.errTip);
+        	location.reload();
+        },
+        error:function(data){
+        	alert("操作失败，请稍后重试！");
+        }
+	}); 
+}
+
+function validate(){
+	if($("#oldpswderr").css("display")=="block"){
+		return false;
+	}
+	if($("#oldpswd").val().length==0){
+		 $("#oldpswderr").text("请输入原密码!");
+		 $('#oldpswderr').css('display','block');
+ 		 return false;
+	}
+	if($("#newpwd").val().length==0){
+		 $("#pswderr").text("请输入新密码!");
+		 $('#pswderr').css('display','block');
+		 return false;
+	}
+	if($("#repwd").val().length==0){
+		 $("#pswd2err").text("请输入确认密码!");
+		 $('#pswd2err').css('display','block');
+		 return false;
+	}
+	if($("#newpwd").val()!=$("#repwd").val()){
+		 $("#pswd2err").text("两次输入密码不一致!");
+		 $('#pswd2err').css('display','block');
+		 return false;
+	}
+	return true;
+}

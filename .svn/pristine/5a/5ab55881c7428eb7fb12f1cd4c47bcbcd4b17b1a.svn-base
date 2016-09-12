@@ -1,0 +1,64 @@
+package seentao.xhsn.person.info.service;
+
+import net.sf.json.JSONObject;
+import seentao.xhsn.bean.HsSubjoinBO;
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月26日 上午10:11:26 
+ * @note 个人信息service
+ */
+public interface IUBInfoService {
+
+	/**根据信息进行保存(bo如果有id，就用update，如果没有id，就用inster)
+	 * 修改菜单信息， 并重新计算资料完成度
+	 * @param bo
+	 */
+	public void save(HsUserbasicinfoBO bo, HsSubjoinBO subjoinBO);
+	
+	
+	/**
+	 * 插入一条信息，将本平台需要的信息进行保存（个人公共信息，个人附加信息），
+	 * 将公共的信息更新到注册平台上
+	 * @param bo
+	 */
+	public void inster(HsUserbasicinfoBO bo);
+	
+	
+	/**
+	 * 根据id修改信息，并将公共信息更新到注册平台上（个人公共信息，个人附加信息）
+	 * @param bo
+	 */
+	public void update(HsUserbasicinfoBO bo);
+
+
+	/**根据用户id和简历id获取用户的相关信息
+	 * @param user_id 用户id
+	 * @param res_id 简历id
+	 * @return
+	 */
+	public HsUserbasicinfoBO getByUserIdAndResId(String user_id, String res_id);
+
+	
+	/**
+	 * 根据主键获取信息
+	 * @param id
+	 * @return
+	 */
+	public HsUserbasicinfoBO getByPK(String id);
+
+
+	/**根据简历id和用户id获取用户的附加信息
+	 * @param user_id 用户id
+	 * @param res_id 简历id
+	 * @return
+	 */
+	public HsSubjoinBO getSubjoinBOByUIDAndRID(String user_id, String res_id);
+	
+	/**
+	 * 将json数据传值给通用注册修改
+	 * @param paramBean
+	 */
+	public void updatePersonUser(JSONObject paramBean) ;
+}

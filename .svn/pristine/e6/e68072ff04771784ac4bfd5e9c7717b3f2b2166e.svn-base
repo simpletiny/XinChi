@@ -1,0 +1,63 @@
+package seentao.xhsn.sys.major.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsMajorBO;
+import seentao.xhsn.sys.major.dao.IMajorDAO;
+import seentao.xhsn.sys.major.service.IMajorService;
+
+@Service
+public class MajorServiceImpl implements IMajorService {
+	@Autowired
+	private IMajorDAO majorDao;
+
+	@Override
+	public List<HsMajorBO> getBigMajor() {
+		List<HsMajorBO> list = majorDao.getBigMajor(null);
+		return list;
+	}
+
+	@Override
+	public List<HsMajorBO> getSmallMajor(String majorCode) {
+		HsMajorBO bo = new HsMajorBO();
+		bo.setParent_code(majorCode);
+		List<HsMajorBO> list = majorDao.getSmallMajor(bo);
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public String saveMajor(HsMajorBO majorBo) {
+		List<HsMajorBO> exists = majorDao.selectExists(majorBo);
+		if (null != exists && exists.size() > 0) {
+			HsMajorBO exist = exists.get(0);
+			if (exist.getName().equals(majorBo.getName())) {
+				return "NAME";
+			} else if (exist.getCode().equals(majorBo.getCode())) {
+				return "CODE";
+			}
+		}
+
+		if (majorBo.getId() != null && !majorBo.getId().equals("")) {
+			majorDao.update(majorBo);
+		} else {
+			if (!majorBo.getCode().endsWith("00")) {
+				majorBo.setParent_code(majorBo.getCode().substring(0, 2) + "00");
+			}
+			majorDao.insert(majorBo);
+		}
+		return "OK";
+	}
+
+	@Override
+	@Transactional
+	public String deleteMajor(String majorId) {
+		majorDao.delete(majorId);
+		return "OK";
+	}
+
+}

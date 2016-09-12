@@ -1,0 +1,236 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 人才库管理
+{% endblock %}
+
+{% block style %}
+
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/vendor/multiple-select/multiple-select.css"/>
+
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>外部简历搜索</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-horizontal search-panel">
+                <div class="form-group">
+                    <div class="span8">
+                        <label class="col-md-1 control-label">简历全文</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" data-bind="value: query().resumeContent" placeholder="简历关键字">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumesExt() }">搜索</button>
+                        <a class="btn btn-green col-md-1" id="import-resumes-btn">导入到项目</a>
+                        <a class="btn btn-green col-md-1" id="batch-import-resume-btn">
+                            <input type="file" name="files[]" class="ip-upload-file"/>导入简历
+                        </a>
+                        <button type="button" class="btn btn-green col-md-1" id="export-resumes-btn" data-bind="click: exportResumes">导出</button>
+                        <button type="button" class="btn btn-green col-md-1" id="export-black-btn">导入黑名单</button>
+                        <span id="search-total-count"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label class="col-md-1 control-label">姓名</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" data-bind="value: query().name" placeholder="姓名">
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label" style="width: 50px;">手机</label>
+                        <div class="col-md-2" style="width: 200px;">
+                            <input type="text" class="form-control" data-bind="value: query().mobile" placeholder="手机">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-md-1 control-label" style="width: 60px;">邮箱</label>
+                        <div class="col-md-2" style="width: 200px;">
+                            <input type="text" class="form-control" data-bind="value: query().email" placeholder="邮箱">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-md-1 control-label" style="width: 50px;">来源</label>
+                        <div class="col-md-2" style="width: 200px;">
+                            <select class="multi-select" multiple="multiple" data-bind="options: allSources, selectedOptions: query().sources"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label class="col-md-1 control-label">性别</label>
+                        <div class="col-md-2">
+                            <select class="form-control" data-bind="options: allGenders, optionsCaption: '不限', value: query().gender"></select>
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label" style="width: 50px;">学历</label>
+                        <div class="col-md-2" style="width: 200px;">
+                            <select class="multi-select" multiple="multiple" data-bind="options: allDegreeNames, selectedOptions: query().degrees"></select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-md-1 control-label" style="width: 60px;">所在地</label>
+                        <div class="col-md-2" style="width: 200px;">
+                            <input type="text" class="form-control" data-bind="value: query().location" placeholder="所在地">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label class="col-md-1 control-label">求职类型</label>
+                        <div class="col-md-2">
+                            <select class="multi-select" multiple="multiple" data-bind="options: allPositionTypes, selectedOptions: query().positionTypes"></select>
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label">目标城市</label>
+                        <div class="col-md-2">
+                            <select class="multi-select" multiple="multiple" data-bind="options: allPreferredCities, selectedOptions: query().preferredCities"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label class="col-md-1 control-label">出生起始年</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" maxlength="4" data-bind="value: query().birthStartYear" placeholder="出生起始年">
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label">出生截止年</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" maxlength="4" data-bind="value: query().birthEndYear" placeholder="出生截止年">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div align="left">
+                        <label class="col-md-1 control-label">更新起始</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control datetime-picker" data-bind="value: resumeUpdateStartDateRaw" placeholder="更新起始">
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label">更新截止</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control datetime-picker" data-bind="value: resumeUpdateEndDateRaw" placeholder="更新截止">
+                        </div>
+                    </div>
+                    <div align="left">
+                        <label class="col-md-1 control-label">营销次数</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" data-bind="value: query().invitedCount" placeholder="营销次数">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>姓名</th>
+                            <th>手机</th>
+                            <th>性别</th>
+                            <th>邮箱</th>
+                            <th>学历</th>
+                            <th>出生年月</th>
+                            <th>所在地</th>
+                            <th>更新日期</th>
+                            <th>简历来源</th>
+                            <th>营销次数</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: resumes().items">
+                    <tr>
+                        <td data-bind="text: $data.name"></td>
+                        <td data-bind="text: $data.mobile"></td>
+                        <td data-bind="text: $data.gender"></td>
+                        <td data-bind="text: $data.email"></td>
+                        <td data-bind="text: $data.degree"></td>
+                        <td data-bind="text: $data.dob"></td>
+                        <td data-bind="text: $data.location"></td>
+                        <td data-bind="text: $data.updatedBy"></td>
+                        <td data-bind="text: $data.source"></td>
+                        <td data-bind="text: $data.invitedCount"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination clearfloat">
+                <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                <!-- ko foreach: pageNums -->
+                <!-- ko if: $data == $root.currentPage() -->
+                <span class="current" data-bind="text: $data"></span>
+                <!-- /ko -->
+                <!-- ko ifnot: $data == $root.currentPage() -->
+                <a data-bind="text: $data, click: $root.turnPage"></a>
+                <!-- /ko -->
+                <!-- /ko -->
+                <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <div id="page-import-resumes" style=" display: none; width: 320px; padding-top: 30px;">
+        <div id="display-employee">
+            <div class="input-row clearfloat" style="width: 400px;">
+                <div class="ip">
+                    <input type="hidden" class="chosenProjectId"  data-bind="value: chosenProjectId" />
+                    <input class="form-control project" type="text"  data-bind="value: chosenProject,event:{focus:focusProject,keyup:refreshBoard}" placeholder="-- 请选择项目 --" />
+                </div>
+            </div>
+
+            <div class="input-row clearfloat" style="width: 400px;">
+                <div class="ip"><input type="number" min="0" id="dd" data-bind="value: exportCount" class="ip-" placeholder="人数" /></div>
+            </div>
+
+            <div align="center" style="padding-top: 30px;"><a class="btn btn-green btn-r" data-bind="click: exportResumesToProject">导入项目</a></div>
+        </div>
+    </div>
+    <div id="page-export-black" style=" display: none; width: 320px; padding-top: 30px;">
+        <form id="form1">
+        <div >
+            <div class="input-row clearfloat" style="width: 600px;">
+                <div class="input-row clearfloat required">
+                    <label class="l">封停原因</label>
+                    <div class="ip">
+                        <select class="ip-default form-control" name="reason" data-bind="options: allReasons, optionsCaption: '-- 拉黑原因 --', value: query().blackReason" required="required"></select>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">封停起始时间</label>
+                    <div class="ip"><input type="text" class="ip-default date-picker" data-bind="value: query().blackStartDate" placeholder="封停起始时间"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">封停终止时间</label>
+                    <div class="ip"><input type="text" class="ip-default date-picker" data-bind="value: query().blackEndDate" placeholder="封停终止时间"/></div>
+                </div>
+            </div>
+            <div align="right" style="padding-top: 30px;width:500px"><a class="btn btn-green btn-r" data-bind="click: exportResumesToBlack">导入黑名单</a></div>
+        </div>
+        </form>
+    </div>
+<script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+<script src="/static/vendor/multiple-select/jquery.multiple.select.js"></script>
+<script>
+    $(".resumes").addClass("current").children("ol").css("display", "block");
+</script>
+<script src="/static/vendor/jquery-file-upload-9.9.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/vendor/jquery-file-upload-9.9.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/vendor/jquery-file-upload-9.9.2/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="/static/vendor/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/vendor/messages_zh.min.js"></script>
+<script src="/static/js/resumes/resumes-ext.js{{ _suffix_ }}"></script>
+{% endblock %}

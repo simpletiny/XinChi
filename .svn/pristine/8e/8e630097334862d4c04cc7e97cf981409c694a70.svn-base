@@ -1,0 +1,42 @@
+package seentao.xhsn.person.jobexp.dao.impl;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.jobexp.dao.IAJobExpDao;
+
+@Service
+public class JobexpDaoImpl extends SqlSessionDaoSupport implements IAJobExpDao {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+	
+
+	public String insert(HsResumejobexperienceBO bo) {
+		String pk = daoUtil.insertBO("seentao.xhsn.bean.mappers.HsResumejobexperienceBOMapper.insert", bo);
+		return pk;
+	}
+	
+	public void test_inster(){
+		HsUserbasicinfoBO ub = new HsUserbasicinfoBO();
+		ub.setUser_email("111@163.com");
+		ub.setUser_name("中华好儿郎");
+		HsResumeBO resume = new HsResumeBO();
+		resume.setName("个人简历");
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsUserbasicinfoBOMapper.insert", ub);
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsResumeBOMapper.insert", resume);
+	}
+
+}

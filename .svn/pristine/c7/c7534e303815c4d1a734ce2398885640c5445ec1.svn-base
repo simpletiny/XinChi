@@ -1,0 +1,25 @@
+package seentao.xhsn.person.jobsearch.dao;
+
+import seentao.xhsn.bean.HsSearchBO;
+import seentao.xhsn.bean.HsSearchConditionBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月5日 下午3:22:04 
+ * @note 搜索器DAO
+ */
+public interface IJobSearchDAO {
+	
+	/**
+	 * 增加搜索记录
+	 * @param bo
+	 * @return PK(id)主键
+	 */
+	public String insertSearch(HsSearchBO bo);
+	
+	/**增加搜索条件
+	 * @param bo 搜索条件信息
+	 * @return PK(id)主键
+	 */
+	public String insertSearchCondition(HsSearchConditionBO bo);
+}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsDictionaryDataBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsDictionaryDataBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="dictionary_catalog" property="dictionary_catalog"
+			jdbcType="VARCHAR" />
+		<result column="dictionary_code" property="dictionary_code"
+			jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		dictionary_catalog,
+		dictionary_code,
+		value,
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_dictionary_data
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from hs_dictionary_data
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsDictionaryDataBO">
+
+		insert into hs_dictionary_data
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="dictionary_catalog != null">
+				dictionary_catalog,
+			</if>
+			<if test="dictionary_code != null">
+				dictionary_code,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="dictionary_catalog != null">
+				#{dictionary_catalog,jdbcType=VARCHAR},
+			</if>
+			<if test="dictionary_code != null">
+				#{dictionary_code,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsDictionaryDataBO">
+		update hs_dictionary_data
+		<set>
+			<if test="dictionary_catalog != null">
+				dictionary_catalog = #{dictionary_catalog,jdbcType=VARCHAR},
+			</if>
+			<if test="dictionary_code != null">
+				dictionary_code = #{dictionary_code,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+
+	<select id="selectByPram" parameterType="seentao.xhsn.bean.HsDictionaryDataBO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hs_dictionary_data
+		<where>
+			<if test="dictionary_catalog !=null">
+				dictionary_catalog = #{dictionary_catalog,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY dictionary_code+0
+	</select>
+	
+	<select id="selectDictDataByCatalog" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select dictionary_code,value from hs_dictionary_data 
+		where dictionary_catalog=(
+		select dictionary_catalog from hs_dictionary_field_map 
+			where table_name=#{table_name} and field_name=#{field_name}) 
+	</select>
+</mapper>

@@ -1,0 +1,193 @@
+package seentao.xhsn.person.jobsearch.service.impl;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.bean.HsSearchBO;
+import seentao.xhsn.bean.HsSearchConditionBO;
+import seentao.xhsn.enterprise.info.dao.IInfoDAO;
+import seentao.xhsn.enterprise.releasejob.dao.IReleasejobDAO;
+import seentao.xhsn.person.jobsearch.bean.JobDetailBean;
+import seentao.xhsn.person.jobsearch.dao.IJobSearchDAO;
+import seentao.xhsn.person.jobsearch.service.IJobSearchService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 
+ * @author niushixing 2014-12-2 下午1:10:39
+ * @update wjx
+ * 
+ */
+@Service
+public class JobSearchServiceImpl implements IJobSearchService {
+	@Autowired
+	private IInfoDAO infoDAO;
+	@Autowired
+	private IReleasejobDAO releasejobDAO;
+	@Autowired
+	private IJobSearchDAO searchDAO;
+
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+
+	@Override
+	public JobDetailBean getJobDetail(String releaseJobId) {
+		HsEtpReleasejobBO etpReleasejob = new HsEtpReleasejobBO();
+		HsEnterpriseBO enterprise = new HsEnterpriseBO();
+		JobDetailBean jb = new JobDetailBean();
+
+		etpReleasejob = releasejobDAO.selectByPrimaryKey(releaseJobId);
+		enterprise = infoDAO.selectByPrimaryKey(etpReleasejob.getCom_id());
+		jb.setJobName(etpReleasejob.getRel_name());
+		jb.setCompanyName(enterprise.getEnt_name());
+		// String companyType =
+		// dictFieldMapService.getDictValueByParam(enterprise.getTable_name(),
+		// "com_type", enterprise.getTrade_code()).get("value");
+		// jb.setCompanyType(companyType);
+		String comSize = dictFieldMapService.getDictValueByParam(enterprise.getTable_name(), "size_id",
+				enterprise.getSize_id()).get("value");
+		jb.setCompanySize(comSize);
+		String monthSalary = dictFieldMapService.getDictValueByParam("hs_etp_releasejob", "salary_code",
+				etpReleasejob.getSalary_code()).get("value");
+		jb.setMonthlyPay(monthSalary);
+		jb.setJobAddress(etpReleasejob.getCounty_code());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date createtime = new Date(etpReleasejob.getRel_createtime().getTime());
+		jb.setPublishDate(sdf.format(createtime));
+
+		jb.setJobProperty(etpReleasejob.getRel_property());
+		if (null != etpReleasejob.getExp_id()) {
+			String jobExp = dictFieldMapService.getDictValueByParam("hs_userbasicinfo", "job_exp_year",
+					etpReleasejob.getExp_id()).get("value");
+			jb.setJobExp(jobExp);
+		}
+		if (null != etpReleasejob.getEducation_code()) {
+			String jobEducation = dictFieldMapService.getDictValueByParam("hs_etp_releasejob", "education_code",
+					etpReleasejob.getEducation_code()).get("value");
+			jb.setJobEducation(jobEducation);
+		}
+
+		// private String jobEducation;
+		jb.setNeedCnt(etpReleasejob.getRel_count());
+		jb.setJobType(etpReleasejob.getJob_id());
+		jb.setId(etpReleasejob.getId());
+		jb.setJobDuty(etpReleasejob.getRel_description());
+		jb.setJobDutyShort(jb.getJobDuty());
+		// private String jobDuty;
+
+		// private String jobRequire;
+		jb.setCompanySummary(enterprise.getCom_info());
+		return jb;
+	}
+
+	@Override
+	public void insert(String user_id, HsEtpReleasejobBO bo) {
+		// 1、保存搜索的主表信息
+		HsSearchBO searchBO = new HsSearchBO();
+		searchBO.setSys_user_id(user_id);
+		searchBO.setSearch_time(new Timestamp(System.currentTimeMillis()));
+		String search_id = searchDAO.insertSearch(searchBO);
+		// 2、保存搜索的搜索条件
+		if (bo.getJob_id() != null && bo.getJob_id().trim().length() > 0) {
+			HsSearchConditionBO scBO = new HsSearchConditionBO();
+			scBO.setCondition_field("job_id");
+			scBO.setCondition_name("职位");
+			scBO.setCondition_value(bo.getJob_id());
+			scBO.setSearch_id(search_id);
+			searchDAO.insertSearchCondition(scBO);
+		}
+		if (bo.getTrade_id() != null && bo.getTrade_id().trim().length() > 0) {
+			HsSearchConditionBO scBO = new HsSearchConditionBO();
+			scBO.setCondition_field("trade_id");
+			scBO.setCondition_name("行业");
+			scBO.setCondition_value(bo.getTrade_id());
+			scBO.setSearch_id(search_id);
+			searchDAO.insertSearchCondition(scBO);
+		}
+		if (bo.getCounty_code() != null && bo.getCounty_code().trim().length() > 0) {
+			HsSearchConditionBO scBO = new HsSearchConditionBO();
+			scBO.setCondition_field("county_code");
+			scBO.setCondition_name("工作城市");
+			scBO.setCondition_value(bo.getCounty_code());
+			scBO.setSearch_id(search_id);
+			searchDAO.insertSearchCondition(scBO);
+		}
+		if (bo.getRel_name() != null && bo.getRel_name().trim().length() > 0) {
+			HsSearchConditionBO scBO = new HsSearchConditionBO();
+			scBO.setCondition_field("rel_name");
+			scBO.setCondition_name("职位名称");
+			scBO.setCondition_value(bo.getRel_name());
+			scBO.setSearch_id(search_id);
+			searchDAO.insertSearchCondition(scBO);
+		} else if (bo.getCompany_name() != null && bo.getCompany_name().trim().length() > 0) {
+			HsSearchConditionBO scBO = new HsSearchConditionBO();
+			scBO.setCondition_field("company_name");
+			scBO.setCondition_name("公司名称");
+			scBO.setCondition_value(bo.getCompany_name());
+			scBO.setSearch_id(search_id);
+			searchDAO.insertSearchCondition(scBO);
+		}
+	}
+
+	@Override
+	public List<JobDetailBean> searchAllByParam(Page<HsEtpReleasejobBO> page) {
+
+		List<JobDetailBean> jobDetails = new ArrayList<JobDetailBean>();
+		List<HsEtpReleasejobBO> releaseJobs = releasejobDAO.getAllByParam(page);
+		for (int i = 0; i < releaseJobs.size(); i++) {
+			HsEtpReleasejobBO etpReleaseJob = (HsEtpReleasejobBO) releaseJobs.get(i);
+			JobDetailBean jobDetail = getJobDetail(etpReleaseJob.getId());
+			jobDetails.add(jobDetail);
+		}
+		return jobDetails;
+	}
+
+	@Override
+	public List<JobDetailBean> searchAllByDesired(Page<HsEtpReleasejobBO> page, HsDesiredPositionBO desiredBO) {
+		if (page == null) {
+			page = new Page<HsEtpReleasejobBO>();
+		}
+		HsEtpReleasejobBO bo = new HsEtpReleasejobBO();
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (desiredBO.getJob_type() != null && desiredBO.getJob_type().trim().length() > 0) {
+			bo.setJob_id_list(Arrays.asList(desiredBO.getJob_type().split(",")));
+		}
+		if (desiredBO.getDesired_trade() != null && desiredBO.getDesired_trade().trim().length() > 0) {
+			bo.setTrade_id_list(Arrays.asList(desiredBO.getDesired_trade().split(",")));
+		}
+		if (desiredBO.getDesired_city() != null && desiredBO.getDesired_city().trim().length() > 0) {
+			bo.setCounty_code_list(Arrays.asList(desiredBO.getDesired_city().split(",")));
+		}
+		if (desiredBO.getDesired_salary_scope() != null && desiredBO.getDesired_salary_scope().trim().length() > 0) {
+			bo.setSalary_code(desiredBO.getDesired_salary_scope());
+		}
+		if (desiredBO.getEmployment_type() != null && desiredBO.getEmployment_type().trim().length() > 0) {
+			bo.setRel_property(desiredBO.getEmployment_type());
+		}
+		params.put("bo", bo);
+		page.setParams(params);
+		List<JobDetailBean> jobDetails = new ArrayList<JobDetailBean>();
+		List<HsEtpReleasejobBO> releaseJobs = releasejobDAO.getAllByParam(page);
+		for (int i = 0; i < releaseJobs.size(); i++) {
+			HsEtpReleasejobBO etpReleaseJob = (HsEtpReleasejobBO) releaseJobs.get(i);
+			JobDetailBean jobDetail = getJobDetail(etpReleaseJob.getId());
+			jobDetails.add(jobDetail);
+		}
+		return jobDetails;
+	}
+
+}

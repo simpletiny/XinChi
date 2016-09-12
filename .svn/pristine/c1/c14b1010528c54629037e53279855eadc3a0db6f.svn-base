@@ -1,0 +1,7 @@
+.btn{width: 88px;
+height: 28px;
+background: #fea201;
+font-size: 14px;
+color: #fdfdfd;
+margin-top: 10px;
+cursor: pointer;}

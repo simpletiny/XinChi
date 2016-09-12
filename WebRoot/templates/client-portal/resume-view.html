@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+        <title>魔方招聘</title>
+        <link type="text/css" rel="stylesheet" href="/static/css/style-web.css">
+    </head>
+    <body>
+        <div class="resume info">
+            <dl class="q">
+                <dt>基本信息</dt>
+                <dd>{{resume.name}}</dd>
+                <dd class="ico1">{% if resume.education|length > 0 %}
+                    {{resume.education[0].degree or '未添加学历'}} - <strong>{{resume.education[0].schoolName or '未添加毕业学校'}}</strong>
+                    {% else %}未添加学历 - <strong>未添加毕业学校</strong>
+                    {% endif %}</dd>
+                <dd class="ico2">{{resume.location or '未添加所在地'}}</dd>
+                <dd class="ico3">{{resume.workingExp or '未添加'}}工作经验 - <strong>
+                    {% if resume.career|length > 0 %}{{resume.career[resume.career|length-1].start~'开始工作' or '未添加开始工作年限'}}
+                    {% else %}未添加开始工作年限
+                    {% endif %}</strong></dd>
+                <dd class="ico4">{{resume.mobile or '未添加电话号码'}}</dd>
+                <dd class="ico5">{{resume.email or '未添加email'}}</dd>
+            </dl>
+        </div>
+        <div class="resume">
+            <dl class="q">
+                <dt>求职意向</dt>
+                <dd>地点: {{resume.targetWorkLocation or '未添加期望工作地点'}}</dd>
+                <dd>期望薪水: {{resume.targetSalary or '未添加期望薪水'}}</dd>
+                <dd>职位: {% if resume.targetPosition|length > 0 and resume.targetPosition[0] != None %}{{resume.targetPosition|join('|')}}
+                    {% else %}未添加期望职位{% endif %}</dd>
+                <dd>工作类型: {{resume.targetJobType or '未添加工作类型'}}</dd>
+            </dl>
+        </div>
+        <div class="resume">
+            <dl class="q">
+                <dt>教育经历</dt>
+                {% for ed in resume.education %}
+                <dd>
+                    <table>
+                        <tr>
+                            <td >{{ed.start}}--{{ed.end}}</td>
+                            <td>{{ed.schoolName}}</td>
+                            <td>{{ed.major}}</td>
+                            <td>{{ed.degree}}</td>
+                        </tr>
+                    </table>
+                </dd>
+                {% endfor %}
+            </dl>
+        </div>
+        <div class="resume">
+            <dl class="q">
+                <dt>工作经历</dt>
+                {% for ca in resume.career %}
+                <dd>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="color:#7da7d9; font-size: 14px">
+                                    {{ca.start}}--{{ca.end}} &nbsp;&nbsp;&nbsp;{{ca.companyName}} &nbsp;&nbsp; {{ca.jobName}}
+                                </p>
+
+                                {{ca.jobDescription}} <p></p>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+                {% endfor %}
+            </dl>
+        </div>
+        <div class="resume">
+            <dl class="q">
+                <dt>项目经历</dt>
+                {% for pr in resume.projects %}
+                <dd>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="color:#7da7d9; font-size: 14px">
+                                    {{pr.start}}--{{pr.end}} &nbsp;&nbsp;&nbsp;{{pr.projectName}}
+                                </p>
+                                {{pr.responsibility}}<br/>
+                                {{pr.projectDescription}}<br/><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+                {% endfor %}
+            </dl>
+        </div>
+        <div class="resume">
+            <dl class="q">
+                <dt>个人描述</dt>
+                <dd>{{resume.skills or '未添加个人技能描述或自我评价'}}</dd>
+            </dl>
+        </div>
+
+        <div class="page_footer">
+            <div class="page_foot_nav"><a href="#" target="_blank">关于魔方招聘</a><span>|</span><a href="#" target="_blank">用户协议</a><span>|</span><a href="#" target="_blank">意见反馈</a><span>|</span><a href="#" target="_blank">广告服务</a><span>|</span><a href="#" target="_blank">联系我们</a></div>
+            <p class="copyright">&copy; 2015 魔方招聘・京ICP备00000000</p>
+        </div>
+
+        <script src="/static/vendor/jquery-1.11.1.min.js"></script>
+        <script src="/static/vendor/jquery.cookie.js"></script>
+        <script src="/static/vendor/knockout-3.2.0.js"></script>
+        <script src="/static/vendor/underscore-min.js"></script>
+        <script type="text/javascript" src="/static/vendor/nanobar.js"></script>
+    </body>
+</html>

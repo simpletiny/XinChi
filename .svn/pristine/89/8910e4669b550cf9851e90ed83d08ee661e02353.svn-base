@@ -1,0 +1,39 @@
+.btn{width: 88px;
+height: 28px;
+background: #fea201;
+font-size: 14px;
+color: #fdfdfd;
+margin-top: 10px;
+cursor: pointer;}
+#maskLayer{position: absolute;left:0px;top:0px}
+#alphadiv{position:absolute;background:#000;z-index: 2000}
+#drag{position:absolute;background:#fff;z-index: 2001;width:580px;border:1px solid #ccc}
+#drag_h{line-height:28px;height:28px;cursor:move;color:#fff;background:#38ac96;border-bottom:1px dashed #babcbc;padding:0 10px;}
+#drag h3 b{float:left; color:#FFF;}
+#drag h3 span{font-weight:normal;float:right;cursor:pointer; color:#FFF;}
+
+#sublist{position:absolute;z-index:2100;background:#fff}
+
+/* 选择专业列表 */
+#MajorAlpha{padding:10px 4px}
+#MajorAlpha ul{zoom:1;overflow:Hidden;line-height:25px;padding:8px 0}
+#MajorAlpha li{float:left;width:220px;cursor:pointer;text-indent:20px;height:25px;overflow:Hidden;background-repeat:no-repeat;background-position:6px 6px}
+#MajorAlpha li.over{background-color:#38ac96;color:#fff}
+/* 专业 悬浮子菜单 */
+#sub_major{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_major h4{border-bottom:1px dashed #ccc}
+#sub_major ul{overflow:hidden;zoom:1}
+#sub_major ul li{float:left;width:220px;height:25px;overflow:hidden}
+#sub_major ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:16px;background-image:url(chk_off.gif);background-repeat:no-repeat;background-position:2px 6px}
+#sub_major ul a:hover{background-color:#38ac96;color:#fff}
+#sublist .radio a{background-image:none}
+
+/* 职能类别 悬浮子菜单 */
+#sub_funtype{border:1px solid #38ac96;line-height:25px;text-align:left}
+#sub_funtype h4{border-bottom:1px dashed #ccc}
+#sub_funtype ul{overflow:hidden;zoom:1}
+#sub_funtype ul li{float:left;width:220px;height:25px;overflow:hidden}
+#sub_funtype ul a{display:block;height:25px;color:#000;text-decoration:none;text-indent:16px;background-image:url(chk_off.gif);background-repeat:no-repeat;background-position:2px 6px}
+#sub_funtype ul a:hover{background-color:#38ac96;color:#fff}
+#sub_funtype ul a.chkON{background-image:url(chk_on.gif)}
+#sublist .radio a{background-image:none}

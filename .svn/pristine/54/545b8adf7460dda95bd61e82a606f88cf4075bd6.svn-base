@@ -1,0 +1,170 @@
+package seentao.xhsn.person.train.action;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.bean.HsTrainingBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.resume.service.IResumeService;
+import seentao.xhsn.person.train.service.ITrainingService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+
+/**
+ * @Description:培训经历填写和修改
+ * @author 李君彦
+ * @date 2014-11-24 下午3:07:41 
+ * @version V1.0   
+ */
+
+@Controller
+@Scope("prototype")
+public class TrainingAction{
+	
+	private HsTrainingBO bo;
+	//是否继续新增
+	private String isAdd;
+	private List<HsTrainingBO> boList;
+	/**
+	 * 当前左侧选中的菜单id
+	 */
+	private String lm_tab_name;
+		
+	/**
+	 * 左侧菜单的集合
+	 */
+	private List<HsPersonLeftMenuBO> leftmenus;
+		
+	/**
+	 * 简历完成度
+	 */
+	private String res_completeness;
+	
+		@Autowired
+	private ILeftMenuService lmService;
+	@Autowired
+	private ITrainingService trainingService;
+	
+	private Map<String, List<HsDictionaryDataBO>> dicts;
+	
+	@Autowired
+	private IResumeService resumeService;
+	/**
+	 * 新增
+	 * @return
+	 */
+	public String saveTraining(){
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		bo.setRes_id(bean.getRes_id());
+		bo.setUser_id(bean.getUser_sys_id());
+		if(StringUtils.isNotEmpty(bo.getId()))
+			trainingService.update(bo);
+		else
+			trainingService.insert(bo);
+		
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateTrain(resBo);
+		return "SUCCESS";
+	}
+	
+	public String updateTraining(){
+		trainingService.update(bo);
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateTrain(resBo);
+		return "SUCCESS";
+	}
+	
+	public String delTraining(){
+		trainingService.delTraining(bo.getId());
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateTrain(resBo);
+		return "SUCCESS";
+	}
+	
+	public String findTraining(){
+		bo=trainingService.selectByPrimaryKey(bo.getId());
+		return "SUCCESS";
+	}
+	
+	public String findAllTraining(){
+		HsTrainingBO paramBO=new HsTrainingBO();
+		UserSessionBean sessionBean=(UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		paramBO.setRes_id(sessionBean.getRes_id());
+		paramBO.setUser_id(sessionBean.getUser_sys_id());
+		boList = trainingService.getAllByParam(paramBO);
+		isAdd=isAdd==null?"n":isAdd;
+		leftmenus = lmService.findLeftMenuByParams();
+		// 获取简历完成度
+		res_completeness = lmService.getCompletenessByPK();
+		lm_tab_name = paramBO.getTable_name();
+		return "SUCCESS";
+	}
+	
+	public HsTrainingBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsTrainingBO bo) {
+		this.bo = bo;
+	}
+	
+	public List<HsTrainingBO> getBoList() {
+		return boList;
+	}
+
+	public void setBoList(List<HsTrainingBO> boList) {
+		this.boList = boList;
+	}
+	
+	public String getIsAdd() {
+		return isAdd;
+	}
+
+	public void setIsAdd(String isAdd) {
+		this.isAdd = isAdd;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getDicts() {
+		return dicts;
+	}
+
+	public void setDicts(Map<String, List<HsDictionaryDataBO>> dicts) {
+		this.dicts = dicts;
+	}
+
+	public String getLm_tab_name() {
+		return lm_tab_name;
+	}
+
+	public void setLm_tab_name(String lm_tab_name) {
+		this.lm_tab_name = lm_tab_name;
+	}
+
+	public List<HsPersonLeftMenuBO> getLeftmenus() {
+		return leftmenus;
+	}
+
+	public void setLeftmenus(List<HsPersonLeftMenuBO> leftmenus) {
+		this.leftmenus = leftmenus;
+	}
+
+	public String getRes_completeness() {
+		return res_completeness;
+	}
+
+	public void setRes_completeness(String res_completeness) {
+		this.res_completeness = res_completeness;
+	}
+}

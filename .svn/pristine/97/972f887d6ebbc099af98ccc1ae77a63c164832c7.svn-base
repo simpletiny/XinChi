@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsResumeVisitorBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsResumeVisitorBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="user_id" property="user_id" jdbcType="CHAR" />
+	    <result column="ent_id" property="ent_id" jdbcType="CHAR" />
+	    <result column="visitTime" property="visitTime" jdbcType="TIMESTAMP" />
+	    <result column="visitCnt" property="visitCnt" jdbcType="INTEGER" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	res_id, 
+    	user_id, 
+    	ent_id, 
+    	visitTime, 
+    	visitCnt, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_resume_visitor
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_resume_visitor
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsResumeVisitorBO" >
+  	
+    insert into hs_resume_visitor
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="user_id != null">
+	        user_id,
+	      </if>
+	 	<if test="ent_id != null">
+	        ent_id,
+	      </if>
+	 	<if test="visitTime != null">
+	        visitTime,
+	      </if>
+	 	<if test="visitCnt != null">
+	        visitCnt,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="user_id != null">
+	        #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="ent_id != null">
+	        #{ent_id,jdbcType=CHAR},
+	      </if>
+    	<if test="visitTime != null">
+	        #{visitTime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="visitCnt != null">
+	        #{visitCnt,jdbcType=INTEGER},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsResumeVisitorBO" >
+    update hs_resume_visitor
+    <set >
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="user_id != null">
+	        user_id = #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="ent_id != null">
+	        ent_id = #{ent_id,jdbcType=CHAR},
+	      </if>
+    	<if test="visitTime != null">
+	        visitTime = #{visitTime,jdbcType=TIMESTAMP},
+	      </if>
+    	<if test="visitCnt != null">
+	        visitCnt = #{visitCnt,jdbcType=INTEGER},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsResumeVisitorBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_resume_visitor
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+ <select id="selectByPage" parameterType="seentao.xhsn.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_resume_visitor
+   <where>
+	    <if test="params.bo.user_id !=null">
+	    	user_id = #{params.bo.user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="params.bo.res_id !=null">
+	    	and res_id = #{params.bo.res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+   
+   <select id="selectCountByParam" parameterType="seentao.xhsn.bean.HsResumeVisitorBO" resultType="java.lang.Integer">
+   select count(*) from hs_resume_visitor
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

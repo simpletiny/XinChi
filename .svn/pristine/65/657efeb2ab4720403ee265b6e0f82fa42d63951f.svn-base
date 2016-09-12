@@ -1,0 +1,33 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsMinzuBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String mz_name;
+		  
+		 
+		  private java.lang.String mz_code;
+		  
+		 
+		  public  java.lang.String getMz_name() {
+				return mz_name;
+			}
+			
+			public void setMz_name( java.lang.String mz_name) {
+				this.mz_name = mz_name;
+			}
+		 
+		  public  java.lang.String getMz_code() {
+				return mz_code;
+			}
+			
+			public void setMz_code( java.lang.String mz_code) {
+				this.mz_code = mz_code;
+			}
+	
+
+}

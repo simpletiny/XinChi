@@ -1,0 +1,53 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<script src="<%=basePath%>common/js/pwd.js" type="text/javascript"></script>
+<script type="text/javascript">
+window['basePath']="<%=basePath%>";
+<!--
+	function switchTab(index){
+		$(".logo ul li a").each(function(i){
+			$(this).attr("class","");
+			if((i+1)==index){
+				$(this).attr("class","bold");
+			}
+		});
+	}
+//-->
+</script>
+<div id="top">
+        	<div class="top_inner">
+            	<div class="logo">
+                	<img src="<%=basePath %>common/images/logo.png"/>
+                    <ul>
+                    	<li><a href="<%=basePath %>enterprise/entIndexInit">首页</a></li>
+                    	<li><a href="<%=basePath %>enterprise/companyInfoInit" class="bold" onclick="switchTab(2)">企业中心</a></li>
+                    	<li><a href="<%=basePath %>enterprise/manageJobInit" onclick="switchTab(3)">职位管理</a></li>
+                    	<li><a href="<%=basePath %>enterprise/manageResumeInit" onclick="switchTab(4)">简历管理</a></li>
+                    	<li><a href="<%=basePath %>enterprise/searchResumeInit" onclick="switchTab(5)">搜索简历</a></li>
+                    	
+                        <br  />
+                    </ul>
+                    <br />
+                </div>
+            	<div class="person">
+                    <s:if test='#session.LOGIN_SESSION_BEAN.photo_url!=null&&#session.LOGIN_SESSION_BEAN.photo_url!=""'>
+					 <div class="pic"><img src="/filesys/${session.LOGIN_SESSION_BEAN.photo_url }" style="width:42px;height:42px;border-radius: 60px"/></div>
+		    		</s:if>
+		    		<s:else>
+		    			<div class="pic" style="background:url(<%=basePath%>common/images/empty.PNG);"></div>
+		    		</s:else>
+                    <div class="name"><p style="width:170px; overflow:hidden;white-space:nowrap; text-overflow:ellipsis;-o-text-overflow:ellipsis; color:#FFF;" >${session.LOGIN_SESSION_BEAN.user_email }</p>
+                    	<ul>
+                        <li><a style="cursor:pointer;" onclick="show('<%=basePath%>');">修改密码</a></li>
+                        <li><a href="<%=basePath%>user/logout">退出</a></li>
+                        </ul>
+                    </div>
+                    <br />
+                </div>
+                <br />
+            </div>
+      </div>

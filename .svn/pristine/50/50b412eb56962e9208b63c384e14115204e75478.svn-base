@@ -1,0 +1,121 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsGrowBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String user_id;
+		  
+		 
+		  private java.lang.String res_id;
+		  
+		 
+		  private java.lang.String school;
+		  
+		 
+		  private java.lang.String begintime;
+		  
+		 
+		  private java.lang.String endtime;
+		  
+		 
+		  private java.lang.String course_name;
+		  
+		 
+		  private java.lang.String course_code;
+		  
+		 
+		  private java.lang.String course_score;
+		  
+		 
+		  private java.lang.String teacher_vluation;
+		  
+		 
+		  private java.lang.String file_id;
+		  
+		 
+		  public  java.lang.String getUser_id() {
+				return user_id;
+			}
+			
+			public void setUser_id( java.lang.String user_id) {
+				this.user_id = user_id;
+			}
+		 
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+		 
+		  public  java.lang.String getSchool() {
+				return school;
+			}
+			
+			public void setSchool( java.lang.String school) {
+				this.school = school;
+			}
+		 
+		  public  java.lang.String getBegintime() {
+				return begintime;
+			}
+			
+			public void setBegintime( java.lang.String begintime) {
+				this.begintime = begintime;
+			}
+		 
+		  public  java.lang.String getEndtime() {
+				return endtime;
+			}
+			
+			public void setEndtime( java.lang.String endtime) {
+				this.endtime = endtime;
+			}
+		 
+		  public  java.lang.String getCourse_name() {
+				return course_name;
+			}
+			
+			public void setCourse_name( java.lang.String course_name) {
+				this.course_name = course_name;
+			}
+		 
+		  public  java.lang.String getCourse_code() {
+				return course_code;
+			}
+			
+			public void setCourse_code( java.lang.String course_code) {
+				this.course_code = course_code;
+			}
+		 
+		  public  java.lang.String getCourse_score() {
+				return course_score;
+			}
+			
+			public void setCourse_score( java.lang.String course_score) {
+				this.course_score = course_score;
+			}
+		 
+		  public  java.lang.String getTeacher_vluation() {
+				return teacher_vluation;
+			}
+			
+			public void setTeacher_vluation( java.lang.String teacher_vluation) {
+				this.teacher_vluation = teacher_vluation;
+			}
+		 
+		  public  java.lang.String getFile_id() {
+				return file_id;
+			}
+			
+			public void setFile_id( java.lang.String file_id) {
+				this.file_id = file_id;
+			}
+	
+
+}

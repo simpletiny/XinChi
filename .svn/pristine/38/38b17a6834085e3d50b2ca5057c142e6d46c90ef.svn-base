@@ -1,0 +1,131 @@
+package seentao.xhsn.enterprise.releasejob.action;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.enterprise.releasejob.service.IReleasejobService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class ReleaseJobAction extends ActionSupport {
+	private static final long serialVersionUID = 2804826321641088618L;
+	private HsEtpReleasejobBO rjbo;
+	@Autowired
+	private IDictionaryFieldMapService dfmService;
+
+	private Map<String, List<HsDictionaryDataBO>> mapDic;
+	private List<HsDictionaryDataBO> educationList;
+	private List<HsDictionaryDataBO> monthlyPayList;
+	private List<HsDictionaryDataBO> expList;
+
+	private String result;
+	private String rjboId;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+		mapDic = dfmService.findDictDataByParam("hs_etp_releasejob");
+		Map<String, List<HsDictionaryDataBO>> mapDic2 = dfmService.findDictDataByParam("hs_userbasicinfo");
+		if (null != mapDic && mapDic.size() > 0) {
+			educationList = mapDic.get("education_type");
+			monthlyPayList = mapDic.get("monthly_salary_cope");
+			expList = mapDic2.get("user_jobexp");
+		}
+		// 如果是修改模式，读取职位信息
+		if (null != rjboId && !rjboId.equals("")) {
+			rjbo = rjService.findReleaseJobById(rjboId);
+		} else {
+			rjbo = new HsEtpReleasejobBO();
+			rjbo.setEducation_value("请选择");
+			rjbo.setMonthly_salary("请选择");
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private IReleasejobService rjService;
+
+	/**
+	 * 保存工作发布
+	 * 
+	 * @return
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 */
+	public String saveJob() {
+		rjService.saveReleaseJob(rjbo);
+		result = "OK";
+		return SUCCESS;
+	}
+
+	public HsEtpReleasejobBO getRjbo() {
+		return rjbo;
+	}
+
+	public void setRjbo(HsEtpReleasejobBO rjbo) {
+		this.rjbo = rjbo;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getMapDic() {
+		return mapDic;
+	}
+
+	public void setMapDic(Map<String, List<HsDictionaryDataBO>> mapDic) {
+		this.mapDic = mapDic;
+	}
+
+	public List<HsDictionaryDataBO> getEducationList() {
+		return educationList;
+	}
+
+	public void setEducationList(List<HsDictionaryDataBO> educationList) {
+		this.educationList = educationList;
+	}
+
+	public List<HsDictionaryDataBO> getMonthlyPayList() {
+		return monthlyPayList;
+	}
+
+	public void setMonthlyPayList(List<HsDictionaryDataBO> monthlyPayList) {
+		this.monthlyPayList = monthlyPayList;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public String getRjboId() {
+		return rjboId;
+	}
+
+	public void setRjboId(String rjboId) {
+		this.rjboId = rjboId;
+	}
+
+	public List<HsDictionaryDataBO> getExpList() {
+		return expList;
+	}
+
+	public void setExpList(List<HsDictionaryDataBO> expList) {
+		this.expList = expList;
+	}
+}

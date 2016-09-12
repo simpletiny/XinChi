@@ -1,0 +1,54 @@
+package seentao.xhsn.regist.service;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsUserBO;;
+
+/** 
+ * @author wjx 
+ * @note 注册action
+ */
+public interface IRegistService {
+
+	/**
+	 * 插入一条用户基本信息
+	 * @param userBo
+	 */
+	public String insert(HsUserBO bo);
+
+	
+	/**
+	 * 根据用户信息发送验证邮件
+	 * @param userBo
+	 */
+	public void sendEmail(HsUserBO bo,String basePath);
+	
+	/**
+	 * 插入用户基本信息,发送验证邮件
+	 * @param bo
+	 * @param basePath
+	 */
+	public String insertAndSendEmail(HsUserBO bo,String basePath);
+
+
+	/**根据参数，查询用户表
+	 * @param type 用户类型
+	 * @param email 邮箱
+	 * @return
+	 */
+	public List<HsUserBO> findUserByTypeAndEmail(int type, String email);
+
+
+
+
+	/**插入企业注册信息
+	 * @param bo
+	 * @param entBO
+	 * @param basePath
+	 * @return
+	 */
+	public void insertENTAndSendEmail(HsUserBO bo, HsEnterpriseBO entBO,
+			String basePath); 
+
+}

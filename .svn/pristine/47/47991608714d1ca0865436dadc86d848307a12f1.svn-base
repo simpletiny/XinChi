@@ -1,0 +1,25 @@
+package seentao.xhsn.sys.city.service;
+
+import seentao.xhsn.sys.city.bean.CityDataBean;
+
+/**
+ * 城市管理service
+ * 
+ * @author niushixing 2015-1-7 13:50:38
+ *
+ */
+public interface ICityService {
+	// 华北-东北 1 northeast
+	public static final String AREA_NORTH_EAST = "1";
+	// 华东地区 2 eastchina
+	public static final String AREA_EAST_CHINA = "2";
+	// 华南-华中 3 southchina
+	public static final String AREA_SOUTH_CHINA = "3";
+	// 西北-西南 4 southwest
+	public static final String AREA_SOUTH_WEST = "4";
+	// 其他 5 other
+	public static final String AREA_OTHER = "5";
+
+	public CityDataBean getCdBean();
+
+}

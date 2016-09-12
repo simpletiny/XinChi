@@ -1,0 +1,121 @@
+select, option {
+	font-size: 14px;
+	color: #636262;
+}
+
+table tr td {
+	font-size: 16px;
+	color: #636262;
+}
+
+.top_inner .logo, .top_inner .person {
+	float: left;
+}
+
+.top_inner .logo {
+	width: 704px;
+	height: 83px;
+}
+
+.top_inner .logo img, .top_inner .logo ul {
+	float: left;
+}
+
+.top_inner .logo ul {
+	width: 400px;
+	margin-left: 25px;
+}
+
+.top_inner .logo ul li {
+	float: left;
+	margin-left: 20px;
+}
+
+.top_inner .logo ul li a {
+	font-size: 18px;
+	color: #FFF;
+	display: block;
+	line-height: 83px;
+}
+
+.top_inner .logo ul li .bold {
+	font-weight: bold;
+	background: url(../images/top/triangle.jpg) no-repeat bottom center;
+}
+
+.top_inner .person {
+	width: 320px;
+	height: 83px;
+	line-height: 83px;
+	position: relative;
+}
+
+.top_inner .person .pic {
+	float: left;
+	width: 42px;
+	height: 42px;
+	border-radius: 60px;
+	background: url(../images/top/kobe.jpg);
+	margin-top: 22px;
+	margin-left: 80px;
+}
+
+.top_inner .person .name {
+	float: left;
+	width: 180px;
+	margin-left: 15px;
+	color: #FFF;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	position: relative;
+	background: url(../images/top/triangle_up.png) no-repeat right center;
+}
+
+.top_inner .person .name:hover ul {
+	display: block;
+}
+
+.top_inner .person .name ul {
+	position: absolute;
+	display: none;
+}
+
+.top_inner .person .name ul li a {
+	display: block;
+	width: 120px;
+	padding-left: 30px;
+	height: 26px;
+	line-height: 26px;
+	background: #38ac96;
+	color: #FFF;
+}
+
+.top_inner .person .name ul li a:hover {
+	background: #a1d8ce;
+}
+
+.top_inner .person .active {
+	background: url(../../images/triangle_d.png) no-repeat right center;
+}
+
+.top_inner .person .xl {
+	position: absolute;
+	left: 210px;
+	top: 83px;
+}
+
+.top_inner .person .xl li a {
+	display: block;
+	width: 78px;
+	padding-left: 30px;
+	height: 26px;
+	line-height: 26px;
+	font-size: 12px;
+	color: #fdfdfd;
+	background: #38ac96;
+}
+
+.top_inner .person .xl li a:hover {
+	background: #a1d8ce;
+}

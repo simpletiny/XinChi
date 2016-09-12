@@ -1,0 +1,101 @@
+package seentao.xhsn.person.center.bean;
+
+
+/**
+ * 个人中心信息bean
+ * 
+ * @author niushixing 2014-12-9 下午2:21:36
+ * 
+ */
+public class PersonBean {
+	private String name;
+	private String desire_job;
+	private String exp;
+	private String cellphone;
+	private String email;
+	private boolean validate;
+	private int visitorCnt;
+	private int applyCnt;
+	private int letterCnt;
+	private String imgPath;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDesire_job() {
+		return desire_job;
+	}
+
+	public void setDesire_job(String desire_job) {
+		this.desire_job = desire_job;
+	}
+
+	public String getExp() {
+		return exp;
+	}
+
+	public void setExp(String exp) {
+		this.exp = exp;
+	}
+
+	public String getCellphone() {
+		return cellphone;
+	}
+
+	public void setCellphone(String cellphone) {
+		this.cellphone = cellphone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getVisitorCnt() {
+		return visitorCnt;
+	}
+
+	public void setVisitorCnt(int visitorCnt) {
+		this.visitorCnt = visitorCnt;
+	}
+
+	public int getApplyCnt() {
+		return applyCnt;
+	}
+
+	public void setApplyCnt(int applyCnt) {
+		this.applyCnt = applyCnt;
+	}
+
+	public int getLetterCnt() {
+		return letterCnt;
+	}
+
+	public void setLetterCnt(int letterCnt) {
+		this.letterCnt = letterCnt;
+	}
+
+	public boolean isValidate() {
+		return validate;
+	}
+
+	public void setValidate(boolean validate) {
+		this.validate = validate;
+	}
+
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+}

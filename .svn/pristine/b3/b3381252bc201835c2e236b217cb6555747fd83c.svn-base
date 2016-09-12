@@ -1,0 +1,103 @@
+package seentao.xhsn.person.center.bean;
+
+public class RecommendedJobBean {
+	private String job_id;
+	private String jobName;
+	private String comName;
+	private String jobLocation;
+	private String comProperty;
+	private String comSize;
+	private String jobExp;
+	private String jobEducation;
+	private String jobSalary;
+	private String jobDuty;
+	private String publishTime;
+	
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public String getComName() {
+		return comName;
+	}
+
+	public void setComName(String comName) {
+		this.comName = comName;
+	}
+
+	public String getJobLocation() {
+		return jobLocation;
+	}
+
+	public void setJobLocation(String jobLocation) {
+		this.jobLocation = jobLocation;
+	}
+
+	public String getComProperty() {
+		return comProperty;
+	}
+
+	public void setComProperty(String comProperty) {
+		this.comProperty = comProperty;
+	}
+
+	public String getComSize() {
+		return comSize;
+	}
+
+	public void setComSize(String comSize) {
+		this.comSize = comSize;
+	}
+
+	public String getJobExp() {
+		return jobExp;
+	}
+
+	public void setJobExp(String jobExp) {
+		this.jobExp = jobExp;
+	}
+
+	public String getJobSalary() {
+		return jobSalary;
+	}
+
+	public void setJobSalary(String jobSalary) {
+		this.jobSalary = jobSalary;
+	}
+
+	public String getJobDuty() {
+		return jobDuty;
+	}
+
+	public void setJobDuty(String jobDuty) {
+		this.jobDuty = jobDuty;
+	}
+
+	public String getJobEducation() {
+		return jobEducation;
+	}
+
+	public void setJobEducation(String jobEducation) {
+		this.jobEducation = jobEducation;
+	}
+
+	public String getJob_id() {
+		return job_id;
+	}
+
+	public void setJob_id(String job_id) {
+		this.job_id = job_id;
+	}
+
+	public String getPublishTime() {
+		return publishTime;
+	}
+
+	public void setPublishTime(String publishTime) {
+		this.publishTime = publishTime;
+	}
+}

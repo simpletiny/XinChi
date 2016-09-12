@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 新增企业
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" href="/static/vendor/rater-star/rater-star.css">
+{% endblock %}
+
+{% block content%}
+
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>企业基本信息录入<a href="/companies" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">企业名称</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: company().name" placeholder="企业名称" name="name" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">企业简称</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: company().briefName" placeholder="企业简称" name="abbr" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">企业网站</label>
+                        <div class="ip"><input type="text" class="ip- checkurl" data-bind="value: company().website" placeholder="企业网站" name="website" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">企业性质</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: company().nature" placeholder="企业性质" name="nature" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6 required">
+                        <label class="l">企业成立日期</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: company().fundingTime" placeholder="年-月-日" name="fundingTime" required="required"/></div>
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">企业总机</label>
+                        <div class="ip"><input type="text" class="ip- phone" data-bind="value: company().phone" placeholder="企业总机" name="phone" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业LOGO</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: company().logoUrl" placeholder="企业LOGO" name="logoUrl"/></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">企业LOGO图标</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: company().smallLogoUrl" placeholder="企业LOGO (图标)" name="smallLogoUrl"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">企业等级</label>
+                        <div class="ip" id="company-grade" style="padding-top: 8px;"></div>
+                        <input type="hidden" id="company-grade-input" data-bind="value: company().grade" />
+                    </div>
+                    <div class="col-md-6 required">
+                        <label class="l">发布状态</label>
+                        <div class="ip"><select class="form-control" data-bind="options: publishStatuses, optionsCaption: '-- 请选择 --', value: company().publishStatus" name="publishStatus" required="required"></select></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业地址</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: company().location" placeholder="企业地址"></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">所属销售</label>
+                        <div class="ip">
+                            <div data-bind="foreach: allSales">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data.id}, checked: $root.company().sales"/><label data-bind="text: $data.employeeName"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业规模</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: company().size" placeholder="企业规模"></textarea></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">产品介绍及行业地位</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: company().product" placeholder="产品介绍及行业地位"></textarea></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业组织架构</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: company().organization" placeholder="企业组织架构"></textarea></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业发展规划</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: company().plan" placeholder="企业发展规划"></textarea></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">企业文化和用人风格</label>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: company().culture" placeholder="企业文化和用人风格"></textarea></div>
+                    </div>
+                </div>
+            </form>
+
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createCompany">保存</a></div>
+
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/rater-star/rater-star.js"></script>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/companies/company-creation.js{{ _suffix_ }}"></script>
+{% endblock %}

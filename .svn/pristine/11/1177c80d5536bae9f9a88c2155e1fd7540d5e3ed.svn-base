@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsLearnpathBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsLearnpathBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="user_id" property="user_id" jdbcType="CHAR" />
+	    <result column="identity_card" property="identity_card" jdbcType="VARCHAR" />
+	    <result column="score_code" property="score_code" jdbcType="VARCHAR" />
+	    <result column="score" property="score" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  <resultMap id="NewResult" type="seentao.xhsn.person.learnpath.bean.HsLearnpathExtendBO">
+		<result column="score_code" property="score_code" jdbcType="VARCHAR" />
+		<result column="score" property="score" jdbcType="VARCHAR" />
+		<association property="scoreCatalogBO" javaType="seentao.xhsn.bean.HsScoreCatalogBO">
+			<id column="id" property="id" jdbcType="CHAR" />
+		    <result column="score_code" property="score_code" jdbcType="VARCHAR" />
+		    <result column="score_name" property="score_name" jdbcType="VARCHAR" />
+		 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+	    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+	    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+	    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+		</association>
+	</resultMap>
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	res_id, 
+    	user_id, 
+    	identity_card, 
+    	score_code, 
+    	score, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_learnpath
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_learnpath
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsLearnpathBO" >
+  	
+    insert into hs_learnpath
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="user_id != null">
+	        user_id,
+	      </if>
+	 	<if test="identity_card != null">
+	        identity_card,
+	      </if>
+	 	<if test="score_code != null">
+	        score_code,
+	      </if>
+	 	<if test="score != null">
+	        score,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="user_id != null">
+	        #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="identity_card != null">
+	        #{identity_card,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score_code != null">
+	        #{score_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score != null">
+	        #{score,jdbcType=VARCHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsLearnpathBO" >
+    update hs_learnpath
+    <set >
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="user_id != null">
+	        user_id = #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="identity_card != null">
+	        identity_card = #{identity_card,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score_code != null">
+	        score_code = #{score_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score != null">
+	        score = #{score,jdbcType=VARCHAR},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByPram" parameterType="seentao.xhsn.bean.HsLearnpathBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_learnpath
+   <where>
+	    <if test="identity_card !=null">
+	    	identity_card = #{identity_card,jdbcType=VARCHAR}
+	    </if>
+    </where>
+   </select>
+   
+   <select id="selectByIdentityCard" parameterType="seentao.xhsn.bean.HsLearnpathBO"
+		resultMap="NewResult">
+		select DISTINCT
+		sc.score_name,sc.score_code,IFNULL(l.score,'') score
+		FROM hs_score_catalog sc LEFT JOIN hs_learnpath l ON sc.score_code=l.score_code
+		<if test="identity_card !=null">
+			AND l.identity_card = #{identity_card,jdbcType=VARCHAR}
+		</if>
+		ORDER BY sc.catalog_index
+	</select>
+	
+	<select id="selectByUserID" parameterType="java.lang.String"
+		resultMap="NewResult">
+		select DISTINCT
+		sc.score_name,sc.score_code,IFNULL(l.score,'') score
+		FROM hs_score_catalog sc 
+		LEFT JOIN hs_userbasicinfo b ON   b.id=#{id,jdbcType=CHAR}
+		LEFT JOIN hs_learnpath l ON sc.score_code=l.score_code AND b.user_idnum=l.identity_card
+		ORDER BY sc.catalog_index
+	</select>
+	
+	<insert id="insertWithList" parameterType="java.util.List" >
+    insert into hs_learnpath (id,identity_card,score_code,score,creater,create_time,modifier,modify_time)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id},#{item.identity_card},#{item.score_code},#{item.score},#{item.creater},#{item.create_time},#{item.modifier},#{item.modify_time})      
+    </foreach>  
+  </insert>
+  <delete id="deleteByParam" parameterType="seentao.xhsn.bean.HsLearnpathBO" >
+    delete from hs_learnpath
+    <where>
+		<if test="identity_card !=null">
+			identity_card = #{identity_card,jdbcType=VARCHAR}
+		</if>
+	</where>
+  </delete>
+  
+</mapper>

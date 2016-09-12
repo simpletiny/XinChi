@@ -1,0 +1,72 @@
+$(document).ready(function(){
+	switchTab(3);
+	$("#job_description").bind('input propertychange', function() {
+		if($("#job_description").val().length>2000){
+			$("#descriptionTip").text("超过字数限制！");
+			$("#job_description").val($("#job_description").val().substring(0,2000));
+		}
+		if($("#job_description").val().length<2000){
+			$("#descriptionTip").text("");
+		}
+	}); 
+});
+
+function validate(){
+	if($("#com_name").val().length==0){
+		$("#errorTip").text("请输入企业名称!");
+		return false;
+	}
+	if($("#IndustryID_2").val().length==0){
+		$("#errorTip").text("请选择行业类别!");
+		return false;
+	}
+	if($("#FuntypeID").val().length==0){
+		$("#errorTip").text("请选择职位类别!");
+		return false;
+	}
+	if($("#position_name").val().length==0){
+		$("#errorTip").text("请输入职位名称!");
+		return false;
+	}
+	if($("#begindate").val().length==0){
+		$("#errorTip").text("请选择工作开始时间!");
+		return false;
+	}
+	if($("#enddate").val().length==0){
+		$("#enddate").val('至今');
+		alert($("#enddate").val());
+		/*$("#errorTip").text("请选择工作结束时间!");
+		return false;*/
+	}
+	if($("#job_description").val().length==0){
+		$("#errorTip").text("请输入工作描述!");
+		return false;
+	}
+	return true;
+}
+
+function handleUpdateResponse(data){
+	$("#key").val(data.bo.id);
+	$("#com_name").val(data.bo.com_name);
+	$("#IndustryID_2").val(data.bo.trade_code);
+	for (var i in ind_a){
+		if(i==data.bo.trade_code){
+			$('#btn_IndustryID_2').val(ind_a[i]);
+			break;
+		}
+	}
+	$("#FuntypeID").val(data.bo.position_code);
+	for (var i in fun_a){
+		if(i==data.bo.position_code){
+			$('#btn_FuntypeID').val(fun_a[i]);
+			break;
+		}
+	}
+	$("#position_name").val(data.bo.position_name);
+	$("#begindate").val(data.bo.begindate);
+	$("#enddate").val(data.bo.enddate);
+	$("#salary_scope").val(data.bo.salary_scope);
+	$("#job_description").val(data.bo.job_description);
+	$("#com_type").val(data.bo.com_type);
+	$("#com_size").val(data.bo.com_size);
+}

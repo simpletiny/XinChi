@@ -1,0 +1,626 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 项目管理
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/vendor/multiple-select/multiple-select.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+  <input type="hidden" id="hidden_phase" value="{{ phase }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <ul class="nav-subtitle">
+          <li role="presentation"><a href="/projects/{{ projectId }}/detail" data-id="project-detail" class="tab-link-title">项目详情</a></li>
+          <li role="presentation" class="active"><a data-id="project-exec" class="tab-link-title">项目执行</a></li>
+          <li role="presentation"><a href="/projects/{{ projectId }}/report" data-id="project-analysis" class="tab-link-title">项目分析</a></li>
+        </ul>
+        <div style="padding: 10px 0 0 350px;">
+            <span class="hint--right" data-hint="项目统计 批次报表 用户标签 用户项目经历">
+                <a class="btn btn-green btn-r" data-bind="click: updateStat" style="margin-left: 100px;">统计</a>
+            </span>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="main-box">
+            <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/candidates" id="tab-candidates" class="tab-title">邀约名单</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/sms" id="tab-sms" class="tab-title">发送通知</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/appoint" id="tab-appoint" class="tab-title">预约管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/visit" id="tab-visit" class="tab-title">到访管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/interview" id="tab-interview" class="tab-title">面试管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/offer" id="tab-offer" class="tab-title">Offer管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/onboard" id="tab-onboard" class="tab-title">入职管理</a></li>
+              <li role="presentation"><a href="/projects/{{ projectId }}/phases/search-candidates" id="tab-search-candidates" class="tab-title">二次营销</a></li>
+            </ul>
+
+            <div class="list-result" id="candidates">
+                <div align="left" style="padding-bottom: 10px;">
+                    <a class="btn btn-green btn-r" href="/resumes">从简历库导入</a>
+                    <a class="btn btn-green btn-r" id="create-candidate">新建被邀约人</a>
+                    <span class="hint--right" data-hint="<CSV文件格式> 姓名,手机,简历来源,求职类型,所在地,学历,性别,最近更新日期(YYYY-MM-DD)">
+                        <a href="javascript:void(0);" class="btn btn-green btn-r">
+                            <input type="file" id="candidate-upload-sync-btn" name="files[]" class="ip-upload-file"/><i class="ic-img"></i>导入邀约名单
+                        </a>
+                    </span>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>姓名</th>
+                            <th>手机号</th>
+                            <th>OpenId</th>
+                            <th>性别</th>
+                            <th>生日</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>简历来源</th>
+                            <th>简历最后更新</th>
+                            <th>营销次数</th>
+                            <th>当前批次</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: candidates().items">
+                        <tr>
+                            <td data-bind="text: $data.name"></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.openId ? $data.openId.substr(0,12) + '...' : '' "></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.dob"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td data-bind="text: $data.resumeSource"></td>
+                            <td data-bind="text: moment($data.lastUpdatedTime).format('YYYY-MM-DD HH:mm')"></td>
+                            <td data-bind="text: $data.invitedCount"></td>
+                            <td>
+                                <!-- ko if: $data.smsBatchId != null -->
+                                <a href="javascript:void(0)" data-bind="text: $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a>
+                                <!-- /ko -->
+                            </td>
+                            <td data-bind="foreach: $data.smsBatches">
+                                <a href="javascript:void(0)" data-bind="text: $data + ',', attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data + '/edit'}"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="candidates-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="sms" style="display: none;">
+                <div align="left" style="padding-bottom: 10px;">
+                    <a class="btn btn-green btn-r" id="create-sms-batch">新建【短消息】批次</a>
+                    <a class="btn btn-green btn-r" id="create-wechat-batch">新建【微信】批次</a>
+                </div>
+                <div style="width: 1000px; text-align: center;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr role="row">
+                                <th style="text-align: center;">通知批次</th>
+                                <th style="text-align: center;">面试时间</th>
+                                <th style="text-align: center;">发送人数</th>
+                                <th style="text-align: center;">发送状态</th>
+                                <th style="text-align: center;">签到人数</th>
+                                <th style="text-align: center;">面试人数</th>
+                                <th style="text-align: center;">Offer人数</th>
+                                <th style="text-align: center;">入职人数</th>
+                                <th style="text-align: center;">创建者</th>
+                                <th style="text-align: center;">创建时间</th>
+                                <th style="text-align: center;">更新时间</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: smsBatches">
+                            <tr>
+                                <td><a href="javascript:void(0)" data-bind="text: $data.name, attr: {href: '/projects/' + {{ projectId }} + '/phases/sms/' + id + '/edit/' + messageType }"></a></td>
+                                <td data-bind="text: $data.batchDate"></td>
+                                <td data-bind="text: $data.targetsCount ? $data.targetsCount : '0'"></td>
+                                <td data-bind="text: $data.status"></td>
+                                <td data-bind="text: $data.signInCount"></td>
+                                <td data-bind="text: $data.interviewCount"></td>
+                                <td data-bind="text: $data.offerCount"></td>
+                                <td data-bind="text: $data.onboardCount"></td>
+                                <td data-bind="text: $data.createdBy"></td>
+                                <td data-bind="text: moment($data.createdTime).format('YYYY-MM-DD HH:mm')"></td>
+                                <td data-bind="text: moment($data.updatedTime).format('YYYY-MM-DD HH:mm')"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="list-result" id="appoint" style="display: none;">
+                <div align="left" style="padding-bottom: 10px;">
+                    <span>
+                        <a href="javascript:void(0);" class="btn btn-green btn-r" data-bind="click: interviewNotify">
+                            面试提醒
+                        </a>
+                    </span>
+                </div>
+                <div style="width: 600px; text-align: center;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th style="text-align: center;">预约总人数</th>
+                            <th style="text-align: center;">短信来源</th>
+                            <th style="text-align: center;">其他来源</th>
+                            <th style="text-align: center;">新用户</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td data-bind="text: stat().reserveCount"></td>
+                        <td data-bind="text: stat().reserveFromCandidateCount"></td>
+                        <td data-bind="text: stat().reserveCount - stat().reserveFromCandidateCount"></td>
+                        <td data-bind="text: stat().reserveFromNewUserCount"></td>
+                    </tr>
+                </table>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th style="width: 10px"></th>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>来源</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: reservations().items">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.name"></a></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.age"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td data-bind="text: $data.source"></td>
+                            <!-- ko if: $data.smsBatchId != null -->
+                            <td><a href="javascript:void(0)" data-bind="text: '批次编号 ' + $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a></td>
+                            <!-- /ko -->
+                            <!-- ko if: $data.smsBatchId == null -->
+                            <td></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination clearfloat">
+                    <span id="appoint-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="visit" style="display: none;">
+                <div align="left" style="padding-bottom: 10px;">
+                    <span class="hint--right" data-hint="<CSV文件格式> 姓名,手机">
+                        <a href="javascript:void(0);" class="btn btn-green btn-r">
+                            <input type="file" id="signin-upload-sync-btn" name="files[]" class="ip-upload-file"/><i class="ic-img"></i>导入签到记录
+                        </a>
+                    </span>
+                </div>
+                <div style="width: 600px; text-align: center;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th style="text-align: center;">到访人数</th>
+                            <th style="text-align: center;">预约到访</th>
+                            <th style="text-align: center;">未预约到访</th>
+                            <th style="text-align: center;">短信邀约到访</th>
+                            <th style="text-align: center;">非短信邀约到访</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td data-bind="text: stat().signInCount"></td>
+                        <td data-bind="text: stat().signInFromReserveCount"></td>
+                        <td data-bind="text: stat().signInCount - stat().signInFromReserveCount"></td>
+                        <td data-bind="text: stat().signInFromCandidateCount"></td>
+                        <td data-bind="text: stat().signInCount - stat().signInFromCandidateCount"></td>
+                    </tr>
+                </table>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th style="width: 10px"></th>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: signins().items">
+                    <tr>
+                        <td><input type="checkbox"/></td>
+                        <td><a href="javascript:void(0)" data-bind="text: $data.name"></a></td>
+                        <td data-bind="text: $data.mobile"></td>
+                        <td data-bind="text: $data.gender"></td>
+                        <td data-bind="text: $data.age"></td>
+                        <td data-bind="text: $data.degree"></td>
+                        <td data-bind="text: $data.location"></td>
+                        <!-- ko if: $data.smsBatchId != null -->
+                        <td><a href="javascript:void(0)" data-bind="text: '批次编号 ' + $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a></td>
+                        <!-- /ko -->
+                        <!-- ko if: $data.smsBatchId == null -->
+                        <td></td>
+                        <!-- /ko -->
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="visit-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="interview" style="display: none;">
+                <div align="left" style="padding-bottom: 10px;">
+                    <span class="hint--right" data-hint="<CSV文件格式> 姓名,手机,面试状态,是否给offer (0/1)">
+                        <a href="javascript:void(0);" class="btn btn-green btn-r">
+                            <input type="file" id="interview-upload-sync-btn" name="files[]" class="ip-upload-file"/><i class="ic-img"></i>导入面试结果
+                        </a>
+                    </span>
+                </div>
+                <div style="width: 400px; text-align: center;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th style="text-align: center;">面试人数</th>
+                            <th style="text-align: center;">offer人数</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td data-bind="text: stat().interviewCount"></td>
+                        <td data-bind="text: stat().offerCount"></td>
+                    </tr>
+                </table>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th style="width: 10px"></th>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>面试结果</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: interviews().items">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.name"></a></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.age"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td data-bind="text: $data.currentInterviewStatus"></td>
+                            <!-- ko if: $data.smsBatchId != null -->
+                            <td><a href="javascript:void(0)" data-bind="text: '批次编号 ' + $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a></td>
+                            <!-- /ko -->
+                            <!-- ko if: $data.smsBatchId == null -->
+                            <td></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="interview-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="offer" style="display: none;">
+                <div style="width: 450px; text-align: center;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th style="text-align: center;">offer人数</th>
+                            <th style="text-align: center;">接受offer</th>
+                            <th style="text-align: center;">拒绝offer</th>
+                            <th style="text-align: center;">待定</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td data-bind="text: stat().offerCount"></td>
+                        <td data-bind="text: stat().acceptOfferCount"></td>
+                        <td data-bind="text: stat().rejectOfferCount"></td>
+                        <td data-bind="text: stat().pendingOfferCount"></td>
+                    </tr>
+                </table>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th style="width: 10px"></th>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>Offer状态</th>
+                            <th>预计入职时间</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: offers().items">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.name"></a></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.age"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td>
+                                <span data-bind="inlineSelect: $data.currentOfferStatus, inlineOptions: $root.allOfferStatuses, changeFunc: $root.updateOfferStatus"></span>
+                            </td>
+                            <td data-bind="inlineDate: $data.estimateOnboardDate, changeFunc: $root.updateEstimateOnboardDate"></td>
+                            <!-- ko if: $data.smsBatchId != null -->
+                            <td><a href="javascript:void(0)" data-bind="text: '批次编号 ' + $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a></td>
+                            <!-- /ko -->
+                            <!-- ko if: $data.smsBatchId == null -->
+                            <td></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="offer-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="onboard" style="display: none;">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th style="width: 10px"></th>
+                            <th>姓名</th>
+                            <th>手机号码</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>offer状态</th>
+                            <th>入职状态</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: onboards().items">
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.name"></a></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.age"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td data-bind="text: $data.currentOfferStatus"></td>
+                            <td>
+                                <span data-bind="inlineSelect: $data.currentOnboardStatus, inlineOptions: $root.allOnboardStatuses, changeFunc: $root.updateOnboardStatus"></span>
+                            </td>
+                            <!-- ko if: $data.smsBatchId != null -->
+                            <td><a href="javascript:void(0)" data-bind="text: '批次编号 ' + $data.smsBatchId, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a></td>
+                            <!-- /ko -->
+                            <!-- ko if: $data.smsBatchId == null -->
+                            <td></td>
+                            <!-- /ko -->
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="onboard-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+
+            <div class="list-result" id="search-candidates">
+                <div style="margin-bottom: 10px;">
+                  <form class="form-horizontal search-panel">
+                    <div class="form-group">
+                        <div align="left">
+                            <label class="col-md-1 control-label">姓名</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" data-bind="value: $root.query().name" placeholder="姓名">
+                            </div>
+                        </div>
+                        <div align="left">
+                            <label class="col-md-1 control-label">手机</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" data-bind="value: $root.query().mobile" placeholder="手机">
+                            </div>
+                        </div>
+                        <div align="left" style="padding-top: 3px;">
+                            <a class="btn btn-green btn-r" style="margin-left: 15px;" data-bind="click: searchCandidates">搜索</a>
+                            <a class="btn btn-green btn-r" style="margin-left: 5px;" id="import-candidates-to-smsbatch-btn">导入通知批次</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <div align="left">
+                          <label class="col-md-1 control-label">性别</label>
+                          <div class="col-md-3"><select class="form-control"  data-bind="options: genders, optionsCaption: '不限', value: $root.query().gender"></select></div>
+                      </div>
+                      <div align="left">
+                          <label class="col-md-1 control-label">求职类型</label>
+                          <div class="col-md-3"><select class="multi-select" id="multi_type" multiple="multiple" data-bind="options: allPositionTypes, selectedOptions: $root.query().positionTypes"></select></div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                        <div align="left">
+                            <label class="col-md-1 control-label">更新起始</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control datetime-picker" data-bind="value: $root.candidateUpdateStartDateRaw" placeholder="更新起始">
+                            </div>
+                        </div>
+                        <div align="left">
+                            <label class="col-md-1 control-label">更新截止</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control datetime-picker" data-bind="value: $root.candidateUpdateEndDateRaw" placeholder="更新截止">
+                            </div>
+                        </div>
+                        <div align="left">
+                            <label class="col-md-1 control-label">营销次数</label>
+                            <div class="ip col-md-4">
+                                <div data-bind="foreach: allNotifyCounts">
+                                    <em class="small-box" style="min-width: inherit;">
+                                        <input type="radio" name='projectPhases' data-bind="attr: {'value': $data}, checked: $root.query().invitedCount"/><label data-bind="text: $data"></label>
+                                    </em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>姓名</th>
+                            <th>手机号</th>
+                            <th>性别</th>
+                            <th>生日</th>
+                            <th>学历</th>
+                            <th>所在地</th>
+                            <th>简历来源</th>
+                            <th>简历最后更新</th>
+                            <th>营销次数</th>
+                            <th>当前批次</th>
+                            <th>通知批次</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: candidates().items">
+                        <tr>
+                            <td data-bind="text: $data.name"></td>
+                            <td data-bind="text: $data.mobile"></td>
+                            <td data-bind="text: $data.gender"></td>
+                            <td data-bind="text: $data.dob"></td>
+                            <td data-bind="text: $data.degree"></td>
+                            <td data-bind="text: $data.location"></td>
+                            <td data-bind="text: $data.resumeSource"></td>
+                            <td data-bind="text: moment($data.lastUpdatedTime).format('YYYY-MM-DD HH:mm')"></td>
+                            <td data-bind="text: $data.invitedCount"></td>
+                            <td>
+                                <!-- ko if: $data.smsBatchId != null -->
+                                <a href="javascript:void(0)" data-bind="text: $data.smsBatchName, attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data.smsBatchId + '/edit'}"></a>
+                                <!-- /ko -->
+                            </td>
+                            <td data-bind="foreach: $data.smsBatches">
+                                <a href="javascript:void(0)" data-bind="text: $data + ',', attr: {href: '/projects/'+ {{ projectId }} +'/phases/sms/'+$data + '/edit'}"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination clearfloat">
+                    <span id="search-candidates-total-count" class="count-label"></span>
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+   <div>
+        <div id="page-import-candidates-to-smsbatch" style="display: none;width: 550px; padding-top: 30px;">
+            <div class="input-row clearfloat required">
+                <label class="l">通知批次</label>
+                <div class="ip"><select class="form-control" data-bind="options: smsBatches, optionsText: 'name', value: chosenSmsBatch"></select></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">导入数量</label>
+                <div class="ip"> <input type="text" class="form-control" data-bind="value: importNumber" placeholder="导入数量" /></div>
+            </div>
+            <div align="right" style="padding-top: 50px; padding-right: 50px;"><a class="btn btn-green btn-r" data-bind="click: importCandidatesToSmsBatch">导入</a></div>
+        </div>
+    </div>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script>
+        $(".projects").addClass("current").children("ol").css("display", "block");
+        $("#tab-{{ phase }}").parent().addClass("active").siblings(".active").removeClass("active");
+        $("#{{ phase }}").show().siblings(".list-result").hide();
+    </script>
+    <script src="/static/vendor/jquery-file-upload-9.9.2/js/vendor/jquery.ui.widget.js"></script>
+    <script src="/static/vendor/jquery-file-upload-9.9.2/js/jquery.iframe-transport.js"></script>
+    <script src="/static/vendor/jquery-file-upload-9.9.2/js/jquery.fileupload.js"></script>
+    <script src="/static/vendor/multiple-select/jquery.multiple.select.js"></script>
+    <script src="/static/js/projects/project-exec.js{{ _suffix_ }}"></script>
+{% endblock %}

@@ -1,0 +1,64 @@
+package seentao.xhsn.person.info.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.info.dao.IUBInfoDao;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月26日 上午11:28:51 
+ * @note 
+ */
+/**
+ * @author Administrator
+ *
+ */
+@Service
+public class UBInfoDaoImpl extends SqlSessionDaoSupport implements IUBInfoDao {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public String inster(HsUserbasicinfoBO bo) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsUserbasicinfoBOMapper.insert", bo);
+	}
+
+	@Override
+	public int update(HsUserbasicinfoBO bo) {
+		return daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsUserbasicinfoBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public HsUserbasicinfoBO getByPK(String id) {
+		return (HsUserbasicinfoBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsUserbasicinfoBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public HsUserbasicinfoBO getByUserSysId(String user_sys_id) {
+		HsUserbasicinfoBO param = new HsUserbasicinfoBO();
+		param.setSys_user_id(user_sys_id);
+		List<HsUserbasicinfoBO> infos = daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsUserbasicinfoBOMapper.selectByParam", param);
+		HsUserbasicinfoBO result = null;
+		if(infos != null && infos.size() > 0 && infos.get(0)!= null){
+			result = infos.get(0);
+		}
+		return result;
+	}
+
+	
+
+}

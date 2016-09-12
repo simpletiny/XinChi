@@ -1,0 +1,92 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsCustomSkillBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String res_id;
+		  
+		 
+		  private java.lang.String user_id;
+		  
+		 
+		  private java.lang.String professional_name;
+		  
+		 
+		  private java.lang.String professional_code;
+		  
+		 
+		  private java.lang.String custom_skill;
+		  
+		 
+		  private java.lang.String usetime;
+		  
+		 
+		  private java.lang.String level;
+		  
+		  public HsCustomSkillBO() {
+				super();
+				setTable_name("hs_custom_skill");
+			}
+		  
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+		 
+		  public  java.lang.String getUser_id() {
+				return user_id;
+			}
+			
+			public void setUser_id( java.lang.String user_id) {
+				this.user_id = user_id;
+			}
+		 
+		  public  java.lang.String getProfessional_name() {
+				return professional_name;
+			}
+			
+			public void setProfessional_name( java.lang.String professional_name) {
+				this.professional_name = professional_name;
+			}
+		 
+		  public  java.lang.String getProfessional_code() {
+				return professional_code;
+			}
+			
+			public void setProfessional_code( java.lang.String professional_code) {
+				this.professional_code = professional_code;
+			}
+		 
+		  public  java.lang.String getCustom_skill() {
+				return custom_skill;
+			}
+			
+			public void setCustom_skill( java.lang.String custom_skill) {
+				this.custom_skill = custom_skill;
+			}
+		 
+		  public  java.lang.String getUsetime() {
+				return usetime;
+			}
+			
+			public void setUsetime( java.lang.String usetime) {
+				this.usetime = usetime;
+			}
+		 
+		  public  java.lang.String getLevel() {
+				return level;
+			}
+			
+			public void setLevel( java.lang.String level) {
+				this.level = level;
+			}
+	
+
+}

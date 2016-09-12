@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 企业管理
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>企业管理</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-horizontal search-panel" role="form">
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">公司名称</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" data-bind="value: query().name" placeholder="公司名称" maxlength="20"
+                                   id="autocomplete-company-name" >
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">公司简称</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" data-bind="value: query().briefName" placeholder="公司简称" maxlength="20"
+                                   id="autocomplete-company-brief-name" >
+                        </div>
+                    </div>
+                    <div class="span6">
+                         <label class="col-md-1 control-label">公司电话</label>
+                         <div class="col-md-2">
+                             <input type="text" class="form-control" data-bind="value: query().phone" placeholder="公司电话" maxlength="20">
+                         </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: searchCompanies">搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="span6">
+                         <label class="col-md-1 control-label">销售进程</label>
+                         <div class="col-md-10">
+                             <div data-bind="foreach: allProgress">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.query().saleProgress"/><label data-bind="text: $data"></label>
+                                </em>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>公司简称</th>
+                            <th>销售进程</th>
+                            <th>上次联系记录</th>
+                            <th>上次联系时间</th>
+                            <th>计划联系时间</th>
+                            <th>所属销售</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: companies">
+                        <tr>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.briefName, attr: {href: '/companies/' + $data.id + '/detail'}"></a></td>
+                            <td data-bind="text: $data.saleProgress"></td>
+                            <td>
+                                <span class="lines-limit-2"
+                                      data-bind="text: $data.lastContactContent, attr: {title: $data.lastContactContent()}">
+                                </span>
+                            </td>
+                            <td data-bind="text: $data.lastContactCreatedTime() ? moment($data.lastContactCreatedTime()).format('YYYY-MM-DD HH:mm') : ''"></td>
+                            <td data-bind="text: $data.nextContactTime"></td>
+                            <td data-bind="text: $data.salesName"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/companies/companies.js{{ _suffix_ }}"></script>
+{% endblock %}

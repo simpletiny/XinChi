@@ -1,0 +1,59 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsPersonLeftmenuDataBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String menu_id;
+
+	private java.lang.String user_id;
+
+	private java.lang.String res_id;
+
+	private java.lang.String class_name;
+
+	private java.lang.Integer score;
+
+	public java.lang.String getMenu_id() {
+		return menu_id;
+	}
+
+	public void setMenu_id(java.lang.String menu_id) {
+		this.menu_id = menu_id;
+	}
+
+	public java.lang.String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(java.lang.String user_id) {
+		this.user_id = user_id;
+	}
+
+	public java.lang.String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(java.lang.String res_id) {
+		this.res_id = res_id;
+	}
+
+	public java.lang.String getClass_name() {
+		return class_name;
+	}
+
+	public void setClass_name(java.lang.String class_name) {
+		this.class_name = class_name;
+	}
+
+	public java.lang.Integer getScore() {
+		return score;
+	}
+
+	public void setScore(java.lang.Integer score) {
+		this.score = score;
+	}
+
+}

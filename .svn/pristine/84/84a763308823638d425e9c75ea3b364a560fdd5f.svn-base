@@ -1,0 +1,31 @@
+package seentao.xhsn.password.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.login.dao.ILoginDAO;
+import seentao.xhsn.password.service.IPasswordService;
+import seentao.xhsn.regist.dao.IRegistDao;
+
+@Service
+public class PasswordServiceImpl implements IPasswordService {
+
+	@Autowired
+	private IRegistDao registDao;
+	@Autowired
+	private ILoginDAO dao;
+
+	@Override
+	public void modifyPwd(HsUserBO bo) {
+		registDao.update(bo);
+	}
+
+	@Override
+	public HsUserBO getUserBeanByLoginInfo(String user_mail, String userPwd,
+			String type) {
+		return dao.getUserBeanByLoginInfo(user_mail, userPwd, type);
+	}
+	
+	
+}

@@ -1,0 +1,52 @@
+package seentao.xhsn.person.resumeother.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsResumeOtherBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.resumeother.dao.IResumeOtherDAO;
+
+
+@Repository
+public class ResumeOtherDAOImpl extends SqlSessionDaoSupport implements IResumeOtherDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsResumeOtherBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsResumeOtherBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsResumeOtherBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsResumeOtherBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsResumeOtherBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsResumeOtherBO selectByPrimaryKey(String id) {
+		return (HsResumeOtherBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsResumeOtherBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsResumeOtherBO> getAllByParam(HsResumeOtherBO bo) {
+		List<HsResumeOtherBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsResumeOtherBOMapper.selectByPram", bo);
+		return list;
+	}
+	
+}

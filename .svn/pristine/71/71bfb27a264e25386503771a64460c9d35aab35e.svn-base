@@ -1,0 +1,167 @@
+$(document).ready(function() {
+	$('#btn_publish').click(function() {
+		location.href = "releaseJobInit";
+	});
+	$('.close').hide();
+	$('.menu_link').removeClass('active');
+	$('.on_b').addClass('active');
+	$("#Pagination").pagination($("#hid_sum_cnt").val() - 0, {
+		callback : changePage,// PageCallback() 为翻页调用次函数。
+		items_per_page : 6, // 每页的数据个数
+		num_display_entries : 3, // 两侧首尾分页条目数
+		current_page : 0, // 当前页码
+		num_edge_entries : 2
+	});
+	switchTab(3);
+});
+
+var st_type = "1";
+/**
+ * 显示不同页面
+ * 
+ * @param type
+ * @param li
+ */
+function showPage(type, li) {
+	$('.menu_link').removeClass('active');
+	$(li).addClass('active');
+	st_type = type;
+	fetchPage();
+}
+function fetchPage() {
+	var layIndex = layer.load('请稍候...', 0);
+	$.ajax({
+		url : "findJobList",
+		data : "type=" + st_type,
+		type : "POST",
+		success : function(data) {
+			layer.close(layIndex);
+			$('#page_contain').html(data);
+			$("#Pagination").pagination($("#hid_sum_cnt").val() - 0, {
+				callback : changePage,// PageCallback() 为翻页调用次函数。
+				items_per_page : 6, // 每页的数据个数
+				num_display_entries : 3, // 两侧首尾分页条目数
+				current_page : 0, // 当前页码
+				num_edge_entries : 2
+			});
+		}
+	});
+}
+function changePage(page_id, jq) {
+	var param = "page.pageNo=" + (page_id + 1);
+	param += "&type=" + st_type;
+	var layIndex = layer.load('请稍候...', 0);
+	$.ajax({
+		url : "findJobList",
+		data : param,
+		type : "POST",
+		success : function(data) {
+			layer.close(layIndex);
+			$('#page_contain').html(data);
+		}
+	});
+}
+/**
+ * 修改职位
+ * 
+ * @param id
+ */
+function modifyJob(id) {
+	location.href = "releaseJobInit?rjboId=" + id;
+}
+/**
+ * 删除职位
+ * 
+ * @param id
+ */
+function deleteJob(id) {
+	if (confirm("确认要删除此职位吗？")) {
+		var layIndex = layer.load('请稍候...', 0);
+		$.ajax({
+			url : "deleteJob",
+			data : "id=" + id,
+			type : "GET",
+			success : function(r) {
+				layer.close(layIndex);
+				var data = eval(r);
+				if (data.result == "OK") {
+					alert("删除成功");
+					fetchPage();
+				}
+			}
+		});
+	}
+}
+/**
+ * 结束职位发布
+ * 
+ * @param id
+ */
+function endJob(id) {
+	if (confirm("确认要结束发布的职位吗？")) {
+		var layIndex = layer.load('请稍候...', 0);
+		$.ajax({
+			url : "endJob",
+			data : "id=" + id,
+			type : "GET",
+			success : function(r) {
+				layer.close(layIndex);
+				var data = eval(r);
+				if (data.result == "OK") {
+					alert("结束成功");
+					fetchPage();
+				}
+			}
+		});
+	}
+}
+/**
+ * 刷新职位
+ * 
+ * @param id
+ * @param type
+ * @param alink
+ */
+function refreshJob(id, alink) {
+	var table = $(alink).parents("table:first");
+	var layIndex = layer.load('请稍候...', 0);
+	$.ajax({
+		url : "refreshJob",
+		data : "id=" + id + "&type=" + st_type,
+		type : "POST",
+		success : function(data) {
+			layer.close(layIndex);
+			table.html(data);
+		}
+	});
+}
+/**
+ * 发布职位
+ * 
+ * @param id
+ * @param type
+ */
+function publishJob(id) {
+	if (confirm("确认要发布该职位吗？")) {
+		var layIndex = layer.load('请稍候...', 0);
+		$.ajax({
+			url : "publishJob",
+			data : "id=" + id + "&type=" + st_type,
+			type : "POST",
+			success : function(r) {
+				layer.close(layIndex);
+				var data = eval(r);
+				if (data.result == "OK") {
+					alert("发布成功");
+					fetchPage();
+				}
+			}
+		});
+	}
+}
+
+function getReceivedResume(alink) {
+	var tr = $(alink).parents("tr:first");
+	var jobId = $(tr).find("td.tdJobId").find("input:first").val();
+	window.location.href = "getReceivedResume?job_id=" + jobId;
+}

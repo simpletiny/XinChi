@@ -1,0 +1,96 @@
+package seentao.xhsn.common;
+
+public class UserSessionBean {
+
+	private String user_sys_id;
+	
+	private String user_id;
+	
+	private String res_id;
+	
+	private String res_name;
+	
+	private String user_email;
+	
+	private String user_phone;
+	//身份证
+	private String identity_card;
+	
+	private Integer user_type;
+	
+	private String photo_url;
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getUser_email() {
+		return user_email;
+	}
+
+	public void setUser_email(String user_email) {
+		this.user_email = user_email;
+	}
+
+	public String getUser_phone() {
+		return user_phone;
+	}
+
+	public void setUser_phone(String user_phone) {
+		this.user_phone = user_phone;
+	}
+
+	public Integer getUser_type() {
+		return user_type;
+	}
+
+	public void setUser_type(Integer user_type) {
+		this.user_type = user_type;
+	}
+
+	public String getIdentity_card() {
+		return identity_card;
+	}
+
+	public void setIdentity_card(String identity_card) {
+		this.identity_card = identity_card;
+	}
+
+	public String getUser_sys_id() {
+		return user_sys_id;
+	}
+
+	public void setUser_sys_id(String user_sys_id) {
+		this.user_sys_id = user_sys_id;
+	}
+
+	public String getRes_name() {
+		return res_name;
+	}
+
+	public void setRes_name(String res_name) {
+		this.res_name = res_name;
+	}
+
+	public String getPhoto_url() {
+		return photo_url;
+	}
+
+	public void setPhoto_url(String photo_url) {
+		this.photo_url = photo_url;
+	}
+	
+	
+}

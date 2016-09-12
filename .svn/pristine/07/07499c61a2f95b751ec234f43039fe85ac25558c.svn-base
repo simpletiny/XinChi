@@ -1,0 +1,36 @@
+package seentao.xhsn.enterprise.sendInform.service;
+
+import seentao.xhsn.bean.HsInterviewInformBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月4日 下午2:44:22 
+ * @note 发送面试通知Service
+ */
+public interface ISendInformService {
+
+	/**
+	 * 插入一条面试通知
+	 * @param informBO
+	 */
+	public void insert(HsInterviewInformBO informBO);
+	
+	/**
+	 * 根据id获取面试通知的具体信息
+	 * @param id
+	 * @return
+	 */
+	public HsInterviewInformBO getByPK(String id);
+	
+	/**给人才发送邮件（面试通知）
+	 * @param email 接收邮件的地址
+	 * @param informBO	面试通知的信息
+	 */
+	public void sendInformForEmail(String email, HsInterviewInformBO informBO);
+
+	/**根据参数修改信息
+	 * @param informBO
+	 */
+	public void updateByParam(HsInterviewInformBO informBO);
+
+}

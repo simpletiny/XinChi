@@ -1,0 +1,44 @@
+package seentao.xhsn.sys.dictionarydata.dao;
+
+import java.util.List;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+
+/**
+ * @Description:字典值信息操作DAO接口
+ * @author 李君彦
+ * @date 2014-11-24 下午3:08:23 
+ * @version V1.0   
+ */
+public interface IDictionaryDataDAO{
+	
+	/**
+	 * 新增
+	 * @param bo
+	 */
+	public void insert(HsDictionaryDataBO bo);
+	
+	/**
+	 * 修改
+	 * @param bo
+	 */
+	public void update(HsDictionaryDataBO bo);
+	
+	/**
+	 * 删除
+	 * @param id
+	 */
+	public void delete(String id);
+	
+	/**
+	 * 根据主键查找
+	 * @param id
+	 */
+	public HsDictionaryDataBO selectByPrimaryKey(String id);
+	
+	/**
+	 * 根据条件查找
+	 * @param bo
+	 */
+	public List<HsDictionaryDataBO> getAllByParam(HsDictionaryDataBO bo);
+}

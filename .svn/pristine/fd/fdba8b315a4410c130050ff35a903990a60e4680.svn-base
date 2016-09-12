@@ -1,0 +1,66 @@
+package seentao.xhsn.person.desired.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.desired.dao.IDesiredPositionDao;
+import seentao.xhsn.person.desired.service.IDesiredPositionService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+/** 
+ * @author wjx 
+ * @date 2014年11月24日 下午1:37:59 
+ * @note 求职意向service
+ */
+@Service
+public class DesiredPositionServiceImpl implements IDesiredPositionService {
+	
+	@Autowired
+	private IDesiredPositionDao dao ;
+	@Autowired
+	private ILeftMenuService lmService;
+	
+	@Override
+	@Transactional
+	public void saveBo(HsDesiredPositionBO bo) {
+		if(bo != null && bo.getId() != null && bo.getId().trim().length() > 0){
+			dao.update(bo);
+		}else{
+			UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			bo.setUser_id(bean.getUser_sys_id());
+			bo.setRes_id(bean.getRes_id());
+			dao.insert(bo);
+		}
+		lmService.updateByParam(bo.getTable_name(),  DictionaryEnum.MENU_TOTALLY.getStringValue());
+	}
+	
+	@Override
+	public void insert(HsDesiredPositionBO bo) {
+		dao.insert(bo);
+	}
+
+	@Override
+	public void update(HsDesiredPositionBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public HsDesiredPositionBO getByUserIdAndResId(String userid, String resid) {
+		HsDesiredPositionBO result = null;
+		List<HsDesiredPositionBO> bos = dao.findByUserIdAndResId(userid, resid);
+		if(bos != null && bos.size() > 0){
+			result = bos.get(0);
+		}
+		return result;
+	}
+
+
+}

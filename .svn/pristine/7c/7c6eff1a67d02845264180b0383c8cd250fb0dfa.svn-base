@@ -1,0 +1,85 @@
+package seentao.xhsn.enterprise.releasejob.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.bean.HsPutresumeBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.enterprise.releasejob.dao.IReleasejobDAO;
+import seentao.xhsn.tools.Page;
+
+/**
+ * 企业发布职位操作DAO实现类
+ * 
+ * @author niushixing 2014-12-2 上午10:59:28
+ * 
+ */
+@Repository
+public class ReleasejobDAOImpl extends SqlSessionDaoSupport implements IReleasejobDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public String insert(HsEtpReleasejobBO bo) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsEtpReleasejobBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsEtpReleasejobBO selectByPrimaryKey(String id) {
+		return (HsEtpReleasejobBO) daoUtil.selectByPK(
+				"seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsEtpReleasejobBO> getAllByParam(Page<HsEtpReleasejobBO> page) {
+		List<HsEtpReleasejobBO> list = daoUtil.selectByParam(
+				"seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.selectByParamByPage", page);
+		return list;
+	}
+
+	@Override
+	public void updateJobStatus(String id, String status) {
+		HsEtpReleasejobBO bo = new HsEtpReleasejobBO();
+		bo.setId(id);
+		bo.setRel_status(status);
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public int getPutResumeCnt(String com_id, String job_id) {
+		HsPutresumeBO bo = new HsPutresumeBO();
+		bo.setEtp_id(com_id);
+		bo.setJob_id(job_id);
+		int cnt = daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsPutresumeBOMapper.selectPutCntByComRelId",
+				bo);
+		return cnt;
+	}
+
+	@Override
+	public List<HsEtpReleasejobBO> getRecommendedJobByPage(Page<HsEtpReleasejobBO> page) {
+		return daoUtil.selectByParam("seentao.xhsn.bean.mappers.HsEtpReleasejobBOMapper.selectRecommendedJobByPage",
+				page);
+	}
+}

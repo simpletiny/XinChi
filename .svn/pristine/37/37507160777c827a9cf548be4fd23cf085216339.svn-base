@@ -1,0 +1,64 @@
+package seentao.xhsn.sys.person.service.impl;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.person.resume.dao.IResumeDAO;
+import seentao.xhsn.sys.person.bean.PersonResumeBean;
+import seentao.xhsn.sys.person.service.IPersonService;
+import seentao.xhsn.tools.Page;
+
+@Service
+public class PersonServiceImpl implements IPersonService {
+	@Autowired
+	private IResumeDAO resumeDao;
+
+	@Override
+	public List<PersonResumeBean> searchResume(Page page) {
+		List<PersonResumeBean> list = new ArrayList<PersonResumeBean>();
+		list = resumeDao.getResumeForAdminByPage(page);
+		Iterator<PersonResumeBean> iter = list.iterator();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		while (iter.hasNext()) {
+			PersonResumeBean bean = iter.next();
+			bean.setGender(bean.getGender().equals("0") ? "男" : "女");
+			if (null != bean.getModify_time()) {
+				try {
+					bean.setModify_time(sf.format(sf.parse(bean.getModify_time())));
+				} catch (ParseException e) {
+					bean.setModify_time(null);
+					continue;
+				}
+			}
+			if (null != bean.getCreate_time()) {
+				try {
+					bean.setCreate_time(sf.format(sf.parse(bean.getModify_time())));
+				} catch (ParseException e) {
+					bean.setCreate_time(null);
+					continue;
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public void autoOpenResume(String[] param) {
+		HsResumeBO bo = new HsResumeBO();
+		if (param != null && param.length > 0) {
+			// bo.setId(param[0]);
+			// bo.setIsopen("Y");
+			System.out.println(param[0]);
+		}
+		// resumeDao.update(bo);
+	}
+}

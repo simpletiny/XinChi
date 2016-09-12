@@ -1,0 +1,125 @@
+package seentao.xhsn.sys.leftmenu.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsPersonLeftmenuDataBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.sys.leftmenu.dao.ILeftMenuDao;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+import seentao.xhsn.sys.leftmenudate.dao.ILeftMenuDataDAO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月1日 下午3:17:28 
+ * @note 个人信息页面左侧菜单Service的实现类
+ */
+@Service
+public class LeftMenuServiceImpl implements ILeftMenuService {
+
+	@Autowired
+	private ILeftMenuDao dao;
+	@Autowired 
+	private ILeftMenuDataDAO dataDAO;
+	
+	
+	@Override
+	public List<HsPersonLeftMenuBO> findLeftMenuByParams() {
+		//插入测试数据
+		//dao.insterInstence();
+		
+		HsPersonLeftMenuBO param = new HsPersonLeftMenuBO();
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		param.setUser_id(bean.getUser_sys_id());
+		param.setRes_id(bean.getRes_id());
+		List<HsPersonLeftMenuBO> results = dao.findLeftMenuAndDataByParam(param);
+		//将地址中的参数加上
+		for (int i = 0; i < results.size(); i++) {
+			HsPersonLeftMenuBO element = results.get(i);
+			if(element.getClass_name() == null || element.getClass_name().length() <= 0){
+				element.setClass_name(DictionaryEnum.MENU_NEVER.getStringValue());
+				element.setScore(0);
+			}
+			if(ResourcesConstants.LEFT_MENU_LEARNPATH.equals(element.getTab_name())){
+				element.setClass_name(DictionaryEnum.MENU_TOTALLY.getStringValue());
+			}
+			String path = element.getPath() + 
+					/*"?user_id=" + element.getUser_id() + 
+					"&res_id=" + element.getRes_id() +*/
+					"?lm_tab_name=" + element.getTab_name();
+			element.setPath(path);
+		}
+		return results;
+	}
+
+	/* 更新菜单的样式
+	 * 1、根据条件查找menuData 是否存在，如果存在，就更新，如果不存在就插入
+	 * @see seentao.xhsn.sys.leftmenu.service.ILeftMenuService#updateByParam(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateByParam(String tab_name, String class_name) {
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String user_id = bean.getUser_sys_id();
+		String res_id = bean.getRes_id();
+		HsPersonLeftMenuBO menu = dao.getMenuByTabName(tab_name);
+		HsPersonLeftmenuDataBO menuData = dataDAO.getMenuDataByParam(menu.getId(), user_id, res_id);
+		HsPersonLeftMenuBO param = new HsPersonLeftMenuBO();
+		if(menuData != null && menuData.getId().length() > 0){
+			//修改该菜单的样式
+			param.setUser_id(user_id);
+			param.setRes_id(res_id);
+			param.setClass_name(class_name);
+			param.setTab_name(tab_name);
+			param.setId(menuData.getMenu_id());
+			if(DictionaryEnum.MENU_TOTALLY.getStringValue().equals(class_name)){
+				param.setScore(10);
+			}else if(DictionaryEnum.MENU_NEVER.getStringValue().equals(class_name)){
+				param.setScore(0);
+			}
+			dao.updateMenuDataByParam(param);
+		}else{
+			//如果没有该菜单的数据，就插入一条数据
+			menuData = new HsPersonLeftmenuDataBO();
+			menuData.setUser_id(user_id);
+			menuData.setRes_id(res_id);
+			menuData.setClass_name(class_name);
+			if(DictionaryEnum.MENU_TOTALLY.getStringValue().equals(class_name)){
+				menuData.setScore(10);
+			}else if(DictionaryEnum.MENU_NEVER.getStringValue().equals(class_name)){
+				menuData.setScore(0);
+			}
+			menuData.setMenu_id(menu.getId());
+			dataDAO.insert(menuData);
+		}
+		//重新计算该简历的完成度
+		long completeness = 0;
+		List<HsPersonLeftMenuBO> results = findLeftMenuByParams();
+		for(HsPersonLeftMenuBO bo : results){
+			completeness += bo.getScore();
+		}
+		HsResumeBO resBo = new HsResumeBO();
+		resBo.setId(bean.getRes_id());
+		resBo.setCompleteness(String.valueOf(completeness));
+		dao.updateResByParam(resBo);
+	}
+
+	@Override
+	public String getCompletenessByPK() {
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String res_id = bean.getRes_id();
+		return dao.getCompletenessByPk(res_id).getCompleteness();
+	}
+	
+	
+
+
+
+}

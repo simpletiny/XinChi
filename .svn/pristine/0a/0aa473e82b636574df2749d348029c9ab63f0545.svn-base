@@ -1,0 +1,81 @@
+package seentao.xhsn.person.resume.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.resume.dao.IResumeDAO;
+import seentao.xhsn.sys.person.bean.PersonResumeBean;
+import seentao.xhsn.sys.person.bean.PersonSearchBean;
+import seentao.xhsn.tools.Page;
+
+/**
+ * @author Administrator
+ *
+ */
+@Repository
+public class ResumeDAOImpl extends SqlSessionDaoSupport implements IResumeDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public String insert(HsResumeBO bo) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsResumeBOMapper.insert", bo);
+	}
+
+	@Override
+	public int update(HsResumeBO bo) {
+		return daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsResumeBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsResumeBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsResumeBO selectByPrimaryKey(String id) {
+		return (HsResumeBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsResumeBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsResumeBO> getAllByParam(HsResumeBO bo) {
+		List<HsResumeBO> list = daoUtil
+				.selectByBOParamT("seentao.xhsn.bean.mappers.HsResumeBOMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public HsResumeBO getByUserId(String user_id) {
+		HsResumeBO param = new HsResumeBO();
+		param.setUser_id(user_id);
+		return daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsResumeBOMapper.selectByParam", param);
+	}
+
+	@Override
+	public List<PersonResumeBean> getResumeForAdminByPage(Page page) {
+		List<PersonResumeBean> list = daoUtil.selectByParam(
+				"seentao.xhsn.bean.mappers.HsResumeBOMapper.selectResumeForAdminByPage", page);
+		return list;
+	}
+
+	@Override
+	public List<PersonResumeBean> getResumeForAdminByBo(PersonSearchBean ps) {
+		List<PersonResumeBean> list = daoUtil.selectByParam(
+				"seentao.xhsn.bean.mappers.HsResumeBOMapper.selectResumeForAdminByBo", ps);
+		return list;
+	}
+
+}

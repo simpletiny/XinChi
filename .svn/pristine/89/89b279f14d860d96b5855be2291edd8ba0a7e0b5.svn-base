@@ -1,0 +1,415 @@
+package seentao.xhsn.person.info.action;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.bean.HsSubjoinBO;
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.info.service.IUBInfoService;
+import seentao.xhsn.person.resume.service.IResumeService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+import seentao.xhsn.tools.PropertiesUtil;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * @author wjx
+ * @date 2014年11月26日 上午10:09:44
+ * @note 个人信息action
+ */
+@Controller
+@Scope("prototype")
+public class UBInfoAction extends ActionSupport {
+
+	private static final long serialVersionUID = 6903417366333492183L;
+
+	@Autowired
+	private IUBInfoService infoService;
+
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+
+	@Autowired
+	private ILeftMenuService lmService;
+
+	private HsUserbasicinfoBO bo;
+
+	private HsSubjoinBO subjoinBO;
+
+	private String id;
+
+	private Map<String, List<HsDictionaryDataBO>> dicts;
+	private Map<String, List<HsDictionaryDataBO>> subjoin_Dicts;
+	private UserSessionBean user;
+	private String user_id;
+
+	private String res_id;
+
+	/**
+	 * 当前左侧选中的菜单id
+	 */
+	private String lm_tab_name;
+
+	/**
+	 * 左侧菜单的集合
+	 */
+	private List<HsPersonLeftMenuBO> leftmenus;
+
+	/**
+	 * 简历完成度
+	 */
+	private String res_completeness;
+
+	private String err_msg;
+
+	/**
+	 * 进入编辑页面
+	 * 
+	 * @return
+	 */
+	public String editInfo() {
+
+		// 1、根据user_id 和res_id 获取个人信息
+		user = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		user_id = user.getUser_sys_id();
+		res_id = user.getRes_id();
+		bo = infoService.getByUserIdAndResId(user_id, res_id);
+		subjoinBO = infoService.getSubjoinBOByUIDAndRID(user_id, res_id);
+		// 2、获取字典信息
+		dicts = dictFieldMapService.findDictDataByParam(new HsUserbasicinfoBO().getTable_name());
+		// 3、获取页面左侧菜单信息
+		leftmenus = lmService.findLeftMenuByParams();
+		// 4、获取简历完成度
+		res_completeness = lmService.getCompletenessByPK();
+		lm_tab_name = bo.getTable_name();
+		return "SUCCESS";
+	}
+
+	@Autowired
+	private IResumeService resumeService;
+
+	/**
+	 * 保存信息
+	 * 
+	 * @return
+	 */
+	public String save() {
+		dicts = dictFieldMapService.findDictDataByParam(new HsUserbasicinfoBO().getTable_name());
+		if (validateSaveForm(bo, subjoinBO)) {
+			if (subjoinBO.getUser_id() == null || subjoinBO.getUser_id().trim().length() <= 0) {
+				subjoinBO.setUser_id(user_id);
+			}
+			if (subjoinBO.getRes_id() == null || subjoinBO.getRes_id().trim().length() <= 0) {
+				subjoinBO.setRes_id(res_id);
+			}
+			infoService.save(bo, subjoinBO);
+			UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			bean.setPhoto_url(bo.getUser_photo());
+			HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+			resumeService.generateBaseInfo(resBo);
+			return "SUCCESS";
+		} else {
+			return "FAIL";
+		}
+	}
+
+	public String show() {
+		user = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		user_id = user.getUser_sys_id();
+		res_id = user.getRes_id();
+		// dicts = infoService.findDictDataByParam(HsUserbasicinfoBO.class);
+		leftmenus = lmService.findLeftMenuByParams();
+		res_completeness = lmService.getCompletenessByPK();
+		bo = infoService.getByUserIdAndResId(user_id, res_id);
+		subjoinBO = infoService.getSubjoinBOByUIDAndRID(user_id, res_id);
+		lm_tab_name = bo.getTable_name();
+		if (subjoinBO != null && subjoinBO.getId() != null && subjoinBO.getId().trim().length() > 0
+				&& subjoinBO.getJob_exp_year() != null && subjoinBO.getJob_exp_year().trim().length() > 0) {
+			HsUserbasicinfoBO temp = new HsUserbasicinfoBO();
+			Map<String, String> sex_data = dictFieldMapService.getDictValueByParam(temp.getTable_name(), "ub_sex",
+					bo.getUser_gender());
+			bo.setUser_gender(sex_data.get("value"));
+			if (subjoinBO == null || subjoinBO.getId() == null) {
+				subjoinBO = new HsSubjoinBO();
+			} else {
+				Map<String, String> job_exp_year_data = dictFieldMapService.getDictValueByParam(temp.getTable_name(),
+						"job_exp_year", subjoinBO.getJob_exp_year());
+				Map<String, String> political_id_data = dictFieldMapService.getDictValueByParam(temp.getTable_name(),
+						"political_id", subjoinBO.getPolitical_id());
+				Map<String, String> marrystate_data = dictFieldMapService.getDictValueByParam(temp.getTable_name(),
+						"ub_marrystate", subjoinBO.getUb_marrystate());
+				subjoinBO.setJob_exp_year(job_exp_year_data.get("value"));
+				subjoinBO.setPolitical_id(political_id_data.get("value"));
+				subjoinBO.setUb_marrystate(marrystate_data.get("value"));
+			}
+			return "SUCCESS";
+		} else {
+			return "EDIT";
+		}
+	}
+
+	public boolean validateSaveForm(HsUserbasicinfoBO bo, HsSubjoinBO subjoinBO) {
+		boolean flag = true;
+		if (bo == null) {
+			err_msg = "必填项，需要必须填写！";
+			flag = false;
+			return flag;
+		}
+		if (bo.getUser_name() == null || bo.getUser_name().trim().length() <= 0) {
+			err_msg = "姓名不能为空";
+			flag = false;
+			return flag;
+		}
+		if (bo.getUser_gender() == null || bo.getUser_gender().trim().length() <= 0) {
+			err_msg = "性别不能为空";
+			flag = false;
+			return flag;
+		}
+		if (subjoinBO.getUb_birthday() == null || subjoinBO.getUb_birthday().length() <= 0) {
+			err_msg = "出生日期不能为空";
+			flag = false;
+			return flag;
+		}
+		if (subjoinBO.getJob_exp_year() == null || subjoinBO.getJob_exp_year().length() <= 0) {
+			err_msg = "工作经验不能为空";
+			flag = false;
+			return flag;
+		}
+		if (subjoinBO.getAear_code() == null || subjoinBO.getAear_code().length() <= 0) {
+			err_msg = "户口所在地不能为空";
+			flag = false;
+			return flag;
+		}
+		if (subjoinBO.getUb_address() == null || subjoinBO.getUb_address().length() <= 0) {
+			err_msg = "现居住城市不能为空";
+			flag = false;
+			return flag;
+		}
+		if (bo.getUser_email() == null || bo.getUser_email().length() <= 0) {
+			err_msg = "邮箱不能为空";
+			flag = false;
+			return flag;
+		}
+
+		return flag;
+	}
+
+	private File file;
+	private String fileName;
+	private String fileFileName;
+
+	public String userLogoUpload() throws IOException {
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		String end = "\r\n";
+		String twoHyphens = "--"; 
+		String boundary = "******";
+		if (file != null && file.length() > 0) {
+			long size = file.length();
+			if (size > 512000) {
+				response.getWriter().print("{\"error\":\"error\"}");
+			} else {
+				String spec = PropertiesUtil.getProperty("login_project_url") + "/upload";
+				URL url = new URL(spec);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setDoInput(true);
+				conn.setRequestMethod("POST");
+				conn.setConnectTimeout(5000);
+				conn.setUseCaches(false);
+				conn.setRequestProperty("Connection", "Keep-Alive");
+				conn.setRequestProperty("Charset", "UTF-8");
+				conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+				DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+
+				out.writeBytes(twoHyphens + boundary + end);
+				String abPath = file.getAbsolutePath();
+				File newFile = null;
+				String newFileName = createImgName(fileFileName);
+				file.renameTo((newFile = new File(abPath.substring(0, abPath.lastIndexOf("\\") + 1) + newFileName)));
+				out.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\""
+						+ newFile.getName().substring(newFile.getName().lastIndexOf("\\") + 1) + "\"" + end);
+				out.writeBytes(end);
+				FileInputStream fis = new FileInputStream(newFile);
+
+				byte[] buffer = new byte[512000]; // 500k
+				int count = 0;
+				while ((count = fis.read(buffer)) != -1) {
+					out.write(buffer, 0, count);
+				}
+				fis.close();
+				out.writeBytes(end);
+				out.writeBytes(twoHyphens + boundary + twoHyphens + end);
+				out.flush();
+				InputStream is = conn.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					fileName = line;
+				}
+				reader.close();
+				JSONObject obj = new JSONObject();
+				obj.put("path", PropertiesUtil.getProperty("login_project_url") + "/" + fileName);
+				String json = obj.toString();
+				response.getWriter().print(json);
+				newFile.delete();
+			}
+		}
+		return null;
+	}
+
+	private String createImgName(String img) {
+		String imgName = "";
+		String ext = img.substring(img.lastIndexOf("."));
+		imgName = UUID.randomUUID() + ext;
+		return imgName;
+	}
+
+	public HsUserbasicinfoBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsUserbasicinfoBO bo) {
+		this.bo = bo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getDicts() {
+		return dicts;
+	}
+
+	public void setDicts(Map<String, List<HsDictionaryDataBO>> dicts) {
+		this.dicts = dicts;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(String res_id) {
+		this.res_id = res_id;
+	}
+
+	public String getLm_tab_name() {
+		return lm_tab_name;
+	}
+
+	public void setLm_tab_name(String lm_tab_name) {
+		this.lm_tab_name = lm_tab_name;
+	}
+
+	public List<HsPersonLeftMenuBO> getLeftmenus() {
+		return leftmenus;
+	}
+
+	public void setLeftmenus(List<HsPersonLeftMenuBO> leftmenus) {
+		this.leftmenus = leftmenus;
+	}
+
+	public String getRes_completeness() {
+		return res_completeness;
+	}
+
+	public void setRes_completeness(String res_completeness) {
+		this.res_completeness = res_completeness;
+	}
+
+	public HsSubjoinBO getSubjoinBO() {
+		return subjoinBO;
+	}
+
+	public void setSubjoinBO(HsSubjoinBO subjoinBO) {
+		this.subjoinBO = subjoinBO;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getSubjoin_Dicts() {
+		return subjoin_Dicts;
+	}
+
+	public void setSubjoin_Dicts(Map<String, List<HsDictionaryDataBO>> subjoin_Dicts) {
+		this.subjoin_Dicts = subjoin_Dicts;
+	}
+
+	public UserSessionBean getUser() {
+		return user;
+	}
+
+	public void setUser(UserSessionBean user) {
+		this.user = user;
+	}
+
+	public String getErr_msg() {
+		return err_msg;
+	}
+
+	public void setErr_msg(String err_msg) {
+		this.err_msg = err_msg;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileFileName() {
+		return fileFileName;
+	}
+
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+
+}

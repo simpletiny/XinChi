@@ -1,0 +1,88 @@
+//第一次创建分页查询
+//pageNo 页数  pageSize 每页显示的记录数
+function fenye(action,param,pageNo,pageSize){
+	var dataParam="";
+	if(param.length!=0){
+		dataParam=param+"&page.pageNo="+pageNo+"&page.pageSize="+pageSize;
+	}else{
+		dataParam="page.pageNo="+pageNo+"&page.pageSize="+pageSize;
+	}	
+	$.ajax({
+        url: action,
+        data: dataParam,
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	handleResponse(data,action,param);
+        },
+        error:function(data){
+        	alert("操作失败，请稍后重试！");
+        }
+	}); 
+}
+//组装分页  page对应java的page对象
+function appendPage(page,action,param){
+	$("#page").empty();
+	 var pageHtml="当前第"+page.pageNo+"页 共有"+page.totalRecord+"结果 每页"+page.pageSize+"条";
+	 if(page.pageNo > 1){
+		 pageHtml=pageHtml+ "<a style=\"color:#05a687;\" href=\"javascript:gotoPage('"+action+"','"+param+"',1,"+page.pageSize+");\">首页</a> ";  
+	 }else{
+		 pageHtml=pageHtml+" 首页  ";
+	 }
+	 
+	 if(page.pageNo > 1){
+		 pageHtml=pageHtml+ "<a style=\"color:#05a687;\" href=\"javascript:gotoPage('"+action+"','"+param+"',"+(page.pageNo-1)+","+page.pageSize+");\">上页</a>   ";  
+	 }else{
+		 pageHtml=pageHtml+"上页  ";
+	 }
+	 if(page.pageNo < page.totalPage){
+		 pageHtml=pageHtml+ "<a style=\"color:#05a687;\" href=\"javascript:gotoPage('"+action+"','"+param+"',"+(page.pageNo+1)+","+page.pageSize+");\">下页</a>    ";  
+	 }else{
+		 pageHtml=pageHtml+"下页  ";
+	 }
+	 if(page.pageNo < page.totalPage){
+		 pageHtml=pageHtml+ "<a style=\"color:#05a687;\" href=\"javascript:gotoPage('"+action+"','"+param+"',"+page.totalPage+","+page.pageSize+");\">尾页</a>  "; 
+	 }else{
+		 pageHtml=pageHtml+"尾页  ";
+	 }
+	 pageHtml=pageHtml+" 跳转到<input name=\"inputpageNo\" id=\"inputpageNo\" type=\"text\" size=\"3\" value="+page.pageNo+">  "+
+	 			"<input name=\"Submit\" type=\"submit\" onClick=\"javascript:gotoPageByIndex( '"+action+"','"+param+"',"+page.totalPage+","+page.pageSize+")\" value=\"确定\"/>";
+	 $("#page").html(pageHtml);  
+}
+
+//点击分页js
+////action 请求action地址    param 请求参数 
+function gotoPage(action,param,pageNo,pageSize) {  
+	var dataParam="";
+	if(param.length!=0){
+		dataParam=param+"&page.pageNo="+pageNo+"&page.pageSize="+pageSize;
+	}else{
+		dataParam="page.pageNo="+pageNo+"&page.pageSize="+pageSize;
+	}	
+	$.ajax({
+        url: action,
+        data: dataParam,
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	handleResponse(data,action,param);
+        },
+        error:function(data){
+        	alert("操作失败，请稍后重试！");
+        }
+	}); 
+}  
+
+//跳转到特定页面js
+function gotoPageByIndex(action,param,pageTotal,pageSize) {  
+    var gotoPageNo = $("#inputpageNo").val();  
+    if (isNaN(gotoPageNo)) {  
+        alert("请输入正确的页码！");  
+        return;  
+    }  
+    if(gotoPageNo>pageTotal){  
+        alert("总共"+pageTotal+"页，输入的页数大于总页数，请重新输入！");  
+        return;  
+    }  
+    gotoPage(action,param,gotoPageNo,pageSize);
+}  

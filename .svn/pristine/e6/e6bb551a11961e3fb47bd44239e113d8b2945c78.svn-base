@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsScoreCatalogBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsScoreCatalogBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="score_code" property="score_code" jdbcType="VARCHAR" />
+	    <result column="score_name" property="score_name" jdbcType="VARCHAR" />
+	    <result column="catalog_index" property="catalog_index" jdbcType="INTEGER" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	score_code, 
+    	score_name, 
+    	catalog_index, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_score_catalog
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_score_catalog
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsScoreCatalogBO" >
+  	
+    insert into hs_score_catalog
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="score_code != null">
+	        score_code,
+	      </if>
+	 	<if test="score_name != null">
+	        score_name,
+	      </if>
+	 	<if test="catalog_index != null">
+	        catalog_index,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="score_code != null">
+	        #{score_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score_name != null">
+	        #{score_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="catalog_index != null">
+	        #{catalog_index,jdbcType=INTEGER},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsScoreCatalogBO" >
+    update hs_score_catalog
+    <set >
+    	<if test="score_code != null">
+	        score_code = #{score_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="score_name != null">
+	        score_name = #{score_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="catalog_index != null">
+	        catalog_index = #{catalog_index,jdbcType=INTEGER},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsScoreCatalogBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_score_catalog
+   <where>
+	    <if test="score_code !=null">
+	    	score_code = #{score_code,jdbcType=CHAR}
+	    </if>
+    </where>
+    ORDER BY catalog_index
+   </select>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.${hbmMoudelVO.clzssName?cap_first}Mapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.${hbmMoudelVO.clzssName?cap_first}" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+    <#list hbmMoudelVO.columnList as columnVO>
+	    <result column="${columnVO.propertyName}" property="${columnVO.propertyName}" jdbcType="${columnVO.jdbcType?upper_case}" />
+	 </#list>  
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+  	<#list hbmMoudelVO.columnList as columnVO>
+    	${columnVO.propertyName}, 
+    </#list>  
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ${hbmMoudelVO.tableName}
+    where id = ${r"#{id,jdbcType=CHAR}"}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ${hbmMoudelVO.tableName}
+    where id = ${r"#{id,jdbcType=CHAR}"}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.${hbmMoudelVO.clzssName?cap_first}" >
+  	
+    insert into ${hbmMoudelVO.tableName}
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+    	<#list hbmMoudelVO.columnList as columnVO>
+	 	<if test="${columnVO.propertyName} != null">
+	        ${columnVO.propertyName},
+	      </if>
+		 </#list>  
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 ${r"#{id},"}
+        </if>
+        <#list hbmMoudelVO.columnList as columnVO>
+    	<if test="${columnVO.propertyName} != null">
+	        ${r"#"}{${columnVO.propertyName},jdbcType=${columnVO.jdbcType?upper_case}},
+	      </if>
+		 </#list>  
+      <if test="creater != null">
+        ${r"#"}{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        ${r"#"}{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        ${r"#"}{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        ${r"#"}{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.${hbmMoudelVO.clzssName?cap_first}" >
+    update ${hbmMoudelVO.tableName}
+    <set >
+    	<#list hbmMoudelVO.columnList as columnVO>
+    	<if test="${columnVO.propertyName} != null">
+	        ${columnVO.propertyName} = ${r"#"}{${columnVO.propertyName},jdbcType=${columnVO.jdbcType?upper_case}},
+	      </if>
+		 </#list> 
+       <if test="modifier != null">
+        modifier = ${r"#"}{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = ${r"#"}{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = ${r"#{id,jdbcType=CHAR}"}
+  </update>
+ <select id="selectByPram" parameterType="seentao.xhsn.bean.${hbmMoudelVO.clzssName?cap_first}" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from ${hbmMoudelVO.tableName}
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = ${r"#"}{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = ${r"#"}{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

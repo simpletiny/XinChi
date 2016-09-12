@@ -1,0 +1,25 @@
+package seentao.xhsn.person.collect.service;
+/** 
+ * @author wjx 
+ * @date 2014年12月10日 下午3:21:31 
+ * @note 
+ */
+public interface IPositionCollectService {
+	
+	/**
+	 * 根据职位id，收藏职位
+	 * @param res_id	简历id
+	 * @param user_id	用户id
+	 * @param job_id	职位id
+	 * @return 收藏的职位数
+	 */
+	public int collectByJobID(String res_id, String user_id, String job_id);
+	/**
+	 * 根据职位的集合，收藏职位
+	 * @param res_id	简历id
+	 * @param user_id	用户id
+	 * @param job_ids	职位id的数组
+	 * @return 收藏的职位数
+	 */
+	public int collectByJobIDs(String res_id, String user_id, String[] job_ids);
+}

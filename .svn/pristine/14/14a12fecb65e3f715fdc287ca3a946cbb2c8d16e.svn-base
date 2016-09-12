@@ -1,0 +1,20 @@
+package seentao.xhsn.enterprise.index.service;
+
+import seentao.xhsn.enterprise.index.bean.EntTopBean;
+
+/**
+ * 企业首页service
+ * 
+ * @author niushixing 2015-1-5 16:26:47
+ *
+ */
+public interface IEntIndexService {
+	/**
+	 * 取得企业首页头部信息
+	 * 
+	 * @param ent_id
+	 * @return
+	 */
+	public EntTopBean getEntTopInfo(String ent_id);
+
+}

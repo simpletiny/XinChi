@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="sys" extends="default" namespace="/sys">
+		<!-- 字典编目 -->
+		<action name="*Dictionary" class="dictionaryAction" method="{1}Dictionary">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		<action name="getAllDictionary" class="dictionaryAction" method="getAllDictionary">
+			<result name="SUCCESS" >/admin/dictionary/dictionary.jsp</result>
+		</action>
+		<!-- 字典值 -->
+		<action name="*DictionaryData*" class="dictionaryDataAction" method="{1}DictionaryData{2}">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		<action name="getAllDictionaryData" class="dictionaryDataAction" method="getAllDictionaryData">
+			<result name="SUCCESS" >/admin/dictionary/dictionaryData.jsp</result>
+		</action>
+		<!-- 学习路径上传 -->
+		<action name="uploadLearn" class="learnPathUploadAction" >
+			<!--  
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">application/excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param>
+			</interceptor-ref>
+			-->
+			<result name="SUCCESS">/admin/learnPath/learnPath.jsp</result>
+			<result name="input" >/admin/learnPath/learnPath.jsp</result>
+		</action>
+		<!-- 企业导入 -->
+		<action name="uploadEnterprise" class="enterpriseUploadAction" >
+		</action>
+		<!-- 城市信息取得 -->
+		<action name="cityInit" class="cityAction" method="getDataJson">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 城市管理初始化 -->
+		<action name="manageCityInit" class="cityAction" method="manageCityInit">
+			<result name="success">/admin/managecity/manageCity.jsp</result>
+		</action>
+		<!-- 城市管理初始化 -->
+		<action name="fetchCityList" class="cityAction" method="fetchCityList">
+			<result name="success">/admin/managecity/cityList.jsp</result>
+		</action>
+		<!-- 保存新建城市 -->
+		<action name="saveCity" class="cityAction" method="saveCity">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 删除城市 -->
+		<action name="deleteCity" class="cityAction" method="deleteCity">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 标记主要城市 -->
+		<action name="markMainCity" class="cityAction" method="markMainCity">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 下载测试 
+		<action name="download" class="seentao.xhsn.sys.download.DownloadAction">  
+            <result name="success" type="stream">  
+                <param name="contentType">${contentType}</param>  
+                <param name="inputName">inputStream</param>  
+                <param name="contentDisposition">attachment;filename=${filename}</param>  
+                <param name="bufferSize">1024</param>  
+            </result>  
+       </action>  
+       -->
+	</package> 
+</struts>

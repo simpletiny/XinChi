@@ -1,0 +1,1001 @@
+package seentao.xhsn.person.resume.service.impl;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+
+import seentao.xhsn.bean.HsCertificateBO;
+import seentao.xhsn.bean.HsCustomSkillBO;
+import seentao.xhsn.bean.HsDesiredPositionBO;
+import seentao.xhsn.bean.HsEducationBO;
+import seentao.xhsn.bean.HsEvaluateBO;
+import seentao.xhsn.bean.HsLearnpathBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+import seentao.xhsn.bean.HsSubjoinBO;
+import seentao.xhsn.bean.HsTrainingBO;
+import seentao.xhsn.bean.HsUbCompanyBO;
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.bean.HsUserbasicinfoBO;
+import seentao.xhsn.common.ReadTextUtil;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.SupperBO;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.person.certificate.bean.HsCertificateExtendBO;
+import seentao.xhsn.person.certificate.dao.ICertificateDAO;
+import seentao.xhsn.person.company.dao.IUBCompanyDAO;
+import seentao.xhsn.person.customskill.bean.HsCustomSkillExtendBO;
+import seentao.xhsn.person.customskill.dao.ICustomSkillDAO;
+import seentao.xhsn.person.desired.dao.IDesiredPositionDao;
+import seentao.xhsn.person.education.bean.HsEducationExtendBO;
+import seentao.xhsn.person.education.dao.IEducationDAO;
+import seentao.xhsn.person.evaluate.dao.IEvaluateDao;
+import seentao.xhsn.person.experience.dao.IExperienceDAO;
+import seentao.xhsn.person.hssubjoin.dao.IHsSubjoinDAO;
+import seentao.xhsn.person.hsuser.dao.IHsUserDAO;
+import seentao.xhsn.person.info.dao.IUBInfoDao;
+import seentao.xhsn.person.learnpath.dao.ILearnPathDAO;
+import seentao.xhsn.person.put.service.IPutResumeService;
+import seentao.xhsn.person.resume.dao.IResumeDAO;
+import seentao.xhsn.person.resume.service.IResumeService;
+import seentao.xhsn.person.train.dao.ITrainingDAO;
+import seentao.xhsn.sys.dictionaryfiledmap.dao.IDictionaryFieldMapDao;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.tools.ArrayBoUtil;
+import seentao.xhsn.tools.FreemakerUtil;
+import seentao.xhsn.tools.MD5Util;
+import seentao.xhsn.tools.PropertiesUtil;
+
+/**
+ * 简历接口实现类
+ * 
+ * @author niushixing 2014-11-27 下午1:28:22
+ * 
+ */
+@Service
+public class ResumeServiceImpl implements IResumeService {
+
+	private Logger logger = Logger.getLogger(ResumeServiceImpl.class);
+	@Autowired
+	private IResumeDAO resumeDao;
+	@Autowired
+	private ITrainingDAO trainingDao;
+	@Autowired
+	private IUBCompanyDAO ubComDao;
+	@Autowired
+	private IEducationDAO eduDao;
+	@Autowired
+	private ICustomSkillDAO csDao;
+	@Autowired
+	private IDesiredPositionDao desiredDao;
+	@Autowired
+	private IExperienceDAO jobexpDao;
+	@Autowired
+	private IUBInfoDao ubDao;
+	@Autowired
+	private IHsUserDAO userDao;
+	@Autowired
+	private IHsSubjoinDAO subDao;
+	@Autowired
+	private ICertificateDAO cerDao;
+	@Autowired
+	private IDictionaryFieldMapDao dicDao;
+	@Autowired
+	private ILearnPathDAO pathDao;
+	@Autowired
+	private IEvaluateDao evaluateDao;
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+	@Autowired
+	private IPutResumeService putService;
+
+	@Override
+	@Transactional
+	public String generateResumeHTML(HsResumeBO bo, ServletContext context) {
+		// sub.photo_file_id
+		// desire.job_type
+
+		// 模板用data
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 简历基本信息
+		HsResumeBO res = resumeDao.selectByPrimaryKey(res_id);
+		// 通过Id取得用户信息
+		HsUserBO user = new HsUserBO();
+		user = userDao.selectByPrimaryKey(user_id);
+		// 用户基本信息
+		HsUserbasicinfoBO ub = new HsUserbasicinfoBO();
+		ub = ubDao.getByUserSysId(user_id);
+
+		if (null != ub) {
+			// 用户性别转化为汉字
+			if (null != ub.getUser_gender()) {
+				ub.setUser_gender(dicDao.getDictByParam("hs_userbasicinfo", "ub_sex", ub.getUser_gender()).get("value"));
+			}
+
+		}
+		// 自我评价
+		List<HsEvaluateBO> evaluateList = evaluateDao.findByUserIdAndResId(user_id, res_id);
+		HsEvaluateBO evaluateBO = null;
+		if (evaluateList != null && evaluateList.size() > 0) {
+			evaluateBO = evaluateList.get(0);
+		}
+		// 个人信息附加表
+		HsSubjoinBO sub = new HsSubjoinBO();
+		sub = subDao.findByUserIdAndResId(user_id, res_id);
+		if (null != sub) {
+			// 转换政治面貌\
+			if (null != sub.getPolitical_id()) {
+				sub.setPolitical_id(dicDao.getDictByParam("hs_userbasicinfo", "political_id", sub.getPolitical_id())
+						.get("value"));
+			} else {
+				sub.setPolitical_id("");
+			}
+			// 转化海外工作经历
+			if (null != sub.getOverseas_exp()) {
+				sub.setOverseas_exp(sub.getOverseas_exp().equals("Y") ? "有" : "无");
+			} else {
+				sub.setOverseas_exp("无");
+			}
+
+			// 转化婚姻状态
+			if (null != sub.getUb_marrystate()) {
+				sub.setUb_marrystate(sub.getUb_marrystate().equals("0") ? "未婚" : "已婚");
+			} else {
+				sub.setUb_marrystate("");
+			}
+		}
+		// 培训经历
+		List<HsTrainingBO> trainlist = new ArrayList<HsTrainingBO>();
+		trainlist = trainingDao.findByUserIdAndResId(user_id, res_id);
+
+		// 任职经历
+		List<HsUbCompanyBO> jclist = new ArrayList<HsUbCompanyBO>();
+		HsUbCompanyBO comBo = new HsUbCompanyBO();
+		comBo.setUser_id(user_id);
+		comBo.setRes_id(res_id);
+		jclist = ubComDao.getAllByParam(comBo);
+		if (jclist != null && jclist.size() > 0) {
+			Iterator<HsUbCompanyBO> iter1 = jclist.iterator();
+			while (iter1.hasNext()) {
+				HsUbCompanyBO jc = iter1.next();
+				// 转换薪资范围
+				if (jc.getSalary_scope() != null) {
+					jc.setSalary_scope(dicDao.getDictByParam("hs_ub_company", "salary_scope", jc.getSalary_scope())
+							.get("value"));
+				}
+				// 转换公司规模
+				if (jc.getCom_size() != null) {
+					jc.setCom_size(dicDao.getDictByParam("hs_ub_company", "com_size", jc.getCom_size()).get("value"));
+				}
+				// 转换公司种类
+				if (jc.getCom_type() != null) {
+					jc.setCom_type(dicDao.getDictByParam("hs_ub_company", "com_type", jc.getCom_type()).get("value"));
+				}
+			}
+		}
+
+		// 项目经历
+		List<HsResumejobexperienceBO> jobexperiencelist = new ArrayList<HsResumejobexperienceBO>();
+		jobexperiencelist = jobexpDao.findByUserIdAndResId(user_id, res_id);
+		// 教育经历
+		List<HsEducationBO> edulist = new ArrayList<HsEducationBO>();
+		List<HsEducationExtendBO> eduExtendList = new ArrayList<HsEducationExtendBO>();
+		edulist = eduDao.findByUserIdAndResId(user_id, res_id);
+		HsEducationExtendBO extendBO = null;
+		for (HsEducationBO educationBO : edulist) {
+			extendBO = new HsEducationExtendBO();
+			this.copyProperties(extendBO, educationBO);
+			Map<String, String> degree = dictFieldMapService.getDictValueByParam(educationBO.getTable_name(),
+					"edu_degree", educationBO.getEdu_degree());
+			extendBO.setEdu_degree_value(degree.get("value"));
+			eduExtendList.add(extendBO);
+		}
+		// 个人技能
+		List<HsCustomSkillBO> cslist = new ArrayList<HsCustomSkillBO>();
+		cslist = csDao.findByUserIdAndResId(user_id, res_id);
+
+		HsCustomSkillExtendBO skillExtendBO = null;
+		List<HsCustomSkillExtendBO> skillExtendList = new ArrayList<HsCustomSkillExtendBO>();
+		for (HsCustomSkillBO customSkillBO : cslist) {
+			skillExtendBO = new HsCustomSkillExtendBO();
+			this.copyProperties(skillExtendBO, customSkillBO);
+			if (StringUtils.isNotEmpty(customSkillBO.getProfessional_name())) {
+				skillExtendBO.setProfessional_value(customSkillBO.getProfessional_name());
+			} else {
+				Map<String, String> professional = dictFieldMapService.getDictValueByParam(
+						customSkillBO.getTable_name(), "professional_code", customSkillBO.getProfessional_code());
+				skillExtendBO.setProfessional_value(professional.get("value"));
+			}
+			skillExtendBO.setLevel_value(dicDao.getDictByParam("hs_custom_skill", "level", customSkillBO.getLevel())
+					.get("value"));
+			skillExtendList.add(skillExtendBO);
+		}
+
+		// 期望职位
+		List<HsDesiredPositionBO> desirelist = new ArrayList<HsDesiredPositionBO>();
+		desirelist = desiredDao.findByUserIdAndResId(user_id, res_id);
+		HsDesiredPositionBO desire = new HsDesiredPositionBO();
+		if (desirelist != null && desirelist.size() > 0) {
+			desire = desirelist.get(0);
+		}
+		// 学习路径
+		HsLearnpathBO pathBo = new HsLearnpathBO();
+		String id_card = "";
+		if (null != SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY)) {
+			id_card = ((UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY))
+					.getIdentity_card();
+		}
+
+		pathBo.setIdentity_card(id_card);
+		List<SupperBO> pathlist = pathDao.selectByIdentityCard(pathBo);
+
+		// 个人证书
+		List<HsCertificateBO> cerlist = new ArrayList<HsCertificateBO>();
+		cerlist = cerDao.findByUserIdAndResId(user_id, res_id);
+		HsCertificateExtendBO certificateExtendBO = null;
+		List<HsCertificateExtendBO> certificateExtendExtendList = new ArrayList<HsCertificateExtendBO>();
+		for (HsCertificateBO certificateBO : cerlist) {
+			certificateExtendBO = new HsCertificateExtendBO();
+			this.copyProperties(certificateExtendBO, certificateBO);
+			if (StringUtils.isNotEmpty(certificateBO.getCerti_name())) {
+				certificateExtendBO.setCerti_code_value(certificateBO.getCerti_name());
+			} else {
+				Map<String, String> certi_code_value = dictFieldMapService.getDictValueByParam(
+						certificateBO.getTable_name(), "certi_code", certificateBO.getCerti_code());
+				certificateExtendBO.setCerti_code_value(certi_code_value.get("value"));
+			}
+			certificateExtendExtendList.add(certificateExtendBO);
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+
+		data.put("htmltitle", "简历预览");
+		data.put("res", res);
+		data.put("basePath", basePath);
+		data.put("user", user);
+		data.put("ub", ub);
+		data.put("sub", sub);
+		data.put("edulist", eduExtendList);
+		data.put("cslist", skillExtendList);
+		data.put("resume", bo);
+		data.put("desire", desire);
+		data.put("trainlist", trainlist);
+		data.put("jclist", jclist);
+		data.put("jobexperiencelist", jobexperiencelist);
+		data.put("cerlist", certificateExtendExtendList);
+		data.put("pathlist", pathlist);
+		// 自我评价
+		data.put("evaluateBO", evaluateBO);
+
+		String templetPath = PropertiesUtil.getProperty("resumetemplet");
+		String filesysPath = PropertiesUtil.getProperty(ResourcesConstants.UPLOAD_PATH);
+		String savePath = createHtmlPath(filesysPath,
+				bo.getUser_id() + "/" + PropertiesUtil.getProperty("baseinfofolder"));
+		String htmlPath = context.getRealPath("/") + savePath;
+		FreemakerUtil.createHTML(context, data, templetPath, htmlPath);
+		return savePath;
+	}
+
+	private void copyProperties(SupperBO dest, SupperBO src) {
+		try {
+			PropertyUtils.copyProperties(dest, src);
+		} catch (Exception e) {
+			logger.error("属性值拷贝失败", e);
+			throw new BusinessException(e);
+		}
+	}
+
+	/**
+	 * 生成HTML路径
+	 * 
+	 * @return
+	 */
+	private String createHtmlPath(String filesysPath, String savePath) {
+
+		String htmlpath = filesysPath + PropertiesUtil.getProperty("resumesavefolder") + savePath;
+		File file = new File(htmlpath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		String path = PropertiesUtil.getProperty("resumesavefolder") + savePath;
+		String name = createHtmlName() + ".html";
+		path += name;
+		return path;
+	}
+
+	/**
+	 * 生成HTML名称
+	 * 
+	 * @return
+	 */
+	private String createHtmlName() {
+		String id = UUID.randomUUID().toString();
+		return MD5Util.getMD5Str(id);
+	}
+
+	@Override
+	public HsResumeBO getByPk(String id) {
+		return resumeDao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	@Transactional
+	public String getResumeHtmlPath(String user_id, String res_id) {
+		HsResumeBO bo = resumeDao.selectByPrimaryKey(res_id);
+		ServletContext context = ServletActionContext.getServletContext();
+		String path = generateResumeHTML(bo, context);
+		bo.setStatic_path(path);
+		resumeDao.update(bo);
+		return bo.getStatic_path();
+	}
+
+	/*
+	 * 修改简历的name
+	 * 
+	 * @see
+	 * seentao.xhsn.person.resume.service.IResumeService#updateResume(seentao
+	 * .xhsn.bean.HsResumeBO)
+	 */
+	@Override
+	public void updateResume(HsResumeBO resume) {
+		int count = resumeDao.update(resume);
+		// 修改session中的name
+		if (count > 0) {
+			UserSessionBean sessionBean = (UserSessionBean) SeentaoApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			sessionBean.setRes_name(resume.getName());
+		}
+	}
+
+	@Override
+	public String generateBaseInfo(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 简历基本信息
+		HsResumeBO res = resumeDao.selectByPrimaryKey(res_id);
+		// 通过Id取得用户信息
+		HsUserBO user = new HsUserBO();
+		user = userDao.selectByPrimaryKey(user_id);
+		// 用户基本信息
+		HsUserbasicinfoBO ub = new HsUserbasicinfoBO();
+		ub = ubDao.getByUserSysId(user_id);
+
+		if (null != ub) {
+			// 用户性别转化为汉字
+			if (null != ub.getUser_gender()) {
+				ub.setUser_gender(dicDao.getDictByParam("hs_userbasicinfo", "ub_sex", ub.getUser_gender()).get("value"));
+			}
+
+		}
+		// 个人信息附加表
+		HsSubjoinBO sub = new HsSubjoinBO();
+		sub = subDao.findByUserIdAndResId(user_id, res_id);
+		if (null != sub) {
+			// 转换政治面貌\
+			if (null != sub.getPolitical_id()) {
+				sub.setPolitical_id(dicDao.getDictByParam("hs_userbasicinfo", "political_id", sub.getPolitical_id())
+						.get("value"));
+			} else {
+				sub.setPolitical_id("");
+			}
+			// 转换工作经验
+			if (null != sub.getJob_exp_year()) {
+				sub.setJob_exp_year(dicDao.getDictByParam("hs_userbasicinfo", "job_exp_year", sub.getJob_exp_year())
+						.get("value"));
+			} else {
+				sub.setJob_exp_year("");
+			}
+			// 转化海外工作经历
+			if (null != sub.getOverseas_exp()) {
+				sub.setOverseas_exp(sub.getOverseas_exp().equals("Y") ? "有" : "无");
+			} else {
+				sub.setOverseas_exp("无");
+			}
+
+			// 转化婚姻状态
+			if (null != sub.getUb_marrystate()) {
+				sub.setUb_marrystate(sub.getUb_marrystate().equals("0") ? "未婚" : "已婚");
+			} else {
+				sub.setUb_marrystate("");
+			}
+			// 转化户口所在地
+			if (null != sub.getAear_code()) {
+				sub.setAear_code(ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_CITY,
+						ResourcesConstants.FIELD_CITY_CODE, sub.getAear_code(), ResourcesConstants.FIELD_CITY_VALUE));
+			}
+			// 转化现居住城市
+			if (null != sub.getUb_address()) {
+				sub.setUb_address(ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_CITY,
+						ResourcesConstants.FIELD_CITY_CODE, sub.getUb_address(), ResourcesConstants.FIELD_CITY_VALUE));
+			}
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("htmltitle", "简历预览");
+		data.put("res", res);
+		data.put("basePath", basePath);
+		data.put("user", user);
+		data.put("ub", ub);
+		data.put("sub", sub);
+
+		//生成word导出模板
+		if(StringUtils.isEmpty(ub.getUser_photo())){
+			ub.setUser_photo(null);
+		}else{
+			//生成document_rels.ftl
+			String photoPath=this.generateExportHtml("phototemp","photofolder",bo.getUser_id(),data);
+			bo.setPhoto_word_path(photoPath);
+		}
+		String exprotSavePath=this.generateExportHtml("baseinfoexporttemp","baseinfofolder",bo.getUser_id(),data);
+		bo.setBaseinfo_word_path(exprotSavePath);
+		//简历预览
+		String savePath=this.generateViewHtml("baseinfotemp","baseinfofolder",bo.getUser_id(),data);
+		bo.setBaseinfo_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateDesire(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 期望职位
+		List<HsDesiredPositionBO> desirelist = new ArrayList<HsDesiredPositionBO>();
+		desirelist = desiredDao.findByUserIdAndResId(user_id, res_id);
+		String savePath = "";
+		String exprotSavePath="";
+		HsDesiredPositionBO desire = new HsDesiredPositionBO();
+		if (desirelist != null && desirelist.size() > 0) {
+			desire = desirelist.get(0);
+			if (desire.getJob_type() != null) {
+				desire.setJob_type(ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_JOB,
+						ResourcesConstants.FIELD_JOB_CODE, desire.getJob_type(), ResourcesConstants.FIELD_JOB_VALUE));
+			}
+			if (desire.getDesired_city() != null) {
+				String[] arrCity = desire.getDesired_city().split(",");
+				String citys = "";
+				for (String city : arrCity) {
+					citys += ","
+							+ ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_CITY,
+									ResourcesConstants.FIELD_CITY_CODE, city, ResourcesConstants.FIELD_CITY_VALUE);
+				}
+				if (citys.startsWith(",")) {
+					desire.setDesired_city(citys.substring(1));
+				}
+			}
+
+			if (desire.getEmployment_type() != null) {
+				String type = desire.getEmployment_type();
+				if (type.equals("1")) {
+					desire.setEmployment_type("全职");
+				} else if (type.equals("2")) {
+					desire.setEmployment_type("兼职");
+				} else {
+					desire.setEmployment_type("实习");
+				}
+			}
+
+			// 获取basePath
+			HttpServletRequest request = ServletActionContext.getRequest();
+			String path = request.getContextPath();
+			String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ path + "/";
+			data.put("basePath", basePath);
+			data.put("desire", desire);
+
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("desireexporttemp","desirefolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("desiretemp","desirefolder",bo.getUser_id(),data);
+		}
+		bo.setDesire_word_path(exprotSavePath);
+		bo.setDesire_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateEvaluate(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 自我评价
+		List<HsEvaluateBO> evaluateList = evaluateDao.findByUserIdAndResId(user_id, res_id);
+		HsEvaluateBO evaluateBO = null;
+		if (evaluateList != null && evaluateList.size() > 0) {
+			evaluateBO = evaluateList.get(0);
+			String html = evaluateBO.getContent();
+			String text = Jsoup.parse(html).body().text();
+			evaluateBO.setContent(text);
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("evaluateBO", evaluateBO);
+		//生成word导出模板
+		String exprotSavePath=this.generateExportHtml("evaluateexporttemp","evaluatefolder",bo.getUser_id(),data);
+		bo.setEvaluate_word_path(exprotSavePath);
+		//简历预览
+		String savePath=this.generateViewHtml("evaluatetemp","evaluatefolder",bo.getUser_id(),data);
+		bo.setEvaluate_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generatePractice(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 任职经历
+		List<HsUbCompanyBO> jclist = new ArrayList<HsUbCompanyBO>();
+		HsUbCompanyBO comBo = new HsUbCompanyBO();
+		comBo.setUser_id(user_id);
+		comBo.setRes_id(res_id);
+		String savePath = "";
+		String exprotSavePath = "";
+		jclist = ubComDao.getAllByParam(comBo);
+		if (jclist != null && jclist.size() > 0) {
+			Iterator<HsUbCompanyBO> iter1 = jclist.iterator();
+			while (iter1.hasNext()) {
+				HsUbCompanyBO jc = iter1.next();
+				// 转化公司类别
+				if (jc.getTrade_code() != null) {
+					jc.setTrade_code(ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_TRADE,
+							ResourcesConstants.FIELD_TRADE_CODE, jc.getTrade_code(),
+							ResourcesConstants.FIELD_TRADE_VALUE));
+				}
+				// 转换薪资范围
+				if (jc.getSalary_scope() != null) {
+					jc.setSalary_scope(dicDao.getDictByParam("hs_ub_company", "salary_scope", jc.getSalary_scope())
+							.get("value"));
+				}
+				// 转换公司规模
+				if (jc.getCom_size() != null) {
+					jc.setCom_size(dicDao.getDictByParam("hs_ub_company", "com_size", jc.getCom_size()).get("value"));
+				}
+				// 转换公司种类
+				if (jc.getCom_type() != null) {
+					jc.setCom_type(dicDao.getDictByParam("hs_ub_company", "com_type", jc.getCom_type()).get("value"));
+				}
+			}
+
+			// 获取basePath
+			HttpServletRequest request = ServletActionContext.getRequest();
+			String path = request.getContextPath();
+			String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ path + "/";
+			data.put("basePath", basePath);
+			data.put("jclist", jclist);
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("practiceexporttemp","practicefolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("practicetemp","practicefolder",bo.getUser_id(),data);
+		}
+		bo.setPractice_word_path(exprotSavePath);
+		bo.setPractice_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateEducation(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 教育经历
+		List<HsEducationBO> edulist = new ArrayList<HsEducationBO>();
+		List<HsEducationExtendBO> eduExtendList = new ArrayList<HsEducationExtendBO>();
+		edulist = eduDao.findByUserIdAndResId(user_id, res_id);
+		HsEducationExtendBO extendBO = null;
+		for (HsEducationBO educationBO : edulist) {
+			extendBO = new HsEducationExtendBO();
+			this.copyProperties(extendBO, educationBO);
+			Map<String, String> degree = dictFieldMapService.getDictValueByParam(educationBO.getTable_name(),
+					"edu_degree", educationBO.getEdu_degree());
+			extendBO.setEdu_degree_value(degree.get("value"));
+			if (StringUtils.isNotEmpty(educationBO.getMain_major_code())) {
+				extendBO.setMain_major_code_value(ArrayBoUtil.getValueByCode(ResourcesConstants.ARRAY_MAJOR,
+						ResourcesConstants.FIELD_MAJOR_CODE, educationBO.getMain_major_code(),
+						ResourcesConstants.FIELD_MAJOR_VALUE));
+			}
+			eduExtendList.add(extendBO);
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("edulist", eduExtendList);
+		String savePath = "";
+		String exprotSavePath = "";
+		if (eduExtendList != null && eduExtendList.size() > 0) {
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("educationexporttemp","educationfolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("educationtemp","educationfolder",bo.getUser_id(),data);
+		}
+		bo.setEducation_word_path(exprotSavePath);
+		bo.setEducation_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateCertificate(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 个人证书
+		List<HsCertificateBO> cerlist = new ArrayList<HsCertificateBO>();
+		cerlist = cerDao.findByUserIdAndResId(user_id, res_id);
+		HsCertificateExtendBO certificateExtendBO = null;
+		List<HsCertificateExtendBO> certificateExtendExtendList = new ArrayList<HsCertificateExtendBO>();
+		for (HsCertificateBO certificateBO : cerlist) {
+			certificateExtendBO = new HsCertificateExtendBO();
+			this.copyProperties(certificateExtendBO, certificateBO);
+			if (StringUtils.isNotEmpty(certificateBO.getCerti_name())) {
+				certificateExtendBO.setCerti_code_value(certificateBO.getCerti_name());
+			} else {
+				Map<String, String> certi_code_value = dictFieldMapService.getDictValueByParam(
+						certificateBO.getTable_name(), "certi_code", certificateBO.getCerti_code());
+				certificateExtendBO.setCerti_code_value(certi_code_value.get("value"));
+			}
+			certificateExtendExtendList.add(certificateExtendBO);
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("cerlist", certificateExtendExtendList);
+		String savePath = "";
+		String exprotSavePath = "";
+		if (certificateExtendExtendList != null && certificateExtendExtendList.size() > 0) {
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("certificateexporttemp","certificatefolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("certificatetemp","certificatefolder",bo.getUser_id(),data);
+		}
+		bo.setCertificate_word_path(exprotSavePath);
+		bo.setCertificate_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateTrain(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 培训经历
+		List<HsTrainingBO> trainlist = new ArrayList<HsTrainingBO>();
+		trainlist = trainingDao.findByUserIdAndResId(user_id, res_id);
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("trainlist", trainlist);
+		String savePath = "";
+		String exprotSavePath = "";
+		if (trainlist != null && trainlist.size() > 0) {
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("trainexporttemp","trainfolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("traintemp","trainfolder",bo.getUser_id(),data);
+		}
+		bo.setTrain_word_path(exprotSavePath);
+		bo.setTrain_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateProject(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 项目经历
+		List<HsResumejobexperienceBO> jobexperiencelist = new ArrayList<HsResumejobexperienceBO>();
+		jobexperiencelist = jobexpDao.findByUserIdAndResId(user_id, res_id);
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("jobexperiencelist", jobexperiencelist);
+		String savePath = "";
+		String exprotSavePath = "";
+		if (jobexperiencelist != null && jobexperiencelist.size() > 0) {
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("projectexporttemp","projectfolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("projecttemp","projectfolder",bo.getUser_id(),data);
+		}
+		bo.setProject_word_path(exprotSavePath);
+		bo.setProject_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+
+	@Override
+	public String generateSkill(HsResumeBO bo) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		// 当前登录用户Id
+		String user_id = bo.getUser_id();
+		String res_id = bo.getId();
+		// 个人技能
+		List<HsCustomSkillBO> cslist = new ArrayList<HsCustomSkillBO>();
+		cslist = csDao.findByUserIdAndResId(user_id, res_id);
+
+		HsCustomSkillExtendBO skillExtendBO = null;
+		List<HsCustomSkillExtendBO> skillExtendList = new ArrayList<HsCustomSkillExtendBO>();
+		for (HsCustomSkillBO customSkillBO : cslist) {
+			skillExtendBO = new HsCustomSkillExtendBO();
+			this.copyProperties(skillExtendBO, customSkillBO);
+			if (StringUtils.isNotEmpty(customSkillBO.getProfessional_name())) {
+				skillExtendBO.setProfessional_value(customSkillBO.getProfessional_name());
+			} else {
+				Map<String, String> professional = dictFieldMapService.getDictValueByParam(
+						customSkillBO.getTable_name(), "professional_code", customSkillBO.getProfessional_code());
+				skillExtendBO.setProfessional_value(professional.get("value"));
+			}
+			skillExtendBO.setLevel_value(dicDao.getDictByParam("hs_custom_skill", "level", customSkillBO.getLevel())
+					.get("value"));
+			skillExtendList.add(skillExtendBO);
+		}
+		// 获取basePath
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		data.put("basePath", basePath);
+		data.put("cslist", skillExtendList);
+		String savePath = "";
+		String exprotSavePath = "";
+		if (skillExtendList != null && skillExtendList.size() > 0) {
+			//生成word导出模板
+			exprotSavePath=this.generateExportHtml("skillexporttemp","skillfolder",bo.getUser_id(),data);
+			//简历预览
+			savePath=this.generateViewHtml("skilltemp","skillfolder",bo.getUser_id(),data);
+		}
+		bo.setSkill_word_path(exprotSavePath);
+		bo.setSkill_path(savePath);
+		resumeDao.update(bo);
+		return savePath;
+	}
+	
+	/**
+	 * 简历预览静态文件生成
+	 * @return
+	 */
+	private String generateViewHtml(String tempKey,String tempFolde,String userID,Map<String, Object> data){
+		String filesysPath = PropertiesUtil.getProperty(ResourcesConstants.UPLOAD_PATH);
+		String templetPath = PropertiesUtil.getProperty(tempKey);
+		String savePath = createHtmlPath(filesysPath, userID + "/" + PropertiesUtil.getProperty(tempFolde));
+		String htmlPath =filesysPath + savePath;
+		ServletContext context = ServletActionContext.getServletContext();		
+		FreemakerUtil.createHTML(context, data, templetPath, htmlPath);
+		return savePath;
+	}
+	
+	/**
+	 * 简历导出静态文件生成
+	 * @return
+	 */
+	private String generateExportHtml(String tempKey,String tempFolde,String userID,Map<String, Object> data){
+		String filesysPath = PropertiesUtil.getProperty(ResourcesConstants.UPLOAD_PATH);
+		String templetPath = PropertiesUtil.getProperty(tempKey);
+		String savePath = createExportPath(filesysPath, userID + "/" + PropertiesUtil.getProperty(tempFolde));
+		String htmlPath =filesysPath + savePath;
+		ServletContext context = ServletActionContext.getServletContext();		
+		FreemakerUtil.createHTML(context, data, templetPath, htmlPath);
+		return savePath;
+	}
+	
+	/**
+	 * 生成HTML路径
+	 * 
+	 * @return
+	 */
+	private String createExportPath(String filesysPath,String savePath) {
+		
+		String htmlpath = filesysPath + PropertiesUtil.getProperty("resumeexportfolder") + savePath;
+		File file = new File(htmlpath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		String path = PropertiesUtil.getProperty("resumeexportfolder") + savePath;
+		String name = createHtmlName() + ".html";
+		path += name;
+		return path;
+	}
+
+	@Override
+	public List<String> fetchWorData(UserSessionBean userSessionBean) {
+		List<String> htmlList=new ArrayList<String>();
+		String photoHtml=null;
+		//根据简历ID查找静态导出文件的路径
+		String resID = userSessionBean.getRes_id();
+		
+		HsResumeBO resumeBO = this.getByPk(resID);
+		Map<String,Object> param = new HashMap<String, Object>();
+		StringBuffer html = new StringBuffer();
+		// 生成简历名称和学习路径
+		HsLearnpathBO pathBo = new HsLearnpathBO();
+		String id_card = "";
+		if (null != SeentaoApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY)) {
+			id_card = userSessionBean
+					.getIdentity_card();
+		}
+		pathBo.setIdentity_card(id_card);
+		//查询学习路径数据
+		List<SupperBO> pathlist = pathDao.selectByIdentityCard(pathBo);
+		String res_name = userSessionBean.getRes_name();
+		param.put("res_name", res_name);
+		param.put("pathlist", pathlist);
+		ServletContext context = ServletActionContext.getServletContext();		
+		//简历名称
+		String resumetemplate =putService.getHtmlTopByTemplet(PropertiesUtil.getProperty("resumeexporttemplet"), param, context);
+		//学习路径
+		String learntemplate =putService.getHtmlTopByTemplet(PropertiesUtil.getProperty("learnexporttemp"), param, context);
+		html.append(resumetemplate);
+		//拼装简历各模块word数据
+		try {
+			html.append(this.appendContent(resumeBO.getBaseinfo_word_path()));
+			html.append(this.appendContent(resumeBO.getDesire_word_path()));
+			html.append(this.appendContent(resumeBO.getEducation_word_path()));
+			html.append(this.appendContent(resumeBO.getEvaluate_word_path()));
+			html.append(this.appendContent(resumeBO.getPractice_word_path()));
+			html.append(this.appendContent(resumeBO.getProject_word_path()));
+			html.append(this.appendContent(resumeBO.getSkill_word_path()));
+			html.append(this.appendContent(resumeBO.getTrain_word_path()));
+			html.append(this.appendContent(resumeBO.getCertificate_word_path()));
+			//处理头像
+			if(StringUtils.isNotEmpty(userSessionBean.getPhoto_url())){
+				photoHtml=this.appendContent(resumeBO.getPhoto_word_path());
+			}
+		} catch (Exception e) {
+			logger.error("拼装简历内容失败！",e);
+		}
+		html.append(learntemplate);
+		//生成简历word
+		htmlList.add(html.toString());
+		if(photoHtml != null)
+			htmlList.add(photoHtml);
+		
+		
+		
+		return htmlList;
+	}
+
+	private String appendContent(String path) throws Exception{
+		String savePath = PropertiesUtil.getProperty(ResourcesConstants.UPLOAD_PATH);
+		String content="";
+		if(StringUtils.isNotEmpty(path)){
+			content= ReadTextUtil.getText( savePath + path).trim();
+		}
+		return content;
+	}
+	
+	/**
+	 * 读取word2007模版，并替换
+	 * @param docxPath 模板地址
+	 * @param tempPath 生成的word文件地址
+	 * @param content word简历内容
+	 * @return
+	 * @throws Exception
+	 */
+	public String generateWord(String docxPath, String tempPath,UserSessionBean userSessionBean,List<String> htmlList) throws Exception {
+		String content=htmlList.get(0);
+		String photoContent="";
+		if(htmlList.size()==2){
+			photoContent=htmlList.get(1);
+		}
+		// 读取模版
+		ZipFile docxFile = new ZipFile(new File(docxPath));
+		ZipEntry documentXML = docxFile.getEntry("word/document.xml");
+		InputStream documentXMLIS = docxFile.getInputStream(documentXML);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		Document doc = dbf.newDocumentBuilder().parse(documentXMLIS);
+
+		Transformer t = TransformerFactory.newInstance().newTransformer();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		t.transform(new DOMSource(doc), new StreamResult(baos));
+		String fileName = tempPath + "\\" + userSessionBean.getRes_id()
+				+ ".docx";
+		ZipOutputStream docxOutFile = new ZipOutputStream(new FileOutputStream(
+				fileName));
+		Enumeration entriesIter = docxFile.entries();
+		while (entriesIter.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) entriesIter.nextElement();
+			if (entry.getName().equals("word/document.xml")) {
+				byte[] data =content.trim().getBytes("UTF-8");
+				docxOutFile.putNextEntry(new ZipEntry(entry.getName()));
+				docxOutFile.write(data, 0, data.length);
+				docxOutFile.closeEntry();
+			}else{
+				if(StringUtils.isNotEmpty(photoContent)
+						&&entry.getName().equals("word/_rels/document.xml.rels")){
+					byte[] data =photoContent.trim().getBytes("UTF-8");
+					docxOutFile.putNextEntry(new ZipEntry(entry.getName()));
+					docxOutFile.write(data, 0, data.length);
+					docxOutFile.closeEntry();
+				}else{
+					InputStream incoming = docxFile.getInputStream(entry);
+					byte[] data = new byte[1024];
+					int readCount;
+					docxOutFile.putNextEntry(new ZipEntry(entry.getName()));
+					while ((readCount = incoming.read(data, 0, data.length)) != -1) {
+						docxOutFile.write(data, 0, readCount);
+					}
+					docxOutFile.closeEntry();
+				}	
+			}
+		}
+		docxOutFile.flush();
+		docxOutFile.close();
+		return fileName;
+	}
+}

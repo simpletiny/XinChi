@@ -1,0 +1,100 @@
+package seentao.xhsn.sys.dictionary.action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.json.annotations.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsDictionaryBO;
+import seentao.xhsn.bean.HsJobBO;
+import seentao.xhsn.sys.dictionary.service.IDictionaryService;
+import seentao.xhsn.tools.Page;
+
+
+/**
+ * @Description:字典信息填写和修改
+ * @author 李君彦
+ * @date 2014-11-24 下午3:07:41 
+ * @version V1.0   
+ */
+
+@Controller
+@Scope("prototype")
+public class DictionaryAction{
+	
+	private HsDictionaryBO bo;
+	private List<HsDictionaryBO> boList;
+
+	private Page<HsJobBO> page;
+	
+	@Autowired
+	private IDictionaryService dictionaryService;
+	
+	/**
+	 * 新增
+	 * @return
+	 */
+	public String addOrUpdateDictionary(){
+		if(StringUtils.isNotEmpty(bo.getId()))
+			dictionaryService.update(bo);
+		else
+			dictionaryService.insert(bo);
+		return "SUCCESS";
+	}
+	
+	public String updateDictionary(){
+		dictionaryService.update(bo);
+		return "SUCCESS";
+	}
+	
+	public String delDictionary(){
+		dictionaryService.delete(bo.getId());
+		return "SUCCESS";
+	}
+	
+	@JSON(serialize=false)
+	public String getAllDictionary(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", bo);
+		page.setParams(params );
+		boList = dictionaryService.getAllByPage(page);
+		return "SUCCESS";
+	}
+	
+	@JSON(serialize=false)
+	public String getDictionary(){
+		bo=dictionaryService.selectByPrimaryKey(bo.getId());
+		return "SUCCESS";
+	}
+	
+	public HsDictionaryBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsDictionaryBO bo) {
+		this.bo = bo;
+	}
+
+	public List<HsDictionaryBO> getBoList() {
+		return boList;
+	}
+
+	public void setBoList(List<HsDictionaryBO> boList) {
+		this.boList = boList;
+	}
+
+	public Page<HsJobBO> getPage() {
+		return page;
+	}
+
+	public void setPage(Page<HsJobBO> page) {
+		this.page = page;
+	}
+	
+	
+}

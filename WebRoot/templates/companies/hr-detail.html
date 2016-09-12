@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 更新HR信息
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <input type="hidden" id="hidden_contact_id" value="{{ contactId }}">
+  <div class="main-body" xmlns="http://www.w3.org/1999/html">
+    <div class="subtitle">
+        <div style="float: left;"><h2>查看HR信息<a href="/companies/{{ companyId }}/hrs" class="cancel-create">返回</a></h2></div>
+        <div style="padding: 22px 0 0 250px;"><a href="/companies/{{ companyId }}/hrs/{{ contactId }}/edit" class="btn btn-green btn-r">编辑</a></div>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div align="right" style="padding-bottom: 10px;"><a href="javascript:void(0)" id="platform-id-btn" class="btn btn-green btn-r">绑定平台账号</a><a href="javascript:void(0)" id="create-contact-record-btn" class="btn btn-green btn-r">添加联系记录</a></div>
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">姓名</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: contact().name"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">职位</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: contact().position"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">固话</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().phone"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">手机</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().mobile"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">邮箱</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: contact().email"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">QQ</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().qq"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">决策权限</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().permission"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">状态</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().status"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">利益诉求</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contact().interestDemand"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">备注信息</label>
+                        <div class="ip"><p class="ip-default" rows="5" data-bind="text: contact().comment"></p></div>
+                    </div>
+                </div>
+
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">平台账号绑定</label>
+                        <!-- ko if: contact().employeeId() != null -->
+                        <div class="ip"><p class="ip-default"><a href="javascript:void(0)" target="_blank" data-bind="attr: {href: '/employees/' + contact().employeeId() + '/detail'}">已绑定</a></p></div>
+                        <!-- /ko -->
+                        <!-- ko if: contact().employeeId() == null -->
+                        <div class="ip"><p class="ip-default">未绑定平台账号</p></div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div>
+    <div id="page-create-contact-record" style=" display: none; width: 550px; padding-top: 30px;">
+        <div class="input-row clearfloat">
+            <label class="l">联系方式</label>
+            <div class="ip"><select class="form-control" data-bind="options: contactWays, value: contactRecord().contactWay"></select></div>
+        </div>
+        <div class="input-row clearfloat">
+            <label class="l">计划联系时间</label>
+            <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: contactRecord().nextContactTime" placeholder="年-月-日"/></div>
+        </div>
+        <div class="input-row clearfloat">
+            <label class="l">销售进程</label>
+            <div class="ip"><select class="form-control" data-bind="options: allProgress, value: contactRecord().saleProgress"></select></div>
+        </div>
+        <div class="input-row clearfloat">
+            <label class="l">内容记录</label>
+            <div class="ip"><textarea type="text" class="ip-" rows="4" data-bind="value: contactRecord().content" placeholder="内容记录"></textarea></div>
+        </div>
+        <div align="right" style="padding-top: 30px; padding-right: 50px;"><a class="btn btn-green btn-r" data-bind="click: createContactRecord">确定</a></div>
+    </div>
+
+    <div id="page-platform-id" style=" display: none; width: 320px; padding-top: 30px;">
+        <div id="display-employee">
+            <div class="input-row clearfloat" style="width: 400px;">
+                <div class="ip"><select class="form-control" data-bind="options: hrEmployees, optionsCaption: '-- 请选择 --', optionsText: 'employeeName', optionsValue: 'id', value: chosenEmployeeId"></select></div>
+            </div>
+
+            <div align="center" style="padding-top: 40px;"><a class="btn btn-green btn-r" data-bind="click: bindEmployee">绑定账号</a></div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/hr/hr-edit.js{{ _suffix_ }}"></script>
+{% endblock %}

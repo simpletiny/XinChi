@@ -1,0 +1,69 @@
+package seentao.xhsn.person.train.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsTrainingBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.train.dao.ITrainingDAO;
+import seentao.xhsn.person.train.service.ITrainingService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+@Service
+@Transactional
+public class TrainingServiceImpl implements ITrainingService{
+
+	@Autowired
+	private ITrainingDAO dao;
+	@Autowired
+	private ILeftMenuService lmService;
+	
+	@Override
+	public void insert(HsTrainingBO bo) {
+		dao.insert(bo);
+		lmService.updateByParam(bo.getTable_name(),DictionaryEnum.MENU_TOTALLY.getStringValue());
+	}
+
+	@Override
+	public void update(HsTrainingBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsTrainingBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsTrainingBO> getAllByParam(HsTrainingBO bo) {
+		return dao.getAllByParam(bo);
+	}
+
+	@Override
+	public void delTraining(String id) {
+		this.delete(id);
+		//更新菜单
+		HsTrainingBO paramBO=new HsTrainingBO();
+		UserSessionBean sessionBean=(UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		paramBO.setRes_id(sessionBean.getRes_id());
+		paramBO.setUser_id(sessionBean.getUser_sys_id());
+		 List<HsTrainingBO> list = this.getAllByParam(paramBO);
+		if(list!=null&&list.size()>0){
+			lmService.updateByParam(paramBO.getTable_name(), DictionaryEnum.MENU_TOTALLY.getStringValue());
+		}else{
+			lmService.updateByParam(paramBO.getTable_name(), DictionaryEnum.MENU_NEVER.getStringValue());
+		}
+	}
+	
+}

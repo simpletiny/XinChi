@@ -1,0 +1,336 @@
+$(document).ready(function() {
+	$('.srmm').focus(function() {
+		$('.mima').css('display', 'none')
+	});
+	$('.srmm').blur(function() {
+
+		if ($('.srmm').val() != "") {
+			$('.mima').css('display', 'none');
+		} else {
+			$('.mima').css('display', 'block');
+		}
+	});
+
+	$('.srmm2').focus(function() {
+		$('.mima2').css('display', 'none')
+	});
+	$('.srmm2').blur(function() {
+
+		if ($('.srmm2').val() != "") {
+			$('.mima2').css('display', 'none');
+		} else {
+			$('.mima2').css('display', 'block');
+		}
+	});
+	$('.qr').focus(function() {
+		$('.qrmm').css('display', 'none')
+	});
+	$('.qr').blur(function() {
+
+		if ($('.qr').val() != "") {
+			$('.qrmm').css('display', 'none');
+		} else {
+			$('.qrmm').css('display', 'block');
+		}
+	});
+
+})
+
+function formsub() {
+	if (validateuser() & validateinfo()) {
+		var layIndex=layer.load('免费注册中,请稍候...', -1);
+		document.getElementById("myform").action = "share/regist_ent";
+		document.getElementById("myform").submit();
+	}
+}
+
+// 验证邮箱
+function validatemail() {
+	var flag_mail = false;
+
+	var mail_text = $('#user_email').val();
+	if($.trim(mail_text)==""||mail_text=="请填写您的注册邮箱"){
+		$('#user_email_err').text("邮箱不能为空！");
+		$("#user_email").val("请填写您的注册邮箱");
+		return false;
+	}
+	// 验证邮箱
+	//var myreg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+	var myreg = /^[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?$/;
+	if (mail_text && myreg.test(mail_text)) {
+		flag_mail = true;
+		$('#user_email_err').text("    ");
+	} else {
+		$('#user_email_err').text("邮箱格式有误！");
+	}
+	return flag_mail;
+}
+//验证用户名
+function validatename() {
+	var flag = true;
+	/*$('#user_name_err').text("");
+
+	var text_str = $('#user_name').val();
+
+	// 验证用户名
+	if (text_str.length <= 0) {
+		flag = false
+		$('#user_name_err').text("不能为空！");
+	} else if (text_str.length < 6) {
+		flag = false
+		$('#user_name_err').text("至少6个字符！");
+	}else if (text_str == "请填写您的用户名") {
+		flag = false
+		$('#user_name_err').text("请填写您的用户名！");
+	}*/
+
+	return flag;
+}
+// 验证密码
+function validatepswd() {
+	var flag_pswd = true;
+	$('#user_pwd_err').text("");
+
+	var pswd_text = $('#user_pwd').val();
+	var pswd2_text = $('#user_pwd2').val();
+
+	// 验证密码
+	if (pswd_text.length <= 0) {
+		flag_pswd = false
+		$('#user_pwd_err').text("不能为空！");
+	} else if (pswd_text.length < 6) {
+		flag_pswd = false
+		$('#user_pwd_err').text("至少6个字符！");
+	}
+	if(pswd2_text.length > 0){
+		if(pswd_text == pswd2_text){
+			$('#user_pwd2_err').text("");
+		}else{
+			flag_pswd = false
+			$('#user_pwd2_err').text("密码与确认密码输入不一致，请重新输入！");
+		}
+	}
+	return flag_pswd;
+}
+
+// 验证密码
+function validatepswd2() {
+	var flag_pswd = true;
+	$('#user_pwd2_err').text("");
+
+	var pswd_text = $('#user_pwd').val();
+	var pswd2_text = $('#user_pwd2').val();
+
+	if (!pswd2_text || pswd2_text.length <= 0) {
+		flag_pswd = false
+		$('#user_pwd2_err').text("不能为空！");
+	} else if (pswd_text != pswd2_text) {
+		flag_pswd = false
+		$('#user_pwd2_err').text("密码与确认密码输入不一致，请重新输入！");
+	}
+	return flag_pswd;
+}
+
+//校验账户信息
+function validateuser(){
+	if(validatename() & validatemail() & validatepswd() & validatepswd2()){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+//校验基本信息
+function validateinfo(){
+	if(validateEntName() & validateEntCounty() & validateEntpeople() & validatetelephone()){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+//校验联系人电话非空
+function validatetelephone(){
+	var flag = false;
+	if(validatetelephone_text() && validatetelephone_area()){
+		flag = true;
+	}
+	return flag;
+}
+
+function validatetelephone_text(){
+	var flag = true;
+	$('#com_telephone_err').text("");
+
+	var text_str = $('#com_telephone').val();
+	// 验证用户名
+	if (text_str.length <= 0 ) {
+		flag = false
+		$('#com_telephone_err').text("电话号码不能为空！");
+	} else if (text_str == "固定电话") {
+		flag = false
+		$('#com_telephone_err').text("请输入固定电话！");
+	} else if(!/^[0-9]*$/.test(text_str) ){
+		flag = false
+		$('#com_telephone_err').text("固定电话只能是数字！");
+	}
+	return flag;
+}
+function validatetelephone_area(){
+	var flag = true;
+	$('#com_telephone_err').text("");
+	var area_str = $('#area_code').val();
+	
+	//校验区号
+	if (area_str.length <= 0 ) {
+		flag = false
+		$('#com_telephone_err').text("区号不能为空！");
+	} else if (area_str == "区号") {
+		flag = false
+		$('#com_telephone_err').text("请输入区号！");
+	} else if(!/^[0-9]*$/.test(area_str) ){
+		flag = false
+		$('#com_telephone_err').text("区号只能是数字！");
+	}/*else if (extension_str == "分机号") {
+		flag = false
+		$('#com_telephone_err').text("请输入分机号！");
+	}*/
+	return flag;
+}
+
+//校验联系人非空
+function validateEntpeople(){
+	var flag = true;
+	$('#com_people_err').text("");
+
+	var text_str = $('#com_people').val();
+	// 验证用户名
+	if ( !text_str || text_str.length <= 0 ) {
+		flag = false
+		$('#com_people_err').text("不能为空！");
+	} else if (text_str == "联系人姓名") {
+		flag = false
+		$('#com_people_err').text("请输入联系人姓名！");
+	}
+	return flag;
+}
+
+//校验企业所在地非空
+function validateEntCounty(){
+	var flag = true;
+	$('#county_code_err').text("");
+
+	var btn_text_str = $('#btn_jobArea').val();
+	var text_str = $('#jobAreaID').val();
+
+	// 验证用户名
+	if (btn_text_str.length <= 0) {
+		flag = false
+		$('#county_code_err').text("不能为空！");
+	} else if (btn_text_str == "请选择") {
+		flag = false
+		$('#county_code_err').text("请输入企业名称！");
+	}
+	return flag;
+}
+
+//校验企业名称非空
+function validateEntName(){
+	var flag = true;
+	$('#ent_name_err').text("");
+
+	var text_str = $('#ent_name').val();
+
+	// 验证用户名
+	if (text_str.length <= 0) {
+		flag = false
+		$('#ent_name_err').text("不能为空！");
+	} else if (text_str.length < 2) {
+		flag = false
+		$('#ent_name_err').text("至少2个字符！");
+	} else if (text_str == "企业全称") {
+		flag = false
+		$('#ent_name_err').text("请输入企业名称！");
+	}
+
+	return flag;
+}
+
+//校验用户是否勾选同意协议
+function validatemobileAccept(){
+	var flag = $("#mobileAcceptIpt").attr("checked");
+	if(flag){
+		var essmg = "";
+	}else{
+		var essmg = "必须同意协议！";
+	}
+	$('#mobileAcceptIpt_err').text(essmg);
+}
+
+function checkEmail(){
+	var email = $("#user_email").val();
+	if(validatemail()){
+		var type = $("#user_type").val();
+		var dataParam = "bo.user_type=" + type + "&bo.user_email=" + email;
+		var action = "share/checkemail";
+		$.ajax({
+	        url: action,
+	        data: dataParam,
+	        type: "post",
+	        dataType: "json",
+	        success: function(data){
+	        	//handleResponse(data,action,param);
+	        	var flag = data.checkemail_flag;
+	        	$("#user_email_success").text("");
+	        	$("#user_email_err").text("");
+	        	if(flag){
+	        		$("#user_email_success").text(data.checkemail_msg);
+	        	}else{
+	        		$("#user_email_err").text(data.checkemail_msg);
+	        	}
+	        },
+	        error:function(data){
+	        	alert("操作失败，请稍后重试！");
+	        }
+		});
+	}
+}
+
+function agreelic(){
+	var flag = $("#mobileAcceptIpt").attr("checked");
+	if(flag){
+		$("#reg_btn").removeAttr("disabled");
+		$("#reg_btn").css("background","#38ac96");
+	}else{
+		$("#reg_btn").attr("disabled","disabled");
+		$("#reg_btn").css("background","#999999");
+	}
+}
+
+function validatePhoneNum(){
+	$('#com_phone_err').text("");
+	var text_str = $('#com_phone').val();
+	
+	/*if (text_str.length <= 0 ) {
+		flag = false
+		$('#com_phone_err').text("手机号码不能为空！");
+	} else if (text_str == "手机号码") {
+		flag = false
+		$('#com_phone_err').text("请输入手机号码！");
+	} else */
+	if(!/^[0-9]*$/.test(text_str) || text_str == "手机号码"){
+		$('#com_phone_err').text("手机号码只能是数字！");
+	}
+}
+
+//是否在数组内
+function in_array(needle, haystack) {
+	if(typeof needle == 'string' || typeof needle == 'number') {
+		for(var i in haystack) {
+			if(haystack[i] == needle) {
+					return true;
+			}
+		}
+	}
+	return false;
+}

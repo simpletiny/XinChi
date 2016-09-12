@@ -1,0 +1,33 @@
+package seentao.xhsn.sys.leftmenudate.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsPersonLeftmenuDataBO;
+import seentao.xhsn.sys.leftmenudate.dao.ILeftMenuDataDAO;
+import seentao.xhsn.sys.leftmenudate.service.ILeftMenuDataService;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月15日 下午5:54:57 
+ * @note 
+ */
+@Service
+public class LeftMenuDataServiceImpl implements ILeftMenuDataService{
+	@Autowired
+	private ILeftMenuDataDAO dao;
+	
+	
+	@Override
+	public void insert(HsPersonLeftmenuDataBO bo) {
+		dao.insert(bo);
+	}
+
+	@Override
+	public void updateScoreByParams(String user_id, String res_id, String tab_name, String class_name) {
+		
+		
+	}
+
+	
+}

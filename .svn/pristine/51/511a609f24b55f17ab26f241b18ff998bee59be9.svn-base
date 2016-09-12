@@ -1,0 +1,55 @@
+package seentao.xhsn.sys.leftmenudate.dao.impl;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsPersonLeftmenuDataBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.sys.leftmenudate.dao.ILeftMenuDataDAO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月15日 下午7:19:08 
+ * @note 
+ */
+@Service
+public class LeftMenuDataDAOImpl extends SqlSessionDaoSupport implements
+		ILeftMenuDataDAO {
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public String insert(HsPersonLeftmenuDataBO bo) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsPersonLeftmenuDataBOMapper.insert", bo);
+	}
+
+	@Override
+	public int updateScoreByParam(HsPersonLeftMenuBO param) {
+		return daoUtil.updateByBOParam("seentao.xhsn.bean.mappers.HsPersonLeftmenuDataBOMapper.updateByMenuParam", param);
+	}
+
+	@Override
+	public int deleteByParam(HsPersonLeftmenuDataBO param) {
+		return daoUtil.deleteByBOParam("seentao.xhsn.bean.mappers.HsPersonLeftmenuDataBOMapper.deleteByMenuParam", param);
+	}
+
+	@Override
+	public HsPersonLeftmenuDataBO getMenuDataByParam(String id, String user_id,
+			String res_id) {
+		HsPersonLeftmenuDataBO param = new HsPersonLeftmenuDataBO();
+		param.setMenu_id(id);
+		param.setUser_id(user_id);
+		param.setRes_id(res_id);
+		return daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsPersonLeftmenuDataBOMapper.selectMenuDataByParam", param);
+	}
+
+}

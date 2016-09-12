@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsTradeBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsTradeBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="trade_name" property="trade_name" jdbcType="VARCHAR" />
+	    <result column="trad_code" property="trad_code" jdbcType="VARCHAR" />
+	    <result column="parent_code" property="parent_code" jdbcType="VARCHAR" />
+	    <result column="ischild" property="ischild" jdbcType="BIT" />
+	    <result column="level" property="level" jdbcType="INTEGER" />
+	    <result column="hotspot" property="hotspot" jdbcType="INTEGER" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	trade_name, 
+    	trad_code, 
+    	parent_code, 
+    	ischild, 
+    	level, 
+    	hotspot, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_trade
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_trade
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsTradeBO" >
+  	
+    insert into hs_trade
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="trade_name != null">
+	        trade_name,
+	      </if>
+	 	<if test="trad_code != null">
+	        trad_code,
+	      </if>
+	 	<if test="parent_code != null">
+	        parent_code,
+	      </if>
+	 	<if test="ischild != null">
+	        ischild,
+	      </if>
+	 	<if test="level != null">
+	        level,
+	      </if>
+	 	<if test="hotspot != null">
+	        hotspot,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="trade_name != null">
+	        #{trade_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trad_code != null">
+	        #{trad_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parent_code != null">
+	        #{parent_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ischild != null">
+	        #{ischild,jdbcType=BIT},
+	      </if>
+    	<if test="level != null">
+	        #{level,jdbcType=INTEGER},
+	      </if>
+    	<if test="hotspot != null">
+	        #{hotspot,jdbcType=INTEGER},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsTradeBO" >
+    update hs_trade
+    <set >
+    	<if test="trade_name != null">
+	        trade_name = #{trade_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="trad_code != null">
+	        trad_code = #{trad_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parent_code != null">
+	        parent_code = #{parent_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ischild != null">
+	        ischild = #{ischild,jdbcType=BIT},
+	      </if>
+    	<if test="level != null">
+	        level = #{level,jdbcType=INTEGER},
+	      </if>
+    	<if test="hotspot != null">
+	        hotspot = #{hotspot,jdbcType=INTEGER},
+	      </if>
+       <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ 
+</mapper>

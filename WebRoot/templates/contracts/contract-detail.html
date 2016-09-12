@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 合同详情
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <input type="hidden" id="hidden_contract_id" value="{{ contractId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <div style="float: left;"><h2>合同信息<a href="/companies/{{ companyId }}/contracts" class="cancel-create">返回</a></h2></div>
+        <div style="padding: 22px 0 0 250px;"><a href="/companies/{{ companyId }}/contracts/{{ contractId }}/edit" class="btn btn-green btn-r">编辑</a></div>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">合同编号</label>
+                        <div class="ip"><p id="name" class="ip-default" data-bind="text: contract().number"></p></div>
+                        <!--p class="error"><i class="ic-error"></i>Your first name is.</p-->
+                    </div>
+                    <div class="col-md-6">
+                        <label for="price" class="l">合同状态</label>
+                        <div class="ip"><p id="price" class="ip-default" data-bind="text: contract().contractStatus"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">客户经理</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contract().customerManager"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">审批状态</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contract().approveStatus"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">开始日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: contract().startDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">结束日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: contract().endDate"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">收费方式</label>
+                        <div class="ip"><p class="ip-default" data-bind="html: contract().paymentMethod"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">保证期</label>
+                        <div class="ip"><p class="ip-" data-bind="text: contract().guaranteePeriod"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">备注信息</label>
+                        <div class="ip"><p class="ip-default" rows="5" data-bind="text: contract().comment"></p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/vendor/ckeditor/ckeditor.js"></script>
+  <script src="/static/vendor/ckeditor/adapters/jquery.js"></script>
+  <script src="/static/js/contracts/contract-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

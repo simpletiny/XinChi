@@ -1,0 +1,7 @@
+  <#if (evaluateBO??) >
+  <div>
+  <h4 style="background:url(${basePath}common/images/resume/images/zwpj2.png);"></h4>
+  	<p>${evaluateBO.content}</p>
+  </div>
+  </#if>
+          

@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* CSS Document */
+#main .dj{ line-height:40px; padding-left:460px;}
+#main .dj a{ font-size:13px; color:#767575; margin-left:15px;}
+#main .info{ background:#FFF;  position:relative; padding-top:20px; display:block;width:1024px}
+#main .info table td span{ margin-right:50px; font-size:16px;}
+#main ul li{ width:1024px; padding-bottom:15px;background:#FFF; border-bottom:2px solid #d7d6d6; margin-top:10px;}
+#main ul li h4{ line-height:40px; padding-left:55px; font-size:15px; color:#636262; font-weight:normal; position:relative;}
+#main ul li h4 span{ font-size:12px; position:absolute; left:900px;}
+#main ul li h5{ font-size:13px; padding-left:55px; line-height:22px; position:relative;}
+#main ul li h5 a{ font-size:12px; position:absolute; left:900px; font-weight:normal;}
+#main ul li p{ margin-left:55px; width:720px; line-height:1.8em;}
+
+.transparent {
+	left:0;
+	top:0;
+	position:absolute;
+	  filter:alpha(opacity=50);  
+	  -moz-opacity:0.5;  
+	  -khtml-opacity: 0.5;  
+	  opacity: 0.5;
+	  background:#000;
+	  z-index:10000;
+} 
+#tanchu{position:fixed;width:832px; z-index:100000; background:#e5ebe9; padding-bottom:20px;}
+#tanchu h4{ height:58px; position:relative;background:url(../images/tanchubg.png) top no-repeat;}
+#tanchu h4 a{ display:block; width:32px; height:32px; background:url(../images/close.png) no-repeat; position:absolute; left:762px; top:14px;}
+.tanchu_inner { width:582px; background:#FFF; margin-left:125px; margin-top:30px; background:FFF;}
+.tanchu_inner p{ line-height:50px; margin-left:50px;}
+

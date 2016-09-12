@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 项目管理
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <ul class="nav-subtitle">
+          <li role="presentation"><a data-id="project-detail" class="tab-link-title">项目介绍</a></li>
+          <li role="presentation"><a href="/projects/{{ projectId }}/phases" data-id="project-exec" class="tab-link-title">项目执行</a></li>
+          <li role="presentation" class="active"><a href="/projects/{{ projectId }}/report" data-id="project-analysis" class="tab-link-title">项目分析</a></li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div class="form-horizontal search-panel">
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">批次日期</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control date-picker" data-bind="value: batchDate" placeholder="日期">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: searchSummary">搜索</button>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-green" data-bind="click: exportResult">导出完整数据</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>类型</th>
+                            <th>日期</th>
+                            <th>短信人数</th>
+                            <th>预约人数</th>
+                            <th>签到人数</th>
+                            <th>面试人数</th>
+                            <th>offer人数</th>
+                            <th>入职人数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <!-- ko foreach: overallSummary -->
+                        <tr>
+                            <td>总数据</td>
+                            <td data-bind="text: $data.batchDate"></td>
+                            <td data-bind="text: $data.inviteCount"></td>
+                            <td data-bind="text: $data.reserveCount"></td>
+                            <td data-bind="text: $data.signInCount"></td>
+                            <td data-bind="text: $data.interviewCount"></td>
+                            <td data-bind="text: $data.offerCount"></td>
+                            <td data-bind="text: $data.onBoardCount"></td>
+                        </tr>
+                      <!-- /ko -->
+                      <!-- ko foreach: candidateSummary -->
+                        <tr>
+                            <td>短信转化率</td>
+                            <td data-bind="text: $data.batchDate"></td>
+                            <td data-bind="text: $data.inviteCount"></td>
+                            <td data-bind="text: $data.reserveCount"></td>
+                            <td data-bind="text: $data.signInCount"></td>
+                            <td data-bind="text: $data.interviewCount"></td>
+                            <td data-bind="text: $data.offerCount"></td>
+                            <td data-bind="text: $data.onBoardCount"></td>
+                        </tr>
+                      <!-- /ko -->
+                      <!-- ko foreach: reservationSummary -->
+                        <tr>
+                            <td data-bind="text: '预约转化率-' + $data.type"></td>
+                            <td data-bind="text: $data.batchDate"></td>
+                            <td data-bind="text: $data.inviteCount"></td>
+                            <td data-bind="text: $data.reserveCount"></td>
+                            <td data-bind="text: $data.signInCount"></td>
+                            <td data-bind="text: $data.interviewCount"></td>
+                            <td data-bind="text: $data.offerCount"></td>
+                            <td data-bind="text: $data.onBoardCount"></td>
+                        </tr>
+                      <!-- /ko -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script>
+        $(".projects").addClass("current").children("ol").css("display", "block");
+        $(".tab-title").on("click", function() {
+            $(this).parent().addClass("active").siblings(".active").removeClass("active");
+            $("#" + $(this).data("id")).show().siblings(".list-result").hide();
+        });
+    </script>
+    <script src="/static/js/projects/project-report.js{{ _suffix_ }}"></script>
+{% endblock %}

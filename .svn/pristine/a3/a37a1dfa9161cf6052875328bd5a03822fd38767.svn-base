@@ -1,0 +1,75 @@
+package seentao.xhsn.enterprise.sendInform.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import seentao.xhsn.bean.HsInterviewInformBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.enterprise.sendInform.dao.ISendInformDAO;
+import seentao.xhsn.tools.Page;
+
+/**
+ * @author wjx
+ * @date 2014年12月4日 下午3:37:37
+ * @note 发送面试通知DAO的实现类
+ */
+@Service
+@Scope("prototype")
+public class SendInformDAOImpl extends SqlSessionDaoSupport implements ISendInformDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
+		}
+	}
+
+	@Override
+	public String insert(HsInterviewInformBO informBO) {
+		return daoUtil.insertBO("seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.insert", informBO);
+	}
+
+	@Override
+	public List<HsInterviewInformBO> findByUserIdAndResId(String user_id, String res_id) {
+		HsInterviewInformBO bo = new HsInterviewInformBO();
+		bo.setUser_id(user_id);
+		bo.setRes_id(res_id);
+		List<HsInterviewInformBO> list = daoUtil.selectByBOParamT(
+				"seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public int getInterviewCnt(String user_id, String res_id) {
+		HsInterviewInformBO bo = new HsInterviewInformBO();
+		bo.setUser_id(user_id);
+		bo.setRes_id(res_id);
+
+		return daoUtil.selectOneValueByParam("seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.selectCountByParam",
+				bo);
+	}
+
+	@Override
+	public List<HsInterviewInformBO> findInterviewByPage(Page<HsInterviewInformBO> page) {
+		return daoUtil.selectByParam("seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.selectByPage", page);
+	}
+
+	@Override
+	public HsInterviewInformBO getByPK(String id) {
+		return (HsInterviewInformBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public int updateByParam(HsInterviewInformBO informBO) {
+		return daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsInterviewInformBOMapper.updateByPrimaryKey", informBO);
+	}
+
+	
+}

@@ -1,0 +1,49 @@
+package seentao.xhsn.sys.trade.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsTradeBO;
+import seentao.xhsn.sys.trade.dao.ITradeDAO;
+import seentao.xhsn.sys.trade.service.ITradeService;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月7日 下午2:06:17 
+ * @note 
+ */
+@Service
+@Transactional
+public class TradeServiceImpl implements ITradeService {
+
+	@Autowired
+	private ITradeDAO dao;
+	
+	@Override
+	public List<HsTradeBO> findAllTrade() {
+		return dao.findAllTrade();
+	}
+
+	@Override
+	public HsTradeBO getByPK(String id) {
+		return dao.getByPK(id);
+	}
+
+	@Override
+	public int saveTrade(HsTradeBO bo) {
+		if(bo.getId() != null && bo.getId().length() > 0){
+			return dao.updateTrade(bo);
+		}else{
+			return dao.insertTrade(bo) != null ? 1 : 0 ;
+		}
+	}
+
+	@Override
+	public int deleteTrade(String id) {
+		return dao.deleteTrade(id);
+	}
+
+}

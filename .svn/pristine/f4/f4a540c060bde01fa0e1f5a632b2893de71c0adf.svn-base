@@ -1,0 +1,177 @@
+package seentao.xhsn.findpswd.action;
+
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.findpswd.service.IFindPswdService;
+import seentao.xhsn.regist.service.IRegistService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月30日 上午10:44:33 
+ * @note 忘记密码|| 找回密码 的action
+ */
+@Controller
+@Scope("prototype")
+public class FindPSWDAction extends ActionSupport{
+
+	private static final long serialVersionUID = 55611791723569078L;
+	
+	@Autowired
+	private IFindPswdService service;
+	
+	@Autowired
+	private IRegistService registService;
+	
+	private HsUserBO bo;
+	private String id;
+	private String user_email;
+	private String verification_code;
+	private String tip;
+	private boolean page_flag;
+	
+	/**
+	 * 发邮箱发送验证码
+	 * @return
+	 */
+	public String sendEmailByFindPswd(){
+		if(validateEmail(bo.getUser_email())){
+			page_flag = this.service.sendEmailByFindPswd(bo.getUser_email());
+			if(page_flag){
+				tip = "验证码发送成功！";
+			}else{
+				tip = "该邮箱不存在！";
+			}
+		}
+		return "SUCCESS";
+	}
+	
+	/**
+	 * 验证邮箱和验证码
+	 * @return
+	 */
+	public String validateEmailAndVerification(){
+		if(validateEmail(bo.getUser_email()) && validateverification_code(bo.getVerification_code())){
+			//验证邮箱和验证码
+			int type = Integer.parseInt(DictionaryEnum.ENTERPRISE_TYPE.getStringValue());
+			List<HsUserBO> users = registService.findUserByTypeAndEmail(type, bo.getUser_email());
+			if(users != null && users.size() > 0 && users.get(0) != null && users.get(0).getId() != null){
+				HsUserBO user = users.get(0);
+				if(bo.getUser_email().equals(user.getUser_email()) && bo.getVerification_code().equalsIgnoreCase(user.getVerification_code())){
+					//验证码的有效期
+					long dif = System.currentTimeMillis() - user.getUser_opentime().getTime();
+					if(dif > 600000){
+						tip = "验证码已失效";
+						return "FAIL";
+					}else{
+						//修改验证码
+						service.updateVerification(user);
+						id = user.getId();
+					}
+				}else{
+					tip = "无效的验证码";
+					return "FAIL";
+				}
+			}else{
+				tip = "该邮箱不存在";
+				return "FAIL";
+			}
+			
+		}
+		return "SUCCESS";
+	}
+	
+	/**
+	 * 根据邮箱来设置密码
+	 * @return
+	 */
+	public String setPswdByEmail(){
+		//验证两次密码是否一致
+		if(bo != null && bo.getUser_pwd().equals(bo.getUser_pwd2())){
+			//保存到数据库中
+			service.updateVerification(bo);
+		}
+
+		return "SUCCESS";
+	}
+	
+	
+
+	private boolean validateEmail(String email) {
+		if (StringUtils.isEmpty(email)) {
+			this.tip = getText("邮箱不能为空");
+			return false;
+		}
+		String reg = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
+		if (!email.matches(reg)) {
+			this.tip = getText("邮箱格式不正确");
+			return false;
+		}
+		return true;
+	}
+	private boolean validateverification_code(String verification_code) {
+		if (StringUtils.isEmpty(verification_code)) {
+			this.tip = getText("验证码不能为空");
+			return false;
+		}
+		return true;
+	}
+
+	public String getUser_email() {
+		return user_email;
+	}
+
+	public void setUser_email(String user_email) {
+		this.user_email = user_email;
+	}
+
+	public String getTip() {
+		return tip;
+	}
+
+	public void setTip(String tip) {
+		this.tip = tip;
+	}
+
+	public String getVerification_code() {
+		return verification_code;
+	}
+
+	public void setVerification_code(String verification_code) {
+		this.verification_code = verification_code;
+	}
+
+	public HsUserBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsUserBO bo) {
+		this.bo = bo;
+	}
+
+	public boolean isPage_flag() {
+		return page_flag;
+	}
+
+	public void setPage_flag(boolean page_flag) {
+		this.page_flag = page_flag;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+}

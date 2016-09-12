@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+</head>
+<body>
+    <script src="/static/vendor/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/messages_zh.min.js"></script>
+    <input type="hidden" id="hidden_apiurl" value="{{ config.APIURL }}">
+    <input type="hidden" id="hidden_projectId" value="{{ projectId }}">
+    <input type="hidden" id="hidden_message_type" value="sms">
+    <div>
+        <form class="form-box info-form">
+            <div class="input-row clearfloat required">
+                <label class="l">短信批次名称</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: smsBatch().name" placeholder="短信批次名称" name="name" required="required"/></div>
+            </div>
+            <div class="input-row clearfloat">
+                <label class="l">短信模板号</label>
+                <div class="ip"><input type="text" class="ip-default" data-bind="value: smsBatch().messageTemplateId" placeholder="短信模板号" name="messageTemplateId"/></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">短信内容</label>
+                <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: smsBatch().content" placeholder="短信内容 [[姓名]]会替换成用户姓名"></textarea></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">面试时间</label>
+                <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: smsBatch().batchDate" placeholder="面试时间"/></div>
+            </div>
+            <div class="input-row clearfloat required">
+                <label class="l">短信供应商</label>
+                <div class="ip"><select class="form-control" data-bind="options: providers, optionsCaption: '-- 请选择 --', value: smsBatch().provider" name="provider" required="required"></select></div>
+            </div>
+        </form>
+        <div align="right" style="padding-top: 0px; padding-right: 100px;">
+            <a type="submit" class="btn btn-green btn-r" data-bind="click: createBatch">保存</a>
+        </div>
+    </div>
+
+    <script src="/static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
+    <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="/static/vendor/knockout-3.2.0.js"></script>
+    <script src="/static/js/projects/sms-batch-creation.js{{ _suffix_ }}"></script>
+    <script src="/static/js/datepicker.js{{ _suffix_ }}"></script>
+    <script src="/static/js/utils.js{{ _suffix_ }}"></script>
+    <script src="/static/js/validation.js{{ _suffix_ }}"></script>
+</body>
+</html>

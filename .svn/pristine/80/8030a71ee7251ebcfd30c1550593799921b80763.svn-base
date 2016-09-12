@@ -1,0 +1,55 @@
+//工作地点
+var ja = [];
+// 主要城市数据字典
+var maincity = [];
+// 所有省份数据字典
+var allprov = [];
+
+$(document).ready(function() {
+	refreshCityArray();
+});
+
+function refreshCityArray() {
+	// 初始化城市数据
+	var basePath = window['basePath'];
+	$.ajax({
+		url : basePath + 'sys/cityInit',
+		type : 'get',
+		data : 'json',
+		success : function(data) {
+			var bean = data.cdbean;
+			var codeList = bean.codeList;
+			var nameList = bean.nameList;
+			var mainCityList1 = bean.mainCityList1;
+			var mainCityList2 = bean.mainCityList2;
+			var mainCityList3 = bean.mainCityList3;
+			var mainCityList4 = bean.mainCityList4;
+			var provinceList1 = bean.provinceList1;
+			var provinceList2 = bean.provinceList2;
+			var provinceList3 = bean.provinceList3;
+			var provinceList4 = bean.provinceList4;
+			var provinceList5 = bean.provinceList5;
+			for (var i = 0; i < codeList.length; i++) {
+				ja[codeList[i]] = nameList[i];
+			}
+			maincity = [ [ '华北-东北', mainCityList1 ], [ '华东地区', mainCityList2 ],
+					[ '华南-华中', mainCityList3 ], [ '西北-西南', mainCityList4 ] ];
+
+			allprov = [ [ '华北-东北', provinceList1 ], [ '华东地区', provinceList2 ],
+					[ '华南-华中', provinceList3 ], [ '西北-西南', provinceList4 ],
+					[ '其它', provinceList5 ] ];
+			convertCityCode();
+
+		}
+	});
+
+}
+function getAreaIDs(idx) {
+	var newArr = new Array();
+	for ( var i in ja) {
+		if (i.substr(0, 2) == idx.substr(0, 2)) {
+			newArr[newArr.length] = i;
+		}
+	}
+	return newArr;
+}

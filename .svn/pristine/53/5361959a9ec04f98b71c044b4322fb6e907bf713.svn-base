@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="share" extends="default" namespace="/share">
+        <action name="registration" class="registAction" method="user_regist">
+            <interceptor-ref name="token" />      
+        	<interceptor-ref name="mystack" />      
+            <result name="invalid.token">mailvalidate/validatemail.jsp</result>      
+			<result name="SUCCESS">mailvalidate/validatemail.jsp</result>
+			<result name="input">register/registration.jsp</result>
+		</action>
+        <action name="regist_ent" class="registAction" method="user_regist_ent">
+            <interceptor-ref name="token" />      
+        	<interceptor-ref name="mystack" />      
+            <result name="invalid.token">register/regist_ent.jsp</result>      
+			<result name="SUCCESS">mailvalidate/validatemail.jsp</result>
+			<result name="FAIL">register/regist_ent.jsp</result>
+			<result name="input">register/regist_ent.jsp</result>
+		</action>
+		<!-- 验证邮箱的唯一 -->
+		<action name="checkemail" class="registAction" method="checkUserEmail">
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		
+		<!-- 忘记密码 |||  发送验证码 -->
+		<action name="sendEmailByFindPswd" class="findPSWDAction" method="sendEmailByFindPswd" >
+			<result name="SUCCESS" type="json"></result>
+		</action>
+		
+		<!-- 忘记密码 |||  验证邮箱和验证码 -->
+		<action name="validateEmailAndVerification" class="findPSWDAction" method="validateEmailAndVerification" >
+			<result name="SUCCESS" >findpassword/set_pswd.jsp</result>
+			<result name="FAIL" >findpassword/find_pswd_ent.jsp</result>
+		</action>
+		<!-- 忘记密码 |||  根据邮箱设置新的密码 -->
+		<action name="setPswdByEmail" class="findPSWDAction" method="setPswdByEmail" >
+			<result name="SUCCESS" >../login.jsp</result>
+		</action>
+		
+	</package> 
+	
+	
+</struts>

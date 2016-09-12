@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 项目管理
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>项目搜索</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-horizontal search-panel">
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">公司名称</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" data-bind="value: query().companyName" placeholder="公司名称" maxlength="20"
+                                   id="autocomplete-company-name" >
+                        </div>
+                    </div>
+                    <div class="span6">
+                         <label class="col-md-1 control-label">项目名称</label>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" data-bind="value: query().projectName" placeholder="项目名称"
+                                    id="autocomplete-project-name" >
+                         </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: searchProjects">搜索</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">项目进程</label>
+                        <div class="ip col-md-8">
+                            <div data-bind="foreach: projectPhases">
+                                <em class="small-box">
+                                    <input type="checkbox" name='projectPhases' data-bind="attr: {'value': $data}, checked: $root.query().projectProgress"/><label data-bind="text: $data"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">所属顾问</label>
+                        <div class="ip col-md-8">
+                            <div data-bind="foreach: projectManagers">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data.id}, checked: $root.query().projectManager"/><label data-bind="text: $data.employeeName"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th></th>
+                            <th>项目名称</th>
+                            <th>项目进度</th>
+                            <th>邀约人数</th>
+                            <th>预约人数</th>
+                            <th>到访人数</th>
+                            <th>面试人数</th>
+                            <th>Offer人数</th>
+                            <th>入职人数</th>
+                            <th>项目经理</th>
+                            <th>更新时间</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: projects">
+                        <tr>
+                            <td><input type="checkbox" data-bind="attr: {'value': $data.id}, checked: $root.chosenProjects"/></td>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.name, attr: {href: '/projects/' + $data.id + '/detail'}"></a></td>
+                            <td data-bind="text: $data.progress"></td>
+                            <td data-bind="text: $data.stat().inviteCount"></td>
+                            <td data-bind="text: $data.stat().reserveCount"></td>
+                            <td data-bind="text: $data.stat().signInCount"></td>
+                            <td data-bind="text: $data.stat().interviewCount"></td>
+                            <td data-bind="text: $data.stat().offerCount"></td>
+                            <td data-bind="text: $data.stat().onboardCount"></td>
+                            <td data-bind="text: $data.pmNames"></td>
+                            <td data-bind="text: moment($data.updatedTime).format('YYYY-MM-DD HH:mm')"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div>
+                <button type="submit" class="btn btn-green" data-bind="click: batchPublishJobs">职位批量发布</button>
+                <button type="submit" class="btn btn-green" data-bind="click: batchUnpublishJobs">职位批量下架</button>
+                <button type="submit" class="btn btn-green" data-bind="click: batchPublishProjects">项目批量发布</button>
+                <button type="submit" class="btn btn-green" data-bind="click: batchUnpublishProjects">项目批量下架</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    $(".projects").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/projects/projects.js{{ _suffix_ }}"></script>
+{% endblock %}

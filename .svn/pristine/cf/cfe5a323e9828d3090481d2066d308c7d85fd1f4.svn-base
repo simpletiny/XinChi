@@ -1,0 +1,45 @@
+package seentao.xhsn.sys.scorecatalog.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsScoreCatalogBO;
+import seentao.xhsn.sys.scorecatalog.dao.IScoreCatalogDAO;
+import seentao.xhsn.sys.scorecatalog.service.IScoreCatalogService;
+
+@Service
+@Transactional
+public class ScoreCatalogServiceImpl implements IScoreCatalogService{
+
+	@Autowired
+	private IScoreCatalogDAO dao;
+	
+	@Override
+	public void insert(HsScoreCatalogBO bo) {
+		dao.insert(bo);
+	}
+
+	@Override
+	public void update(HsScoreCatalogBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsScoreCatalogBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsScoreCatalogBO> getAllByParam(HsScoreCatalogBO bo) {
+		return dao.getAllByParam(bo);
+	}
+	
+}

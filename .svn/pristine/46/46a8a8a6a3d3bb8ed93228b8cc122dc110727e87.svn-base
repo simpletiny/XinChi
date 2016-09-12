@@ -1,0 +1,54 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+pageContext.setAttribute("basePath", basePath);
+%>
+<table  style="border:1px solid;border-collapse:collapse">
+				<s:iterator value="bigMajorList" id="major" status="no">
+				<s:if test="#no.Odd">
+				<tr>
+					<td style="width:200px;border:1px solid #7E9CF7;"  class="tdName1">
+						<span title="点击查看详细" style="color:blue;cursor:pointer;" onclick="watchDetail(this,'1')"><s:property value="#major.name"/></span>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;" class="tdCode1">
+						<s:property value="#major.code"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;" class="tdSort1">
+						<s:property value="#major.sort_no"/>
+					</td>
+					<td style="width:120px;border:1px solid #7E9CF7;" class="tdOperate1">
+						<span style="cursor:pointer;color:blue" onclick="deleteMajor(this,'1')">删除</span>
+						&nbsp;&nbsp;
+						<span style="cursor:pointer;color:blue" onclick="editMajor(this,'1')">编辑</span>
+					</td>
+					<td style="display:none">
+						<input type="hidden" value="${major.id }" class="txtMajorId1"/>
+						<input type="hidden" value="${major.code }" class="txtMajorCode1"/>
+					</td>
+				</s:if>
+				<s:else>
+					<td style="width:200px;border:1px solid #7E9CF7;"  class="tdName2">
+						<span title="点击查看详细" style="color:blue;cursor:pointer;" onclick="watchDetail(this,'2')"><s:property value="#major.name"/></span>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;" class="tdCode2">
+						<s:property value="#major.code"/>
+					</td>
+					<td style="width:100px;border:1px solid #7E9CF7;" class="tdSort2">
+						<s:property value="#major.sort_no"/>
+					</td>
+					<td style="width:120px;border:1px solid #7E9CF7;" class="tdOperate2">
+						<span style="cursor:pointer;color:blue" onclick="deleteMajor(this,'2')">删除</span>
+						&nbsp;&nbsp;
+						<span style="cursor:pointer;color:blue" onclick="editMajor(this,'2')">编辑</span>
+					</td>
+					<td style="display:none">
+						<input type="hidden" value="${major.id }" class="txtMajorId2"/>
+						<input type="hidden" value="${major.code }" class="txtMajorCode2"/>
+					</td>
+				</tr>
+				</s:else>
+		
+				</s:iterator>
+			</table>

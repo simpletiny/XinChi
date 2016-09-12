@@ -1,0 +1,18 @@
+package seentao.xhsn.person.jobexp.service;
+
+import seentao.xhsn.bean.HsResumejobexperienceBO;
+
+/**
+ * 项目经验Service
+ * @author wjx
+ *
+ */
+public interface IJobExpService {
+
+	/**
+	 * 插入项目经验
+	 * @param bo
+	 */
+	public void insert(HsResumejobexperienceBO bo);
+
+}

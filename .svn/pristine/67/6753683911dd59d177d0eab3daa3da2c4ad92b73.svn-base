@@ -1,0 +1,59 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsPositionCollectBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private java.lang.String user_id;
+
+	private java.lang.String res_id;
+
+	private java.lang.String job_id;
+
+	private java.sql.Timestamp collect_date;
+
+	private java.lang.Integer collect_duration;
+
+	public java.lang.String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(java.lang.String user_id) {
+		this.user_id = user_id;
+	}
+
+	public java.lang.String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(java.lang.String res_id) {
+		this.res_id = res_id;
+	}
+
+	public java.lang.String getJob_id() {
+		return job_id;
+	}
+
+	public void setJob_id(java.lang.String job_id) {
+		this.job_id = job_id;
+	}
+
+	public java.sql.Timestamp getCollect_date() {
+		return collect_date;
+	}
+
+	public void setCollect_date(java.sql.Timestamp collect_date) {
+		this.collect_date = collect_date;
+	}
+
+	public java.lang.Integer getCollect_duration() {
+		return collect_duration;
+	}
+
+	public void setCollect_duration(java.lang.Integer collect_duration) {
+		this.collect_duration = collect_duration;
+	}
+
+}

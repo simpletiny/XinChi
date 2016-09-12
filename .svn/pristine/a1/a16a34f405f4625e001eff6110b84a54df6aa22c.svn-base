@@ -1,0 +1,299 @@
+package seentao.xhsn.sys.enterpriseupload.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.ToolsUtil;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.sys.enterpriseupload.service.IEnterpriseUploadService;
+import seentao.xhsn.sys.learnpathupload.action.LearnPathUploadAction;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * @Description:企业上传
+ * @author 李君彦
+ * @date 2014-12-29 下午3:17:27 
+ * @version V1.0   
+ */
+@Controller
+@Scope("prototype")
+public class EnterpriseUploadAction extends ActionSupport{
+
+	private static final long serialVersionUID = 1L;
+	private Logger logger = Logger.getLogger(LearnPathUploadAction.class);
+
+	// 上传文件集合
+	private List<File> file;
+	// 上传文件名集合
+	private List<String> fileFileName;
+	// 上传文件内容类型集合
+	private List<String> fileContentType;
+	@Autowired
+	private IEnterpriseUploadService enterpriseUploadService;
+	
+	private String errorTip;
+
+	public String execute() throws BusinessException {
+		// 解析excel
+		if (file != null && file.size() > 0){
+			readExcel();
+		}
+		return null;
+	}
+	
+	private void readExcel() {
+		//导入准备 城市
+		BidiMap cityMap = null/*this.parseMap(ResourcesConstants.ARRAY_CITY)*/;
+		//职位
+		BidiMap jobMap = null/*this.parseMap(ResourcesConstants.ARRAY_JOB)*/;
+		//行业
+		BidiMap tradeMap = null/*this.parseMap(ResourcesConstants.ARRAY_TRADE)*/;
+		//企业基本信息
+		Map<String,HsEnterpriseBO> enterMap=new HashMap<String,HsEnterpriseBO>();
+		//发布职位
+		Map<String,List<HsEtpReleasejobBO>> releasejobMap=new HashMap<String,List<HsEtpReleasejobBO>>();
+		FileInputStream fis =null;
+		errorTip="";
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("UTF-8");
+		try {
+			fis = new FileInputStream(file.get(0));
+			Workbook book = Workbook.getWorkbook(fis);
+			Sheet sheet = book.getSheet(0);
+			HsEnterpriseBO enterpriseBO = null;
+			List<HsEtpReleasejobBO> releasejobList=null;
+			HsEtpReleasejobBO etpReleasejobBO=null;
+			Cell cell =null;
+			for (int rowNum = 1; rowNum < sheet.getRows(); rowNum++) {
+				//企业名称为空 
+				if(StringUtils.isEmpty(sheet.getCell(1, rowNum).getContents())){
+					continue;
+				}
+				cell = sheet.getCell(15, rowNum);
+				String mail=cell.getContents();
+				if(StringUtils.isEmpty(mail.trim())){
+					errorTip+=rowNum+"、";
+					continue;
+				}
+				// 全角转半角 
+				mail=ToolsUtil.ToDBC(mail.trim());
+				 String reg = ResourcesConstants.MAIL_REG;
+				 if (!mail.matches(reg)) {
+					 errorTip+=rowNum+"、";
+					 continue;
+				 }
+				 //@后字母小写
+				 mail=this.formatMail(mail.trim());
+				//非第一次扫描到企业信息
+				if(enterMap.containsKey(mail)){
+					releasejobList=releasejobMap.get(mail);
+					//拼装岗位数据
+					etpReleasejobBO = this.setReleaseJob(jobMap, sheet, rowNum, mail, tradeMap, cityMap);
+					if(releasejobList==null)
+						releasejobList=new ArrayList<HsEtpReleasejobBO>();
+					releasejobList.add(etpReleasejobBO);
+				}else{
+					//拼装企业信息数据
+					enterpriseBO = this.setEnterprise(jobMap, sheet, rowNum, tradeMap, cityMap);
+					enterMap.put(mail, enterpriseBO);
+					releasejobList=new ArrayList<HsEtpReleasejobBO>();
+					//拼装岗位数据
+					etpReleasejobBO = this.setReleaseJob(jobMap, sheet, rowNum, mail, tradeMap, cityMap);
+					releasejobList.add(etpReleasejobBO);
+					releasejobMap.put(mail, releasejobList);
+				}
+			}
+			enterpriseUploadService.save(enterMap,releasejobMap);
+			if(StringUtils.isNotEmpty(errorTip)){
+				errorTip+="行邮箱列数据错误，未导入！";
+				logger.info(errorTip);
+			}
+			response.getWriter().write("导入成功！"+errorTip);
+		} catch (Exception e) {
+			logger.error("导入失败!", e);
+			throw new BusinessException(e, "导入失败!");
+		} finally {
+			try {
+				if (fis != null)
+					fis.close();
+			} catch (IOException e) {
+				logger.error("导入失败!", e);
+				throw new BusinessException(e, "导入失败!");
+			}
+
+		}
+
+	}
+	
+	/**
+	 * 格式化邮箱 /@后字母小写
+	 * @return
+	 */
+	private  String formatMail(String mail){
+		//全角转半角 
+		String[] strs=mail.split("@");
+		mail=strs[0]+"@"+strs[1].toLowerCase();
+		return mail;
+	}
+
+	/**
+	 * 拼装企业信息数据
+	 * @param tradeMap 
+	 * @param cityMap 
+	 * @return
+	 */
+	private HsEnterpriseBO setEnterprise(BidiMap jobMap, Sheet sheet, int rowNum, BidiMap tradeMap, BidiMap cityMap) {
+		HsEnterpriseBO enterpriseBO;
+		enterpriseBO=new HsEnterpriseBO();
+		//企业名称
+		enterpriseBO.setEnt_name(sheet.getCell(1, rowNum).getContents());
+		//所在地
+		String city=sheet.getCell(6, rowNum).getContents();
+		city=city.length()>2?city.substring(2):city;
+		Object county_code=cityMap.getKey(city);
+		enterpriseBO.setCounty_code(county_code==null?"99":county_code.toString());
+		//座机
+//		String telephone=sheet.getCell(14, rowNum).getContents();
+//		if(StringUtils.isNotEmpty(telephone)){
+//			telephone=telephone.replace("（86）", "");
+//			int count=StringUtils.countMatches(telephone, "-");
+//			String[] str=telephone.split("-");
+//			enterpriseBO.setCom_telephone();
+//		}
+		//联系人
+		enterpriseBO.setCom_people(sheet.getCell(11, rowNum).getContents());
+		//手机号码
+		String phone=sheet.getCell(13, rowNum).getContents();
+		if(StringUtils.isNotEmpty(phone)&&phone.length()==11)
+			enterpriseBO.setCom_phone(sheet.getCell(13, rowNum).getContents());
+		//行业类别
+		Object trade_id=tradeMap.getKey(sheet.getCell(2, rowNum).getContents());
+		enterpriseBO.setTrade_code(trade_id==null?"30":trade_id.toString());
+		//公司简介
+		enterpriseBO.setCom_info(sheet.getCell(9, rowNum).getContents());
+		return enterpriseBO;
+	}
+
+	/**
+	 * 拼装岗位数据
+	 * @param tradeMap 
+	 * @param cityMap 
+	 */
+	private HsEtpReleasejobBO setReleaseJob(BidiMap jobMap, Sheet sheet,
+			int rowNum, String mail, BidiMap tradeMap, BidiMap cityMap) {
+		HsEtpReleasejobBO etpReleasejobBO=new HsEtpReleasejobBO();
+		//岗位名称
+		etpReleasejobBO.setRel_name(sheet.getCell(3, rowNum).getContents());
+		//发布时间
+		etpReleasejobBO.setRel_createtime(this.parseTimestamp(sheet.getCell(10, rowNum).getContents()));
+		//职位类别
+		Object job_id=jobMap.getKey(sheet.getCell(4, rowNum).getContents());
+		etpReleasejobBO.setJob_id(job_id==null?"0142":job_id.toString());
+		//行业类别
+		Object trade_id=tradeMap.getKey(sheet.getCell(2, rowNum).getContents());
+		etpReleasejobBO.setTrade_id(trade_id==null?"30":trade_id.toString());
+		//岗位性质
+		String pro=sheet.getCell(5, rowNum).getContents();
+		String proVal=null;
+		if("全职".equals(pro)){
+			proVal="1";
+		}else if("兼职".equals(pro)){
+			proVal="2";
+		}else if("实习".equals(pro)){
+			proVal="3";
+		}
+		etpReleasejobBO.setRel_property(proVal);
+		//描述
+		etpReleasejobBO.setRel_description(sheet.getCell(8, rowNum).getContents());
+		//月薪面议
+		etpReleasejobBO.setSalary_code("10");
+		etpReleasejobBO.setRel_count(sheet.getCell(7, rowNum).getContents());
+		etpReleasejobBO.setLinkman_email(mail);
+		etpReleasejobBO.setRel_status("1");//已发布
+		//工作地点
+		String city=sheet.getCell(6, rowNum).getContents();
+		city=city.length()>2?city.substring(2):city;
+		Object county_code=cityMap.getKey(city);
+		etpReleasejobBO.setCounty_code(county_code==null?"99":county_code.toString());
+		return etpReleasejobBO;
+	}
+	
+	private BidiMap parseMap(Map<String, String> map){
+		BidiMap bidiMap = new DualHashBidiMap(); 
+		bidiMap.putAll(map);
+		return bidiMap;
+	}
+	
+	
+	private Timestamp parseTimestamp(String str){
+		SimpleDateFormat df=new SimpleDateFormat("yyyy.MM.dd");
+		try {
+			Date date = df.parse(str);
+			return new Timestamp(date.getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<File> getFile() {
+		return file;
+	}
+
+	public void setFile(List<File> file) {
+		this.file = file;
+	}
+
+	public List<String> getFileFileName() {
+		return fileFileName;
+	}
+
+	public void setFileFileName(List<String> fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+
+	public List<String> getFileContentType() {
+		return fileContentType;
+	}
+
+	public void setFileContentType(List<String> fileContentType) {
+		this.fileContentType = fileContentType;
+	}
+
+	public String getErrorTip() {
+		return errorTip;
+	}
+
+	public void setErrorTip(String errorTip) {
+		this.errorTip = errorTip;
+	}
+	
+}

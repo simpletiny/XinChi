@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 修改员工信息
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_employee_id" value="{{ employeeId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>修改员工信息<a href="/employees/{{ employeeId }}/detail" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div align="right" style="padding-bottom: 10px;"><a href="/employees/{{ employeeId }}/edit" class="btn btn-green btn-r">编辑</a></div>
+            <form class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">员工编号</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: employee().id"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">登录名</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: employee().username"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">员工姓名</label>
+                        <div class="ip"><input type="text" class="ip-default" data-bind="value: employee().employeeName" placeholder="员工姓名" name="name" required="required"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <label class="l">员工角色</label>
+                        <div class="ip">
+                            <div data-bind="foreach: allRoles" style="padding-top: 4px;">
+                                <em class="small-box">
+                                    <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.employee().roles"/><label data-bind="text: $root.roleMapping[$data]"></label>
+                                </em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div align="right"><a class="btn btn-green btn-r" data-bind="click: updateEmployee">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script>
+      $(".employees").addClass("current").children("ol").css("display", "block");
+      $(".tab-title").on("click", function() {
+          $(this).parent().addClass("active").siblings(".active").removeClass("active");
+          $("#" + $(this).data("id")).show().siblings(".list-result").hide();
+      });
+  </script>
+  <script src="/static/js/employees/employee-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

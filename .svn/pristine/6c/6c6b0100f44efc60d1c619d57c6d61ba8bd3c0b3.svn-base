@@ -1,0 +1,44 @@
+package seentao.xhsn.sys.mailgroup.service.impl;
+
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsGroupMailRecordBO;
+import seentao.xhsn.sys.mailgroup.service.IMailGroupService;
+import seentao.xhsn.tools.PropertiesUtil;
+import seentao.xhsn.tools.mail.MailSender;
+import seentao.xhsn.tools.mail.MailSenderInfo;
+
+/**
+ * 
+ * @author niushixing 2015-1-23 15:03:31
+ *
+ */
+@Service
+public class MailGroupServiceImpl implements IMailGroupService {
+
+	@Override
+	@Transactional
+	public String sendMailGroup(HsGroupMailRecordBO mailBo) {
+		// 1给公司发送邮件
+		MailSenderInfo mailInfo = new MailSenderInfo();
+		mailInfo.setMailServerHost(PropertiesUtil.getProperty("mailServerHost"));
+		mailInfo.setMailServerPort(PropertiesUtil.getProperty("mailServerPort"));
+		mailInfo.setValidate(true);
+		mailInfo.setUserName(PropertiesUtil.getProperty("mailSendUser"));
+		String pwd = new String(Base64.decodeBase64(PropertiesUtil.getProperty("mailSendPwd")));
+		mailInfo.setPassword(pwd);
+		mailInfo.setFromAddress(PropertiesUtil.getProperty("mailSendUser"));
+		mailInfo.setToAddress("simpletiny@163.com");
+		// 邮箱标题
+		mailInfo.setSubject(mailBo.getTitle());
+		// 邮件内容-- 简历信息
+		mailInfo.setContent(mailBo.getContent());
+		// 这个类主要来发送邮件
+		MailSender sms = new MailSender();
+		sms.sendHtmlMail(mailInfo);
+		return "OK";
+	}
+
+}

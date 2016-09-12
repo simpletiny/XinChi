@@ -1,0 +1,23 @@
+/**
+ * 企业端预览简历
+ * 
+ * @param td
+ */
+function viewResume(res_id,user_id) {
+	window
+			.open(
+					'viewResume?res_id=' + res_id + "&user_id=" + user_id,
+					'newwindow',
+					'width=800,height=700,top=100,left=200,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,status=no');
+	var param = "page.pageNo=" + (st_page_id + 1);
+	param += "&type=" + st_type;
+	param += collectParam();
+	$.ajax({
+		url : "findJobListForEnt",
+		data : param,
+		type : "post",
+		success : function(data) {
+			$("#data_container").html(data);
+		}
+	});
+}

@@ -1,0 +1,138 @@
+package seentao.xhsn.person.resume.service;
+
+import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.common.UserSessionBean;
+
+/**
+ * 简历接口
+ * 
+ * @author niushixing 2014-11-27 下午1:41:24
+ * 
+ */
+public interface IResumeService {
+	/**
+	 * 生成简历预览HTML
+	 * 
+	 * @param bo
+	 * @param context
+	 * @return 返回html路径
+	 */
+	public String generateResumeHTML(HsResumeBO bo, ServletContext context);
+
+	/**
+	 * 生成基本信息
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateBaseInfo(HsResumeBO bo);
+
+	/**
+	 * 生成求职意向
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateDesire(HsResumeBO bo);
+
+	/**
+	 * 生成自我评价
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateEvaluate(HsResumeBO bo);
+
+	/**
+	 * 生成实习工作经历
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generatePractice(HsResumeBO bo);
+
+	/**
+	 * 生成教育背景
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateEducation(HsResumeBO bo);
+
+	/**
+	 * 生成所获证书
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateCertificate(HsResumeBO bo);
+
+	/**
+	 * 生成培训经历
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateTrain(HsResumeBO bo);
+
+	/**
+	 * 生成项目经验
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateProject(HsResumeBO bo);
+
+	/**
+	 * 生成个人技能
+	 * 
+	 * @param bo
+	 * @return
+	 */
+	public String generateSkill(HsResumeBO bo);
+
+	/**
+	 * 根据主键获取简历信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public HsResumeBO getByPk(String id);
+
+	/**
+	 * 取得简历静态页面路径
+	 * 
+	 * @param user_id
+	 * @param res_id
+	 * @return
+	 */
+	public String getResumeHtmlPath(String user_id, String res_id);
+
+	/**
+	 * 修改简历信息
+	 * 
+	 * @param resume
+	 */
+	public void updateResume(HsResumeBO resume);
+
+	/**
+	 * 生成供下载的word文档
+	 * @param resume
+	 * @return
+	 */
+	public List<String> fetchWorData(UserSessionBean userSessionBean);
+	
+	/**
+	 * 读取word2007模版，并替换
+	 * @param docxPath 模板地址
+	 * @param tempPath 生成的word文件地址
+	 * @param htmlList word简历内容
+	 * @return
+	 * @throws Exception
+	 */
+	public String generateWord(String docxPath, String tempPath,UserSessionBean userSessionBean,List<String> htmlList) throws Exception ;
+}

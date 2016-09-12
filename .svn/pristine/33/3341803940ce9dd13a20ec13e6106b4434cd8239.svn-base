@@ -1,0 +1,182 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsUbCompanyBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String user_id;
+		  
+		 
+		  private java.lang.String res_id;
+		  
+		 
+		  private java.lang.String com_name;
+		  
+		 
+		  private java.lang.String com_address;
+		  
+		 
+		  private java.lang.String begindate;
+		  
+		 
+		  private java.lang.String enddate;
+		  
+		 
+		  private java.lang.String trade_extend;
+		  
+		 
+		  private java.lang.String trade_code;
+		  
+		 
+		  private java.lang.String position_name;
+		  
+		 
+		  private java.lang.String position_code;
+		  
+		 
+		  private java.lang.String position_extend;
+		  
+		 
+		  private java.lang.String com_size;
+		  
+		 
+		  private java.lang.String com_type;
+		  
+		 
+		  private java.lang.String salary_scope;
+		  
+		 
+		  private java.lang.String job_description;
+		  
+		 
+		  
+		  public HsUbCompanyBO() {
+			super();
+			setTable_name("hs_ub_company");
+		}
+
+		public  java.lang.String getUser_id() {
+				return user_id;
+			}
+			
+			public void setUser_id( java.lang.String user_id) {
+				this.user_id = user_id;
+			}
+		 
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+		 
+		  public  java.lang.String getCom_name() {
+				return com_name;
+			}
+			
+			public void setCom_name( java.lang.String com_name) {
+				this.com_name = com_name;
+			}
+		 
+		  public  java.lang.String getCom_address() {
+				return com_address;
+			}
+			
+			public void setCom_address( java.lang.String com_address) {
+				this.com_address = com_address;
+			}
+		 
+		  public  java.lang.String getBegindate() {
+				return begindate;
+			}
+			
+			public void setBegindate( java.lang.String begindate) {
+				this.begindate = begindate;
+			}
+		 
+		  public  java.lang.String getEnddate() {
+				return enddate;
+			}
+			
+			public void setEnddate( java.lang.String enddate) {
+				this.enddate = enddate;
+			}
+		 
+		  public  java.lang.String getTrade_extend() {
+				return trade_extend;
+			}
+			
+			public void setTrade_extend( java.lang.String trade_extend) {
+				this.trade_extend = trade_extend;
+			}
+		 
+		  public  java.lang.String getTrade_code() {
+				return trade_code;
+			}
+			
+			public void setTrade_code( java.lang.String trade_code) {
+				this.trade_code = trade_code;
+			}
+		 
+		  public  java.lang.String getPosition_name() {
+				return position_name;
+			}
+			
+			public void setPosition_name( java.lang.String position_name) {
+				this.position_name = position_name;
+			}
+		 
+		  public  java.lang.String getPosition_code() {
+				return position_code;
+			}
+			
+			public void setPosition_code( java.lang.String position_code) {
+				this.position_code = position_code;
+			}
+		 
+		  public  java.lang.String getPosition_extend() {
+				return position_extend;
+			}
+			
+			public void setPosition_extend( java.lang.String position_extend) {
+				this.position_extend = position_extend;
+			}
+		 
+		  public  java.lang.String getCom_size() {
+				return com_size;
+			}
+			
+			public void setCom_size( java.lang.String com_size) {
+				this.com_size = com_size;
+			}
+		 
+		  public  java.lang.String getCom_type() {
+				return com_type;
+			}
+			
+			public void setCom_type( java.lang.String com_type) {
+				this.com_type = com_type;
+			}
+		 
+		  public  java.lang.String getSalary_scope() {
+				return salary_scope;
+			}
+			
+			public void setSalary_scope( java.lang.String salary_scope) {
+				this.salary_scope = salary_scope;
+			}
+		 
+		  public  java.lang.String getJob_description() {
+				return job_description;
+			}
+			
+			public void setJob_description( java.lang.String job_description) {
+				this.job_description = job_description;
+			}
+	
+
+}

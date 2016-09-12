@@ -1,0 +1,52 @@
+package seentao.xhsn.person.company.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.bean.HsUbCompanyBO;
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.person.company.dao.IUBCompanyDAO;
+
+
+@Repository
+public class UBCompanyDAOImpl extends SqlSessionDaoSupport implements IUBCompanyDAO{
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	@Override
+	public void insert(HsUbCompanyBO bo) {
+		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsUbCompanyBOMapper.insert", bo);
+	}
+
+	@Override
+	public void update(HsUbCompanyBO bo) {
+		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsUbCompanyBOMapper.updateByPrimaryKey", bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsUbCompanyBOMapper.deleteByPrimaryKey", id);
+	}
+
+	@Override
+	public HsUbCompanyBO selectByPrimaryKey(String id) {
+		return (HsUbCompanyBO) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsUbCompanyBOMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<HsUbCompanyBO> getAllByParam(HsUbCompanyBO bo) {
+		List<HsUbCompanyBO> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsUbCompanyBOMapper.selectByPram", bo);
+		return list;
+	}
+	
+}

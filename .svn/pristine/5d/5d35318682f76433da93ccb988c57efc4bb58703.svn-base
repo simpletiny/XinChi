@@ -1,0 +1,37 @@
+package seentao.xhsn.sys.leftmenudate.dao;
+
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsPersonLeftmenuDataBO;
+
+/** 
+ * @author wjx 
+ * @date 2014年12月15日 下午6:04:42 
+ * @note 
+ */
+public interface ILeftMenuDataDAO {
+	/**插入数据
+	 * @param bo
+	 * @return
+	 */
+	String insert(HsPersonLeftmenuDataBO bo);
+	/**修改分数
+	 * @param param
+	 * @return
+	 */
+	int updateScoreByParam(HsPersonLeftMenuBO param);
+	/**
+	 * 根据参数删除菜单数据
+	 * @param param
+	 * @return
+	 */
+	int deleteByParam(HsPersonLeftmenuDataBO param);
+	/**根据menuid和用户id简历id获取用户的菜单数据
+	 * @param id  hsleftmenu 表中的id
+	 * @param user_id 用户id
+	 * @param res_id 简历id
+	 * @return
+	 */
+	HsPersonLeftmenuDataBO getMenuDataByParam(String id, String user_id,
+			String res_id);
+	
+}

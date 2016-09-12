@@ -1,0 +1,248 @@
+package seentao.xhsn.regist.ation;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsUserBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.login.util.PassWordUtil;
+import seentao.xhsn.regist.service.IRegistService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/** 
+ * @author wjx 
+ * @note 注册action
+ */
+@Controller
+@Scope("prototype")
+public class RegistAction extends ActionSupport {
+
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private IRegistService registService;
+
+	private HsUserBO bo;
+	
+	private HsEnterpriseBO entBO;
+
+	private String id;
+	
+	private String mailAddress;
+	
+	private String fail_msg ;
+	private String checkemail_msg ;
+	private boolean checkemail_flag;
+
+	public String user_regist() {
+		// 设置默认字段
+		bo.setUser_registtime(new Timestamp(System.currentTimeMillis()));
+		bo.setUser_name(bo.getUser_email());
+		bo.setUser_state(DictionaryEnum.STATE_NORMAL.getStringValue());
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		//存储用户信息, 给邮箱发送验证信息
+		this.registService.insertAndSendEmail(bo, basePath);
+		String mail=bo.getUser_email();
+		mailAddress="http://mail."+mail.substring(mail.indexOf("@")+1,mail.length());
+		return "SUCCESS";
+	}
+
+	public static void main(String[] args) {
+		String str="273707977@qq.com";
+		System.out.println(str);
+	}
+	
+	/**
+	 * 企业注册
+	 * @return
+	 */
+	public String user_regist_ent() {
+		List<HsUserBO> users = this.registService.findUserByTypeAndEmail(bo.getUser_type(), bo.getUser_email());
+		if(users.size() > 0){
+			this.fail_msg =  "该邮箱已被注册";
+			return "FAIL";
+		}else{
+			
+			// 设置默认字段
+			HttpServletRequest request = ServletActionContext.getRequest();
+			String path = request.getContextPath();
+			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+			bo.setUser_pwd(PassWordUtil.createPassword(bo.getUser_pwd()));
+			this.registService.insertENTAndSendEmail(bo, entBO, basePath);
+			String mail = bo.getUser_email();
+			mailAddress = "http://mail."+mail.substring(mail.indexOf("@")+1,mail.length());
+			return "SUCCESS";
+		}
+	}
+	
+	/**
+	 * 校验字段
+	 */
+	public void validateUser_regist() {
+		if (null == bo.getUser_email() || "".equals(bo.getUser_email())) {
+			addFieldError("bo.user_email", "邮箱不能为空");
+			return;
+		}
+		String reg = ResourcesConstants.MAIL_REG;
+		if (!bo.getUser_email().matches(reg)) {
+			addFieldError("bo.user_email", "邮箱不正确");
+			return;
+		}
+		List<HsUserBO> users = this.registService.findUserByTypeAndEmail(bo.getUser_type(), bo.getUser_email());
+		if(users.size() > 0){
+			addFieldError("bo.user_email", "该邮箱已被注册");
+			return;
+		}
+		if (null == bo.getUser_pwd() || "".equals(bo.getUser_pwd())) {
+			addFieldError("bo.user_pwd", "密码不能为空");
+			return;
+		}
+		if (null == bo.getUser_pwd2() || "".equals(bo.getUser_pwd2())) {
+			addFieldError("bo.user_email", "密码不能为空");
+			return;
+		}
+		if (!bo.getUser_pwd().equals(bo.getUser_pwd2())) {
+			addFieldError("bo.user_email", "密码与确认密码输入不一致");
+			return;
+		}
+	}
+	
+	public String checkUserEmail(){
+		if(bo != null && bo.getUser_email() != null && bo.getUser_email().length() > 0){
+			List<HsUserBO> users = this.registService.findUserByTypeAndEmail(bo.getUser_type(), bo.getUser_email());
+			if(users.size() > 0){
+				this.checkemail_flag = false;
+				this.checkemail_msg =  "该邮箱已被注册";
+			}else{
+				this.checkemail_flag = true;
+				this.checkemail_msg =  "该邮箱可以使用";
+			}
+		}
+		return "SUCCESS";
+	}
+	
+	
+	/**
+	 * 校验企业注册
+	 */
+	public void validateUser_regist_ent() {
+		if (null == bo.getUser_email() || "".equals(bo.getUser_email())) {
+			addFieldError("bo.user_email", "邮箱不能为空");
+			return;
+		}
+		String reg = ResourcesConstants.MAIL_REG;
+		if (!bo.getUser_email().matches(reg)) {
+			addFieldError("bo.user_email", "邮箱不正确");
+			return;
+		}
+		/*if (null == bo.getUser_name() || "".equals(bo.getUser_name())) {
+			addFieldError("bo.user_name", "用户名不能为空");
+			return;
+		}*/
+		if (null == bo.getUser_pwd() || "".equals(bo.getUser_pwd())) {
+			addFieldError("bo.user_pwd", "密码不能为空");
+			return;
+		}
+		if (null == bo.getUser_pwd2() || "".equals(bo.getUser_pwd2())) {
+			addFieldError("bo.user_pwd2", "确认密码不能为空");
+			return;
+		}
+		if (!bo.getUser_pwd().equals(bo.getUser_pwd2())) {
+			addFieldError("bo.user_pwd", "密码与确认密码输入不一致");
+			return;
+		}
+		
+		
+		if (null == entBO.getEnt_name() || "".equals(entBO.getEnt_name())) {
+			addFieldError("entBO.ent_name", "企业名称不能为空");
+			return;
+		}
+		if (null == entBO.getCounty_code() || "".equals(entBO.getCounty_code())) {
+			addFieldError("entBO.county_code", "企业地址不能为空");
+			return;
+		}
+		if (null == entBO.getCom_people() || "".equals(entBO.getCom_people())) {
+			addFieldError("entBO.com_people", "公司联系人不能为空");
+			return;
+		}
+		if (null == entBO.getCom_telephone() || "".equals(entBO.getCom_telephone())) {
+			addFieldError("entBO.com_telephone", "企业联系电话不能为空");
+			return;
+		}
+		if (null == entBO.getCom_telephone_area_code() || "".equals(entBO.getCom_telephone_area_code())) {
+			addFieldError("entBO.com_telephone_area_code", "企业联系电话区号不能为空");
+			return;
+		}
+	}
+
+	public HsUserBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsUserBO bo) {
+		this.bo = bo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getMailAddress() {
+		return mailAddress;
+	}
+
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+
+	public HsEnterpriseBO getEntBO() {
+		return entBO;
+	}
+
+	public void setEntBO(HsEnterpriseBO entBO) {
+		this.entBO = entBO;
+	}
+
+	public String getFail_msg() {
+		return fail_msg;
+	}
+
+	public void setFail_msg(String fail_msg) {
+		this.fail_msg = fail_msg;
+	}
+
+	public String getCheckemail_msg() {
+		return checkemail_msg;
+	}
+
+	public void setCheckemail_msg(String checkemail_msg) {
+		this.checkemail_msg = checkemail_msg;
+	}
+
+	public boolean isCheckemail_flag() {
+		return checkemail_flag;
+	}
+
+	public void setCheckemail_flag(boolean checkemail_flag) {
+		this.checkemail_flag = checkemail_flag;
+	}
+	
+	
+	
+}

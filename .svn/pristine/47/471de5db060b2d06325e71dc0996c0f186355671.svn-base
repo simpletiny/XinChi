@@ -1,0 +1,60 @@
+package seentao.xhsn.person.learnpath.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsLearnpathBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.common.SupperBO;
+import seentao.xhsn.person.learnpath.dao.ILearnPathDAO;
+import seentao.xhsn.person.learnpath.service.ILearnPathService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+@Service
+@Transactional
+public class LearnPathServiceImpl implements ILearnPathService{
+
+	@Autowired
+	private ILearnPathDAO dao;
+	@Autowired
+	private ILeftMenuService lmService;
+	
+	@Override
+	public void insert(HsLearnpathBO bo) {
+		dao.insert(bo);
+		lmService.updateByParam(bo.getTable_name(),DictionaryEnum.MENU_TOTALLY.getStringValue());
+	}
+	@Override
+	public void insertBOList(List<SupperBO> boList) {
+		dao.insertBOList(boList);
+	}
+	@Override
+	public void update(HsLearnpathBO bo) {
+		dao.update(bo);
+	}
+
+	@Override
+	public void delete(String id) {
+		dao.delete(id);
+	}
+
+	@Override
+	public HsLearnpathBO selectByPrimaryKey(String id) {
+		return dao.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<HsLearnpathBO> getAllByParam(HsLearnpathBO bo) {
+		return dao.getAllByParam(bo);
+	}
+
+	@Override
+	public List<SupperBO> selectByIdentityCard(
+			HsLearnpathBO bo) {
+		return dao.selectByIdentityCard(bo);
+	}
+	
+}

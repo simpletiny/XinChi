@@ -1,0 +1,38 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+pageContext.setAttribute("basePath", basePath);
+%>
+<table style="width:800px;border:1px solid;border-collapse:collapse">
+<s:iterator value="cityList" id="city" status="no">
+<s:if test="#no.Odd">
+<tr style="background-color:#C7EAFF">
+</s:if>
+<s:else>
+<tr>
+</s:else>
+	<td style="width:50px;text-align:center;border:1px solid #7E9CF7;">
+		<input type="checkbox" name="chk_each"/>
+	</td>
+	<td style="width:200px;border:1px solid #7E9CF7;" class="tdName">
+		<s:property value="#city.city_name"/>
+	</td>
+	<td style="width:150px;border:1px solid #7E9CF7;" class="tdCode">
+		<s:property value="#city.city_code"/>
+	</td>
+	<td style="width:150px;border:1px solid #7E9CF7;" class="tdSort">
+		<s:property value="#city.sort_no"/>
+	</td>
+	<td style="width:200px;border:1px solid #7E9CF7;text-align:center" class="tdOperate">
+		<span style="cursor:pointer;color:blue" onclick="deleteCity(this)">删除</span>
+		&nbsp;&nbsp;
+		<span style="cursor:pointer;color:blue" onclick="editCity(this)">编辑</span>
+	</td>
+	<td style="display:none">
+		<input type="hidden" value="${city.id}" class="txtCityId" name="hid_city_id"/>
+	</td>
+</tr>
+</s:iterator>
+</table>

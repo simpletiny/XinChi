@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsInterviewInformBOMapper">
+	<resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsInterviewInformBO">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="res_id" property="res_id" jdbcType="CHAR" />
+		<result column="user_id" property="user_id" jdbcType="CHAR" />
+		<result column="ent_id" property="ent_id" jdbcType="CHAR" />
+		<result column="job_id" property="job_id" jdbcType="CHAR" />
+		<result column="ent_name" property="ent_name" jdbcType="VARCHAR" />
+		<result column="ent_address" property="ent_address" jdbcType="VARCHAR" />
+		<result column="job_name" property="job_name" jdbcType="VARCHAR" />
+		<result column="interviewer" property="interviewer" jdbcType="VARCHAR" />
+		<result column="interviewer_phone" property="interviewer_phone"
+			jdbcType="VARCHAR" />
+		<result column="inform_date" property="inform_date" jdbcType="TIMESTAMP" />
+		<result column="attach" property="attach" jdbcType="VARCHAR" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="modify_time" property="modify_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,create_time, creater, modifier,
+		res_id,
+		user_id,
+		ent_id,
+		job_id,
+		ent_name,
+		ent_address,
+		job_name,
+		interviewer,
+		interviewer_phone,
+		inform_date,
+		attach,
+		note,
+		state,
+		modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from hs_interview_inform
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from hs_interview_inform
+		where id = #{id,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="seentao.xhsn.bean.HsInterviewInformBO">
+
+		insert into hs_interview_inform
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="res_id != null">
+				res_id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="ent_id != null">
+				ent_id,
+			</if>
+			<if test="job_id != null">
+				job_id,
+			</if>
+			<if test="ent_name != null">
+				ent_name,
+			</if>
+			<if test="ent_address != null">
+				ent_address,
+			</if>
+			<if test="job_name != null">
+				job_name,
+			</if>
+			<if test="interviewer != null">
+				interviewer,
+			</if>
+			<if test="interviewer_phone != null">
+				interviewer_phone,
+			</if>
+			<if test="inform_date != null">
+				inform_date,
+			</if>
+			<if test="attach != null">
+				attach,
+			</if>
+			<if test="note != null">
+				note,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="creater != null">
+				creater,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="modifier != null">
+				modifier,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="res_id != null">
+				#{res_id,jdbcType=CHAR},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=CHAR},
+			</if>
+			<if test="ent_id != null">
+				#{ent_id,jdbcType=CHAR},
+			</if>
+			<if test="job_id != null">
+				#{job_id,jdbcType=CHAR},
+			</if>
+			<if test="ent_name != null">
+				#{ent_name,jdbcType=VARCHAR},
+			</if>
+			<if test="ent_address != null">
+				#{ent_address,jdbcType=VARCHAR},
+			</if>
+			<if test="job_name != null">
+				#{job_name,jdbcType=VARCHAR},
+			</if>
+			<if test="interviewer != null">
+				#{interviewer,jdbcType=VARCHAR},
+			</if>
+			<if test="interviewer_phone != null">
+				#{interviewer_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="inform_date != null">
+				#{inform_date,jdbcType=TIMESTAMP},
+			</if>
+			<if test="attach != null">
+				#{attach,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=VARCHAR},
+			</if>
+			<if test="creater != null">
+				#{creater,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsInterviewInformBO">
+		update hs_interview_inform
+		<set>
+			<if test="res_id != null">
+				res_id = #{res_id,jdbcType=CHAR},
+			</if>
+			<if test="user_id != null">
+				user_id = #{user_id,jdbcType=CHAR},
+			</if>
+			<if test="ent_id != null">
+				ent_id = #{ent_id,jdbcType=CHAR},
+			</if>
+			<if test="job_id != null">
+				job_id = #{job_id,jdbcType=CHAR},
+			</if>
+			<if test="ent_name != null">
+				ent_name = #{ent_name,jdbcType=VARCHAR},
+			</if>
+			<if test="ent_address != null">
+				ent_address = #{ent_address,jdbcType=VARCHAR},
+			</if>
+			<if test="job_name != null">
+				job_name = #{job_name,jdbcType=VARCHAR},
+			</if>
+			<if test="interviewer != null">
+				interviewer = #{interviewer,jdbcType=VARCHAR},
+			</if>
+			<if test="interviewer_phone != null">
+				interviewer_phone = #{interviewer_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="inform_date != null">
+				inform_date = #{inform_date,jdbcType=TIMESTAMP},
+			</if>
+			<if test="attach != null">
+				attach = #{attach,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				note = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time = #{modify_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="seentao.xhsn.bean.HsInterviewInformBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_interview_inform
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+	<select id="selectByPage" parameterType="seentao.xhsn.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_interview_inform
+   <where>
+	    <if test="params.bo.user_id !=null">
+	    	user_id = #{params.bo.user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="params.bo.res_id !=null">
+	    	and res_id = #{params.bo.res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+   <select id="selectCountByParam" parameterType="seentao.xhsn.bean.HsInterviewInformBO" resultType="java.lang.Integer">
+   select count(*) from hs_interview_inform
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

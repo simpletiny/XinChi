@@ -1,0 +1,101 @@
+package seentao.xhsn.person.company.bean;
+
+import seentao.xhsn.bean.HsUbCompanyBO;
+
+public class HsUbCompanyExtendBO extends HsUbCompanyBO {
+
+	private static final long serialVersionUID = 1L;
+
+	private String begindate_year;
+	
+	private String begindate_month;
+	
+	private String enddate_year;
+	
+	private String enddate_month;
+	
+	private String trade_code_value;
+	
+	private String position_code_value;
+	
+	private String com_size_value;
+	
+	private String com_type_value;
+	
+	private String salary_scope_value;
+
+	public String getBegindate_year() {
+		return begindate_year;
+	}
+
+	public void setBegindate_year(String begindate_year) {
+		this.begindate_year = begindate_year;
+	}
+
+	public String getBegindate_month() {
+		return begindate_month;
+	}
+
+	public void setBegindate_month(String begindate_month) {
+		this.begindate_month = begindate_month;
+	}
+
+	public String getEnddate_year() {
+		return enddate_year;
+	}
+
+	public void setEnddate_year(String enddate_year) {
+		this.enddate_year = enddate_year;
+	}
+
+	public String getEnddate_month() {
+		return enddate_month;
+	}
+
+	public void setEnddate_month(String enddate_month) {
+		this.enddate_month = enddate_month;
+	}
+
+	public String getTrade_code_value() {
+		return trade_code_value;
+	}
+
+	public void setTrade_code_value(String trade_code_value) {
+		this.trade_code_value = trade_code_value;
+	}
+
+	public String getPosition_code_value() {
+		return position_code_value;
+	}
+
+	public void setPosition_code_value(String position_code_value) {
+		this.position_code_value = position_code_value;
+	}
+
+	public String getCom_size_value() {
+		return com_size_value;
+	}
+
+	public void setCom_size_value(String com_size_value) {
+		this.com_size_value = com_size_value;
+	}
+
+	public String getCom_type_value() {
+		return com_type_value;
+	}
+
+	public void setCom_type_value(String com_type_value) {
+		this.com_type_value = com_type_value;
+	}
+
+	public String getSalary_scope_value() {
+		return salary_scope_value;
+	}
+
+	public void setSalary_scope_value(String salary_scope_value) {
+		this.salary_scope_value = salary_scope_value;
+	}
+	
+	
+	
+}

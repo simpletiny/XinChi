@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 员工管理
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>员工管理</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                            <th>姓名</th>
+                            <th>登录名</th>
+                            <th>员工角色</th>
+                            <th>状态</th>
+                            <th>创建日期</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: employees().items">
+                        <tr>
+                            <td><a href="javascript:void(0)" data-bind="text: $data.employeeName, attr: {href: '/employees/' + $data.id + '/detail'}"></a></td>
+                            <td data-bind="text: $data.username"></td>
+                            <td data-bind="text: $root.mappedRoles()[$data.id]"></td>
+                            <!-- ko if: $data.active -->
+                            <td><i class="fa fa-check-circle fa-lg fa-fw"></i></td>
+                            <!-- /ko -->
+                            <!-- ko if: !$data.active -->
+                            <td><i class="fa fa-ban fa-lg fa-fw"></i></td>
+                            <!-- /ko -->
+                            <td data-bind="text: moment($data.createdTime).format('YYYY-MM-DD HH:mm')"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    $(".employees").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/employees/employees.js{{ _suffix_ }}"></script>
+{% endblock %}

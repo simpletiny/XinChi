@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsGrowBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsGrowBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="user_id" property="user_id" jdbcType="CHAR" />
+	    <result column="res_id" property="res_id" jdbcType="CHAR" />
+	    <result column="school" property="school" jdbcType="VARCHAR" />
+	    <result column="begintime" property="begintime" jdbcType="VARCHAR" />
+	    <result column="endtime" property="endtime" jdbcType="VARCHAR" />
+	    <result column="course_name" property="course_name" jdbcType="VARCHAR" />
+	    <result column="course_code" property="course_code" jdbcType="VARCHAR" />
+	    <result column="course_score" property="course_score" jdbcType="VARCHAR" />
+	    <result column="teacher_vluation" property="teacher_vluation" jdbcType="VARCHAR" />
+	    <result column="file_id" property="file_id" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	user_id, 
+    	res_id, 
+    	school, 
+    	begintime, 
+    	endtime, 
+    	course_name, 
+    	course_code, 
+    	course_score, 
+    	teacher_vluation, 
+    	file_id, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_grow
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_grow
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsGrowBO" >
+  	
+    insert into hs_grow
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="user_id != null">
+	        user_id,
+	      </if>
+	 	<if test="res_id != null">
+	        res_id,
+	      </if>
+	 	<if test="school != null">
+	        school,
+	      </if>
+	 	<if test="begintime != null">
+	        begintime,
+	      </if>
+	 	<if test="endtime != null">
+	        endtime,
+	      </if>
+	 	<if test="course_name != null">
+	        course_name,
+	      </if>
+	 	<if test="course_code != null">
+	        course_code,
+	      </if>
+	 	<if test="course_score != null">
+	        course_score,
+	      </if>
+	 	<if test="teacher_vluation != null">
+	        teacher_vluation,
+	      </if>
+	 	<if test="file_id != null">
+	        file_id,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="user_id != null">
+	        #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="school != null">
+	        #{school,jdbcType=VARCHAR},
+	      </if>
+    	<if test="begintime != null">
+	        #{begintime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="endtime != null">
+	        #{endtime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_name != null">
+	        #{course_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_code != null">
+	        #{course_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_score != null">
+	        #{course_score,jdbcType=VARCHAR},
+	      </if>
+    	<if test="teacher_vluation != null">
+	        #{teacher_vluation,jdbcType=VARCHAR},
+	      </if>
+    	<if test="file_id != null">
+	        #{file_id,jdbcType=CHAR},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsGrowBO" >
+    update hs_grow
+    <set >
+    	<if test="user_id != null">
+	        user_id = #{user_id,jdbcType=CHAR},
+	      </if>
+    	<if test="res_id != null">
+	        res_id = #{res_id,jdbcType=CHAR},
+	      </if>
+    	<if test="school != null">
+	        school = #{school,jdbcType=VARCHAR},
+	      </if>
+    	<if test="begintime != null">
+	        begintime = #{begintime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="endtime != null">
+	        endtime = #{endtime,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_name != null">
+	        course_name = #{course_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_code != null">
+	        course_code = #{course_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="course_score != null">
+	        course_score = #{course_score,jdbcType=VARCHAR},
+	      </if>
+    	<if test="teacher_vluation != null">
+	        teacher_vluation = #{teacher_vluation,jdbcType=VARCHAR},
+	      </if>
+    	<if test="file_id != null">
+	        file_id = #{file_id,jdbcType=CHAR},
+	      </if>
+       <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ 
+</mapper>

@@ -1,0 +1,411 @@
+{% extends "layout.html" %}
+
+{% block title %}
+- 销售里程碑
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+<link rel="stylesheet" href="/static/vendor/rater-star/rater-star.css">
+<style type="text/css">
+    .line-title {
+        font-size: 16px;
+    }
+    .line-input{
+        display:inline-block;
+        width:100%;
+    }
+</style>
+{% endblock %}
+
+{% block content%}
+
+<input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+<div class="main-body">
+    <div class="subtitle">
+        <div style="float: left;"><h2>销售里程碑<a href="/companies/{{ companyId }}/detail" class="cancel-create">返回</a></h2></div>
+        <div style="padding: 22px 0 0 250px;"><a href="/companies/{{ companyId }}/milestone/create" class="btn btn-green btn-r">编辑</a></div>
+    </div>
+    <div class="main-container">
+        <div class="main-box">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>客户基本信息收集</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkCompanySize"/><label>公司规模：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().companySize"/></div>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitmentChannels"/><label>历史招聘渠道：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitmentChannels"/></div>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitmentEffect"/><label>历史招聘效果：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitmentEffect"/></div>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitmentCost"/><label>历史招聘费用：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitmentCost"/></div>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitmentCycle"/><label>招聘需求/周期：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitmentCycle"/></div>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitmentKey"/><label>招聘关键数据：</label>
+                            </em>
+                            <div class="col-md-3"><label>offer率：</label><p class="ip-default" data-bind="text:milestone().offerRate"/></div>
+                            <div class="col-md-3"><label>入职率：</label><p class="ip-default" data-bind="text:milestone().accessionRate"/></div>
+                            <div class="col-md-3"><label>流失率：</label><p class="ip-default" data-bind="text:milestone().lossRate"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>找到合格的对接人</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkBroker"/><label>对接人的基本信息收集</label>
+                            </em>
+                        </div>
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkContactBroker"/><label>与对接人建立初步联系</label>
+                            </em>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>摸清决策链</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left">
+                            <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkDecisionMaker"/><label>决策人姓名：</label>
+                        </em>
+
+                        <div class="col-md-6"><p class="ip-default" data-bind="text:milestone().decisionMakerName"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 职位：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().decisionMakerPosition"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 手机：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().decisionMakerMobile"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left">
+                            <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkKeyMan"/><label>关键人姓名：</label>
+                        </em>
+
+                        <div class="col-md-6"><p class="ip-default" data-bind="text:milestone().keyManName"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 职位：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().keyManPosition"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 手机：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().keyManMobile"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left">
+                            <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkExecutor"/><label>执行者姓名：</label>
+                        </em>
+
+                        <div class="col-md-6"><p class="ip-default" data-bind="text:milestone().executorName"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 职位：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().executorPosition"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 手机：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().executorMobile"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left">
+                            <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkParticipant"/><label>参与者姓名：</label>
+                        </em>
+
+                        <div class="col-md-6"><p class="ip-default" data-bind="text:milestone().participantName"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 职位：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().participantPosition"/></div>
+                    </div>
+                    <div class="col-md-4">
+                        <em class="small-box" style="float:left;text-align: right">
+                            <label> 手机：</label>
+                        </em>
+
+                        <div class="col-md-8"><p class="ip-default" data-bind="text:milestone().participantMobile"/></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>招聘现状</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkPresentChannel"/><label>现有渠道：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().presentChannel"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkPresentChannelEffect"/><label>现有渠道效果：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().presentChannelEffect"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkPresentChannelCost"/><label>现有渠道价格：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().presentChannelCost"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>招聘计划</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitReason"/><label>招聘原因：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitReason"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitRequirement"/><label>招聘需求：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitRequirement"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitCycle"/><label>招聘周期：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitCycle"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitBudget"/><label>招聘预算：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitBudget"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitUrgency"/><label>招聘紧急度：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitUrgency"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>招聘难点</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box" style="float:left;width:130px">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkRecruitDifficulty"/><label>招聘难点：</label>
+                            </em>
+
+                            <div class="col-md-10"><p class="ip-default" data-bind="text:milestone().recruitDifficulty"/></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkAgreeDifficulty"/><label>客户已经认同招聘难点</label>
+                            </em>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>客户意向</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkWillMagicCube"/><label>权利人（关键人或决策人）愿意评估魔方招聘</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkAgreeMagicCube"/><label>权利人认同魔方招聘服务的价值</label>
+                            </em>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>商务合作谈判</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkCooperationPlan"/><label>提出合作方案进行讨论</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkContractDiscussion"/><label>项目经理和客户当面讨论了合同内容</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkAgreeContract"/><label>获得权利人口头对方案的同意</label>
+                            </em>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="ip line-title">
+                        <label>合同签订</label>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkContractMainContent"/><label>合同主要内容确定，并提交书面合同审核</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkSealedContract"/><label>提供书面的盖章合同给客户</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkFiledContract"/><label>合同签订完毕，交到财务备案</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkInitialPayment"/><label>首付款支付（如有首付款）</label>
+                            </em>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="line-input">
+                            <em class="small-box">
+                                <input type="checkbox" disabled="disabled" data-bind="checked:milestone().checkPayment"/><label>账期管理</label>
+                            </em>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/vendor/rater-star/rater-star.js"></script>
+<script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+<script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+</script>
+<script src="/static/js/companies/company-milestone-detail.js{{ _suffix_ }}"></script>
+{% endblock %}

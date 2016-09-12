@@ -1,0 +1,42 @@
+package example.dao.impl;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import seentao.xhsn.common.DaoUtil;
+import seentao.xhsn.common.SupperBO;
+import seentao.xhsn.tools.Page;
+import example.bean.HsUserBO;
+import example.dao.IUserTestDAO;
+
+@Repository
+public class UserTestDAOImpl  extends SqlSessionDaoSupport  implements IUserTestDAO {
+
+	private SqlSession sqlSession;
+	private DaoUtil daoUtil;
+	public void initDao(){
+		if(daoUtil==null){
+			sqlSession=sqlSession==null?getSqlSession():sqlSession;
+			daoUtil=new DaoUtil(sqlSession);
+		}
+	}
+	
+	public HsUserBO getBoById(String id) {
+		HsUserBO bo=this.getSqlSession().selectOne("example.bean.mappers.HsUserBOMapper.selectByPrimaryKey", id);
+		return bo;
+	}
+
+	public String insert(HsUserBO bo) {
+		String pk=daoUtil.insertBO("example.bean.mappers.HsUserBOMapper.insert", bo);
+		return pk;
+	}
+
+	public List<SupperBO> queryAll(Page<SupperBO> page) {
+		List<SupperBO> list=daoUtil.selectByParam("example.bean.mappers.HsUserBOMapper.selectAllByPage",page);
+		return list;
+	}
+
+}

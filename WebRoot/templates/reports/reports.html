@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 报表管理
+{% endblock %}
+
+{% block content%}
+  <div class="main-body">
+    <div class="subtitle">
+        <h2>报表管理</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            报表管理
+        </div>
+    </div>
+  </div>
+  <script>
+    $(".reports").addClass("current").children("ol").css("display", "block");
+  </script>
+{% endblock %}

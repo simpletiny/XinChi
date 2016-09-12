@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 查看财务数据
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="/static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_finance_id" value="{{ financeId }}">
+  <div class="main-body">
+    <div class="subtitle">
+        <div style="float: left;"><h2>产看财务数据<a href="/finance-rolls" class="cancel-create">返回</a></h2></div>
+        <div style="padding: 22px 0 0 250px;"><a href="/finance-rolls/{{ financeId }}/edit" class="btn btn-green btn-r">编辑</a></div>
+    </div>
+
+    <div class="main-container">
+        <div class="main-box">
+            <div class="form-box info-form">
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">委托企业</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: chosenCompany().name"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">项目名称</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: financeRoll().projectName"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">预付款日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().advancePaymentDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">预付款</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().advancePaymentAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">项目截止日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().projectEndDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">单价</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().unitAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">入职人数</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().unitAmount"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">总额</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().totalAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">首笔应收日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().firstPaymentDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">首笔应收金额</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().firstPaymentAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">首笔实收日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().firstPaymentReceivedDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">首笔实收金额</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().firstPaymentReceivedAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">尾款应收日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().lastPaymentDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">尾款应收金额</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().lastPaymentAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">尾款实收日期</label>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: financeRoll().lastPaymentReceivedDate"></p></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">尾款实收金额</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().lastPaymentReceivedAmount"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">所属顾问</label>
+                        <div class="ip"><p class="ip-" data-bind="text: financeRoll().projectManager"></p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="/static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script>
+    $(".finance").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/finance/finance-creation.js{{ _suffix_ }}"></script>
+{% endblock %}

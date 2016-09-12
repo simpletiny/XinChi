@@ -1,0 +1,29 @@
+package seentao.xhsn.enterprise.index.action;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.common.BaseAction;
+
+/**
+ * 企业端首页Action
+ * 
+ * @author niushixing 2015-1-5 15:55:02
+ *
+ */
+@Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class EntIndexAction extends BaseAction {
+	private static final long serialVersionUID = -8317650815510925498L;
+
+	/**
+	 * 页面初始化
+	 * 
+	 * @return
+	 */
+	public String init() {
+
+		return SUCCESS;
+	}
+}

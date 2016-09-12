@@ -1,0 +1,88 @@
+package seentao.xhsn.person.collect.action;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.person.collect.service.IPositionCollectService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * @author wjx
+ * @date 2014年12月10日 下午4:14:58
+ * @note
+ */
+@Controller
+@Scope("prototype")
+public class PositionCollectAction extends ActionSupport {
+	private static final long serialVersionUID = -6987827178482559506L;
+
+	@Autowired
+	private IPositionCollectService collectService;
+
+	private String job_id;
+	private String job_ids;
+	private int collent_count;
+
+	public String positionCollect() {
+		/*
+		 * String user_id = SeentaoApplicationContext.getCurrentUser(); res_id =
+		 * (
+		 * (UserSessionBean)SeentaoApplicationContext.getSession(ResourcesConstants
+		 * .LOGIN_SESSION_KEY)).getRes_id();
+		 */
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String user_id =bean.getUser_sys_id();
+		String res_id = bean.getRes_id();
+		if(job_id != null && job_id.trim().length() > 0){
+			collent_count = collectService.collectByJobID(res_id, user_id, job_id);
+		}
+		return "RESULTJSON";
+	}
+
+	public String positionCollectByIDs() {
+		/*
+		 * String user_id = SeentaoApplicationContext.getCurrentUser(); res_id =
+		 * (
+		 * (UserSessionBean)SeentaoApplicationContext.getSession(ResourcesConstants
+		 * .LOGIN_SESSION_KEY)).getRes_id();
+		 */
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String user_id =bean.getUser_sys_id();
+		String res_id = bean.getRes_id();
+		if(job_ids != null && job_ids.trim().length() > 0){
+			collent_count = collectService.collectByJobIDs(res_id, user_id, job_ids.split(","));
+		}
+		
+		return "RESULTJSON";
+	}
+
+	public String getJob_id() {
+		return job_id;
+	}
+
+	public void setJob_id(String job_id) {
+		this.job_id = job_id;
+	}
+
+	public String getJob_ids() {
+		return job_ids;
+	}
+
+	public void setJob_ids(String job_ids) {
+		this.job_ids = job_ids;
+	}
+
+	public int getCollent_count() {
+		return collent_count;
+	}
+
+	public void setCollent_count(int collent_count) {
+		this.collent_count = collent_count;
+	}
+
+}

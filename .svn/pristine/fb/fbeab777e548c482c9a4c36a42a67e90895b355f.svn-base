@@ -1,0 +1,30 @@
+package seentao.xhsn.password.service;
+
+import seentao.xhsn.bean.HsUserBO;
+
+/**
+ * @Description:	密码service接口
+ * @author 李君彦
+ * @date 2014-12-16 下午6:43:48 
+ * @version V1.0   
+ */
+public interface IPasswordService {
+
+	/**
+	 * 密码修改
+	 * @param user_email
+	 * @param newpwd
+	 */
+	void modifyPwd(HsUserBO bo);
+	
+	
+	/**
+	 * 根据密码、邮箱，类型查询登录用户信息
+	 * @param user_mail
+	 * @param userPwd
+	 * @param type
+	 * @return
+	 */
+	public HsUserBO getUserBeanByLoginInfo(String user_mail, String userPwd, String type);
+
+}

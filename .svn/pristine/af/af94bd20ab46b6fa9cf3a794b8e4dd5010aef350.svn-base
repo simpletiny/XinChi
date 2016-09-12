@@ -1,0 +1,61 @@
+package seentao.xhsn.sys.seentaotask.service.impl;
+
+import java.util.Iterator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsTaskBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.sys.seentaotask.dao.ISeenTaoTaskDAO;
+import seentao.xhsn.sys.seentaotask.service.ISeenTaoTaskService;
+
+@Service
+public class SeenTaoTaskServiceImpl implements ISeenTaoTaskService {
+	@Autowired
+	private ISeenTaoTaskDAO taskDao;
+
+	/**
+	 * 创建任务
+	 * 
+	 * @param task
+	 * @return
+	 */
+	@Override
+	@Transactional
+	public String addTask(HsTaskBO task) {
+		Iterator<HsTaskBO> iter = ResourcesConstants.ARRAY_TASK.iterator();
+		while (iter.hasNext()) {
+			HsTaskBO bo = iter.next();
+			if (bo.getExecutor().equals(task.getExecutor()) && bo.getParameters().equals(task.getParameters())
+					&& bo.getMethod().equals(task.getMethod())) {
+				iter.remove();
+				bo.setIsdone("Y");
+				taskDao.update(bo);
+				break;
+			}
+		}
+		ResourcesConstants.ARRAY_TASK.add(task);
+		taskDao.insert(task);
+		return "success";
+	}
+
+	@Override
+	public String removeTask(HsTaskBO task) {
+
+		return "";
+	}
+
+	/**
+	 * 更新任务
+	 * 
+	 * @param task
+	 * @return
+	 */
+	@Override
+	public String updateTask(HsTaskBO task) {
+
+		return "";
+	}
+}

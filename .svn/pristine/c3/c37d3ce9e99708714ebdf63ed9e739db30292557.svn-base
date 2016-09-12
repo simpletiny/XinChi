@@ -1,0 +1,36 @@
+### set log levels ###
+
+log4j.rootLogger = INFO,stdout,E
+
+
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target = System.out
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern =  %d{ABSOLUTE} %5p %c{1}:%L - %m%n
+
+##按天记录
+log4j.appender.E= org.apache.log4j.DailyRollingFileAppender
+#log4j.appender.E.File =c:/log.log
+log4j.appender.E.File =${catalina.home}/logs/xhsn
+log4j.appender.E.DatePattern='-'yyyy-MM-dd'.log'
+log4j.appender.E.Threshold =INFO
+log4j.appender.E.layout = org.apache.log4j.PatternLayout
+log4j.appender.E.layout.ConversionPattern =%-d{yyyy-MM-dd HH\:mm\:ss}[%c\:%L] [%t\:%r] - [%p]  %m%n
+
+##按文件大小记录
+#log4j.appender.rollfile = org.apache.log4j.RollingFileAppender  
+#log4j.appender.rollfile.Flle = D:/my.log  
+#log4j.appender.rollfile.Threshold =INFO
+#log4j.appender.rollfile.Append = true  
+#log4j.appender.rollfile.MaxFileSize=1MB  
+#log4j.appender.rollfile.layout = org.apache.log4j.PatternLayout
+#log4j.appender.rollfile.layout.ConversionPattern =%-d{yyyy-MM-dd HH\:mm\:ss}[%c:%L] [%t\:%r] - [%p]  %m%n
+
+###显示SQL语句部分
+log4j.logger.com.ibatis=DEBUG
+log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=DEBUG
+log4j.logger.com.ibatis.common.jdbc.ScriptRunner=DEBUG
+log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=DEBUG
+log4j.logger.java.sql.Connection=DEBUG
+log4j.logger.java.sql.Statement=DEBUG
+log4j.logger.java.sql.PreparedStatement=DEBUG

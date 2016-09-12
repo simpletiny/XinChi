@@ -1,0 +1,232 @@
+package seentao.xhsn.person.certificate.action;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsCertificateBO;
+import seentao.xhsn.bean.HsDictionaryDataBO;
+import seentao.xhsn.bean.HsFileDataBO;
+import seentao.xhsn.bean.HsPersonLeftMenuBO;
+import seentao.xhsn.bean.HsResumeBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.common.SeentaoApplicationContext;
+import seentao.xhsn.common.SupperBO;
+import seentao.xhsn.common.UserSessionBean;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.person.certificate.bean.HsCertificateExtendBO;
+import seentao.xhsn.person.certificate.service.ICertificateService;
+import seentao.xhsn.person.resume.service.IResumeService;
+import seentao.xhsn.sys.dictionaryfiledmap.service.IDictionaryFieldMapService;
+import seentao.xhsn.sys.filedata.service.IFileDataService;
+import seentao.xhsn.sys.leftmenu.service.ILeftMenuService;
+
+
+/**
+ * @Description:所获证书填写和修改
+ * @author 李君彦
+ * @date 2014-11-24 下午3:07:41 
+ * @version V1.0   
+ */
+
+@Controller
+@Scope("prototype")
+public class CertificateAction{
+	private Logger logger=Logger.getLogger(CertificateAction.class);
+	
+	private HsCertificateExtendBO bo;
+	
+	private List<HsCertificateExtendBO> boList;
+	//是否继续新增
+	private String isAdd;
+	//附件信息
+	private List<HsFileDataBO> fileDataList;
+	/**
+	 * 当前左侧选中的菜单id
+	 */
+	private String lm_tab_name;
+		
+	/**
+	 * 左侧菜单的集合
+	 */
+	private List<HsPersonLeftMenuBO> leftmenus;
+		
+	/**
+	 * 简历完成度
+	 */
+	private String res_completeness;
+	
+	@Autowired
+	private ILeftMenuService lmService;
+	@Autowired
+	private ICertificateService certificateService;
+	@Autowired
+	private IDictionaryFieldMapService dictFieldMapService;
+	@Autowired
+	private IFileDataService filedataService;
+	@Autowired
+	private IResumeService resumeService;
+	private Map<String, List<HsDictionaryDataBO>> dicts;
+	/**
+	 * 新增
+	 * @return
+	 */
+	public String saveCertificate(){
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		bo.setRes_id(bean.getRes_id());
+		bo.setUser_id(bean.getUser_sys_id());
+		HsCertificateBO certificateBO=new HsCertificateBO();
+		this.copyProperties(certificateBO, bo);
+		if(StringUtils.isNotEmpty(bo.getId()))
+			certificateService.update(certificateBO);
+		else
+			certificateService.insert(certificateBO);
+		
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateCertificate(resBo);
+		return "SUCCESS";
+	}
+	
+	public String updateCertificate(){
+		certificateService.update(bo);
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateCertificate(resBo);
+		return "SUCCESS";
+	}
+	
+	public String delCertificate(){
+		certificateService.delCertificate(bo.getId());
+		UserSessionBean bean = (UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		HsResumeBO resBo = resumeService.getByPk(bean.getRes_id());
+		resumeService.generateCertificate(resBo);
+		return "SUCCESS";
+	}
+	
+	public String findCertificate(){
+		HsCertificateBO certificateBO = certificateService.selectByPrimaryKey(bo.getId());
+		dicts = dictFieldMapService.findDictDataByParam(bo.getTable_name());
+		this.copyProperties(bo,certificateBO); 
+		//证书名称
+		if(StringUtils.isNotEmpty(certificateBO.getCerti_code())){
+			Map<String, String> certi_code_value = dictFieldMapService.getDictValueByParam(certificateBO.getTable_name(), "certi_code", certificateBO.getCerti_code());
+			bo.setCerti_code_value(certi_code_value.get("value"));
+		}
+		//附件信息
+		if(StringUtils.isNotEmpty(certificateBO.getCerti_file_id())){
+			HsFileDataBO fileDataBO=new HsFileDataBO();
+			fileDataBO.setFile_id(certificateBO.getCerti_file_id());
+			fileDataList=filedataService.getAllByParam(fileDataBO);
+		}
+		
+		return "SUCCESS";
+	}
+	
+	public String findAllCertificate(){
+		HsCertificateBO paramBO=new HsCertificateBO();
+		UserSessionBean sessionBean=(UserSessionBean) SeentaoApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		paramBO.setRes_id(sessionBean.getRes_id());
+		paramBO.setUser_id(sessionBean.getUser_sys_id());
+		List<HsCertificateBO> list = certificateService.getAllByParam(paramBO);
+		dicts = dictFieldMapService.findDictDataByParam(paramBO.getTable_name());
+		HsCertificateExtendBO extendBO =null;
+		boList=new ArrayList<HsCertificateExtendBO>();
+		for(HsCertificateBO certificateBO:list){
+			extendBO=new HsCertificateExtendBO();
+			this.copyProperties(extendBO, certificateBO);
+			if(StringUtils.isNotEmpty(certificateBO.getCerti_code())){
+				Map<String, String> certi_code_value = dictFieldMapService.getDictValueByParam(certificateBO.getTable_name(), "certi_code", certificateBO.getCerti_code());
+				extendBO.setCerti_code_value(certi_code_value.get("value"));
+			}
+			boList.add(extendBO);
+		}
+		isAdd=isAdd==null?"n":isAdd;
+		leftmenus = lmService.findLeftMenuByParams();
+		// 获取简历完成度
+//		res_completeness = lmService.getCompletenessByPK();
+		return "SUCCESS";
+	}
+	
+	private void copyProperties(SupperBO dest, SupperBO src) {
+		try {
+			PropertyUtils.copyProperties(dest, src);
+		} catch (Exception e) {
+			logger.error("属性值拷贝失败",e);
+			throw new BusinessException(e);
+		}
+	}
+	
+	
+	public HsCertificateExtendBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsCertificateExtendBO bo) {
+		this.bo = bo;
+	}
+
+	public List<HsCertificateExtendBO> getBoList() {
+		return boList;
+	}
+
+	public void setBoList(List<HsCertificateExtendBO> boList) {
+		this.boList = boList;
+	}
+
+	public String getIsAdd() {
+		return isAdd;
+	}
+
+	public void setIsAdd(String isAdd) {
+		this.isAdd = isAdd;
+	}
+
+	public Map<String, List<HsDictionaryDataBO>> getDicts() {
+		return dicts;
+	}
+
+	public void setDicts(Map<String, List<HsDictionaryDataBO>> dicts) {
+		this.dicts = dicts;
+	}
+
+	public String getLm_tab_name() {
+		return lm_tab_name;
+	}
+
+	public void setLm_tab_name(String lm_tab_name) {
+		this.lm_tab_name = lm_tab_name;
+	}
+
+	public List<HsPersonLeftMenuBO> getLeftmenus() {
+		return leftmenus;
+	}
+
+	public void setLeftmenus(List<HsPersonLeftMenuBO> leftmenus) {
+		this.leftmenus = leftmenus;
+	}
+
+	public String getRes_completeness() {
+		return res_completeness;
+	}
+
+	public void setRes_completeness(String res_completeness) {
+		this.res_completeness = res_completeness;
+	}
+
+	public List<HsFileDataBO> getFileDataList() {
+		return fileDataList;
+	}
+
+	public void setFileDataList(List<HsFileDataBO> fileDataList) {
+		this.fileDataList = fileDataList;
+	}
+	
+	
+}

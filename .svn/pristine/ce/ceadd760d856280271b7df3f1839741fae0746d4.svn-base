@@ -1,0 +1,4 @@
+package seentao.xhsn.sys.ckfinder.connector.handlers.command;
+
+public interface IPostCommand {
+}

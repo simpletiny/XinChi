@@ -1,0 +1,19 @@
+package seentao.xhsn.enterprise.index.dao;
+
+import seentao.xhsn.enterprise.index.bean.EntTopBean;
+
+/**
+ * 
+ * @author niushixing 2015-1-6 09:31:07
+ *
+ */
+public interface IEntIndexDao {
+	/**
+	 * 搜索企业首页头部信息
+	 * 
+	 * @param ent_id
+	 * @return
+	 */
+	public EntTopBean selectTopCnt(String ent_id);
+
+}

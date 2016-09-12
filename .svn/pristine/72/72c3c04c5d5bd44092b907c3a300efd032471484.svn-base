@@ -1,0 +1,101 @@
+package seentao.xhsn.sys.job.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsJobBO;
+import seentao.xhsn.common.DictionaryEnum;
+import seentao.xhsn.exception.BusinessException;
+import seentao.xhsn.sys.job.dao.IJobDAO;
+import seentao.xhsn.sys.job.service.IJobService;
+import seentao.xhsn.tools.Page;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月8日 上午10:35:32 
+ * @note 
+ */
+@Transactional
+@Service
+public class JobServiceImpl implements IJobService {
+	
+	@Autowired
+	private IJobDAO jobDao;
+	
+	@Override
+	public List<HsJobBO> findAllJob(Page<HsJobBO> page) {
+		return jobDao.findAllJob(page);
+	}
+
+	@Override
+	public HsJobBO getByPK(String id) {
+		return jobDao.getByPK(id);
+	}
+
+	@Override
+	public void saveJob(HsJobBO bo) {
+		if(bo.getId() != null && bo.getId().length() > 0){
+			jobDao.updateJobByPK(bo);
+		}else{
+			String code = "";
+			if(DictionaryEnum.LEVEL_FIRST.getIntValue() == bo.getLevel()){
+				code = getNextFirstCode();
+				bo.setParent_code("0");
+			}else if(DictionaryEnum.LEVEL_SECOND.getIntValue() == bo.getLevel()){
+				code = getNextSecondCodeByParent(bo.getParent_code());
+			}
+			bo.setJob_code(code);
+			jobDao.insert(bo);
+		}
+
+	}
+
+	/**根据父节点获取二级的下一个编码
+	 * @param parent_code
+	 * @return
+	 */
+	private String getNextSecondCodeByParent(String parent_code) {
+		String newCode = "";
+		HsJobBO param = new HsJobBO();
+		param.setParent_code(parent_code);
+		param.setLevel(DictionaryEnum.LEVEL_SECOND.getIntValue());;
+		String currentCode = jobDao.getMaxCodeByParam(param);
+		if(currentCode == null || currentCode.length() <= 0){
+			currentCode = parent_code;
+		}
+		newCode = String.valueOf(Integer.parseInt(currentCode) + 1);
+		return newCode;
+	}
+
+	/**获取下一个一级编码
+	 * @return
+	 */
+	private String getNextFirstCode() {
+		String newCode = "";
+		HsJobBO param = new HsJobBO();
+		param.setLevel(DictionaryEnum.LEVEL_FIRST.getIntValue());;
+		String currentCode = jobDao.getMaxCodeByParam(param);
+		if(currentCode != null && currentCode.length() > 0){
+			int top = Integer.parseInt(currentCode)/100 + 1;
+			newCode = top + "00";
+		}else{
+			throw new BusinessException("编码获取失败~！");
+		}
+		return newCode;
+	}
+
+	@Override
+	public void deleteJob(String id) {
+		jobDao.deleteById(id);
+	}
+
+	@Override
+	public List<HsJobBO> findJobChildrenByParent(Page<HsJobBO> page) {
+		//TODO:添加额外的条件
+		
+		return jobDao.findJobsByPage(page);
+	}
+}

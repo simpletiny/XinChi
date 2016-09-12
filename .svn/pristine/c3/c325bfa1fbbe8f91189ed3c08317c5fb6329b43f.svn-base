@@ -1,0 +1,149 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsDesiredPositionBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	public HsDesiredPositionBO(){
+		setTable_name("hs_desired_position");
+	}
+	
+	private java.lang.String res_id;
+
+	private java.lang.String user_id;
+
+	private java.lang.String employment_type;
+	private java.lang.String employment_type_value;
+	//期望工作城市
+	private java.lang.String desired_city;
+	private java.lang.String desired_city_value;
+	//期望职位
+	private java.lang.String job_type;
+	private java.lang.String job_type_value;
+	//期望行业
+	private java.lang.String desired_trade;
+	private java.lang.String desired_trade_value;
+
+	private java.lang.String desired_salary_scope;
+	private java.lang.String desired_salary_scope_value;
+
+	private java.lang.String state;
+	private java.lang.String state_value;
+
+	public java.lang.String getRes_id() {
+		return res_id;
+	}
+
+	public void setRes_id(java.lang.String res_id) {
+		this.res_id = res_id;
+	}
+
+	public java.lang.String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(java.lang.String user_id) {
+		this.user_id = user_id;
+	}
+
+	public java.lang.String getEmployment_type() {
+		return employment_type;
+	}
+
+	public void setEmployment_type(java.lang.String employment_type) {
+		this.employment_type = employment_type;
+	}
+
+	public java.lang.String getDesired_city() {
+		return desired_city;
+	}
+
+	public void setDesired_city(java.lang.String desired_city) {
+		this.desired_city = desired_city;
+	}
+
+	public java.lang.String getJob_type() {
+		return job_type;
+	}
+
+	public void setJob_type(java.lang.String job_type) {
+		this.job_type = job_type;
+	}
+
+	public java.lang.String getDesired_trade() {
+		return desired_trade;
+	}
+
+	public void setDesired_trade(java.lang.String desired_trade) {
+		this.desired_trade = desired_trade;
+	}
+
+	public java.lang.String getDesired_salary_scope() {
+		return desired_salary_scope;
+	}
+
+	public void setDesired_salary_scope(java.lang.String desired_salary_scope) {
+		this.desired_salary_scope = desired_salary_scope;
+	}
+
+	public java.lang.String getState() {
+		return state;
+	}
+
+	public void setState(java.lang.String state) {
+		this.state = state;
+	}
+
+	public java.lang.String getEmployment_type_value() {
+		return employment_type_value;
+	}
+
+	public void setEmployment_type_value(java.lang.String employment_type_value) {
+		this.employment_type_value = employment_type_value;
+	}
+
+	public java.lang.String getDesired_salary_scope_value() {
+		return desired_salary_scope_value;
+	}
+
+	public void setDesired_salary_scope_value(
+			java.lang.String desired_salary_scope_value) {
+		this.desired_salary_scope_value = desired_salary_scope_value;
+	}
+
+	public java.lang.String getState_value() {
+		return state_value;
+	}
+
+	public void setState_value(java.lang.String state_value) {
+		this.state_value = state_value;
+	}
+
+	public java.lang.String getDesired_city_value() {
+		return desired_city_value;
+	}
+
+	public void setDesired_city_value(java.lang.String desired_city_value) {
+		this.desired_city_value = desired_city_value;
+	}
+
+	public java.lang.String getJob_type_value() {
+		return job_type_value;
+	}
+
+	public void setJob_type_value(java.lang.String job_type_value) {
+		this.job_type_value = job_type_value;
+	}
+
+	public java.lang.String getDesired_trade_value() {
+		return desired_trade_value;
+	}
+
+	public void setDesired_trade_value(java.lang.String desired_trade_value) {
+		this.desired_trade_value = desired_trade_value;
+	}
+
+	
+}

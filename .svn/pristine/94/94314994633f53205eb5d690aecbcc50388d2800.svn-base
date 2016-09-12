@@ -1,0 +1,88 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsTradeBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String trade_name;
+		  
+		 
+		  private java.lang.String trad_code;
+		  
+		 
+		  private java.lang.String parent_code;
+		  
+		 
+		  private java.lang.Boolean ischild;
+		  
+		 
+		  private java.lang.Integer level;
+		  
+		 
+		  private java.lang.Integer hotspot;
+		  
+		 
+		  private java.lang.Integer sort;
+		  
+		 
+		  public  java.lang.String getTrade_name() {
+				return trade_name;
+			}
+			
+			public void setTrade_name( java.lang.String trade_name) {
+				this.trade_name = trade_name;
+			}
+		 
+		  public  java.lang.String getTrad_code() {
+				return trad_code;
+			}
+			
+			public void setTrad_code( java.lang.String trad_code) {
+				this.trad_code = trad_code;
+			}
+		 
+		  public  java.lang.String getParent_code() {
+				return parent_code;
+			}
+			
+			public void setParent_code( java.lang.String parent_code) {
+				this.parent_code = parent_code;
+			}
+		 
+		  public  java.lang.Boolean getIschild() {
+				return ischild;
+			}
+			
+			public void setIschild( java.lang.Boolean ischild) {
+				this.ischild = ischild;
+			}
+		 
+		  public  java.lang.Integer getLevel() {
+				return level;
+			}
+			
+			public void setLevel( java.lang.Integer level) {
+				this.level = level;
+			}
+		 
+		  public  java.lang.Integer getHotspot() {
+				return hotspot;
+			}
+			
+			public void setHotspot( java.lang.Integer hotspot) {
+				this.hotspot = hotspot;
+			}
+		 
+		  public  java.lang.Integer getSort() {
+				return sort;
+			}
+			
+			public void setSort( java.lang.Integer sort) {
+				this.sort = sort;
+			}
+	
+
+}

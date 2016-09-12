@@ -1,0 +1,99 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsPutresumeBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String user_id;
+		  
+		 
+		  private java.lang.String res_id;
+		  
+		 
+		  private java.lang.String etp_id;
+		  
+		 
+		  private java.lang.String job_id;
+		  
+		 
+		  private java.sql.Timestamp putdatetime;
+		  
+		 
+		  private java.lang.String issend;
+		  
+		 
+		  private java.lang.String issee;
+		  
+		 
+		  private java.sql.Timestamp lastseedatetime;
+		  
+		 
+		  public  java.lang.String getUser_id() {
+				return user_id;
+			}
+			
+			public void setUser_id( java.lang.String user_id) {
+				this.user_id = user_id;
+			}
+		 
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+		 
+		  public  java.lang.String getEtp_id() {
+				return etp_id;
+			}
+			
+			public void setEtp_id( java.lang.String etp_id) {
+				this.etp_id = etp_id;
+			}
+		 
+		  public  java.lang.String getJob_id() {
+				return job_id;
+			}
+			
+			public void setJob_id( java.lang.String job_id) {
+				this.job_id = job_id;
+			}
+		 
+		  public  java.sql.Timestamp getPutdatetime() {
+				return putdatetime;
+			}
+			
+			public void setPutdatetime( java.sql.Timestamp putdatetime) {
+				this.putdatetime = putdatetime;
+			}
+		 
+		  public  java.lang.String getIssend() {
+				return issend;
+			}
+			
+			public void setIssend( java.lang.String issend) {
+				this.issend = issend;
+			}
+		 
+		  public  java.lang.String getIssee() {
+				return issee;
+			}
+			
+			public void setIssee( java.lang.String issee) {
+				this.issee = issee;
+			}
+		 
+		  public  java.sql.Timestamp getLastseedatetime() {
+				return lastseedatetime;
+			}
+			
+			public void setLastseedatetime( java.sql.Timestamp lastseedatetime) {
+				this.lastseedatetime = lastseedatetime;
+			}
+	
+
+}

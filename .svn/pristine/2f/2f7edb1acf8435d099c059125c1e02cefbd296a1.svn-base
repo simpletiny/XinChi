@@ -1,0 +1,19 @@
+$(document).ready(
+		function() {
+			var basePath = window['basePath'];
+			// 注册
+			$("#registerbt").click(function() {
+				window.location.href = basePath+"share/register/registration.jsp";
+			});
+			// 登陆
+			$("#loginbt").click(function() {
+				window.location.href = basePath+"login.jsp";
+			});
+			$("#btn_search").click(
+					function() {
+						var type = $(this).attr("name");
+						type == "job" ? url = basePath + "person/jobSearch/job_search.jsp" : url = basePath
+								+ "enterprise/searchResumeInit";
+						window.location.href = url;
+					});
+		});

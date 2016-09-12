@@ -1,0 +1,18 @@
+package seentao.xhsn.sys.enterpriseupload.service;
+
+import java.util.List;
+import java.util.Map;
+
+import seentao.xhsn.bean.HsEnterpriseBO;
+import seentao.xhsn.bean.HsEtpReleasejobBO;
+
+public interface IEnterpriseUploadService {
+
+	/**企业信息和职位导入
+	 * @param enterMap
+	 * @param releasejobMap
+	 */
+	public void save(Map<String, HsEnterpriseBO> enterMap,
+			Map<String, List<HsEtpReleasejobBO>> releasejobMap);
+
+}

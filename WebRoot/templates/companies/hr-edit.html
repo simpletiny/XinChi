@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - 更新HR信息
+{% endblock %}
+
+{% block content%}
+  <input type="hidden" id="hidden_company_id" value="{{ companyId }}">
+  <input type="hidden" id="hidden_contact_id" value="{{ contactId }}">
+  <div class="main-body" xmlns="http://www.w3.org/1999/html">
+    <div class="subtitle">
+        <h2>更新HR信息<a href="/companies/{{ companyId }}/hrs" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+    </div>
+
+    <div class="main-container">
+        <div class="form-all">
+            <form class="form-box info-form">
+                <div class="input-row clearfloat required">
+                    <label class="l">姓名</label>
+                    <div class="ip"><input type="text" class="ip-default" data-bind="value: contact().name" placeholder="姓名" name="name" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">职位</label>
+                    <div class="ip"><input type="text" class="ip-default" data-bind="value: contact().position" placeholder="职位" name="position" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">固话</label>
+                    <div class="ip"><input type="text" class="ip- phone" data-bind="value: contact().phone" placeholder="固话"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">手机</label>
+                    <div class="ip"><input type="text" class="ip- phone" data-bind="value: contact().mobile" placeholder="手机" name="mobile"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">邮箱</label>
+                    <div class="ip"><input type="email" class="ip-default" data-bind="value: contact().email" placeholder="邮箱" name="email"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">QQ</label>
+                    <div class="ip"><input type="text" class="ip-" data-bind="value: contact().qq" placeholder="QQ" name="qq"/></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">决策权限</label>
+                    <div class="ip"><select class="form-control" data-bind="options: hrRoles, optionsCaption: '请选择...', value: contact().permission" name="decisionPerm" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">状态</label>
+                    <div class="ip"><select class="form-control" data-bind="options: hrStatuses, optionsCaption: '请选择...', value: contact().status" name="status" required="required"></select></div>
+                </div>
+                <div class="input-row clearfloat required">
+                    <label class="l">利益诉求</label>
+                    <div class="ip"><input type="text" class="ip-" data-bind="value: contact().interestDemand" placeholder="利益诉求" name="interestDemand" required="required"/></div>
+                </div>
+                <div class="input-row clearfloat">
+                    <label class="l">备注信息</label>
+                    <div class="ip"><textarea type="text" class="ip-default" rows="5" data-bind="value: contact().comment" placeholder="备注信息"></textarea></div>
+                </div>
+            </form>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: updateHr">保存</a></div>
+        </div>
+    </div>
+  </div>
+  <script>
+    $(".companies").addClass("current").children("ol").css("display", "block");
+  </script>
+  <script src="/static/js/hr/hr-edit.js{{ _suffix_ }}"></script>
+{% endblock %}

@@ -1,0 +1,93 @@
+package seentao.xhsn.sys.trade.action;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import seentao.xhsn.bean.HsTradeBO;
+import seentao.xhsn.sys.trade.service.ITradeService;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+/** 
+ * @author wjx 
+ * @date 2015年1月7日 下午1:36:37 
+ * @note  职业维护
+ */
+@Controller
+@Scope("prototype")
+public class TradeAction extends ActionSupport {
+	private static final long serialVersionUID = -8269563180340734332L;
+	
+	private List<HsTradeBO> trades ;
+	private String id;
+	private HsTradeBO bo;
+
+	@Autowired
+	private ITradeService tradeService;
+	
+	
+	/**查找所有的行业
+	 * @return
+	 */
+	public String findAllTrade(){
+		trades =  tradeService.findAllTrade();
+		return "SUCCESS";
+	}
+	
+	/**根据id获取行业信息，并进行编辑
+	 * @return
+	 */
+	public String editTrade(){
+		bo = tradeService.getByPK(id);
+		return "SUCCESS";
+	}
+	
+	/**根据bo保存行业信息
+	 * @return
+	 */
+	public String saveTrade(){
+		tradeService.saveTrade(bo);
+		return "SUCCESS";
+	}
+	
+	/**删除行业信息
+	 * @return
+	 */
+	public String deleteTrade(){
+		tradeService.deleteTrade(id);
+		return "SUCCESS";
+	}
+
+	
+	
+	
+	
+	public List<HsTradeBO> getTrades() {
+		return trades;
+	}
+
+	public void setTrades(List<HsTradeBO> trades) {
+		this.trades = trades;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public HsTradeBO getBo() {
+		return bo;
+	}
+
+	public void setBo(HsTradeBO bo) {
+		this.bo = bo;
+	}
+	
+	
+}

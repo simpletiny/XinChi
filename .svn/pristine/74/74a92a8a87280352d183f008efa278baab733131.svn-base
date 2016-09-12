@@ -1,0 +1,83 @@
+package seentao.xhsn.bean;
+
+import java.io.Serializable;
+import seentao.xhsn.common.SupperBO;
+
+public class HsCertificateBO extends SupperBO implements Serializable {
+	private static final long serialVersionUID = 1L;
+		
+		 
+		  private java.lang.String certi_code;
+		  
+		 
+		  private java.lang.String certi_name;
+		  
+		 
+		  private java.lang.String gain_month;
+		  
+		 
+		  private java.lang.String certi_file_id;
+		  
+		 
+		  private java.lang.String user_id;
+		  
+		 
+		  private java.lang.String res_id;
+		  
+		  
+		 
+		  public HsCertificateBO() {
+			super();
+			setTable_name("hs_certificate");
+		}
+
+		public  java.lang.String getCerti_code() {
+				return certi_code;
+			}
+			
+			public void setCerti_code( java.lang.String certi_code) {
+				this.certi_code = certi_code;
+			}
+		 
+		  public  java.lang.String getCerti_name() {
+				return certi_name;
+			}
+			
+			public void setCerti_name( java.lang.String certi_name) {
+				this.certi_name = certi_name;
+			}
+		 
+		  public  java.lang.String getGain_month() {
+				return gain_month;
+			}
+			
+			public void setGain_month( java.lang.String gain_month) {
+				this.gain_month = gain_month;
+			}
+		 
+		  public  java.lang.String getCerti_file_id() {
+				return certi_file_id;
+			}
+			
+			public void setCerti_file_id( java.lang.String certi_file_id) {
+				this.certi_file_id = certi_file_id;
+			}
+		 
+		  public  java.lang.String getUser_id() {
+				return user_id;
+			}
+			
+			public void setUser_id( java.lang.String user_id) {
+				this.user_id = user_id;
+			}
+		 
+		  public  java.lang.String getRes_id() {
+				return res_id;
+			}
+			
+			public void setRes_id( java.lang.String res_id) {
+				this.res_id = res_id;
+			}
+	
+
+}

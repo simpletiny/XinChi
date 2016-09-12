@@ -1,0 +1,171 @@
+package seentao.xhsn.sys.city.service.impl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import seentao.xhsn.bean.HsCityBO;
+import seentao.xhsn.common.ResourcesConstants;
+import seentao.xhsn.sys.city.bean.CityDataBean;
+import seentao.xhsn.sys.city.dao.ICityDAO;
+import seentao.xhsn.sys.city.service.ICityService;
+import seentao.xhsn.tools.ArrayBoUtil;
+import seentao.xhsn.tools.CompareUtil;
+
+/**
+ * 
+ * @author niushixing 2015-1-7 13:51:18
+ *
+ */
+@Service
+public class CityServiceImpl implements ICityService {
+
+	@Autowired
+	private ICityDAO cityDao;
+
+	@Override
+	public CityDataBean getCdBean() {
+		CityDataBean cdBean = new CityDataBean();
+		List<String> codeList = new ArrayList<String>();
+		List<String> nameList = new ArrayList<String>();
+
+		List<String> mainCityList1 = new ArrayList<String>();
+		List<String> mainCityList2 = new ArrayList<String>();
+		List<String> mainCityList3 = new ArrayList<String>();
+		List<String> mainCityList4 = new ArrayList<String>();
+
+		List<String> provinceList1 = new ArrayList<String>();
+		List<String> provinceList2 = new ArrayList<String>();
+		List<String> provinceList3 = new ArrayList<String>();
+		List<String> provinceList4 = new ArrayList<String>();
+		List<String> provinceList5 = new ArrayList<String>();
+
+		for (HsCityBO city : ResourcesConstants.ARRAY_CITY) {
+			codeList.add(city.getCity_code());
+			nameList.add(city.getCity_name());
+			if (city.getArea().equals(AREA_NORTH_EAST)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList1.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList1.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_EAST_CHINA)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList2.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList2.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_SOUTH_CHINA)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList3.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList3.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_SOUTH_WEST)) {
+				if (city.getMain_city().equals("Y")) {
+					mainCityList4.add(city.getCity_code());
+				} else {
+					if (city.getCity_code().endsWith("00")) {
+						provinceList4.add(city.getCity_code());
+					}
+				}
+			} else if (city.getArea().equals(AREA_OTHER)) {
+				if (city.getCity_code().endsWith("00") || city.getCity_code().equals("99")) {
+					provinceList5.add(city.getCity_code());
+				}
+			}
+		}
+		cdBean.setCodeList(codeList);
+		cdBean.setNameList(nameList);
+		cdBean.setMainCityList1(mainCityList1);
+		cdBean.setMainCityList2(mainCityList2);
+		cdBean.setMainCityList3(mainCityList3);
+		cdBean.setMainCityList4(mainCityList4);
+		cdBean.setProvinceList1(provinceList1);
+		cdBean.setProvinceList2(provinceList2);
+		cdBean.setProvinceList3(provinceList3);
+		cdBean.setProvinceList4(provinceList4);
+		cdBean.setProvinceList5(provinceList5);
+		return cdBean;
+	}
+
+	@Override
+	public Map<String, String> getProvinceList() {
+		Map<String, String> provinceList = new LinkedHashMap<String, String>();
+		List<HsCityBO> list = cityDao.getProvinceList();
+		for (HsCityBO city : list) {
+			provinceList.put(city.getCity_code(), city.getCity_name());
+		}
+		return provinceList;
+	}
+
+	@Override
+	public List<HsCityBO> getCityList(String provinceCode) {
+		List<HsCityBO> list = cityDao.getCityList(provinceCode);
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public String saveCity(HsCityBO cityBo) {
+		List<HsCityBO> exists = cityDao.selectExists(cityBo);
+		if (null != exists && exists.size() > 0) {
+			HsCityBO exist = exists.get(0);
+			if (exist.getCity_name().equals(cityBo.getCity_name())) {
+				return "NAME";
+			} else if (exist.getCity_code().equals(cityBo.getCity_code())) {
+				return "CODE";
+			}
+		}
+		if (cityBo.getId() != null && !cityBo.getId().equals("")) {
+			cityDao.update(cityBo);
+			cityBo = cityDao.selectByPrimaryKey(cityBo.getId());
+			ArrayBoUtil.updateByObject(ResourcesConstants.ARRAY_CITY, cityBo);
+		} else {
+
+			HsCityBO city = new HsCityBO();
+			city.setCity_code(cityBo.getProvince_code());
+			List<HsCityBO> list = cityDao.getAllByParam(city);
+			if (list != null && list.size() > 0) {
+				cityBo.setArea(list.get(0).getArea());
+			}
+			String cityId = cityDao.insert(cityBo);
+			cityBo = cityDao.selectByPrimaryKey(cityId);
+			ResourcesConstants.ARRAY_CITY.add(cityBo);
+		}
+		Collections.sort(ResourcesConstants.ARRAY_CITY, CompareUtil.createComparator(1, "sort_no"));
+		return "OK";
+	}
+
+	@Override
+	@Transactional
+	public String deleteCityById(String city_id) {
+		cityDao.delete(city_id);
+		return "OK";
+	}
+
+	@Override
+	@Transactional
+	public String markMainCity(String cityIds) {
+		String[] arrCityId = cityIds.split(",");
+		for (String city_id : arrCityId) {
+			HsCityBO city = cityDao.selectByPrimaryKey(city_id);
+			city.setMain_city("Y");
+			cityDao.update(city);
+		}
+		return "OK";
+	}
+
+}

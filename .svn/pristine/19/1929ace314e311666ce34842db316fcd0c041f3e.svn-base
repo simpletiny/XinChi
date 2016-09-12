@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsGroupMailRecordBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsGroupMailRecordBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="content" property="content" jdbcType="VARCHAR" />
+	    <result column="send_time" property="send_time" jdbcType="TIMESTAMP" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	receiver, 
+    	title, 
+    	content, 
+    	send_time, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_group_mail_record
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_group_mail_record
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsGroupMailRecordBO" >
+  	
+    insert into hs_group_mail_record
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="receiver != null">
+	        receiver,
+	      </if>
+	 	<if test="title != null">
+	        title,
+	      </if>
+	 	<if test="content != null">
+	        content,
+	      </if>
+	 	<if test="send_time != null">
+	        send_time,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="receiver != null">
+	        #{receiver,jdbcType=VARCHAR},
+	      </if>
+    	<if test="title != null">
+	        #{title,jdbcType=VARCHAR},
+	      </if>
+    	<if test="content != null">
+	        #{content,jdbcType=VARCHAR},
+	      </if>
+    	<if test="send_time != null">
+	        #{send_time,jdbcType=TIMESTAMP},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsGroupMailRecordBO" >
+    update hs_group_mail_record
+    <set >
+    	<if test="receiver != null">
+	        receiver = #{receiver,jdbcType=VARCHAR},
+	      </if>
+    	<if test="title != null">
+	        title = #{title,jdbcType=VARCHAR},
+	      </if>
+    	<if test="content != null">
+	        content = #{content,jdbcType=VARCHAR},
+	      </if>
+    	<if test="send_time != null">
+	        send_time = #{send_time,jdbcType=TIMESTAMP},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsGroupMailRecordBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_group_mail_record
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

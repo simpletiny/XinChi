@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seentao.xhsn.bean.mappers.HsCollegeResourceBOMapper" >
+  <resultMap id="BaseResultMap" type="seentao.xhsn.bean.HsCollegeResourceBO" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="college_name" property="college_name" jdbcType="VARCHAR" />
+	    <result column="graduate_date" property="graduate_date" jdbcType="DATE" />
+	    <result column="city_code" property="city_code" jdbcType="VARCHAR" />
+	    <result column="product_name" property="product_name" jdbcType="VARCHAR" />
+	    <result column="graduate_count" property="graduate_count" jdbcType="INTEGER" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+    	<result column="creater" property="creater" jdbcType="VARCHAR" />
+    	<result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    	<result column="modify_time" property="modify_time" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		id,create_time, creater, modifier,
+    	college_name, 
+    	graduate_date, 
+    	city_code, 
+    	product_name, 
+    	graduate_count, 
+    	modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hs_college_resource
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hs_college_resource
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="seentao.xhsn.bean.HsCollegeResourceBO" >
+  	
+    insert into hs_college_resource
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<if test="id != null">
+	        id,
+	      </if>
+	 	<if test="college_name != null">
+	        college_name,
+	      </if>
+	 	<if test="graduate_date != null">
+	        graduate_date,
+	      </if>
+	 	<if test="city_code != null">
+	        city_code,
+	      </if>
+	 	<if test="product_name != null">
+	        product_name,
+	      </if>
+	 	<if test="graduate_count != null">
+	        graduate_count,
+	      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modify_time != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+       	 #{id},
+        </if>
+    	<if test="college_name != null">
+	        #{college_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="graduate_date != null">
+	        #{graduate_date,jdbcType=DATE},
+	      </if>
+    	<if test="city_code != null">
+	        #{city_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product_name != null">
+	        #{product_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="graduate_count != null">
+	        #{graduate_count,jdbcType=INTEGER},
+	      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="seentao.xhsn.bean.HsCollegeResourceBO" >
+    update hs_college_resource
+    <set >
+    	<if test="college_name != null">
+	        college_name = #{college_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="graduate_date != null">
+	        graduate_date = #{graduate_date,jdbcType=DATE},
+	      </if>
+    	<if test="city_code != null">
+	        city_code = #{city_code,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product_name != null">
+	        product_name = #{product_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="graduate_count != null">
+	        graduate_count = #{graduate_count,jdbcType=INTEGER},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="seentao.xhsn.bean.HsCollegeResourceBO" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from hs_college_resource
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

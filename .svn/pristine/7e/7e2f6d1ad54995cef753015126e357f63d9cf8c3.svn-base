@@ -1,0 +1,17 @@
+
+            <div>
+            	<h4 style="background:url(${basePath}common/images/resume/images/qzyx2.png);"></h4>
+                <table cellspacing="0px"  style="width:17cm;border-collapse:collapse; border:0; font-size:10px; color:#565555; margin-left:50px;">
+                <tr>
+                	<td height="30" style="width:2cm;text-align:right">职业：</td>
+                	<td style="width:4cm;text-align:left" class="tdDesireJobType">
+	                	${desire.job_type}
+                	</td>
+                	<td height="30" style="width:2cm;text-align:right">性质：</td>
+                	<td style="width:3cm;text-align:left">${desire.employment_type}</td>
+                	<td height="30" style="width:2cm;text-align:right">工作地：</td>
+                	<td style="width:4cm;text-align:left">${desire.desired_city}</td>
+                </tr>
+                </table>
+            </div>
+       
