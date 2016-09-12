@@ -46,4 +46,28 @@
 			<comment>create table user_info</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+              DROP TABLE IF EXISTS task;
+              	CREATE  TABLE task (
+					  executor INT NOT NULL ,
+					  method VARCHAR(45) NULL ,
+					  parameters VARCHAR(45) NULL ,
+					  taskType VARCHAR(45) NULL ,
+					  executeTime TIMESTAMP NULL ,
+					  isdone CHAR(1) NULL ,
+					  create_time VARCHAR(15) NULL ,
+					  update_time VARCHAR(15) NULL ,
+					  pk VARCHAR(45) NULL ,
+					  new_tablecol VARCHAR(45) NOT NULL ,
+					  PRIMARY KEY (new_tablecol) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin;
+            ]]>
+			<comment>create table task</comment>
+		</sql>
+	</changeSet>
+
+
 </databaseChangeLog>
