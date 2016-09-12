@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
  <!-- 配置定时任务 -->
-	<!-- <bean id="seentaoQuartzTask" class="seentao.xhsn.common.SeenTaoQuartzTask"/>
+ <bean id="seentaoQuartzTask" class="com.xinchi.common.XinChiQuartzTask"/>
 	<bean id="taskInfo" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
 			<ref local="seentaoQuartzTask"/>
@@ -25,5 +25,5 @@
 		          <ref local="quartzTrigger"/>
 		    </list>
 		</property>
-	</bean> -->
+	</bean> 
 </beans>
