@@ -6,12 +6,41 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="alice">
-        <createTable tableName="debug_info">
-            <column name="message" type="varchar(255)"/>
-            <column name="date_ran" type="datetime">
-                    <constraints nullable="false"/>
-            </column>
-        </createTable>
+     <!--   delimiter $$
+
+CREATE TABLE `user_base` (
+  `login_name` varchar(15) COLLATE utf8_bin NOT NULL,
+  `password` varchar(32) COLLATE utf8_bin NOT NULL,
+  `user_number` varchar(10) COLLATE utf8_bin NOT NULL,
+  `id` varchar(18) COLLATE utf8_bin NOT NULL,
+  `user_name` varchar(8) COLLATE utf8_bin NOT NULL,
+  `sex` char(1) COLLATE utf8_bin NOT NULL DEFAULT 'M',
+  `delete_flg` char(1) COLLATE utf8_bin NOT NULL DEFAULT 'N',
+  `user_status` char(1) COLLATE utf8_bin NOT NULL DEFAULT '1',
+  `create_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+  `update_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+  `pk` char(22) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`login_name`,`pk`),
+  UNIQUE KEY `login_name_UNIQUE` (`login_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工表基本信息表'$$
+
+delimiter $$
+
+CREATE TABLE `user_info` (
+  `id` varchar(18) COLLATE utf8_bin NOT NULL,
+  `id_file_name` varchar(45) COLLATE utf8_bin NOT NULL,
+  `user_right` varchar(45) COLLATE utf8_bin NOT NULL,
+  `update_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+  `create_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
+  `pk` char(22) COLLATE utf8_bin NOT NULL,
+  `nick_name` varchar(10) COLLATE utf8_bin NOT NULL,
+  `cellphone` varchar(11) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`,`pk`),
+  UNIQUE KEY `staff_number_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工关联信息表'$$ -->
+
+
+
     </changeSet>
 
     <changeSet id="run-mark" author="alice" runAlways="true">
