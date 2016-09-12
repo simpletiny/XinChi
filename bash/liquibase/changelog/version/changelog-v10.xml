@@ -1,60 +1,49 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet id="1" author="alice">
-     <!--   delimiter $$
-
-CREATE TABLE `user_base` (
-  `login_name` varchar(15) COLLATE utf8_bin NOT NULL,
-  `password` varchar(32) COLLATE utf8_bin NOT NULL,
-  `user_number` varchar(10) COLLATE utf8_bin NOT NULL,
-  `id` varchar(18) COLLATE utf8_bin NOT NULL,
-  `user_name` varchar(8) COLLATE utf8_bin NOT NULL,
-  `sex` char(1) COLLATE utf8_bin NOT NULL DEFAULT 'M',
-  `delete_flg` char(1) COLLATE utf8_bin NOT NULL DEFAULT 'N',
-  `user_status` char(1) COLLATE utf8_bin NOT NULL DEFAULT '1',
-  `create_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `update_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `pk` char(22) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`login_name`,`pk`),
-  UNIQUE KEY `login_name_UNIQUE` (`login_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工表基本信息表'$$
-
-delimiter $$
-
-CREATE TABLE `user_info` (
-  `id` varchar(18) COLLATE utf8_bin NOT NULL,
-  `id_file_name` varchar(45) COLLATE utf8_bin NOT NULL,
-  `user_right` varchar(45) COLLATE utf8_bin NOT NULL,
-  `update_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `create_time` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `pk` char(22) COLLATE utf8_bin NOT NULL,
-  `nick_name` varchar(10) COLLATE utf8_bin NOT NULL,
-  `cellphone` varchar(11) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`,`pk`),
-  UNIQUE KEY `staff_number_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工关联信息表'$$ -->
-
-
-
-    </changeSet>
-
-    <changeSet id="run-mark" author="alice" runAlways="true">
-        <insert tableName="debug_info">
-            <column name="message" value="Liquibase update was ran"/>
-            <column name="date_ran" valueComputed="current_datetime"/>
-        </insert>
-        <rollback/>
-    </changeSet>
-
-
-    <include file="com/example/features/employees.xml"/>
-    <include file="features/store.sql" relativeToChangelogFile="true"/>
-
-    <includeAll path="com/example/versions"/>
-
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+              DROP TABLE IF EXISTS user_base;
+              CREATE TABLE user_base (
+				  login_name varchar(15) COLLATE utf8_bin NOT NULL,
+				  password varchar(32) COLLATE utf8_bin NOT NULL,
+				  user_number varchar(10) COLLATE utf8_bin NOT NULL,
+				  id varchar(18) COLLATE utf8_bin NOT NULL,
+				  user_name varchar(8) COLLATE utf8_bin NOT NULL,
+				  sex char(1) COLLATE utf8_bin NOT NULL DEFAULT 'M',
+				  delete_flg char(1) COLLATE utf8_bin NOT NULL DEFAULT 'N',
+				  user_status char(1) COLLATE utf8_bin NOT NULL DEFAULT '1',
+				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  pk char(22) COLLATE utf8_bin NOT NULL,
+				  PRIMARY KEY (login_name,pk),
+				  UNIQUE KEY login_name_UNIQUE (login_name)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工表基本信息表';
+            ]]>
+			<comment>create table user_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+              DROP TABLE IF EXISTS user_info;
+              CREATE TABLE user_info (
+				  id varchar(18) COLLATE utf8_bin NOT NULL,
+				  id_file_name varchar(45) COLLATE utf8_bin NOT NULL,
+				  user_right varchar(45) COLLATE utf8_bin NOT NULL,
+				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  pk char(22) COLLATE utf8_bin NOT NULL,
+				  nick_name varchar(10) COLLATE utf8_bin NOT NULL,
+				  cellphone varchar(11) COLLATE utf8_bin NOT NULL,
+				  PRIMARY KEY (id,pk),
+				  UNIQUE KEY staff_number_UNIQUE (id)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工关联信息表';
+            ]]>
+			<comment>create table user_info</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
