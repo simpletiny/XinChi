@@ -1,8 +1,0 @@
-function show(basePaht){
-	var openUrl = basePaht+"share/password/pwd.jsp";
-	var iWidth=800; 
-	var iHeight=400; 
-	var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
-	var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
-	 window.open(openUrl,"","height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft); 
-}

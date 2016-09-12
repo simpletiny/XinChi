@@ -1,9 +1,0 @@
-  <#if (cerlist?size>0) >
-  <div>
-  <h4 style="background:url(${basePath}common/images/resume/images/zs.png);"></h4>
-   <#list cerlist as cer>
-      <p>${cer.gain_month}：${cer.certi_code_value}</p>
-    </#list>
-  </div>
-  </#if>
-      

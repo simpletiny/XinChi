@@ -1,3 +1,0 @@
-function formsub(){
-	document.getElementById("myform").submit();
-}

@@ -1,9 +1,0 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<style type="text/css">
-#footer{ width:100%;  background:#e8e7e7; text-align:center;}
-#footer p{ font-size:12px; height:54px; line-height:54px; color:#b6b5b5;}
-</style>
-
-<div id="footer">
-     <p>用友新道科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;琼ICP备11002248号-3</p>
-</div>
