@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="alice">
+        <createTable tableName="debug_info">
+            <column name="message" type="varchar(255)"/>
+            <column name="date_ran" type="datetime">
+                    <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="run-mark" author="alice" runAlways="true">
+        <insert tableName="debug_info">
+            <column name="message" value="Liquibase update was ran"/>
+            <column name="date_ran" valueComputed="current_datetime"/>
+        </insert>
+        <rollback/>
+    </changeSet>
+
+
+    <include file="com/example/features/employees.xml"/>
+    <include file="features/store.sql" relativeToChangelogFile="true"/>
+
+    <includeAll path="com/example/versions"/>
+
+</databaseChangeLog>
