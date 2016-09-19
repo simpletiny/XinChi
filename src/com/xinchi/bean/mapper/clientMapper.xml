@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.ClientMapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientBean" >
-    	<id column="id" property="id" jdbcType="CHAR" />
 	    <result column="client_name" property="client_name" jdbcType="VARCHAR" />
 	    <result column="client_short_name" property="client_short_name" jdbcType="VARCHAR" />
 	    <result column="client_area" property="client_area" jdbcType="VARCHAR" />
@@ -53,7 +52,7 @@
     select 
     <include refid="Base_Column_List" />
     from client
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -243,8 +242,14 @@
     	<if test="create_user != null">
 	        create_user = #{create_user,jdbcType=VARCHAR},
 	      </if>
+	      <if test="create_time != null">
+	        create_time = #{create_time,jdbcType=VARCHAR},
+	      </if>
     	<if test="update_user != null">
 	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+	      <if test="update_time != null">
+	        update_time = #{update_time,jdbcType=VARCHAR},
 	      </if>
     	<if test="approve_user != null">
 	        approve_user = #{approve_user,jdbcType=VARCHAR},
@@ -255,29 +260,12 @@
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
 	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-       <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="modify_time != null">
-        modify_time = #{modify_time,jdbcType=VARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </update>
  <select id="selectByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
     from client
-   <where>
-	    <if test="user_id !=null">
-	    	user_id = #{user_id,jdbcType=CHAR}
-	    </if>
-	    <if test="res_id !=null">
-	    	and res_id = #{res_id,jdbcType=CHAR}
-	    </if>
-    </where>
    </select>
 </mapper>

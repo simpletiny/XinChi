@@ -37,6 +37,11 @@ public class DaoUtil {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		if (null != ub) {
+			supperBO.setCreate_user(ub.getUser_number());
+		}
 		sqlSession.insert(mapper, supperBO);
 		return pk;
 	}
@@ -167,7 +172,8 @@ public class DaoUtil {
 	 * List<SupperBO> listBo = sqlSession.selectList(mapper,param); return
 	 * listBo; }
 	 */
-	public <T extends SupperBO> List<T> selectByParam(String mapper, Object param) {
+	public <T extends SupperBO> List<T> selectByParam(String mapper,
+			Object param) {
 		List<T> listBo = sqlSession.selectList(mapper, param);
 		return listBo;
 	}
@@ -195,8 +201,10 @@ public class DaoUtil {
 	 *            :指定map key的列名
 	 * @return：BO的Map键值对对象
 	 */
-	public Map<String, Object> selectByMapParam(String mapper, Map map, String keyColumn) {
-		Map<String, Object> rtnMap = sqlSession.selectMap(mapper, map, keyColumn);
+	public Map<String, Object> selectByMapParam(String mapper, Map map,
+			String keyColumn) {
+		Map<String, Object> rtnMap = sqlSession.selectMap(mapper, map,
+				keyColumn);
 		return rtnMap;
 	}
 
@@ -207,7 +215,8 @@ public class DaoUtil {
 	 * @return
 	 */
 	public List<SupperBO> selectBySql(String sql) {
-		List<SupperBO> listBo = sqlSession.selectList("commonMapper.findRecords", sql);
+		List<SupperBO> listBo = sqlSession.selectList(
+				"commonMapper.findRecords", sql);
 		return listBo;
 	}
 
@@ -232,6 +241,11 @@ public class DaoUtil {
 	 */
 	public int updateByPK(String mapper, SupperBO supperBO) {
 		supperBO.setUpdate_time(DateUtil.getTimeMillis());
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		if (null != ub) {
+			supperBO.setUpdate_user(ub.getUser_number());
+		}
 		return sqlSession.update(mapper, supperBO);
 	}
 
@@ -279,10 +293,11 @@ public class DaoUtil {
 	 * @param supperBO
 	 * @return
 	 */
-	public <T extends Object> T selectOneValueByParam(String mapper, SupperBO supperBO) {
+	public <T extends Object> T selectOneValueByParam(String mapper,
+			SupperBO supperBO) {
 		return (T) sqlSession.selectOne(mapper, supperBO);
 	}
-	
+
 	public <T extends Object> T selectOneValue(String mapper) {
 		return (T) sqlSession.selectOne(mapper, null);
 	}

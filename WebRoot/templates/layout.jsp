@@ -23,7 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <div class="header-min-width">
             <div class="user-status">
                 <i class="ic-user"><img src="<%=basePath%>static/img/mc-default-userphoto.png" width="36" height="36" alt=""/></i>
-                <span></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/logout">退出</a><i class="fa fa-lg fa-sign-out"></i>
+                <span></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=basePath%>user/logout">退出</a><i class="fa fa-lg fa-sign-out"></i>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
@@ -51,7 +52,11 @@ public class UserAction extends BaseAction {
 
 		return result;
 	}
-
+	public String logout() {
+		HttpSession map = ServletActionContext.getRequest().getSession();
+		map.invalidate();
+		return "SUCCESS";
+	}
 	public String register() throws IOException {
 		if (ubb.getPassword().equals(password2)) {
 

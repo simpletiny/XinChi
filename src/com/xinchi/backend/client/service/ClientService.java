@@ -39,8 +39,10 @@ public interface ClientService {
 	 * 
 	 * @param bo
 	 */
-	public List<com.xinchi.bean.ClientBean> getAllByParam(
+	public List<com.xinchi.bean.ClientBean> getAllCompaniesByParam(
 			com.xinchi.bean.ClientBean bo);
 
 	public String createCompany(ClientBean client);
+	
+	public String updateCompany(ClientBean client);
 }

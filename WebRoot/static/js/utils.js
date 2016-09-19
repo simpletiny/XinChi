@@ -150,11 +150,15 @@ var date2iso = function(date) {
 };
 
 function startLoadingIndicator(msg) {
+	var apiurl = $("#hidden_apiurl").val();
+	if (apiurl==null){
+		apiurl = "../../";
+	}
     if ($('.large-format-loader').length == 0) {
         var uiCode =
             '<div class="large-format-loader is-not-loading">\
                 <div id="loader-inside-infi" class="loader-inside-format">\
-                    <p style="padding-top: 30px"><img height="50" width="50" src="/static/img/loading.gif"/></p>\
+                    <p style="padding-top: 30px"><img height="50" width="50" src="'+apiurl+'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
                 <div id="loader-inside-process" class="loader-inside-format" hidden>\
@@ -179,11 +183,15 @@ function startLoadingIndicator(msg) {
 }
 
 function startLoadingSimpleIndicator(msg) {
+	var apiurl = $("#hidden_apiurl").val();
+	if (apiurl==null){
+		apiurl = "../../";
+	}
     if ($('.large-format-loader').length == 0) {
         var uiCode =
             '<div class="large-format-loader-simple is-not-loading">\
                 <div id="loader-inside-infi" class="loader-inside-format">\
-                    <p style="padding-top: 30px"><img height="50" width="50" src="/static/img/loading.gif"/></p>\
+                    <p style="padding-top: 30px"><img height="50" width="50" src="'+apiurl+'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
                 <div id="loader-inside-process" class="loader-inside-format" hidden>\

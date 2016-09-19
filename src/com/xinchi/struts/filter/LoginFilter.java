@@ -53,14 +53,14 @@ public class LoginFilter extends HttpServlet implements Filter {
 			}
 		}else{
 			// 如果是XMLHttpRequest则为Ajax请求
-			String isAjax = request.getHeader("x-requested-with");
+//			String isAjax = request.getHeader("x-requested-with");
 			if (isEscapse(url)) {
 				fc.doFilter(request, response);
 			} else if (isNotControlUrl(url)) {
 				fc.doFilter(request, response);
 			} else {
 				if (sessionBean == null) {
-					response.sendRedirect(contextPath + "/login.jsp");
+					response.sendRedirect(contextPath + "/templates/users/login.jsp");
 					return;
 				}
 				fc.doFilter(request, response);

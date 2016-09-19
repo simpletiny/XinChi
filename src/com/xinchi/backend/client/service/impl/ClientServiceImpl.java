@@ -42,9 +42,15 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public List<com.xinchi.bean.ClientBean> getAllByParam(
+	public List<com.xinchi.bean.ClientBean> getAllCompaniesByParam(
 			com.xinchi.bean.ClientBean bo) {
 		return dao.getAllByParam(bo);
+	}
+
+	@Override
+	public String updateCompany(ClientBean client) {
+		dao.update(client);
+		return "success";
 	}
 
 }

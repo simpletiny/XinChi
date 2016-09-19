@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
 		                    </div>
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">编辑</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
 		                    </div>
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
@@ -42,11 +42,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="span8">
                         <label class="col-md-1 control-label">关键字</label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" data-bind="value: query().resumeContent" placeholder="公司关键字">
+                            <input type="text" class="form-control"  placeholder="公司关键字">
                         </div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">搜索</button>
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
                     </div>
                 </div>
             </form>
@@ -54,26 +54,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr role="row">
-                            <th>公司名称</th>
-                            <th>简称</th>
+                        	<th></th>
+                            <th>公司简称</th>
                             <th>公司类型</th>
+                            <th>地区</th>
                             <th>财务主体</th>
-                            <th>性别</th>
                             <th>手机号</th>
-                            <th>身份证照片</th>
-                            <th>审批</th>
+                            <th>电话</th>
+                            <th>传真</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: users">
+                    <tbody data-bind="foreach: clients">
                         <tr>
-                            <td data-bind="text: $data.user_name"></td>
-                            <td data-bind="text: $data.nick_name"></td>
-                            <td data-bind="text: $data.user_number"></td>
-                            <td data-bind="text: $data.id"></td>
-                            <td data-bind="text: $data.sex"></td>
-                            <td data-bind="text: $data.cellphone"></td>
-                            <td><a href="javascript:void(0)" data-bind="click: function() {$parent.checkIdPic($data.id_file_name)} ">查看</a></td>
-                            <td><a href="javascript:void(0)" data-bind="click: function() {$parent.agreeUser($data.pk)} ">同意</a>&nbsp;<a href="javascript:void(0)" data-bind="click: function() {$parent.rejectUser($data.pk)} ">拒绝</a></td>
+                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies"/></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.client_type"></td>
+                            <td data-bind="text: $data.client_area"></td>
+                            <td data-bind="text: $data.body_name"></td>
+                            <td data-bind="text: $data.body_cellphone"></td>
+                            <td data-bind="text: $data.telephone"></td>
+                             <td data-bind="text: $data.fax"></td>            
                         </tr>
                     </tbody>
                 </table>
