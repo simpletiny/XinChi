@@ -12,8 +12,6 @@ import ${pac}.dao.${clazzName?cap_first}DAO;
 import ${pac}.service.${clazzName?cap_first}Service;
 
 @Service
-@Transactional
-@Scope("prototype")
 public class ${clazzName?cap_first}ServiceImpl implements ${clazzName?cap_first}Service{
 
 	@Autowired

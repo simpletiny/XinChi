@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="mappers.${hbmMoudelVO.clzssName?cap_first}Mapper" >
-  <resultMap id="BaseResultMap" type="${hbmMoudelVO.clzssName?cap_first}" >
+<mapper namespace="com.xinchi.bean.mapper.${hbmMoudelVO.clzssName?cap_first}Mapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.${hbmMoudelVO.clzssName?cap_first}" >
     	<id column="id" property="id" jdbcType="CHAR" />
     <#list hbmMoudelVO.columnList as columnVO>
 	    <result column="${columnVO.propertyName}" property="${columnVO.propertyName}" jdbcType="${columnVO.jdbcType?upper_case}" />

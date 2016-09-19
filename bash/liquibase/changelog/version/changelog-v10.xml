@@ -68,6 +68,39 @@
 			<comment>create table task</comment>
 		</sql>
 	</changeSet>
-
+	
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+              DROP TABLE IF EXISTS client;
+             CREATE TABLE client (
+				  client_name varchar(30) COLLATE utf8_bin NOT NULL,
+				  client_short_name varchar(30) COLLATE utf8_bin NOT NULL,
+				  client_area varchar(10) COLLATE utf8_bin NOT NULL,
+				  client_type varchar(10) COLLATE utf8_bin NOT NULL,
+				  telephone varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  fax varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  address varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  body_name varchar(10) COLLATE utf8_bin NOT NULL,
+				  body_sex varchar(45) COLLATE utf8_bin NOT NULL,
+				  body_id varchar(18) COLLATE utf8_bin DEFAULT NULL,
+				  body_birth_year varchar(4) COLLATE utf8_bin DEFAULT NULL,
+				  body_wechat varchar(20) COLLATE utf8_bin DEFAULT NULL,
+				  body_cellphone varchar(11) COLLATE utf8_bin DEFAULT NULL,
+				  create_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  update_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  approve_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  update_reason varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  comment varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  pk char(22) COLLATE utf8_bin NOT NULL,
+				  PRIMARY KEY (pk)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='客户表';
+            ]]>
+			<comment>create table client</comment>
+		</sql>
+	</changeSet>
+	
 
 </databaseChangeLog>

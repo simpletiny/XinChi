@@ -37,6 +37,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <li><a href="<%=basePath%>templates/users/user-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>新用户审批</a></li>
                 </ol>
             </li>
+            <li class="client"><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
+                <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>公司管理</a></li>
+                </ol>
+            </li>
         </ul>
     </div>
 <!-- sidebar end -->

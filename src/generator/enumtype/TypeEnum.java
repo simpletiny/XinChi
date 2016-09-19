@@ -2,11 +2,11 @@ package generator.enumtype;
 
 public enum TypeEnum {
 
-	BIT("java.lang.Boolean", "bit", "bit"),TEXT("java.lang.String", "varchar", "text"),
-	LONGTEXT("java.lang.String", "varchar", "longtext"),
-	LONGBLOB("java.lang.String", "blog", "longblob"),CHAR("java.lang.String", "char", "char"),
-	VARCHAR("java.lang.String", "varchar", "varchar"),
-	TIMESTAMP("java.sql.Timestamp", "timestamp", "timestamp"),INT("java.lang.Integer", "integer", "int"),
+	BIT("Boolean", "bit", "bit"),TEXT("String", "varchar", "text"),
+	LONGTEXT("String", "varchar", "longtext"),
+	LONGBLOB("String", "blog", "longblob"),CHAR("String", "char", "char"),
+	VARCHAR("String", "varchar", "varchar"),
+	TIMESTAMP("java.sql.Timestamp", "timestamp", "timestamp"),INT("Integer", "integer", "int"),
 	DATE("java.sql.Date","date","date"),DATETIME("java.sql.Timestamp", "timestamp", "timestamp");
 	private String columnType;
 	

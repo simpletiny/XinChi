@@ -50,6 +50,5 @@
 		<action name="defaultAction" class="com.xinchi.common.DefaultAction"></action>	
     </package>
 	<!--  添加struts配置-->
-	 <include file="struts/struts-user.xml" /> 
-	 <include file="struts/struts-file.xml" /> 
+	 <include file="struts/*.xml" /> 
 </struts>   

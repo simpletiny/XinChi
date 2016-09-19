@@ -21,9 +21,9 @@ import freemarker.template.TemplateException;
 
 public class GeneratePackage {
 
-	public static final String clazzName="userInfo";
-	public static final String desc="任务";
-	public static final String voName="UserInfoBean";
+	public static final String clazzName="client";
+	public static final String desc="客户";
+	public static final String voName="ClientBean";
 	/**
 	 * @param args
 	 * @throws Exception 
@@ -32,8 +32,8 @@ public class GeneratePackage {
 		 URL url = GeneratePackage.class.getResource("/");
 		 String path1=url.getPath().replace("WebRoot/WEB-INF/classes/", "src/com/xinchi");
 		 String path2=path1+"/backend";
-//		 new File(path2+"/"+clazzName.toLowerCase()+"/action/").mkdirs();
-//		 new File(path2+"/"+clazzName.toLowerCase()+"/action/"+StringUtils.capitalize(clazzName)+"Action.java").createNewFile();
+		 new File(path2+"/"+clazzName.toLowerCase()+"/action/").mkdirs();
+		 new File(path2+"/"+clazzName.toLowerCase()+"/action/"+StringUtils.capitalize(clazzName)+"Action.java").createNewFile();
 		 new File(path2+"/"+clazzName.toLowerCase()+"/service/impl/").mkdirs();
 		 new File(path2+"/"+clazzName.toLowerCase()+"/service/"+StringUtils.capitalize(clazzName)+"Service.java").createNewFile();
 		 new File(path2+"/"+clazzName.toLowerCase()+"/service/impl/"+StringUtils.capitalize(clazzName)+"ServiceImpl.java").createNewFile();
@@ -47,7 +47,7 @@ public class GeneratePackage {
 		map.put("desc", desc);
 		map.put("vo", "com.xinchi.bean."+ voName);
 //		//生成action
-//		getAction(clazzName,map,"action.ftl");
+		getAction(clazzName,map,"action.ftl");
 //		//SERVICE
 		generateFile2(map, StringUtils.capitalize(clazzName)+"Service.java", "service.ftl", getClzssPath(), path2+"/"+clazzName.toLowerCase()+"/service/");
 		generateFile2(map, StringUtils.capitalize(clazzName)+"ServiceImpl.java", "serviceImpl.ftl", getClzssPath(), path2+"/"+clazzName.toLowerCase()+"/service/impl/");

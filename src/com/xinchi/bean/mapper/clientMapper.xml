@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ClientMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="client_name" property="client_name" jdbcType="VARCHAR" />
+	    <result column="client_short_name" property="client_short_name" jdbcType="VARCHAR" />
+	    <result column="client_area" property="client_area" jdbcType="VARCHAR" />
+	    <result column="client_type" property="client_type" jdbcType="VARCHAR" />
+	    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+	    <result column="fax" property="fax" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	    <result column="body_name" property="body_name" jdbcType="VARCHAR" />
+	    <result column="body_sex" property="body_sex" jdbcType="VARCHAR" />
+	    <result column="body_id" property="body_id" jdbcType="VARCHAR" />
+	    <result column="body_birth_year" property="body_birth_year" jdbcType="VARCHAR" />
+	    <result column="body_wechat" property="body_wechat" jdbcType="VARCHAR" />
+	    <result column="body_cellphone" property="body_cellphone" jdbcType="VARCHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+	    <result column="update_reason" property="update_reason" jdbcType="VARCHAR" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	client_name, 
+    	client_short_name, 
+    	client_area, 
+    	client_type, 
+    	telephone, 
+    	fax, 
+    	address, 
+    	body_name, 
+    	body_sex, 
+    	body_id, 
+    	body_birth_year, 
+    	body_wechat, 
+    	body_cellphone, 
+    	create_user, 
+    	update_user, 
+    	approve_user, 
+    	update_reason, 
+    	comment, 
+    	pk, 
+    	create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from client
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from client
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.ClientBean" >
+  	
+    insert into client
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="client_name != null">
+	        client_name,
+	      </if>
+	 	<if test="client_short_name != null">
+	        client_short_name,
+	      </if>
+	 	<if test="client_area != null">
+	        client_area,
+	      </if>
+	 	<if test="client_type != null">
+	        client_type,
+	      </if>
+	 	<if test="telephone != null">
+	        telephone,
+	      </if>
+	 	<if test="fax != null">
+	        fax,
+	      </if>
+	 	<if test="address != null">
+	        address,
+	      </if>
+	 	<if test="body_name != null">
+	        body_name,
+	      </if>
+	 	<if test="body_sex != null">
+	        body_sex,
+	      </if>
+	 	<if test="body_id != null">
+	        body_id,
+	      </if>
+	 	<if test="body_birth_year != null">
+	        body_birth_year,
+	      </if>
+	 	<if test="body_wechat != null">
+	        body_wechat,
+	      </if>
+	 	<if test="body_cellphone != null">
+	        body_cellphone,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="approve_user != null">
+	        approve_user,
+	      </if>
+	 	<if test="update_reason != null">
+	        update_reason,
+	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="client_name != null">
+	        #{client_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_short_name != null">
+	        #{client_short_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_area != null">
+	        #{client_area,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_type != null">
+	        #{client_type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="telephone != null">
+	        #{telephone,jdbcType=VARCHAR},
+	      </if>
+    	<if test="fax != null">
+	        #{fax,jdbcType=VARCHAR},
+	      </if>
+    	<if test="address != null">
+	        #{address,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_name != null">
+	        #{body_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_sex != null">
+	        #{body_sex,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_id != null">
+	        #{body_id,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_birth_year != null">
+	        #{body_birth_year,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_wechat != null">
+	        #{body_wechat,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_cellphone != null">
+	        #{body_cellphone,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approve_user != null">
+	        #{approve_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_reason != null">
+	        #{update_reason,jdbcType=VARCHAR},
+	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientBean" >
+    update client
+    <set >
+    	<if test="client_name != null">
+	        client_name = #{client_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_short_name != null">
+	        client_short_name = #{client_short_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_area != null">
+	        client_area = #{client_area,jdbcType=VARCHAR},
+	      </if>
+    	<if test="client_type != null">
+	        client_type = #{client_type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="telephone != null">
+	        telephone = #{telephone,jdbcType=VARCHAR},
+	      </if>
+    	<if test="fax != null">
+	        fax = #{fax,jdbcType=VARCHAR},
+	      </if>
+    	<if test="address != null">
+	        address = #{address,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_name != null">
+	        body_name = #{body_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_sex != null">
+	        body_sex = #{body_sex,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_id != null">
+	        body_id = #{body_id,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_birth_year != null">
+	        body_birth_year = #{body_birth_year,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_wechat != null">
+	        body_wechat = #{body_wechat,jdbcType=VARCHAR},
+	      </if>
+    	<if test="body_cellphone != null">
+	        body_cellphone = #{body_cellphone,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approve_user != null">
+	        approve_user = #{approve_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_reason != null">
+	        update_reason = #{update_reason,jdbcType=VARCHAR},
+	      </if>
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+       <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modify_time != null">
+        modify_time = #{modify_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from client
+   <where>
+	    <if test="user_id !=null">
+	    	user_id = #{user_id,jdbcType=CHAR}
+	    </if>
+	    <if test="res_id !=null">
+	    	and res_id = #{res_id,jdbcType=CHAR}
+	    </if>
+    </where>
+   </select>
+</mapper>

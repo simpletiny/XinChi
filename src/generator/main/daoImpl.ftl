@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import ${vo};
-import seentao.xhsn.common.DaoUtil;
+import com.xinchi.common.DaoUtil;
 import ${pac}.dao.${clazzName?cap_first}DAO;
 
 
 @Repository
-@Scope("prototype")
 public class ${clazzName?cap_first}DAOImpl extends SqlSessionDaoSupport implements ${clazzName?cap_first}DAO{
 
 	private SqlSession sqlSession;
