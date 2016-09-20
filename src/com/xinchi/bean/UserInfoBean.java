@@ -20,6 +20,8 @@ public class UserInfoBean extends SupperBO implements Serializable {
 
 	private java.lang.String cellphone;
 
+	private String user_role;
+
 	public java.lang.String getId() {
 		return id;
 	}
@@ -66,6 +68,14 @@ public class UserInfoBean extends SupperBO implements Serializable {
 
 	public void setId_file_name(java.lang.String id_file_name) {
 		this.id_file_name = id_file_name;
+	}
+
+	public String getUser_role() {
+		return user_role;
+	}
+
+	public void setUser_role(String user_role) {
+		this.user_role = user_role;
 	}
 
 }

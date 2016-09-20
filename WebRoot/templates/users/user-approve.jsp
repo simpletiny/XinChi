@@ -51,7 +51,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        </div>
     </div>
   </div>
-
+  <div id="agree-panel" style="display:none">
+  	<input type="hidden" id="current-pk" />
+      <div class="input-row clearfloat">
+	        <div class="col-md-12">
+	             <label class="l">员工角色</label>
+	                 <div class="ip">
+	                       <div data-bind="foreach: allRoles" style="padding-top: 4px;">
+	                           <em class="small-box">
+	                                 <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenUserRoles"/><label data-bind="text: $root.roleMapping[$data]"></label>
+	                            </em>
+	                        </div>
+	                   </div>
+	       </div>
+       </div>
+       <div class="input-row clearfloat" style="float:right">
+	       <a type="submit" class="btn btn-green btn-r" data-bind="click: doAgree">确定</a>
+	       <a type="submit" class="btn btn-green btn-r" data-bind="click: doCancel">取消</a>
+     </div>
+  </div>
+ 
  <div id="pic-check" style="display:none">
  	<jsp:include page="../common/check-picture.jsp" />
  </div>

@@ -41,6 +41,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>公司管理</a></li>
                 </ol>
+                 <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户员工</a></li>
+                </ol>
             </li>
         </ul>
     </div>

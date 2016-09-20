@@ -22,6 +22,9 @@ public class UserBaseBean extends SupperBO implements Serializable {
 	private java.lang.String delete_flg;
 
 	private java.lang.String user_status;
+	
+	private String approve_user;
+	private String approve_time;
 
 	public java.lang.String getLogin_name() {
 		return login_name;
@@ -85,6 +88,22 @@ public class UserBaseBean extends SupperBO implements Serializable {
 
 	public void setUser_status(java.lang.String user_status) {
 		this.user_status = user_status;
+	}
+
+	public String getApprove_user() {
+		return approve_user;
+	}
+
+	public void setApprove_user(String approve_user) {
+		this.approve_user = approve_user;
+	}
+
+	public String getApprove_time() {
+		return approve_time;
+	}
+
+	public void setApprove_time(String approve_time) {
+		this.approve_time = approve_time;
 	}
 
 }

@@ -53,4 +53,10 @@ public interface UserService {
 	public String login(UserBaseBean ubb);
 	
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo);
+
+	public String approveUser(String user_pk, String user_roles);
+
+	public List<UserCommonBean> getAllNewUsers();
+
+	public String rejectUser(String user_pk);
 }

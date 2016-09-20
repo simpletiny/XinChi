@@ -52,17 +52,20 @@ public class UserAction extends BaseAction {
 
 		return result;
 	}
+
 	public String logout() {
 		HttpSession map = ServletActionContext.getRequest().getSession();
 		map.invalidate();
 		return "SUCCESS";
 	}
+
 	public String register() throws IOException {
 		if (ubb.getPassword().equals(password2)) {
 
 			String ext = Utils.getFileExt(fileFileName);
 			String fileFolder = PropertiesUtil.getProperty("userIdFileFolder");
-			File destfile = new File(fileFolder + File.separator + ubb.getId() + "." + ext);
+			File destfile = new File(fileFolder + File.separator + ubb.getId()
+					+ "." + ext);
 			FileUtils.copyFile(file, destfile);
 			file.delete();
 			uib.setId_file_name(ubb.getId() + "." + ext);
@@ -88,8 +91,20 @@ public class UserAction extends BaseAction {
 
 	private List<UserCommonBean> users;
 
-	public String search() {
-		users = userService.getAllUserCommonByParam(null);
+	public String searchNewUsers() {
+		users = userService.getAllNewUsers();
+		return SUCCESS;
+	}
+
+	private String user_pk;
+	private String user_roles;
+
+	public String approveUser() {
+		resultStr = userService.approveUser(user_pk, user_roles);
+		return SUCCESS;
+	}
+	public String rejectUser() {
+		resultStr = userService.rejectUser(user_pk);
 		return SUCCESS;
 	}
 
@@ -162,6 +177,22 @@ public class UserAction extends BaseAction {
 
 	public void setUsers(List<UserCommonBean> users) {
 		this.users = users;
+	}
+
+	public String getUser_pk() {
+		return user_pk;
+	}
+
+	public void setUser_pk(String user_pk) {
+		this.user_pk = user_pk;
+	}
+
+	public String getUser_roles() {
+		return user_roles;
+	}
+
+	public void setUser_roles(String user_roles) {
+		this.user_roles = user_roles;
 	}
 
 }

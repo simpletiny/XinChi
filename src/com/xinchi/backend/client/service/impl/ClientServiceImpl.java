@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.backend.client.service.ClientService;
@@ -16,6 +17,7 @@ public class ClientServiceImpl implements ClientService {
 	private ClientDAO dao;
 
 	@Override
+	@Transactional
 	public String createCompany(ClientBean client) {
 		dao.insert(client);
 		return "success";
@@ -27,6 +29,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
+	@Transactional
 	public void update(com.xinchi.bean.ClientBean bo) {
 		dao.update(bo);
 	}

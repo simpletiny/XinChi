@@ -42,4 +42,6 @@ public interface UserDAO{
 	
 	
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo);
+
+	public List<UserCommonBean> getAllNewUsers();
 }

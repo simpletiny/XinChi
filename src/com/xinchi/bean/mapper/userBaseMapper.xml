@@ -13,10 +13,12 @@
 	    <result column="user_status" property="user_status" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+ 	    <result column="approve_time" property="approve_time" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
-  		
+  		pk,
     	login_name, 
     	password, 
     	user_number, 
@@ -25,18 +27,20 @@
     	sex, 
     	delete_flg, 
     	user_status, 
+    	approve_user,
+    	approve_time,
     	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from user_base
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user_base
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </delete>
   
   <insert id="insert" parameterType="com.xinchi.bean.UserBaseBean" >
@@ -70,6 +74,12 @@
 	      </if>
 	 	<if test="user_status != null">
 	        user_status,
+	      </if>
+	     <if test="approve_user != null">
+	        approve_user,
+	      </if>
+	          <if test="approve_time != null">
+	        approve_time,
 	      </if>
       <if test="create_time != null">
         create_time,
@@ -105,6 +115,12 @@
 	      </if>
     	<if test="user_status != null">
 	        #{user_status,jdbcType=CHAR},
+	      </if>
+	      <if test="approve_user != null">
+	        #{approve_user,jdbcType=CHAR},
+	      </if>
+	       <if test="approve_time != null">
+	        #{approve_time,jdbcType=CHAR},
 	      </if>
       <if test="create_time != null">
         #{create_time,jdbcType=VARCHAR},
@@ -143,11 +159,14 @@
     	<if test="user_status != null">
 	        user_status = #{user_status,jdbcType=CHAR},
 	      </if>
-       <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="modify_time != null">
-        modify_time = #{modify_time,jdbcType=VARCHAR},
+	    <if test="approve_user != null">
+	        approve_user = #{approve_user,jdbcType=VARCHAR},
+	      </if>
+	        <if test="approve_time != null">
+	        approve_time = #{approve_time,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
       </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}
@@ -164,6 +183,6 @@
    </select>
  
    <select id="selectMaxUserNumber" resultType="java.lang.String">
-      select MAX(user_number) from user_base
+      select MAX(user_number) from user_base where user_number != 'admin'
    </select>
 </mapper>

@@ -16,8 +16,14 @@
 		<action name="checkLoginName" class="userAction" method="checkLoginName">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<action name="search" class="userAction" method="search">
+		<action name="searchNewUsers" class="userAction" method="searchNewUsers">
 			<result name="success" type="json"></result>
+		</action>
+		<action name="approveUser" class="userAction" method="approveUser">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="rejectUser" class="userAction" method="rejectUser">
+			<result name="success" type="str">resultStr</result>
 		</action>
 	</package>
 

@@ -65,4 +65,11 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 		return list;
 	}
 
+	@Override
+	public List<UserCommonBean> getAllNewUsers() {
+		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllNewUsers",
+				null);
+		return list;
+	}
+
 }

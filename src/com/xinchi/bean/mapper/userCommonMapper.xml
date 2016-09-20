@@ -32,6 +32,12 @@
 		B.nick_name,
 		B.cellphone
   </sql>
+   <select id="selectAllNewUsers" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id where A.user_status='A'
+  </select>
     <select id="selectAllByParam" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean" >
     select 
     <include refid="Base_Column_List" />

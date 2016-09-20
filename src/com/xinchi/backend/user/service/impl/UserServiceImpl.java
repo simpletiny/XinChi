@@ -15,14 +15,14 @@ import com.xinchi.backend.util.UserUtilService;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
 
 @Service
 public class UserServiceImpl implements UserService {
-
 	@Autowired
 	private UserDAO dao;
 	@Autowired
@@ -57,7 +57,8 @@ public class UserServiceImpl implements UserService {
 				sessionBean.setNick_name(uib.getNick_name());
 				sessionBean.setCellphone(uib.getCellphone());
 				sessionBean.setUser_status(user.getUser_status());
-				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
+				XinChiApplicationContext.setSession(
+						ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 				return "success";
 			} else {
 				return "input";
@@ -78,6 +79,37 @@ public class UserServiceImpl implements UserService {
 		userInfoService.insert(uib);
 	}
 
+	@Override
+	@Transactional
+	public String approveUser(String user_pk, String user_roles) {
+		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
+		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		ubb.setApprove_time(DateUtil.getTimeMillis());
+		ubb.setApprove_user(sessionBean.getUser_number());
+		ubb.setUser_status(ResourcesConstants.USER_STATUS_NORMAL);
+		uib.setUser_role(user_roles);
+
+		dao.update(ubb);
+
+		infoDao.update(uib);
+
+		return "success";
+	}
+
+	@Override
+	@Transactional
+	public String rejectUser(String user_pk) {
+		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		ubb.setApprove_time(DateUtil.getTimeMillis());
+		ubb.setApprove_user(sessionBean.getUser_number());
+		ubb.setUser_status(ResourcesConstants.USER_STATUS_REJECT);
+		dao.update(ubb);
+		return "success";
+	}
 	@Override
 	public void update(UserBaseBean bo) {
 		dao.update(bo);
@@ -108,5 +140,12 @@ public class UserServiceImpl implements UserService {
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo) {
 		return dao.getAllUserCommonByParam(bo);
 	}
+
+	@Override
+	public List<UserCommonBean> getAllNewUsers() {
+		return dao.getAllNewUsers();
+
+	}
+
 
 }

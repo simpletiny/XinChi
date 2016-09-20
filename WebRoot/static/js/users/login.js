@@ -26,9 +26,9 @@ function check_name() {
 			}
 		},
 		error : function(data) {
-			console.log(eval(data))
+			console.log(eval(data));
 		}
-	})
+	});
 }
 
 $(document).ready(function() {

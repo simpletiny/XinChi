@@ -10,6 +10,7 @@
 		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="user_role" property="user_role" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -20,6 +21,7 @@
 		pk,
 		nick_name,
 		cellphone,
+		user_role,
 		create_time,update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -40,7 +42,7 @@
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from user_info
-		where id = #{id,jdbcType=CHAR}
+		where pk = #{pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.UserInfoBean">
@@ -65,6 +67,9 @@
 			</if>
 			<if test="cellphone != null">
 				cellphone,
+			</if>
+			<if test="user_role != null">
+				user_role,
 			</if>
 			<if test="create_time != null">
 				create_time,
@@ -91,6 +96,9 @@
 			</if>
 			<if test="cellphone != null">
 				#{cellphone,jdbcType=VARCHAR},
+			</if>
+		    <if test="user_role != null">
+				#{user_role,jdbcType=VARCHAR},
 			</if>
 			<if test="create_time != null">
 				#{create_time,jdbcType=VARCHAR},
@@ -123,14 +131,14 @@
 			<if test="cellphone != null">
 				cellphone = #{cellphone,jdbcType=VARCHAR},
 			</if>
-			<if test="modifier != null">
-				modifier = #{modifier,jdbcType=VARCHAR},
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
-			<if test="modify_time != null">
-				modify_time = #{modify_time,jdbcType=VARCHAR},
+			<if test="user_role != null">
+				user_role = #{user_role,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=CHAR}
+		where pk = #{pk,jdbcType=CHAR}
 	</update>
 	<select id="selectByParam" parameterType="com.xinchi.bean.UserInfoBean"
 		resultMap="BaseResultMap">
