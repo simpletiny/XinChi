@@ -14,7 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>公司新建<a href="<%=basePath %>/templates/client/company.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>财务主体新建<a href="<%=basePath %>/templates/client/company.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -22,12 +22,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <form class="form-box info-form">
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
-                        <label class="l">公司名称</label>
-                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: client().client_name" placeholder="公司名称" name="client.client_name" required="required"/></div>
+                        <label class="l">主体名称</label>
+                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: client().client_name" placeholder="主体名称" name="client.client_name" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
-                        <label class="l">公司简称</label>
-                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: client().client_short_name" placeholder="公司简称" name="client.client_short_name" required="required"/></div>
+                        <label class="l">主体简称</label>
+                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: client().client_short_name" placeholder="主体简称" name="client.client_short_name" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -57,11 +57,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
                 <hr noshade color="#0066cc">
-                 <h3>财务主体</h3>
+                 <h3>负责人信息</h3>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">姓名</label>
-                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: client().body_name" placeholder="财务主体姓名" name="client.body_name" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: client().body_name" placeholder="姓名" name="client.body_name" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">性别</label>
@@ -75,13 +75,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     <div class="col-md-6">
                         <label class="l">微信</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_wechat" placeholder="财务主体微信" name="client.body_wechat"/></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_wechat" placeholder="微信" name="client.body_wechat"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_cellphone" placeholder="财务主体手机号" name="client.body_cellphone" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_cellphone" placeholder="手机号" name="client.body_cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6">
                         <label class="l">出生年</label>

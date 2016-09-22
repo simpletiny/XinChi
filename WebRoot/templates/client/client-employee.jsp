@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
 		                    </div>
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
 		                    </div>
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
@@ -65,17 +65,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>所属销售</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: clients">
+                    <tbody data-bind="foreach: employees">
                         <tr>
-                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies"/></td>
-                            <td ><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a> </td>
-                            <td data-bind="text: $data.client_type"></td>
-                            <td data-bind="text: $data.client_area"></td>
-                            <td data-bind="text: $data.body_name"></td>
-                            <td data-bind="text: $data.body_cellphone"></td>
-                            <td data-bind="text: $data.telephone"></td>
-                             <td data-bind="text: $data.fax"></td>    
-                             <td data-bind="text: $data.fax"></td>          
+                        	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees"/></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.sex"></td>
+                            <td data-bind="text: $data.area"></td>
+                            <td data-bind="text: $data.financial_body_name"></td>
+                            <td data-bind="text: $data.ellphone"></td>
+                            <td data-bind="text: $data.qq"></td>
+                            <td data-bind="text: $data.wechat"></td>    
+                            <td data-bind="text: $data.sales"></td>          
                         </tr>
                     </tbody>
                 </table>

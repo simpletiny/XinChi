@@ -14,6 +14,15 @@
 		<action name="searchOneCompany" class="clientAction" method="searchCompanyByPk">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="createEmployee" class="employeeAction" method="createEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchEmployee" class="employeeAction" method="searchEmployee">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchOneEmployee" class="employeeAction" method="searchOneEmployee">
+			<result name="success" type="json"></result>
+		</action>
 	</package>
 
 </struts>

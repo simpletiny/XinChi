@@ -19,6 +19,7 @@ import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.Utils;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -103,6 +104,12 @@ public class UserAction extends BaseAction {
 		resultStr = userService.approveUser(user_pk, user_roles);
 		return SUCCESS;
 	}
+
+	public String searchAllSales() {
+		users = userService.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
+		return SUCCESS;
+	}
+
 	public String rejectUser() {
 		resultStr = userService.rejectUser(user_pk);
 		return SUCCESS;

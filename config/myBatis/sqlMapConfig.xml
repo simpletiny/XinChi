@@ -18,7 +18,8 @@
          <mapper resource="com/xinchi/bean/mapper/userBaseMapper.xml"/> 
          <mapper resource="com/xinchi/bean/mapper/userInfoMapper.xml"/>
          <mapper resource="com/xinchi/bean/mapper/userCommonMapper.xml"/> 	
-         <mapper resource="com/xinchi/bean/mapper/clientMapper.xml"/> 	
+         <mapper resource="com/xinchi/bean/mapper/clientMapper.xml"/> 
+           <mapper resource="com/xinchi/bean/mapper/clientEmployeeMapper.xml"/> 		
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册
         <package name="com.tiantian.mybatis.mapperinterface"/>-->
     </mappers>

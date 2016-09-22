@@ -44,4 +44,11 @@
     from user_base A LEFT JOIN user_info B 
     ON A.id = B.id
   </select>
+    <select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id
+    where B.user_role like CONCAT('%',#{roles},'%')
+  </select>
 </mapper>

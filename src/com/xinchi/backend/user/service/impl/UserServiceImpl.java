@@ -111,6 +111,11 @@ public class UserServiceImpl implements UserService {
 		return "success";
 	}
 	@Override
+	public List<UserCommonBean> getAllUsersByRole(String roles) {
+		return dao.getAllUsersByRole(roles);
+	}
+
+	@Override
 	public void update(UserBaseBean bo) {
 		dao.update(bo);
 	}
@@ -146,6 +151,7 @@ public class UserServiceImpl implements UserService {
 		return dao.getAllNewUsers();
 
 	}
+
 
 
 }

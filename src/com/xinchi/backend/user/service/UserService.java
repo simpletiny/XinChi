@@ -59,4 +59,6 @@ public interface UserService {
 	public List<UserCommonBean> getAllNewUsers();
 
 	public String rejectUser(String user_pk);
+
+	public List<UserCommonBean> getAllUsersByRole(String uSER_ROLE_SALES);
 }

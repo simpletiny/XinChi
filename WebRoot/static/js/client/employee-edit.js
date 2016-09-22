@@ -1,22 +1,39 @@
 var financialLayer;
-var CompanyContext = function() {
+var EmployeeContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.client = ko.observable({});
+	self.employeePk = $("#employee_key").val();
+	self.employee = ko.observable({});
 	self.genders = [ '男', '女' ];
 	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
-	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
+//	self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	self.sales = ko.observableArray([]);
-	self.employee = ko.observable({});
 	self.clients = ko.observable({
 		total : 0,
 		items : []
 	});
-
 	self.choosenSales = ko.observableArray([]);
+	
+	startLoadingSimpleIndicator("加载中");
+
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 	});
+	$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+		employee_pk : self.employeePk
+	}, function(data) {
+		if (data.employee) {
+			self.employee(data.employee);
+//			self.choosenSales=self.employee().sales.split(",");
+			self.choosenSales=["dnhzfnV0fHx1fHRygH57dA"];
+		} else {
+			fail_msg("员工不存在！");
+		}
+		endLoadingIndicator();
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+	
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
@@ -52,29 +69,24 @@ var CompanyContext = function() {
 		layer.close(financialLayer);
 	};
 
-	self.createEmployee = function() {
-
+	
+	self.saveEmployee = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-
-		$.ajax(
-				{
-					type : "POST",
-					url : self.apiurl + 'client/createEmployee',
-					data : $("form").serialize() + "&employee.sales="
-							+ self.choosenSales()
-				}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/client/client-employee.jsp";
-					}
-				});
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'client/updateEmployee',
+			data : $("form").serialize()
+		}).success(function(str) {
+			if(str=="success"){
+				window.location.href=self.apiurl+"templates/client/client-employee.jsp";
+			}
+		});
 	};
 };
 
-var ctx = new CompanyContext();
+var ctx = new EmployeeContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);

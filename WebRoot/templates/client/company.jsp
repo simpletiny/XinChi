@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>公司管理</h2>
+        <h2>财务主体管理</h2>
     </div>
 
     <div class="main-container">
@@ -42,7 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="span8">
                         <label class="col-md-1 control-label">关键字</label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="公司关键字">
+                            <input type="text" class="form-control"  placeholder="关键字">
                         </div>
                     </div>
                     <div>
@@ -55,10 +55,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <thead>
                         <tr role="row">
                         	<th></th>
-                            <th>公司简称</th>
-                            <th>公司类型</th>
+                            <th>财务主体简称</th>
+                            <th>类型</th>
                             <th>地区</th>
-                            <th>财务主体</th>
+                            <th>负责人</th>
                             <th>手机号</th>
                             <th>电话</th>
                             <th>传真</th>

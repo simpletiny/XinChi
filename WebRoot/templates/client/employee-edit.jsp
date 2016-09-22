@@ -3,6 +3,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -14,21 +15,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>员工编辑<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>员工新建<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form">
-            
+             <input type="hidden" id="employee_key" name = "employee.pk" value="<%=key%>">
                    <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">姓名</label>
-                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().body_name" placeholder="姓名" name="employee.name" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().name" placeholder="姓名" name="employee.name" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">性别</label>
-                        <div class="ip"><select class="form-control" data-bind="options: genders,value: employee().body_sex" name="employee.sex" required="required"></select></div>
+                        <div class="ip"><select class="form-control" data-bind="options: genders,value: employee().sex" name="employee.sex" required="required"></select></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -46,22 +47,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                    <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">身份证号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_id" placeholder="身份证号" name="employee.id"/></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().id" placeholder="身份证号" name="employee.id"/></div>
                     </div>
                     <div class="col-md-6">
                         <label class="l">出生年</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_birth_year" placeholder="出生年" name="employee.birth_year" /></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().birth_year" placeholder="出生年" name="employee.birth_year" /></div>
                     </div>
 
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6">
                         <label class="l">微信</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_wechat" placeholder="微信" name="employee.wechat"/></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -100,7 +101,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createEmployee">保存</a></div>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: saveEmployee">保存</a></div>
         </div>
     </div>
   </div>

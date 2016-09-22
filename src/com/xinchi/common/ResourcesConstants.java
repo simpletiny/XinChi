@@ -32,4 +32,11 @@ public class ResourcesConstants {
 	// never used每个世纪
 	public static String TASK_EVERYCENTURY = "6";
 
+	/* 用户角色 */
+	public static String USER_ROLE_ADMIN = "ADMIN";
+	public static String USER_ROLE_MANAGER = "MANAGER";
+	public static String USER_ROLE_SALES = "SALES";
+	public static String USER_ROLE_PRODUCT = "PRODUCT";
+	public static String USER_ROLE_FINANCE = "FINANCE";
+
 }

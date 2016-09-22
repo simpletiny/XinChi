@@ -17,7 +17,7 @@ String key = request.getParameter("key");
  <input type="hidden" id="client_key" value="<%=key%>">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>查看公司信息<a  href="<%=basePath %>/templates/client/company.jsp"  class="cancel-create">返回</a></h2>
+        <h2>查看财务主体信息<a  href="<%=basePath %>/templates/client/company.jsp"  class="cancel-create">返回</a></h2>
     </div>
 
     <div class="main-container">
@@ -26,36 +26,36 @@ String key = request.getParameter("key");
             <div class="form-box info-form">
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">公司名称</label>
+                        <label class="l">主体名称</label>
                         <div class="ip"><p class="ip-default" data-bind="text: company().client_name"></p></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="l">公司简称</label>
+                        <label class="l">主体简称</label>
                         <div class="ip"><p class="ip-default" data-bind="text: company().client_short_name"></p></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">公司地区</label>
+                        <label class="l">地区</label>
                         <div class="ip"><p class="ip-default" data-bind="text: company().client_area"></p></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="l">公司类型</label>
+                        <label class="l">类型</label>
                         <div class="ip"><p class="ip-" data-bind="text: company().client_type"></p></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">公司电话</label>
+                        <label class="l">电话</label>
                         <div class="ip"><p class="ip- date-picker" data-bind="text: company().telephone"></p></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="l">公司传真</label>
+                        <label class="l">传真</label>
                         <div class="ip"><p class="ip-" data-bind="text: company().fax"></p></div>
                     </div>
                 </div>
                 <hr/>
-                <h3>财务主体信息</h3>
+                <h3>负责人信息</h3>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">姓名</label>

@@ -25,6 +25,9 @@
 		<action name="rejectUser" class="userAction" method="rejectUser">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="searchAllSales" class="userAction" method="searchAllSales">
+			<result name="success" type="json"></result>
+		</action>
 	</package>
 
 </struts>

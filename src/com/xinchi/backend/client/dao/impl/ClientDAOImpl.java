@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.ClientDAO;
@@ -12,7 +11,6 @@ import com.xinchi.common.DaoUtil;
 
 
 @Repository
-@Scope("prototype")
 public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO{
 
 	private SqlSession sqlSession;
