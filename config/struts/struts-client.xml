@@ -23,6 +23,9 @@
 		<action name="searchOneEmployee" class="employeeAction" method="searchOneEmployee">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="updateEmployee" class="employeeAction" method="updateEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

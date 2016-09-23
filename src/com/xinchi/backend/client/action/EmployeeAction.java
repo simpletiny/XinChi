@@ -22,6 +22,11 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	public String updateEmployee() {
+		resultStr = employeeService.updateEmployee(employee);
+		return SUCCESS;
+	}
+	
 	private List<ClientEmployeeBean> employees;
 	public String searchEmployee(){
 		employees = employeeService.getAllClientEmployeeByParam(employee);

@@ -20,7 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </div>
 
 <script src="/static/vendor/chart/Chart.js"></script>
-
+<jsp:include page="layout.jsp" />
 <script>
     options = {
 
@@ -131,5 +131,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
    </script>
 </head>
-<jsp:include page="layout.jsp" />
+
 </html>

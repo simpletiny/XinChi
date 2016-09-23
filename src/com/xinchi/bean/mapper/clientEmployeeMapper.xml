@@ -236,14 +236,14 @@
     	<if test="birth_year != null">
 	        birth_year = #{birth_year,jdbcType=VARCHAR},
 	      </if>
-       <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
+       <if test="update_user != null">
+        update_user = #{update_user,jdbcType=VARCHAR},
       </if>
-      <if test="modify_time != null">
-        modify_time = #{modify_time,jdbcType=VARCHAR},
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </update>
  <select id="selectByParam" parameterType="com.xinchi.bean.ClientEmployeeBean" resultMap="BaseResultMap">
    select 

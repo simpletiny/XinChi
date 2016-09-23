@@ -52,9 +52,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public String updateEmployee(ClientEmployeeBean client) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public String updateEmployee(ClientEmployeeBean employee) {
+		dao.update(employee);
+		return "success";
 	}
 
 }

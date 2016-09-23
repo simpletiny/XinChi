@@ -19,13 +19,15 @@ var EmployeeContext = function() {
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 	});
+	
 	$.getJSON(self.apiurl + 'client/searchOneEmployee', {
 		employee_pk : self.employeePk
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
-//			self.choosenSales=self.employee().sales.split(",");
-			self.choosenSales=["dnhzfnV0fHx1fHRygH57dA"];
+			 $(self.employee().sales.split(",")).each(function (idx, id) {
+				 self.choosenSales.push(id);
+	            });
 		} else {
 			fail_msg("员工不存在！");
 		}
