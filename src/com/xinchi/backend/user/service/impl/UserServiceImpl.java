@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
 				sessionBean.setNick_name(uib.getNick_name());
 				sessionBean.setCellphone(uib.getCellphone());
 				sessionBean.setUser_status(user.getUser_status());
+				sessionBean.setUser_roles(uib.getUser_role());
 				XinChiApplicationContext.setSession(
 						ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 				return "success";

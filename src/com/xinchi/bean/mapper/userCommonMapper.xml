@@ -15,6 +15,7 @@
 		<result column="user_right" property="user_right" jdbcType="VARCHAR" />
 		<result column="nick_name" property="nick_name" jdbcType="VARCHAR" />
 		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="user_roles" property="user_roles" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -30,7 +31,8 @@
 		B.id_file_name,
 		B.user_right,
 		B.nick_name,
-		B.cellphone
+		B.cellphone,
+		B.user_role as user_roles
   </sql>
    <select id="selectAllNewUsers" resultMap="BaseResultMap">
     select 

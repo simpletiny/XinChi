@@ -144,6 +144,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>
     <script src="<%=basePath %>static/js/validation.js"></script>
-  <script src="<%=basePath %>static/js/client/employee-edit.js"></script>
+  <script src="<%=basePath %>static/js/client/employee-creation.js"></script>
 </body>
 </html>

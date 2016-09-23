@@ -24,7 +24,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- head start -->
     <div class="main-header">
         <div class="header-min-width">
-   
+   			 <div class="user-status">
+                <span></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=basePath%>">返回</a></i>
+            </div>
         </div>
     </div>
 <!-- head end -->

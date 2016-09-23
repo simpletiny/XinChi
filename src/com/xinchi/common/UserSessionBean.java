@@ -10,7 +10,7 @@ public class UserSessionBean {
 	private String nick_name;
 	private String cellphone;
 	private String user_status;
-
+	private String user_roles;
 	public String getId() {
 		return id;
 	}
@@ -65,6 +65,14 @@ public class UserSessionBean {
 
 	public void setUser_number(String user_number) {
 		this.user_number = user_number;
+	}
+
+	public String getUser_roles() {
+		return user_roles;
+	}
+
+	public void setUser_roles(String user_roles) {
+		this.user_roles = user_roles;
 	}
 
 }

@@ -13,7 +13,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <title>欣驰国际</title>
   <div class="main-body">
     <div class="subtitle">
-        <h2><s:property value="#session.user.nick_name"/>（<s:property value="#session.user.user_number"/>），你好！</h2>
+        
     </div>
 
     <div class="main-container">

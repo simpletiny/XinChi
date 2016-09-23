@@ -102,5 +102,36 @@
 		</sql>
 	</changeSet>
 	
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP TABLE IF EXISTS client_employee;
+            CREATE TABLE client_employee (
+				  name varchar(10) COLLATE utf8_bin NOT NULL,
+				  sex char(1) COLLATE utf8_bin DEFAULT NULL,
+				  wechat varchar(20) COLLATE utf8_bin DEFAULT NULL,
+				  qq varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  cellphone varchar(11) COLLATE utf8_bin NOT NULL,
+				  telephone varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  id varchar(18) COLLATE utf8_bin DEFAULT NULL,
+				  financial_body_pk char(22) COLLATE utf8_bin NOT NULL,
+				  financial_body_name varchar(10) COLLATE utf8_bin NOT NULL,
+				  area varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  sales varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  create_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  update_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  pk char(22) COLLATE utf8_bin NOT NULL,
+				  comment varchar(100) COLLATE utf8_bin DEFAULT NULL,
+				  birth_year varchar(4) COLLATE utf8_bin DEFAULT NULL,
+				  fax varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  PRIMARY KEY (pk)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='客户员工表';
+            ]]>
+			<comment>create table client-employee</comment>
+		</sql>
+	</changeSet>
+	
 
 </databaseChangeLog>
