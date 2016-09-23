@@ -53,7 +53,7 @@ $(document).ready(function() {
 				expires : 7
 			});
 		} else {
-			$.cookie("rmbUser", "false", {
+			$.cookie("auto-login", "false", {
 				expire : -1
 			});
 			$.cookie("username", "", {

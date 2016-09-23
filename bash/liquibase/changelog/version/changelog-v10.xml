@@ -6,8 +6,7 @@
 	<changeSet id="1" author="simpletiny">
 		<sql>
             <![CDATA[
-              DROP TABLE IF EXISTS user_base;
-              CREATE TABLE user_base (
+            CREATE TABLE user_base (
 				  login_name varchar(15) COLLATE utf8_bin NOT NULL,
 				  password varchar(32) COLLATE utf8_bin NOT NULL,
 				  user_number varchar(10) COLLATE utf8_bin NOT NULL,
@@ -19,7 +18,9 @@
 				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
 				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
 				  pk char(22) COLLATE utf8_bin NOT NULL,
-				  PRIMARY KEY (login_name,pk),
+				  approve_user varchar(10) COLLATE utf8_bin DEFAULT NULL,
+				  approve_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+				  PRIMARY KEY (pk,login_name),
 				  UNIQUE KEY login_name_UNIQUE (login_name)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工表基本信息表';
             ]]>
@@ -30,18 +31,19 @@
 		<sql>
             <![CDATA[
               DROP TABLE IF EXISTS user_info;
-              CREATE TABLE user_info (
-				  id varchar(18) COLLATE utf8_bin NOT NULL,
-				  id_file_name varchar(45) COLLATE utf8_bin NOT NULL,
-				  user_right varchar(45) COLLATE utf8_bin NOT NULL,
-				  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
-				  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
-				  pk char(22) COLLATE utf8_bin NOT NULL,
-				  nick_name varchar(10) COLLATE utf8_bin NOT NULL,
-				  cellphone varchar(11) COLLATE utf8_bin NOT NULL,
-				  PRIMARY KEY (id,pk),
-				  UNIQUE KEY staff_number_UNIQUE (id)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工关联信息表';
+             CREATE TABLE user_info (
+			  id varchar(18) COLLATE utf8_bin NOT NULL,
+			  id_file_name varchar(45) COLLATE utf8_bin NOT NULL,
+			  user_right varchar(45) COLLATE utf8_bin NOT NULL,
+			  update_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+			  create_time varchar(15) COLLATE utf8_bin DEFAULT NULL,
+			  pk char(22) COLLATE utf8_bin NOT NULL,
+			  nick_name varchar(10) COLLATE utf8_bin NOT NULL,
+			  cellphone varchar(11) COLLATE utf8_bin NOT NULL,
+			  user_role varchar(100) COLLATE utf8_bin DEFAULT NULL,
+			  PRIMARY KEY (id,pk),
+			  UNIQUE KEY staff_number_UNIQUE (id)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='内部员工关联信息表';
             ]]>
 			<comment>create table user_info</comment>
 		</sql>
