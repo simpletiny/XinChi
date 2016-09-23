@@ -12,8 +12,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css"/>
     <link rel="stylesheet" href="<%=basePath%>static/vendor/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    
     <script type="text/javascript" src="<%=basePath%>static/vendor/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>static/vendor/jquery-cookie/jquery.cookie.js"></script>
     <script src="<%=basePath%>static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
     <script src="<%=basePath%>static/js/users/login.js"></script>
 </head>
@@ -34,6 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ul>
             <li><input type="text" id="username" placeholder="用户名" class="ip-default" name="ubb.login_name" required="required" /></li>
             <li><input type="password" id="password" placeholder="密码" class="ip-default" name="ubb.password" required="required" /></li>
+            <li><input type="checkbox" id="auto-login"/><label>自动登录</label></li>
             <li><div style="padding-top: 15px;"><button type="submit" class="btn btn-green">登录</button></div></li>
             <li><div style="padding-top: 5px;"><a style="cursor: pointer" href="<%=basePath%>templates/users/register.jsp">注册</a></div></li>
         </ul>

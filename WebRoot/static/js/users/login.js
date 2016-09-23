@@ -1,6 +1,6 @@
 function confirm() {
-	var password1 = $("#password1").val()
-	var password2 = $("#password2").val()
+	var password1 = $("#password1").val();
+	var password2 = $("#password2").val();
 	if (password1 != password2) {
 		layer.msg("前后密码不一致！", 2, 8);
 		$("#submit").attr("disabled", true);
@@ -8,7 +8,6 @@ function confirm() {
 		$("#submit").attr("disabled", false);
 	}
 }
-
 function check_name() {
 	var login_name = $("#login_name").val();
 	if ($.trim(login_name) == "")
@@ -40,5 +39,34 @@ $(document).ready(function() {
 		layer.msg("密码不正确！", 2, 8);
 		$("#login_result").val("");
 	}
-
-})
+	$("form").submit(function(e) {
+		if ($("#auto-login").prop("checked")) {
+			var str_username = $("#username").val();
+			var str_password = $("#password").val();
+			$.cookie("auto-login", "true", {
+				expires : 7
+			});
+			$.cookie("username", str_username, {
+				expires : 7
+			});
+			$.cookie("password", str_password, {
+				expires : 7
+			});
+		} else {
+			$.cookie("rmbUser", "false", {
+				expire : -1
+			});
+			$.cookie("username", "", {
+				expires : -1
+			});
+			$.cookie("password", "", {
+				expires : -1
+			});
+		}
+	});
+	if ($.cookie("auto-login") == "true") {
+		$("#auto-login").prop("checked", true);
+		$("#username").val($.cookie("username"));
+		$("#password").val($.cookie("password"));
+	}
+});
