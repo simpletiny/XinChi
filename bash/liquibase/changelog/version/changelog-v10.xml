@@ -134,6 +134,30 @@
 			<comment>create table client-employee</comment>
 		</sql>
 	</changeSet>
-	
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP TABLE IF EXISTS card;
+            CREATE  TABLE card (
+				  number VARCHAR(40) NOT NULL ,
+				  name VARCHAR(10) NOT NULL ,
+				  bank VARCHAR(40) NOT NULL ,
+				  type VARCHAR(10) NOT NULL ,
+				  init_money DECIMAL(12,2) NOT NULL ,
+				  balance DECIMAL(12,2) NOT NULL ,
+				  comment VARCHAR(200) NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = ujis
+				COMMENT = '银行卡表';
+            ]]>
+			<comment>create table card</comment>
+		</sql>
+	</changeSet>
+
 
 </databaseChangeLog>

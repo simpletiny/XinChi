@@ -9,8 +9,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-
+<jsp:include page="layout.jsp" />
     <title>欣驰国际</title>
+
+</head>
+<body>
+
   <div class="main-body">
     <div class="subtitle">
         
@@ -20,9 +24,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <canvas id="userChart" width="1000" height="400"></canvas>
     </div>
   </div>
-</head>
+ </body>
 
-<jsp:include page="layout.jsp" />
 <script src="<%=basePath %>static/vendor/chart/Chart.js"></script>
 
 <script>
@@ -134,6 +137,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     var userChart = new Chart(ctx).Line(data, options);
 
    </script>
-
 
 </html>

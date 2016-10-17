@@ -7,7 +7,8 @@ public enum TypeEnum {
 	LONGBLOB("String", "blog", "longblob"),CHAR("String", "char", "char"),
 	VARCHAR("String", "varchar", "varchar"),
 	TIMESTAMP("java.sql.Timestamp", "timestamp", "timestamp"),INT("Integer", "integer", "int"),
-	DATE("java.sql.Date","date","date"),DATETIME("java.sql.Timestamp", "timestamp", "timestamp");
+	DATE("java.sql.Date","date","date"),DATETIME("java.sql.Timestamp", "timestamp", "timestamp")
+	,DECIMAL("java.math.BigDecimal","decimal","decimal");
 	private String columnType;
 	
 	private String type;

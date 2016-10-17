@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="renderer" content="webkit"/>
-
+	<link href="<%=basePath%>static/img/favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/hint.min.css"/>
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css"/>
@@ -46,6 +46,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
                  <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户员工</a></li>
+                </ol>
+            </li>
+            </s:if>
+             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>财务</a>
+                <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>银行卡管理</a></li>
+                </ol>
+                 <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/finance/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>明细账</a></li>
                 </ol>
             </li>
             </s:if>

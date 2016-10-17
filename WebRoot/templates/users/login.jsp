@@ -9,6 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>欣驰国际</title>
+    <link href="<%=basePath%>static/img/favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css"/>
     <link rel="stylesheet" href="<%=basePath%>static/vendor/font-awesome-4.2.0/css/font-awesome.min.css"/>
