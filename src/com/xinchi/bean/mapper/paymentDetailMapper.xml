@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PaymentDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.PaymentDetailBean" >
+	    <result column="account" property="account" jdbcType="VARCHAR" />
+	    <result column="time" property="time" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="money" property="money" jdbcType="DECIMAL" />
+	    <result column="balance" property="balance" jdbcType="DECIMAL" />
+	    <result column="record_time" property="record_time" jdbcType="VARCHAR" />
+	    <result column="record_user" property="record_user" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	     <result column="comment" property="comment" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	account, 
+    	time, 
+    	type, 
+    	money, 
+    	balance, 
+    	record_time, 
+    	record_user, 
+    	update_user, 
+    	create_user, 
+    	pk, 
+    	create_time,
+    	update_time,
+    	comment
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from payment_detail
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from payment_detail
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.PaymentDetailBean" >
+  	
+    insert into payment_detail
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="account != null">
+	        account,
+	      </if>
+	 	<if test="time != null">
+	        time,
+	      </if>
+	 	<if test="type != null">
+	        type,
+	      </if>
+	 	<if test="money != null">
+	        money,
+	      </if>
+	 	<if test="balance != null">
+	        balance,
+	      </if>
+	 	<if test="record_time != null">
+	        record_time,
+	      </if>
+	 	<if test="record_user != null">
+	        record_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="account != null">
+	        #{account,jdbcType=VARCHAR},
+	      </if>
+    	<if test="time != null">
+	        #{time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="type != null">
+	        #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="money != null">
+	        #{money,jdbcType=DECIMAL},
+	      </if>
+    	<if test="balance != null">
+	        #{balance,jdbcType=DECIMAL},
+	      </if>
+    	<if test="record_time != null">
+	        #{record_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="record_user != null">
+	        #{record_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=TIMESTAMP},
+      </if>
+       <if test="comment != null">
+        #{comment,jdbcType=TIMESTAMP},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PaymentDetailBean" >
+    update payment_detail
+    <set >
+    	<if test="account != null">
+	        account = #{account,jdbcType=VARCHAR},
+	      </if>
+    	<if test="time != null">
+	        time = #{time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="type != null">
+	        type = #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="money != null">
+	        money = #{money,jdbcType=DECIMAL},
+	      </if>
+    	<if test="balance != null">
+	        balance = #{balance,jdbcType=DECIMAL},
+	      </if>
+    	<if test="record_time != null">
+	        record_time = #{record_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="record_user != null">
+	        record_user = #{record_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+       <if test="update_user != null">
+        update_user = #{update_user,jdbcType=VARCHAR},
+      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from payment_detail
+   </select>
+</mapper>

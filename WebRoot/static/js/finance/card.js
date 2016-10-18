@@ -1,19 +1,19 @@
 var CardContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.chosenCompanies = ko.observableArray([]);
-	self.createCompany = function() {
+	self.chosenCards = ko.observableArray([]);
+	self.createCard = function() {
 		window.location.href = self.apiurl
 				+ "templates/finance/card-creation.jsp";
 	};
 
-	self.clients = ko.observable({
+	self.cards = ko.observable({
 		total : 0,
 		items : []
 	});
 	self.refresh = function() {
-		$.getJSON(self.apiurl + 'client/searchCompany', {}, function(data) {
-			self.clients(data.clients);
+		$.getJSON(self.apiurl + 'finance/searchCard', {}, function(data) {
+			self.cards(data.cards);
 		});
 	};
 	self.search = function() {
@@ -24,15 +24,15 @@ var CardContext = function() {
 
 	};
 
-	self.editCompany = function() {
-		if (self.chosenCompanies().length == 0) {
-			fail_msg("请选择公司");
+	self.editCard = function() {
+		if (self.chosenCards().length == 0) {
+			fail_msg("请选择账户");
 			return;
-		} else if (self.chosenCompanies().length > 1) {
+		} else if (self.chosenCards().length > 1) {
 			fail_msg("编辑只能选中一个");
 			return;
-		} else if (self.chosenCompanies().length == 1) {
-			window.location.href = self.apiurl +"templates/client/company-edit.jsp?key="+self.chosenCompanies()[0];
+		} else if (self.chosenCards().length == 1) {
+			window.location.href = self.apiurl +"templates/client/Card-edit.jsp?key="+self.chosenCards()[0];
 		}
 	};
 

@@ -1,5 +1,7 @@
 package com.xinchi.backend.finance.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,31 @@ public class CardServiceImpl implements CardService {
 	public void insert(CardBean bo) {
 		bo.setBalance(bo.getInit_money());
 		dao.insert(bo);
+	}
+
+	@Override
+	public List<CardBean> getAllCardsByParam(CardBean bo) {
+		return dao.getAllByParam(bo);
+	}
+
+	@Override
+	public List<String> getAllAccounts() {
+		return dao.getAllAccounts();
+	}
+
+	@Override
+	public String getAccountBalance(String account) {
+		return dao.getAccountBalance(account);
+	}
+
+	@Override
+	public String checkAccount(String account) {
+		CardBean card = dao.getCardByAccount(account);
+		if (card!=null){
+			return "exist";
+		}else{
+			return "ok";
+		}
 	}
 
 }

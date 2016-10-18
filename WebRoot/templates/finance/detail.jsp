@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>账户管理</h2>
+        <h2>明细管理</h2>
     </div>
 
     <div class="main-container">
@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="form-group" >
 	                    <div style="width:10%;float:right">
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCard() }">新建</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail() }">新建</button>
 		                    </div>
 		                 </div>
 	                </div>
@@ -50,25 +50,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr role="row">
                         	<!-- <th></th> -->
                             <th>账户</th>
-                            <th>账户id/卡号</th>
-                            <th>户名</th>
-                            <th>开户行</th>
-                            <th>初始金额</th>
+                            <th>发生时间</th>
+                            <th>收/支</th>
+                            <th>发生金额</th>
                             <th>余额</th>
-                            <th>种类</th>
 							<th>备注</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: cards">
+                    <tbody data-bind="foreach: details">
                         <tr>
-                        	 <!-- <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCards"/></td> -->
-                        	 <td data-bind="text: $data.account" ></td>
-                        	  <td data-bind="text: $data.number" ></td>
-                            <td data-bind="text: $data.name" ></td>
-                            <td data-bind="text: $data.bank"></td>
-                            <td data-bind="text: $data.init_money"></td>
-                            <td data-bind="text: $data.balance"></td>
+                        <!-- 	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCards"/></td> -->
+                        	  <td data-bind="text: $data.account" ></td>
+                            <td data-bind="text: $data.time" ></td>
                             <td data-bind="text: $data.type"></td>
+                            <td data-bind="text: $data.money"></td>
+                            <td data-bind="text: $data.balance"></td>
                             <td data-bind="text: $data.comment"></td>      
                         </tr>
                     </tbody>
@@ -80,6 +76,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
     $(".finance").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath%>static/js/finance/card.js"></script>
+    <script src="<%=basePath%>static/js/finance/detail.js"></script>
 </body>
 </html>

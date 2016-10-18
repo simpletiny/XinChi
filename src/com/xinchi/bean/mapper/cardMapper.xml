@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.CardMapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.CardBean" >
+  		 <result column="account" property="account" jdbcType="VARCHAR" />
 	    <result column="number" property="number" jdbcType="VARCHAR" />
 	    <result column="name" property="name" jdbcType="VARCHAR" />
 	    <result column="bank" property="bank" jdbcType="VARCHAR" />
@@ -12,11 +13,11 @@
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
- 	    <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-  		
+  		account,
     	number, 
     	name, 
     	bank, 
@@ -47,6 +48,9 @@
     insert into card
     
     <trim prefix="(" suffix=")" suffixOverrides=",">
+    <if test="account != null">
+	        account,
+	      </if>
 	 	<if test="number != null">
 	        number,
 	      </if>
@@ -85,7 +89,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-
+		<if test="account != null">
+	        #{account,jdbcType=VARCHAR},
+	      </if>
     	<if test="number != null">
 	        #{number,jdbcType=VARCHAR},
 	      </if>
@@ -120,7 +126,7 @@
         #{create_time,jdbcType=VARCHAR},
       </if>
        <if test="update_time != null">
-        #{update_time,jdbcType=TIMESTAMP},
+        #{update_time,jdbcType=VARCHAR},
       </if>
     </trim>		
   </insert>
@@ -129,6 +135,9 @@
   <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.CardBean" >
     update card
     <set >
+    	<if test="account != null">
+	        account = #{account,jdbcType=VARCHAR},
+	      </if>
     	<if test="number != null">
 	        number = #{number,jdbcType=VARCHAR},
 	      </if>
@@ -150,27 +159,44 @@
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
 	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
     	<if test="create_user != null">
 	        create_user = #{create_user,jdbcType=VARCHAR},
 	      </if>
     	<if test="update_user != null">
 	        update_user = #{update_user,jdbcType=VARCHAR},
 	      </if>
-       <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="modify_time != null">
-        modify_time = #{modify_time,jdbcType=VARCHAR},
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </update>
  <select id="selectByParam" parameterType="com.xinchi.bean.CardBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
     from card
+   </select>
+ <select id="selectAllAccounts" resultType="String">
+   select account from card
+   </select>
+   
+ <select id="selectBalanceByAccount" parameterType="String" resultType="java.lang.String">
+   select balance from card
+      <where>
+	    <if test="_parameter !=null">
+	    	account= #{_parameter,jdbcType=VARCHAR}
+	    </if>
+    </where>
+   </select>
+   
+ <select id="selectCardByAccount" parameterType="String" resultMap="BaseResultMap">
+   select 
+	<include refid="Base_Column_List" />
+   from card
+      <where>
+	    <if test="_parameter !=null">
+	    	account= #{_parameter,jdbcType=VARCHAR}
+	    </if>
+    </where>
    </select>
 </mapper>

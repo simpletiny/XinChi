@@ -49,12 +49,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
             </li>
             </s:if>
-             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>财务</a>
+             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')"><li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>财务</a>
                 <ol style="display: none;">
-                    <li><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>银行卡管理</a></li>
+                    <li><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>账户管理</a></li>
                 </ol>
                  <ol style="display: none;">
-                    <li><a href="<%=basePath%>templates/finance/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>明细账</a></li>
+                    <li><a href="<%=basePath%>templates/finance/detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>明细账</a></li>
                 </ol>
             </li>
             </s:if>

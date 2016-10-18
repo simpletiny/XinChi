@@ -5,6 +5,25 @@
 		<action name="createCard" class="cardAction" method="createCard">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="searchCard" class="cardAction" method="searchCard">
+			<result name="success" type="json"></result>
+		</action>
+	    <action name="searchAllAccounts" class="cardAction" method="searchAllAccounts">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="checkAccount" class="cardAction" method="checkAccount">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	    <action name="getAccountBalance" class="cardAction" method="getAccountBalance">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	    <action name="createDetail" class="paymentDetailAction" method="createDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchDetail" class="paymentDetailAction" method="searchDetail">
+			<result name="success" type="json"></result>
+		</action>
+
 	</package>
 
 </struts>

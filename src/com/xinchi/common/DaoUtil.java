@@ -277,6 +277,16 @@ public class DaoUtil {
 	}
 
 	/**
+	 * 查询单个结果集合
+	 * 
+	 * @param mapper
+	 * @return
+	 */
+	public List<Object> selectList(String mapper) {
+		return sqlSession.selectList(mapper);
+	}
+
+	/**
 	 * 根据sql语句修改记录
 	 * 
 	 * @author wy
@@ -296,6 +306,11 @@ public class DaoUtil {
 	public <T extends Object> T selectOneValueByParam(String mapper,
 			SupperBO supperBO) {
 		return (T) sqlSession.selectOne(mapper, supperBO);
+	}
+
+	public <T extends Object> T selectOneValueByParam(String mapper,
+			Object object) {
+		return (T) sqlSession.selectOne(mapper, object);
 	}
 
 	public <T extends Object> T selectOneValue(String mapper) {

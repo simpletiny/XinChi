@@ -139,6 +139,7 @@
             <![CDATA[
             DROP TABLE IF EXISTS card;
             CREATE  TABLE card (
+                  account VARCHAR(50) NOT NULL ,
 				  number VARCHAR(40) NOT NULL ,
 				  name VARCHAR(10) NOT NULL ,
 				  bank VARCHAR(40) NOT NULL ,
@@ -152,10 +153,36 @@
 				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
 				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
 				  PRIMARY KEY (pk) )
-				DEFAULT CHARACTER SET = ujis
+				DEFAULT CHARACTER SET = utf8
 				COMMENT = '银行卡表';
             ]]>
 			<comment>create table card</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP TABLE IF EXISTS payment_detail;
+            CREATE  TABLE payment_detail (
+			  account VARCHAR(50) NOT NULL ,
+			  time VARCHAR(16) NOT NULL ,
+			  type VARCHAR(2) NOT NULL ,
+			  money DECIMAL(12,2) NOT NULL ,
+			  balance DECIMAL(12,2) NOT NULL ,
+			  record_time VARCHAR(15) NOT NULL ,
+			  record_user VARCHAR(10) NOT NULL ,
+			  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+			  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+			  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+			  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+			  pk CHAR(22) NOT NULL ,
+			  comment VARCHAR(200) NULL ,
+			  PRIMARY KEY (pk) )
+			DEFAULT CHARACTER SET = utf8
+			COMMENT = '收支明细表';
+
+            ]]>
+			<comment>create table payment_detail</comment>
 		</sql>
 	</changeSet>
 

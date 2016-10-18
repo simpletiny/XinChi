@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class CardBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	private String account;
 	private String number;
 
 	private String name;
@@ -105,6 +105,14 @@ public class CardBean extends SupperBO implements Serializable {
 
 	public void setInit_money(BigDecimal init_money) {
 		this.init_money = init_money;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 
 }

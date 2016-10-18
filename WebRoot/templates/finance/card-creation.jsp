@@ -14,15 +14,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>新建银行卡<a href="<%=basePath %>/templates/finance/card.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>新建账户<a href="<%=basePath %>/templates/finance/card.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form">
+            	 <div class="input-row clearfloat">
+                    <div class="col-md-8 required">
+                        <label class="l">账户名称</label>
+                        <div class="ip"><input type="text" id="account" class="ip-default" data-bind="value: card().account,event:{blur:checkAccount}" placeholder="账户名称" name="card.account" required="required"/></div>
+                    </div>
+                </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
-                        <label class="l">卡号</label>
+                        <label class="l">卡号/账户id</label>
                         <div class="ip"><input type="text" id="number" class="ip-default" data-bind="value: card().number" placeholder="卡号" name="card.number" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
@@ -55,7 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createCompany">保存</a></div>
+            <div align="right"><a type="submit" id="submit" class="btn btn-green btn-r" data-bind="click: createCompany">保存</a></div>
         </div>
     </div>
   </div>
