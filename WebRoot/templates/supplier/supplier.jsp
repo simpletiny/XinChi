@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>客户财务主体管理</h2>
+        <h2>供应商财务主体管理</h2>
     </div>
 
     <div class="main-container">
@@ -28,10 +28,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="form-group" >
 	                    <div style="width:30%;float:right">
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createSupplier() }">新建</button>
 		                    </div>
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editSupplier() }">编辑</button>
 		                    </div>
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
@@ -64,12 +64,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>传真</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: clients">
+                    <tbody data-bind="foreach: suppliers">
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies"/></td>
-                            <td ><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a> </td>
-                            <td data-bind="text: $data.client_type"></td>
-                            <td data-bind="text: $data.client_area"></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.supplier_short_name,attr: {href: 'supplier-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.supplier_type"></td>
+                            <td data-bind="text: $data.supplier_area"></td>
                             <td data-bind="text: $data.body_name"></td>
                             <td data-bind="text: $data.body_cellphone"></td>
                             <td data-bind="text: $data.telephone"></td>
@@ -82,8 +82,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </div>
   <script>
-    $(".client").addClass("current").children("ol").css("display", "block");
+    $(".supplier").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath%>static/js/client/company.js"></script>
+    <script src="<%=basePath%>static/js/supplier/supplier.js"></script>
 </body>
 </html>

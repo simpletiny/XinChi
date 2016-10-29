@@ -14,7 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>客户员工编辑<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>供应商员工编辑<a href="<%=basePath %>/templates/supplier/supplier-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -127,9 +127,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>负责人</th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: clients">
-                        <tr data-bind="event: {dblclick: function(){ $parent.pickFinancial($data.client_short_name,$data.pk)}}">
-                            <td data-bind="text: $data.client_short_name"> </td>
+                    <tbody data-bind="foreach: suppliers">
+                        <tr data-bind="event: {dblclick: function(){ $parent.pickFinancial($data.supplier_short_name,$data.pk)}}">
+                            <td data-bind="text: $data.supplier_short_name"> </td>
                             <td data-bind="text: $data.body_name"></td> 
                         </tr>
                     </tbody>
@@ -144,6 +144,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>
     <script src="<%=basePath %>static/js/validation.js"></script>
-  <script src="<%=basePath %>static/js/client/employee-creation.js"></script>
+  <script src="<%=basePath %>static/js/supplier/employee-creation.js"></script>
 </body>
 </html>

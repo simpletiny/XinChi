@@ -15,7 +15,7 @@ String key = request.getParameter("key");
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>员工新建<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>客户员工编辑<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
