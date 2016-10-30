@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.SupplierPaidDetailBeanMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierPaidDetailBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
+	    <result column="paid" property="paid" jdbcType="DECIMAL" />
+	    <result column="paid_time" property="paid_time" jdbcType="VARCHAR" />
+	    <result column="supplier_pk" property="supplier_pk" jdbcType="CHAR" />
+	    <result column="supplier_name" property="supplier_name" jdbcType="CHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	team_number, 
+    	paid, 
+    	paid_time, 
+    	supplier_pk, 
+    	supplier_name, 
+    	create_user, 
+    	update_user, 
+    	pk, 
+    	create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_paid_detail
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from supplier_paid_detail
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="SupplierPaidDetailBean" >
+  	
+    insert into supplier_paid_detail
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="team_number != null">
+	        team_number,
+	      </if>
+	 	<if test="paid != null">
+	        paid,
+	      </if>
+	 	<if test="paid_time != null">
+	        paid_time,
+	      </if>
+	 	<if test="supplier_pk != null">
+	        supplier_pk,
+	      </if>
+	 	<if test="supplier_name != null">
+	        supplier_name,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="team_number != null">
+	        #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="paid != null">
+	        #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="paid_time != null">
+	        #{paid_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="supplier_pk != null">
+	        #{supplier_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="supplier_name != null">
+	        #{supplier_name,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="SupplierPaidDetailBean" >
+    update supplier_paid_detail
+    <set >
+    	<if test="team_number != null">
+	        team_number = #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="paid != null">
+	        paid = #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="paid_time != null">
+	        paid_time = #{paid_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="supplier_pk != null">
+	        supplier_pk = #{supplier_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="supplier_name != null">
+	        supplier_name = #{supplier_name,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+      <if test="modify_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="SupplierPaidDetailBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from supplier_paid_detail
+   </select>
+</mapper>

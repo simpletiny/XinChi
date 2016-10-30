@@ -67,6 +67,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
             </li>
             </s:if>
+             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="sale"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
+                <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单管理</a></li>
+                </ol>
+            </li>
+            </s:if>
         </ul>
     </div>
 

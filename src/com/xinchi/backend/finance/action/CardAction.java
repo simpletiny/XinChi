@@ -44,12 +44,12 @@ public class CardAction extends BaseAction {
 	
 	@JSON(serialize = false)
 	public String getAccountBalance() {
-		try {
-			account = new String(account.getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return ERROR;
-		}
+//		try {
+//			account = new String(account.getBytes("ISO-8859-1"), "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//			return ERROR;
+//		}
 		resultStr = cardService.getAccountBalance(account);
 		return SUCCESS;
 	}

@@ -10,9 +10,8 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	private String supplier_short_name;
 
-	private String supplier_area;
-
-	private String supplier_type;
+	private String supplier_provice;
+	private String supplier_city;
 
 	private String telephone;
 
@@ -58,22 +57,6 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	public void setSupplier_short_name(String supplier_short_name) {
 		this.supplier_short_name = supplier_short_name;
-	}
-
-	public String getSupplier_area() {
-		return supplier_area;
-	}
-
-	public void setSupplier_area(String supplier_area) {
-		this.supplier_area = supplier_area;
-	}
-
-	public String getSupplier_type() {
-		return supplier_type;
-	}
-
-	public void setSupplier_type(String supplier_type) {
-		this.supplier_type = supplier_type;
 	}
 
 	public String getTelephone() {
@@ -196,5 +179,20 @@ public class SupplierBean extends SupperBO implements Serializable {
 		this.pk = pk;
 	}
 
+	public String getSupplier_provice() {
+		return supplier_provice;
+	}
+
+	public void setSupplier_provice(String supplier_provice) {
+		this.supplier_provice = supplier_provice;
+	}
+
+	public String getSupplier_city() {
+		return supplier_city;
+	}
+
+	public void setSupplier_city(String supplier_city) {
+		this.supplier_city = supplier_city;
+	}
 
 }

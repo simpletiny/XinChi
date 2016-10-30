@@ -70,7 +70,7 @@
 			<comment>create table task</comment>
 		</sql>
 	</changeSet>
-	
+
 	<changeSet id="4" author="simpletiny">
 		<sql>
             <![CDATA[
@@ -103,7 +103,7 @@
 			<comment>create table client</comment>
 		</sql>
 	</changeSet>
-	
+
 	<changeSet id="5" author="simpletiny">
 		<sql>
             <![CDATA[
@@ -217,7 +217,7 @@
 			<comment>create table client</comment>
 		</sql>
 	</changeSet>
-	
+
 	<changeSet id="9" author="simpletiny">
 		<sql>
             <![CDATA[
@@ -248,5 +248,153 @@
 			<comment>create table client-employee</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE supplier DROP COLUMN supplier_area , ADD COLUMN supplier_provice VARCHAR(10) NULL  AFTER pk , ADD COLUMN supplier_city VARCHAR(10) NULL  AFTER supplier_provice ;
+            ]]>
+			<comment>modify table client and supplier</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE supplier DROP COLUMN supplier_type ;
+          		            ]]>
+			<comment>modify table supplier</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS sale_order;
+          		CREATE  TABLE sale_order (
+					  team_number VARCHAR(30) NOT NULL ,
+					  product VARCHAR(100) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  return_date VARCHAR(10) NULL ,
+					  days INT NULL ,
+					  flight VARCHAR(20) NULL ,
+					  ticket DECIMAL(12,2) NULL ,
+					  air_payment DECIMAL(12,2) NULL ,
+					  people_count INT NULL ,
+					  client_employee_pk CHAR(22) NULL ,
+					  client_employee_name VARCHAR(10) NULL ,
+					  receivable DECIMAL(12,2) NULL ,
+					  received DECIMAL(12,2) NULL ,
+					  client_debt DECIMAL(12,2) NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '订单表';
+          		            ]]>
+			<comment>create table sale_order</comment>
+		</sql>
+	</changeSet>
+    <changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS sale_order_supplier;
+          		CREATE  TABLE sale_order_supplier (
+					  team_number VARCHAR(30) NOT NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '订单供应商';
+          		            ]]>
+			<comment>create table sale_order_supplier</comment>
+		</sql>
+	</changeSet>
+    <changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS sale_order_name_list;
+          		CREATE  TABLE sale_order_name_list (
+					  team_number VARCHAR(30) NOT NULL ,
+					  name VARCHAR(45) NULL ,
+					  id VARCHAR(45) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '订单名单表';
+          		            ]]>
+			<comment>create table sale_order_name_list</comment>
+		</sql>
+	</changeSet>
+    <changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS client_received_detail;
+          		CREATE  TABLE client_received_detail (
+					  team_number VARCHAR(30) NOT NULL ,
+					  received DECIMAL(12,2) NOT NULL ,
+					  received_time VARCHAR(15) NOT NULL ,
+					  card_pk CHAR(22) NULL ,
+					  card_account VARCHAR(50) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '收款明细表';
 
+          		            ]]>
+			<comment>create table client_received_detail</comment>
+		</sql>
+	</changeSet>
+    <changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS supplier_paid_detail;
+          		CREATE  TABLE supplier_paid_detail (
+					  team_number VARCHAR(30) NOT NULL ,
+					  paid DECIMAL(12,2) NOT NULL ,
+					  paid_time VARCHAR(15) NOT NULL ,
+					  supplier_pk CHAR(22) NOT NULL,
+					  supplier_name CHAR(22) NOT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '付款明细表';
+
+          		            ]]>
+			<comment>create table supplier_paid_detail</comment>
+		</sql>
+	</changeSet>
+    <changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+              ALTER TABLE sale_order ADD COLUMN comment VARCHAR(200) NULL  AFTER pk ;
+          		            ]]>
+			<comment>modify table sale_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

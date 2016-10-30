@@ -4,8 +4,6 @@
   <resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierBean" >
 	    <result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 	    <result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
-	    <result column="supplier_area" property="supplier_area" jdbcType="VARCHAR" />
-	    <result column="supplier_type" property="supplier_type" jdbcType="VARCHAR" />
 	    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
 	    <result column="fax" property="fax" jdbcType="VARCHAR" />
 	    <result column="address" property="address" jdbcType="VARCHAR" />
@@ -23,14 +21,14 @@
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="supplier_provice" property="supplier_provice" jdbcType="VARCHAR" />
+ 	    <result column="supplier_city" property="supplier_city" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
   		
     	supplier_name, 
     	supplier_short_name, 
-    	supplier_area, 
-    	supplier_type, 
     	telephone, 
     	fax, 
     	address, 
@@ -46,7 +44,10 @@
     	update_reason, 
     	comment, 
     	pk, 
-    	create_time,update_time
+    	create_time,
+    	update_time,
+    	supplier_provice,
+    	supplier_city
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -70,12 +71,6 @@
 	      </if>
 	 	<if test="supplier_short_name != null">
 	        supplier_short_name,
-	      </if>
-	 	<if test="supplier_area != null">
-	        supplier_area,
-	      </if>
-	 	<if test="supplier_type != null">
-	        supplier_type,
 	      </if>
 	 	<if test="telephone != null">
 	        telephone,
@@ -128,6 +123,12 @@
       <if test="update_time != null">
         update_time,
       </if>
+      <if test="supplier_provice != null">
+        supplier_provice,
+      </if>
+      <if test="supplier_provice != null">
+        supplier_city,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="supplier_name != null">
@@ -135,12 +136,6 @@
 	      </if>
     	<if test="supplier_short_name != null">
 	        #{supplier_short_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_area != null">
-	        #{supplier_area,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_type != null">
-	        #{supplier_type,jdbcType=VARCHAR},
 	      </if>
     	<if test="telephone != null">
 	        #{telephone,jdbcType=VARCHAR},
@@ -193,6 +188,12 @@
        <if test="update_time != null">
         #{update_time,jdbcType=VARCHAR},
       </if>
+          	<if test="supplier_provice != null">
+	        #{supplier_provice,jdbcType=VARCHAR},
+	      </if>
+	      <if test="supplier_city != null">
+	        #{supplier_city,jdbcType=VARCHAR},
+	      </if>
     </trim>		
   </insert>
   
@@ -205,12 +206,6 @@
 	      </if>
     	<if test="supplier_short_name != null">
 	        supplier_short_name = #{supplier_short_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_area != null">
-	        supplier_area = #{supplier_area,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_type != null">
-	        supplier_type = #{supplier_type,jdbcType=VARCHAR},
 	      </if>
     	<if test="telephone != null">
 	        telephone = #{telephone,jdbcType=VARCHAR},
@@ -259,6 +254,12 @@
 	      </if>
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+	          	<if test="supplier_provice != null">
+	        supplier_provice = #{supplier_provice,jdbcType=VARCHAR},
+	      </if>
+	      	<if test="supplier_city != null">
+	        supplier_city = #{supplier_city,jdbcType=VARCHAR},
 	      </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}

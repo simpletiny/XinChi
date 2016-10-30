@@ -15,7 +15,7 @@ String key = request.getParameter("key");
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>公司编辑<a href="<%=basePath %>/templates/supplier/supplier.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>供应商编辑<a href="<%=basePath %>/templates/supplier/supplier.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -42,14 +42,13 @@ String key = request.getParameter("key");
                         <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: supplier().fax" placeholder="传真" name="supplier.fax" /></div>
                     </div>
                 </div>
-                <div class="input-row clearfloat">
-                     <div class="col-md-6 required">
-                        <label class="l">地区</label>
-                        <div class="ip"><select class="form-control" data-bind="options: supplierArea, optionsCaption: '-- 请选择 --', value: supplier().supplier_area" name="supplier.supplier_area" required="required"></select></div>
-                    </div>
+                    <div class="input-row clearfloat">
                     <div class="col-md-6 required">
-                        <label class="l">公司类型</label>
-                        <div class="ip"><select class="form-control" data-bind="options: supplierType, optionsCaption: '-- 请选择 --', value: supplier().supplier_type" name="supplier.supplier_type" required="required"></select></div>
+                        <label class="l">地区</label>
+                        <div class="ip" style="width:35%"><select class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: supplier().supplier_provice,event:{change:ter}" name="supplier.supplier_provice" required="required"></select></div>
+                       <div class="ip"  style="width:35%"><select class="form-control" id="city" name="supplier.supplier_city" required="required">
+                       <option value>-- 市--</option>
+                       </select></div>
                     </div>
                 </div>
                  <div class="input-row clearfloat">
@@ -98,7 +97,7 @@ String key = request.getParameter("key");
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: saveCompany">保存</a></div>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: saveSupplier">保存</a></div>
         </div>
     </div>
   </div>

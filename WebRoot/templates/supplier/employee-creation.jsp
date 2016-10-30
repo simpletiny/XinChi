@@ -32,10 +32,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
                 <div class="input-row clearfloat">
-                     <div class="col-md-6 required">
-                        <label class="l">地区</label>
-                        <div class="ip"><select class="form-control" data-bind="options: employeeArea, optionsCaption: '-- 请选择 --', value: employee().area" name="employee.area" required="required"></select></div>
-                    </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
                         <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().financial_body_name,click:choseFinancial" placeholder="点击选择" name="employee.financial_body_name" id="financial_body_name" required="required"/>
