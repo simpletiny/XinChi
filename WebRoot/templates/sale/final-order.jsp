@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>预算单管理</h2>
+        <h2>决算单管理</h2>
     </div>
 
     <div class="main-container">
@@ -26,17 +26,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     .form-control{ height: 30px; }
                 </style>
                     <div class="form-group" >
-	                    <div style="width:30%;float:right">
-		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOrder() }">新建</button>
-		                    </div>
-		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-		                    </div>
-		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
-		                    </div>
-		                 </div>
 	                </div>
                 <div class="form-group">
                     <div class="span8">
@@ -54,7 +43,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr role="row">
-                        	<th></th>
                             <th>团号</th>
                             <th>客户</th>
                             <th>出团日期</th>
@@ -62,20 +50,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>人数</th>
                             <th>总团款</th>
                             <th>总成本</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: orders">
                         <tr>
-                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
-                            <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'order-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.team_number"></td>
                             <td data-bind="text: $data.client_employee_name"></td>
                             <td data-bind="text: $data.departure_date"></td>
                             <td data-bind="text: $data.return_date"></td>
                             <td data-bind="text: $data.people_count"></td> 
                              <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>   
-                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">结团</a></td>        
+                             <td data-bind="text: $data.payable"></td>     
                         </tr>
                     </tbody>
                 </table>
@@ -86,6 +71,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
     $(".sale").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath%>static/js/sale/order.js"></script>
+    <script src="<%=basePath%>static/js/sale/final-order.js"></script>
 </body>
 </html>

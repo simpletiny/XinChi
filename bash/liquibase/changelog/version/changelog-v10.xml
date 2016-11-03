@@ -397,4 +397,153 @@
 			<comment>modify table sale_order</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE sale_order;
+          		CREATE  TABLE budget_order (
+					  team_number VARCHAR(30) NOT NULL ,
+					  product VARCHAR(100) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  return_date VARCHAR(10) NULL ,
+					  days INT NULL ,
+					  traffic_payment DECIMAL(12,2) NULL ,
+					  people_count INT NULL ,
+					  client_employee_pk CHAR(22) NULL ,
+					  client_employee_name VARCHAR(10) NULL ,
+					  receivable DECIMAL(12,2) NULL ,
+					  received DECIMAL(12,2) NULL ,
+					  client_debt DECIMAL(12,2) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  other_payment DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '预算订单表';
+          		            ]]>
+			<comment>create table sale_order</comment>
+		</sql>
+	</changeSet>
+	  <changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+                DROP TABLE IF EXISTS sale_order_supplier;
+          		CREATE  TABLE budget_order_supplier (
+					  team_number VARCHAR(30) NOT NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '预算订单供应商';
+          		            ]]>
+			<comment>create table sale_order_supplier</comment>
+		</sql>
+	</changeSet>
+	    <changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+              ALTER TABLE budget_order ADD COLUMN comment VARCHAR(200) NULL  AFTER pk ;
+          		            ]]>
+			<comment>modify table budget_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE  TABLE final_order (
+					  team_number VARCHAR(30) NOT NULL ,
+					  product VARCHAR(100) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  return_date VARCHAR(10) NULL ,
+					  days INT NULL ,
+					  flight VARCHAR(20) NULL ,
+					  ticket DECIMAL(12,2) NULL ,
+					  air_payment DECIMAL(12,2) NULL ,
+					  people_count INT NULL ,
+					  client_employee_pk CHAR(22) NULL ,
+					  client_employee_name VARCHAR(10) NULL ,
+					  receivable DECIMAL(12,2) NULL ,
+					  received DECIMAL(12,2) NULL ,
+					  client_debt DECIMAL(12,2) NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  comment VARCHAR(200) NULL,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '决算单表';
+          		            ]]>
+			<comment>create table final_order</comment>
+		</sql>
+	</changeSet>
+	 <changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE  TABLE final_order_supplier (
+					  team_number VARCHAR(30) NOT NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  supplier_debt DECIMAL(12,2) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COMMENT = '决算单供应商';
+          		            ]]>
+			<comment>create table final_order_supplier</comment>
+		</sql>
+	</changeSet>
+	 <changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE client_received_detail CHANGE COLUMN received_time received_time VARCHAR(16) NOT NULL ;
+          		            ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
+	 <changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE final_order DROP COLUMN air_payment , DROP COLUMN ticket , DROP COLUMN flight , ADD COLUMN other_payment DECIMAL(12,2) NULL  AFTER comment ;
+
+          		            ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
+	 <changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE final_order ADD COLUMN traffic_payment DECIMAL(12,2) NULL  AFTER other_payment ;
+          		
+
+          		            ]]>
+			<comment>ALTER TABLE final_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

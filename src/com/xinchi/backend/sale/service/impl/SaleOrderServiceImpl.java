@@ -8,9 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
 import com.xinchi.backend.sale.service.SaleOrderService;
-import com.xinchi.bean.SaleOrderBean;
+import com.xinchi.bean.BudgetOrderBean;
+import com.xinchi.bean.BudgetOrderSupplierBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
-import com.xinchi.bean.SaleOrderSupplierBean;
 
 @Service
 @Transactional
@@ -20,7 +21,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 	private SaleOrderDAO dao;
 
 	@Override
-	public void insert(SaleOrderBean bo) {
+	public void insert(BudgetOrderBean bo) {
 		dao.insert(bo);
 	}
 
@@ -30,14 +31,77 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 	}
 
 	@Override
-	public void saveOrderSupplier(List<SaleOrderSupplierBean> arrSupplier) {
+	public void saveOrderSupplier(List<BudgetOrderSupplierBean> arrSupplier) {
 		dao.saveOrderSupplier(arrSupplier);
 	}
 
 	@Override
-	public List<SaleOrderBean> searchOrders(SaleOrderBean bo) {
-		
+	public List<BudgetOrderBean> searchOrders(BudgetOrderBean bo) {
+
 		return dao.selectAllByParam(bo);
+	}
+
+	@Override
+	public BudgetOrderBean searchBudgetOrderByPk(String order_pk) {
+		return dao.selectBudgetOrderByPk(order_pk);
+	}
+
+	@Override
+	public List<BudgetOrderSupplierBean> searchBudgetSupplier(String team_number) {
+		return dao.searchBudgetSupplier(team_number);
+	}
+
+	@Override
+	public void deleteNameListByTeamNo(String team_number) {
+		dao.deleteNameListByTeamNo(team_number);
+
+	}
+
+	@Override
+	public void deleteOrderSupplierByTeamNumber(String team_number) {
+		dao.deleteOrderSupplierByTeamNumber(team_number);
+	}
+
+	@Override
+	public void update(BudgetOrderBean order) {
+		dao.updateBudgetOrder(order);
+
+	}
+
+	@Override
+	public void saveReceivableDetail(ClientReceivedDetailBean detail) {
+		BudgetOrderBean order = dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
+		if(null==order.getReceived()){
+			order.setReceived(detail.getReceived());
+		}else{
+			order.setReceived(order.getReceived().add(detail.getReceived()));
+		}
+		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
+		dao.updateBudgetOrder(order);
+		
+		dao.saveReceivableDetail(detail);
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> searchReceivableDetails(
+			String team_number) {
+
+		return dao.searchReceivableDetails(team_number);
+	}
+
+	@Override
+	public void deleteReceivableDetail(String detail_pk) {
+		ClientReceivedDetailBean detail = dao.selectClientReceivedDetailByPk(detail_pk);
+		BudgetOrderBean order = dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
+		if(null==order.getReceived()){
+			//
+		}else{
+			order.setReceived(order.getReceived().subtract(detail.getReceived()));
+		}
+		
+		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
+		dao.updateBudgetOrder(order);
+		dao.deleteReceivableDetail(detail_pk);
 	}
 
 }

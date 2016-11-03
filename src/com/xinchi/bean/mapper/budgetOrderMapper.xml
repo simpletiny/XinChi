@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.BudgetOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.BudgetOrderBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
+	    <result column="product" property="product" jdbcType="VARCHAR" />
+	    <result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+	    <result column="return_date" property="return_date" jdbcType="VARCHAR" />
+	    <result column="days" property="days" jdbcType="INTEGER" />
+	    <result column="traffic_payment" property="traffic_payment" jdbcType="DECIMAL" />
+	    <result column="people_count" property="people_count" jdbcType="INTEGER" />
+	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+	    <result column="receivable" property="receivable" jdbcType="DECIMAL" />
+	    <result column="received" property="received" jdbcType="DECIMAL" />
+	    <result column="client_debt" property="client_debt" jdbcType="DECIMAL" />
+	    <result column="payable" property="payable" jdbcType="DECIMAL" />
+	    <result column="paid" property="paid" jdbcType="DECIMAL" />
+	    <result column="supplier_debt" property="supplier_debt" jdbcType="DECIMAL" />
+	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	team_number, 
+    	product, 
+    	departure_date, 
+    	return_date, 
+    	days, 
+    	traffic_payment, 
+    	people_count, 
+    	client_employee_pk, 
+    	client_employee_name, 
+    	receivable, 
+    	received, 
+    	client_debt, 
+    	payable, 
+    	paid, 
+    	supplier_debt, 
+    	other_payment, 
+    	create_user, 
+    	update_user, 
+    	pk, 
+    	comment,
+    	create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from budget_order
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from budget_order
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.BudgetOrderBean" >
+  	
+    insert into budget_order
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="team_number != null">
+	        team_number,
+	      </if>
+	 	<if test="product != null">
+	        product,
+	      </if>
+	 	<if test="departure_date != null">
+	        departure_date,
+	      </if>
+	 	<if test="return_date != null">
+	        return_date,
+	      </if>
+	 	<if test="days != null">
+	        days,
+	      </if>
+	 	<if test="traffic_payment != null">
+	        traffic_payment,
+	      </if>
+	 	<if test="people_count != null">
+	        people_count,
+	      </if>
+	 	<if test="client_employee_pk != null">
+	        client_employee_pk,
+	      </if>
+	 	<if test="client_employee_name != null">
+	        client_employee_name,
+	      </if>
+	 	<if test="receivable != null">
+	        receivable,
+	      </if>
+	 	<if test="received != null">
+	        received,
+	      </if>
+	 	<if test="client_debt != null">
+	        client_debt,
+	      </if>
+	 	<if test="payable != null">
+	        payable,
+	      </if>
+	 	<if test="paid != null">
+	        paid,
+	      </if>
+	 	<if test="supplier_debt != null">
+	        supplier_debt,
+	      </if>
+	 	<if test="other_payment != null">
+	        other_payment,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="team_number != null">
+	        #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        #{product,jdbcType=VARCHAR},
+	      </if>
+    	<if test="departure_date != null">
+	        #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="return_date != null">
+	        #{return_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="days != null">
+	        #{days,jdbcType=INTEGER},
+	      </if>
+    	<if test="traffic_payment != null">
+	        #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="people_count != null">
+	        #{people_count,jdbcType=INTEGER},
+	      </if>
+    	<if test="client_employee_pk != null">
+	        #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="receivable != null">
+	        #{receivable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="received != null">
+	        #{received,jdbcType=DECIMAL},
+	      </if>
+    	<if test="client_debt != null">
+	        #{client_debt,jdbcType=DECIMAL},
+	      </if>
+    	<if test="payable != null">
+	        #{payable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="paid != null">
+	        #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="supplier_debt != null">
+	        #{supplier_debt,jdbcType=DECIMAL},
+	      </if>
+    	<if test="other_payment != null">
+	        #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=CHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.BudgetOrderBean" >
+    update budget_order
+    <set >
+    	<if test="team_number != null">
+	        team_number = #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        product = #{product,jdbcType=VARCHAR},
+	      </if>
+    	<if test="departure_date != null">
+	        departure_date = #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="return_date != null">
+	        return_date = #{return_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="days != null">
+	        days = #{days,jdbcType=INTEGER},
+	      </if>
+    	<if test="traffic_payment != null">
+	        traffic_payment = #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="people_count != null">
+	        people_count = #{people_count,jdbcType=INTEGER},
+	      </if>
+    	<if test="client_employee_pk != null">
+	        client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        client_employee_name = #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="receivable != null">
+	        receivable = #{receivable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="received != null">
+	        received = #{received,jdbcType=DECIMAL},
+	      </if>
+    	<if test="client_debt != null">
+	        client_debt = #{client_debt,jdbcType=DECIMAL},
+	      </if>
+    	<if test="payable != null">
+	        payable = #{payable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="paid != null">
+	        paid = #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="supplier_debt != null">
+	        supplier_debt = #{supplier_debt,jdbcType=DECIMAL},
+	      </if>
+    	<if test="other_payment != null">
+	        other_payment = #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=CHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.BudgetOrderBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from budget_order
+    <where>
+    	<if test="create_user != null">
+    	 	and create_user = #{create_user,jdbcType=VARCHAR}
+    	</if>
+    </where>
+   </select>
+   
+ <select id="selectBudgetOrderByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from budget_order
+    where team_number = #{team_number,jdbcType=VARCHAR}
+   </select>
+</mapper>

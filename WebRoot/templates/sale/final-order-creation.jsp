@@ -3,6 +3,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -15,12 +16,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>新建预算订单<a href="<%=basePath %>/templates/sale/order.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>新建决算订单(<b data-bind="text:order().team_number"></b>)<a href="<%=basePath %>/templates/sale/order.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
-
+ <input type="hidden" id="order_key" name="order.budget_pk"  value="<%=key%>" />
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form" id="form_container">
+            	<input type="hidden" data-bind="value:order().team_number" name="order.team_number"></input>
+            	<input type="hidden" data-bind="value:order().received" name="order.received"></input>
                <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">客户</label>
@@ -29,9 +32,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">总团款</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().receivable" placeholder="总团款" name="order.receivable" required="required"/></div>
+                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().receivable,event{blur:changeRecevable}" placeholder="总团款" name="order.receivable" required="required"/></div>
                     </div>
                 </div>
+                 <div class="input-row clearfloat">
+                   <div class="col-md-6">
+                        <label class="l">已收合计</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: order().received" /></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="l">尚余</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: client_debt" /></div>
+                    </div>
+                    </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-12 required">
                         <label class="l">产品</label>
@@ -90,7 +103,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createOrder">保存</a></div>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createFinalOrder">结团</a></div>
         </div>
     </div>
   </div>
@@ -184,6 +197,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="<%=basePath %>static/js/validation.js"></script>
     <script src="<%=basePath %>static/js/datepicker.js"></script>
  
-  <script src="<%=basePath %>static/js/sale/order-creation.js"></script>
+  <script src="<%=basePath %>static/js/sale/final-order-creation.js"></script>
 </body>
 </html>

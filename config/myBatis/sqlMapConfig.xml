@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>      
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">    
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-	
-	<properties>  
-              <property name="dialect" value="MySQL"/>  
-              <property name="pageSqlId" value=".*ByPage$"/>
-    </properties> 
-    <settings><setting name="logImpl" value="LOG4J"/></settings>
-    <plugins>  
-            <plugin interceptor="com.xinchi.mybatis.interceptor.PaginationInterceptor"/>  
-    </plugins>  
-    <mappers>
-        <!-- 配置sql语句文件 -->
-        
-         <!-- Mapper注册-->
-         <mapper resource="com/xinchi/bean/mapper/userBaseMapper.xml"/> 
-         <mapper resource="com/xinchi/bean/mapper/userInfoMapper.xml"/>
-         <mapper resource="com/xinchi/bean/mapper/userCommonMapper.xml"/> 	
-         <mapper resource="com/xinchi/bean/mapper/clientMapper.xml"/> 
-           <mapper resource="com/xinchi/bean/mapper/clientEmployeeMapper.xml"/> 	
-            <mapper resource="com/xinchi/bean/mapper/cardMapper.xml"/> 	
-            <mapper resource="com/xinchi/bean/mapper/paymentDetailMapper.xml"/> 	
-            <mapper resource="com/xinchi/bean/mapper/supplierEmployeeMapper.xml"/> 
-            <mapper resource="com/xinchi/bean/mapper/supplierMapper.xml"/> 
-            <mapper resource="com/xinchi/bean/mapper/saleOrderMapper.xml"/> 
-            <mapper resource="com/xinchi/bean/mapper/saleOrderNameListMapper.xml"/> 
-            <mapper resource="com/xinchi/bean/mapper/saleOrderSupplierMapper.xml"/> 
-		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册
-        <package name="com.tiantian.mybatis.mapperinterface"/>-->
-    </mappers>
+
+	<properties>
+		<property name="dialect" value="MySQL" />
+		<property name="pageSqlId" value=".*ByPage$" />
+	</properties>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<plugins>
+		<plugin interceptor="com.xinchi.mybatis.interceptor.PaginationInterceptor" />
+	</plugins>
+	<mappers>
+		<!-- 配置sql语句文件 -->
+
+		<!-- Mapper注册 -->
+		<mapper resource="com/xinchi/bean/mapper/userBaseMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userInfoMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userCommonMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientEmployeeMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/cardMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/paymentDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierEmployeeMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/saleOrderNameListMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetOrderSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalOrderSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientReceivedDetailMapper.xml" />
+		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
+	</mappers>
 </configuration>  

@@ -40,10 +40,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
             </li>
             </s:if>
-            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="client"><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
+            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="client"><a href="#" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
+                <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                 <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
                 </ol>
+                </s:if>
                  <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户员工</a></li>
                 </ol>
@@ -69,7 +71,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             </s:if>
              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="sale"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
                 <ol style="display: none;">
-                    <li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单管理</a></li>
+                    <li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>预算单管理</a></li>
+                </ol>
+                 <ol style="display: none;">
+                    <li><a href="<%=basePath%>templates/sale/final-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>决算单管理</a></li>
                 </ol>
             </li>
             </s:if>

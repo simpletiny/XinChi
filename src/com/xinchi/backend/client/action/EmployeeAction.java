@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope("prototype")
@@ -29,6 +32,15 @@ public class EmployeeAction extends BaseAction {
 	
 	private List<ClientEmployeeBean> employees;
 	public String searchEmployee(){
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		
+		if(!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)){
+			employee = new ClientEmployeeBean();
+			employee.setSales(sessionBean.getPk());
+		}
+		
 		employees = employeeService.getAllClientEmployeeByParam(employee);
 		return SUCCESS;
 	}

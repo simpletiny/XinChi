@@ -32,8 +32,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl +"templates/client/company-edit.jsp?key="+self.chosenOrders()[0];
+			window.location.href = self.apiurl +"templates/sale/order-edit.jsp?key="+self.chosenOrders()[0];
 		}
+	};
+	
+	//结团
+	self.closeTeam = function(pk){
+		window.location.href = self.apiurl +"templates/sale/final-order-creation.jsp?key="+pk;
 	};
 
 };

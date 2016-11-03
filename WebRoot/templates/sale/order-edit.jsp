@@ -3,6 +3,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -15,12 +16,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>新建预算订单<a href="<%=basePath %>/templates/sale/order.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>预算订单修改(<b data-bind="text:order().team_number"></b>)<a href="<%=basePath %>/templates/sale/order.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
+    
         <div class="main-box">
             <form class="form-box info-form" id="form_container">
+            <input type="hidden" data-bind="value:order().team_number" name="order.team_number"></input>
+            <input type="hidden" id="order_key" name="order.pk"  value="<%=key%>" />
                <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">客户</label>
@@ -59,19 +63,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip"><input type="number" min="0" class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
                     </div>
                 </div>
-                 
+                  <!-- ko foreach: suppliers -->
                 <div class="input-row clearfloat" st="supplier">
                     <div class="col-md-6">
                         <label class="l">供应商</label>
-                        <div class="ip"><input type="text" class="ip-" st="supplierEmployeeName" data-bind="event:{click:choseSupplierEmployee}" placeholder="供应商"/></div>
-                  		<input type="text" class="ip-" st="supplierEmployeePk" style="display:none"/>
+                        <div class="ip"><input type="text" class="ip-" st="supplierEmployeeName" data-bind="value:$data.supplier_employee_name,event:{click:choseSupplierEmployee}" placeholder="供应商"/></div>
+                  		<input type="text" class="ip-" data-bind="value:$data.supplier_employee_pk" st="supplierEmployeePk" style="display:none"/>
                     </div>
                     <div class="col-md-6">
                         <label class="l">应付款</label>
-                        <div class="ip"><input type="number" st="payable" min="0" class="ip-"  placeholder="应付款"/></div>
+                        <div class="ip"><input type="number" st="payable" data-bind="value:$data.payable" min="0" class="ip-"  placeholder="应付款"/></div>
                     </div>
                 </div>
-
+                <!-- /ko -->
                 
                 <div class="input-row clearfloat">
                 <div class="ip"><a type="button" class="btn btn-green btn-r" data-bind="click: addSupplier">添加供应商</a></div>
@@ -79,7 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                  <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">其他费用</label>
-                        <div class="ip"><input type="number"  data-bind="value:order().other_payment" name="order.other_payment" min="0" class="ip-"  placeholder="其他费用"/></div>
+                        <div class="ip"><input type="number" min="0" class="ip-"  data-bind="value:order().other_payment" name="order.other_payment" placeholder="其他费用"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -90,7 +94,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createOrder">保存</a></div>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: updateOrder">保存</a></div>
         </div>
     </div>
   </div>
@@ -184,6 +188,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="<%=basePath %>static/js/validation.js"></script>
     <script src="<%=basePath %>static/js/datepicker.js"></script>
  
-  <script src="<%=basePath %>static/js/sale/order-creation.js"></script>
+  <script src="<%=basePath %>static/js/sale/order-edit.js"></script>
 </body>
 </html>

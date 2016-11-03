@@ -249,5 +249,10 @@
    select 
     <include refid="Base_Column_List" />
     from client_employee
+      <where>
+    	<if test="sales != null">
+	         and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
+	      </if>
+    </where>
    </select>
 </mapper>

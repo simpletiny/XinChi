@@ -12,6 +12,8 @@ import java.util.Date;
  * 
  */
 public class DateUtil {
+	public static String YYYYMMDD = "yyyyMMdd";
+
 	/**
 	 * 
 	 * @return
@@ -41,4 +43,19 @@ public class DateUtil {
 		}
 	}
 
+	/**
+	 * 按格式取得日期字符串
+	 * 
+	 * @param format
+	 * @return
+	 */
+	public static String getDateStr(String format) {
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		return sdf.format(c.getTime());
+	}
+
+//	public static void main(String[] args) {
+//		System.out.println(getDateStr("HH:mm"));
+//	}
 }

@@ -35,6 +35,11 @@
     where pk = #{pk,jdbcType=CHAR}
   </delete>
   
+  <delete id="deleteByTeamNumber" parameterType="java.lang.String" >
+    delete from sale_order_name_list
+    where team_number = #{team_number,jdbcType=CHAR}
+  </delete>
+  
   <insert id="insert" parameterType="com.xinchi.bean.SaleOrderNameListBean" >
   	
     insert into sale_order_name_list

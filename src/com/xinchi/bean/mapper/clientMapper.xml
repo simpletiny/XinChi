@@ -267,5 +267,10 @@
    select 
     <include refid="Base_Column_List" />
     from client
+    <where>
+    	<if test="create_user != null">
+	         and create_user = #{create_user,jdbcType=VARCHAR}
+	      </if>
+    </where>
    </select>
 </mapper>

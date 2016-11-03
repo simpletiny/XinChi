@@ -6,10 +6,38 @@ var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
+	self.suppliers = ko.observable({});
+	
+	self.orderPk = $("#order_key").val();
+	//加载订单信息
+	startLoadingSimpleIndicator("加载中");
+	$.getJSON(self.apiurl + 'sale/searchOneOrder', {
+		order_pk : self.orderPk
+	}, function(data) {
+		if (data.order) {
+			self.order(data.order);
+			
+			//获取订单包含的供应商
+			$.getJSON(self.apiurl + 'sale/searchOrderSupplier', {
+				team_number: self.order().team_number
+			}, function(data) {
+				self.suppliers(data.budgetSuppliers);
+			});
+			
+		} else {
+			fail_msg("订单不存在！");
+		}
 
+		endLoadingIndicator();
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+	
 	self.clientEmployees = ko.observable({});
 	self.supplierEmployees = ko.observable({});
 
+
+	
 	self.refreshClient = function() {
 		$.getJSON(self.apiurl + 'client/searchEmployee', {}, function(data) {
 			self.clientEmployees(data.employees);
@@ -103,7 +131,7 @@ var OrderContext = function() {
 
 	};
 
-	self.createOrder = function() {
+	self.updateOrder = function() {
 		if (!$("form").valid()) {
 			return;
 		}
@@ -137,10 +165,10 @@ var OrderContext = function() {
 
 		var data = $("form").serialize() + "&nameList=" + nameList
 				+ "&supplierJson=" + supplierJson;
-
+		console.log(data);
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'sale/createOrder',
+			url : self.apiurl + 'sale/updateOrder',
 			data : data
 		}).success(
 				function(str) {
@@ -168,7 +196,7 @@ function choseSupplierEmployee(data, event) {
 			dom : '#supplier-pick'
 		},
 		end : function() {
-			console.log("Done");
+			//console.log("Done");
 		}
 	});
 

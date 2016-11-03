@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.SaleOrderMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.SaleOrderBean" >
+<mapper namespace="com.xinchi.bean.mapper.FinalOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.FinalOrderBean" >
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
+	    <result column="product" property="product" jdbcType="VARCHAR" />
 	    <result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 	    <result column="return_date" property="return_date" jdbcType="VARCHAR" />
 	    <result column="days" property="days" jdbcType="INTEGER" />
-	    <result column="flight" property="flight" jdbcType="VARCHAR" />
-	    <result column="ticket" property="ticket" jdbcType="DECIMAL" />
-	    <result column="air_payment" property="air_payment" jdbcType="DECIMAL" />
 	    <result column="people_count" property="people_count" jdbcType="INTEGER" />
 	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
@@ -23,20 +21,20 @@
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
+	    <result column="traffic_payment" property="traffic_payment" jdbcType="DECIMAL" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
- 	    <result column="product" property="product" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
   		
     	team_number, 
+    	product, 
     	departure_date, 
     	return_date, 
     	days, 
-    	flight, 
-    	ticket, 
-    	air_payment, 
     	people_count, 
     	client_employee_pk, 
     	client_employee_name, 
@@ -51,29 +49,33 @@
     	create_user, 
     	update_user, 
     	pk, 
-    	create_time,
-    	update_time,
-    	product
+    	comment, 
+    	other_payment, 
+    	traffic_payment,
+    	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from sale_order
+    from final_order
     where pk = #{pk,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from sale_order
+    delete from final_order
     where pk = #{pk,jdbcType=CHAR}
   </delete>
   
-  <insert id="insert" parameterType="com.xinchi.bean.SaleOrderBean" >
+  <insert id="insert" parameterType="com.xinchi.bean.FinalOrderBean" >
   	
-    insert into sale_order
+    insert into final_order
     
     <trim prefix="(" suffix=")" suffixOverrides=",">
 	 	<if test="team_number != null">
 	        team_number,
+	      </if>
+	 	<if test="product != null">
+	        product,
 	      </if>
 	 	<if test="departure_date != null">
 	        departure_date,
@@ -83,15 +85,6 @@
 	      </if>
 	 	<if test="days != null">
 	        days,
-	      </if>
-	 	<if test="flight != null">
-	        flight,
-	      </if>
-	 	<if test="ticket != null">
-	        ticket,
-	      </if>
-	 	<if test="air_payment != null">
-	        air_payment,
 	      </if>
 	 	<if test="people_count != null">
 	        people_count,
@@ -135,19 +128,28 @@
 	 	<if test="pk != null">
 	        pk,
 	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+	 	<if test="other_payment != null">
+	        other_payment,
+	      </if>
+	 	<if test="traffic_payment != null">
+	        traffic_payment,
+	      </if>
       <if test="create_time != null">
         create_time,
       </if>
       <if test="update_time != null">
         update_time,
       </if>
-      <if test="product != null">
-        product,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="team_number != null">
 	        #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        #{product,jdbcType=VARCHAR},
 	      </if>
     	<if test="departure_date != null">
 	        #{departure_date,jdbcType=VARCHAR},
@@ -157,15 +159,6 @@
 	      </if>
     	<if test="days != null">
 	        #{days,jdbcType=INTEGER},
-	      </if>
-    	<if test="flight != null">
-	        #{flight,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket != null">
-	        #{ticket,jdbcType=DECIMAL},
-	      </if>
-    	<if test="air_payment != null">
-	        #{air_payment,jdbcType=DECIMAL},
 	      </if>
     	<if test="people_count != null">
 	        #{people_count,jdbcType=INTEGER},
@@ -209,24 +202,33 @@
     	<if test="pk != null">
 	        #{pk,jdbcType=CHAR},
 	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="other_payment != null">
+	        #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="traffic_payment != null">
+	        #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
       <if test="create_time != null">
         #{create_time,jdbcType=VARCHAR},
       </if>
        <if test="update_time != null">
         #{update_time,jdbcType=VARCHAR},
       </if>
-       <if test="product != null">
-        #{product,jdbcType=VARCHAR},
-      </if>
     </trim>		
   </insert>
   
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SaleOrderBean" >
-    update sale_order
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.FinalOrderBean" >
+    update final_order
     <set >
     	<if test="team_number != null">
 	        team_number = #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        product = #{product,jdbcType=VARCHAR},
 	      </if>
     	<if test="departure_date != null">
 	        departure_date = #{departure_date,jdbcType=VARCHAR},
@@ -236,15 +238,6 @@
 	      </if>
     	<if test="days != null">
 	        days = #{days,jdbcType=INTEGER},
-	      </if>
-    	<if test="flight != null">
-	        flight = #{flight,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket != null">
-	        ticket = #{ticket,jdbcType=DECIMAL},
-	      </if>
-    	<if test="air_payment != null">
-	        air_payment = #{air_payment,jdbcType=DECIMAL},
 	      </if>
     	<if test="people_count != null">
 	        people_count = #{people_count,jdbcType=INTEGER},
@@ -288,18 +281,29 @@
     	<if test="pk != null">
 	        pk = #{pk,jdbcType=CHAR},
 	      </if>
-      <if test="modify_time != null">
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="other_payment != null">
+	        other_payment = #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="traffic_payment != null">
+	        traffic_payment = #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
+      <if test="update_time != null">
         update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-         <if test="product != null">
-        product = #{product,jdbcType=VARCHAR},
       </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.SaleOrderBean" resultMap="BaseResultMap">
+ <select id="selectByParam" parameterType="com.xinchi.bean.FinalOrderBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
-    from sale_order
+    from final_order
+    <where>
+    	<if test="create_user != null">
+      and   create_user = #{create_user,jdbcType=VARCHAR}
+      </if>
+    </where>
    </select>
 </mapper>

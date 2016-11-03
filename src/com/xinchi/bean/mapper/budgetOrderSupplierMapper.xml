@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.ClientReceivedDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientReceivedDetailBean" >
+<mapper namespace="com.xinchi.bean.mapper.BudgetOrderSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.BudgetOrderSupplierBean" >
     	<id column="id" property="id" jdbcType="CHAR" />
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
-	    <result column="received" property="received" jdbcType="DECIMAL" />
-	    <result column="received_time" property="received_time" jdbcType="VARCHAR" />
-	    <result column="card_pk" property="card_pk" jdbcType="CHAR" />
-	    <result column="card_account" property="card_account" jdbcType="VARCHAR" />
+	    <result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+	    <result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
+	    <result column="payable" property="payable" jdbcType="DECIMAL" />
+	    <result column="paid" property="paid" jdbcType="DECIMAL" />
+	    <result column="supplier_debt" property="supplier_debt" jdbcType="DECIMAL" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
@@ -18,10 +19,11 @@
   <sql id="Base_Column_List" >
   		
     	team_number, 
-    	received, 
-    	received_time, 
-    	card_pk, 
-    	card_account, 
+    	supplier_employee_pk, 
+    	supplier_employee_name, 
+    	payable, 
+    	paid, 
+    	supplier_debt, 
     	create_user, 
     	update_user, 
     	pk, 
@@ -30,34 +32,42 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from client_received_detail
+    from budget_order_supplier
     where pk = #{pk,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from client_received_detail
+    delete from budget_order_supplier
     where pk = #{pk,jdbcType=CHAR}
   </delete>
   
-  <insert id="insert" parameterType="com.xinchi.bean.ClientReceivedDetailBean" >
+  <delete id="deleteByTeamNumber" parameterType="java.lang.String" >
+    delete from budget_order_supplier
+    where team_number = #{team_number,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.BudgetOrderSupplierBean" >
   	
-    insert into client_received_detail
+    insert into budget_order_supplier
     
     <trim prefix="(" suffix=")" suffixOverrides=",">
 	 	<if test="team_number != null">
 	        team_number,
 	      </if>
-	 	<if test="received != null">
-	        received,
+	 	<if test="supplier_employee_pk != null">
+	        supplier_employee_pk,
 	      </if>
-	 	<if test="received_time != null">
-	        received_time,
+	 	<if test="supplier_employee_name != null">
+	        supplier_employee_name,
 	      </if>
-	 	<if test="card_pk != null">
-	        card_pk,
+	 	<if test="payable != null">
+	        payable,
 	      </if>
-	 	<if test="card_account != null">
-	        card_account,
+	 	<if test="paid != null">
+	        paid,
+	      </if>
+	 	<if test="supplier_debt != null">
+	        supplier_debt,
 	      </if>
 	 	<if test="create_user != null">
 	        create_user,
@@ -79,17 +89,20 @@
     	<if test="team_number != null">
 	        #{team_number,jdbcType=VARCHAR},
 	      </if>
-    	<if test="received != null">
-	        #{received,jdbcType=DECIMAL},
+    	<if test="supplier_employee_pk != null">
+	        #{supplier_employee_pk,jdbcType=CHAR},
 	      </if>
-    	<if test="received_time != null">
-	        #{received_time,jdbcType=VARCHAR},
+    	<if test="supplier_employee_name != null">
+	        #{supplier_employee_name,jdbcType=VARCHAR},
 	      </if>
-    	<if test="card_pk != null">
-	        #{card_pk,jdbcType=CHAR},
+    	<if test="payable != null">
+	        #{payable,jdbcType=DECIMAL},
 	      </if>
-    	<if test="card_account != null">
-	        #{card_account,jdbcType=VARCHAR},
+    	<if test="paid != null">
+	        #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="supplier_debt != null">
+	        #{supplier_debt,jdbcType=DECIMAL},
 	      </if>
     	<if test="create_user != null">
 	        #{create_user,jdbcType=VARCHAR},
@@ -110,23 +123,26 @@
   </insert>
   
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientReceivedDetailBean" >
-    update client_received_detail
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.BudgetOrderSupplierBean" >
+    update budget_order_supplier
     <set >
     	<if test="team_number != null">
 	        team_number = #{team_number,jdbcType=VARCHAR},
 	      </if>
-    	<if test="received != null">
-	        received = #{received,jdbcType=DECIMAL},
+    	<if test="supplier_employee_pk != null">
+	        supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
 	      </if>
-    	<if test="received_time != null">
-	        received_time = #{received_time,jdbcType=VARCHAR},
+    	<if test="supplier_employee_name != null">
+	        supplier_employee_name = #{supplier_employee_name,jdbcType=VARCHAR},
 	      </if>
-    	<if test="card_pk != null">
-	        card_pk = #{card_pk,jdbcType=CHAR},
+    	<if test="payable != null">
+	        payable = #{payable,jdbcType=DECIMAL},
 	      </if>
-    	<if test="card_account != null">
-	        card_account = #{card_account,jdbcType=VARCHAR},
+    	<if test="paid != null">
+	        paid = #{paid,jdbcType=DECIMAL},
+	      </if>
+    	<if test="supplier_debt != null">
+	        supplier_debt = #{supplier_debt,jdbcType=DECIMAL},
 	      </if>
     	<if test="create_user != null">
 	        create_user = #{create_user,jdbcType=VARCHAR},
@@ -143,18 +159,18 @@
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.ClientReceivedDetailBean" resultMap="BaseResultMap">
+ <select id="selectByParam" parameterType="com.xinchi.bean.BudgetOrderSupplierBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
-    from client_received_detail
+    from budget_order_supplier
    </select>
- <select id="searchReceivableDetailsByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+   
+ <select id="selectByTeamNumber" parameterType="String" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
-    from client_received_detail
-    
+    from budget_order_supplier
     <where>
-    	team_number = #{team_number,jdbcType=CHAR}
+    	  team_number = #{team_number,jdbcType=VARCHAR}
     </where>
    </select>
 </mapper>

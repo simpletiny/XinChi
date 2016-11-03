@@ -6,6 +6,34 @@ var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
+	self.suppliers = ko.observable({});
+
+	self.client_debt = ko.observable();
+
+	self.orderPk = $("#order_key").val();
+	// 加载订单信息
+	startLoadingSimpleIndicator("加载中");
+	$.getJSON(self.apiurl + 'sale/searchOneOrder', {
+		order_pk : self.orderPk
+	}, function(data) {
+		if (data.order) {
+			self.order(data.order);
+			self.client_debt(self.order().client_debt);
+			// 获取订单包含的供应商
+			$.getJSON(self.apiurl + 'sale/searchOrderSupplier', {
+				team_number : self.order().team_number
+			}, function(data) {
+				self.suppliers(data.budgetSuppliers);
+			});
+
+		} else {
+			fail_msg("订单不存在！");
+		}
+
+		endLoadingIndicator();
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
 
 	self.clientEmployees = ko.observable({});
 	self.supplierEmployees = ko.observable({});
@@ -102,9 +130,16 @@ var OrderContext = function() {
 		layer.close(nameListLayer);
 
 	};
-
-	self.createOrder = function() {
+	self.changeRecevable = function() {
+		balance = self.order().receivable - self.order().received;
+		self.client_debt(balance);
+	};
+	self.createFinalOrder = function() {
 		if (!$("form").valid()) {
+			return;
+		}
+		if (self.order().receivable != self.order().received) {
+			fail_msg("客户团款未结清，不能结团！");
 			return;
 		}
 
@@ -137,16 +172,15 @@ var OrderContext = function() {
 
 		var data = $("form").serialize() + "&nameList=" + nameList
 				+ "&supplierJson=" + supplierJson;
-
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'sale/createOrder',
+			url : self.apiurl + 'sale/createFinalOrder',
 			data : data
 		}).success(
 				function(str) {
 					if (str == "OK") {
 						window.location.href = self.apiurl
-								+ "templates/sale/order.jsp";
+								+ "templates/sale/final-order.jsp";
 					}
 				});
 	};
@@ -168,7 +202,7 @@ function choseSupplierEmployee(data, event) {
 			dom : '#supplier-pick'
 		},
 		end : function() {
-			console.log("Done");
+			// console.log("Done");
 		}
 	});
 

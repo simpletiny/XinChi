@@ -1,11 +1,9 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
 import com.xinchi.common.SupperBO;
 
-public class SaleOrderBean extends SupperBO implements Serializable {
+public class FinalOrderBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String team_number;
@@ -18,33 +16,27 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 
 	private Integer days;
 
-	private String flight;
-
-	private BigDecimal ticket;
-
-	private BigDecimal air_payment;
-
 	private Integer people_count;
 
 	private String client_employee_pk;
 
 	private String client_employee_name;
 
-	private BigDecimal receivable;
+	private java.math.BigDecimal receivable;
 
-	private BigDecimal received;
+	private java.math.BigDecimal received;
 
-	private BigDecimal client_debt;
+	private java.math.BigDecimal client_debt;
 
 	private String supplier_employee_pk;
 
 	private String supplier_employee_name;
 
-	private BigDecimal payable;
+	private java.math.BigDecimal payable;
 
-	private BigDecimal paid;
+	private java.math.BigDecimal paid;
 
-	private BigDecimal supplier_debt;
+	private java.math.BigDecimal supplier_debt;
 
 	private String create_user;
 
@@ -53,6 +45,8 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String comment;
+	private java.math.BigDecimal traffic_payment;
+	private java.math.BigDecimal other_payment;
 
 	public String getTeam_number() {
 		return team_number;
@@ -60,6 +54,14 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
 	public String getDeparture_date() {
@@ -86,30 +88,6 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 		this.days = days;
 	}
 
-	public String getFlight() {
-		return flight;
-	}
-
-	public void setFlight(String flight) {
-		this.flight = flight;
-	}
-
-	public BigDecimal getTicket() {
-		return ticket;
-	}
-
-	public void setTicket(BigDecimal ticket) {
-		this.ticket = ticket;
-	}
-
-	public BigDecimal getAir_payment() {
-		return air_payment;
-	}
-
-	public void setAir_payment(BigDecimal air_payment) {
-		this.air_payment = air_payment;
-	}
-
 	public Integer getPeople_count() {
 		return people_count;
 	}
@@ -134,27 +112,27 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 		this.client_employee_name = client_employee_name;
 	}
 
-	public BigDecimal getReceivable() {
+	public java.math.BigDecimal getReceivable() {
 		return receivable;
 	}
 
-	public void setReceivable(BigDecimal receivable) {
+	public void setReceivable(java.math.BigDecimal receivable) {
 		this.receivable = receivable;
 	}
 
-	public BigDecimal getReceived() {
+	public java.math.BigDecimal getReceived() {
 		return received;
 	}
 
-	public void setReceived(BigDecimal received) {
+	public void setReceived(java.math.BigDecimal received) {
 		this.received = received;
 	}
 
-	public BigDecimal getClient_debt() {
+	public java.math.BigDecimal getClient_debt() {
 		return client_debt;
 	}
 
-	public void setClient_debt(BigDecimal client_debt) {
+	public void setClient_debt(java.math.BigDecimal client_debt) {
 		this.client_debt = client_debt;
 	}
 
@@ -174,27 +152,27 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 		this.supplier_employee_name = supplier_employee_name;
 	}
 
-	public BigDecimal getPayable() {
+	public java.math.BigDecimal getPayable() {
 		return payable;
 	}
 
-	public void setPayable(BigDecimal payable) {
+	public void setPayable(java.math.BigDecimal payable) {
 		this.payable = payable;
 	}
 
-	public BigDecimal getPaid() {
+	public java.math.BigDecimal getPaid() {
 		return paid;
 	}
 
-	public void setPaid(BigDecimal paid) {
+	public void setPaid(java.math.BigDecimal paid) {
 		this.paid = paid;
 	}
 
-	public BigDecimal getSupplier_debt() {
+	public java.math.BigDecimal getSupplier_debt() {
 		return supplier_debt;
 	}
 
-	public void setSupplier_debt(BigDecimal supplier_debt) {
+	public void setSupplier_debt(java.math.BigDecimal supplier_debt) {
 		this.supplier_debt = supplier_debt;
 	}
 
@@ -222,20 +200,28 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 		this.pk = pk;
 	}
 
-	public String getProduct() {
-		return product;
-	}
-
-	public void setProduct(String product) {
-		this.product = product;
-	}
-
 	public String getComment() {
 		return comment;
 	}
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public java.math.BigDecimal getOther_payment() {
+		return other_payment;
+	}
+
+	public void setOther_payment(java.math.BigDecimal other_payment) {
+		this.other_payment = other_payment;
+	}
+
+	public java.math.BigDecimal getTraffic_payment() {
+		return traffic_payment;
+	}
+
+	public void setTraffic_payment(java.math.BigDecimal traffic_payment) {
+		this.traffic_payment = traffic_payment;
 	}
 
 }

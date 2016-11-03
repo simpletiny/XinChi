@@ -21,7 +21,7 @@ String key = request.getParameter("key");
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form">
-             <input type="hidden" id="client_key" name = "client.pk" value="<%=key%>">
+             <input type="hidden" id="client_key" name = "client.pk" value="<%=key%>" />
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">公司名称</label>

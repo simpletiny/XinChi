@@ -1,11 +1,9 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
 import com.xinchi.common.SupperBO;
 
-public class SaleOrderSupplierBean extends SupperBO implements Serializable {
+public class FinalOrderSupplierBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String team_number;
@@ -14,11 +12,11 @@ public class SaleOrderSupplierBean extends SupperBO implements Serializable {
 
 	private String supplier_employee_name;
 
-	private BigDecimal payable;
+	private java.math.BigDecimal payable;
 
-	private BigDecimal paid;
+	private java.math.BigDecimal paid;
 
-	private BigDecimal supplier_debt;
+	private java.math.BigDecimal supplier_debt;
 
 	private String create_user;
 
@@ -50,27 +48,27 @@ public class SaleOrderSupplierBean extends SupperBO implements Serializable {
 		this.supplier_employee_name = supplier_employee_name;
 	}
 
-	public BigDecimal getPayable() {
+	public java.math.BigDecimal getPayable() {
 		return payable;
 	}
 
-	public void setPayable(BigDecimal payable) {
+	public void setPayable(java.math.BigDecimal payable) {
 		this.payable = payable;
 	}
 
-	public BigDecimal getPaid() {
+	public java.math.BigDecimal getPaid() {
 		return paid;
 	}
 
-	public void setPaid(BigDecimal paid) {
+	public void setPaid(java.math.BigDecimal paid) {
 		this.paid = paid;
 	}
 
-	public BigDecimal getSupplier_debt() {
+	public java.math.BigDecimal getSupplier_debt() {
 		return supplier_debt;
 	}
 
-	public void setSupplier_debt(BigDecimal supplier_debt) {
+	public void setSupplier_debt(java.math.BigDecimal supplier_debt) {
 		this.supplier_debt = supplier_debt;
 	}
 

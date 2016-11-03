@@ -88,4 +88,5 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 		this.pk = pk;
 	}
 
+
 }
