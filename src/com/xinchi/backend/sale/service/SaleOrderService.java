@@ -6,6 +6,7 @@ import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
+import com.xinchi.tools.Page;
 
 public interface SaleOrderService {
 	/**
@@ -37,4 +38,6 @@ public interface SaleOrderService {
 			String team_number);
 
 	public void deleteReceivableDetail(String detail_pk);
+
+	public List<BudgetOrderBean> searchOrdersByPage(Page<BudgetOrderBean> page);
 }

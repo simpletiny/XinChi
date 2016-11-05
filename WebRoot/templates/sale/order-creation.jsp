@@ -118,9 +118,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">姓名</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="client_name" class="form-control"  placeholder="姓名" />
                </div>
            </div>
            <div>
@@ -142,6 +142,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                 <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>
@@ -150,15 +162,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    <div id="supplier-pick" style="display:none;">
       <div class="main-container">
        <div class="main-box"style="width:600px">
-         <div class="form-group">
+          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">姓名</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="supplier_name" class="form-control"  placeholder="姓名" />
                </div>
            </div>
            <div>
-               <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { searchSupplierEmployee() }">搜索</button>
+               <button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
            </div>
        </div>
              <div class="list-result">
@@ -176,6 +188,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>

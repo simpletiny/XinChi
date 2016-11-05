@@ -41,14 +41,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                 </div>
 	                </div>
                 <div class="form-group">
-                    <div class="span8">
-                        <label class="col-md-1 control-label">关键字</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="关键字" />
+                    <div class="span6">
+                        <label class="col-md-1 control-label">团号</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="团号"
+                                  name="order.team_number" />
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">产品</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="产品"
+                                  name="order.product" />
+                        </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
                 </div>
             </form>
@@ -86,6 +94,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                 <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
     </div>

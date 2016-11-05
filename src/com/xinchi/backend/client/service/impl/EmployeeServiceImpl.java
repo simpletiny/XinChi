@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.tools.Page;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -56,6 +57,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public String updateEmployee(ClientEmployeeBean employee) {
 		dao.update(employee);
 		return "success";
+	}
+
+	@Override
+	public List<ClientEmployeeBean> getAllClientEmployeeByPage(
+			Page<ClientEmployeeBean> page) {
+		return dao.getAllByPage(page);
 	}
 
 }

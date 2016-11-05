@@ -12,6 +12,7 @@ import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
+import com.xinchi.tools.Page;
 
 @Service
 @Transactional
@@ -51,6 +52,11 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 	@Override
 	public List<FinalOrderSupplierBean> searchFinalSupplier(String team_number) {
 		return dao.searchFinalSupplier(team_number);
+	}
+
+	@Override
+	public List<FinalOrderBean> searchOrdersByPage(Page<FinalOrderBean> page) {
+		return dao.selectAllByPage(page);
 	}
 
 }

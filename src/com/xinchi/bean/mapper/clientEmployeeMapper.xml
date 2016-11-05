@@ -255,4 +255,23 @@
 	      </if>
     </where>
    </select>
+ <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from client_employee
+     <where>
+    	<if test="params.bo.sales != null and params.bo.sales !=''">
+	         and sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.name != null and params.bo.name !=''">
+	         and name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.area != null and params.bo.area !=''">
+	         and area = #{params.bo.area,jdbcType=VARCHAR}
+	      </if>
+	      	<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
+	         and financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+	      </if>
+    </where> 
+   </select>
 </mapper>

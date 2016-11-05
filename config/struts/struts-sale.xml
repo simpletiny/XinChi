@@ -8,6 +8,12 @@
 		<action name="searchOrder" class="saleOrderAction" method="searchOrder">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchOrderByPage" class="saleOrderAction" method="searchOrderByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOneOrder" class="saleOrderAction" method="searchOneOrder">
 			<result name="success" type="json"></result>
 		</action>
@@ -31,6 +37,12 @@
 		</action>
 		<action name="searchFinalOrders" class="finalOrderAction" method="searchFinalOrders">
 			<result name="success" type="json"></result>
+		</action>
+		<action name="searchFinalOrdersByPage" class="finalOrderAction" method="searchFinalOrdersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 		<action name="searchOneFinalOrder" class="finalOrderAction" method="searchOneFinalOrder">
 			<result name="success" type="json"></result>

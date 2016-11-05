@@ -1,6 +1,8 @@
 package com.xinchi.backend.supplier.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.ResourcesConstants;
 
 @Controller
 @Scope("prototype")
@@ -32,6 +35,15 @@ public class SupplierAction extends BaseAction {
 
 	public String searchSupplier() {
 		suppliers = supplierService.getAllCompaniesByParam(null);
+		return SUCCESS;
+	}
+
+	public String searchSupplierByPage() {
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", supplier);
+		page.setParams(params);
+		suppliers = supplierService.getAllCompaniesByPage(page);
 		return SUCCESS;
 	}
 

@@ -33,14 +33,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                 </div>
 	                </div>
                 <div class="form-group">
-                    <div class="span8">
-                        <label class="col-md-1 control-label">关键字</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="关键字">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">账户</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="账户"
+                                  name="detail.account" />
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">类型</label>
+                        <div class="col-md-2">
+                            <select class="form-control" data-bind="options: type, optionsCaption: '-- 请选择 --'" name="detail.type"></select>
+                        </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
                 </div>
             </form>
@@ -51,24 +58,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<!-- <th></th> -->
                             <th>账户</th>
                             <th>发生时间</th>
-                            <th>收/支</th>
-                            <th>发生金额</th>
+                            <th>收入</th>
+                            <th>支出</th>
                             <th>余额</th>
 							<th>备注</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: details">
                         <tr>
-                        <!-- 	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCards"/></td> -->
-                        	  <td data-bind="text: $data.account" ></td>
-                            <td data-bind="text: $data.time" ></td>
-                            <td data-bind="text: $data.type"></td>
-                            <td data-bind="text: $data.money"></td>
-                            <td data-bind="text: $data.balance"></td>
-                            <td data-bind="text: $data.comment"></td>      
-                        </tr>
+								<!-- 	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCards"/></td> -->
+								<td data-bind="text: $data.account"></td>
+								<td data-bind="text: $data.time"></td>
+								<!-- ko if: $data.type=='收入' -->
+								<td data-bind="text: $data.money"></td>
+								<td></td>
+								<!-- /ko -->
+								<!-- ko if: $data.type=='支出' -->
+								<td></td>
+								<td data-bind="text: $data.money"></td>
+								<!-- /ko -->
+								<td data-bind="text: $data.balance"></td>
+								<td data-bind="text: $data.comment"></td>
+							</tr>
                     </tbody>
                 </table>
+                 <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
     </div>

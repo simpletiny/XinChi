@@ -1,7 +1,7 @@
 var nameListLayer;
 var clientEmployeeLayer;
 var supplierEmployeeLayer;
-
+var currentType;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -11,22 +11,36 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 
 	self.refreshClient = function() {
-		$.getJSON(self.apiurl + 'client/searchEmployee', {}, function(data) {
+		var param = "employee.name="+$("#client_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count="
+		+ self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);
+			
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 		});
 	};
 
 	self.searchClientEmployee = function() {
+		currentType = "client";
 		self.refreshClient();
 	};
 
 	self.refreshSupplier = function() {
-		$.getJSON(self.apiurl + 'supplier/searchEmployee', {}, function(data) {
+		var param = "employee.name="+$("#supplier_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count="
+		+ self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
 			self.supplierEmployees(data.employees);
+			
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 		});
 	};
 
 	self.searchSupplierEmployee = function() {
+		currentType = "supplier";
 		self.refreshSupplier();
 	};
 
@@ -160,6 +174,59 @@ var OrderContext = function() {
 			}
 		});
 	};
+	
+	// start pagination
+	self.currentPage = ko.observable(1);
+	self.perPage = 10;
+	self.pageNums = ko.observableArray();
+	self.totalCount = ko.observable(1);
+	self.startIndex = ko.computed(function() {
+		return (self.currentPage() - 1) * self.perPage;
+	});
+	
+	self.resetPage = function() {
+		self.currentPage(1);
+	};
+
+	self.previousPage = function() {
+		if (self.currentPage() > 1) {
+			self.currentPage(self.currentPage() - 1);
+			self.refreshPage();
+		}
+	};
+
+	self.nextPage = function() {
+		if (self.currentPage() < self.pageNums().length) {
+			self.currentPage(self.currentPage() + 1);
+			self.refreshPage();
+		}
+	};
+
+	self.turnPage = function(pageIndex) {
+		self.currentPage(pageIndex);
+		self.refreshPage();
+	};
+
+	self.setPageNums = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
+		var pageNums = [];
+		for ( var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums(pageNums);
+	};
+
+	self.refreshPage = function() {
+		if(currentType=="supplier"){
+			self.searchSupplierEmployee();
+		}else{
+			self.searchClientEmployee();
+		}
+
+	};
+	// end pagination
 };
 
 var ctx = new OrderContext();

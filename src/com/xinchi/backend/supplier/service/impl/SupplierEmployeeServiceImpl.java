@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.supplier.dao.SupplierEmployeeDAO;
 import com.xinchi.backend.supplier.service.SupplierEmployeeService;
 import com.xinchi.bean.SupplierEmployeeBean;
+import com.xinchi.tools.Page;
 
 @Service
 public class SupplierEmployeeServiceImpl implements SupplierEmployeeService {
@@ -56,6 +57,11 @@ public class SupplierEmployeeServiceImpl implements SupplierEmployeeService {
 	public String updateEmployee(SupplierEmployeeBean employee) {
 		dao.update(employee);
 		return "success";
+	}
+
+	@Override
+	public List<SupplierEmployeeBean> getAllSupplierEmployeeByPage(Page<SupplierEmployeeBean> page) {
+		return dao.getAllByPage(page);
 	}
 
 }

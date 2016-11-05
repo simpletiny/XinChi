@@ -33,10 +33,6 @@ String key = request.getParameter("key");
                     </div>
                 </div>
                 <div class="input-row clearfloat">
-                     <div class="col-md-6 required">
-                        <label class="l">地区</label>
-                        <div class="ip"><select class="form-control" data-bind="options: employeeArea, optionsCaption: '-- 请选择 --', value: employee().area" name="employee.area" required="required"></select></div>
-                    </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
                         <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().financial_body_name,click:choseFinancial" placeholder="点击选择" name="employee.financial_body_name" id="financial_body_name" required="required"/>
@@ -106,18 +102,18 @@ String key = request.getParameter("key");
     </div>
   </div>
   
-  <div id="financial_pick" style="display:none;">
+<div id="financial_pick" style="display:none;">
       <div class="main-container">
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">主体名称</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="supplier_name" class="form-control"  placeholder="主体名称" />
                </div>
            </div>
            <div>
-               <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { searchFinancial() }">搜索</button>
+               <button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchFinancial }">搜索</button>
            </div>
        </div>
              <div class="list-result">
@@ -135,6 +131,18 @@ String key = request.getParameter("key");
                         </tr>
                     </tbody>
                 </table>
+               <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>

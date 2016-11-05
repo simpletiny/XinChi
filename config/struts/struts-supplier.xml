@@ -11,6 +11,12 @@
 		<action name="searchSupplier" class="supplierAction" method="searchSupplier">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchSupplierByPage" class="supplierAction" method="searchSupplierByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOneSupplier" class="supplierAction" method="searchSupplierByPk">
 			<result name="success" type="json"></result>
 		</action>
@@ -19,6 +25,12 @@
 		</action>
 		<action name="searchEmployee" class="supplierEmployeeAction" method="searchEmployee">
 			<result name="success" type="json"></result>
+		</action>
+		<action name="searchEmployeeByPage" class="supplierEmployeeAction" method="searchEmployeeByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 		<action name="searchOneEmployee" class="supplierEmployeeAction" method="searchOneEmployee">
 			<result name="success" type="json"></result>

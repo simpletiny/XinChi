@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.bean.ClientBean;
+import com.xinchi.tools.Page;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -54,6 +55,11 @@ public class ClientServiceImpl implements ClientService {
 	public String updateCompany(ClientBean client) {
 		dao.update(client);
 		return "success";
+	}
+
+	@Override
+	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page) {
+		return dao.getAllCompaniesByPage(page);
 	}
 
 }

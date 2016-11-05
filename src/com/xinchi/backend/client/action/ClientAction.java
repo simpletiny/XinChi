@@ -1,6 +1,8 @@
 package com.xinchi.backend.client.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -45,6 +47,24 @@ public class ClientAction extends BaseAction {
 		}
 		
 		clients = clientService.getAllCompaniesByParam(cb);
+		return SUCCESS;
+	}
+	
+	public String searchCompanyByPage() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if(!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)){
+			client.setCreate_user(sessionBean.getUser_number());
+		}
+		
+		params.put("bo", client);
+		
+		page.setParams(params);
+		
+		clients = clientService.getAllCompaniesByPage(page);
 		return SUCCESS;
 	}
 

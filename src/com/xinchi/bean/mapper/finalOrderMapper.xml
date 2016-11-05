@@ -317,4 +317,21 @@
       </if>
     </where>
    </select>
+   
+   <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from final_order
+        <where>
+    	<if test="params.bo.create_user != null and params.bo.create_user !=''">
+	         and create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+	      </if>
+	      	<if test="params.bo.team_number != null and params.bo.team_number !=''">
+	         and team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.product != null and params.bo.product !=''">
+	         and product like CONCAT('%', #{params.bo.product,jdbcType=VARCHAR},'%')
+	      </if>
+    </where> 
+    </select>
 </mapper>

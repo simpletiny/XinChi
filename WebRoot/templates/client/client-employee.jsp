@@ -9,7 +9,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>欣驰国际</title>
-
+                <style>
+                    .form-group { margin-bottom: 5px; }
+                    .form-control{ height: 30px; }
+                </style>
 </head>
 <body>
 <div class="main-body">
@@ -21,10 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="main-container">
        <div class="main-box">
          <form class="form-horizontal search-panel">
-                <style>
-                    .form-group { margin-bottom: 5px; }
-                    .form-control{ height: 30px; }
-                </style>
+
                     <div class="form-group" >
 	                    <div style="width:30%;float:right">
 		                    <div>
@@ -38,15 +38,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                    </div>
 		                 </div>
 	                </div>
-                <div class="form-group">
-                    <div class="span8">
-                        <label class="col-md-1 control-label">关键字</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="公司关键字">
+				 <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">姓名</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="姓名" maxlength="20"
+                                  name="employee.name" />
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">地区</label>
+                        <div class="col-md-2">
+                            <select class="form-control" data-bind="options: employeeArea, optionsCaption: '-- 请选择 --'" name="employee.area"></select>
+                        </div>
+                    </div>
+                    <div class="span6">
+                         <label class="col-md-1 control-label">财务主体</label>
+                         <div class="col-md-2">
+                             <input type="text" class="form-control" placeholder="财务主体"  name="employee.financial_body_name"/>
+                         </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
                 </div>
             </form>
@@ -79,6 +92,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
     </div>

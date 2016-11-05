@@ -7,7 +7,9 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.supplier.dao.SupplierDAO;
+import com.xinchi.bean.SupplierBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 
 @Repository
@@ -45,6 +47,12 @@ public class SupplierDAOImpl extends SqlSessionDaoSupport implements SupplierDAO
 	@Override
 	public List<com.xinchi.bean.SupplierBean> getAllByParam(com.xinchi.bean.SupplierBean bo) {
 		List<com.xinchi.bean.SupplierBean> list=daoUtil.selectByBOParamT("com.xinchi.bean.mapper.SupplierMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public List<SupplierBean> getAllByPage(Page<SupplierBean> page) {
+		List<com.xinchi.bean.SupplierBean> list=daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierMapper.selectByPage", page);
 		return list;
 	}
 	

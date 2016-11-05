@@ -6,6 +6,7 @@ import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
+import com.xinchi.tools.Page;
 
 public interface SaleOrderDAO {
 
@@ -38,5 +39,7 @@ public interface SaleOrderDAO {
 
 	public ClientReceivedDetailBean selectClientReceivedDetailByPk(
 			String detail_pk);
+
+	public List<BudgetOrderBean> selectAllByPage(Page<BudgetOrderBean> page);
 
 }

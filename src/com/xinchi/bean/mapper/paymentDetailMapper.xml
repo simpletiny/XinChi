@@ -184,4 +184,21 @@
     <include refid="Base_Column_List" />
     from payment_detail
    </select>
+ <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from payment_detail
+    
+       <where>
+    	<if test="params.bo.account != null and params.bo.account !=''">
+	         and account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.type != null and params.bo.type !=''">
+	         and type = #{params.bo.type,jdbcType=VARCHAR}
+	      </if>
+	  <!--     	<if test="params.bo.client_area != null and params.bo.client_area !=''">
+	         and client_area = #{params.bo.client_area,jdbcType=VARCHAR}
+	      </if> -->
+    </where> 
+   </select>
 </mapper>

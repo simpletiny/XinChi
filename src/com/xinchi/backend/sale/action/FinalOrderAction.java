@@ -3,7 +3,9 @@ package com.xinchi.backend.sale.action;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -33,9 +35,10 @@ public class FinalOrderAction extends BaseAction {
 
 	@Autowired
 	private FinalOrderService finalOrderService;
-	
+
 	@Autowired
 	private SaleOrderService saleOrderService;
+
 	/**
 	 * 创建订单
 	 * 
@@ -122,6 +125,22 @@ public class FinalOrderAction extends BaseAction {
 			order.setCreate_user(sessionBean.getUser_number());
 		}
 		orders = finalOrderService.searchOrders(order);
+
+		return SUCCESS;
+	}
+
+	public String searchFinalOrdersByPage() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			order.setCreate_user(sessionBean.getUser_number());
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", order);
+		page.setParams(params);
+		orders = finalOrderService.searchOrdersByPage(page);
 
 		return SUCCESS;
 	}

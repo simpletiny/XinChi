@@ -38,6 +38,8 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String birth_year;
+	private String employee_provice;
+	private String employee_city;
 
 	public String getName() {
 		return name;
@@ -173,6 +175,22 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 
 	public void setFax(String fax) {
 		this.fax = fax;
+	}
+
+	public String getEmployee_provice() {
+		return employee_provice;
+	}
+
+	public void setEmployee_provice(String employee_provice) {
+		this.employee_provice = employee_provice;
+	}
+
+	public String getEmployee_city() {
+		return employee_city;
+	}
+
+	public void setEmployee_city(String employee_city) {
+		this.employee_city = employee_city;
 	}
 
 }

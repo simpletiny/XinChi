@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
+import com.xinchi.tools.Page;
 
 public interface FinalOrderService {
 
@@ -16,5 +17,7 @@ public interface FinalOrderService {
 	public FinalOrderBean searchFinalOrderByPk(String order_pk);
 
 	public List<FinalOrderSupplierBean> searchFinalSupplier(String team_number);
+
+	public List<FinalOrderBean> searchOrdersByPage(Page<FinalOrderBean> page);
 
 }

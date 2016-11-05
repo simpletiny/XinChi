@@ -12,6 +12,7 @@ import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.tools.Page;
 
 @Service
 @Transactional
@@ -102,6 +103,11 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
 		dao.updateBudgetOrder(order);
 		dao.deleteReceivableDetail(detail_pk);
+	}
+
+	@Override
+	public List<BudgetOrderBean> searchOrdersByPage(Page<BudgetOrderBean> page) {
+		return dao.selectAllByPage(page);
 	}
 
 }

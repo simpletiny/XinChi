@@ -7,7 +7,9 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.EmployeeDAO;
+import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class EmployeeDAOImpl extends SqlSessionDaoSupport implements
@@ -58,6 +60,14 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements
 				.selectByBOParamT(
 						"com.xinchi.bean.mapper.ClientEmployeeMapper.selectByParam",
 						bo);
+		return list;
+	}
+
+	@Override
+	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page) {
+		List<ClientEmployeeBean> list = daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.ClientEmployeeMapper.selectByPage",
+				page);
 		return list;
 	}
 

@@ -15,6 +15,7 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+import com.xinchi.tools.Page;
 
 @Service
 public class PaymentDetailServiceImpl implements PaymentDetailService {
@@ -41,7 +42,13 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 	@Override
 	public List<PaymentDetailBean> getAllDetailsByParam(PaymentDetailBean bean) {
-		
+
 		return dao.selectAllDetailsByParam(bean);
+	}
+
+	@Override
+	public List<PaymentDetailBean> getAllDetailsByPage(
+			Page<PaymentDetailBean> page) {
+		return dao.selectAllDetailsByPage(page);
 	}
 }

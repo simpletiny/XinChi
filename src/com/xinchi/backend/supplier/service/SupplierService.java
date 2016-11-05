@@ -3,6 +3,7 @@ package com.xinchi.backend.supplier.service;
 import java.util.List;
 
 import com.xinchi.bean.SupplierBean;
+import com.xinchi.tools.Page;
 
 public interface SupplierService {
 
@@ -45,4 +46,6 @@ public interface SupplierService {
 	public String createSupplier(SupplierBean supplier);
 	
 	public String updateSupplier(SupplierBean supplier);
+
+	public List<SupplierBean> getAllCompaniesByPage(Page<SupplierBean> page);
 }

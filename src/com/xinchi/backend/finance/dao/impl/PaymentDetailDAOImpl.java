@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.xinchi.backend.finance.dao.PaymentDetailDAO;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class PaymentDetailDAOImpl extends SqlSessionDaoSupport implements
@@ -36,5 +37,14 @@ public class PaymentDetailDAOImpl extends SqlSessionDaoSupport implements
 		return daoUtil.selectByBOParamT(
 				"com.xinchi.bean.mapper.PaymentDetailMapper.selectByParam",
 				bean);
+	}
+
+	@Override
+	public List<PaymentDetailBean> selectAllDetailsByPage(
+			Page<PaymentDetailBean> page) {
+		return daoUtil
+				.selectByParam(
+						"com.xinchi.bean.mapper.PaymentDetailMapper.selectByPage",
+						page);
 	}
 }

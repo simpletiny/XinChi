@@ -10,6 +10,7 @@ import com.xinchi.backend.sale.dao.FinalOrderDAO;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class FinalOrderDAOImpl extends SqlSessionDaoSupport implements
@@ -61,6 +62,12 @@ public class FinalOrderDAOImpl extends SqlSessionDaoSupport implements
 				.selectByParam(
 						"com.xinchi.bean.mapper.FinalOrderSupplierMapper.selectByTeamNumber",
 						team_number);
+	}
+
+	@Override
+	public List<FinalOrderBean> selectAllByPage(Page<FinalOrderBean> page) {
+		return daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.FinalOrderMapper.selectByPage", page);
 	}
 
 }

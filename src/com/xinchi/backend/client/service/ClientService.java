@@ -3,6 +3,7 @@ package com.xinchi.backend.client.service;
 import java.util.List;
 
 import com.xinchi.bean.ClientBean;
+import com.xinchi.tools.Page;
 
 public interface ClientService {
 
@@ -45,4 +46,6 @@ public interface ClientService {
 	public String createCompany(ClientBean client);
 	
 	public String updateCompany(ClientBean client);
+
+	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page);
 }

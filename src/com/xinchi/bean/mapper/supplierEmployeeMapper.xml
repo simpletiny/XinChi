@@ -16,6 +16,8 @@
 	    <result column="sales" property="sales" jdbcType="VARCHAR" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="employee_provice" property="employee_provice" jdbcType="VARCHAR" />
+	    <result column="employee_city" property="employee_city" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
 	    <result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
@@ -249,5 +251,47 @@
    select 
     <include refid="Base_Column_List" />
     from supplier_employee
+   </select>
+ <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+   select 
+   		A.name, 
+    	A.sex, 
+    	A.wechat, 
+    	A.qq, 
+    	A.cellphone, 
+    	A.telephone, 
+    	A.fax,
+    	A.id, 
+    	A.financial_body_pk, 
+    	A.financial_body_name, 
+    	A.area, 
+    	A.sales, 
+    	A.create_user, 
+    	A.update_user, 
+    	A.pk, 
+    	A.comment, 
+    	A.birth_year, 
+    	A.create_time,
+    	A.update_time,
+    	B.supplier_city as employee_city
+    from supplier_employee A
+    
+    LEFT JOIN supplier B ON A.financial_body_pk = B.pk
+    
+   <where>
+	      <if test="params.bo.name != null and params.bo.name !=''">
+	         and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+	      </if>
+	      <if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
+	         and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.employee_provice != null and params.bo.employee_provice !=''">
+	         and B.supplier_provice = #{params.bo.employee_provice,jdbcType=VARCHAR}
+	      </if>
+	      <if test="params.bo.employee_city != null and params.bo.employee_city !=''">
+	         and B.supplier_city = #{params.bo.employee_city,jdbcType=VARCHAR}
+	      </if>
+    </where> 
+    
    </select>
 </mapper>

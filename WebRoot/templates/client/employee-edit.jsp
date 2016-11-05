@@ -111,13 +111,13 @@ String key = request.getParameter("key");
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">主体名称</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="client_name" class="form-control"  placeholder="主体名称" />
                </div>
            </div>
            <div>
-               <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { searchFinancial() }">搜索</button>
+               <button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchFinancial }">搜索</button>
            </div>
        </div>
              <div class="list-result">
@@ -135,12 +135,24 @@ String key = request.getParameter("key");
                         </tr>
                     </tbody>
                 </table>
+               <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>
   </div>
   <script>
-    $(".employee").addClass("current").children("ol").css("display", "block");
+    $(".client").addClass("current").children("ol").css("display", "block");
   </script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>

@@ -2,6 +2,9 @@ package com.xinchi.backend.supplier.dao;
 
 import java.util.List;
 
+import com.xinchi.bean.SupplierBean;
+import com.xinchi.tools.Page;
+
 
 public interface SupplierDAO{
 	
@@ -34,4 +37,6 @@ public interface SupplierDAO{
 	 * @param bo
 	 */
 	public List<com.xinchi.bean.SupplierBean> getAllByParam(com.xinchi.bean.SupplierBean bo);
+
+	public List<SupplierBean> getAllByPage(Page<SupplierBean> page);
 }

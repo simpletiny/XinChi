@@ -2,6 +2,9 @@ package com.xinchi.backend.client.dao;
 
 import java.util.List;
 
+import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.tools.Page;
+
 public interface EmployeeDAO {
 
 	/**
@@ -39,4 +42,6 @@ public interface EmployeeDAO {
 	 */
 	public List<com.xinchi.bean.ClientEmployeeBean> getAllByParam(
 			com.xinchi.bean.ClientEmployeeBean bo);
+
+	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page);
 }

@@ -12,6 +12,7 @@ import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class SaleOrderDAOImpl extends SqlSessionDaoSupport implements
@@ -91,7 +92,8 @@ public class SaleOrderDAOImpl extends SqlSessionDaoSupport implements
 
 	@Override
 	public void updateBudgetOrder(BudgetOrderBean order) {
-		daoUtil.updateByPK("com.xinchi.bean.mapper.BudgetOrderMapper.updateByPrimaryKey",
+		daoUtil.updateByPK(
+				"com.xinchi.bean.mapper.BudgetOrderMapper.updateByPrimaryKey",
 				order);
 	}
 
@@ -122,13 +124,25 @@ public class SaleOrderDAOImpl extends SqlSessionDaoSupport implements
 
 	@Override
 	public BudgetOrderBean selectBudgetOrderByTeamNumber(String team_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetOrderMapper.selectBudgetOrderByTeamNumber", team_number);
+		return daoUtil
+				.selectOneValueByParam(
+						"com.xinchi.bean.mapper.BudgetOrderMapper.selectBudgetOrderByTeamNumber",
+						team_number);
 	}
 
 	@Override
 	public ClientReceivedDetailBean selectClientReceivedDetailByPk(
 			String detail_pk) {
-		return (ClientReceivedDetailBean)daoUtil.selectByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPrimaryKey", detail_pk);
+		return (ClientReceivedDetailBean) daoUtil
+				.selectByPK(
+						"com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPrimaryKey",
+						detail_pk);
+	}
+
+	@Override
+	public List<BudgetOrderBean> selectAllByPage(Page<BudgetOrderBean> page) {
+		return daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.BudgetOrderMapper.selectByPage", page);
 	}
 
 }

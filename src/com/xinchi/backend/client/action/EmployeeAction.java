@@ -1,6 +1,8 @@
 package com.xinchi.backend.client.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,36 +22,58 @@ public class EmployeeAction extends BaseAction {
 	private ClientEmployeeBean employee;
 	@Autowired
 	private EmployeeService employeeService;
+
 	public String createEmployee() {
 		resultStr = employeeService.createEmployee(employee);
 		return SUCCESS;
 	}
-	
+
 	public String updateEmployee() {
 		resultStr = employeeService.updateEmployee(employee);
 		return SUCCESS;
 	}
-	
+
 	private List<ClientEmployeeBean> employees;
-	public String searchEmployee(){
+
+	@SuppressWarnings("unchecked")
+	public String searchEmployeeByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
+		Map<String, Object> params = new HashMap<String, Object>();
+		// employee = new ClientEmployeeBean();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			employee.setSales(sessionBean.getPk());
+		}
+
+		params.put("bo", employee);
+		page.setParams(params);
+		employees = employeeService.getAllClientEmployeeByPage(page);
 		
-		if(!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)){
+		return SUCCESS;
+	}
+
+	public String searchEmployee() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			employee = new ClientEmployeeBean();
 			employee.setSales(sessionBean.getPk());
 		}
-		
+
 		employees = employeeService.getAllClientEmployeeByParam(employee);
 		return SUCCESS;
 	}
-	
+
 	private String employee_pk;
-	public String searchOneEmployee(){
+
+	public String searchOneEmployee() {
 		employee = employeeService.selectByPrimaryKey(employee_pk);
 		return SUCCESS;
 	}
+
 	public ClientEmployeeBean getEmployee() {
 		return employee;
 	}
@@ -57,19 +81,21 @@ public class EmployeeAction extends BaseAction {
 	public void setEmployee(ClientEmployeeBean employee) {
 		this.employee = employee;
 	}
+
 	public List<ClientEmployeeBean> getEmployees() {
 		return employees;
 	}
+
 	public void setEmployees(List<ClientEmployeeBean> employees) {
 		this.employees = employees;
 	}
+
 	public String getEmployee_pk() {
 		return employee_pk;
 	}
+
 	public void setEmployee_pk(String employee_pk) {
 		this.employee_pk = employee_pk;
 	}
-	
-
 
 }

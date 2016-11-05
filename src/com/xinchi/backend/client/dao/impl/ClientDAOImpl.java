@@ -7,7 +7,9 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.ClientDAO;
+import com.xinchi.bean.ClientBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 
 @Repository
@@ -45,6 +47,12 @@ public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO{
 	@Override
 	public List<com.xinchi.bean.ClientBean> getAllByParam(com.xinchi.bean.ClientBean bo) {
 		List<com.xinchi.bean.ClientBean> list=daoUtil.selectByBOParamT("com.xinchi.bean.mapper.ClientMapper.selectByParam", bo);
+		return list;
+	}
+
+	@Override
+	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page) {
+		List<com.xinchi.bean.ClientBean> list=daoUtil.selectByParam("com.xinchi.bean.mapper.ClientMapper.selectByPage", page);
 		return list;
 	}
 	

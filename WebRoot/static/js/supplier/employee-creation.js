@@ -46,8 +46,14 @@ var SupplierEmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		$.getJSON(self.apiurl + 'supplier/searchSupplier', {}, function(data) {
+		var param = "supplier.supplier_name="+$("#supplier_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count="
+		+ self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);
+			
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 		});
 	};
 	self.searchFinancial = function() {
@@ -81,6 +87,55 @@ var SupplierEmployeeContext = function() {
 					}
 				});
 	};
+	
+	// start pagination
+	self.currentPage = ko.observable(1);
+	self.perPage = 10;
+	self.pageNums = ko.observableArray();
+	self.totalCount = ko.observable(1);
+	self.startIndex = ko.computed(function() {
+		return (self.currentPage() - 1) * self.perPage;
+	});
+
+	self.resetPage = function() {
+		self.currentPage(1);
+	};
+
+	self.previousPage = function() {
+		if (self.currentPage() > 1) {
+			self.currentPage(self.currentPage() - 1);
+			self.refreshPage();
+		}
+	};
+
+	self.nextPage = function() {
+		if (self.currentPage() < self.pageNums().length) {
+			self.currentPage(self.currentPage() + 1);
+			self.refreshPage();
+		}
+	};
+
+	self.turnPage = function(pageIndex) {
+		self.currentPage(pageIndex);
+		self.refreshPage();
+	};
+
+	self.setPageNums = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
+		var pageNums = [];
+		for ( var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums(pageNums);
+	};
+
+	self.refreshPage = function() {
+		self.searchFinancial();
+
+	};
+	// end pagination
 };
 
 var ctx = new SupplierEmployeeContext();

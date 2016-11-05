@@ -11,6 +11,13 @@ String key = request.getParameter("key");
 <head>
     <title>欣驰国际</title>
     <link rel="stylesheet" type="text/css" href="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+    <style>
+    input:read-only{
+		border:1px solid #DDD;
+		background-color:#F5F5F5;
+		color:#ACA899;
+		}
+    </style>
 </head>
 <body>
 <div class="main-body">
@@ -27,7 +34,7 @@ String key = request.getParameter("key");
                <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">客户</label>
-                        <div class="ip"><input type="text" id="txt-client-employee-name" class="ip-" data-bind="value: order().client_employee_name,event:{click:choseClientEmployee}" placeholder="客户" name="order.client_employee_name" required="required"/></div>
+                        <div class="ip"><input type="text" id="txt-client-employee-name" class="ip-"  readonly="readonly" data-bind="value: order().client_employee_name" placeholder="客户" name="order.client_employee_name" required="required"/></div>
                     	<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk" style="display:none" name="order.client_employee_pk" id="client-employee-pk" required="required"/>
                     </div>
                     <div class="col-md-6 required">
@@ -38,24 +45,24 @@ String key = request.getParameter("key");
                 <div class="input-row clearfloat">
                     <div class="col-md-12 required">
                         <label class="l">产品</label>
-                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: order().product" placeholder="产品" name="order.product" required="required"/></div>
+                        <div class="ip"><input readonly="readonly" type="text" id="name" class="ip-default" data-bind="value: order().product" placeholder="产品" name="order.product" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat ">
                     <div class="col-md-6 required">
                         <label class="l">出团日期</label>
-                        <div class="ip"><input type="text" id="departure" class="ip- date-picker"  data-bind="value: order().departure_date" placeholder="出团日期" name="order.departure_date" required="required"/></div>
+                        <div class="ip"><input readonly="readonly" type="text" id="departure" class="ip-"  data-bind="value: order().departure_date" placeholder="出团日期" name="order.departure_date" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">天数</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().days" placeholder="天数" name="order.days" required="required"/></div>
+                        <div class="ip"><input readonly="readonly" type="number" min="0" class="ip-" data-bind="value: order().days" placeholder="天数" name="order.days" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">人数</label>
-                        <div class="ip" style="width:30%"><input type="number" class="ip-" id="people-count" data-bind="value:order().people_count" placeholder="人数" name="order.people_count"/></div>
-                   		<div class="ip" style="width:30%"><a type="submit" class="btn btn-green btn-r" data-bind="click: recordNameList">名单</a></div>
+                        <div class="ip" style="width:30%"><input readonly="readonly" type="number" class="ip-" id="people-count" data-bind="value:order().people_count" placeholder="人数" name="order.people_count"/></div>
+                   		<!-- <div class="ip" style="width:30%"><a type="submit" class="btn btn-green btn-r" data-bind="click: recordNameList">名单</a></div> -->
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">大交通费用</label>
@@ -66,7 +73,7 @@ String key = request.getParameter("key");
                 <div class="input-row clearfloat" st="supplier">
                     <div class="col-md-6">
                         <label class="l">供应商</label>
-                        <div class="ip"><input type="text" class="ip-" st="supplierEmployeeName" data-bind="value:$data.supplier_employee_name,event:{click:choseSupplierEmployee}" placeholder="供应商"/></div>
+                        <div class="ip"><input type="text" class="ip-" readonly="readonly" st="supplierEmployeeName" data-bind="value:$data.supplier_employee_name," placeholder="供应商"/></div>
                   		<input type="text" class="ip-" data-bind="value:$data.supplier_employee_pk" st="supplierEmployeePk" style="display:none"/>
                     </div>
                     <div class="col-md-6">
@@ -77,7 +84,7 @@ String key = request.getParameter("key");
                 <!-- /ko -->
                 
                 <div class="input-row clearfloat">
-                <div class="ip"><a type="button" class="btn btn-green btn-r" data-bind="click: addSupplier">添加供应商</a></div>
+                <!-- <div class="ip"><a type="button" class="btn btn-green btn-r" data-bind="click: addSupplier">添加供应商</a></div> -->
                 </div>
                  <div class="input-row clearfloat">
                     <div class="col-md-6">

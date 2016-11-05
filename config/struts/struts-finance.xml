@@ -23,6 +23,12 @@
 		<action name="searchDetail" class="paymentDetailAction" method="searchDetail">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchDetailByPage" class="paymentDetailAction" method="searchDetailByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 	</package>
 

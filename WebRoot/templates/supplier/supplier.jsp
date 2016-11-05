@@ -9,7 +9,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>欣驰国际</title>
-
+  <style>
+                    .form-group { margin-bottom: 5px; }
+                    .form-control{ height: 30px; }
+                </style>
 </head>
 <body>
 <div class="main-body">
@@ -21,10 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="main-container">
        <div class="main-box">
          <form class="form-horizontal search-panel">
-                <style>
-                    .form-group { margin-bottom: 5px; }
-                    .form-control{ height: 30px; }
-                </style>
+              
                     <div class="form-group" >
 	                    <div style="width:30%;float:right">
 		                    <div>
@@ -39,14 +39,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                 </div>
 	                </div>
                 <div class="form-group">
-                    <div class="span8">
-                        <label class="col-md-1 control-label">关键字</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="关键字">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">名称</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="名称"
+                                  name="supplier.supplier_name" />
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">地区</label>
+                        <div class="col-md-2">
+                            <select class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: supplier().supplier_provice,event:{change:ter}" name="supplier.supplier_provice"></select>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="col-md-2">
+                            <select class="form-control" id="city" name="supplier.supplier_city" ></select>
+                        </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
                 </div>
             </form>
@@ -56,8 +68,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr role="row">
                         	<th></th>
                             <th>财务主体简称</th>
-                            <th>类型</th>
-                            <th>地区</th>
+                            <th>城市</th>
                             <th>负责人</th>
                             <th>手机号</th>
                             <th>电话</th>
@@ -68,8 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.supplier_short_name,attr: {href: 'supplier-detail.jsp?key='+$data.pk}"></a> </td>
-                            <td data-bind="text: $data.supplier_type"></td>
-                            <td data-bind="text: $data.supplier_area"></td>
+                            <td data-bind="text: $data.supplier_city"></td>
                             <td data-bind="text: $data.body_name"></td>
                             <td data-bind="text: $data.body_cellphone"></td>
                             <td data-bind="text: $data.telephone"></td>
@@ -77,6 +87,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
     </div>

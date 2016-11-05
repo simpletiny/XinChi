@@ -38,17 +38,37 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                    </div>
 		                 </div>
 	                </div>
-                <div class="form-group">
-                    <div class="span8">
-                        <label class="col-md-1 control-label">关键字</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="公司关键字">
+              <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">姓名</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="姓名"
+                                  name="employee.name" />
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">财务主体</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="财务主体"
+                                  name="employee.financial_body_name" />
+                        </div>
                     </div>
+
                 </div>
+                 <div class="form-group">
+                   <div class="span6">
+                        <label class="col-md-1 control-label">地区</label>
+                        <div class="col-md-2">
+                            <select style="height:32px" class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: supplier().supplier_provice,event:{change:ter}" name="employee.employee_provice"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <select style="height:32px" class="form-control" id="city" name="employee.employee_city" ></select>
+                        </div>
+                    </div>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+                    </div>
+                    </div>
             </form>
        <div class="list-result">
                 <table class="table table-striped table-hover">
@@ -57,7 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<th></th>
                             <th>姓名</th>
                             <th>性别</th>
-                            <th>地区</th>
+                            <th>城市</th>
                             <th>财务主体</th>
                             <th>手机号</th>
                             <th>QQ</th>
@@ -70,7 +90,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a> </td>
                             <td data-bind="text: $data.sex"></td>
-                            <td data-bind="text: $data.area"></td>
+                            <td data-bind="text: $data.employee_city"></td>
                             <td data-bind="text: $data.financial_body_name"></td>
                             <td data-bind="text: $data.ellphone"></td>
                             <td data-bind="text: $data.qq"></td>
@@ -79,6 +99,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
     </div>

@@ -1,6 +1,8 @@
 package com.xinchi.backend.supplier.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +34,14 @@ public class SupplierEmployeeAction extends BaseAction {
 
 	public String searchEmployee() {
 		employees = employeeService.getAllSupplierEmployeeByParam(employee);
+		return SUCCESS;
+	}
+
+	public String searchEmployeeByPage() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", employee);
+		page.setParams(params);
+		employees = employeeService.getAllSupplierEmployeeByPage(page);
 		return SUCCESS;
 	}
 
