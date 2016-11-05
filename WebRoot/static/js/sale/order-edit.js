@@ -7,23 +7,23 @@ var OrderContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
 	self.suppliers = ko.observable({});
-	
+
 	self.orderPk = $("#order_key").val();
-	//加载订单信息
+	// 加载订单信息
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'sale/searchOneOrder', {
 		order_pk : self.orderPk
 	}, function(data) {
 		if (data.order) {
 			self.order(data.order);
-			
-			//获取订单包含的供应商
+
+			// 获取订单包含的供应商
 			$.getJSON(self.apiurl + 'sale/searchOrderSupplier', {
-				team_number: self.order().team_number
+				team_number : self.order().team_number
 			}, function(data) {
 				self.suppliers(data.budgetSuppliers);
 			});
-			
+
 		} else {
 			fail_msg("订单不存在！");
 		}
@@ -32,12 +32,10 @@ var OrderContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
+
 	self.clientEmployees = ko.observable({});
 	self.supplierEmployees = ko.observable({});
 
-
-	
 	self.refreshClient = function() {
 		$.getJSON(self.apiurl + 'client/searchEmployee', {}, function(data) {
 			self.clientEmployees(data.employees);
@@ -150,7 +148,7 @@ var OrderContext = function() {
 					"[st='supplierEmployeePk']").val();
 			var payable = $(current).find("[st='payable']").val();
 
-			if (supplierEmployeePk == "")
+			if (supplierEmployeePk == "" || supplierEmployeeName == "")
 				continue;
 			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName
 					+ '",' + '"supplierEmployeePk":"' + supplierEmployeePk
@@ -196,7 +194,7 @@ function choseSupplierEmployee(data, event) {
 			dom : '#supplier-pick'
 		},
 		end : function() {
-			//console.log("Done");
+			// console.log("Done");
 		}
 	});
 

@@ -23,6 +23,8 @@
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="payment_comment" property="payment_comment" jdbcType="VARCHAR" />
+	    <result column="final_flg" property="final_flg" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
   </resultMap>
@@ -49,6 +51,8 @@
     	update_user, 
     	pk, 
     	comment,
+    	payment_comment,
+    	final_flg,
     	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -128,6 +132,12 @@
 	 	<if test="comment != null">
 	        comment,
 	      </if>
+	 	<if test="payment_comment != null">
+	        payment_comment,
+	      </if>
+	 	<if test="final_flg != null">
+	        final_flg,
+	      </if>
       <if test="create_time != null">
         create_time,
       </if>
@@ -195,6 +205,12 @@
 	      </if>
     	<if test="comment != null">
 	        #{comment,jdbcType=CHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        #{payment_comment,jdbcType=CHAR},
+	      </if>
+    	<if test="final_flg != null">
+	        #{final_flg,jdbcType=CHAR},
 	      </if>
       <if test="create_time != null">
         #{create_time,jdbcType=VARCHAR},
@@ -265,6 +281,12 @@
 	      </if>
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=CHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        payment_comment = #{payment_comment,jdbcType=CHAR},
+	      </if>
+    	<if test="final_flg != null">
+	        final_flg = #{final_flg,jdbcType=CHAR},
 	      </if>
       <if test="update_time != null">
         update_time = #{update_time,jdbcType=VARCHAR},

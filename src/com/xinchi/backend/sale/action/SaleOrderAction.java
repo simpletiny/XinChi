@@ -91,8 +91,12 @@ public class SaleOrderAction extends BaseAction {
 		}
 
 		if (null != order.getOther_payment()) {
-			sum.add(order.getOther_payment());
+			sum = sum.add(order.getOther_payment());
 		}
+		if (null != order.getTraffic_payment()) {
+			sum = sum.add(order.getTraffic_payment());
+		}
+
 		// 保存订单
 		String departureDate = order.getDeparture_date();
 		int days = order.getDays();
@@ -202,45 +206,54 @@ public class SaleOrderAction extends BaseAction {
 		}
 		saleOrderService
 				.deleteOrderSupplierByTeamNumber(order.getTeam_number());
-		
+
 		saleOrderService.saveOrderSupplier(arrSupplier);
 
 		if (null != order.getOther_payment()) {
-			sum.add(order.getOther_payment());
+			sum = sum.add(order.getOther_payment());
 		}
-		
+
+		if (null != order.getTraffic_payment()) {
+			sum = sum.add(order.getTraffic_payment());
+		}
+
 		// 保存订单
 		String departureDate = order.getDeparture_date();
 		int days = order.getDays();
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 		order.setReturn_date(returnDate);
 		order.setPayable(sum);
-		
+
 		saleOrderService.update(order);
 
 		resultStr = OK;
 		return SUCCESS;
 	}
-	
+
 	private ClientReceivedDetailBean detail;
-	public String saveReceivableDetail(){
+
+	public String saveReceivableDetail() {
 		saleOrderService.saveReceivableDetail(detail);
 		resultStr = OK;
 		return SUCCESS;
 	}
-	
+
 	private List<ClientReceivedDetailBean> receivableDetails;
-	public String searchReceivableDetails(){
-		receivableDetails = saleOrderService.searchReceivableDetails(team_number);
+
+	public String searchReceivableDetails() {
+		receivableDetails = saleOrderService
+				.searchReceivableDetails(team_number);
 		return SUCCESS;
 	}
-	
+
 	private String detail_pk;
-	public String deleteReceivableDetail(){
+
+	public String deleteReceivableDetail() {
 		saleOrderService.deleteReceivableDetail(detail_pk);
 		resultStr = OK;
 		return SUCCESS;
 	}
+
 	public BudgetOrderBean getOrder() {
 		return order;
 	}

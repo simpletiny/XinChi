@@ -23,7 +23,7 @@ String key = request.getParameter("key");
         <div class="main-box">
             <form class="form-box info-form" id="form_container">
             	<input type="hidden" data-bind="value:order().team_number" name="order.team_number"></input>
-            	<input type="hidden" data-bind="value:order().received" name="order.received"></input>
+            <input type="hidden" id="order_key" name="order.pk"  value="<%=key%>" />
                <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">客户</label>
@@ -32,19 +32,9 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">总团款</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().receivable,event{blur:changeRecevable}" placeholder="总团款" name="order.receivable" required="required"/></div>
+                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().receivable" placeholder="总团款" name="order.receivable" required="required"/></div>
                     </div>
                 </div>
-                 <div class="input-row clearfloat">
-                   <div class="col-md-6">
-                        <label class="l">已收合计</label>
-                        <div class="ip"><p class="ip-default" data-bind="text: order().received" /></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="l">尚余</label>
-                        <div class="ip"><p class="ip-default" data-bind="text: client_debt" /></div>
-                    </div>
-                    </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-12 required">
                         <label class="l">产品</label>
@@ -72,19 +62,19 @@ String key = request.getParameter("key");
                         <div class="ip"><input type="number" min="0" class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
                     </div>
                 </div>
-                 
+                  <!-- ko foreach: suppliers -->
                 <div class="input-row clearfloat" st="supplier">
                     <div class="col-md-6">
                         <label class="l">供应商</label>
-                        <div class="ip"><input type="text" class="ip-" st="supplierEmployeeName" data-bind="event:{click:choseSupplierEmployee}" placeholder="供应商"/></div>
-                  		<input type="text" class="ip-" st="supplierEmployeePk" style="display:none"/>
+                        <div class="ip"><input type="text" class="ip-" st="supplierEmployeeName" data-bind="value:$data.supplier_employee_name,event:{click:choseSupplierEmployee}" placeholder="供应商"/></div>
+                  		<input type="text" class="ip-" data-bind="value:$data.supplier_employee_pk" st="supplierEmployeePk" style="display:none"/>
                     </div>
                     <div class="col-md-6">
                         <label class="l">应付款</label>
-                        <div class="ip"><input type="number" st="payable" min="0" class="ip-"  placeholder="应付款"/></div>
+                        <div class="ip"><input type="number" st="payable" data-bind="value:$data.payable" min="0" class="ip-"  placeholder="应付款"/></div>
                     </div>
                 </div>
-
+                <!-- /ko -->
                 
                 <div class="input-row clearfloat">
                 <div class="ip"><a type="button" class="btn btn-green btn-r" data-bind="click: addSupplier">添加供应商</a></div>
@@ -92,7 +82,11 @@ String key = request.getParameter("key");
                  <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">其他费用</label>
-                        <div class="ip"><input type="number"  data-bind="value:order().other_payment" name="order.other_payment" min="0" class="ip-"  placeholder="其他费用"/></div>
+                        <div class="ip"><input type="number" min="0" class="ip-"  data-bind="value:order().other_payment" name="order.other_payment" placeholder="其他费用"/></div>
+                    </div>
+                                         <div class="col-md-6">
+                        <label class="l">费用说明</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: order().payment_comment" name="order.payment_comment" placeholder="费用说明"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -103,7 +97,7 @@ String key = request.getParameter("key");
                 </div>
             </form>
 
-            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createFinalOrder">结团</a></div>
+            <div align="right"><a type="submit" class="btn btn-green btn-r" data-bind="click: createFinalOrder">保存</a></div>
         </div>
     </div>
   </div>

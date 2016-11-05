@@ -22,6 +22,7 @@
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="payment_comment" property="payment_comment" jdbcType="VARCHAR" />
 	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
 	    <result column="traffic_payment" property="traffic_payment" jdbcType="DECIMAL" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -52,6 +53,7 @@
     	comment, 
     	other_payment, 
     	traffic_payment,
+    	payment_comment,
     	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -131,6 +133,9 @@
 	 	<if test="comment != null">
 	        comment,
 	      </if>
+	 	<if test="payment_comment != null">
+	        payment_comment,
+	      </if>
 	 	<if test="other_payment != null">
 	        other_payment,
 	      </if>
@@ -204,6 +209,9 @@
 	      </if>
     	<if test="comment != null">
 	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        #{payment_comment,jdbcType=VARCHAR},
 	      </if>
     	<if test="other_payment != null">
 	        #{other_payment,jdbcType=DECIMAL},
@@ -283,6 +291,9 @@
 	      </if>
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        payment_comment = #{payment_comment,jdbcType=VARCHAR},
 	      </if>
     	<if test="other_payment != null">
 	        other_payment = #{other_payment,jdbcType=DECIMAL},

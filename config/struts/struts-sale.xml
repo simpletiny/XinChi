@@ -32,6 +32,12 @@
 		<action name="searchFinalOrders" class="finalOrderAction" method="searchFinalOrders">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchOneFinalOrder" class="finalOrderAction" method="searchOneFinalOrder">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchFinalOrderSupplier" class="finalOrderAction" method="searchFinalOrderSupplier">
+			<result name="success" type="json"></result>
+		</action>
 	</package>
 
 </struts>

@@ -52,7 +52,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="col-md-6">
                         <label class="l">人数</label>
                         <div class="ip" style="width:30%"><input type="number" class="ip-" id="people-count" data-bind="value:order().people_count" placeholder="人数" name="order.people_count"/></div>
-                   		<div class="ip" style="width:30%"><a type="submit" class="btn btn-green btn-r" data-bind="click: recordNameList">名单</a></div>
+                   		<div class="ip" style="width:30%"><a type="submit" style="display:none" class="btn btn-green btn-r" data-bind="click: recordNameList">名单</a></div>
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">大交通费用</label>
@@ -80,6 +80,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="col-md-6">
                         <label class="l">其他费用</label>
                         <div class="ip"><input type="number"  data-bind="value:order().other_payment" name="order.other_payment" min="0" class="ip-"  placeholder="其他费用"/></div>
+                    </div>
+                     <div class="col-md-6">
+                        <label class="l">费用说明</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: order().payment_comment" name="order.payment_comment" placeholder="费用说明"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

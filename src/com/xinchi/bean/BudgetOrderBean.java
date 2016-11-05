@@ -44,6 +44,8 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 
 	private String pk;
 	private String comment;
+	private String payment_comment;
+	private String final_flg;
 
 	public String getTeam_number() {
 		return team_number;
@@ -203,6 +205,22 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getPayment_comment() {
+		return payment_comment;
+	}
+
+	public void setPayment_comment(String payment_comment) {
+		this.payment_comment = payment_comment;
+	}
+
+	public String getFinal_flg() {
+		return final_flg;
+	}
+
+	public void setFinal_flg(String final_flg) {
+		this.final_flg = final_flg;
 	}
 
 }

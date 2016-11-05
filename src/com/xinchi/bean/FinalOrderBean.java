@@ -47,6 +47,7 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 	private String comment;
 	private java.math.BigDecimal traffic_payment;
 	private java.math.BigDecimal other_payment;
+	private String payment_comment;
 
 	public String getTeam_number() {
 		return team_number;
@@ -222,6 +223,14 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 
 	public void setTraffic_payment(java.math.BigDecimal traffic_payment) {
 		this.traffic_payment = traffic_payment;
+	}
+
+	public String getPayment_comment() {
+		return payment_comment;
+	}
+
+	public void setPayment_comment(String payment_comment) {
+		this.payment_comment = payment_comment;
 	}
 
 }

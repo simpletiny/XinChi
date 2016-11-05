@@ -44,10 +44,23 @@ public class FinalOrderDAOImpl extends SqlSessionDaoSupport implements
 
 	@Override
 	public List<FinalOrderBean> selectAllByParam(FinalOrderBean order) {
+		return daoUtil.selectByBOParamT(
+				"com.xinchi.bean.mapper.FinalOrderMapper.selectByParam", order);
+	}
+
+	@Override
+	public FinalOrderBean searchFinalOrderByPk(String order_pk) {
+		return (FinalOrderBean) daoUtil.selectByPK(
+				"com.xinchi.bean.mapper.FinalOrderMapper.selectByPrimaryKey",
+				order_pk);
+	}
+
+	@Override
+	public List<FinalOrderSupplierBean> searchFinalSupplier(String team_number) {
 		return daoUtil
-				.selectByBOParamT(
-						"com.xinchi.bean.mapper.FinalOrderMapper.selectByParam",
-						order);
+				.selectByParam(
+						"com.xinchi.bean.mapper.FinalOrderSupplierMapper.selectByTeamNumber",
+						team_number);
 	}
 
 }

@@ -54,7 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </thead>
                     <tbody data-bind="foreach: orders">
                         <tr>
-                            <td data-bind="text: $data.team_number"></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'final-order-detail.jsp?key='+$data.pk}"></a> </td>
                             <td data-bind="text: $data.client_employee_name"></td>
                             <td data-bind="text: $data.departure_date"></td>
                             <td data-bind="text: $data.return_date"></td>

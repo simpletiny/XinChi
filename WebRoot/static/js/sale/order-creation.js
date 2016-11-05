@@ -122,7 +122,7 @@ var OrderContext = function() {
 					"[st='supplierEmployeePk']").val();
 			var payable = $(current).find("[st='payable']").val();
 
-			if (supplierEmployeePk == "")
+			if (supplierEmployeePk == "" || supplierEmployeeName == "")
 				continue;
 			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName
 					+ '",' + '"supplierEmployeePk":"' + supplierEmployeePk
@@ -137,18 +137,28 @@ var OrderContext = function() {
 
 		var data = $("form").serialize() + "&nameList=" + nameList
 				+ "&supplierJson=" + supplierJson;
-
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/createOrder',
-			data : data
-		}).success(
-				function(str) {
-					if (str == "OK") {
-						window.location.href = self.apiurl
-								+ "templates/sale/order.jsp";
-					}
-				});
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '提交后无法修改，是否确认提交?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'sale/createOrder',
+						data : data
+					}).success(
+							function(str) {
+								if (str == "OK") {
+									window.location.href = self.apiurl
+											+ "templates/sale/order.jsp";
+								}
+							});
+				}
+			}
+		});
 	};
 };
 

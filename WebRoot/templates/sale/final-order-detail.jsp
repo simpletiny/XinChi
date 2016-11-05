@@ -146,6 +146,6 @@ String key = request.getParameter("key");
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>
     <script src="<%=basePath %>static/js/validation.js"></script>
         <script src="<%=basePath %>static/js/datepicker.js"></script>
-  <script src="<%=basePath %>static/js/sale/order-detail.js"></script>
+  <script src="<%=basePath %>static/js/sale/final-order-detail.js"></script>
 </body>
 </html>

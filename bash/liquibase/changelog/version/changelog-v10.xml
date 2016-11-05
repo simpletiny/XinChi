@@ -546,4 +546,22 @@
 			<comment>ALTER TABLE final_order</comment>
 		</sql>
 	</changeSet>
+	 <changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE budget_order ADD COLUMN payment_comment VARCHAR(200) NULL  AFTER comment;
+					ALTER TABLE final_order ADD COLUMN payment_comment VARCHAR(200) NULL  AFTER comment;
+          		            ]]>
+			<comment>ALTER TABLE final_order and budget_order</comment>
+		</sql>
+	</changeSet>
+	 <changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE budget_order ADD COLUMN final_flg CHAR(1) NULL DEFAULT 'N'  AFTER payment_comment;
+
+          		            ]]>
+			<comment>ALTER TABLE budget_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

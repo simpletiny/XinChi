@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.sale.service.FinalOrderService;
+import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.common.BaseAction;
@@ -32,7 +33,9 @@ public class FinalOrderAction extends BaseAction {
 
 	@Autowired
 	private FinalOrderService finalOrderService;
-
+	
+	@Autowired
+	private SaleOrderService saleOrderService;
 	/**
 	 * 创建订单
 	 * 
@@ -64,7 +67,7 @@ public class FinalOrderAction extends BaseAction {
 
 		// 保存订单供应商
 		List<FinalOrderSupplierBean> arrSupplier = new ArrayList<FinalOrderSupplierBean>();
-		
+
 		JSONArray array = JSONArray.fromObject(supplierJson);
 		BigDecimal sum = BigDecimal.ZERO;
 		for (int i = 0; i < array.size(); i++) {
@@ -88,28 +91,29 @@ public class FinalOrderAction extends BaseAction {
 			arrSupplier.add(supplier);
 		}
 		finalOrderService.saveOrderSupplier(arrSupplier);
-		
+
 		if (null != order.getOther_payment()) {
-			sum.add(order.getOther_payment());
+			sum = sum.add(order.getOther_payment());
 		}
-		
+		if (null != order.getTraffic_payment()) {
+			sum = sum.add(order.getTraffic_payment());
+		}
 		// 保存订单
 		String departureDate = order.getDeparture_date();
 		int days = order.getDays();
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 		order.setReturn_date(returnDate);
 		order.setPayable(sum);
-		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
-		
+		// order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
+		order.setClient_debt(order.getReceivable());
 		finalOrderService.insert(order);
-
-		
 		resultStr = OK;
 		return SUCCESS;
 	}
-	
+
 	private List<FinalOrderBean> orders;
-	public String searchFinalOrders(){
+
+	public String searchFinalOrders() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
@@ -118,9 +122,26 @@ public class FinalOrderAction extends BaseAction {
 			order.setCreate_user(sessionBean.getUser_number());
 		}
 		orders = finalOrderService.searchOrders(order);
-		
+
 		return SUCCESS;
 	}
+
+	private String order_pk;
+
+	public String searchOneFinalOrder() {
+		order = finalOrderService.searchFinalOrderByPk(order_pk);
+		return SUCCESS;
+	}
+
+	private List<FinalOrderSupplierBean> finalOrderSuppliers;
+	private String team_number;
+
+	public String searchFinalOrderSupplier() {
+		finalOrderSuppliers = finalOrderService
+				.searchFinalSupplier(team_number);
+		return SUCCESS;
+	}
+
 	public FinalOrderBean getOrder() {
 		return order;
 	}
@@ -136,11 +157,38 @@ public class FinalOrderAction extends BaseAction {
 	public void setSupplierJson(String supplierJson) {
 		this.supplierJson = supplierJson;
 	}
+
 	public List<FinalOrderBean> getOrders() {
 		return orders;
 	}
+
 	public void setOrders(List<FinalOrderBean> orders) {
 		this.orders = orders;
+	}
+
+	public String getOrder_pk() {
+		return order_pk;
+	}
+
+	public void setOrder_pk(String order_pk) {
+		this.order_pk = order_pk;
+	}
+
+	public List<FinalOrderSupplierBean> getFinalOrderSuppliers() {
+		return finalOrderSuppliers;
+	}
+
+	public void setFinalOrderSuppliers(
+			List<FinalOrderSupplierBean> finalOrderSuppliers) {
+		this.finalOrderSuppliers = finalOrderSuppliers;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 
 }

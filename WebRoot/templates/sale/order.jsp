@@ -30,19 +30,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOrder() }">新建</button>
 		                    </div>
+		                     <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
 		                    </div>
 		                    <div>
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
 		                    </div>
+		                    </s:if>
 		                 </div>
 	                </div>
                 <div class="form-group">
                     <div class="span8">
                         <label class="col-md-1 control-label">关键字</label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control"  placeholder="关键字">
+                            <input type="text" class="form-control"  placeholder="关键字" />
                         </div>
                     </div>
                     <div>
@@ -74,8 +76,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.return_date"></td>
                             <td data-bind="text: $data.people_count"></td> 
                              <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>   
-                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">结团</a></td>        
+                             <td data-bind="text: $data.payable"></td>
+                             <!-- ko if: $data.final_flg=='N' -->
+                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">生成决算单</a></td> 
+                             <!-- /ko -->   
+                             <!-- ko if: $data.final_flg=='Y' -->
+                             <td>已生成</td> 
+                             <!-- /ko -->        
                         </tr>
                     </tbody>
                 </table>

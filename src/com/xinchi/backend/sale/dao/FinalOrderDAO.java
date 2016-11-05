@@ -13,4 +13,8 @@ public interface FinalOrderDAO {
 
 	public List<FinalOrderBean> selectAllByParam(FinalOrderBean order);
 
+	public FinalOrderBean searchFinalOrderByPk(String order_pk);
+
+	public List<FinalOrderSupplierBean> searchFinalSupplier(String team_number);
+
 }
