@@ -29,7 +29,7 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	private String sales;
 	private String sales_name;
-	
+
 	private String create_user;
 
 	private String update_user;
@@ -39,6 +39,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String birth_year;
+
+	private String public_flg;
 
 	public String getName() {
 		return name;
@@ -182,6 +184,14 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setSales_name(String sales_name) {
 		this.sales_name = sales_name;
+	}
+
+	public String getPublic_flg() {
+		return public_flg;
+	}
+
+	public void setPublic_flg(String public_flg) {
+		this.public_flg = public_flg;
 	}
 
 }

@@ -5,7 +5,7 @@ var EmployeeContext = function() {
 	self.employeePk = $("#employee_key").val();
 	self.employee = ko.observable({});
 	self.genders = [ '男', '女' ];
-//	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
+	// self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
 	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	self.sales = ko.observableArray([]);
 	self.clients = ko.observable({
@@ -13,6 +13,7 @@ var EmployeeContext = function() {
 		items : []
 	});
 	self.choosenSales = ko.observableArray([]);
+	self.publicFlg = ko.observable();
 
 	startLoadingSimpleIndicator("加载中");
 
@@ -25,12 +26,18 @@ var EmployeeContext = function() {
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
+			self.publicFlg(self.employee().public_flg);
+			if (self.publicFlg() == "Y") {
+				$("#check-public").attr("checked", true);
+			} else {
+				$("#check-public").attr("checked", false);
+			}
+			self.publicClient();
 			if (self.employee().sales != "") {
 				$(self.employee().sales.split(",")).each(function(idx, id) {
 					self.choosenSales.push(id);
 				});
 			}
-
 		} else {
 			fail_msg("员工不存在！");
 		}
@@ -59,11 +66,12 @@ var EmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "client.client_short_name="+$("#client_name").val();
+		var param = "client.client_short_name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
-		
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
+				+ self.perPage;
+
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
+				data) {
 			self.clients(data.clients);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -72,6 +80,19 @@ var EmployeeContext = function() {
 	self.searchFinancial = function() {
 		self.refresh();
 
+	};
+
+	self.publicClient = function() {
+		if ($("#check-public").is(":checked")) {
+			$("[st='sales']").attr("checked", false);
+			$("[st='sales']").attr("disabled", true);
+			self.publicFlg("Y");
+			self.choosenSales = ko.observableArray([]);
+		} else {
+			$("[st='sales']").attr("disabled", false);
+			self.publicFlg("N");
+		}
+		return true;
 	};
 
 	self.pickFinancial = function(name, pk) {
@@ -89,7 +110,8 @@ var EmployeeContext = function() {
 					type : "POST",
 					url : self.apiurl + 'client/updateEmployee',
 					data : $("form").serialize() + "&employee.sales="
-							+ self.choosenSales()
+							+ self.choosenSales() + "&employee.public_flg="
+							+ self.publicFlg()
 				}).success(
 				function(str) {
 					if (str == "success") {
@@ -98,7 +120,7 @@ var EmployeeContext = function() {
 					}
 				});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;

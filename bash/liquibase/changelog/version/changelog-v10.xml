@@ -583,4 +583,12 @@
 			<comment>ALTER TABLE client_employee</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE client_employee ADD COLUMN public_flg CHAR(1) NULL DEFAULT 'N'  AFTER comment ;
+          		            ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

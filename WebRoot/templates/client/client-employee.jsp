@@ -86,7 +86,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.financial_body_name"></td>
                             <td data-bind="text: $data.ellphone"></td>
                             <td data-bind="text: $data.qq"></td>
+                            <!-- ko if:$data.public_flg =='Y' -->
+                            <td data-bind="text: $data.sales_name" style="color:red"></td>
+                            <!-- /ko -->
+                            <!-- ko if:$data.public_flg =='N' -->
                             <td data-bind="text: $data.sales_name"></td>
+                            <!-- /ko -->
                         </tr>
                     </tbody>
                 </table>

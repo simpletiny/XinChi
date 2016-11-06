@@ -76,9 +76,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip">
                             <div data-bind="foreach: sales">
                                 <em class="small-box">
-                                    <input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.choosenSales"/><label data-bind="text: $data.user_name"></label>
+                                    <input type="checkbox" st="sales" name="choosenSales" required="required" data-bind="attr: {'value': $data.pk}, checked: $root.choosenSales"/><label data-bind="text: $data.user_name"></label>
                                 </em>
                             </div>
+                              <em class="small-box">
+                                    <input type="checkbox" id="check-public" name="choosenSales" required="required" data-bind="click:publicClient"/><label style="color:red;">公开</label>
+                               </em>
                         </div>
                     </div>
                 </div>

@@ -52,15 +52,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public String createEmployee(ClientEmployeeBean employee) {
-		String[] userPks = employee.getSales().split(",");
-		String sales_name = "";
-		
-		List<UserBaseBean> users = userDao.getAllByPks(userPks);
-		for (UserBaseBean user : users) {
-			sales_name += user.getUser_name() + ",";
+		if (employee.getPublic_flg().equals("Y")) {
+			employee.setSales("");
+			employee.setSales_name("公开");
+		} else {
+			if (!employee.getSales().equals("")) {
+				String[] userPks = employee.getSales().split(",");
+				String sales_name = "";
+
+				List<UserBaseBean> users = userDao.getAllByPks(userPks);
+				for (UserBaseBean user : users) {
+					sales_name += user.getUser_name() + ",";
+				}
+				sales_name = sales_name.substring(0, sales_name.length() - 1);
+				employee.setSales_name(sales_name);
+			}
 		}
-		sales_name = sales_name.substring(0,sales_name.length()-1);
-		employee.setSales_name(sales_name);
 		dao.insert(employee);
 		return "success";
 	}
@@ -68,15 +75,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public String updateEmployee(ClientEmployeeBean employee) {
-		String[] userPks = employee.getSales().split(",");
-		String sales_name = "";
-		
-		List<UserBaseBean> users = userDao.getAllByPks(userPks);
-		for (UserBaseBean user : users) {
-			sales_name += user.getUser_name() + ",";
+		if (employee.getPublic_flg().equals("Y")) {
+			employee.setSales("");
+			employee.setSales_name("公开");
+		} else {
+			if (!employee.getSales().equals("")) {
+				String[] userPks = employee.getSales().split(",");
+				String sales_name = "";
+
+				List<UserBaseBean> users = userDao.getAllByPks(userPks);
+				for (UserBaseBean user : users) {
+					sales_name += user.getUser_name() + ",";
+				}
+				sales_name = sales_name.substring(0, sales_name.length() - 1);
+				employee.setSales_name(sales_name);
+			}
 		}
-		sales_name = sales_name.substring(0,sales_name.length()-1);
-		employee.setSales_name(sales_name);
 		dao.update(employee);
 		return "success";
 	}

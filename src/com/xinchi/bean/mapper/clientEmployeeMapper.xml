@@ -19,6 +19,7 @@
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="public_flg" property="public_flg" jdbcType="CHAR" />
 	    <result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
@@ -42,7 +43,8 @@
     	create_user, 
     	update_user, 
     	pk, 
-    	comment, 
+    	comment,
+    	public_flg,
     	birth_year, 
     	create_time,
     	update_time
@@ -115,6 +117,9 @@
 	 	<if test="comment != null">
 	        comment,
 	      </if>
+	      <if test="public_flg != null">
+	        public_flg,
+	      </if>
 	 	<if test="birth_year != null">
 	        birth_year,
 	      </if>
@@ -176,6 +181,9 @@
 	      </if>
     	<if test="comment != null">
 	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="public_flg != null">
+	        #{public_flg,jdbcType=CHAR},
 	      </if>
     	<if test="birth_year != null">
 	        #{birth_year,jdbcType=VARCHAR},
@@ -244,6 +252,9 @@
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
 	      </if>
+    	<if test="public_flg != null">
+	        public_flg = #{public_flg,jdbcType=VARCHAR},
+	      </if>
     	<if test="birth_year != null">
 	        birth_year = #{birth_year,jdbcType=VARCHAR},
 	      </if>
@@ -285,13 +296,14 @@
     	A.update_user, 
     	A.pk, 
     	A.comment, 
+    	A.public_flg,
     	A.birth_year, 
     	A.create_time,
     	A.update_time
     from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk 
      <where>
     	<if test="params.bo.sales != null and params.bo.sales !=''">
-	         and A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')
+	         and (A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') or A.public_flg ='Y')
 	      </if>
 	      	<if test="params.bo.name != null and params.bo.name !=''">
 	         and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
