@@ -53,9 +53,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </div>
                     </div>
                     <div class="span6">
-                         <label class="col-md-1 control-label">财务主体</label>
+                         <label class="col-md-1 control-label">客户简称</label>
                          <div class="col-md-2">
-                             <input type="text" class="form-control" placeholder="财务主体"  name="employee.financial_body_name"/>
+                             <input type="text" class="form-control" placeholder="客户简称"  name="employee.financial_body_name"/>
                          </div>
                     </div>
                     <div style="padding-top: 3px;">
@@ -71,10 +71,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>姓名</th>
                             <th>性别</th>
                             <th>地区</th>
-                            <th>财务主体</th>
+                            <th>客户简称</th>
                             <th>手机号</th>
                             <th>QQ</th>
-                            <th>微信</th>
                             <th>所属销售</th>
                         </tr>
                     </thead>
@@ -87,8 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.financial_body_name"></td>
                             <td data-bind="text: $data.ellphone"></td>
                             <td data-bind="text: $data.qq"></td>
-                            <td data-bind="text: $data.wechat"></td>    
-                            <td data-bind="text: $data.sales"></td>          
+                            <td data-bind="text: $data.sales_name"></td>
                         </tr>
                     </tbody>
                 </table>

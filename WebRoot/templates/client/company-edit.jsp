@@ -39,7 +39,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">传真</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: client().fax" placeholder="传真" name="client.fax" /></div>
+                        <div class="ip"><input type="number" class="ip-" data-bind="value: client().fax" placeholder="传真" name="client.fax" /></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

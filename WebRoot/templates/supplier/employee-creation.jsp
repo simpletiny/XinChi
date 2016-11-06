@@ -14,7 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>供应商员工编辑<a href="<%=basePath %>/templates/supplier/supplier-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>供应商员工新建<a href="<%=basePath %>/templates/supplier/supplier-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -32,6 +32,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
                 <div class="input-row clearfloat">
+                	 <div class="col-md-6 required">
+                        <label class="l">手机号</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
+                    </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
                         <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().financial_body_name,click:choseFinancial" placeholder="点击选择" name="employee.financial_body_name" id="financial_body_name" required="required"/>
@@ -51,23 +55,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
                 </div>
                 <div class="input-row clearfloat">
-                    <div class="col-md-6 required">
-                        <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="l">微信</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_wechat" placeholder="微信" name="employee.wechat"/></div>
-                    </div>
-                </div>
-                <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">电话</label>
                         <div class="ip"><input type="text" class="ip-" data-bind="value: employee().telephone" placeholder="电话" name="employee.telephone"/></div>
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">传真</label>
-                        <div class="ip"><input type="text" min="0" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">
@@ -76,7 +70,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip"><input type="text" class="ip-" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
                     </div>
                 </div>
-				<div class="input-row clearfloat required">
+				<!-- <div class="input-row clearfloat required">
                     <div class="col-md-12">
                         <label class="l">所属销售</label>
                         <div class="ip">
@@ -87,7 +81,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="input-row clearfloat">
                     <div class="col-md-12">
                         <label class="l">备注</label>
@@ -107,9 +101,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">主体名称</label>
+               <label class="col-md-2 control-label">主体简称</label>
                <div class="col-md-6">
-                   <input type="text" id="supplier_name" class="form-control"  placeholder="主体名称" />
+                   <input type="text" id="supplier_name" class="form-control"  placeholder="主体简称" />
                </div>
            </div>
            <div>

@@ -36,15 +36,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <s:form theme="simple" cssClass="register" id="register-form" method="post" action="register" namespace="/user" enctype="multipart/form-data" >
         <h4>用户注册</h4>
         <ul>
-            <li><input type="text" id="login_name" placeholder="用户名" onblur="check_name()" class="ip-default" name="ubb.login_name" required="required" /></li>
-            <li><input type="password" id="password1" placeholder="密码" class="ip-default" name="ubb.password" required="required" /></li>
-            <li><input type="password" onblur="confirm()" id="password2" placeholder="再次输入密码" class="ip-default" name="password2" required="required" /></li>
-            <li><input type="text" id="name" placeholder="姓名" class="ip-default" name="ubb.user_name" required="required" /></li>
-            <li><input type="text" id="id" placeholder="身份证号" class="ip-default" name="ubb.id" required="required" /></li>
-             <li><input type="text" id="nick_name" placeholder="昵称" class="ip-default" name="uib.nick_name" required="required" /></li>
-              <li><input type="text" id="cellphone" placeholder="电话" class="ip-default" name="uib.cellphone" required="required" /></li>
+            <li><input type="text" id="login_name" maxlength="15" placeholder="用户名" onblur="check_name()" class="ip-default" name="ubb.login_name" required="required" /></li>
+            <li><input type="password" onblur="confirm()" id="password1" maxlength="30" placeholder="密码" class="ip-default" name="ubb.password" required="required" /></li>
+            <li><input type="password" onblur="confirm()" maxlength="30" id="password2" placeholder="再次输入密码" class="ip-default" name="password2" required="required" /></li>
+            <li><input type="text" id="name" placeholder="姓名" maxlength="8" class="ip-default" name="ubb.user_name" required="required" /></li>
+            <li><input type="text" id="id" placeholder="身份证号" maxlength="18" class="ip-default" name="ubb.id" required="required" /></li>
+             <li><input type="text" id="nick_name" placeholder="昵称" maxlength="10" class="ip-default" name="uib.nick_name" required="required" /></li>
+              <li><input type="text" id="cellphone" placeholder="电话" maxlength="11" class="ip-default" name="uib.cellphone" required="required" /></li>
             <li><select class="form-control" name="ubb.sex" > <option value ="F">女</option><option value ="M">男</option></select></li>
-            <li><a href="javascript:;" class="a-upload">上传身份证复印件<input type="file" name="file" id="upload"/></a></li>
+            <li><a href="javascript:;" class="a-upload">上传身份证复印件<input type="file" name="file"  required="required" id="upload" /></a></li>
             <li><div style="padding-top: 15px;"><button id="submit" type="submit" class="btn btn-green">提交</button></div></li>
         </ul>
     </s:form>

@@ -46,7 +46,7 @@ var SupplierEmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "supplier.supplier_name="+$("#supplier_name").val();
+		var param = "supplier.supplier_short_name="+$("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 		+ self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
@@ -77,8 +77,7 @@ var SupplierEmployeeContext = function() {
 				{
 					type : "POST",
 					url : self.apiurl + 'supplier/createEmployee',
-					data : $("form").serialize() + "&employee.sales="
-							+ self.choosenSales()
+					data : $("form").serialize()
 				}).success(
 				function(str) {
 					if (str == "success") {

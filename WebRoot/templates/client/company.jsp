@@ -40,10 +40,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                </div>
                 <div class="form-group">
                     <div class="span6">
-                        <label class="col-md-1 control-label">名称</label>
+                        <label class="col-md-1 control-label">简称</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" placeholder="名称"
-                                  name="client.client_name" />
+                            <input type="text" class="form-control" placeholder="简称"
+                                  name="client.client_short_name" />
                         </div>
                     </div>
                     <div class="span6">

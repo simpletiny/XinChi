@@ -61,6 +61,8 @@ public class UserAction extends BaseAction {
 	}
 
 	public String register() throws IOException {
+		if (null == file)
+			return ERROR;
 		if (ubb.getPassword().equals(password2)) {
 
 			String ext = Utils.getFileExt(fileFileName);
@@ -106,7 +108,8 @@ public class UserAction extends BaseAction {
 	}
 
 	public String searchAllSales() {
-		users = userService.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
+		users = userService
+				.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
 		return SUCCESS;
 	}
 

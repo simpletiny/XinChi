@@ -28,7 +28,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String area;
 
 	private String sales;
-
+	private String sales_name;
+	
 	private String create_user;
 
 	private String update_user;
@@ -173,6 +174,14 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setFax(String fax) {
 		this.fax = fax;
+	}
+
+	public String getSales_name() {
+		return sales_name;
+	}
+
+	public void setSales_name(String sales_name) {
+		this.sales_name = sales_name;
 	}
 
 }

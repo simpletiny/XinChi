@@ -14,6 +14,7 @@
 	    <result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
 	    <result column="area" property="area" jdbcType="VARCHAR" />
 	    <result column="sales" property="sales" jdbcType="VARCHAR" />
+	    <result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
@@ -37,6 +38,7 @@
     	financial_body_name, 
     	area, 
     	sales, 
+    	sales_name,
     	create_user, 
     	update_user, 
     	pk, 
@@ -98,6 +100,9 @@
 	 	<if test="sales != null">
 	        sales,
 	      </if>
+	 	<if test="sales_name != null">
+	        sales_name,
+	      </if>
 	 	<if test="create_user != null">
 	        create_user,
 	      </if>
@@ -156,6 +161,9 @@
 	      </if>
     	<if test="sales != null">
 	        #{sales,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sales_name != null">
+	        #{sales_name,jdbcType=VARCHAR},
 	      </if>
     	<if test="create_user != null">
 	        #{create_user,jdbcType=VARCHAR},
@@ -221,6 +229,9 @@
     	<if test="sales != null">
 	        sales = #{sales,jdbcType=VARCHAR},
 	      </if>
+    	<if test="sales_name != null">
+	        sales_name = #{sales_name,jdbcType=VARCHAR},
+	      </if>
     	<if test="create_user != null">
 	        create_user = #{create_user,jdbcType=VARCHAR},
 	      </if>
@@ -257,20 +268,39 @@
    </select>
  <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 
-    <include refid="Base_Column_List" />
-    from client_employee
+    	A.name, 
+    	A.sex, 
+    	A.wechat, 
+    	A.qq, 
+    	A.cellphone, 
+    	A.telephone, 
+    	A.fax,
+    	A.id, 
+    	A.financial_body_pk, 
+    	A.financial_body_name, 
+    	B.client_area as area, 
+    	A.sales, 
+    	A.sales_name, 
+    	A.create_user, 
+    	A.update_user, 
+    	A.pk, 
+    	A.comment, 
+    	A.birth_year, 
+    	A.create_time,
+    	A.update_time
+    from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk 
      <where>
     	<if test="params.bo.sales != null and params.bo.sales !=''">
-	         and sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')
+	         and A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')
 	      </if>
 	      	<if test="params.bo.name != null and params.bo.name !=''">
-	         and name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+	         and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
 	      </if>
 	      	<if test="params.bo.area != null and params.bo.area !=''">
-	         and area = #{params.bo.area,jdbcType=VARCHAR}
+	         and B.area = #{params.bo.area,jdbcType=VARCHAR}
 	      </if>
 	      	<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
-	         and financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+	         and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 	      </if>
     </where> 
    </select>

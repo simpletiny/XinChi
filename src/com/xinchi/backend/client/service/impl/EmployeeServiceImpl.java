@@ -8,13 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.EmployeeService;
+import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.UserBaseBean;
 import com.xinchi.tools.Page;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeDAO dao;
+	@Autowired
+	private UserDAO userDao;
 
 	@Override
 	public void insert(ClientEmployeeBean bo) {
@@ -48,6 +52,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public String createEmployee(ClientEmployeeBean employee) {
+		String[] userPks = employee.getSales().split(",");
+		String sales_name = "";
+		
+		List<UserBaseBean> users = userDao.getAllByPks(userPks);
+		for (UserBaseBean user : users) {
+			sales_name += user.getUser_name() + ",";
+		}
+		sales_name = sales_name.substring(0,sales_name.length()-1);
+		employee.setSales_name(sales_name);
 		dao.insert(employee);
 		return "success";
 	}
@@ -55,6 +68,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public String updateEmployee(ClientEmployeeBean employee) {
+		String[] userPks = employee.getSales().split(",");
+		String sales_name = "";
+		
+		List<UserBaseBean> users = userDao.getAllByPks(userPks);
+		for (UserBaseBean user : users) {
+			sales_name += user.getUser_name() + ",";
+		}
+		sales_name = sales_name.substring(0,sales_name.length()-1);
+		employee.setSales_name(sales_name);
 		dao.update(employee);
 		return "success";
 	}

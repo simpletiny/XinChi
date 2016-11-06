@@ -185,4 +185,13 @@
    <select id="selectMaxUserNumber" resultType="java.lang.String">
       select MAX(user_number) from user_base where user_number != 'admin'
    </select>
+   
+   <select id="selectAllByPks" resultMap="BaseResultMap">
+	 select
+	 <include refid="Base_Column_List" />
+	 from user_base where pk in
+	 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	  #{item}
+ </foreach>
+</select>
 </mapper>

@@ -1,6 +1,5 @@
 package com.xinchi.common;
 
-import java.io.File;
 
 public class Utils {
 
@@ -19,14 +18,16 @@ public class Utils {
 
 	public static String getFileExt(String fileName) {
 		String ext = "";
+		if (null == fileName || fileName.equals(""))
+			return "";
 		ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 		return ext;
 	}
 
 	public static void main(String[] str) {
-//		String xx="D:$workplace$fileUpload$userId";
-//		System.out.println( File.separator);
-//		String x = File.separator.toString();
-//		System.out.println(xx.replaceAll("\\$", new String(x)));
+		// String xx="D:$workplace$fileUpload$userId";
+		// System.out.println( File.separator);
+		// String x = File.separator.toString();
+		// System.out.println(xx.replaceAll("\\$", new String(x)));
 	}
 }

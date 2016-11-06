@@ -51,10 +51,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
             </li>
             </s:if>
-            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="supplier"><a href="<%=basePath%>templates/supplier/supplier.jsp"><i class="fa fa-users fa-lg fa-fw"></i>供应商管理</a>
+            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="supplier"><a href="#" onclick="$('.supplier').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>供应商管理</a>
+              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                 <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/supplier/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
                 </ol>
+                </s:if>
                  <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/supplier/supplier-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
                 </ol>

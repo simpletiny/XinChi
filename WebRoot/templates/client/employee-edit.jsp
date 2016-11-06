@@ -33,9 +33,9 @@ String key = request.getParameter("key");
                     </div>
                 </div>
                 <div class="input-row clearfloat">
-                     <div class="col-md-6 required">
-                        <label class="l">地区</label>
-                        <div class="ip"><select class="form-control" data-bind="options: employeeArea, optionsCaption: '-- 请选择 --', value: employee().area" name="employee.area" required="required"></select></div>
+                    <div class="col-md-6 required">
+                        <label class="l">手机号</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
@@ -56,23 +56,13 @@ String key = request.getParameter("key");
 
                 </div>
                 <div class="input-row clearfloat">
-                    <div class="col-md-6 required">
-                        <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="l">微信</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"/></div>
-                    </div>
-                </div>
-                <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">电话</label>
                         <div class="ip"><input type="text" class="ip-" data-bind="value: employee().telephone" placeholder="电话" name="employee.telephone"/></div>
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">传真</label>
-                        <div class="ip"><input type="text" min="0" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">
@@ -111,9 +101,9 @@ String key = request.getParameter("key");
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">主体名称</label>
+               <label class="col-md-2 control-label">主体简称</label>
                <div class="col-md-6">
-                   <input type="text" id="client_name" class="form-control"  placeholder="主体名称" />
+                   <input type="text" id="client_name" class="form-control"  placeholder="主体简称" />
                </div>
            </div>
            <div>

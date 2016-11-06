@@ -86,4 +86,12 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 		return list;
 	}
 
+	@Override
+	public List<UserBaseBean> getAllByPks(String[] pks) {
+		List<UserBaseBean> list = daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.UserBaseMapper.selectAllByPks",
+				pks);
+		return list;
+	}
+
 }

@@ -40,10 +40,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                </div>
                 <div class="form-group">
                     <div class="span6">
-                        <label class="col-md-1 control-label">名称</label>
+                        <label class="col-md-1 control-label">简称</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" placeholder="名称"
-                                  name="supplier.supplier_name" />
+                            <input type="text" class="form-control" placeholder="简称"
+                                  name="supplier.supplier_short_name" />
                         </div>
                     </div>
                     <div class="span6">
@@ -67,7 +67,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <thead>
                         <tr role="row">
                         	<th></th>
-                            <th>财务主体简称</th>
+                            <th>供应商简称</th>
                             <th>城市</th>
                             <th>负责人</th>
                             <th>手机号</th>

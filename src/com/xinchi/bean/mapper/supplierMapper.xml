@@ -278,6 +278,9 @@
 	      	<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
 	         and supplier_name like CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
 	      </if>
+	      	<if test="params.bo.supplier_short_name != null and params.bo.supplier_short_name !=''">
+	         and supplier_short_name like CONCAT('%',#{params.bo.supplier_short_name,jdbcType=VARCHAR},'%')
+	      </if>
 	      	<if test="params.bo.supplier_provice != null and params.bo.supplier_provice !=''">
 	         and supplier_provice = #{params.bo.supplier_provice,jdbcType=VARCHAR}
 	      </if>

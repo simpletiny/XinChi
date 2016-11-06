@@ -11,10 +11,9 @@ import javax.imageio.ImageIO;
 public class SomeTest {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		File picture = new File("D:\\workplace\\fileUpload\\userId\\9986013.jpg");
-		BufferedImage sourceImg = ImageIO.read(new FileInputStream(picture));
-		System.out.println(String.format("%.1f", picture.length() / 1024.0));
-		System.out.println(sourceImg.getWidth());
-		System.out.println(sourceImg.getHeight());
+		String sales_name = "123,1231,4123,";
+		sales_name = sales_name.substring(0,sales_name.length()-1);
+		
+		System.out.println(sales_name);
 	}
 }

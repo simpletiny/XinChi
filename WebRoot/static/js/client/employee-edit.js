@@ -5,7 +5,7 @@ var EmployeeContext = function() {
 	self.employeePk = $("#employee_key").val();
 	self.employee = ko.observable({});
 	self.genders = [ '男', '女' ];
-	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
+//	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
 	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	self.sales = ko.observableArray([]);
 	self.clients = ko.observable({
@@ -59,7 +59,7 @@ var EmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "client.client_name="+$("#client_name").val();
+		var param = "client.client_short_name="+$("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 		+ self.perPage;
 		

@@ -51,14 +51,14 @@ public class ClientAction extends BaseAction {
 	}
 	
 	public String searchCompanyByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String roles = sessionBean.getUser_roles();
+//		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+//				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+//		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 		
-		if(!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)){
-			client.setCreate_user(sessionBean.getUser_number());
-		}
+//		if(!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)){
+//			client.setCreate_user(sessionBean.getUser_number());
+//		}
 		
 		params.put("bo", client);
 		

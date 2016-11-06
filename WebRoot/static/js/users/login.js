@@ -1,6 +1,8 @@
 function confirm() {
 	var password1 = $("#password1").val();
 	var password2 = $("#password2").val();
+	if (password1 == "" || password2 == "")
+		return;
 	if (password1 != password2) {
 		layer.msg("前后密码不一致！", 2, 8);
 		$("#submit").attr("disabled", true);
@@ -13,7 +15,7 @@ function check_name() {
 	if ($.trim(login_name) == "")
 		return;
 	$.ajax({
-		url : window['basePath'] + "/user/checkLoginName",
+		url : window['basePath'] + "user/checkLoginName",
 		type : "post",
 		data : "login_name=" + login_name,
 		success : function(data) {

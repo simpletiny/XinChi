@@ -6,7 +6,8 @@ var CompanyContext = function() {
 		window.location.href = self.apiurl
 				+ "templates/client/company-creation.jsp";
 	};
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+		        			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clients = ko.observable({
 		total : 0,
 		items : []

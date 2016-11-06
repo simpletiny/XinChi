@@ -2,7 +2,8 @@ var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenEmployees = ko.observableArray([]);
-	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
+	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+	        			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

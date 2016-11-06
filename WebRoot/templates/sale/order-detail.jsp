@@ -130,7 +130,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">金额</label>
-                        <div class="ip"><input type="number"  min="0" class="ip-" name="detail.received"  placeholder="金额" required="required"/></div>
+                        <div class="ip"><input type="number" class="ip-" name="detail.received"  placeholder="金额" required="required"/></div>
                     </div>
                 </div>
           </form>

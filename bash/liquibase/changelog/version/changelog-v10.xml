@@ -564,4 +564,23 @@
 			<comment>ALTER TABLE budget_order</comment>
 		</sql>
 	</changeSet>
+	
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+				UPDATE client set client_type='分公司' where client_type='挂靠';
+				UPDATE client set client_type='独立注册' where client_type='注册';
+          		            ]]>
+			<comment>update data of table client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE client_employee ADD COLUMN sales_name VARCHAR(200) NULL  AFTER sales ;
+
+          		            ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

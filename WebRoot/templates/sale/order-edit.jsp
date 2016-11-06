@@ -33,7 +33,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">总团款</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().receivable" placeholder="总团款" name="order.receivable" required="required"/></div>
+                        <div class="ip"><input type="number"  class="ip-" data-bind="value: order().receivable" placeholder="总团款" name="order.receivable" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -49,7 +49,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">天数</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" data-bind="value: order().days" placeholder="天数" name="order.days" required="required"/></div>
+                        <div class="ip"><input type="number"  class="ip-" data-bind="value: order().days" placeholder="天数" name="order.days" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
@@ -60,7 +60,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">大交通费用</label>
-                        <div class="ip"><input type="number" min="0" class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
+                        <div class="ip"><input type="number"  class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
                     </div>
                 </div>
                   <!-- ko foreach: suppliers -->
@@ -72,7 +72,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6">
                         <label class="l">应付款</label>
-                        <div class="ip"><input type="number" st="payable" data-bind="value:$data.payable" min="0" class="ip-"  placeholder="应付款"/></div>
+                        <div class="ip"><input type="number" st="payable" data-bind="value:$data.payable"  class="ip-"  placeholder="应付款"/></div>
                     </div>
                 </div>
                 <!-- /ko -->
@@ -83,7 +83,7 @@ String key = request.getParameter("key");
                  <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">其他费用</label>
-                        <div class="ip"><input type="number" min="0" class="ip-"  data-bind="value:order().other_payment" name="order.other_payment" placeholder="其他费用"/></div>
+                        <div class="ip"><input type="number"  class="ip-"  data-bind="value:order().other_payment" name="order.other_payment" placeholder="其他费用"/></div>
                     </div>
                                          <div class="col-md-6">
                         <label class="l">费用说明</label>

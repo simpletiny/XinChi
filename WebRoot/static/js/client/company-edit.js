@@ -4,9 +4,10 @@ var CompanyContext = function() {
 	self.companyPk = $("#client_key").val();
 	self.client = ko.observable({});
 	self.genders = [ '男', '女' ];
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
-	self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
-	
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.clientType = [ '独立注册', '分公司', '营业部', '包桌', '经纪人', '其他' ];
+
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'client/searchOneCompany', {
 		client_pk : self.companyPk
@@ -20,7 +21,7 @@ var CompanyContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
+
 	self.saveCompany = function() {
 		if (!$("form").valid()) {
 			return;
@@ -29,11 +30,13 @@ var CompanyContext = function() {
 			type : "POST",
 			url : self.apiurl + 'client/updateCompany',
 			data : $("form").serialize()
-		}).success(function(str) {
-			if(str=="success"){
-				window.location.href=self.apiurl+"templates/client/company.jsp";
-			}
-		});
+		}).success(
+				function(str) {
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/client/company.jsp";
+					}
+				});
 	};
 };
 

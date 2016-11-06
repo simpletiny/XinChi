@@ -46,4 +46,6 @@ public interface UserDAO{
 	public List<UserCommonBean> getAllNewUsers();
 
 	public List<UserCommonBean> getAllUsersByRole(String roles);
+	
+	public List<UserBaseBean> getAllByPks(String[] pks);
 }
