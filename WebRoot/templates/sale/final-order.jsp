@@ -42,6 +42,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                   name="order.product" />
                         </div>
                     </div>
+                    <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                     <div class="span6">
+                        <label class="col-md-1 control-label">销售</label>
+                        <div class="col-md-2">
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="order.create_user_name"></select>
+                        </div>
+                    </div>
+                    </s:if>
                     <div style="padding-top: 3px;">
                         <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
@@ -58,6 +66,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>人数</th>
                             <th>总团款</th>
                             <th>总成本</th>
+                            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                            <th>销售</th>
+                            </s:if>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: orders">
@@ -68,7 +79,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.return_date"></td>
                             <td data-bind="text: $data.people_count"></td> 
                              <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>     
+                             <td data-bind="text: $data.payable"></td>    
+                               <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                             <td data-bind="text: $data.create_user_name"></td>  
+                              </s:if>
                         </tr>
                     </tbody>
                 </table>

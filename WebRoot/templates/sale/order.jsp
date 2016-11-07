@@ -55,6 +55,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                   name="order.product" />
                         </div>
                     </div>
+                   <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                     <div class="span6">
+                        <label class="col-md-1 control-label">销售</label>
+                        <div class="col-md-2">
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="order.create_user_name"></select>
+                        </div>
+                    </div>
+                    </s:if>
                     <div style="padding-top: 3px;">
                         <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
@@ -73,6 +81,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>总团款</th>
                             <th>总成本</th>
                             <th></th>
+                            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                            <th>销售</th>
+                            </s:if>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: orders">
@@ -90,7 +101,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                              <!-- /ko -->   
                              <!-- ko if: $data.final_flg=='Y' -->
                              <td>已生成</td> 
-                             <!-- /ko -->        
+                             <!-- /ko -->      
+                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                             <td data-bind="text: $data.create_user_name"></td>  
+                              </s:if>  
                         </tr>
                     </tbody>
                 </table>

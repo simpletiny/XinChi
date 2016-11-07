@@ -39,7 +39,7 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 	private java.math.BigDecimal supplier_debt;
 
 	private String create_user;
-
+	private String create_user_name;
 	private String update_user;
 
 	private String pk;
@@ -231,6 +231,14 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 
 	public void setPayment_comment(String payment_comment) {
 		this.payment_comment = payment_comment;
+	}
+
+	public String getCreate_user_name() {
+		return create_user_name;
+	}
+
+	public void setCreate_user_name(String create_user_name) {
+		this.create_user_name = create_user_name;
 	}
 
 }

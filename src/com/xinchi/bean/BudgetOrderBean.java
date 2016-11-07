@@ -39,7 +39,7 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 	private java.math.BigDecimal other_payment;
 
 	private String create_user;
-
+	private String create_user_name;
 	private String update_user;
 
 	private String pk;
@@ -221,6 +221,14 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 
 	public void setFinal_flg(String final_flg) {
 		this.final_flg = final_flg;
+	}
+
+	public String getCreate_user_name() {
+		return create_user_name;
+	}
+
+	public void setCreate_user_name(String create_user_name) {
+		this.create_user_name = create_user_name;
 	}
 
 }

@@ -20,6 +20,7 @@
 	    <result column="supplier_debt" property="supplier_debt" jdbcType="DECIMAL" />
 	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="create_user_name" property="create_user_name" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
@@ -313,20 +314,47 @@
    </select>
  <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 
-    <include refid="Base_Column_List" />
-    from budget_order
+   		A.team_number, 
+    	A.product, 
+    	A.departure_date, 
+    	A.return_date, 
+    	A.days, 
+    	A.traffic_payment, 
+    	A.people_count, 
+    	A.client_employee_pk, 
+    	A.client_employee_name, 
+    	A.receivable, 
+    	A.received, 
+    	A.client_debt, 
+    	A.payable, 
+    	A.paid, 
+    	A.supplier_debt, 
+    	A.other_payment, 
+    	A.create_user,
+    	B.user_name as create_user_name,
+    	A.update_user, 
+    	A.pk, 
+    	A.comment,
+    	A.payment_comment,
+    	A.final_flg,
+    	A.create_time,
+    	A.update_time
+    from budget_order A LEFT JOIN user_base B ON A.create_user = B.user_number
         <where>
     	<if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+	         and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
 	      </if>
 	      	<if test="params.bo.team_number != null and params.bo.team_number !=''">
-	         and team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+	         and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
 	      </if>
 	      	<if test="params.bo.product != null and params.bo.product !=''">
-	         and product like CONCAT('%', #{params.bo.product,jdbcType=VARCHAR},'%')
+	         and A.product like CONCAT('%', #{params.bo.product,jdbcType=VARCHAR},'%')
 	      </if>
 	      	<if test="params.bo.final_flg != null and params.bo.final_flg !=''">
-	         and final_flg = #{params.bo.final_flg,jdbcType=VARCHAR}
+	         and A.final_flg = #{params.bo.final_flg,jdbcType=VARCHAR}
+	      </if>
+	      	<if test="params.bo.create_user_name != null and params.bo.create_user_name !=''">
+	         and B.user_name = #{params.bo.create_user_name,jdbcType=VARCHAR}
 	      </if>
     </where> 
  
