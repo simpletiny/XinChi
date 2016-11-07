@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>欣驰国际</title>
-
+	 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/multiple-select/multiple-select.css"/>
 </head>
 <body>
 <div class="main-body">
@@ -49,7 +49,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="span6">
                         <label class="col-md-1 control-label">地区</label>
                         <div class="col-md-2">
-                            <select class="form-control" data-bind="options: clientArea, optionsCaption: '-- 请选择 --'" name="client.client_area"></select>
+                            <select class="form-control" style="height:34px" data-bind="options: clientArea, optionsCaption: '-- 请选择 --'" name="client.client_area"></select>
+                        </div>
+                    </div>
+
+                     <div align="left">
+                        <label class="col-md-1 control-label" style="width: 50px;">销售</label>
+                        <div class="col-md-2" style="width: 200px;">
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="client.sales_name"></select>
                         </div>
                     </div>
                     <div style="padding-top: 3px;">
@@ -106,6 +113,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
     $(".client").addClass("current").children("ol").css("display", "block");
   </script>
+   <script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
     <script src="<%=basePath%>static/js/client/company.js"></script>
 </body>
 </html>

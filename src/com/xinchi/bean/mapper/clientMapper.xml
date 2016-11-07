@@ -323,6 +323,9 @@
 	      	<if test="params.bo.client_area != null and params.bo.client_area !=''">
 	         and client_area = #{params.bo.client_area,jdbcType=VARCHAR}
 	      </if>
+	      <if test="params.bo.sales_name != null and params.bo.sales_name !=''">
+	         and sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
+	      </if>
     </where> 
    </select>
 </mapper>

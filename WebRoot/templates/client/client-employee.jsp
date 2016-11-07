@@ -58,10 +58,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                              <input type="text" class="form-control" placeholder="客户简称"  name="employee.financial_body_name"/>
                          </div>
                     </div>
+                    </div>
+                  <div class="form-group">
+                  <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                     <div class="span6">
+                        <label class="col-md-1 control-label">销售</label>
+                        <div class="col-md-2">
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="employee.sales_name"></select>
+                        </div>
+                    </div>
+                    </s:if>
+                      <div class="span6" style="float:right">
                     <div style="padding-top: 3px;">
                         <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
                     </div>
+                    </div>
                 </div>
+                
             </form>
        <div class="list-result">
                 <table class="table table-striped table-hover">

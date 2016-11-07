@@ -314,6 +314,9 @@
 	      	<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 	         and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 	      </if>
+	      <if test="params.bo.sales_name != null and params.bo.sales_name !=''">
+	         and A.sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
+	      </if>
     </where> 
    </select>
 </mapper>

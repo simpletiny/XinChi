@@ -7,11 +7,33 @@ var CompanyContext = function() {
 				+ "templates/client/company-creation.jsp";
 	};
 	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
-		        			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clients = ko.observable({
 		total : 0,
 		items : []
 	});
+
+	// 销售信息
+	self.sales = ko.observableArray([]);
+	self.chosenSales = ko.observableArray([]);
+	self.sales_name = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+		self.sales(data.users);
+		self.sales_name.push("公开");
+		$(self.sales()).each(function(idx, data) {
+			self.sales_name.push(data.user_name);
+		});
+
+//		$('.multi-select').multipleSelect({
+//			placeholder : '全部',
+//			selectAllText : '全选',
+//			width : '180px',
+//			minimumCountSelected : 1,
+//			countSelected : '已选: #',
+//			allSelected : '已全选'
+//		});
+	});
+
 	self.refresh = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
@@ -20,11 +42,12 @@ var CompanyContext = function() {
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
 				data) {
 			self.clients(data.clients);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
 	};
+
 	self.search = function() {
 
 	};
@@ -54,7 +77,7 @@ var CompanyContext = function() {
 	self.startIndex = ko.computed(function() {
 		return (self.currentPage() - 1) * self.perPage;
 	});
-	
+
 	self.resetPage = function() {
 		self.currentPage(1);
 	};
