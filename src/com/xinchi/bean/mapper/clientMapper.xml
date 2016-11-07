@@ -21,6 +21,9 @@
 	    <result column="update_reason" property="update_reason" jdbcType="VARCHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
 	    <result column="pk" property="pk" jdbcType="CHAR" />
+	     <result column="sales" property="sales" jdbcType="VARCHAR" />
+	     <result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
+	     <result column="public_flg" property="public_flg" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
   </resultMap>
@@ -46,6 +49,9 @@
     	update_reason, 
     	comment, 
     	pk, 
+    	sales,
+    	sales_name,
+    	public_flg,
     	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -57,7 +63,7 @@
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from client
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </delete>
   
   <insert id="insert" parameterType="com.xinchi.bean.ClientBean" >
@@ -121,6 +127,15 @@
 	      </if>
 	 	<if test="pk != null">
 	        pk,
+	      </if>
+	      	<if test="sales != null">
+	        sales,
+	      </if>
+	      	<if test="sales_name != null">
+	        sales_name,
+	      </if>
+	      	<if test="public_flg != null">
+	        public_flg,
 	      </if>
       <if test="create_time != null">
         create_time,
@@ -186,6 +201,15 @@
 	      </if>
     	<if test="pk != null">
 	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="sales != null">
+	        #{sales,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sales_name != null">
+	        #{sales_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="public_flg != null">
+	        #{public_flg,jdbcType=CHAR},
 	      </if>
       <if test="create_time != null">
         #{create_time,jdbcType=VARCHAR},
@@ -260,6 +284,15 @@
     	<if test="comment != null">
 	        comment = #{comment,jdbcType=VARCHAR},
 	      </if>
+    	<if test="sales != null">
+	        sales = #{sales,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sales_name != null">
+	        sales_name = #{sales_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="public_flg != null">
+	        public_flg = #{public_flg,jdbcType=CHAR},
+	      </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
@@ -278,8 +311,8 @@
     <include refid="Base_Column_List" />
     from client
     <where>
-    	<if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+    	<if test="params.bo.sales != null and params.bo.sales !=''">
+	         and (sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') or public_flg ='Y')
 	      </if>
 	      	<if test="params.bo.client_name != null and params.bo.client_name !=''">
 	         and client_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')

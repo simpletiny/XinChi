@@ -8,12 +8,47 @@ var CompanyContext = function() {
 			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clientType = [ '独立注册', '分公司', '营业部', '包桌', '经纪人', '其他' ];
 
+	
+	self.sales = ko.observableArray([]);
+	self.choosenSales = ko.observableArray([]);
+	self.publicFlg = ko.observable("N");
+	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+		self.sales(data.users);
+	});
+	
+	self.publicClient = function() {
+		if ($("#check-public").is(":checked")) {
+			$("[st='sales']").attr("checked", false);
+			$("[st='sales']").attr("disabled", true);
+			self.publicFlg("Y");
+			self.choosenSales = ko.observableArray([]);
+		} else {
+			$("[st='sales']").attr("disabled", false);
+			self.publicFlg("N");
+		}
+		return true;
+	};
+	
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'client/searchOneCompany', {
 		client_pk : self.companyPk
 	}, function(data) {
 		if (data.client) {
 			self.client(data.client);
+			self.publicFlg(self.client().public_flg);
+			if (self.publicFlg() == "Y") {
+				$("#check-public").attr("checked", true);
+			} else {
+				$("#check-public").attr("checked", false);
+			}
+			self.publicClient();
+			
+			if (self.client().sales&&self.client().sales != "") {
+				$(self.client().sales.split(",")).each(function(idx, id) {
+					self.choosenSales.push(id);
+				});
+			}
+			
 		} else {
 			fail_msg("公司不存在！");
 		}
@@ -29,7 +64,8 @@ var CompanyContext = function() {
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'client/updateCompany',
-			data : $("form").serialize()
+			data : $("form").serialize()+ "&client.sales="
+			+ self.choosenSales()+"&client.public_flg="+self.publicFlg()
 		}).success(
 				function(str) {
 					if (str == "success") {

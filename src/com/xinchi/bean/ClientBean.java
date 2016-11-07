@@ -43,6 +43,10 @@ public class ClientBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String pk;
+	
+	private String sales;
+	private String sales_name;
+	private String public_flg;
 
 	public String getClient_name() {
 		return client_name;
@@ -194,6 +198,30 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getSales() {
+		return sales;
+	}
+
+	public void setSales(String sales) {
+		this.sales = sales;
+	}
+
+	public String getSales_name() {
+		return sales_name;
+	}
+
+	public void setSales_name(String sales_name) {
+		this.sales_name = sales_name;
+	}
+
+	public String getPublic_flg() {
+		return public_flg;
+	}
+
+	public void setPublic_flg(String public_flg) {
+		this.public_flg = public_flg;
 	}
 
 }

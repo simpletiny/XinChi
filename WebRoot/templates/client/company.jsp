@@ -67,8 +67,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>地区</th>
                             <th>负责人</th>
                             <th>手机号</th>
-                            <th>电话</th>
-                            <th>传真</th>
+                            <th>所属销售</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: clients">
@@ -79,8 +78,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.client_area"></td>
                             <td data-bind="text: $data.body_name"></td>
                             <td data-bind="text: $data.body_cellphone"></td>
-                            <td data-bind="text: $data.telephone"></td>
-                             <td data-bind="text: $data.fax"></td>            
+                             <!-- ko if:$data.public_flg =='Y' -->
+                            <td data-bind="text: $data.sales_name" style="color:red"></td>
+                            <!-- /ko -->
+                            <!-- ko if:$data.public_flg =='N' -->
+                            <td data-bind="text: $data.sales_name"></td>
+                            <!-- /ko -->        
                         </tr>
                     </tbody>
                 </table>

@@ -33,7 +33,7 @@ var EmployeeContext = function() {
 				$("#check-public").attr("checked", false);
 			}
 			self.publicClient();
-			if (self.employee().sales != "") {
+			if (self.employee().sales&& self.employee().sales != "") {
 				$(self.employee().sales.split(",")).each(function(idx, id) {
 					self.choosenSales.push(id);
 				});

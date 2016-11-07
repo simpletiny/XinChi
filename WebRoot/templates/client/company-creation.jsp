@@ -56,6 +56,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip"><input type="text" class="ip-" data-bind="value: client().address" placeholder="地址" name="client.address"/></textarea></div>
                     </div>
                 </div>
+                <div class="input-row clearfloat required">
+                    <div class="col-md-12">
+                        <label class="l">所属销售</label>
+                        <div class="ip">
+                            <div data-bind="foreach: sales">
+                                <em class="small-box">
+                                    <input type="checkbox" st="sales" name="choosenSales" required="required" data-bind="attr: {'value': $data.pk}, checked: $root.choosenSales"/><label data-bind="text: $data.user_name"></label>
+                                </em>
+                            </div>
+                              <em class="small-box">
+                                    <input type="checkbox" id="check-public" name="choosenSales" required="required" data-bind="click:publicClient"/><label style="color:red;">公开</label>
+                               </em>
+                        </div>
+                    </div>
+                </div>
                 <hr noshade color="#0066cc">
                  <h3>负责人信息</h3>
                 <div class="input-row clearfloat">
