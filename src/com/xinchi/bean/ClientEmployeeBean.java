@@ -18,7 +18,7 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	private String telephone;
 	private String fax;
-
+	private String type;
 	private String id;
 
 	private String financial_body_pk;
@@ -192,6 +192,14 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setPublic_flg(String public_flg) {
 		this.public_flg = public_flg;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

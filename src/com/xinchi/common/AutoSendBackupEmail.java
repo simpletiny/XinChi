@@ -1,4 +1,4 @@
-package com.xinchi.tools.main;
+package com.xinchi.common;
 
 import java.io.File;
 
@@ -7,14 +7,24 @@ import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 
-public class MailMain {
-	public static void main(String[] args) throws MessagingException {
+import org.springframework.stereotype.Service;
+
+import com.xinchi.tools.PropertiesUtil;
+import com.xinchi.tools.main.MailSender;
+import com.xinchi.tools.main.MailSenderInfo;
+import com.zeroturnaround.javarebel.cD;
+
+@Service
+public class AutoSendBackupEmail {
+
+	public void sendBackup(String[] param) throws MessagingException {
 		// 这个类主要是设置邮件
-		String serverHost = "smtp.163.com";
-		String serverPort = "25";
-		String sendUser = "simpletiny@163.com";
-		String sendPassword = "@141592st";
-		String subject = "test1 mail";
+		String serverHost = PropertiesUtil.getProperty("mailServerHost");
+		String serverPort = PropertiesUtil.getProperty("mailServerPort");
+		String sendUser = PropertiesUtil.getProperty("mailSendUser");
+		String sendPassword = PropertiesUtil.getProperty("mailSendPwd");
+
+		String subject = "sql backup";
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setMailServerHost(serverHost);
 		mailInfo.setMailServerPort(serverPort);
@@ -29,12 +39,13 @@ public class MailMain {
 		// 设置附件
 
 		MimeBodyPart attachmentPart = new MimeBodyPart();
-
-		FileDataSource source = new FileDataSource(new File(
-				"D:\\books\\通往奴役之路.CHM"));
+		String fileName = DateUtil.getDateStr("yyyyMMdd") + ".sql";
+		File file = new File(PropertiesUtil.getProperty("backupFolder")
+				+ fileName);
+		FileDataSource source = new FileDataSource(file);
 		attachmentPart.setDataHandler(new DataHandler(source));
-		attachmentPart.setFileName("bb.CHM");
-		
+		attachmentPart.setFileName(file.getName());
+
 		mailInfo.setContent("");
 		mailInfo.setAttachmentPart(attachmentPart);
 		// mailInfo.setContent(html);

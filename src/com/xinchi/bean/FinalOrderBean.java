@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class FinalOrderBean extends SupperBO implements Serializable {
@@ -11,6 +13,7 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 	private String product;
 
 	private String departure_date;
+	private String confirm_date;
 
 	private String return_date;
 
@@ -22,21 +25,25 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 
 	private String client_employee_name;
 
-	private java.math.BigDecimal receivable;
+	private BigDecimal receivable;
 
-	private java.math.BigDecimal received;
+	private BigDecimal received;
 
-	private java.math.BigDecimal client_debt;
+	private BigDecimal client_debt;
 
 	private String supplier_employee_pk;
 
 	private String supplier_employee_name;
 
-	private java.math.BigDecimal payable;
+	private BigDecimal payable;
 
-	private java.math.BigDecimal paid;
+	private BigDecimal paid;
 
-	private java.math.BigDecimal supplier_debt;
+	private BigDecimal supplier_debt;
+
+	private BigDecimal profit;
+
+	private BigDecimal per_profit;
 
 	private String create_user;
 	private String create_user_name;
@@ -45,8 +52,8 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String comment;
-	private java.math.BigDecimal traffic_payment;
-	private java.math.BigDecimal other_payment;
+	private BigDecimal traffic_payment;
+	private BigDecimal other_payment;
 	private String payment_comment;
 
 	public String getTeam_number() {
@@ -113,27 +120,27 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 		this.client_employee_name = client_employee_name;
 	}
 
-	public java.math.BigDecimal getReceivable() {
+	public BigDecimal getReceivable() {
 		return receivable;
 	}
 
-	public void setReceivable(java.math.BigDecimal receivable) {
+	public void setReceivable(BigDecimal receivable) {
 		this.receivable = receivable;
 	}
 
-	public java.math.BigDecimal getReceived() {
+	public BigDecimal getReceived() {
 		return received;
 	}
 
-	public void setReceived(java.math.BigDecimal received) {
+	public void setReceived(BigDecimal received) {
 		this.received = received;
 	}
 
-	public java.math.BigDecimal getClient_debt() {
+	public BigDecimal getClient_debt() {
 		return client_debt;
 	}
 
-	public void setClient_debt(java.math.BigDecimal client_debt) {
+	public void setClient_debt(BigDecimal client_debt) {
 		this.client_debt = client_debt;
 	}
 
@@ -153,27 +160,27 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 		this.supplier_employee_name = supplier_employee_name;
 	}
 
-	public java.math.BigDecimal getPayable() {
+	public BigDecimal getPayable() {
 		return payable;
 	}
 
-	public void setPayable(java.math.BigDecimal payable) {
+	public void setPayable(BigDecimal payable) {
 		this.payable = payable;
 	}
 
-	public java.math.BigDecimal getPaid() {
+	public BigDecimal getPaid() {
 		return paid;
 	}
 
-	public void setPaid(java.math.BigDecimal paid) {
+	public void setPaid(BigDecimal paid) {
 		this.paid = paid;
 	}
 
-	public java.math.BigDecimal getSupplier_debt() {
+	public BigDecimal getSupplier_debt() {
 		return supplier_debt;
 	}
 
-	public void setSupplier_debt(java.math.BigDecimal supplier_debt) {
+	public void setSupplier_debt(BigDecimal supplier_debt) {
 		this.supplier_debt = supplier_debt;
 	}
 
@@ -209,19 +216,19 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 		this.comment = comment;
 	}
 
-	public java.math.BigDecimal getOther_payment() {
+	public BigDecimal getOther_payment() {
 		return other_payment;
 	}
 
-	public void setOther_payment(java.math.BigDecimal other_payment) {
+	public void setOther_payment(BigDecimal other_payment) {
 		this.other_payment = other_payment;
 	}
 
-	public java.math.BigDecimal getTraffic_payment() {
+	public BigDecimal getTraffic_payment() {
 		return traffic_payment;
 	}
 
-	public void setTraffic_payment(java.math.BigDecimal traffic_payment) {
+	public void setTraffic_payment(BigDecimal traffic_payment) {
 		this.traffic_payment = traffic_payment;
 	}
 
@@ -239,6 +246,30 @@ public class FinalOrderBean extends SupperBO implements Serializable {
 
 	public void setCreate_user_name(String create_user_name) {
 		this.create_user_name = create_user_name;
+	}
+
+	public BigDecimal getPer_profit() {
+		return per_profit;
+	}
+
+	public void setPer_profit(BigDecimal per_profit) {
+		this.per_profit = per_profit;
+	}
+
+	public BigDecimal getProfit() {
+		return profit;
+	}
+
+	public void setProfit(BigDecimal profit) {
+		this.profit = profit;
+	}
+
+	public String getConfirm_date() {
+		return confirm_date;
+	}
+
+	public void setConfirm_date(String confirm_date) {
+		this.confirm_date = confirm_date;
 	}
 
 }

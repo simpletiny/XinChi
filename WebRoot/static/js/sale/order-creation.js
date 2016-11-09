@@ -58,7 +58,7 @@ var OrderContext = function() {
 								+ '</div>'
 								+ '<div class="col-md-6">'
 								+ '<label class="l">应付款</label>'
-								+ '<div class="ip"><input type="number" min="0" st="payable" class="ip-" placeholder="应付款" /></div>'
+								+ '<div class="ip"><input type="number" st="payable" class="ip-" placeholder="应付款" /></div>'
 								+ '</div>' + '</div>');
 	};
 

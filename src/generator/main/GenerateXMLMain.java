@@ -35,7 +35,7 @@ public class GenerateXMLMain {
 		for (String table : tablelist) {
 			createXmlAndBOByTabName(table);
 		}*/
-		String table = "final_order";
+		String table = "team_number";
 		createXmlAndBOByTabName(table);
 		
 	}

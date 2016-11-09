@@ -5,6 +5,7 @@ var EmployeeContext = function() {
 	self.employeePk = $("#employee_key").val();
 	self.employee = ko.observable({});
 	self.genders = [ '男', '女' ];
+	self.employeeType = ['未知','员工','老板','包桌'];
 	// self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
 	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	self.sales = ko.observableArray([]);

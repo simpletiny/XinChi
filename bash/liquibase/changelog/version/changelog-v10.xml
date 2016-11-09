@@ -300,7 +300,7 @@
 			<comment>create table sale_order</comment>
 		</sql>
 	</changeSet>
-    <changeSet id="13" author="simpletiny">
+	<changeSet id="13" author="simpletiny">
 		<sql>
             <![CDATA[
                 DROP TABLE IF EXISTS sale_order_supplier;
@@ -323,7 +323,7 @@
 			<comment>create table sale_order_supplier</comment>
 		</sql>
 	</changeSet>
-    <changeSet id="14" author="simpletiny">
+	<changeSet id="14" author="simpletiny">
 		<sql>
             <![CDATA[
                 DROP TABLE IF EXISTS sale_order_name_list;
@@ -343,7 +343,7 @@
 			<comment>create table sale_order_name_list</comment>
 		</sql>
 	</changeSet>
-    <changeSet id="15" author="simpletiny">
+	<changeSet id="15" author="simpletiny">
 		<sql>
             <![CDATA[
                 DROP TABLE IF EXISTS client_received_detail;
@@ -366,7 +366,7 @@
 			<comment>create table client_received_detail</comment>
 		</sql>
 	</changeSet>
-    <changeSet id="16" author="simpletiny">
+	<changeSet id="16" author="simpletiny">
 		<sql>
             <![CDATA[
                 DROP TABLE IF EXISTS supplier_paid_detail;
@@ -389,7 +389,7 @@
 			<comment>create table supplier_paid_detail</comment>
 		</sql>
 	</changeSet>
-    <changeSet id="17" author="simpletiny">
+	<changeSet id="17" author="simpletiny">
 		<sql>
             <![CDATA[
               ALTER TABLE sale_order ADD COLUMN comment VARCHAR(200) NULL  AFTER pk ;
@@ -430,7 +430,7 @@
 			<comment>create table sale_order</comment>
 		</sql>
 	</changeSet>
-	  <changeSet id="19" author="simpletiny">
+	<changeSet id="19" author="simpletiny">
 		<sql>
             <![CDATA[
                 DROP TABLE IF EXISTS sale_order_supplier;
@@ -453,7 +453,7 @@
 			<comment>create table sale_order_supplier</comment>
 		</sql>
 	</changeSet>
-	    <changeSet id="20" author="simpletiny">
+	<changeSet id="20" author="simpletiny">
 		<sql>
             <![CDATA[
               ALTER TABLE budget_order ADD COLUMN comment VARCHAR(200) NULL  AFTER pk ;
@@ -497,7 +497,7 @@
 			<comment>create table final_order</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="22" author="simpletiny">
+	<changeSet id="22" author="simpletiny">
 		<sql>
             <![CDATA[
           		CREATE  TABLE final_order_supplier (
@@ -519,7 +519,7 @@
 			<comment>create table final_order_supplier</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="23" author="simpletiny">
+	<changeSet id="23" author="simpletiny">
 		<sql>
             <![CDATA[
           		ALTER TABLE client_received_detail CHANGE COLUMN received_time received_time VARCHAR(16) NOT NULL ;
@@ -527,7 +527,7 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="24" author="simpletiny">
+	<changeSet id="24" author="simpletiny">
 		<sql>
             <![CDATA[
           		ALTER TABLE final_order DROP COLUMN air_payment , DROP COLUMN ticket , DROP COLUMN flight , ADD COLUMN other_payment DECIMAL(12,2) NULL  AFTER comment ;
@@ -536,7 +536,7 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="25" author="simpletiny">
+	<changeSet id="25" author="simpletiny">
 		<sql>
             <![CDATA[
           		ALTER TABLE final_order ADD COLUMN traffic_payment DECIMAL(12,2) NULL  AFTER other_payment ;
@@ -546,7 +546,7 @@
 			<comment>ALTER TABLE final_order</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="26" author="simpletiny">
+	<changeSet id="26" author="simpletiny">
 		<sql>
             <![CDATA[
 					ALTER TABLE budget_order ADD COLUMN payment_comment VARCHAR(200) NULL  AFTER comment;
@@ -555,7 +555,7 @@
 			<comment>ALTER TABLE final_order and budget_order</comment>
 		</sql>
 	</changeSet>
-	 <changeSet id="27" author="simpletiny">
+	<changeSet id="27" author="simpletiny">
 		<sql>
             <![CDATA[
 				ALTER TABLE budget_order ADD COLUMN final_flg CHAR(1) NULL DEFAULT 'N'  AFTER payment_comment;
@@ -564,7 +564,7 @@
 			<comment>ALTER TABLE budget_order</comment>
 		</sql>
 	</changeSet>
-	
+
 	<changeSet id="28" author="simpletiny">
 		<sql>
             <![CDATA[
@@ -601,12 +601,106 @@
 			<comment>ALTER TABLE client_employee and client</comment>
 		</sql>
 	</changeSet>
-		<changeSet id="32" author="simpletiny">
+	<changeSet id="32" author="simpletiny">
 		<sql>
             <![CDATA[
             	UPDATE client set public_flg='Y',sales='',sales_name='公开';
           		            ]]>
 			<comment>update table client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP TABLE IF EXISTS task;
+              	CREATE  TABLE task (
+					  executor VARCHAR(100) NULL ,
+					  method VARCHAR(100) NULL ,
+					  parameters VARCHAR(100) NULL ,
+					  taskType CHAR(1) NULL ,
+					  executeTime TIMESTAMP NULL ,
+					  isdone CHAR(1) NULL ,
+					  create_time VARCHAR(15) NULL ,
+					  update_time VARCHAR(15) NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					  DEFAULT CHARACTER SET = utf8
+					  COLLATE = utf8_bin;
+          		            ]]>
+			<comment>ALTER TABLE task</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+					insert into task values('autoSendBackupEmail','sendBackup','','2','2016-11-08 20:00:00','N','','','tasksendbackupmail');
+          		            ]]>
+			<comment>insert data to task</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+					CREATE  TABLE team_number (
+					  team_number VARCHAR(10) NOT NULL ,
+					  sale_pk CHAR(22) NOT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '销售团号表';
+          		            ]]>
+			<comment>CREATE TABLE team_number</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE budget_order ADD COLUMN confirm_date VARCHAR(10) NULL  AFTER departure_date;
+		
+          		            ]]>
+			<comment>ALTER TABLE budget_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE final_order ADD COLUMN confirm_date VARCHAR(15) NULL  AFTER departure_date ;
+		
+          		            ]]>
+			<comment>ALTER TABLE final_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+					update budget_order set confirm_date='2016-11-01' where create_time <'1478620800985';
+					update budget_order set confirm_date='2016-11-09' where create_time >'1478620800985';
+					update final_order set confirm_date='2016-11-01' where create_time <'1478620800985';
+					update final_order set confirm_date='2016-11-09' where create_time >'1478620800985';
+		
+          		            ]]>
+			<comment>update old order confirm_date </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+					update client set client_type='总公司' where client_type='独立注册';
+					update client set client_type='包桌' where client_type='其他';
+          		            ]]>
+			<comment>update old client_type </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_employee ADD COLUMN type VARCHAR(10) NULL DEFAULT '未知'  AFTER name ;
+
+          		            ]]>
+			<comment>ALTER TABLE client_employee </comment>
 		</sql>
 	</changeSet>
 </databaseChangeLog>

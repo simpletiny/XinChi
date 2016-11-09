@@ -49,9 +49,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
                 <div class="input-row clearfloat">
-                    <div class="col-md-6">
+                    <div class="col-md-6 required">
                         <label class="l">人数</label>
-                        <div class="ip" style="width:30%"><input type="number" class="ip-" id="people-count" data-bind="value:order().people_count" placeholder="人数" name="order.people_count"/></div>
+                        <div class="ip" style="width:30%"><input type="number" class="ip-" id="people-count" data-bind="value:order().people_count" placeholder="人数" min="1" name="order.people_count" required="required"/></div>
                    		<div class="ip" style="width:30%"><a type="submit" style="display:none" class="btn btn-green btn-r" data-bind="click: recordNameList">名单</a></div>
                     </div>
                     <div class="col-md-6 ">
@@ -59,7 +59,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip"><input type="number"  class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
                     </div>
                 </div>
-                 
+               <div class="input-row clearfloat ">
+                    <div class="col-md-6 required">
+                        <label class="l">确认日期</label>
+                        <div class="ip"><input type="text" id="departure" class="ip- date-picker"  data-bind="value: order().confirm_date" placeholder="确认日期" name="order.confirm_date" required="required"/></div>
+                    </div>
+                </div>
                 <div class="input-row clearfloat" st="supplier">
                     <div class="col-md-6">
                         <label class="l">供应商</label>

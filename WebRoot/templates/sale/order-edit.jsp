@@ -63,6 +63,12 @@ String key = request.getParameter("key");
                         <div class="ip"><input type="number"  class="ip-" id="air-pay" data-bind="value: order().traffic_payment" placeholder="大交通费用" name="order.traffic_payment" /></div>
                     </div>
                 </div>
+                <div class="input-row clearfloat ">
+                    <div class="col-md-6 required">
+                        <label class="l">确认日期</label>
+                        <div class="ip"><input type="text" id="departure" class="ip- date-picker"  data-bind="value: order().confirm_date" placeholder="确认日期" name="order.confirm_date" required="required"/></div>
+                    </div>
+                </div>
                   <!-- ko foreach: suppliers -->
                 <div class="input-row clearfloat" st="supplier">
                     <div class="col-md-6">
@@ -117,14 +123,14 @@ String key = request.getParameter("key");
       <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
   </div>
 
-   <div id="client-pick" style="display:none;">
+  <div id="client-pick" style="display:none;">
       <div class="main-container">
        <div class="main-box"style="width:600px">
          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">姓名</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="client_name" class="form-control"  placeholder="姓名" />
                </div>
            </div>
            <div>
@@ -146,6 +152,18 @@ String key = request.getParameter("key");
                         </tr>
                     </tbody>
                 </table>
+                 <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>
@@ -154,15 +172,15 @@ String key = request.getParameter("key");
    <div id="supplier-pick" style="display:none;">
       <div class="main-container">
        <div class="main-box"style="width:600px">
-         <div class="form-group">
+          <div class="form-group">
            <div class="span8">
-               <label class="col-md-2 control-label">关键字</label>
+               <label class="col-md-2 control-label">姓名</label>
                <div class="col-md-6">
-                   <input type="text" class="form-control"  placeholder="关键字">
+                   <input type="text" id="supplier_name" class="form-control"  placeholder="姓名" />
                </div>
            </div>
            <div>
-               <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { searchSupplierEmployee() }">搜索</button>
+               <button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
            </div>
        </div>
              <div class="list-result">
@@ -180,6 +198,18 @@ String key = request.getParameter("key");
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
             </div>
        </div>
        </div>

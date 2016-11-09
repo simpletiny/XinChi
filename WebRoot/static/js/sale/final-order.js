@@ -7,12 +7,45 @@ var OrderContext = function() {
 		items : []
 	});
 	
+	self.dateFrom = ko.observable();
+	self.dateTo = ko.observable();
+	var x = new Date();
+	self.dateTo(x.Format("yyyy-MM-")+x.getDaysInMonth());
+	self.dateFrom(x.Format("yyyy-MM-")+"01");
+	
+	// 计算合计
+	self.totalPeople = ko.observable(0);
+	self.totalReceivable = ko.observable(0);
+	self.totalPayable = ko.observable(0);
+	self.totalProfit = ko.observable(0);
+	self.totalPerProfit = ko.observable(0);
+	
 	self.refresh = function() {
+		var totalPeople = 0;
+		var totalReceivable = 0;
+		var totalPayable = 0;
+		var totalProfit = 0;
+		var totalPerProfit = 0;
+		
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'sale/searchFinalOrdersByPage', param, function(data) {
 			self.orders(data.orders);
+			
+			// 计算合计
+			$(self.orders()).each(function(idx, data) {
+				totalPeople += data.people_count;
+				totalReceivable += data.receivable;
+				totalPayable += data.payable;
+				totalProfit += data.profit;
+			});
+			
+			self.totalPeople(totalPeople);
+			self.totalReceivable(totalReceivable);
+			self.totalPayable(totalPayable);
+			self.totalProfit(totalProfit);
+			self.totalPerProfit((totalProfit/totalPeople).toFixed(2));
 			
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());

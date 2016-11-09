@@ -7,47 +7,49 @@ import com.xinchi.common.SupperBO;
 public class TaskBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private java.lang.String executor;
+	private String executor;
 
-	private java.lang.String method;
+	private String method;
 
-	private java.lang.String parameters;
+	private String parameters;
 
-	private java.lang.String taskType;
+	private String taskType;
 
 	private java.sql.Timestamp executeTime;
 
-	private java.lang.String isdone;
+	private String isdone;
 
-	public java.lang.String getExecutor() {
+	private String pk;
+
+	public String getExecutor() {
 		return executor;
 	}
 
-	public void setExecutor(java.lang.String executor) {
+	public void setExecutor(String executor) {
 		this.executor = executor;
 	}
 
-	public java.lang.String getMethod() {
+	public String getMethod() {
 		return method;
 	}
 
-	public void setMethod(java.lang.String method) {
+	public void setMethod(String method) {
 		this.method = method;
 	}
 
-	public java.lang.String getParameters() {
+	public String getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(java.lang.String parameters) {
+	public void setParameters(String parameters) {
 		this.parameters = parameters;
 	}
 
-	public java.lang.String getTaskType() {
+	public String getTaskType() {
 		return taskType;
 	}
 
-	public void setTaskType(java.lang.String taskType) {
+	public void setTaskType(String taskType) {
 		this.taskType = taskType;
 	}
 
@@ -59,12 +61,20 @@ public class TaskBean extends SupperBO implements Serializable {
 		this.executeTime = executeTime;
 	}
 
-	public java.lang.String getIsdone() {
+	public String getIsdone() {
 		return isdone;
 	}
 
-	public void setIsdone(java.lang.String isdone) {
+	public void setIsdone(String isdone) {
 		this.isdone = isdone;
+	}
+
+	public String getPk() {
+		return pk;
+	}
+
+	public void setPk(String pk) {
+		this.pk = pk;
 	}
 
 }

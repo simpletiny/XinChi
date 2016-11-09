@@ -248,7 +248,11 @@ public class DaoUtil {
 		}
 		return sqlSession.update(mapper, supperBO);
 	}
-
+	
+	public int sysUpdateByPK(String mapper, SupperBO supperBO) {
+		supperBO.setUpdate_time(DateUtil.getTimeMillis());
+		return sqlSession.update(mapper, supperBO);
+	}
 	/**
 	 * 根据BO修改记录
 	 * 

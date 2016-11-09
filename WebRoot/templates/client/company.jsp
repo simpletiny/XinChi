@@ -69,9 +69,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <thead>
                         <tr role="row">
                         	<th></th>
-                            <th>财务主体简称</th>
-                            <th>类型</th>
+                            <th>简称</th>
                             <th>地区</th>
+                            <th>类型</th>
+                            <th>全称</th>
                             <th>负责人</th>
                             <th>手机号</th>
                             <th>所属销售</th>
@@ -81,8 +82,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a> </td>
-                            <td data-bind="text: $data.client_type"></td>
                             <td data-bind="text: $data.client_area"></td>
+                            <td data-bind="text: $data.client_type"></td>
+                            <td data-bind="text: $data.client_name"></td>
                             <td data-bind="text: $data.body_name"></td>
                             <td data-bind="text: $data.body_cellphone"></td>
                              <!-- ko if:$data.public_flg =='Y' -->

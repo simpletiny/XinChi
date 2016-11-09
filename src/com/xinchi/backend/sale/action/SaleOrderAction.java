@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.backend.util.service.TeamNumberService;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -37,6 +38,9 @@ public class SaleOrderAction extends BaseAction {
 	@Autowired
 	private SaleOrderService saleOrderService;
 
+	@Autowired
+	private TeamNumberService teamNumberService;
+
 	/**
 	 * 创建订单
 	 * 
@@ -44,7 +48,7 @@ public class SaleOrderAction extends BaseAction {
 	 * @throws ParseException
 	 */
 	public String createOrder() {
-		String team_number = generateTeamNumber(order.getDeparture_date());
+		String team_number = teamNumberService.generateTeamNumber();
 		order.setTeam_number(team_number);
 
 		// 保存名单
@@ -114,21 +118,6 @@ public class SaleOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	/**
-	 * 生成团号
-	 * 
-	 * @return
-	 */
-	private String generateTeamNumber(String departure_date) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String number = departure_date.replaceAll("-", "");
-		String d = DateUtil.getDateStr("HHmm");
-		number += d;
-		number = sessionBean.getUser_number() + number;
-		return number;
-	}
-
 	private List<BudgetOrderBean> orders;
 
 	public String searchOrder() {
@@ -142,7 +131,7 @@ public class SaleOrderAction extends BaseAction {
 		orders = saleOrderService.searchOrders(order);
 		return SUCCESS;
 	}
-	
+
 	public String searchOrderByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -150,11 +139,11 @@ public class SaleOrderAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order.setCreate_user(sessionBean.getUser_number());
 		}
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", order);
 		page.setParams(params);
-		
+
 		orders = saleOrderService.searchOrdersByPage(page);
 		return SUCCESS;
 	}

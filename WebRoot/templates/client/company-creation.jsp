@@ -27,7 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">主体简称</label>
-                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: client().client_short_name" placeholder="主体简称" name="client.client_short_name" required="required"/></div>
+                        <div class="ip"><input type="text" maxlength="8" id="name" class="ip-default" data-bind="value: client().client_short_name" placeholder="主体简称" name="client.client_short_name" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

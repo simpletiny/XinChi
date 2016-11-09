@@ -6,6 +6,7 @@
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
 	    <result column="product" property="product" jdbcType="VARCHAR" />
 	    <result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+	    <result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
 	    <result column="return_date" property="return_date" jdbcType="VARCHAR" />
 	    <result column="days" property="days" jdbcType="INTEGER" />
 	    <result column="traffic_payment" property="traffic_payment" jdbcType="DECIMAL" />
@@ -19,6 +20,8 @@
 	    <result column="paid" property="paid" jdbcType="DECIMAL" />
 	    <result column="supplier_debt" property="supplier_debt" jdbcType="DECIMAL" />
 	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
+	    <result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
+	    <result column="per_profit" property="per_profit" jdbcType="DECIMAL" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	    <result column="create_user_name" property="create_user_name" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
@@ -35,6 +38,7 @@
     	team_number, 
     	product, 
     	departure_date, 
+    	confirm_date,
     	return_date, 
     	days, 
     	traffic_payment, 
@@ -81,6 +85,9 @@
 	      </if>
 	 	<if test="departure_date != null">
 	        departure_date,
+	      </if>
+	 	<if test="confirm_date != null">
+	        confirm_date,
 	      </if>
 	 	<if test="return_date != null">
 	        return_date,
@@ -155,6 +162,9 @@
 	      </if>
     	<if test="departure_date != null">
 	        #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="confirm_date != null">
+	        #{confirm_date,jdbcType=VARCHAR},
 	      </if>
     	<if test="return_date != null">
 	        #{return_date,jdbcType=VARCHAR},
@@ -234,6 +244,9 @@
 	      </if>
     	<if test="departure_date != null">
 	        departure_date = #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="confirm_date != null">
+	        confirm_date = #{confirm_date,jdbcType=VARCHAR},
 	      </if>
     	<if test="return_date != null">
 	        return_date = #{return_date,jdbcType=VARCHAR},
@@ -317,6 +330,7 @@
    		A.team_number, 
     	A.product, 
     	A.departure_date, 
+    	A.confirm_date,
     	A.return_date, 
     	A.days, 
     	A.traffic_payment, 
@@ -330,6 +344,8 @@
     	A.paid, 
     	A.supplier_debt, 
     	A.other_payment, 
+    	(A.receivable - A.payable) as gross_profit,
+    	CONVERT((A.receivable - A.payable)/A.people_count,decimal(12,2)) as per_profit,
     	A.create_user,
     	B.user_name as create_user_name,
     	A.update_user, 
@@ -340,7 +356,8 @@
     	A.create_time,
     	A.update_time
     from budget_order A LEFT JOIN user_base B ON A.create_user = B.user_number
-        <where>
+    <where>
+        A.final_flg = 'N'
     	<if test="params.bo.create_user != null and params.bo.create_user !=''">
 	         and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
 	      </if>
@@ -353,10 +370,16 @@
 	      	<if test="params.bo.final_flg != null and params.bo.final_flg !=''">
 	         and A.final_flg = #{params.bo.final_flg,jdbcType=VARCHAR}
 	      </if>
-	      	<if test="params.bo.create_user_name != null and params.bo.create_user_name !=''">
+	      <if test="params.bo.create_user_name != null and params.bo.create_user_name !=''">
 	         and B.user_name = #{params.bo.create_user_name,jdbcType=VARCHAR}
 	      </if>
+	      <if test="params.bo.date_from != null and params.bo.date_from !=''">
+	         and A.confirm_date  &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+	      </if>
+	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
+	         and A.confirm_date  &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+	      </if>
     </where> 
- 
+ 	ORDER BY A.departure_date
    </select>
 </mapper>

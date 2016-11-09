@@ -27,27 +27,27 @@ public class XinChiTaskDAOImpl extends SqlSessionDaoSupport implements XinChiTas
 
 	@Override
 	public void insert(TaskBean bo) {
-		daoUtil.insertBO("seentao.xhsn.bean.mappers.HsTaskBOMapper.insert", bo);
+		daoUtil.insertBO("com.xinchi.bean.mapper.TaskMapper.insert", bo);
 	}
 
 	@Override
 	public void update(TaskBean bo) {
-		daoUtil.updateByPK("seentao.xhsn.bean.mappers.HsTaskBOMapper.updateByPrimaryKey", bo);
+		daoUtil.sysUpdateByPK("com.xinchi.bean.mapper.TaskMapper.updateByPrimaryKey", bo);
 	}
 
 	@Override
 	public void delete(String id) {
-		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.HsTaskBOMapper.deleteByPrimaryKey", id);
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.TaskMapper.deleteByPrimaryKey", id);
 	}
 
 	@Override
 	public TaskBean selectByPrimaryKey(String id) {
-		return (TaskBean) daoUtil.selectByPK("seentao.xhsn.bean.mappers.HsTaskBOMapper.selectByPrimaryKey", id);
+		return (TaskBean) daoUtil.selectByPK("com.xinchi.bean.mapper.TaskMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<TaskBean> getAllByParam(TaskBean bo) {
-		List<TaskBean> list = daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.HsTaskBOMapper.selectByParam", bo);
+		List<TaskBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.TaskMapper.selectByParam", bo);
 		return list;
 	}
 

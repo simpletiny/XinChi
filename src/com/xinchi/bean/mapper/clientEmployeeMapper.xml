@@ -6,6 +6,7 @@
 	    <result column="sex" property="sex" jdbcType="CHAR" />
 	    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
 	    <result column="qq" property="qq" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
 	    <result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
 	    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
 	    <result column="fax" property="fax" jdbcType="VARCHAR" />
@@ -31,6 +32,7 @@
     	sex, 
     	wechat, 
     	qq, 
+    	type,
     	cellphone, 
     	telephone, 
     	fax,
@@ -77,6 +79,9 @@
 	      </if>
 	 	<if test="qq != null">
 	        qq,
+	      </if>
+	 	<if test="type != null">
+	        type,
 	      </if>
 	 	<if test="cellphone != null">
 	        cellphone,
@@ -142,6 +147,9 @@
 	      </if>
     	<if test="qq != null">
 	        #{qq,jdbcType=VARCHAR},
+	      </if>
+    	<if test="type != null">
+	        #{type,jdbcType=VARCHAR},
 	      </if>
     	<if test="cellphone != null">
 	        #{cellphone,jdbcType=VARCHAR},
@@ -213,6 +221,9 @@
     	<if test="qq != null">
 	        qq = #{qq,jdbcType=VARCHAR},
 	      </if>
+    	<if test="type != null">
+	        type = #{type,jdbcType=VARCHAR},
+	      </if>
     	<if test="cellphone != null">
 	        cellphone = #{cellphone,jdbcType=VARCHAR},
 	      </if>
@@ -283,6 +294,7 @@
     	A.sex, 
     	A.wechat, 
     	A.qq, 
+    	A.type,
     	A.cellphone, 
     	A.telephone, 
     	A.fax,
