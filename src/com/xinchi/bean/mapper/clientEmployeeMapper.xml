@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientEmployeeBean" >
 	    <result column="name" property="name" jdbcType="VARCHAR" />
 	    <result column="sex" property="sex" jdbcType="CHAR" />
+	    <result column="age" property="age" jdbcType="VARCHAR" />
 	    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
 	    <result column="qq" property="qq" jdbcType="VARCHAR" />
 	    <result column="type" property="type" jdbcType="VARCHAR" />
@@ -292,6 +293,7 @@
    select 
     	A.name, 
     	A.sex, 
+    	CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year END as age,
     	A.wechat, 
     	A.qq, 
     	A.type,

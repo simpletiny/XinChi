@@ -2,7 +2,6 @@ var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.detail = ko.observable({});
-	self.type = [ '收入', '支出' ];
 	self.accounts = ko.observableArray([]);
 	self.balance = '0';
 	self.initBalance = "0";
@@ -17,18 +16,19 @@ var DetailContext = function() {
 	});
 
 	self.changeAccount = function() {
+		if (self.detail().account == "") {
+			self.balance = 0;
+			self.initBalance = 0;
+			return;
+		}
+
 		$.getJSON(self.apiurl + 'finance/getAccountBalance', {
 			account : self.detail().account
 		}, function(data) {
-			if (data) {
-				self.balance = data;
-				self.initBalance = data;
-				self.calculateBalance();
-				$("#p-balance").text(self.balance);
-				
-			} else {
-				fail_msg("无法查询余额！");
-			}
+			self.balance = data;
+			self.initBalance = data;
+			self.calculateBalance();
+			$("#p-balance").text(self.balance);
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
@@ -36,17 +36,9 @@ var DetailContext = function() {
 	};
 	// 计算余额
 	self.calculateBalance = function() {
-		if ($("#sec-type").val() != "" && $("#txt-money").val() != "") {
-			if ($("#sec-type").val() == "收入") {
-				self.balance = (self.initBalance - 0)
-						+ ($("#txt-money").val() - 0);
-				$("#p-balance").text(self.balance);
-			} else if ($("#sec-type").val() == "支出") {
-				self.balance = (self.initBalance - 0)
-						- ($("#txt-money").val() - 0);
-				$("#p-balance").text(self.balance);
-			}
-		}
+		self.balance = (self.initBalance - 0) + ($("#txt-money").val() - 0);
+		$("#p-balance").text(self.balance);
+
 	};
 
 	self.createDetail = function() {
@@ -68,6 +60,7 @@ var DetailContext = function() {
 								url : self.apiurl + 'finance/createDetail',
 								data : $("form").serialize()
 										+ "&detail.balance=" + self.balance
+										+ "&detail.type=收入"
 							}).success(
 							function(str) {
 								if (str == "success") {

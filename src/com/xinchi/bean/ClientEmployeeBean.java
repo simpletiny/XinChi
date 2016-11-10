@@ -9,7 +9,7 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String name;
 
 	private String sex;
-
+	private String age;
 	private String wechat;
 
 	private String qq;
@@ -200,6 +200,14 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
 	}
 
 }

@@ -20,6 +20,9 @@
 	    <action name="createDetail" class="paymentDetailAction" method="createDetail">
 			<result name="success" type="str">resultStr</result>
 		</action>
+	    <action name="createInnerDetail" class="paymentDetailAction" method="createInnerDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchDetail" class="paymentDetailAction" method="searchDetail">
 			<result name="success" type="json"></result>
 		</action>

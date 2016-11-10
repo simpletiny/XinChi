@@ -3,9 +3,10 @@ var DetailContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.type = [ '收入', '支出' ];
 	self.chosenCards = ko.observableArray([]);
-	self.createDetail = function() {
-		window.location.href = self.apiurl
-				+ "templates/finance/detail-creation.jsp";
+
+	self.createDetail = function(type) {
+		window.location.href = self.apiurl + "templates/finance/" + type
+				+ "-detail-creation.jsp";
 	};
 
 	self.details = ko.observable({
@@ -16,7 +17,8 @@ var DetailContext = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
-		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(
+				data) {
 			self.details(data.details);
 		});
 	};
@@ -35,7 +37,7 @@ var DetailContext = function() {
 	self.startIndex = ko.computed(function() {
 		return (self.currentPage() - 1) * self.perPage;
 	});
-	
+
 	self.resetPage = function() {
 		self.currentPage(1);
 	};

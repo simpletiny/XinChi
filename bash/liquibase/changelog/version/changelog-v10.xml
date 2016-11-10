@@ -703,4 +703,14 @@
 			<comment>ALTER TABLE client_employee </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE payment_detail ADD COLUMN inner_flg CHAR(1) NULL DEFAULT 'N'  AFTER comment ;
+				ALTER TABLE payment_detail ADD COLUMN inner_pk CHAR(22) NULL  AFTER inner_flg ;
+				
+          		            ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

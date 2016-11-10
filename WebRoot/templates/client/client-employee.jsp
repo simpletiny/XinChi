@@ -83,6 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<th></th>
                             <th>姓名</th>
                             <th>性别</th>
+                            <th>年龄</th>
                             <th>类型</th>
                             <th>地区</th>
                             <th>客户简称</th>
@@ -96,6 +97,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a> </td>
                             <td data-bind="text: $data.sex"></td>
+                            <td data-bind="text: $data.age"></td>
                             <td data-bind="text: $data.type"></td>
                             <td data-bind="text: $data.area"></td>
                             <td data-bind="text: $data.financial_body_name"></td>

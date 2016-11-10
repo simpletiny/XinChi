@@ -35,7 +35,7 @@ String key = request.getParameter("key");
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" maxlength="11"  data-bind="value: employee().cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip- cellphone" maxlength="11"  data-bind="value: employee().cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
@@ -51,7 +51,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6">
                         <label class="l">出生年</label>
-                        <div class="ip"><input type="text" class="ip-" maxlength="4" data-bind="value: employee().birth_year" placeholder="出生年" name="employee.birth_year" /></div>
+                        <div class="ip"><input type="text" class="ip- date_year" maxlength="4" data-bind="value: employee().birth_year" placeholder="出生年" name="employee.birth_year" /></div>
                     </div>
 
                 </div>

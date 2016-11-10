@@ -96,11 +96,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_cellphone" placeholder="手机号" name="client.body_cellphone" required="required"/></div>
+                        <div class="ip"><input type="text" maxlength="11" class="ip- cellphone" data-bind="value: client().body_cellphone" placeholder="手机号" name="client.body_cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6">
                         <label class="l">出生年</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: client().body_birth_year" placeholder="出生年" name="client.body_birth_year" /></div>
+                        <div class="ip"><input type="text" maxlength="4" class="ip- date_year" data-bind="value: client().body_birth_year" placeholder="出生年" name="client.body_birth_year" /></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

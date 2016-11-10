@@ -2,6 +2,7 @@ package com.xinchi.backend.finance.service;
 
 import java.util.List;
 
+import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.tools.Page;
 
@@ -12,4 +13,6 @@ public interface PaymentDetailService {
 
 	public List<PaymentDetailBean> getAllDetailsByPage(
 			Page<PaymentDetailBean> page);
+
+	public void saveInnerDetail(InnerTransferBean innerTransfer);
 }

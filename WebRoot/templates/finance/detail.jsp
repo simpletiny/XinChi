@@ -26,9 +26,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     .form-control{ height: 30px; }
                 </style>
                     <div class="form-group" >
-	                    <div style="width:10%;float:right">
+	                    <div style="float:right">
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail() }">新建</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('receive') }">收入</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('pay') }">支出</button>
+		                         <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('inner') }">内转</button>
 		                    </div>
 		                 </div>
 	                </div>

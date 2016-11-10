@@ -15,8 +15,9 @@ var OrderContext = function() {
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	var x = new Date();
-	self.dateTo(x.Format("yyyy-MM-")+x.getDaysInMonth());
-	self.dateFrom(x.Format("yyyy-MM-")+"01");
+	//self.dateTo(x.Format("yyyy-MM-")+x.getDaysInMonth());
+	self.dateTo(x.Format("yyyy-MM-dd"));
+	self.dateFrom(x.Format("yyyy-MM-dd"));
 	
 	// 计算合计
 	self.totalPeople = ko.observable(0);

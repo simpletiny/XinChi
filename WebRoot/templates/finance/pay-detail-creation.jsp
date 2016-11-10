@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>新建明细<a href="<%=basePath %>/templates/finance/detail.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>支出<a href="<%=basePath %>/templates/finance/detail.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -32,10 +32,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                 </div>
                 <div class="input-row clearfloat">
-                    <div class="col-md-6 required">
-                        <label class="l">收/支</label>
-                        <div class="ip"><select class="form-control" id='sec-type' data-bind="options: type, optionsCaption: '-- 请选择 --', value: detail().type,event:{change:calculateBalance}" name="detail.type" required="required"></select></div>
-                    </div>
 					 <div class="col-md-6 required">
                         <label class="l">发生金额</label>
                         <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money,event:{keyup:calculateBalance}" placeholder="发生金额" name="detail.money" required="required"/></div>
@@ -68,6 +64,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>
     <script src="<%=basePath %>static/js/validation.js"></script>
      <script src="<%=basePath %>static/js/datepicker.js"></script>
-  <script src="<%=basePath %>static/js/finance/detail-creation.js"></script>
+  <script src="<%=basePath %>static/js/finance/pay-detail-creation.js"></script>
 </body>
 </html>

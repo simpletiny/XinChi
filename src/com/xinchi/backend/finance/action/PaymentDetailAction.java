@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.ResourcesConstants;
 
 @Controller
 @Scope("prototype")
@@ -27,6 +27,19 @@ public class PaymentDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private InnerTransferBean innerTransfer;
+
+	/**
+	 * 创建内转详情
+	 * 
+	 * @return
+	 */
+	public String createInnerDetail() {
+		pds.saveInnerDetail(innerTransfer);
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	List<PaymentDetailBean> details;
 
 	public String searchDetail() {
@@ -35,11 +48,11 @@ public class PaymentDetailAction extends BaseAction {
 	}
 
 	public String searchDetailByPage() {
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", detail);
 		page.setParams(params);
-		
+
 		details = pds.getAllDetailsByPage(page);
 		return SUCCESS;
 	}
@@ -58,5 +71,13 @@ public class PaymentDetailAction extends BaseAction {
 
 	public void setDetails(List<PaymentDetailBean> details) {
 		this.details = details;
+	}
+
+	public InnerTransferBean getInnerTransfer() {
+		return innerTransfer;
+	}
+
+	public void setInnerTransfer(InnerTransferBean innerTransfer) {
+		this.innerTransfer = innerTransfer;
 	}
 }

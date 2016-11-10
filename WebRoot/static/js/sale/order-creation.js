@@ -9,7 +9,10 @@ var OrderContext = function() {
 
 	self.clientEmployees = ko.observable({});
 	self.supplierEmployees = ko.observable({});
-
+	 
+	var x = new Date();
+	self.order().confirm_date =x.Format("yyyy-MM-dd");
+	
 	self.refreshClient = function() {
 		var param = "employee.name="+$("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
