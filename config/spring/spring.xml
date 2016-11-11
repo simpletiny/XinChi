@@ -11,6 +11,7 @@
 		default-autowire="byName">
 		
   	<bean id="placeholderConfig" class="com.xinchi.tools.PropertiesUtil">    
+  		<property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
         	<list>
         		 <value>classpath:jdbc.properties</value>   

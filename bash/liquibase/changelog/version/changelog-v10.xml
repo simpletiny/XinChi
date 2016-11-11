@@ -713,4 +713,14 @@
 			<comment>ALTER TABLE payment_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE card CHANGE COLUMN name name VARCHAR(20) NOT NULL  ;
+
+				
+          		            ]]>
+			<comment>ALTER TABLE card</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

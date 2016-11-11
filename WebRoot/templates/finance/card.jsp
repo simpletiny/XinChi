@@ -60,16 +60,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: cards">
-                        <tr>
+                        <tr style="overflow:hidden">
                         	 <!-- <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCards"/></td> -->
-                        	 <td data-bind="text: $data.account" ></td>
-                        	  <td data-bind="text: $data.number" ></td>
-                            <td data-bind="text: $data.name" ></td>
-                            <td data-bind="text: $data.bank"></td>
-                            <td data-bind="text: $data.init_money"></td>
-                            <td data-bind="text: $data.balance"></td>
-                            <td data-bind="text: $data.type"></td>
-                            <td data-bind="text: $data.comment"></td>      
+                        	 <td data-bind="text: $data.account" style="overflow:hidden"></td>
+                        	  <td data-bind="text: $data.number" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.name" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.bank" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.init_money" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.balance" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.type" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.comment" title="test" style="overflow:hidden"></td>      
                         </tr>
                     </tbody>
                 </table>

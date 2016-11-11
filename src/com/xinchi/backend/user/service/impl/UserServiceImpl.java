@@ -17,6 +17,7 @@ import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
@@ -40,7 +41,8 @@ public class UserServiceImpl implements UserService {
 			return "none";
 		} else {
 			UserBaseBean user = users.get(0);
-			if (user.getPassword().equals(ubb.getPassword())) {
+			if (user.getPassword().equals(
+					SimpletinyString.MD5(ubb.getPassword()))) {
 
 				UserSessionBean sessionBean = new UserSessionBean();
 				try {
@@ -71,6 +73,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void register(UserBaseBean bo, UserInfoBean uib) {
 		String userNumber = uus.getNextUserNumber();
+		bo.setPassword(SimpletinyString.MD5(bo.getPassword()));
 		bo.setUser_number(userNumber);
 		bo.setUser_status(ResourcesConstants.USER_STATUS_APPLY);
 		dao.insert(bo);
@@ -111,6 +114,7 @@ public class UserServiceImpl implements UserService {
 		dao.update(ubb);
 		return "success";
 	}
+
 	@Override
 	public List<UserCommonBean> getAllUsersByRole(String roles) {
 		return dao.getAllUsersByRole(roles);
@@ -152,7 +156,5 @@ public class UserServiceImpl implements UserService {
 		return dao.getAllNewUsers();
 
 	}
-
-
 
 }

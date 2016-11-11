@@ -23,23 +23,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             	 <div class="input-row clearfloat">
                     <div class="col-md-8 required">
                         <label class="l">账户名称</label>
-                        <div class="ip"><input type="text" id="account" class="ip-default" data-bind="value: card().account,event:{blur:checkAccount}" placeholder="账户名称" name="card.account" required="required"/></div>
+                        <div class="ip"><input maxlength="50" type="text" id="account" class="ip-default" data-bind="value: card().account,event:{blur:checkAccount}" placeholder="账户名称" name="card.account" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">卡号/账户id</label>
-                        <div class="ip"><input type="text" id="number" class="ip-default" data-bind="value: card().number" placeholder="卡号" name="card.number" required="required"/></div>
+                        <div class="ip"><input type="text" id="number" maxlength="40" class="ip-default" data-bind="value: card().number" placeholder="卡号" name="card.number" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">户名</label>
-                        <div class="ip"><input type="text" id="name" class="ip-default" data-bind="value: card().name" placeholder="户名" name="card.name" required="required"/></div>
+                        <div class="ip"><input type="text" id="name" maxlength="20" class="ip-default" data-bind="value: card().name" placeholder="户名" name="card.name" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">开户行</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: card().bank" placeholder="开户行" name="card.bank" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip-" maxlength="40" data-bind="value: card().bank" placeholder="开户行" name="card.bank" required="required"/></div>
                     </div>
                      <div class="col-md-6 required">
                         <label class="l">初始金额</label>
@@ -56,7 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                <div class="input-row clearfloat">
                     <div class="col-md-12">
                         <label class="l">备注</label>
-                        <div class="ip"><textarea type="text" class="ip-default" rows="15" data-bind="value: card().comment" name ="card.comment" placeholder="需要备注说明的信息"></textarea></div>
+                        <div class="ip"><textarea type="text" maxlength="200" class="ip-default" rows="15" data-bind="value: card().comment" name ="card.comment" placeholder="需要备注说明的信息"></textarea></div>
                     </div>
                 </div>
             </form>

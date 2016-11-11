@@ -4,8 +4,6 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -24,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <canvas id="userChart" width="1000" height="400"></canvas>
     </div>
   </div>
- </body>
+
 
 <script src="<%=basePath %>static/vendor/chart/Chart.js"></script>
 
@@ -131,11 +129,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 data : [28,48,40,19,96,27,100]
             }
         ]
-    }
+    };
 
     var ctx = $("#userChart").get(0).getContext("2d");
-    var userChart = new Chart(ctx).Line(data, options);
-
+    //var userChart = new Chart(ctx).Line(data, options);
    </script>
-
+ </body>
 </html>

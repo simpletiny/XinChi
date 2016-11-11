@@ -23,11 +23,4 @@ public class Utils {
 		ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 		return ext;
 	}
-
-	public static void main(String[] str) {
-		// String xx="D:$workplace$fileUpload$userId";
-		// System.out.println( File.separator);
-		// String x = File.separator.toString();
-		// System.out.println(xx.replaceAll("\\$", new String(x)));
-	}
 }

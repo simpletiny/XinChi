@@ -1,15 +1,14 @@
-package apptest;
+package com.xinchi.common;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 
-public class SomeTest {
-	public static String source = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
-
-	public static void main(String[] args) throws UnsupportedEncodingException {
-		System.out.println(MD5("12312"));
-	}
-
+/**
+ * 字符串工具类
+ * 
+ * @author simpletiny
+ * 
+ */
+public class SimpletinyString {
 	/**
 	 * 字符串MD5加密100次
 	 * 
