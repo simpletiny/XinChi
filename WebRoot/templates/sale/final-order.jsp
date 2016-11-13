@@ -138,7 +138,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </div>
   <script>
-    $(".sale").addClass("current").children("ol").css("display", "block");
+    $(".order").addClass("current").children("ol").css("display", "block");
   </script>
     <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
    <script src="<%=basePath %>static/js/datepicker.js"></script>

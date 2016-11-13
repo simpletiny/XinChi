@@ -1,0 +1,218 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+ <%@taglib uri="/struts-tags" prefix="s" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>欣驰国际</title>
+	<link rel="stylesheet" type="text/css" href="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath %>static/vendor/datetimepicker/MonthPicker.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath %>static/css/jquery-ui.css"/>
+     <style>
+         .form-group { margin-bottom: 5px; }
+         .form-control{ height: 30px; }
+         .fixed{
+         	font-size:12px;
+			display:block;
+			position:fixed;
+			right:0px;
+			top:200px;
+			margin-left:10px;
+			z-index:100;
+			}
+     </style>
+</head>
+<body>
+<div class="main-body">
+<jsp:include page="../layout.jsp" />
+    <div class="subtitle">
+        <h2>应收款</h2>
+    </div>
+
+    <div class="main-container">
+       <div class="main-box">
+         <form class="form-horizontal search-panel">
+                <div class="form-group">
+                    <div class="span6">
+                        <label class="col-md-1 control-label">客户</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="客户"
+                                  name="order.client_employee_name"/>
+                        </div>
+                    </div>
+
+                    <div class="span6">
+                        <label class="col-md-1 control-label">出团月份</label>
+                        <div class="col-md-2">
+                             <input type="text" class="form-control month-picker-st" placeholder="出团月份"
+                                  name="order.departure_month"/>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <label class="col-md-1 control-label">状态</label>
+                        <div class="col-md-2">
+                        	 <select class="form-control" style="height:34px" data-bind="options: teamStatus, optionsCaption: '全部'" name="order.teamStatus"></select>
+                        </div>
+                    </div>
+                    <div class="span6">
+                 	    <div data-bind="foreach: types">
+                            <em class="small-box">
+                                <input type="checkbox" required="required" data-bind="attr: {'value': $data}, checked: $root.choosenTypes"/><label data-bind="text: $data"></label>
+                            </em>
+                        </div>
+                    </div>
+                    </div>
+                   <div class="form-group">
+                   <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                     <div class="span6">
+                        <label class="col-md-1 control-label">销售</label>
+                        <div class="col-md-2">
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="order.create_user_name"></select>
+                        </div>
+                    </div>
+                    </s:if>
+                    <div style="padding-top: 3px;">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+                    </div>
+                </div>
+            </form>
+             <div class="list-result">
+	            <table class="table table-striped table-hover">
+	                    <thead>
+	                        <tr role="row">
+	                            <th></th>
+	                            <th>全部</th>
+	                            <th>不足1月</th>
+	                            <th>1个月~2个月</th>
+	                            <th>2个月~6个月</th>
+	                            <th>坏账</th>
+	                        </tr>
+	                    </thead>
+	                     <tbody id="tbody-data">
+	                        <tr>
+								<td>单数</td>
+								<td data-bind="recsum.all_count"></td>
+								<td data-bind="recsum.one_month_count"></td>
+								<td data-bind="recsum.two_month_count"></td>
+								<td data-bind="recsum.six_month_count"></td>
+								<td data-bind="recsum.bad_month_count"></td>
+	                        </tr>
+	                        <tr>
+								<td>尾款</td>
+								<td data-bind="recsum.all_balance"></td>
+								<td data-bind="recsum.one_month_balance"></td>
+								<td data-bind="recsum.two_month_balance"></td>
+								<td data-bind="recsum.six_month_balance"></td>
+								<td data-bind="recsum.bad_month_balance"></td>
+	                        </tr>
+	                    </tbody>
+	           </table>
+           	</div>
+      		 <div class="list-result">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr role="row">
+                        	<th></th>
+                            <th>团号</th>
+                            <th>回团天数</th>
+                            <th>决否</th>
+                            <th>客户</th>
+                            <th>出团日期</th>
+                            <th>产品</th>
+                            <th>人数</th>
+                            <th>总团款</th>
+                            <th>已收款</th>
+                            <th>尾款</th>
+                            <th></th>
+                            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                            <th>销售</th>
+                            </s:if>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-data" data-bind="foreach: orders">
+                        <tr>
+                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'order-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.client_employee_name"></td>
+                            <td data-bind="text: $data.confirm_date"></td>
+                            <td data-bind="text: $data.departure_date"></td>
+                            <td data-bind="text: $data.return_date"></td>
+                            <td data-bind="text: $data.people_count"></td> 
+                             <td data-bind="text: $data.receivable"></td>    
+                             <td data-bind="text: $data.payable"></td>
+                             <td data-bind="text: $data.gross_profit"></td>    
+                             <td data-bind="text: $data.per_profit"></td>
+                             <!-- ko if: $data.final_flg=='N' -->
+                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">生成决算单</a></td> 
+                             <!-- /ko -->   
+                             <!-- ko if: $data.final_flg=='Y' -->
+                             <td>已生成</td> 
+                             <!-- /ko -->      
+                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                             <td data-bind="text: $data.create_user_name"></td>  
+                              </s:if>  
+                        </tr>
+                    </tbody>
+                    <tr id="total-row">
+                    		<td></td>
+                    	    <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>合计</td>
+                            <td data-bind="text:totalPeople"></td>
+                            <td data-bind="text:totalReceivable"></td>
+                            <td data-bind="text:totalPayable"></td>
+                            <td data-bind="text:totalProfit"></td>
+                            <td data-bind="text:totalPerProfit"></td>
+                            <td></td>
+                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                            <td></td>
+                            </s:if>
+                    </tr>
+                </table>
+                 <div class="pagination clearfloat">
+                    <a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+                    <!-- ko foreach: pageNums -->
+                    <!-- ko if: $data == $root.currentPage() -->
+                    <span class="current" data-bind="text: $data"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: $data == $root.currentPage() -->
+                    <a data-bind="text: $data, click: $root.turnPage"></a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+                </div>
+            </div>
+       </	>
+	                    <div class="fixed">
+		                    <div style="margin-top:5px">
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ridTail() }">抹零申请</button>
+		                    </div>
+		                    <div style="margin-top:5px">
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { sumOrder() }">合账申请</button>
+		                    </div>
+		                    <div style="margin-top:5px">
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { strike() }">冲账申请</button>
+		                    </div>
+		                    <div style="margin-top:5px">
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">收入</button>
+		                    </div>
+		                 </div>
+    </div>
+    
+  </div>
+  <script>
+    $(".sale").addClass("current").children("ol").css("display", "block");
+  </script>
+   <script src="<%=basePath %>static/vendor/jquery-ui.min.js"></script>
+  <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script src="<%=basePath %>static/vendor/datetimepicker/MonthPicker.min.js"></script>
+   <script src="<%=basePath %>static/js/datepicker.js"></script>
+    <script src="<%=basePath%>static/js/sale/receivable.js"></script>
+</body>
+</html>
