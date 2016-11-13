@@ -13,7 +13,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <div class="main-body">
     <div class="subtitle">
         
-       <a href="<%=basePath%>simpletiny/changeAllPasswordToMD5" >test</a>
+      <%--  <a href="<%=basePath%>simpletiny/changeAllPasswordToMD5" >test</a> --%>
+       <a href="<%=basePath%>simpletiny/autoGenReceivable" >生成应收款表</a>
     </div>
 
     <div class="main-container">

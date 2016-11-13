@@ -5,28 +5,44 @@ import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
-/**
- * 应收款信息
- * 
- * @author simpletiny
- * 
- */
-public class Receivable extends SupperBO implements Serializable {
-	private static final long serialVersionUID = -3726795740247926997L;
+public class ReceivableBean extends SupperBO implements Serializable {
+	private static final long serialVersionUID = -8054012584061695464L;
 
 	private String team_number;
-	private int back_days;
+
+	private Integer back_days;
+
 	private String final_flg;
+
 	private String client_employee_name;
+
 	private String client_employee_pk;
+
 	private String departure_date;
+
+	private String return_date;
+
 	private String product;
-	private int people_count;
-	private BigDecimal sum_receivable;
+
+	private Integer people_count;
+
+	private BigDecimal budget_receivable;
+
+	private BigDecimal final_receivable;
+
 	private BigDecimal received;
+
 	private BigDecimal balance;
+
 	private String sales;
+
 	private String sales_name;
+
+	private String update_user;
+
+	private String pk;
+
+	private String create_user;
 
 	public String getTeam_number() {
 		return team_number;
@@ -36,11 +52,11 @@ public class Receivable extends SupperBO implements Serializable {
 		this.team_number = team_number;
 	}
 
-	public int getBack_days() {
+	public Integer getBack_days() {
 		return back_days;
 	}
 
-	public void setBack_days(int back_days) {
+	public void setBack_days(Integer back_days) {
 		this.back_days = back_days;
 	}
 
@@ -84,20 +100,28 @@ public class Receivable extends SupperBO implements Serializable {
 		this.product = product;
 	}
 
-	public int getPeople_count() {
+	public Integer getPeople_count() {
 		return people_count;
 	}
 
-	public void setPeople_count(int people_count) {
+	public void setPeople_count(Integer people_count) {
 		this.people_count = people_count;
 	}
 
-	public BigDecimal getSum_receivable() {
-		return sum_receivable;
+	public BigDecimal getBudget_receivable() {
+		return budget_receivable;
 	}
 
-	public void setSum_receivable(BigDecimal sum_receivable) {
-		this.sum_receivable = sum_receivable;
+	public void setBudget_receivable(BigDecimal budget_receivable) {
+		this.budget_receivable = budget_receivable;
+	}
+
+	public BigDecimal getFinal_receivable() {
+		return final_receivable;
+	}
+
+	public void setFinal_receivable(BigDecimal final_receivable) {
+		this.final_receivable = final_receivable;
 	}
 
 	public BigDecimal getReceived() {
@@ -130,6 +154,38 @@ public class Receivable extends SupperBO implements Serializable {
 
 	public void setSales_name(String sales_name) {
 		this.sales_name = sales_name;
+	}
+
+	public String getUpdate_user() {
+		return update_user;
+	}
+
+	public void setUpdate_user(String update_user) {
+		this.update_user = update_user;
+	}
+
+	public String getPk() {
+		return pk;
+	}
+
+	public void setPk(String pk) {
+		this.pk = pk;
+	}
+
+	public String getCreate_user() {
+		return create_user;
+	}
+
+	public void setCreate_user(String create_user) {
+		this.create_user = create_user;
+	}
+
+	public String getReturn_date() {
+		return return_date;
+	}
+
+	public void setReturn_date(String return_date) {
+		this.return_date = return_date;
 	}
 
 }

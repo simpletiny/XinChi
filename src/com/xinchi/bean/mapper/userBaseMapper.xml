@@ -38,6 +38,13 @@
     where pk = #{pk,jdbcType=CHAR}
   </select>
   
+  <select id="selectByUserNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_base
+    where user_number = #{user_number,jdbcType=CHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user_base
     where pk = #{pk,jdbcType=CHAR}

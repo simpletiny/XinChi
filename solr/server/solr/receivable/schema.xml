@@ -117,10 +117,24 @@
          WARNING: The _text_ catch-all field will significantly increase your index size.
          If you don't need it, consider removing it and the corresponding copyField directive.
     -->
-    <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-	<field name="name" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-	<field name="sex" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-	<field name="age" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+    
+    <field name="id" type="string" indexed="true" stored="true" required="true"  multiValued="false" />
+	<field name="team_number" type="string" indexed="true" stored="true"  multiValued="false" />
+	<field name="back_days" type="int" indexed="true" stored="true"  multiValued="false" />
+	<field name="final_flg" type="string" indexed="true" stored="true"  multiValued="false" />
+	<field name="client_employee_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+	<field name="client_employee_pk" type="string" indexed="true" stored="true"  multiValued="false" />
+	<field name="departure_date" type="date" indexed="true" stored="true"  multiValued="false" />
+	<field name="return_date" type="date" indexed="true" stored="true"  multiValued="false" />
+	<field name="product" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+	<field name="people_count" type="int" indexed="true" stored="true"  multiValued="false" />
+	<field name="budget_receivable" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="final_receivable" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="received" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="balance" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="sales" type="string" indexed="true" stored="true"  multiValued="false" />
+	<field name="sales_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+
     <!-- doc values are enabled by default for primitive types such as long so we don't index the version field  -->
     <field name="_version_" type="long" indexed="false" stored="false"/>
     <field name="_root_" type="string" indexed="true" stored="false" docValues="false" />
@@ -129,7 +143,10 @@
     <!-- Only enabled in the "schemaless" data-driven example (assuming the client
          does not know what fields may be searched) because it's very expensive to index everything twice. -->
          
-    <copyField source="*" dest="_text_"/>
+   <copyField source="team_number" dest="_text_"/>
+   <copyField source="client_employee_name" dest="_text_"/>
+   <copyField source="product" dest="_text_"/>
+   <copyField source="sales_name" dest="_text_"/>
 
     <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 

@@ -70,4 +70,11 @@ public class FinalOrderDAOImpl extends SqlSessionDaoSupport implements
 				"com.xinchi.bean.mapper.FinalOrderMapper.selectByPage", page);
 	}
 
+	@Override
+	public FinalOrderBean selectByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.FinalOrderMapper.selectByTeamNumber",
+				team_number);
+	}
+
 }

@@ -94,4 +94,9 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 		return list;
 	}
 
+	@Override
+	public UserBaseBean getByUserNumber(String user_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.UserBaseMapper.selectByUserNumber", user_number);
+	}
+
 }

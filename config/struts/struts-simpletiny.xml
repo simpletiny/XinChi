@@ -5,6 +5,9 @@
 		<action name="changeAllPasswordToMD5" class="simpletinyAction" method="changeAllPasswordToMD5">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="autoGenReceivable" class="simpletinyAction" method="autoGenReceivable">
+			<result name="success" type="redirect">/</result>
+		</action>
 	</package>
 
 </struts>

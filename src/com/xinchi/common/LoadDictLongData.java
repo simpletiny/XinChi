@@ -1,11 +1,13 @@
 package com.xinchi.common;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.bean.TaskBean;
+import com.xinchi.solr.service.SimpletinySolr;
 import com.xinchi.sys.xinchitask.dao.XinChiTaskDAO;
 
 /**
@@ -33,7 +35,6 @@ public class LoadDictLongData implements ApplicationListener {
 		// // 初始化城市
 		// ResourcesConstants.ARRAY_CITY = cityDao.getAllByParam(new
 		// HsCityBO());
-
 		TaskBean task = new TaskBean();
 		task.setIsdone("N");
 		ResourcesConstants.ARRAY_TASK = taskDao.getAllByParam(task);

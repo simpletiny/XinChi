@@ -20,4 +20,6 @@ public interface FinalOrderDAO {
 
 	public List<FinalOrderBean> selectAllByPage(Page<FinalOrderBean> page);
 
+	public FinalOrderBean selectByTeamNumber(String team_number);
+
 }

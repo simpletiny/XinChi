@@ -723,4 +723,36 @@
 			<comment>ALTER TABLE card</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE receivable (
+					  team_number VARCHAR(30) NOT NULL ,
+					  back_days INT NULL ,
+					  final_flg CHAR(1) NULL DEFAULT 'N',
+					  client_employee_name VARCHAR(10) NULL ,
+					  client_employee_pk CHAR(22) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  return_date VARCHAR(10) NULL ,
+					  product VARCHAR(100) NULL ,
+					  people_count INT NULL ,
+					  budget_receivable DECIMAL(12,2) NULL ,
+					  final_receivable DECIMAL(12,2) NULL ,
+					  received DECIMAL(12,2) NULL ,
+					  balance DECIMAL(12,2) NULL ,
+					  sales VARCHAR(300) NULL ,
+					  sales_name VARCHAR(200) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '应收款表';
+          		            ]]>
+			<comment>CREATE  TABLE receivable</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

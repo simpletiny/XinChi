@@ -59,4 +59,10 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 		return dao.selectAllByPage(page);
 	}
 
+	@Override
+	public FinalOrderBean getFinalOrderByTeamNo(String team_number) {
+		
+		return dao.selectByTeamNumber(team_number);
+	}
+
 }
