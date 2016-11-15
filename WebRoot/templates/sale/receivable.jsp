@@ -41,7 +41,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <label class="col-md-1 control-label">客户</label>
                         <div class="col-md-2">
                             <input type="text" class="form-control" placeholder="客户"
-                                  name="order.client_employee_name"/>
+                                  name="receivable.client_employee_name"/>
                         </div>
                     </div>
 
@@ -49,19 +49,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <label class="col-md-1 control-label">出团月份</label>
                         <div class="col-md-2">
                              <input type="text" class="form-control month-picker-st" placeholder="出团月份"
-                                  name="order.departure_month"/>
+                                  name="receivable.departure_month"/>
                         </div>
                     </div>
                     <div class="span6">
                         <label class="col-md-1 control-label">状态</label>
                         <div class="col-md-2">
-                        	 <select class="form-control" style="height:34px" data-bind="options: teamStatus, optionsCaption: '全部'" name="order.teamStatus"></select>
+                        	 <select class="form-control" style="height:34px" data-bind="options: teamStatus, optionsCaption: '全部'" name="receivable.team_status"></select>
                         </div>
                     </div>
                     <div class="span6">
                  	    <div data-bind="foreach: types">
                             <em class="small-box">
-                                <input type="checkbox" required="required" data-bind="attr: {'value': $data}, checked: $root.choosenTypes"/><label data-bind="text: $data"></label>
+                                <input type="checkbox" required="required" data-bind="attr: {'value': $data}, checked: $root.chosenTypes,event:{click:$root.changeType}"/><label data-bind="text: $data"></label>
                             </em>
                         </div>
                     </div>
@@ -71,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                      <div class="span6">
                         <label class="col-md-1 control-label">销售</label>
                         <div class="col-md-2">
-                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="order.create_user_name"></select>
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部',value:chosenSales,event:{change:fetchSummary}" name="receivable.sales_name"></select>
                         </div>
                     </div>
                     </s:if>
@@ -95,19 +95,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                     <tbody id="tbody-data">
 	                        <tr>
 								<td>单数</td>
-								<td data-bind="recsum.all_count"></td>
-								<td data-bind="recsum.one_month_count"></td>
-								<td data-bind="recsum.two_month_count"></td>
-								<td data-bind="recsum.six_month_count"></td>
-								<td data-bind="recsum.bad_month_count"></td>
+								<td data-bind="text:recsum().all_count"></td>
+								<td data-bind="text:recsum().one_month_count"></td>
+								<td data-bind="text:recsum().two_month_count"></td>
+								<td data-bind="text:recsum().six_month_count"></td>
+								<td data-bind="text:recsum().bad_month_count"></td>
 	                        </tr>
 	                        <tr>
 								<td>尾款</td>
-								<td data-bind="recsum.all_balance"></td>
-								<td data-bind="recsum.one_month_balance"></td>
-								<td data-bind="recsum.two_month_balance"></td>
-								<td data-bind="recsum.six_month_balance"></td>
-								<td data-bind="recsum.bad_month_balance"></td>
+								<td data-bind="text:recsum().all_balance"></td>
+								<td st="all" data-bind="text:recsum().one_month_balance"></td>
+								<td st="all" data-bind="text:recsum().two_month_balance"></td>
+								<td st="all" data-bind="text:recsum().six_month_balance"></td>
+								<td st="all" data-bind="text:recsum().bad_month_balance"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().one_month_budget_balance"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().two_month_budget_balance"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().six_month_budget_balance"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().bad_month_budget_balance"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().one_month_final_balance"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().two_month_final_balance"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().six_month_final_balance"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().bad_month_final_balance"></td>
 	                        </tr>
 	                    </tbody>
 	           </table>
@@ -127,33 +135,57 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>总团款</th>
                             <th>已收款</th>
                             <th>尾款</th>
-                            <th></th>
                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                             <th>销售</th>
                             </s:if>
                         </tr>
                     </thead>
-                    <tbody id="tbody-data" data-bind="foreach: orders">
+                    <tbody id="tbody-data" data-bind="foreach: receivables">
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'order-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.back_days"></td>
+                            <td data-bind="text: $data.final_flg"></td>
                             <td data-bind="text: $data.client_employee_name"></td>
-                            <td data-bind="text: $data.confirm_date"></td>
                             <td data-bind="text: $data.departure_date"></td>
-                            <td data-bind="text: $data.return_date"></td>
-                            <td data-bind="text: $data.people_count"></td> 
-                             <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>
-                             <td data-bind="text: $data.gross_profit"></td>    
-                             <td data-bind="text: $data.per_profit"></td>
-                             <!-- ko if: $data.final_flg=='N' -->
-                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">生成决算单</a></td> 
-                             <!-- /ko -->   
-                             <!-- ko if: $data.final_flg=='Y' -->
-                             <td>已生成</td> 
-                             <!-- /ko -->      
+                            <td data-bind="text: $data.product"></td> 
+                             <td data-bind="text: $data.people_count"></td>
+                             
+                             <td st="budget" style="display:none" data-bind="text:$data.budget_receivable"></td>
+                             
+                             <!-- ko if: $data.final_flg=="Y" -->  
+                             <td st="final" style="display:none" data-bind="text:$data.final_receivable"></td>
+                              <!-- /ko -->
+                               <!-- ko if: $data.final_flg=="N" -->      
+                             <td st="final" style="display:none">未决算</td>
+                             <!-- /ko -->
+                             
+                              <!-- ko if: $data.final_flg=="Y" -->      
+                             <td st="all" data-bind="text:$data.final_receivable"></td>
+                             <!-- /ko -->
+                              <!-- ko if: $data.final_flg=="N" -->      
+                             <td st="all" data-bind="text:$data.budget_receivable"></td>
+                             <!-- /ko -->
+                             
+                             <td data-bind="text: $data.received"></td>   
+                             
+                             <td st="budget" style="display:none" data-bind="text:$data.budget_balance"></td>
+                             
+                             <!-- ko if: $data.final_flg=="Y" -->  
+                             <td st="final" style="display:none" data-bind="text:$data.final_balance"></td>
+                              <!-- /ko -->
+                               <!-- ko if: $data.final_flg=="N" -->      
+                             <td st="final" style="display:none">未决算</td>
+                             <!-- /ko -->
+                              
+                             <!-- ko if: $data.final_flg=="Y" -->      
+                             <td st="all" data-bind="text:$data.final_balance"></td>
+                             <!-- /ko -->
+                              <!-- ko if: $data.final_flg=="N" -->      
+                             <td st="all" data-bind="text:$data.budget_balance"></td>
+                             <!-- /ko -->
                              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-                             <td data-bind="text: $data.create_user_name"></td>  
+                             <td data-bind="text: $data.sales_name"></td>  
                               </s:if>  
                         </tr>
                     </tbody>
@@ -163,16 +195,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>合计</td>
                             <td data-bind="text:totalPeople"></td>
-                            <td data-bind="text:totalReceivable"></td>
-                            <td data-bind="text:totalPayable"></td>
-                            <td data-bind="text:totalProfit"></td>
-                            <td data-bind="text:totalPerProfit"></td>
-                            <td></td>
-                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-                            <td></td>
-                            </s:if>
+                            <td st="all" data-bind="text:totalReceivable"></td>
+                            <td st="budget" style="display:none" data-bind="text:totalBudgetReceivable"></td>
+                            <td st="final" style="display:none" data-bind="text:totalFinalReceivable"></td>
+                            <td data-bind="text:totalReceived"></td>
+                            <td st="all" data-bind="text:totalBalance"></td>
+                            <td st="budget" style="display:none" data-bind="text:totalBudgetBalance"></td>
+                            <td st="final" style="display:none" data-bind="text:totalFinalBalance"></td>
+                            <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                             <td></td>  
+                           </s:if>  
                     </tr>
                 </table>
                  <div class="pagination clearfloat">

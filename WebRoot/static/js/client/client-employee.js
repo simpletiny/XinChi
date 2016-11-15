@@ -23,7 +23,7 @@ var CompanyContext = function() {
 		$(self.sales()).each(function(idx, data) {
 			self.sales_name.push(data.user_name);
 		});
-
+		
 //		$('.multi-select').multipleSelect({
 //			placeholder : '全部',
 //			selectAllText : '全选',

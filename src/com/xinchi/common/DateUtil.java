@@ -16,6 +16,7 @@ public class DateUtil {
 	public static String YYYY_MM_DD = "yyyy-MM-dd";
 
 	public static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+	public static SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM");
 
 	/**
 	 * 
@@ -59,6 +60,8 @@ public class DateUtil {
 	}
 
 	public static int dateDiff(String date1, String... date2) {
+		if (null == date1)
+			return 0;
 		try {
 			Date d1 = sdf1.parse(date1);
 			Date d2 = null;
@@ -68,7 +71,7 @@ public class DateUtil {
 				d2 = new Date();
 			}
 			long diff = Math.abs(d1.getTime() - d2.getTime());
-			int days = (int) diff / (1000 * 60 * 60 * 24);
+			int days = (int) (diff / (1000 * 60 * 60 * 24));
 			return days;
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -77,11 +80,11 @@ public class DateUtil {
 	}
 
 	public static Date castStr2Date(String source, String... format) {
-		 SimpleDateFormat sdf = sdf1;
-		if(format.length>0){
+		SimpleDateFormat sdf = sdf1;
+		if (format.length > 0) {
 			sdf = new SimpleDateFormat(format[0]);
 		}
-		
+
 		try {
 			return sdf.parse(source);
 		} catch (ParseException e) {
@@ -89,10 +92,54 @@ public class DateUtil {
 			return null;
 		}
 
-
 	}
 
-	// public static void main(String[] args) {
-	// System.out.println(castStr2Date("2016-05-16 12:23:33","yyyy-MM-dd HH:mm:ss"));
-	// }
+	public static String castDate2Str(Date date, String... format) {
+		if (format.length > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat(format[0]);
+			return sdf.format(date);
+		} else {
+			return sdf1.format(date);
+		}
+	}
+
+	/**
+	 * 获取世界调和时间
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String getUTC(String... date) {
+		Calendar cal = Calendar.getInstance();
+
+		if (date.length > 0) {
+			Date d1 = castStr2Date(date[0]);
+			cal.setTime(d1);
+		}
+
+		int zoneOffset = cal.get(java.util.Calendar.ZONE_OFFSET);
+		int dstOffset = cal.get(java.util.Calendar.DST_OFFSET);
+		cal.add(java.util.Calendar.MILLISECOND, -(zoneOffset + dstOffset));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		return sdf.format(cal.getTime());
+	}
+
+	public static String getLastDay(String month, String... format) {
+		Date d = null;
+		if (format.length > 0) {
+			d = castStr2Date(month, format[0]);
+		} else {
+			d = castStr2Date(month, "yyyy-MM");
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(d);
+		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+
+		return sdf1.format(cal.getTime());
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getLastDay("2016-11"));
+	}
 }

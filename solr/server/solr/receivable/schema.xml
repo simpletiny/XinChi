@@ -120,7 +120,6 @@
     
     <field name="id" type="string" indexed="true" stored="true" required="true"  multiValued="false" />
 	<field name="team_number" type="string" indexed="true" stored="true"  multiValued="false" />
-	<field name="back_days" type="int" indexed="true" stored="true"  multiValued="false" />
 	<field name="final_flg" type="string" indexed="true" stored="true"  multiValued="false" />
 	<field name="client_employee_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
 	<field name="client_employee_pk" type="string" indexed="true" stored="true"  multiValued="false" />
@@ -131,7 +130,8 @@
 	<field name="budget_receivable" type="double" indexed="true" stored="true"  multiValued="false" />
 	<field name="final_receivable" type="double" indexed="true" stored="true"  multiValued="false" />
 	<field name="received" type="double" indexed="true" stored="true"  multiValued="false" />
-	<field name="balance" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="budget_balance" type="double" indexed="true" stored="true"  multiValued="false" />
+	<field name="final_balance" type="double" indexed="true" stored="true"  multiValued="false" />
 	<field name="sales" type="string" indexed="true" stored="true"  multiValued="false" />
 	<field name="sales_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
 

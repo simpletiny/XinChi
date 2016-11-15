@@ -38,5 +38,11 @@ public class ResourcesConstants {
 	public static String USER_ROLE_SALES = "SALES";
 	public static String USER_ROLE_PRODUCT = "PRODUCT";
 	public static String USER_ROLE_FINANCE = "FINANCE";
-
+	
+	//团队状态
+	public static String TEAM_STATUS_BEFORE="未出团";
+	public static String TEAM_STATUS_AFTER="已出团";
+	public static String TEAM_STATUS_RETURN="已回团";
+	public static String TEAM_STATUS_NOT_RETURN="未回团";
+	
 }

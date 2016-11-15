@@ -89,8 +89,6 @@ public class SimpletinyAction extends BaseAction {
 
 				receivable.setSales_name(userBase.getUser_name());
 				receivable.setReceived(BigDecimal.ZERO);
-				int back_days = DateUtil.dateDiff(budget.getReturn_date());
-				receivable.setBack_days(back_days);
 
 				FinalOrderBean finalOrder = finalOrderService
 						.getFinalOrderByTeamNo(budget.getTeam_number());
@@ -99,6 +97,13 @@ public class SimpletinyAction extends BaseAction {
 					receivable.setFinal_flg("Y");
 					receivable.setFinal_receivable(finalOrder.getReceivable());
 				}
+				receivable.setBudget_balance(receivable.getBudget_receivable());
+
+				if (null != receivable.getFinal_flg()
+						&& receivable.getFinal_flg().equals("Y")) {
+					receivable.setFinal_balance(receivable.getFinal_receivable());
+				}
+				
 				receivableService.insert(receivable);
 
 				SolrInputDocument document = castR2D(receivable);
@@ -121,7 +126,6 @@ public class SimpletinyAction extends BaseAction {
 		SolrInputDocument document = new SolrInputDocument();
 		document.addField("id", receivable.getPk());
 		document.addField("team_number", receivable.getTeam_number());
-		document.addField("back_days", receivable.getBack_days());
 		document.addField("final_flg", receivable.getFinal_flg());
 		document.addField("client_employee_name",
 				receivable.getClient_employee_name());
@@ -145,8 +149,11 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("received", (null == receivable.getReceived() ? 0
 				: receivable.getReceived().doubleValue()));
 
-		document.addField("balance", (null == receivable.getBalance() ? 0
-				: receivable.getBalance().doubleValue()));
+		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0
+				: receivable.getBudget_balance().doubleValue()));
+	
+		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0
+				: receivable.getFinal_balance().doubleValue()));
 
 		document.addField("sales", receivable.getSales());
 		document.addField("sales_name", receivable.getSales_name());

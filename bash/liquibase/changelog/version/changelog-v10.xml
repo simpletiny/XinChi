@@ -755,4 +755,152 @@
 			<comment>CREATE  TABLE receivable</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE receivable DROP COLUMN balance , DROP COLUMN back_days , ADD COLUMN budget_balance DECIMAL(12,2) NULL  AFTER received , ADD COLUMN final_balance DECIMAL(12,2) NULL  AFTER budget_balance ;
+          		            ]]>
+			<comment>ALTER TABLE receivable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+				create view receivable_back_days as
+				    select 
+				        sales_name,
+				        sales,
+				        budget_balance,
+				        final_balance,
+				        DATEDIFF(curdate(), return_date) as back_days
+				    from
+				        receivable;
+											
+											create view receivable_a as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as all_count,
+				        sum(budget_balance) as all_budget_balance,
+				        sum(final_balance) as all_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as all_balance
+				    from
+				        receivable
+				    group by sales_name;
+											
+											create view receivable_b as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as one_month_count,
+				        sum(budget_balance) as one_month_budget_balance,
+				        sum(final_balance) as one_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as one_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 0 and back_days <= 30
+				    group by sales_name;
+										 
+										create view receivable_c as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as two_month_count,
+				        sum(budget_balance) as two_month_budget_balance,
+				        sum(final_balance) as two_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as two_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 30 and back_days <= 60
+				    group by sales_name;
+										
+										create view receivable_d as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as six_month_count,
+				        sum(budget_balance) as six_month_budget_balance,
+				        sum(final_balance) as six_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as six_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 60 and back_days <= 180
+				    group by sales_name;
+										  
+										create view receivable_e as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as bad_month_count,
+				        sum(budget_balance) as bad_month_budget_balance,
+				        sum(final_balance) as bad_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as bad_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 180
+				    group by sales_name;
+									create view user_number as
+				    select distinct
+				        user_name, user_number
+				    from
+				        user_base;
+										create view receivable_summary as
+				    select 
+				        A.user_number,
+				        A.user_name,
+				        B.all_count,
+				        B.all_budget_balance,
+				        B.all_final_balance,
+				        B.all_balance,
+				        C.one_month_count,
+				        C.one_month_budget_balance,
+				        C.one_month_final_balance,
+				        C.one_month_balance,
+				        D.two_month_count,
+				        D.two_month_budget_balance,
+				        D.two_month_final_balance,
+				        D.two_month_balance,
+				        E.six_month_count,
+				        E.six_month_budget_balance,
+				        E.six_month_final_balance,
+				        E.six_month_balance,
+				        F.bad_month_count,
+				        F.bad_month_budget_balance,
+				        F.bad_month_final_balance,
+				        F.bad_month_balance
+				    from
+				        user_number A
+				            LEFT JOIN
+				        receivable_a B ON A.user_number = B.sales
+				            LEFT JOIN
+				        receivable_b C ON A.user_number = C.sales
+				            LEFT JOIN
+				        receivable_c D ON A.user_number = D.sales
+				            LEFT JOIN
+				        receivable_d E ON A.user_number = E.sales
+				            LEFT JOIN
+				        receivable_e F ON A.user_number = F.sales;
+          		            ]]>
+			<comment>create receivable_summary views</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

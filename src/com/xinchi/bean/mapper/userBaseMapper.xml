@@ -42,7 +42,13 @@
     select 
     <include refid="Base_Column_List" />
     from user_base
-    where user_number = #{user_number,jdbcType=CHAR}
+    where user_number = #{user_number,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_base
+    where user_name = #{user_name,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

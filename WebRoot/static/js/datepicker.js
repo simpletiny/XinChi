@@ -17,10 +17,3 @@ if ($('.datetime-picker').datetimepicker != null) {
         lang: 'zh'
     });
 }
-
-$(function(){ 
-	$('.month-picker-st').MonthPicker({
-		 Button: false,
-		 MonthFormat: 'yy-mm'
-	});
-});

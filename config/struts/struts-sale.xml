@@ -50,6 +50,15 @@
 		<action name="searchFinalOrderSupplier" class="finalOrderAction" method="searchFinalOrderSupplier">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchReceivableSummary" class="receivableAction" method="searchReceivableSummary">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchReceivableByPage" class="receivableAction" method="searchReceivableByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 
 </struts>

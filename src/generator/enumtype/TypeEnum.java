@@ -8,7 +8,7 @@ public enum TypeEnum {
 	VARCHAR("String", "varchar", "varchar"),
 	TIMESTAMP("java.sql.Timestamp", "timestamp", "timestamp"),INT("Integer", "integer", "int"),
 	DATE("java.sql.Date","date","date"),DATETIME("java.sql.Timestamp", "timestamp", "timestamp")
-	,DECIMAL("java.math.BigDecimal","decimal","decimal");
+	,DECIMAL("java.math.BigDecimal","decimal","decimal"),BIGINT("int","bigint","bigint");
 	private String columnType;
 	
 	private String type;
@@ -62,7 +62,7 @@ public enum TypeEnum {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getJdbcType("int"));
+		System.out.println(getJdbcType("bigint"));
 	}
 	
 	

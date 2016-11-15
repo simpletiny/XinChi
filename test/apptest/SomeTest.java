@@ -3,21 +3,17 @@ package apptest;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import net.sf.json.JSONObject;
-
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.SimpleOrderedMap;
 
 import com.google.common.base.Joiner;
+import com.xinchi.bean.ReceivableBean;
+import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 
 public class SomeTest {
 	public static String source = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
@@ -25,37 +21,33 @@ public class SomeTest {
 
 	public static void main(String[] args) throws SolrServerException,
 			IOException {
-		// System.out.println(DateUtil.dateDiff("2016-11-06", "2016-11-07"));
+		System.out.println(DateUtil.dateDiff("2016-10-01"));
+//		BigDecimal b = new BigDecimal(null);
+//		System.out.println(b);;
 
-		List<String> queryParts = new ArrayList<String>();
-
-		queryParts.add("_text_:\"" + "map" + "\"");
-		String str = Joiner.on("and").join(queryParts);
-
-		// SolrClient solr = new HttpSolrClient.Builder(solr_url).build();
-		SolrClient solr = new HttpSolrClient(solr_url);
-		// 计算合计
-		SolrQuery query = new SolrQuery("*:*");
-		query.add("stats", "true");
-		query.add("stats.field", "budget_receivable");
-
-		// query.add("id:test");
-		QueryResponse response = solr.query(query);
-		System.out.println(response);
-		SimpleOrderedMap<SimpleOrderedMap<SimpleOrderedMap>> map = (SimpleOrderedMap) response
-				.getResponse().get("stats");
-		System.out.println(map.get("stats_fields").get("budget_receivable")
-				.get("sum"));
-		SolrDocumentList list = response.getResults();
-
-		for (SolrDocument doc : list) {
-
-			System.out.println(doc.get("id"));
-
-		}
-
-		SolrInputDocument document = new SolrInputDocument();
-
+//		ReceivableBean b = new ReceivableBean();
+//		b.setClient_employee_name("牛世行");
+//		b.setTeam_status("已回团");
+//		b.setDeparture_month("2016-11");
+//		b.setSales_name("test");
+//
+//		System.out.println(buildQuery(b));
+//		SolrClient solrClient = new HttpSolrClient(solr_url);
+//		// 计算合计
+//		SolrQuery query = new SolrQuery("*");
+//		query.setStart(0);
+//		query.setRows(5);
+//		// query.add("id:test");
+//		QueryResponse response;
+//
+//		response = solrClient.query(query);
+//		SolrDocumentList list = response.getResults();
+//		System.out.println(response.getResults().getNumFound());
+//		for (SolrDocument doc : list) {
+//
+//			System.out.println(doc.get("return_date"));
+//
+//		}
 		// document.addField("id", "1");
 		// document.addField("name", "牛世行");
 		// document.addField("sex", "map飞");
@@ -66,6 +58,48 @@ public class SomeTest {
 		// solr.deleteById("xxx");
 
 		// solr.commit();
+	}
+
+	private static String buildQuery(ReceivableBean options) {
+		String separator = " AND ";
+		List<String> queryParts = new ArrayList<String>();
+
+		if (!SimpletinyString.isEmpty(options.getClient_employee_name())) {
+			queryParts.add("client_employee_name:\""
+					+ options.getClient_employee_name() + "\"");
+		}
+
+		if (!SimpletinyString.isEmpty(options.getSales_name())) {
+			queryParts.add("sales_name:\"" + options.getSales_name() + "\"");
+		}
+
+		String team_status = options.getTeam_status();
+		String from = "";
+		String to = "";
+		if (!SimpletinyString.isEmpty(team_status)) {
+			if (team_status.equals(ResourcesConstants.TEAM_STATUS_BEFORE)) {
+				from = DateUtil.getUTC();
+				to = "*";
+				queryParts.add("departure_date:[" + from + " TO " + to + "]");
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_AFTER)) {
+				from = "*";
+				to = DateUtil.getUTC();
+				queryParts.add("departure_date:[" + from + " TO " + to + "]");
+			} else if (team_status
+					.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
+				from = "*";
+				to = DateUtil.getUTC();
+				queryParts.add("return_date:[" + from + " TO " + to + "]");
+			}
+		}
+
+		String departure_month = options.getDeparture_month();
+		if (!SimpletinyString.isEmpty(departure_month)) {
+			from = DateUtil.getUTC(departure_month + "-01");
+			to =DateUtil.getUTC( DateUtil.getLastDay(departure_month));
+			queryParts.add("departure_date:[" + from + " TO " + to + "]");
+		}
+		return Joiner.on(separator).join(queryParts);
 	}
 
 	/**
@@ -116,5 +150,9 @@ public class SomeTest {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	private String safeGet(SolrDocument doc, String key) {
+		return doc.get(key) != null ? doc.get(key).toString() : null;
 	}
 }

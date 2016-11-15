@@ -30,6 +30,7 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 
 		budgetOrder.setFinal_flg("Y");
 		saleDao.updateBudgetOrder(budgetOrder);
+		order.setConfirm_date(budgetOrder.getConfirm_date());
 		dao.insert(order);
 
 	}

@@ -3,7 +3,6 @@
 <mapper namespace="com.xinchi.bean.mapper.ReceivableMapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.ReceivableBean" >
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
-	    <result column="back_days" property="back_days" jdbcType="INTEGER" />
 	    <result column="final_flg" property="final_flg" jdbcType="CHAR" />
 	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
@@ -14,7 +13,8 @@
 	    <result column="budget_receivable" property="budget_receivable" jdbcType="DECIMAL" />
 	    <result column="final_receivable" property="final_receivable" jdbcType="DECIMAL" />
 	    <result column="received" property="received" jdbcType="DECIMAL" />
-	    <result column="balance" property="balance" jdbcType="DECIMAL" />
+	    <result column="budget_balance" property="budget_balance" jdbcType="DECIMAL" />
+	    <result column="final_balance" property="final_balance" jdbcType="DECIMAL" />
 	    <result column="sales" property="sales" jdbcType="VARCHAR" />
 	    <result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
 	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
@@ -27,7 +27,6 @@
   <sql id="Base_Column_List" >
   		
     	team_number, 
-    	back_days, 
     	final_flg, 
     	client_employee_name, 
     	client_employee_pk, 
@@ -38,7 +37,8 @@
     	budget_receivable, 
     	final_receivable, 
     	received, 
-    	balance, 
+    	budget_balance, 
+    	final_balance, 
     	sales, 
     	sales_name, 
     	update_user, 
@@ -66,9 +66,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
 	 	<if test="team_number != null">
 	        team_number,
-	      </if>
-	 	<if test="back_days != null">
-	        back_days,
 	      </if>
 	 	<if test="final_flg != null">
 	        final_flg,
@@ -100,8 +97,11 @@
 	 	<if test="received != null">
 	        received,
 	      </if>
-	 	<if test="balance != null">
-	        balance,
+	 	<if test="budget_balance != null">
+	        budget_balance,
+	      </if>
+	 	<if test="final_balance != null">
+	        final_balance,
 	      </if>
 	 	<if test="sales != null">
 	        sales,
@@ -128,9 +128,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="team_number != null">
 	        #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="back_days != null">
-	        #{back_days,jdbcType=INTEGER},
 	      </if>
     	<if test="final_flg != null">
 	        #{final_flg,jdbcType=CHAR},
@@ -162,8 +159,11 @@
     	<if test="received != null">
 	        #{received,jdbcType=DECIMAL},
 	      </if>
-    	<if test="balance != null">
-	        #{balance,jdbcType=DECIMAL},
+    	<if test="budget_balance != null">
+	        #{budget_balance,jdbcType=DECIMAL},
+	      </if>
+    	<if test="final_balance != null">
+	        #{final_balance,jdbcType=DECIMAL},
 	      </if>
     	<if test="sales != null">
 	        #{sales,jdbcType=VARCHAR},
@@ -196,9 +196,6 @@
     	<if test="team_number != null">
 	        team_number = #{team_number,jdbcType=VARCHAR},
 	      </if>
-    	<if test="back_days != null">
-	        back_days = #{back_days,jdbcType=INTEGER},
-	      </if>
     	<if test="final_flg != null">
 	        final_flg = #{final_flg,jdbcType=CHAR},
 	      </if>
@@ -229,8 +226,11 @@
     	<if test="received != null">
 	        received = #{received,jdbcType=DECIMAL},
 	      </if>
-    	<if test="balance != null">
-	        balance = #{balance,jdbcType=DECIMAL},
+    	<if test="budget_balance != null">
+	        budget_balance = #{budget_balance,jdbcType=DECIMAL},
+	      </if>
+    	<if test="final_balance != null">
+	        final_balance = #{final_balance,jdbcType=DECIMAL},
 	      </if>
     	<if test="sales != null">
 	        sales = #{sales,jdbcType=VARCHAR},

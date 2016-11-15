@@ -1,5 +1,6 @@
 package com.xinchi.common;
 
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 
 /**
@@ -57,5 +58,20 @@ public class SimpletinyString {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static boolean isEmpty(String str) {
+
+		return null == str || str.equals("");
+	}
+
+	public static int str2Int(String str) {
+		return (null == str || str.trim().equals("")) ? 0 : Integer.valueOf(str
+				.trim());
+	}
+
+	public static BigDecimal str2Decimal(String str) {
+		return (null == str || str.trim().equals("")) ? BigDecimal.ZERO
+				: new BigDecimal((str.trim()));
 	}
 }

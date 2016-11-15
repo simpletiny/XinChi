@@ -1,110 +1,53 @@
-2016-11-13 07:04:31.185 INFO  (main) [   ] o.e.j.s.Server jetty-9.3.8.v20160314
-2016-11-13 07:04:31.596 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr? version 6.3.0
-2016-11-13 07:04:31.596 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
-2016-11-13 07:04:31.597 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: D:\ForCoding\workplace\XinChi\solr
-2016-11-13 07:04:31.647 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2016-11-13T07:04:31.598Z
-2016-11-13 07:04:31.648 INFO  (main) [   ] o.a.s.s.StartupLoggingUtils Property solr.log.muteconsole given. Muting ConsoleAppender named CONSOLE
-2016-11-13 07:04:31.672 INFO  (main) [   ] o.a.s.c.SolrResourceLoader Using system property solr.solr.home: D:\ForCoding\workplace\XinChi\solr\server\solr
-2016-11-13 07:04:31.678 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\ForCoding\workplace\XinChi\solr\server\solr\solr.xml
-2016-11-13 07:04:31.894 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
-2016-11-13 07:04:31.957 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions underneath D:\ForCoding\workplace\XinChi\solr\server\solr
-2016-11-13 07:04:31.963 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [receivable]
-2016-11-13 07:04:32.000 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@1e98b1c{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
-2016-11-13 07:04:32.001 INFO  (main) [   ] o.e.j.s.Server Started @1535ms
-2016-11-13 07:04:32.031 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader [receivable] Added 51 libs to classloader, from paths: [/D:/ForCoding/workplace/XinChi/solr/contrib/clustering/lib, /D:/ForCoding/workplace/XinChi/solr/contrib/extraction/lib, /D:/ForCoding/workplace/XinChi/solr/contrib/langid/lib, /D:/ForCoding/workplace/XinChi/solr/contrib/velocity/lib, /D:/ForCoding/workplace/XinChi/solr/dist]
-2016-11-13 07:04:32.116 ERROR (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:32.120 ERROR (coreContainerWorkExecutor-2-thread-1) [   ] o.a.s.c.CoreContainer Error waiting for SolrCore to be created
-java.util.concurrent.ExecutionException: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
-	at java.util.concurrent.FutureTask.get(FutureTask.java:192)
-	at org.apache.solr.core.CoreContainer.lambda$load$1(CoreContainer.java:526)
-	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	... 5 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:32.709 INFO  (qtp12209492-18) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json} status=0 QTime=520
-2016-11-13 07:04:35.218 ERROR (qtp12209492-16) [   ] o.a.s.s.HttpSolrCall null:org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
+2016-11-15 01:33:39.666 INFO  (main) [   ] o.e.j.s.Server jetty-9.3.8.v20160314
+2016-11-15 01:33:41.004 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr? version 6.3.0
+2016-11-15 01:33:41.005 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
+2016-11-15 01:33:41.005 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: D:\ForCoding\workplace\XinChi\solr
+2016-11-15 01:33:41.217 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2016-11-15T01:33:41.008Z
+2016-11-15 01:33:41.219 INFO  (main) [   ] o.a.s.s.StartupLoggingUtils Property solr.log.muteconsole given. Muting ConsoleAppender named CONSOLE
+2016-11-15 01:33:41.345 INFO  (main) [   ] o.a.s.c.SolrResourceLoader Using system property solr.solr.home: D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-15 01:33:41.398 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\ForCoding\workplace\XinChi\solr\server\solr\solr.xml
+2016-11-15 01:33:42.524 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
+2016-11-15 01:33:51.814 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions underneath D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-15 01:33:51.904 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [receivable]
+2016-11-15 01:33:52.086 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@aed80c{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-15 01:33:52.100 INFO  (main) [   ] o.e.j.s.Server Started @17010ms
+2016-11-15 01:33:52.163 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader [receivable] Added 3 libs to classloader, from paths: [/D:/ForCoding/workplace/XinChi/solr/extlib]
+2016-11-15 01:33:52.607 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 6.3.0
+2016-11-15 01:33:53.026 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [receivable] Schema name=receivable
+2016-11-15 01:33:53.984 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Loaded schema receivable/1.6 with uniqueid field id
+2016-11-15 01:33:54.387 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'receivable' using configuration from instancedir D:\ForCoding\workplace\XinChi\solr\server\solr\receivable
+2016-11-15 01:33:54.514 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.c.SolrCore [[receivable] ] Opening new SolrCore at [D:\ForCoding\workplace\XinChi\solr\server\solr\receivable], dataDir=[F:\data\]
+2016-11-15 01:33:54.744 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
+2016-11-15 01:33:57.722 INFO  (qtp31837390-20) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json} status=0 QTime=1039
+2016-11-15 01:34:04.398 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2016-11-15 01:34:04.398 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2016-11-15 01:34:04.526 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Hard AutoCommit: if uncommited for 15000ms; 
+2016-11-15 01:34:04.527 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Soft AutoCommit: disabled
+2016-11-15 01:34:04.826 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.SolrIndexSearcher Opening [Searcher@13c9283[receivable] main]
+2016-11-15 01:34:04.843 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf
+2016-11-15 01:34:04.877 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2016-11-15 01:34:04.890 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4,maxQueryFrequency=0.01}
+2016-11-15 01:34:04.896 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf\elevate.xml
+2016-11-15 01:34:04.923 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
+2016-11-15 01:34:04.957 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener sending requests to Searcher@13c9283[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_z(6.3.0):C19) Uninverting(_10(6.3.0):C1) Uninverting(_11(6.3.0):C1)))}
+2016-11-15 01:34:04.958 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2016-11-15 01:34:04.958 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2016-11-15 01:34:04.959 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.SolrCore [receivable] Registered new searcher Searcher@13c9283[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_z(6.3.0):C19) Uninverting(_10(6.3.0):C1) Uninverting(_11(6.3.0):C1)))}
+2016-11-15 01:38:26.266 INFO  (qtp31837390-19) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=21 status=0 QTime=274
+2016-11-15 01:43:38.040 INFO  (qtp31837390-16) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=21 status=0 QTime=3
+2016-11-15 01:44:40.413 INFO  (qtp31837390-21) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={qd=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=0 status=0 QTime=22
+2016-11-15 01:52:58.940 INFO  (qtp31837390-22) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=21 status=0 QTime=2
+2016-11-15 01:58:50.008 ERROR (qtp31837390-17) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: org.apache.solr.search.SyntaxError: Cannot parse 'departure_date:[2016-11-01 To 2016-11-02]': Encountered " <RANGE_GOOP> "2016-11-02 "" at line 1, column 30.
+Was expecting one of:
+    "]" ...
+    "}" ...
+    
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:218)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
 	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
@@ -131,55 +74,51 @@ Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.Mul
 	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
 	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
 	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+Caused by: org.apache.solr.search.SyntaxError: Cannot parse 'departure_date:[2016-11-01 To 2016-11-02]': Encountered " <RANGE_GOOP> "2016-11-02 "" at line 1, column 30.
+Was expecting one of:
+    "]" ...
+    "}" ...
+    
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:156)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	... 31 more
+Caused by: org.apache.solr.parser.ParseException: Encountered " <RANGE_GOOP> "2016-11-02 "" at line 1, column 30.
+Was expecting one of:
+    "]" ...
+    "}" ...
+    
+	at org.apache.solr.parser.QueryParser.generateParseException(QueryParser.java:659)
+	at org.apache.solr.parser.QueryParser.jj_consume_token(QueryParser.java:541)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:368)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
 	... 34 more
 
-2016-11-13 07:04:35.223 ERROR (qtp12209492-16) [   ] o.a.s.s.HttpSolrCall An Error was wrapped in another exception - please report complete stacktrace on SOLR-6161
-org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
+2016-11-15 01:58:50.012 INFO  (qtp31837390-17) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:[2016-11-01+To+2016-11-02]&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=28
+2016-11-15 02:00:08.395 ERROR (qtp31837390-21) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'2016-11-01'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:529)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:309)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
 	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
@@ -206,169 +145,28 @@ org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due
 	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
 	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
 	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:35.224 WARN  (qtp12209492-16) [   ] o.e.j.s.ServletHandler Error for /solr/receivable/select
-java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:38.699 ERROR (qtp12209492-18) [   ] o.a.s.s.HttpSolrCall null:org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
-	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
-	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
-	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
-	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
-	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
-	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
-	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
-	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
-	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
-	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
-	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
-	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
-	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
-	at org.eclipse.jetty.server.Server.handle(Server.java:518)
-	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
-	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
-	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
-	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
-	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
-	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
-	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
 
-2016-11-13 07:04:38.702 ERROR (qtp12209492-18) [   ] o.a.s.s.HttpSolrCall An Error was wrapped in another exception - please report complete stacktrace on SOLR-6161
-org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
+2016-11-15 02:00:08.397 INFO  (qtp31837390-21) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:2016-11-01&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=56
+2016-11-15 02:02:05.701 ERROR (qtp31837390-20) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'2016-11-01'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:529)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:309)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
 	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
@@ -395,171 +193,28 @@ org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due
 	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
 	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
 	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:38.703 WARN  (qtp12209492-18) [   ] o.e.j.s.ServletHandler Error for /solr/receivable/select
-java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:41.253 INFO  (qtp12209492-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479020681094} status=0 QTime=1
-2016-11-13 07:04:41.342 INFO  (qtp12209492-34) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479020681095} status=0 QTime=89
-2016-11-13 07:04:43.073 ERROR (qtp12209492-17) [   ] o.a.s.s.HttpSolrCall null:org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
-	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
-	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
-	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
-	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
-	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
-	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
-	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
-	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
-	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
-	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
-	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
-	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
-	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
-	at org.eclipse.jetty.server.Server.handle(Server.java:518)
-	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
-	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
-	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
-	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
-	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
-	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
-	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
 
-2016-11-13 07:04:43.076 ERROR (qtp12209492-17) [   ] o.a.s.s.HttpSolrCall An Error was wrapped in another exception - please report complete stacktrace on SOLR-6161
-org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due to init failure: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.getCore(CoreContainer.java:1097)
-	at org.apache.solr.servlet.HttpSolrCall.init(HttpSolrCall.java:252)
-	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:414)
+2016-11-15 02:02:05.703 INFO  (qtp31837390-20) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:2016-11-01+11:05:06&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=4
+2016-11-15 02:02:27.703 ERROR (qtp31837390-14) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'2016-11-01'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:529)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:309)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
 	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
 	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
@@ -586,90 +241,218 @@ org.apache.solr.common.SolrException: SolrCore 'receivable' is not available due
 	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
 	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
 	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: JVM Error creating core [receivable]: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:860)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	... 1 more
-Caused by: java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:04:43.076 WARN  (qtp12209492-17) [   ] o.e.j.s.ServletHandler Error for /solr/receivable/select
-java.lang.NoClassDefFoundError: org/apache/lucene/analysis/util/MultiTermAwareComponent
-	at java.lang.ClassLoader.defineClass1(Native Method)
-	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
-	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:487)
-	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:428)
-	at java.lang.Class.forName0(Native Method)
-	at java.lang.Class.forName(Class.java:348)
-	at org.apache.lucene.util.SPIClassIterator.next(SPIClassIterator.java:158)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.reload(AnalysisSPILoader.java:85)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:65)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:51)
-	at org.apache.lucene.analysis.util.AnalysisSPILoader.<init>(AnalysisSPILoader.java:43)
-	at org.apache.lucene.analysis.util.CharFilterFactory.<clinit>(CharFilterFactory.java:32)
-	at org.apache.solr.core.SolrResourceLoader.reloadLuceneSPI(SolrResourceLoader.java:241)
-	at org.apache.solr.core.SolrConfig.initLibs(SolrConfig.java:791)
-	at org.apache.solr.core.SolrConfig.<init>(SolrConfig.java:205)
-	at org.apache.solr.core.SolrConfig.readFromResourceLoader(SolrConfig.java:179)
-	at org.apache.solr.core.ConfigSetService.createSolrConfig(ConfigSetService.java:97)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:77)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:840)
-	at org.apache.solr.core.CoreContainer.lambda$load$0(CoreContainer.java:498)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor.lambda$execute$0(ExecutorUtil.java:229)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+
+2016-11-15 02:02:27.705 INFO  (qtp31837390-14) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:2016-11-01+11:05:06&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=3
+2016-11-15 02:03:46.807 ERROR (qtp31837390-19) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'1995-12-31T23'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:529)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:309)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
 	at java.lang.Thread.run(Thread.java:745)
-Caused by: java.lang.ClassNotFoundException: org.apache.lucene.analysis.util.MultiTermAwareComponent
-	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
-	... 34 more
-2016-11-13 07:13:07.014 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@1e98b1c{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
-2016-11-13 07:13:07.015 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=25671582
-2016-11-13 07:13:07.020 WARN  (ShutdownMonitor) [   ] o.e.j.s.ServletContextHandler ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.
+
+2016-11-15 02:03:46.809 INFO  (qtp31837390-19) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:1995-12-31T23:59:59Z&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=4
+2016-11-15 02:05:08.605 ERROR (qtp31837390-22) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'1995-12-31T23'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.handleBareTokenQuery(SolrQueryParserBase.java:529)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:309)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+
+2016-11-15 02:05:08.607 INFO  (qtp31837390-22) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:1995-12-31T23:59:59Z&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=3
+2016-11-15 02:05:32.238 INFO  (qtp31837390-17) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:"1995-12-31T23:59:59Z"&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=0 status=0 QTime=106
+2016-11-15 02:05:47.653 ERROR (qtp31837390-20) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'1995-12-31'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:384)
+	at org.apache.solr.parser.SolrQueryParserBase.handleQuotedTerm(SolrQueryParserBase.java:543)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:413)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+
+2016-11-15 02:05:47.654 INFO  (qtp31837390-20) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:"1995-12-31"&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=4
+2016-11-15 02:06:36.766 INFO  (qtp31837390-14) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=21 status=0 QTime=2
+2016-11-15 02:12:02.481 ERROR (qtp31837390-17) [   x:receivable] o.a.s.h.RequestHandlerBase org.apache.solr.common.SolrException: Invalid Date String:'Tue Nov 15 10:12:02 CST 2016'
+	at org.apache.solr.util.DateMathParser.parseMath(DateMathParser.java:234)
+	at org.apache.solr.schema.TrieField.readableToIndexed(TrieField.java:531)
+	at org.apache.solr.schema.FieldType.getFieldQuery(FieldType.java:753)
+	at org.apache.solr.schema.TrieField.getFieldQuery(TrieField.java:496)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:736)
+	at org.apache.solr.parser.SolrQueryParserBase.getFieldQuery(SolrQueryParserBase.java:384)
+	at org.apache.solr.parser.SolrQueryParserBase.handleQuotedTerm(SolrQueryParserBase.java:543)
+	at org.apache.solr.parser.QueryParser.Term(QueryParser.java:413)
+	at org.apache.solr.parser.QueryParser.Clause(QueryParser.java:180)
+	at org.apache.solr.parser.QueryParser.Query(QueryParser.java:101)
+	at org.apache.solr.parser.QueryParser.TopLevelQuery(QueryParser.java:90)
+	at org.apache.solr.parser.SolrQueryParserBase.parse(SolrQueryParserBase.java:152)
+	at org.apache.solr.search.LuceneQParser.parse(LuceneQParser.java:50)
+	at org.apache.solr.search.QParser.getQuery(QParser.java:140)
+	at org.apache.solr.handler.component.QueryComponent.prepare(QueryComponent.java:161)
+	at org.apache.solr.handler.component.SearchHandler.handleRequestBody(SearchHandler.java:269)
+	at org.apache.solr.handler.RequestHandlerBase.handleRequest(RequestHandlerBase.java:153)
+	at org.apache.solr.core.SolrCore.execute(SolrCore.java:2213)
+	at org.apache.solr.servlet.HttpSolrCall.execute(HttpSolrCall.java:654)
+	at org.apache.solr.servlet.HttpSolrCall.call(HttpSolrCall.java:460)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:303)
+	at org.apache.solr.servlet.SolrDispatchFilter.doFilter(SolrDispatchFilter.java:254)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+
+2016-11-15 02:12:02.483 INFO  (qtp31837390-17) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=departure_date:"Tue+Nov+15+10:12:02+CST+2016"&stats=true&wt=javabin&version=2&stats.field=budget_receivable} status=400 QTime=4
+2016-11-15 02:13:59.001 INFO  (qtp31837390-20) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479176038525} status=0 QTime=5
+2016-11-15 02:13:59.253 INFO  (qtp31837390-14) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479176038526} status=0 QTime=253
+2016-11-15 02:13:59.254 INFO  (qtp31837390-21) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479176038526} status=0 QTime=251
+2016-11-15 02:14:08.232 INFO  (qtp31837390-35) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479176038525} status=0 QTime=0
+2016-11-15 02:14:08.249 INFO  (qtp31837390-19) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/luke params={numTerms=0&show=index&wt=json&_=1479176048181} status=0 QTime=11
+2016-11-15 02:14:08.252 INFO  (qtp31837390-17) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/ping params={action=status&wt=json&_=1479176038526&ts=1479176038526} status=503 QTime=3
+2016-11-15 02:14:08.258 INFO  (qtp31837390-20) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/replication params={wt=json&command=details&_=1479176048183} status=0 QTime=15
+2016-11-15 02:14:08.345 INFO  (qtp31837390-16) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479176038526} status=0 QTime=110
+2016-11-15 02:14:08.346 INFO  (qtp31837390-15) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/system params={wt=json&_=1479176048182} status=0 QTime=100
+2016-11-15 02:14:10.475 INFO  (qtp31837390-20) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479176038525} status=0 QTime=0
+2016-11-15 02:14:10.537 INFO  (qtp31837390-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479176038526} status=0 QTime=59
+2016-11-15 02:14:13.116 INFO  (qtp31837390-35) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&indent=on&wt=json&_=1479176050351} hits=21 status=0 QTime=0
+2016-11-15 02:15:14.153 INFO  (qtp31837390-22) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&stats=true&wt=javabin&version=2&stats.field=budget_receivable} hits=21 status=0 QTime=1
+2016-11-15 02:50:33.786 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@aed80c{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-15 02:50:33.796 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=25418286
+2016-11-15 02:50:33.807 INFO  (coreCloseExecutor-12-thread-1) [   x:receivable] o.a.s.c.SolrCore [receivable]  CLOSING SolrCore org.apache.solr.core.SolrCore@646140
+2016-11-15 02:50:33.969 WARN  (ShutdownMonitor) [   ] o.e.j.s.ServletContextHandler ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.

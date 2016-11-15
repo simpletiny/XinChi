@@ -10,8 +10,6 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	private String team_number;
 
-	private Integer back_days;
-
 	private String final_flg;
 
 	private String client_employee_name;
@@ -32,7 +30,9 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	private BigDecimal received;
 
-	private BigDecimal balance;
+	private BigDecimal budget_balance;
+
+	private BigDecimal final_balance;
 
 	private String sales;
 
@@ -43,6 +43,13 @@ public class ReceivableBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String create_user;
+	
+	private String back_days;
+
+	// search condition
+	private String departure_month;
+	private String team_status;
+	private String type;
 
 	public String getTeam_number() {
 		return team_number;
@@ -50,14 +57,6 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
-	}
-
-	public Integer getBack_days() {
-		return back_days;
-	}
-
-	public void setBack_days(Integer back_days) {
-		this.back_days = back_days;
 	}
 
 	public String getFinal_flg() {
@@ -132,14 +131,6 @@ public class ReceivableBean extends SupperBO implements Serializable {
 		this.received = received;
 	}
 
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
-
 	public String getSales() {
 		return sales;
 	}
@@ -186,6 +177,54 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	public void setReturn_date(String return_date) {
 		this.return_date = return_date;
+	}
+
+	public BigDecimal getBudget_balance() {
+		return budget_balance;
+	}
+
+	public void setBudget_balance(BigDecimal budget_balance) {
+		this.budget_balance = budget_balance;
+	}
+
+	public BigDecimal getFinal_balance() {
+		return final_balance;
+	}
+
+	public void setFinal_balance(BigDecimal final_balance) {
+		this.final_balance = final_balance;
+	}
+
+	public String getDeparture_month() {
+		return departure_month;
+	}
+
+	public void setDeparture_month(String departure_month) {
+		this.departure_month = departure_month;
+	}
+
+	public String getTeam_status() {
+		return team_status;
+	}
+
+	public void setTeam_status(String team_status) {
+		this.team_status = team_status;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getBack_days() {
+		return back_days;
+	}
+
+	public void setBack_days(String back_days) {
+		this.back_days = back_days;
 	}
 
 }

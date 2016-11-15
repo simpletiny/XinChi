@@ -53,4 +53,6 @@ public interface UserDAO {
 	public List<UserBaseBean> getAllByPks(String[] pks);
 
 	public UserBaseBean getByUserNumber(String user_number);
+
+	public UserBaseBean selectUserByName(String user_name);
 }

@@ -6,8 +6,17 @@ var OrderContext = function() {
 	self.types = [ '预算', '决算' ];
 	self.chosenTypes = ko.observableArray([]);
 	self.recsum = ko.observable({});
+	self.chosenSales = ko.observable();
+	// 获取摘要信息
+	self.fetchSummary = function() {
+		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
+			sales_name : self.chosenSales()
+		}, function(data) {
+			self.recsum(data.summary);
+		});
+	};
 
-	self.orders = ko.observable({
+	self.receivables = ko.observable({
 		total : 0,
 		items : []
 	});
@@ -32,55 +41,96 @@ var OrderContext = function() {
 
 	// 计算合计
 	self.totalPeople = ko.observable(0);
+
+	self.totalBudgetReceivable = ko.observable(0);
 	self.totalReceivable = ko.observable(0);
-	self.totalPayable = ko.observable(0);
-	self.totalProfit = ko.observable(0);
-	self.totalPerProfit = ko.observable(0);
+	self.totalFinalReceivable = ko.observable(0);
+
+	self.totalReceived = ko.observable(0);
+
+	self.totalBudgetBalance = ko.observable(0);
+	self.totalBalance = ko.observable(0);
+	self.totalFinalBalance = ko.observable(0);
 
 	self.refresh = function() {
 		var totalPeople = 0;
+		var totalBudgetReceivable = 0;
 		var totalReceivable = 0;
-		var totalPayable = 0;
-		var totalProfit = 0;
-		var totalPerProfit = 0;
+		var totalFinalReceivable = 0;
+		var totalReceived = 0;
+		var totalBudgetBalance = 0;
+		var totalBalance = 0;
+		var totalFinalBalance = 0;
 
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
-		$
-				.getJSON(self.apiurl + 'sale/searchOrderByPage', param,
-						function(data) {
-							self.orders(data.orders);
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
+				data) {
+			self.receivables(data.receivables);
 
-							// 计算合计
-							$(self.orders()).each(function(idx, data) {
-								totalPeople += data.people_count;
-								totalReceivable += data.receivable;
-								totalPayable += data.payable;
-								totalProfit += data.gross_profit;
-							});
+			// 计算合计
+			$(self.receivables()).each(function(idx, data) {
+				totalPeople += data.people_count;
+				totalBudgetReceivable += data.budget_receivable;
+				totalBudgetBalance += data.budget_balance;
+				if (data.final_flg == "Y") {
+					totalFinalReceivable += data.final_receivable;
+					totalFinalBalance += data.final_balance;
+					totalReceivable += data.final_receivable;
+					totalBalance += data.final_balance;
+				} else {
+					totalReceivable += data.budget_receivable;
+					totalBalance += data.budget_balance;
+				}
+				totalReceived += data.received;
 
-							self.totalPeople(totalPeople);
-							self.totalReceivable(totalReceivable);
-							self.totalPayable(totalPayable);
-							self.totalProfit(totalProfit);
-							self.totalPerProfit((totalProfit / totalPeople)
-									.toFixed(2));
+			});
 
-							self.totalCount(Math.ceil(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
-						});
+			self.totalPeople(totalPeople);
+
+			self.totalBudgetReceivable(totalBudgetReceivable);
+			self.totalReceivable(totalReceivable);
+			self.totalFinalReceivable(totalFinalReceivable);
+			self.totalReceived(totalReceived);
+
+			self.totalBudgetBalance(totalBudgetBalance);
+			self.totalBalance(totalBalance);
+			self.totalFinalBalance(totalFinalBalance);
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+		});
+	};
+
+	self.changeType = function() {
+		if (self.chosenTypes().length == 0 || self.chosenTypes().length == 2) {
+			$("[st='all']").show();
+			$("[st='budget']").hide();
+			$("[st='final']").hide();
+		} else if (self.chosenTypes()[0] == "预算") {
+			$("[st='all']").hide();
+			$("[st='budget']").show();
+			$("[st='final']").hide();
+		} else {
+			$("[st='all']").hide();
+			$("[st='budget']").hide();
+			$("[st='final']").show();
+		}
+
+		return true;
 	};
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
 	self.sales_name = ko.observableArray([]);
+	self.sales_number = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 		$(self.sales()).each(function(idx, data) {
 			self.sales_name.push(data.user_name);
+			self.sales_number.push(data.user_number);
 		});
 	});
 	self.search = function() {
@@ -165,4 +215,9 @@ var ctx = new OrderContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+	ctx.fetchSummary();
+	$('.month-picker-st').MonthPicker({
+		Button : false,
+		MonthFormat : 'yy-mm'
+	});
 });
