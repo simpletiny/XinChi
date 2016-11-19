@@ -1,3 +1,8 @@
+var tailLayer;
+var sumLayer;
+var strikeLayer;
+var receiveLayer;
+
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -23,20 +28,236 @@ var OrderContext = function() {
 
 	// 执行方法
 	// 抹零申请
-	self.ridTail = function() {
+	self.tailMoney = ko.observable();
+	self.team_number = ko.observable();
+	self.client_employee_name = ko.observable();
 
+	self.ridTail = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("抹零申请只能选中一个订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var re = null;
+			$(self.receivables()).each(function(idx, data) {
+				if (data.pk == self.chosenOrders()[0]) {
+					re = data;
+					return false;
+				}
+			});
+			if (re.final_flg == "N") {
+				fail_msg("订单未决算，不能抹零申请");
+				return;
+			}
+			if (re.final_balance <= 0) {
+				fail_msg("尾款已结清");
+				return;
+			}
+			if (re.final_balance >= 100) {
+				fail_msg("尾款多余100元，不能抹零申请");
+				return;
+			}
+			self.tailMoney(re.final_balance);
+			self.team_number(re.team_number);
+			self.client_employee_name(re.client_employee_name);
+
+			tailLayer = $.layer({
+				type : 1,
+				title : [ '抹零申请', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '1120px', '300px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#tail_submit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
+	};
+
+	self.applyRidTail = function() {
+		if (!$("#form-tail").valid())
+			return;
+		startLoadingSimpleIndicator("保存中");
+		var data = $("#form-tail").serialize();
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyRidTail',
+			data : data,
+			success : function(str) {
+				if(str!="OK"){
+					fail_msg("申请失败，请联系管理员");
+				}
+				layer.close(tailLayer);
+				self.refresh();
+				endLoadingIndicator();
+			}
+		});
 	};
 	// 合账申请
 	self.sumOrder = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			fail_msg("合账申请请选择多个订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			var res = new Array();
+			var client_employee_pks = new Array();
+			$(self.receivables()).each(function(idx, data1) {
+				$(self.chosenOrders()).each(function(idx, data2) {
+					if (data1.pk == data2) {
+						res.push(data1);
+						return false;
+					}
+				});
+			});
+			var check_result = true;
+			$(res).each(function(idx, data) {
+				client_employee_pks.push(data.client_employee_pk);
+				if (data.final_flg == "Y") {
+					if (data.final_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
+				} else {
+					if (data.budget_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
+				}
+			});
+			if (!check_result)
+				return;
+			startLoadingSimpleIndicator("检测中");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/isSameFinancialBody',
+				data : "client_employee_pks=" + client_employee_pks,
+				success : function(str) {
+					if (str == "NOT") {
+						fail_msg("客户不属于同一财务主体");
 
+					} else {
+						sumLayer = $.layer({
+							type : 1,
+							title : [ '抹零申请', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '820px', '700px' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#sum_submit'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					}
+					endLoadingIndicator();
+				}
+			});
+		}
 	};
 	// 冲账申请
 	self.strike = function() {
-
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("冲账申请只能选择一个订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var re = null;
+			$(self.receivables()).each(function(idx, data) {
+				if (data.pk == self.chosenOrders()[0]) {
+					re = data;
+					return false;
+				}
+			});
+			if (re.final_flg == "Y") {
+				if (re.final_balance <= 0) {
+					fail_msg("尾款已结清");
+					return;
+				}
+			} else {
+				if (re.budget_balance <= 0) {
+					fail_msg("尾款已结清");
+					return;
+				}
+			}
+			strikeLayer = $.layer({
+				type : 1,
+				title : [ '冲账申请', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '820px', '700px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#strike_submit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
 	};
 	// 收入
 	self.receive = function() {
-
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("收入只能选择一个订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var re = null;
+			$(self.receivables()).each(function(idx, data) {
+				if (data.pk == self.chosenOrders()[0]) {
+					re = data;
+					return false;
+				}
+			});
+			if (re.final_flg == "Y") {
+				if (re.final_balance <= 0) {
+					fail_msg("尾款已结清");
+					return;
+				}
+			} else {
+				if (re.budget_balance <= 0) {
+					fail_msg("尾款已结清");
+					return;
+				}
+			}
+			receiveLayer = $.layer({
+				type : 1,
+				title : [ '收入', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '820px', '300px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#receive_submit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
 	};
 
 	// 计算合计
@@ -62,13 +283,13 @@ var OrderContext = function() {
 		var totalBalance = 0;
 		var totalFinalBalance = 0;
 
-		var param = $("form").serialize();
+		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
 				data) {
 			self.receivables(data.receivables);
-
+			self.chosenOrders.removeAll();
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
 				totalPeople += data.people_count;

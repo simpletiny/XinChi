@@ -6,13 +6,25 @@ import java.math.BigDecimal;
 import com.xinchi.common.SupperBO;
 
 public class ClientReceivedDetailBean extends SupperBO implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8576728527390144279L;
 
 	private String team_number;
 
 	private BigDecimal received;
 
 	private String received_time;
+
+	private String type;
+
+	private String confirm_time;
+
+	private String status;
+
+	private String comment;
+
+	private BigDecimal sum_received;
+
+	private String related_pk;
 
 	private String card_pk;
 
@@ -46,6 +58,54 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setReceived_time(String received_time) {
 		this.received_time = received_time;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getConfirm_time() {
+		return confirm_time;
+	}
+
+	public void setConfirm_time(String confirm_time) {
+		this.confirm_time = confirm_time;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public BigDecimal getSum_received() {
+		return sum_received;
+	}
+
+	public void setSum_received(BigDecimal sum_received) {
+		this.sum_received = sum_received;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
 	}
 
 	public String getCard_pk() {
@@ -87,6 +147,5 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	public void setPk(String pk) {
 		this.pk = pk;
 	}
-
 
 }

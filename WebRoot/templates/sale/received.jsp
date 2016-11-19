@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>决算单管理</h2>
+        <h2>收入详表</h2>
     </div>
 
     <div class="main-container">
@@ -26,6 +26,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     .form-control{ height: 30px; }
                 </style>
                     <div class="form-group" >
+	                    <div style="width:30%;float:right">
+		                    <div>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOrder() }">新建</button>
+		                    </div>
+		                     <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+		                    <div>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
+		                    </div>
+		                    <div>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+		                    </div>
+		                    </s:if>
+		                 </div>
 	                </div>
                 <div class="form-group">
                     <div class="span6">
@@ -42,9 +55,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                   name="order.product" />
                         </div>
                     </div>
-                    	</div>
-                    	<div class="form-group" >
-                    	  <div align="left">
+                    </div>
+                   <div class="form-group">
+                      <div align="left">
                         <label class="col-md-1 control-label">确认日期</label>
                         <div class="col-md-2" style="float:left">
                             <input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from"
@@ -57,7 +70,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                   name="order.date_to" />
                         </div>
                     </div>
-                    <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                   <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                      <div class="span6">
                         <label class="col-md-1 control-label">销售</label>
                         <div class="col-md-2">
@@ -74,40 +87,50 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr role="row">
+                        	<th></th>
                             <th>团号</th>
                             <th>客户</th>
-                             <th>确认日期</th>
+                            <th>确认日期</th>
                             <th>出团日期</th>
                             <th>回团日期</th>
                             <th>人数</th>
                             <th>总团款</th>
                             <th>总成本</th>
-                            <th>利润</th>
+                            <th>毛利润</th>
                             <th>人均利润</th>
+                            <th></th>
                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                             <th>销售</th>
                             </s:if>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: orders">
+                    <tbody id="tbody-data" data-bind="foreach: orders">
                         <tr>
-                            <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'final-order-detail.jsp?key='+$data.pk}"></a> </td>
+                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
+                            <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'order-detail.jsp?key='+$data.pk}"></a> </td>
                             <td data-bind="text: $data.client_employee_name"></td>
                             <td data-bind="text: $data.confirm_date"></td>
                             <td data-bind="text: $data.departure_date"></td>
                             <td data-bind="text: $data.return_date"></td>
                             <td data-bind="text: $data.people_count"></td> 
                              <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>  
-                             <td data-bind="text: $data.profit"></td>    
-                             <td data-bind="text: $data.per_profit"></td>  
-                               <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+                             <td data-bind="text: $data.payable"></td>
+                             <td data-bind="text: $data.gross_profit"></td>    
+                             <td data-bind="text: $data.per_profit"></td>
+                             <!-- ko if: $data.final_flg=='N' -->
+                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.closeTeam($data.pk)} ">生成决算单</a></td> 
+                             <!-- /ko -->   
+                             <!-- ko if: $data.final_flg=='Y' -->
+                             <td>已生成</td> 
+                             <!-- /ko -->      
+                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                              <td data-bind="text: $data.create_user_name"></td>  
-                              </s:if>
+                              </s:if>  
                         </tr>
                     </tbody>
-                     <tr id="total-row">
-                     		<td></td>
+                    <tr id="total-row">
+                    		<td></td>
+                    	    <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -117,6 +140,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text:totalPayable"></td>
                             <td data-bind="text:totalProfit"></td>
                             <td data-bind="text:totalPerProfit"></td>
+                            <td></td>
                              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                             <td></td>
                             </s:if>
@@ -139,10 +163,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </div>
   <script>
-    $(".order").addClass("current").children("ol").css("display", "block");
+    $(".sale").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+  <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
    <script src="<%=basePath %>static/js/datepicker.js"></script>
-    <script src="<%=basePath%>static/js/sale/final-order.js"></script>
+    <script src="<%=basePath%>static/js/sale/order.js"></script>
 </body>
 </html>

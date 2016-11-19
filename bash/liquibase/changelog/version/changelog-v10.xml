@@ -903,4 +903,12 @@
 			<comment>create receivable_summary views</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_received_detail ADD COLUMN type VARCHAR(10) NULL  AFTER received_time , ADD COLUMN confirm_time VARCHAR(16) NULL  AFTER type , ADD COLUMN status CHAR(1) NULL  AFTER confirm_time , ADD COLUMN comment VARCHAR(200) NULL  AFTER status , ADD COLUMN sum_received DECIMAL(12,2) NULL  AFTER comment , ADD COLUMN related_pk VARCHAR(500) NULL  AFTER sum_received ;
+          		            ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

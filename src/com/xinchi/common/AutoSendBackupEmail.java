@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.xinchi.tools.PropertiesUtil;
 import com.xinchi.tools.main.MailSender;
 import com.xinchi.tools.main.MailSenderInfo;
-import com.zeroturnaround.javarebel.cD;
 
 @Service
 public class AutoSendBackupEmail {
@@ -23,7 +22,7 @@ public class AutoSendBackupEmail {
 		String serverPort = PropertiesUtil.getProperty("mailServerPort");
 		String sendUser = PropertiesUtil.getProperty("mailSendUser");
 		String sendPassword = PropertiesUtil.getProperty("mailSendPwd");
-
+	
 		String subject = "sql backup";
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setMailServerHost(serverHost);

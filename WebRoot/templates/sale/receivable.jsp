@@ -35,7 +35,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <div class="main-container">
        <div class="main-box">
-         <form class="form-horizontal search-panel">
+         <form class="form-horizontal search-panel" id="form-search">
                 <div class="form-group">
                     <div class="span6">
                         <label class="col-md-1 control-label">客户</label>
@@ -241,9 +241,218 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
     
   </div>
+</div>
+    <div id="tail_submit" style="display:none;width:1100px; padding-top: 30px;">
+   	 <form id="form-tail">
+	          <div class="input-row clearfloat">
+		           <div class="col-md-4">
+		               <label class="l" style="width:30%">抹零金额</label>
+		               <div class="ip" style="width:70%">
+		                  <p class="ip-default" data-bind="text:tailMoney()"></p>
+		                  <input name="detail.received" type="hidden" data-bind="value:tailMoney()"/>
+		               </div>
+		           </div>
+		           <div class="col-md-4">
+		               <label class="l" style="width:30%">团号</label>
+		               <div class="ip" style="width:70%">
+		                   <p class="ip-default" data-bind="text:team_number()"></p>
+		                   <input name="detail.team_number" type="hidden" data-bind="value:team_number()"/>
+		               </div>
+		           </div>
+		         <div class="col-md-4">
+		               <label class="l" style="width:30%">客户</label>
+		               <div class="ip" style="width:70%">
+		                   <p class="ip-default" data-bind="text:client_employee_name()"></p>
+		               </div>
+		           </div>
+	      	 </div>
+	      	 <div class="input-row clearfloat">
+		     	 <div class="col-md-12 required">
+                       <label class="l" style="width:10%">说明</label>
+                       <div class="ip" style="width:90%"><input type="text" maxlength="200" class="ip-" placeholder="说明" name="detail.comment" required="required"/></div>
+                   </div>
+	      	 </div>
+	      	 <div class="input-row clearfloat">
+		     	<div class="col-md-12" style="margin-top:10px">
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+				</div>
+	      	 </div>
+      	 </form>
+  	 </div>
+  	 
+  <div id="sum_submit" style="display:none;width:800px; padding-top: 30px;">
+   	 <form id="form-sum">
+	          <div class="input-row clearfloat">
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">账户</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">入账总金额</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	 </div>
+	      	 <div class="input-row clearfloat">
+		         <div class="col-md-6 required">
+		               <label class="l" style="width:30%">入账时间</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		         <div class="col-md-6 required">
+		               <label class="l" style="width:30%">我组金额</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	  </div>
+	      	  <div class="input-row clearfloat">
+		         <div class="col-md-4">
+		               <label class="l" style="width:100%">团号</label>
+		           </div>
+		         <div class="col-md-4">
+		               <label class="l" style="width:100%">客户</label>
+		           </div>
+		            <div class="col-md-4 required">
+		               <label class="l" style="width:100%">分配金额</label>
+		           </div>
+	      	 </div>
+	      	  <div class="input-row clearfloat">
+		         <div class="col-md-4">
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		         <div class="col-md-4">
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		           <div class="col-md-4">
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	  </div>
+	      	 
+	      	 <div class="input-row clearfloat">
+		     	<div class="col-md-12" style="margin-top:10px">
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+				</div>
+	      	 </div>
+      	 </form>
+  	 </div>
+  	 
+  	<div id="strike_submit" style="display:none;width:800px; padding-top: 30px;">
+   	 <form id="form-strike">
+	          <div class="input-row clearfloat">
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">冲账金额</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	 </div>
+	      	  <div class="input-row clearfloat">
+		         <div class="col-md-4">
+		               <label class="l" style="width:100%">团号</label>
+		           </div>
+		         <div class="col-md-4">
+		               <label class="l" style="width:100%">客户</label>
+		           </div>
+		            <div class="col-md-4 required">
+		               <label class="l" style="width:100%">分配金额</label>
+		           </div>
+	      	 </div>
+	      	  <div class="input-row clearfloat">
+		         <div class="col-md-4">
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		         <div class="col-md-4">
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		           <div class="col-md-4">
+		          
+		               <div class="ip">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	  </div>
+	      	  <div class="input-row clearfloat">
+		         <div class="col-md-12 required">
+		         	  <label class="l" style="width:10%">客户</label>
+		               <div class="ip">
+		                   <textarea type="text" class="ip-default" rows="15" name ="order.comment" placeholder="需要备注说明的信息"></textarea>
+		               </div>
+		           </div>
+	      	  </div>
+	      	 <div class="input-row clearfloat">
+		     	<div class="col-md-12" style="margin-top:10px">
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+				</div>
+	      	 </div>
+      	 </form>
+  	 </div>
+  	 
+  <div id="receive_submit" style="display:none;width:800px; padding-top: 30px;">
+   	 <form id="form-receive">
+   	 		 <div class="input-row clearfloat">
+		         <div class="col-md-6 required">
+		               <label class="l" style="width:30%">团号</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">客户</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	 </div>
+	          <div class="input-row clearfloat">
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">账户</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+		           <div class="col-md-6 required">
+		               <label class="l" style="width:30%">金额</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	 </div>
+	      	 <div class="input-row clearfloat">
+		         <div class="col-md-6 required">
+		               <label class="l" style="width:30%">入账时间</label>
+		               <div class="ip" style="width:70%">
+		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               </div>
+		           </div>
+	      	  </div>
+	      	 <div class="input-row clearfloat">
+		     	<div class="col-md-12" style="margin-top:10px">
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+				</div>
+	      	 </div>
+      	 </form>
+  	 </div>
   <script>
     $(".sale").addClass("current").children("ol").css("display", "block");
   </script>
+      <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>
+    <script src="<%=basePath %>static/js/validation.js"></script>
    <script src="<%=basePath %>static/vendor/jquery-ui.min.js"></script>
   <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
   <script src="<%=basePath %>static/vendor/datetimepicker/MonthPicker.min.js"></script>

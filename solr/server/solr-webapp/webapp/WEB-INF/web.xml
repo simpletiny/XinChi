@@ -163,6 +163,21 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+  
+	<!-- <security-constraint>  
+        <web-resource-collection>  
+                <web-resource-name>solr</web-resource-name>  
+                <url-pattern>/</url-pattern>  
+        </web-resource-collection>  
+        <auth-constraint>  
+                <role-name>admin</role-name>  
+        </auth-constraint>  
+</security-constraint>  
+  
+<login-config>  
+        <auth-method>BASIC</auth-method>  
+        <realm-name>Test Realm</realm-name>  
+</login-config>  -->
 
   <!-- Get rid of error message -->
   <security-constraint>

@@ -248,11 +248,12 @@ public class DaoUtil {
 		}
 		return sqlSession.update(mapper, supperBO);
 	}
-	
+
 	public int sysUpdateByPK(String mapper, SupperBO supperBO) {
 		supperBO.setUpdate_time(DateUtil.getTimeMillis());
 		return sqlSession.update(mapper, supperBO);
 	}
+
 	/**
 	 * 根据BO修改记录
 	 * 
@@ -288,6 +289,18 @@ public class DaoUtil {
 	 */
 	public List<Object> selectList(String mapper) {
 		return sqlSession.selectList(mapper);
+	}
+
+	/**
+	 * 查询集合
+	 * 
+	 * @param mapper
+	 * @param obj
+	 * @return
+	 */
+	public <T extends Object>List<T> selectListByParam(String mapper,
+			Object obj) {
+		return sqlSession.selectList(mapper, obj);
 	}
 
 	/**

@@ -9,8 +9,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.user.dao.UserDAO;
+import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.bean.UserBaseBean;
@@ -64,6 +66,22 @@ public class ReceivableAction extends BaseAction {
 		receivables = receivableService.searchReceivableByPage(page);
 		return SUCCESS;
 	}
+	
+	private String client_employee_pks;
+	
+	@Autowired
+	private EmployeeService employeeService;
+	//判断是否为同一财务主体
+	public String isSameFinancialBody() {
+		String employee_pks[] = client_employee_pks.split(",");
+		List<String> body_pks = employeeService.getBodyPksByEmployeePks(employee_pks);
+		if(body_pks.size()>1){
+			resultStr = "NOT";
+		}else{
+			resultStr = OK;
+		}
+		return SUCCESS;
+	}
 
 	public ReceivableSummaryBean getSummary() {
 		return summary;
@@ -95,5 +113,13 @@ public class ReceivableAction extends BaseAction {
 
 	public void setSales_name(String sales_name) {
 		this.sales_name = sales_name;
+	}
+
+	public String getClient_employee_pks() {
+		return client_employee_pks;
+	}
+
+	public void setClient_employee_pks(String client_employee_pks) {
+		this.client_employee_pks = client_employee_pks;
 	}
 }

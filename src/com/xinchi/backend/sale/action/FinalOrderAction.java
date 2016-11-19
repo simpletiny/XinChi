@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.bean.FinalOrderBean;
@@ -38,6 +39,8 @@ public class FinalOrderAction extends BaseAction {
 
 	@Autowired
 	private SaleOrderService saleOrderService;
+	@Autowired
+	private ReceivableService receivableService;
 
 	/**
 	 * 创建订单
@@ -110,6 +113,7 @@ public class FinalOrderAction extends BaseAction {
 		// order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
 		order.setClient_debt(order.getReceivable());
 		finalOrderService.insert(order);
+		receivableService.updateByTeamNumber(order.getTeam_number());
 		resultStr = OK;
 		return SUCCESS;
 	}
@@ -136,7 +140,7 @@ public class FinalOrderAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order.setCreate_user(sessionBean.getUser_number());
 		}
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", order);
 		page.setParams(params);

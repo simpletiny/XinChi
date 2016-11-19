@@ -45,4 +45,18 @@ public class ResourcesConstants {
 	public static String TEAM_STATUS_RETURN="已回团";
 	public static String TEAM_STATUS_NOT_RETURN="未回团";
 	
+	//收入种类
+	public static String RECEIVED_TYPE_TAIL="TAIL";
+	public static String RECEIVED_TYPE_SUM="SUM";
+	public static String RECEIVED_TYPE_STRIKE="STRIKE";
+	public static String RECEIVED_TYPE_RECEIVED="RECEIVED";
+	
+	
+	//收入状态
+	//待确认
+	public static String RECEIVED_STATUS_ING="I";
+	//被驳回
+	public static String RECEIVED_STATUS_NO="N";
+	//已入账
+	public static String RECEIVED_STATUS_YES="Y";
 }

@@ -44,4 +44,6 @@ public interface EmployeeDAO {
 			com.xinchi.bean.ClientEmployeeBean bo);
 
 	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page);
+
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
 }

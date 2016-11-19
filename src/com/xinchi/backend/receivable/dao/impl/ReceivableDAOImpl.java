@@ -57,4 +57,20 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements
 
 		}
 	}
+
+	@Override
+	public ReceivableBean selectReceivableByTeamNumber(String team_number) {
+		return daoUtil
+				.selectOneValueByParam(
+						"com.xinchi.bean.mapper.ReceivableMapper.selectReceivableByTeamNumber",
+						team_number);
+	}
+
+	@Override
+	public void update(ReceivableBean receivable) {
+		daoUtil.updateByPK(
+				"com.xinchi.bean.mapper.ReceivableMapper.updateByPrimaryKey",
+				receivable);
+
+	}
 }

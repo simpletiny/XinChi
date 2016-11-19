@@ -83,12 +83,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')"><li class="sale"><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-users fa-lg fa-fw"></i>销售</a>
                 <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>应收款</a></li>
+                    <li class="received"><a href="<%=basePath%>templates/sale/received.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收入详表</a></li>
                 </ol>
             </li>
             </s:if>
         </ul>
     </div>
-
 <!-- sidebar end -->
     <script src="<%=basePath%>static/vendor/jquery-1.11.1.min.js"></script>
     <script src="<%=basePath%>static/vendor/knockout-3.2.0.js"></script>

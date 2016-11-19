@@ -279,6 +279,7 @@
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
+  
  <select id="selectByParam" parameterType="com.xinchi.bean.ClientEmployeeBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
@@ -289,6 +290,16 @@
 	      </if>
     </where>
    </select>
+   
+ <select id="selectBodyPksByEmployeePks" resultType="java.lang.String">
+   select distinct financial_body_pk from client_employee
+     where pk in
+	 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	  #{item}
+ 	</foreach>
+  </select>
+   
+   
  <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 
     	A.name, 

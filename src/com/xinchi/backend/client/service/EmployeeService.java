@@ -48,4 +48,6 @@ public interface EmployeeService {
 	public String updateEmployee(ClientEmployeeBean client);
 
 	public List<ClientEmployeeBean> getAllClientEmployeeByPage(Page<ClientEmployeeBean> page);
+
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
 }

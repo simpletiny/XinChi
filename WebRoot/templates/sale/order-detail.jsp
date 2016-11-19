@@ -30,7 +30,7 @@ String key = request.getParameter("key");
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">总团款</label>
-                        <div class="ip"><p class="ip-default" data-bind="text: order().receivable" placeholder="总团款" name="order.receivable"/></div>
+                        <div class="ip"><p class="ip-default" data-bind="text: order().receivable" name="order.receivable"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

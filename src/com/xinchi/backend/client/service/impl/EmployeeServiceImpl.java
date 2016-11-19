@@ -101,4 +101,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return dao.getAllByPage(page);
 	}
 
+	@Override
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
+		
+		return dao.getBodyPksByEmployeePks(employee_pks);
+	}
+
 }

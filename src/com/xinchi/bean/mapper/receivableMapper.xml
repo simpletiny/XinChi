@@ -54,6 +54,13 @@
     where pk = #{pk,jdbcType=CHAR}
   </select>
   
+  <select id="selectReceivableByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from receivable
+    where team_number = #{team_number,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from receivable
     where pk = #{pk,jdbcType=CHAR}
@@ -247,7 +254,7 @@
     	<if test="create_user != null">
 	        create_user = #{create_user,jdbcType=VARCHAR},
 	      </if>
-      <if test="modify_time != null">
+      <if test="update_time != null">
         update_time = #{update_time,jdbcType=VARCHAR},
       </if>
     </set>

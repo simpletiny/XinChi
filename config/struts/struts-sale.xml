@@ -53,11 +53,19 @@
 		<action name="searchReceivableSummary" class="receivableAction" method="searchReceivableSummary">
 			<result name="success" type="json"></result>
 		</action>
+		
+		<action name="isSameFinancialBody" class="receivableAction" method="isSameFinancialBody">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
 		<action name="searchReceivableByPage" class="receivableAction" method="searchReceivableByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
+		</action>
+		<action name="applyRidTail" class="receivedAction" method="applyRidTail">
+			<result name="success" type="str">resultStr</result>
 		</action>
 	</package>
 

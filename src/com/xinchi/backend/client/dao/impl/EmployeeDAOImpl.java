@@ -71,4 +71,12 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements
 		return list;
 	}
 
+	@Override
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
+		return daoUtil
+				.selectListByParam(
+						"com.xinchi.bean.mapper.ClientEmployeeMapper.selectBodyPksByEmployeePks",
+						employee_pks);
+	}
+
 }

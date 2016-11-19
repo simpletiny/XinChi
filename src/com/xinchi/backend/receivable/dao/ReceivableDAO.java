@@ -9,4 +9,8 @@ public interface ReceivableDAO {
 
 	public ReceivableSummaryBean selectReceivableSummary(String sales);
 
+	public ReceivableBean selectReceivableByTeamNumber(String teamNumber);
+
+	public void update(ReceivableBean receivable);
+
 }

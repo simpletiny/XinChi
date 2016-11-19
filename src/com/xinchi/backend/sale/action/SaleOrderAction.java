@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.util.service.TeamNumberService;
 import com.xinchi.bean.BudgetOrderBean;
@@ -41,6 +42,8 @@ public class SaleOrderAction extends BaseAction {
 	@Autowired
 	private TeamNumberService teamNumberService;
 
+	@Autowired
+	private ReceivableService receivableService;
 	/**
 	 * 创建订单
 	 * 
@@ -112,7 +115,7 @@ public class SaleOrderAction extends BaseAction {
 		order.setClient_debt(order.getReceivable());
 		order.setReceived(BigDecimal.ZERO);
 		saleOrderService.insert(order);
-
+		receivableService.updateByTeamNumber(order.getTeam_number());
 		saleOrderService.saveOrderSupplier(arrSupplier);
 		resultStr = OK;
 		return SUCCESS;
@@ -232,7 +235,7 @@ public class SaleOrderAction extends BaseAction {
 		order.setPayable(sum);
 
 		saleOrderService.update(order);
-
+		receivableService.updateByTeamNumber(order.getTeam_number());
 		resultStr = OK;
 		return SUCCESS;
 	}
