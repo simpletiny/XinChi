@@ -21,43 +21,8 @@ public class SomeTest {
 
 	public static void main(String[] args) throws SolrServerException,
 			IOException {
-		System.out.println(DateUtil.dateDiff("2016-10-01"));
-//		BigDecimal b = new BigDecimal(null);
-//		System.out.println(b);;
-
-//		ReceivableBean b = new ReceivableBean();
-//		b.setClient_employee_name("牛世行");
-//		b.setTeam_status("已回团");
-//		b.setDeparture_month("2016-11");
-//		b.setSales_name("test");
-//
-//		System.out.println(buildQuery(b));
-//		SolrClient solrClient = new HttpSolrClient(solr_url);
-//		// 计算合计
-//		SolrQuery query = new SolrQuery("*");
-//		query.setStart(0);
-//		query.setRows(5);
-//		// query.add("id:test");
-//		QueryResponse response;
-//
-//		response = solrClient.query(query);
-//		SolrDocumentList list = response.getResults();
-//		System.out.println(response.getResults().getNumFound());
-//		for (SolrDocument doc : list) {
-//
-//			System.out.println(doc.get("return_date"));
-//
-//		}
-		// document.addField("id", "1");
-		// document.addField("name", "牛世行");
-		// document.addField("sex", "map飞");
-		// document.addField("age", "马云");
-		// UpdateResponse response1 = solr.add(document);
-
-		// solr.deleteById("1");
-		// solr.deleteById("xxx");
-
-		// solr.commit();
+		String[] a = {"1","3","5","6"};
+		System.out.println(Joiner.on(",").join(a));
 	}
 
 	private static String buildQuery(ReceivableBean options) {

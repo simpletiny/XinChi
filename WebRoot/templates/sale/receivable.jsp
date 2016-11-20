@@ -368,50 +368,65 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		           <div class="col-md-6 required">
 		               <label class="l" style="width:30%">冲账金额</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                   <input type="text" name="detail.allot_received" class="form-control" id="strike-money" required="required"/>
 		               </div>
 		           </div>
 	      	 </div>
 	      	  <div class="input-row clearfloat">
-		         <div class="col-md-4">
+		         <div class="col-md-3">
 		               <label class="l" style="width:100%">团号</label>
 		           </div>
-		         <div class="col-md-4">
+		         <div class="col-md-3">
 		               <label class="l" style="width:100%">客户</label>
 		           </div>
-		            <div class="col-md-4 required">
+		             <div class="col-md-3">
+		               <label class="l" style="width:100%">尾款</label>
+		           </div>
+		            <div class="col-md-3 required">
 		               <label class="l" style="width:100%">分配金额</label>
 		           </div>
 	      	 </div>
-	      	  <div class="input-row clearfloat">
-		         <div class="col-md-4">
+	      	   <!-- ko foreach:chosenReceivables -->
+	      	  <div class="input-row clearfloat" st="strike-allot">
+		         <div class="col-md-3">
 		               <div class="ip">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               	   <p class="ip-default" data-bind="text:$data.team_number"></p>
+		                   <input type="hidden" data-bind="value:$data.team_number" st="strike-team_number"/>
 		               </div>
 		           </div>
-		         <div class="col-md-4">
+		         <div class="col-md-3">
 		               <div class="ip">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                   	<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
 		               </div>
 		           </div>
-		           <div class="col-md-4">
-		          
+		         <div class="col-md-3">
 		               <div class="ip">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		               		<!-- ko if:$data.final_flg=="Y" -->
+		                   	<p class="ip-default" data-bind="text:$data.final_balance"></p>
+		                   	<!-- /ko -->
+		                   	<!-- ko if:$data.final_flg=="N" -->
+		                   	<p class="ip-default" data-bind="text:$data.budget_balance"></p>
+		                   	<!-- /ko -->
+		               </div>
+		           </div>
+		           <div class="col-md-3">
+		               <div class="ip">
+		                   <input type="number" class="form-control" st="strike-received" data-bind="attr:{'name':'name-'+$data.pk}" required="required"/>
 		               </div>
 		           </div>
 	      	  </div>
+	      	 <!-- /ko -->
 	      	  <div class="input-row clearfloat">
 		         <div class="col-md-12 required">
-		         	  <label class="l" style="width:10%">客户</label>
+		         	  <label class="l" style="width:10%">说明</label>
 		               <div class="ip">
-		                   <textarea type="text" class="ip-default" rows="15" name ="order.comment" placeholder="需要备注说明的信息"></textarea>
+		                   <textarea type="text" class="ip-default" rows="15" name ="detail.comment" placeholder="需要说明的信息" required="required"></textarea>
 		               </div>
 		           </div>
 	      	  </div>
 	      	 <div class="input-row clearfloat">
 		     	<div class="col-md-12" style="margin-top:10px">
-					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyStrike">申请</a></div>
 				</div>
 	      	 </div>
       	 </form>
@@ -420,16 +435,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <div id="receive_submit" style="display:none;width:800px; padding-top: 30px;">
    	 <form id="form-receive">
    	 		 <div class="input-row clearfloat">
-		         <div class="col-md-6 required">
+		         <div class="col-md-6">
 		               <label class="l" style="width:30%">团号</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                    <p class="ip-default" data-bind="text:team_number()"></p>
+		                   <input name="detail.team_number" type="hidden" data-bind="value:team_number()"/>
 		               </div>
 		           </div>
-		           <div class="col-md-6 required">
+		           <div class="col-md-6">
 		               <label class="l" style="width:30%">客户</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                    <p class="ip-default" data-bind="text:client_employee_name()"></p>
 		               </div>
 		           </div>
 	      	 </div>
@@ -437,13 +453,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		           <div class="col-md-6 required">
 		               <label class="l" style="width:30%">账户</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                  <select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" name="detail.card_account" required="required"></select>
 		               </div>
 		           </div>
 		           <div class="col-md-6 required">
 		               <label class="l" style="width:30%">金额</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                   <input type="number"  name="detail.received" class="form-control" required="required"/>
 		               </div>
 		           </div>
 	      	 </div>
@@ -451,13 +467,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		         <div class="col-md-6 required">
 		               <label class="l" style="width:30%">入账时间</label>
 		               <div class="ip" style="width:70%">
-		                   <input type="text" id="supplier_name" class="form-control" required="required"/>
+		                   <input type="text" name="detail.received_time" class="form-control datetime-picker" required="required"/>
 		               </div>
 		           </div>
 	      	  </div>
 	      	 <div class="input-row clearfloat">
 		     	<div class="col-md-12" style="margin-top:10px">
-					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyRidTail">申请</a></div>
+					<div align="right"><a type="button" class="btn btn-green btn-r" data-bind="click: applyReceive">申请</a></div>
 				</div>
 	      	 </div>
       	 </form>

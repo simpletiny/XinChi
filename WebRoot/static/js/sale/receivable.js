@@ -232,45 +232,109 @@ var OrderContext = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("冲账申请只能选择一个订单");
-			return;
-		} else if (self.chosenOrders().length == 1) {
-			var re = null;
-			$(self.receivables()).each(function(idx, data) {
-				if (data.pk == self.chosenOrders()[0]) {
-					re = data;
-					return false;
+		} else if (self.chosenOrders().length >= 1) {
+			self.chosenReceivables.removeAll();
+			var client_employee_pks = new Array();
+			$(self.receivables()).each(function(idx, data1) {
+				$(self.chosenOrders()).each(function(idx, data2) {
+					if (data1.pk == data2) {
+						self.chosenReceivables.push(data1);
+						return false;
+					}
+				});
+			});
+			var check_result = true;
+			$(self.chosenReceivables()).each(function(idx, data) {
+				client_employee_pks.push(data.client_employee_pk);
+				if (data.final_flg == "Y") {
+					if (data.final_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
+				} else {
+					if (data.budget_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
 				}
 			});
-			if (re.final_flg == "Y") {
-				if (re.final_balance <= 0) {
-					fail_msg("尾款已结清");
-					return;
-				}
-			} else {
-				if (re.budget_balance <= 0) {
-					fail_msg("尾款已结清");
-					return;
-				}
-			}
-			strikeLayer = $.layer({
-				type : 1,
-				title : [ '冲账申请', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '820px', '700px' ],
-				offset : [ '150px', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#strike_submit'
-				},
-				end : function() {
-					console.log("Done");
+
+			if (!check_result)
+				return;
+			startLoadingSimpleIndicator("检测中");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/isSameFinancialBody',
+				data : "client_employee_pks=" + client_employee_pks,
+				success : function(str) {
+					if (str == "NOT") {
+						fail_msg("客户不属于同一财务主体");
+					} else {
+						strikeLayer = $.layer({
+							type : 1,
+							title : [ '冲账申请', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '820px', '780px' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#strike_submit'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					}
+					endLoadingIndicator();
 				}
 			});
 		}
+	};
+
+	self.applyStrike = function() {
+		if (!$("#form-strike").valid())
+			return;
+		var sumAllot = 0;
+		$("[st='strike-received']").each(function(idx, data) {
+			sumAllot += $(data).val() - 0;
+		});
+		if (sumAllot != $("#strike-money").val() - 0) {
+			fail_msg("分配金额合计和冲账金额不匹配");
+			return;
+		}
+
+		var data = $("#form-strike").serialize();
+		var allot_json = '[';
+		var allot = $("[st='strike-allot']");
+		for ( var i = 0; i < allot.length; i++) {
+			var current = allot[i];
+			var n = $(current).find("[st='strike-team_number']").val();
+			var r = $(current).find("[st='strike-received']").val();
+			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+			if (i == allot.length - 1) {
+				allot_json += '"}';
+			} else {
+				allot_json += '"},';
+			}
+		}
+		allot_json += ']';
+		
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyStrike',
+			data : data + "&allot_json=" + allot_json,
+			success : function(str) {
+				if (str != "OK") {
+					fail_msg("申请失败，请联系管理员");
+				}
+				layer.close(strikeLayer);
+				self.refresh();
+				endLoadingIndicator();
+			}
+		});
 	};
 	// 收入
 	self.receive = function() {
@@ -299,13 +363,17 @@ var OrderContext = function() {
 					return;
 				}
 			}
+
+			self.team_number(re.team_number);
+			self.client_employee_name(re.client_employee_name);
+
 			receiveLayer = $.layer({
 				type : 1,
 				title : [ '收入', '' ],
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
-				area : [ '820px', '300px' ],
+				area : [ '820px', '400px' ],
 				offset : [ '150px', '' ],
 				scrollbar : true,
 				page : {
@@ -318,6 +386,27 @@ var OrderContext = function() {
 		}
 	};
 
+	self.applyReceive = function() {
+		if (!$("#form-receive").valid()) {
+			return;
+		}
+		var data = $("#form-receive").serialize();
+
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyReceive',
+			data : data,
+			success : function(str) {
+				if (str != "OK") {
+					fail_msg("申请失败，请联系管理员");
+				}
+				layer.close(receiveLayer);
+				self.refresh();
+				endLoadingIndicator();
+			}
+		});
+	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 

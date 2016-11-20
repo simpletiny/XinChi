@@ -74,4 +74,10 @@ public class SimpletinyString {
 		return (null == str || str.trim().equals("")) ? BigDecimal.ZERO
 				: new BigDecimal((str.trim()));
 	}
+
+	public static String addSingleQuote(String str) {
+		if (isEmpty(str))
+			return "";
+		return "'" + str.replaceAll(",", "','") + "'";
+	}
 }

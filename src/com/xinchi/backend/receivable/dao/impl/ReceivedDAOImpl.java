@@ -1,5 +1,7 @@
 package com.xinchi.backend.receivable.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
@@ -28,12 +31,22 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
 				detail);
 	}
-	
+
 	@Override
 	public void insertWithPk(ClientReceivedDetailBean detail) {
 		daoUtil.insertBOWithPk(
 				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
 				detail);
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> getAllByPage(
+			Page<ClientReceivedDetailBean> page) {
+		List<ClientReceivedDetailBean> list = daoUtil
+				.selectByParam(
+						"com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPage",
+						page);
+		return list;
 	}
 
 }
