@@ -20,5 +20,11 @@ public class ReceivedServiceImpl implements ReceivedService {
 		
 		dao.insert(detail);
 	}
+	
+	@Override
+	public void insertWithPk(ClientReceivedDetailBean detail) {
+		
+		dao.insertWithPk(detail);
+	}
 
 }

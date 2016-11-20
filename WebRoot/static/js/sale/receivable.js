@@ -26,6 +26,17 @@ var OrderContext = function() {
 		items : []
 	});
 
+	self.accounts = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
+		if (data.accounts) {
+			self.accounts(data.accounts);
+		} else {
+			fail_msg("不存在账户，无法建立明细账！");
+		}
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+
 	// 执行方法
 	// 抹零申请
 	self.tailMoney = ko.observable();
@@ -92,7 +103,7 @@ var OrderContext = function() {
 			url : self.apiurl + 'sale/applyRidTail',
 			data : data,
 			success : function(str) {
-				if(str!="OK"){
+				if (str != "OK") {
 					fail_msg("申请失败，请联系管理员");
 				}
 				layer.close(tailLayer);
@@ -101,6 +112,8 @@ var OrderContext = function() {
 			}
 		});
 	};
+	self.chosenReceivables = ko.observableArray([]);
+
 	// 合账申请
 	self.sumOrder = function() {
 		if (self.chosenOrders().length == 0) {
@@ -110,18 +123,18 @@ var OrderContext = function() {
 			fail_msg("合账申请请选择多个订单");
 			return;
 		} else if (self.chosenOrders().length > 1) {
-			var res = new Array();
+			self.chosenReceivables.removeAll();
 			var client_employee_pks = new Array();
 			$(self.receivables()).each(function(idx, data1) {
 				$(self.chosenOrders()).each(function(idx, data2) {
 					if (data1.pk == data2) {
-						res.push(data1);
+						self.chosenReceivables.push(data1);
 						return false;
 					}
 				});
 			});
 			var check_result = true;
-			$(res).each(function(idx, data) {
+			$(self.chosenReceivables()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
 					if (data.final_balance <= 0) {
@@ -145,11 +158,10 @@ var OrderContext = function() {
 				success : function(str) {
 					if (str == "NOT") {
 						fail_msg("客户不属于同一财务主体");
-
 					} else {
 						sumLayer = $.layer({
 							type : 1,
-							title : [ '抹零申请', '' ],
+							title : [ '合账申请', '' ],
 							maxmin : false,
 							closeBtn : [ 1, true ],
 							shadeClose : false,
@@ -169,6 +181,52 @@ var OrderContext = function() {
 			});
 		}
 	};
+	// 执行合账申请
+	self.applySum = function() {
+		if (!$("#form-sum").valid())
+			return;
+		var sumAllot = 0;
+		$("[st='received']").each(function(idx, data) {
+			sumAllot += $(data).val() - 0;
+		});
+		if (sumAllot != $(".amountRangeEnd").val() - 0) {
+			fail_msg("分配金额合计和我组金额不匹配");
+			return;
+		}
+
+		var data = $("#form-sum").serialize();
+
+		var allot_json = '[';
+		var allot = $("[st='allot']");
+		for ( var i = 0; i < allot.length; i++) {
+			var current = allot[i];
+			var n = $(current).find("[st='team_number']").val();
+			var r = $(current).find("[st='received']").val();
+			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+			if (i == allot.length - 1) {
+				allot_json += '"}';
+			} else {
+				allot_json += '"},';
+			}
+		}
+		allot_json += ']';
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applySum',
+			data : data + "&allot_json=" + allot_json,
+			success : function(str) {
+				if (str != "OK") {
+					fail_msg("申请失败，请联系管理员");
+				}
+				layer.close(sumLayer);
+				self.refresh();
+				endLoadingIndicator();
+			}
+		});
+
+	};
+
 	// 冲账申请
 	self.strike = function() {
 		if (self.chosenOrders().length == 0) {
@@ -441,4 +499,5 @@ $(document).ready(function() {
 		Button : false,
 		MonthFormat : 'yy-mm'
 	});
+
 });

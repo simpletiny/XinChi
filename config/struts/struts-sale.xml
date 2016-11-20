@@ -67,6 +67,9 @@
 		<action name="applyRidTail" class="receivedAction" method="applyRidTail">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="applySum" class="receivedAction" method="applySum">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

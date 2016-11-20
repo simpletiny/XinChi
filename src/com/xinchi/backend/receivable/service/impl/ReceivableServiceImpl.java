@@ -247,6 +247,7 @@ public class ReceivableServiceImpl implements ReceivableService {
 			if (null != finalOrder) {
 				receivable.setFinal_flg("Y");
 				receivable.setFinal_receivable(finalOrder.getReceivable());
+				receivable.setFinal_balance(finalOrder.getReceivable().subtract(receivable.getReceived()));
 			}
 
 			update(receivable);

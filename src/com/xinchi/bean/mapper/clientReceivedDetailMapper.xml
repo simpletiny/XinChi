@@ -10,6 +10,7 @@
 	    <result column="status" property="status" jdbcType="CHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
 	    <result column="sum_received" property="sum_received" jdbcType="DECIMAL" />
+	    <result column="allot_received" property="allot_received" jdbcType="DECIMAL" />
 	    <result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
 	    <result column="card_pk" property="card_pk" jdbcType="CHAR" />
 	    <result column="card_account" property="card_account" jdbcType="VARCHAR" />
@@ -30,6 +31,7 @@
     	status, 
     	comment, 
     	sum_received, 
+    	allot_received,
     	related_pk, 
     	card_pk, 
     	card_account, 
@@ -80,6 +82,9 @@
 	 	<if test="sum_received != null">
 	        sum_received,
 	      </if>
+	 	<if test="allot_received != null">
+	        allot_received,
+	      </if>
 	 	<if test="related_pk != null">
 	        related_pk,
 	      </if>
@@ -129,6 +134,9 @@
 	      </if>
     	<if test="sum_received != null">
 	        #{sum_received,jdbcType=DECIMAL},
+	      </if>
+    	<if test="allot_received != null">
+	        #{allot_received,jdbcType=DECIMAL},
 	      </if>
     	<if test="related_pk != null">
 	        #{related_pk,jdbcType=VARCHAR},
@@ -184,6 +192,9 @@
 	      </if>
     	<if test="sum_received != null">
 	        sum_received = #{sum_received,jdbcType=DECIMAL},
+	      </if>
+    	<if test="allot_received != null">
+	        allot_received = #{allot_received,jdbcType=DECIMAL},
 	      </if>
     	<if test="related_pk != null">
 	        related_pk = #{related_pk,jdbcType=VARCHAR},

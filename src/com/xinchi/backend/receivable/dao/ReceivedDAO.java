@@ -6,4 +6,5 @@ public interface ReceivedDAO {
 
 	public void insert(ClientReceivedDetailBean detail);
 
+	public void insertWithPk(ClientReceivedDetailBean detail);
 }

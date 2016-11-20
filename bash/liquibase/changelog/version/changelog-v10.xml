@@ -911,4 +911,12 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_received_detail ADD COLUMN allot_received DECIMAL(12,2) NULL  AFTER sum_received;
+          		            ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

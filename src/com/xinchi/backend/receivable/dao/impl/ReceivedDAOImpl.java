@@ -28,5 +28,12 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
 				detail);
 	}
+	
+	@Override
+	public void insertWithPk(ClientReceivedDetailBean detail) {
+		daoUtil.insertBOWithPk(
+				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
+				detail);
+	}
 
 }

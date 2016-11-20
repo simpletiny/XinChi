@@ -46,6 +46,17 @@ public class DaoUtil {
 		return pk;
 	}
 
+	public String insertBOWithPk(String mapper, SupperBO supperBO) {
+		supperBO.setCreate_time(DateUtil.getTimeMillis());
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		if (null != ub) {
+			supperBO.setCreate_user(ub.getUser_number());
+		}
+		sqlSession.insert(mapper, supperBO);
+		return supperBO.getPk();
+	}
+
 	/**
 	 * 插入对象列表
 	 * 
@@ -298,7 +309,7 @@ public class DaoUtil {
 	 * @param obj
 	 * @return
 	 */
-	public <T extends Object>List<T> selectListByParam(String mapper,
+	public <T extends Object> List<T> selectListByParam(String mapper,
 			Object obj) {
 		return sqlSession.selectList(mapper, obj);
 	}
