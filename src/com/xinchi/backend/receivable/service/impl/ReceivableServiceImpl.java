@@ -87,9 +87,7 @@ public class ReceivableServiceImpl implements ReceivableService {
 				ReceivableBean receivable = new ReceivableBean();
 				receivable.setTeam_number(safeGet(doc, "team_number"));
 				receivable.setPk(safeGet(doc, "id"));
-				receivable
-						.setFinal_flg((null == safeGet(doc, "final_flg") ? "N"
-								: "Y"));
+				receivable.setFinal_flg((null==safeGet(doc, "final_flg"))?"N":safeGet(doc, "final_flg"));
 				receivable.setClient_employee_name(safeGet(doc,
 						"client_employee_name"));
 				receivable.setClient_employee_pk(safeGet(doc,
@@ -247,7 +245,8 @@ public class ReceivableServiceImpl implements ReceivableService {
 			if (null != finalOrder) {
 				receivable.setFinal_flg("Y");
 				receivable.setFinal_receivable(finalOrder.getReceivable());
-				receivable.setFinal_balance(finalOrder.getReceivable().subtract(receivable.getReceived()));
+				receivable.setFinal_balance(finalOrder.getReceivable()
+						.subtract(receivable.getReceived()));
 			}
 
 			update(receivable);

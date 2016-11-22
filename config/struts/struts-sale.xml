@@ -70,6 +70,18 @@
 		<action name="applySum" class="receivedAction" method="applySum">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="applyReceive" class="receivedAction" method="applyReceive">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyStrike" class="receivedAction" method="applyStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchReceivedByPage" class="receivedAction" method="searchReceivedByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 
 </struts>
