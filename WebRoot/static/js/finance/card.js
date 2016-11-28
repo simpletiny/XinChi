@@ -14,6 +14,7 @@ var CardContext = function() {
 	self.refresh = function() {
 		$.getJSON(self.apiurl + 'finance/searchCard', {}, function(data) {
 			self.cards(data.cards);
+			$(".rmb").formatCurrency();
 		});
 	};
 	self.search = function() {

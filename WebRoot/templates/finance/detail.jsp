@@ -72,14 +72,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.time"></td>
 								<!-- ko if: $data.type=='收入' -->
-								<td data-bind="text: $data.money"></td>
+								<td data-bind="text: $data.money"  class="rmb"></td>
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.type=='支出' -->
 								<td></td>
-								<td data-bind="text: $data.money"></td>
+								<td data-bind="text: $data.money"  class="rmb"></td>
 								<!-- /ko -->
-								<td data-bind="text: $data.balance"></td>
+								<td data-bind="text: $data.balance"  class="rmb"></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
                     </tbody>

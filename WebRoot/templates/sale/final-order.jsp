@@ -97,10 +97,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.departure_date"></td>
                             <td data-bind="text: $data.return_date"></td>
                             <td data-bind="text: $data.people_count"></td> 
-                             <td data-bind="text: $data.receivable"></td>    
-                             <td data-bind="text: $data.payable"></td>  
-                             <td data-bind="text: $data.profit"></td>    
-                             <td data-bind="text: $data.per_profit"></td>  
+                             <td data-bind="text: $data.receivable"  class="rmb"></td>    
+                             <td data-bind="text: $data.payable"  class="rmb"></td>  
+                             <td data-bind="text: $data.profit"  class="rmb"></td>    
+                             <td data-bind="text: $data.per_profit"  class="rmb"></td>  
                                <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                              <td data-bind="text: $data.create_user_name"></td>  
                               </s:if>
@@ -113,10 +113,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td></td>
                             <td>合计</td>
                             <td data-bind="text:totalPeople"></td>
-                            <td data-bind="text:totalReceivable"></td>
-                            <td data-bind="text:totalPayable"></td>
-                            <td data-bind="text:totalProfit"></td>
-                            <td data-bind="text:totalPerProfit"></td>
+                            <td data-bind="text:totalReceivable"  class="rmb"></td>
+                            <td data-bind="text:totalPayable"  class="rmb"></td>
+                            <td data-bind="text:totalProfit"  class="rmb"></td>
+                            <td data-bind="text:totalPerProfit" class="rmb"></td>
                              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                             <td></td>
                             </s:if>

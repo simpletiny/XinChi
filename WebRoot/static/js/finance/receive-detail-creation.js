@@ -28,7 +28,6 @@ var DetailContext = function() {
 			self.balance = data;
 			self.initBalance = data;
 			self.calculateBalance();
-			$("#p-balance").text(self.balance);
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
@@ -36,9 +35,9 @@ var DetailContext = function() {
 	};
 	// 计算余额
 	self.calculateBalance = function() {
-		self.balance = (self.initBalance - 0) + ($("#txt-money").val() - 0);
+		self.balance = Number((self.initBalance - 0) + ($("#txt-money").val() - 0)).toFixed(2);
 		$("#p-balance").text(self.balance);
-
+		$(".rmb").formatCurrency();
 	};
 
 	self.createDetail = function() {

@@ -222,6 +222,6 @@
 	         and client_area = #{params.bo.client_area,jdbcType=VARCHAR}
 	      </if> -->
     </where> 
-    ORDER BY time
+    ORDER BY time desc
    </select>
 </mapper>

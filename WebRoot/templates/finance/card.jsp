@@ -66,8 +66,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	  <td data-bind="text: $data.number" style="overflow:hidden"></td>
                             <td data-bind="text: $data.name" style="overflow:hidden"></td>
                             <td data-bind="text: $data.bank" style="overflow:hidden"></td>
-                            <td data-bind="text: $data.init_money" style="overflow:hidden"></td>
-                            <td data-bind="text: $data.balance" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.init_money" class="rmb" style="overflow:hidden"></td>
+                            <td data-bind="text: $data.balance" class="rmb"  style="overflow:hidden"></td>
                             <td data-bind="text: $data.type" style="overflow:hidden"></td>
                             <td data-bind="text: $data.comment" title="test" style="overflow:hidden"></td>      
                         </tr>

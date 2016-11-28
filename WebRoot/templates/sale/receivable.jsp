@@ -104,18 +104,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                        <tr>
 								<td>尾款</td>
 								<td data-bind="text:recsum().all_balance"></td>
-								<td st="all" data-bind="text:recsum().one_month_balance"></td>
-								<td st="all" data-bind="text:recsum().two_month_balance"></td>
-								<td st="all" data-bind="text:recsum().six_month_balance"></td>
-								<td st="all" data-bind="text:recsum().bad_month_balance"></td>
-								<td st="budget" style="display:none" data-bind="text:recsum().one_month_budget_balance"></td>
-								<td st="budget" style="display:none" data-bind="text:recsum().two_month_budget_balance"></td>
-								<td st="budget" style="display:none" data-bind="text:recsum().six_month_budget_balance"></td>
-								<td st="budget" style="display:none" data-bind="text:recsum().bad_month_budget_balance"></td>
-								<td st="final" style="display:none" data-bind="text:recsum().one_month_final_balance"></td>
-								<td st="final" style="display:none" data-bind="text:recsum().two_month_final_balance"></td>
-								<td st="final" style="display:none" data-bind="text:recsum().six_month_final_balance"></td>
-								<td st="final" style="display:none" data-bind="text:recsum().bad_month_final_balance"></td>
+								<td st="all" data-bind="text:recsum().one_month_balance"  class="rmb"></td>
+								<td st="all" data-bind="text:recsum().two_month_balance"  class="rmb"></td>
+								<td st="all" data-bind="text:recsum().six_month_balance"  class="rmb"></td>
+								<td st="all" data-bind="text:recsum().bad_month_balance" class="rmb"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().one_month_budget_balance" class="rmb"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().two_month_budget_balance" class="rmb"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().six_month_budget_balance" class="rmb"></td>
+								<td st="budget" style="display:none" data-bind="text:recsum().bad_month_budget_balance" class="rmb"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().one_month_final_balance" class="rmb"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().two_month_final_balance" class="rmb"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().six_month_final_balance" class="rmb"></td>
+								<td st="final" style="display:none" data-bind="text:recsum().bad_month_final_balance" class="rmb"></td>
 	                        </tr>
 	                    </tbody>
 	           </table>
@@ -151,38 +151,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.product"></td> 
                              <td data-bind="text: $data.people_count"></td>
                              
-                             <td st="budget" style="display:none" data-bind="text:$data.budget_receivable"></td>
+                             <td st="budget" style="display:none" data-bind="text:$data.budget_receivable" class="rmb"></td>
                              
                              <!-- ko if: $data.final_flg=="Y" -->  
-                             <td st="final" style="display:none" data-bind="text:$data.final_receivable"></td>
+                             <td st="final" style="display:none" data-bind="text:$data.final_receivable" class="rmb"></td>
                               <!-- /ko -->
                                <!-- ko if: $data.final_flg=="N" -->      
                              <td st="final" style="display:none">未决算</td>
                              <!-- /ko -->
                              
                               <!-- ko if: $data.final_flg=="Y" -->      
-                             <td st="all" data-bind="text:$data.final_receivable"></td>
+                             <td st="all" data-bind="text:$data.final_receivable" class="rmb"></td>
                              <!-- /ko -->
                               <!-- ko if: $data.final_flg=="N" -->      
-                             <td st="all" data-bind="text:$data.budget_receivable"></td>
+                             <td st="all" data-bind="text:$data.budget_receivable" class="rmb"></td>
                              <!-- /ko -->
                              
                              <td data-bind="text: $data.received"></td>   
                              
-                             <td st="budget" style="display:none" data-bind="text:$data.budget_balance"></td>
+                             <td st="budget" style="display:none" data-bind="text:$data.budget_balance" class="rmb"></td>
                              
                              <!-- ko if: $data.final_flg=="Y" -->  
-                             <td st="final" style="display:none" data-bind="text:$data.final_balance"></td>
+                             <td st="final" style="display:none" data-bind="text:$data.final_balance" class="rmb"></td>
                               <!-- /ko -->
                                <!-- ko if: $data.final_flg=="N" -->      
                              <td st="final" style="display:none">未决算</td>
                              <!-- /ko -->
                               
                              <!-- ko if: $data.final_flg=="Y" -->      
-                             <td st="all" data-bind="text:$data.final_balance"></td>
+                             <td st="all" data-bind="text:$data.final_balance" class="rmb"></td>
                              <!-- /ko -->
                               <!-- ko if: $data.final_flg=="N" -->      
-                             <td st="all" data-bind="text:$data.budget_balance"></td>
+                             <td st="all" data-bind="text:$data.budget_balance" class="rmb"></td>
                              <!-- /ko -->
                              <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                              <td data-bind="text: $data.sales_name"></td>  
@@ -198,13 +198,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td></td>
                             <td>合计</td>
                             <td data-bind="text:totalPeople"></td>
-                            <td st="all" data-bind="text:totalReceivable"></td>
-                            <td st="budget" style="display:none" data-bind="text:totalBudgetReceivable"></td>
-                            <td st="final" style="display:none" data-bind="text:totalFinalReceivable"></td>
-                            <td data-bind="text:totalReceived"></td>
-                            <td st="all" data-bind="text:totalBalance"></td>
-                            <td st="budget" style="display:none" data-bind="text:totalBudgetBalance"></td>
-                            <td st="final" style="display:none" data-bind="text:totalFinalBalance"></td>
+                            <td st="all" data-bind="text:totalReceivable" class="rmb"></td>
+                            <td st="budget" style="display:none" data-bind="text:totalBudgetReceivable" class="rmb"></td>
+                            <td st="final" style="display:none" data-bind="text:totalFinalReceivable" class="rmb"></td>
+                            <td data-bind="text:totalReceived" class="rmb"></td>
+                            <td st="all" data-bind="text:totalBalance" class="rmb"></td>
+                            <td st="budget" style="display:none" data-bind="text:totalBudgetBalance" class="rmb"></td>
+                            <td st="final" style="display:none" data-bind="text:totalFinalBalance" class="rmb"></td>
                             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                              <td></td>  
                            </s:if>  
@@ -248,7 +248,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		           <div class="col-md-4">
 		               <label class="l" style="width:30%">抹零金额</label>
 		               <div class="ip" style="width:70%">
-		                  <p class="ip-default" data-bind="text:tailMoney()"></p>
+		                  <p class="ip-default rmb" data-bind="text:tailMoney()"></p>
 		                  <input name="detail.received" type="hidden" data-bind="value:tailMoney()"/>
 		               </div>
 		           </div>
@@ -340,10 +340,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		         <div class="col-md-3">
 		               <div class="ip">
 		               		<!-- ko if:$data.final_flg=="Y" -->
-		                   	<p class="ip-default" data-bind="text:$data.final_balance"></p>
+		                   	<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
 		                   	<!-- /ko -->
 		                   	<!-- ko if:$data.final_flg=="N" -->
-		                   	<p class="ip-default" data-bind="text:$data.budget_balance"></p>
+		                   	<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
 		                   	<!-- /ko -->
 		               </div>
 		           </div>
@@ -402,10 +402,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		         <div class="col-md-3">
 		               <div class="ip">
 		               		<!-- ko if:$data.final_flg=="Y" -->
-		                   	<p class="ip-default" data-bind="text:$data.final_balance"></p>
+		                   	<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
 		                   	<!-- /ko -->
 		                   	<!-- ko if:$data.final_flg=="N" -->
-		                   	<p class="ip-default" data-bind="text:$data.budget_balance"></p>
+		                   	<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
 		                   	<!-- /ko -->
 		               </div>
 		           </div>

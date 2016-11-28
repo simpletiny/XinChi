@@ -62,7 +62,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </ol>
             </li>
             </s:if>
-             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')"><li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>财务</a>
+             <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')"><li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>财务</a>
                 <ol style="display: none;">
                     <li><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>账户管理</a></li>
                 </ol>
@@ -91,6 +91,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
 <!-- sidebar end -->
     <script src="<%=basePath%>static/vendor/jquery-1.11.1.min.js"></script>
+    <script src="<%=basePath%>static/vendor/jquery-formatCurrency.js"></script>
     <script src="<%=basePath%>static/vendor/knockout-3.2.0.js"></script>
     <script src="<%=basePath%>static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
     <script src="<%=basePath%>static/vendor/momentjs/moment-with-locales.min.js"></script>

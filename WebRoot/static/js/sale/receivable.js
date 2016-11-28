@@ -18,6 +18,7 @@ var OrderContext = function() {
 			sales_name : self.chosenSales()
 		}, function(data) {
 			self.recsum(data.summary);
+			$(".rmb").formatCurrency();
 		});
 	};
 
@@ -73,7 +74,8 @@ var OrderContext = function() {
 			self.tailMoney(re.final_balance);
 			self.team_number(re.team_number);
 			self.client_employee_name(re.client_employee_name);
-
+			
+			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
 				title : [ '抹零申请', '' ],
@@ -150,6 +152,7 @@ var OrderContext = function() {
 			});
 			if (!check_result)
 				return;
+			$(".rmb").formatCurrency();
 			startLoadingSimpleIndicator("检测中");
 			$.ajax({
 				type : "POST",
@@ -261,6 +264,7 @@ var OrderContext = function() {
 
 			if (!check_result)
 				return;
+			$(".rmb").formatCurrency();
 			startLoadingSimpleIndicator("检测中");
 			$.ajax({
 				type : "POST",
@@ -468,6 +472,9 @@ var OrderContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			$(".rmb").formatCurrency();
+			self.changeType();
 		});
 	};
 
@@ -500,6 +507,7 @@ var OrderContext = function() {
 			self.sales_name.push(data.user_name);
 			self.sales_number.push(data.user_number);
 		});
+		
 	});
 	self.search = function() {
 

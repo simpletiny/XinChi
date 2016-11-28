@@ -20,6 +20,10 @@ var DetailContext = function() {
 		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(
 				data) {
 			self.details(data.details);
+			$(".rmb").formatCurrency();
+
+            self.totalCount(Math.ceil(data.page.total / self.perPage));
+            self.setPageNums(self.currentPage());
 		});
 	};
 	self.search = function() {

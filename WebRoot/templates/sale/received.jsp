@@ -77,11 +77,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <tbody id="tbody-data" data-bind="foreach: receiveds">
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
-                            <td ><a href="javascript:void(0)" data-bind="text: $data.received"></a> </td>
+                            <td data-bind="text: $data.received" class="rmb"> </td>
                             <td data-bind="text: $data.received_time"></td>
                             <td data-bind="text: $root.typeMapping[$data.type]"></td>
                             <td data-bind="text: $data.comment"></td>
-                            <td data-bind="text: $data.create_time"></td>
+                            <td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
                             <td data-bind="text: $data.confirm_time"></td> 
                              <td data-bind="text: $root.statusMapping[$data.status]"></td>    
                         </tr>

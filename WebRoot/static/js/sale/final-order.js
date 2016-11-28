@@ -49,6 +49,7 @@ var OrderContext = function() {
 			
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			$(".rmb").formatCurrency();
 		});
 	};
 	
