@@ -66,8 +66,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr role="row">
                         	<th></th>
                             <th>金额</th>
+                             <th>类型</th>
                             <th>收入时间</th>
-                            <th>类型</th>
+                            <th>我方账户</th>
+                            <th>客户</th>
                             <th>摘要</th>
                             <th>填报日期</th>
                             <th>入账日期</th>
@@ -78,8 +80,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr>
                         	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
                             <td data-bind="text: $data.received" class="rmb"> </td>
-                            <td data-bind="text: $data.received_time"></td>
                             <td data-bind="text: $root.typeMapping[$data.type]"></td>
+                           <td data-bind="text: $data.received_time"></td>
+                           <td data-bind="text: $data.card_account"></td>
+                            <td data-bind="text: $data.comment"></td>
                             <td data-bind="text: $data.comment"></td>
                             <td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
                             <td data-bind="text: $data.confirm_time"></td> 

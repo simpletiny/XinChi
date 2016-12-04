@@ -10,8 +10,6 @@ var SupplierEmployeeContext = function() {
 	// '湖南省', '广东省', '海南省', '四川省', '贵州省', '云南省', '陕西省', '甘肃省', '青海省',
 	// '台湾省', '内蒙古自治区', '广西壮族自治区', '西藏自治区', '宁夏回族自治区', '新疆维吾尔自治区',
 	// '香港特别行政区', '澳门特别行政区' ];
-	
-
 
 	// self.supplierType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	self.sales = ko.observableArray([]);
@@ -20,7 +18,6 @@ var SupplierEmployeeContext = function() {
 		total : 0,
 		items : []
 	});
-	
 
 	self.choosenSales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
@@ -46,12 +43,11 @@ var SupplierEmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "supplier.supplier_short_name="+$("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
+		var param = "supplier.supplier_short_name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -73,20 +69,17 @@ var SupplierEmployeeContext = function() {
 			return;
 		}
 
-		$.ajax(
-				{
-					type : "POST",
-					url : self.apiurl + 'supplier/createEmployee',
-					data : $("form").serialize()
-				}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/supplier/supplier-employee.jsp";
-					}
-				});
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'supplier/createEmployee',
+			data : $("form").serialize()
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/supplier/supplier-employee.jsp";
+			}
+		});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -121,8 +114,7 @@ var SupplierEmployeeContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

@@ -36,6 +36,7 @@
 		<mapper resource="com/xinchi/bean/mapper/teamNumberMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/receivableMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/receivableSummaryMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierFileMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

@@ -1,8 +1,7 @@
 package com.xinchi.common;
 
 public enum FileFolder {
-	USER_ID("userIdFileFolder");
-
+	USER_ID("userIdFileFolder"), SUPPLIER_FILE("supplierFileFolder");
 	private String value;
 
 	public String value() {

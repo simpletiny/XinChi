@@ -8,7 +8,7 @@
 	    <result column="fax" property="fax" jdbcType="VARCHAR" />
 	    <result column="address" property="address" jdbcType="VARCHAR" />
 	    <result column="body_name" property="body_name" jdbcType="VARCHAR" />
-	    <result column="body_sex" property="body_sex" jdbcType="VARCHAR" />
+	    <result column="body_sex" property="body_sex" jdbcType="CHAR" />
 	    <result column="body_id" property="body_id" jdbcType="VARCHAR" />
 	    <result column="body_birth_year" property="body_birth_year" jdbcType="VARCHAR" />
 	    <result column="body_wechat" property="body_wechat" jdbcType="VARCHAR" />
@@ -23,8 +23,13 @@
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
  	    <result column="supplier_provice" property="supplier_provice" jdbcType="VARCHAR" />
  	    <result column="supplier_city" property="supplier_city" jdbcType="VARCHAR" />
+ 	    <result column="credit_code" property="credit_code" jdbcType="VARCHAR" />
+ 	    <result column="payment_type" property="payment_type" jdbcType="VARCHAR" />
+ 	    <result column="is_cooperate" property="is_cooperate" jdbcType="CHAR" />
+ 	    <result column="corporate_name" property="corporate_name" jdbcType="VARCHAR" />
+ 	    <result column="corporate_sex" property="corporate_sex" jdbcType="CHAR" />
+ 	    <result column="corporate_id" property="corporate_id" jdbcType="VARCHAR" />
   </resultMap>
-  
   <sql id="Base_Column_List" >
   		
     	supplier_name, 
@@ -47,7 +52,13 @@
     	create_time,
     	update_time,
     	supplier_provice,
-    	supplier_city
+    	supplier_city,
+    	credit_code,
+    	payment_type,
+    	is_cooperate,
+    	corporate_name,
+    	corporate_sex,
+    	corporate_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -58,7 +69,7 @@
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from supplier
-    where id = #{id,jdbcType=CHAR}
+    where pk = #{pk,jdbcType=CHAR}
   </delete>
   
   <insert id="insert" parameterType="com.xinchi.bean.SupplierBean" >
@@ -126,8 +137,26 @@
       <if test="supplier_provice != null">
         supplier_provice,
       </if>
-      <if test="supplier_provice != null">
+      <if test="supplier_city != null">
         supplier_city,
+      </if>
+      <if test="credit_code != null">
+        credit_code,
+      </if>
+      <if test="payment_type != null">
+        payment_type,
+      </if>
+      <if test="is_cooperate != null">
+        is_cooperate,
+      </if>
+      <if test="corporate_name != null">
+        corporate_name,
+      </if>
+      <if test="corporate_sex != null">
+        corporate_sex,
+      </if>
+      <if test="corporate_id != null">
+        corporate_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -193,6 +222,24 @@
 	      </if>
 	      <if test="supplier_city != null">
 	        #{supplier_city,jdbcType=VARCHAR},
+	      </if>
+	      <if test="credit_code != null">
+	        #{credit_code,jdbcType=VARCHAR},
+	      </if>
+	      <if test="payment_type != null">
+	        #{payment_type,jdbcType=VARCHAR},
+	      </if>
+	      <if test="is_cooperate != null">
+	        #{is_cooperate,jdbcType=CHAR},
+	      </if>
+	      <if test="corporate_name != null">
+	        #{corporate_name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="corporate_sex != null">
+	        #{corporate_sex,jdbcType=CHAR},
+	      </if>
+	      <if test="corporate_id != null">
+	        #{corporate_id,jdbcType=VARCHAR},
 	      </if>
     </trim>		
   </insert>
@@ -261,6 +308,25 @@
 	      	<if test="supplier_city != null">
 	        supplier_city = #{supplier_city,jdbcType=VARCHAR},
 	      </if>
+	      	<if test="credit_code != null">
+	        credit_code = #{credit_code,jdbcType=VARCHAR},
+	      </if>
+	      	<if test="payment_type != null">
+	        payment_type = #{payment_type,jdbcType=VARCHAR},
+	      </if>
+	      	<if test="is_cooperate != null">
+	        is_cooperate = #{is_cooperate,jdbcType=CHAR},
+	      </if>
+	      	<if test="corporate_name != null">
+	        corporate_name = #{corporate_name,jdbcType=VARCHAR},
+	      </if>
+	      	<if test="corporate_sex != null">
+	        corporate_sex = #{corporate_sex,jdbcType=CHAR},
+	      </if>
+	      	<if test="corporate_id != null">
+	        corporate_id = #{corporate_id,jdbcType=VARCHAR},
+	      </if>
+	      
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>

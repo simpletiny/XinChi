@@ -11,6 +11,9 @@
 		<action name="searchSupplier" class="supplierAction" method="searchSupplier">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchSupplierFiles" class="supplierAction" method="searchSupplierFiles">
+			<result name="success" type="json"></result>
+		</action>
 		<action name="searchSupplierByPage" class="supplierAction" method="searchSupplierByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -19,6 +22,9 @@
 		</action>
 		<action name="searchOneSupplier" class="supplierAction" method="searchSupplierByPk">
 			<result name="success" type="json"></result>
+		</action>
+		<action name="deleteSupplierFile" class="supplierAction" method="deleteSupplierFile">
+			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="createEmployee" class="supplierEmployeeAction" method="createEmployee">
 			<result name="success" type="str">resultStr</result>
@@ -38,6 +44,7 @@
 		<action name="updateEmployee" class="supplierEmployeeAction" method="updateEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+
 	</package>
 
 </struts>

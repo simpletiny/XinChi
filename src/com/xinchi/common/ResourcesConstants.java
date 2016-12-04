@@ -38,25 +38,39 @@ public class ResourcesConstants {
 	public static String USER_ROLE_SALES = "SALES";
 	public static String USER_ROLE_PRODUCT = "PRODUCT";
 	public static String USER_ROLE_FINANCE = "FINANCE";
-	
-	//团队状态
-	public static String TEAM_STATUS_BEFORE="未出团";
-	public static String TEAM_STATUS_AFTER="已出团";
-	public static String TEAM_STATUS_RETURN="已回团";
-	public static String TEAM_STATUS_NOT_RETURN="未回团";
-	
-	//收入种类
-	public static String RECEIVED_TYPE_TAIL="TAIL";
-	public static String RECEIVED_TYPE_SUM="SUM";
-	public static String RECEIVED_TYPE_STRIKE="STRIKE";
-	public static String RECEIVED_TYPE_RECEIVED="RECEIVED";
-	
-	
-	//收入状态
-	//待确认
-	public static String RECEIVED_STATUS_ING="I";
-	//被驳回
-	public static String RECEIVED_STATUS_NO="N";
-	//已入账
-	public static String RECEIVED_STATUS_YES="Y";
+
+	// 团队状态
+	public static String TEAM_STATUS_BEFORE = "未出团";
+	public static String TEAM_STATUS_AFTER = "已出团";
+	public static String TEAM_STATUS_RETURN = "已回团";
+	public static String TEAM_STATUS_NOT_RETURN = "未回团";
+
+	// 收入种类
+	public static String RECEIVED_TYPE_TAIL = "TAIL";
+	public static String RECEIVED_TYPE_SUM = "SUM";
+	public static String RECEIVED_TYPE_STRIKE = "STRIKE";
+	public static String RECEIVED_TYPE_RECEIVED = "RECEIVED";
+
+	// 收入状态
+	// 待确认
+	public static String RECEIVED_STATUS_ING = "I";
+	// 被驳回
+	public static String RECEIVED_STATUS_NO = "N";
+	// 已入账
+	public static String RECEIVED_STATUS_YES = "Y";
+	/**
+	 * 供应商文件类型
+	 */
+	// 营业执照
+	public static String SUPPLIER_FILE_TYPE_LICENCE = "LICENCE";
+	// 许可证
+	public static String SUPPLIER_FILE_TYPE_PERMIT = "PERMIT";
+	// 责任险
+	public static String SUPPLIER_FILE_TYPE_INSURANCE = "INSURANCE";
+	// 法人身份证
+	public static String SUPPLIER_FILE_TYPE_CORPORATE = "CORPORATE";
+	// 负责人身份证
+	public static String SUPPLIER_FILE_TYPE_CHIEF = "CHIEF";
+	// 其他文件
+	public static String SUPPLIER_FILE_TYPE_OTHER = "OTHER";
 }

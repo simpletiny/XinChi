@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.SupplierFileMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierFileBean">
+		<result column="supplier_pk" property="supplier_pk" jdbcType="CHAR" />
+		<result column="file_name" property="file_name" jdbcType="VARCHAR" />
+		<result column="file_type" property="file_type" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		supplier_pk,
+		file_name,
+		file_type,
+		update_user,
+		create_user,
+		pk,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_file
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from supplier_file
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByParam" parameterType="com.xinchi.bean.SupplierFileBean">
+		delete from supplier_file
+		<where>
+			<if test="supplier_pk != null">
+				and supplier_pk = #{supplier_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="file_name != null">
+				and file_name = #{file_name,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.SupplierFileBean">
+
+		insert into supplier_file
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="supplier_pk != null">
+				supplier_pk,
+			</if>
+			<if test="file_name != null">
+				file_name,
+			</if>
+			<if test="file_type != null">
+				file_type,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="supplier_pk != null">
+				#{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="file_name != null">
+				#{file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="file_type != null">
+				#{file_type,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierFileBean">
+		update supplier_file
+		<set>
+			<if test="supplier_pk != null">
+				supplier_pk = #{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="file_name != null">
+				file_name = #{file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="file_type != null">
+				file_type = #{file_type,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.SupplierFileBean"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_file
+		<where>
+			<if test="supplier_pk != null">
+				and supplier_pk = #{supplier_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="file_name != null">
+				and file_name = #{file_name,jdbcType=VARCHAR}
+			</if>
+			<if test="file_type != null">
+				and file_type = #{file_type,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectSupplierFilesBySupplierPk" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_file
+		where supplier_pk = #{supplier_pk,jdbcType=CHAR}
+	</select>
+</mapper>

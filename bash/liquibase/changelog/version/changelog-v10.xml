@@ -919,4 +919,33 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE supplier_file (
+					  supplier_pk CHAR(22) NOT NULL ,
+					  file_name VARCHAR(30) NULL ,
+					  file_type VARCHAR(10) NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '供应商文件表';
+
+          		            ]]>
+			<comment>create TABLE supplier_file</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE supplier CHANGE COLUMN body_sex body_sex CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL  , ADD COLUMN credit_code VARCHAR(100) NULL  AFTER supplier_city , ADD COLUMN payment_type VARCHAR(10) NULL  AFTER credit_code , ADD COLUMN is_cooperate CHAR(1) NULL  AFTER payment_type , ADD COLUMN corporate_name VARCHAR(10) NULL  AFTER is_cooperate , ADD COLUMN corporate_sex CHAR(1) NULL  AFTER corporate_name , ADD COLUMN corporate_id VARCHAR(18) NULL  AFTER corporate_sex ;
+          		            ]]>
+			<comment>ALTER TABLE supplier</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

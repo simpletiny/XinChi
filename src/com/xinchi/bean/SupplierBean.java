@@ -42,6 +42,18 @@ public class SupplierBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String pk;
+	
+	private String credit_code;
+	
+	private String payment_type;
+	
+	private String is_cooperate;
+	
+	private String corporate_name;
+	
+	private String corporate_sex;
+	
+	private String corporate_id;
 
 	public String getSupplier_name() {
 		return supplier_name;
@@ -193,6 +205,54 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	public void setSupplier_city(String supplier_city) {
 		this.supplier_city = supplier_city;
+	}
+
+	public String getCredit_code() {
+		return credit_code;
+	}
+
+	public void setCredit_code(String credit_code) {
+		this.credit_code = credit_code;
+	}
+
+	public String getPayment_type() {
+		return payment_type;
+	}
+
+	public void setPayment_type(String payment_type) {
+		this.payment_type = payment_type;
+	}
+
+	public String getIs_cooperate() {
+		return is_cooperate;
+	}
+
+	public void setIs_cooperate(String is_cooperate) {
+		this.is_cooperate = is_cooperate;
+	}
+
+	public String getCorporate_name() {
+		return corporate_name;
+	}
+
+	public void setCorporate_name(String corporate_name) {
+		this.corporate_name = corporate_name;
+	}
+
+	public String getCorporate_sex() {
+		return corporate_sex;
+	}
+
+	public void setCorporate_sex(String corporate_sex) {
+		this.corporate_sex = corporate_sex;
+	}
+
+	public String getCorporate_id() {
+		return corporate_id;
+	}
+
+	public void setCorporate_id(String corporate_id) {
+		this.corporate_id = corporate_id;
 	}
 
 }

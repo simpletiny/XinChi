@@ -36,12 +36,12 @@ String key = request.getParameter("key");
                 </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">地区</label>
-                        <div class="ip"><p class="ip-default" data-bind="text: supplier().supplier_area"></p></div>
+                        <label class="l">信用代码</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: supplier().credit_code"></p></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="l">类型</label>
-                        <div class="ip"><p class="ip-" data-bind="text: supplier().supplier_type"></p></div>
+                        <label class="l">地区</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: supplier().supplier_area"></p></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
