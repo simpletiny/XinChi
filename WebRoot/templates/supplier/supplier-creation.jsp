@@ -97,12 +97,10 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
-							<label class="l">结款方式</label>
-							<div class="ip">
-								<select class="form-control" data-bind="options: paymentTypes,value: supplier().payment_type" name="supplier.payment_type" required="required"></select>
-							</div>
-
-
+						<label class="l">结款方式</label>
+						<div class="ip">
+							<select class="form-control" data-bind="options: paymentTypes,value: supplier().payment_type" name="supplier.payment_type" required="required"></select>
+						</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">是否合作</label>

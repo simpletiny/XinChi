@@ -49,4 +49,14 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 		return list;
 	}
 
+	@Override
+	public ClientReceivedDetailBean selectByPk(String pk) {
+		return (ClientReceivedDetailBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPrimaryKey", pk);
+	}
+
+	@Override
+	public void deleteByPk(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.deleteByPrimaryKey", pk);
+	}
+
 }

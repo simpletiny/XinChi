@@ -2,7 +2,10 @@ var SupplierContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCompanies = ko.observableArray([]);
-
+	self.isMapping = {
+			'Y' : '合作',
+			'N' : '终止合作',
+		};
 	self.suppliers = ko.observable({
 		total : 0,
 		items : []

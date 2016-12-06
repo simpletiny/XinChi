@@ -1,7 +1,7 @@
 var ReceivedContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.chosenOrders = ko.observableArray([]);
+	self.chosenReceiveds = ko.observableArray([]);
 
 	self.receiveds = ko.observable({
 		total : 0,
@@ -20,13 +20,12 @@ var ReceivedContext = function() {
 	if (nowDayOfWeek == 0) {
 		nowDayOfWeek = 7;
 	}
-	
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+1);
+
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
-			+ (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
-	
+
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
@@ -59,13 +58,10 @@ var ReceivedContext = function() {
 		var totalProfit = 0;
 		var totalPerProfit = 0;
 
-		var param = $("form").serialize() + "&detail.status="
-				+ self.chosenStatus();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		var param = $("form").serialize() + "&detail.status=" + self.chosenStatus();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
 			// 计算合计
 			$(self.receiveds()).each(function(idx, data) {
@@ -83,17 +79,56 @@ var ReceivedContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
-			
+
 			$(".rmb").formatCurrency();
 		});
 	};
 
-	self.search = function() {
-
-	};
-
-	self.resetPage = function() {
-
+	self.rollBack = function() {
+		if (self.chosenReceiveds().length == 0) {
+			fail_msg("请选择");
+			return;
+		}
+		var pks=new Array();
+		var check = true;
+		$(self.chosenReceiveds()).each(function(idx, data) {
+			if (data.split(";")[1] == 'Y') {
+				check = false;
+				return false;
+			}else{
+				pks.push(data.split(";")[0]);
+			}
+		});
+		if (!check) {
+			fail_msg("请选择未入账的收入");
+			return;
+		}
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确认要打回重报吗?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					startLoadingSimpleIndicator("操作中");
+					layer.close(index);
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'sale/rollBackReceived',
+						data : "received_pks="+pks,
+						success : function(str) {
+							if (str != "OK") {
+								fail_msg("回滚失败，请联系管理员");
+							}
+							self.refresh();
+							self.chosenReceiveds = ko.observableArray([]);
+							endLoadingIndicator();
+						}
+					});
+				}
+			}
+		});
 	};
 
 	// start pagination
@@ -130,8 +165,7 @@ var ReceivedContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

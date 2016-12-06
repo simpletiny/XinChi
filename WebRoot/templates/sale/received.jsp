@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="form-group" >
 	                    <div style="width:30%;float:right">
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" disabled="disabled" data-bind="click: function() { createOrder() }">打回从报</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
 		                    </div>
 		                 </div>
 	                </div>
@@ -78,7 +78,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </thead>
                     <tbody id="tbody-data" data-bind="foreach: receiveds">
                         <tr>
-                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders"/></td>
+                        	 <td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenReceiveds"/></td>
                             <td data-bind="text: $data.received" class="rmb"> </td>
                             <td data-bind="text: $root.typeMapping[$data.type]"></td>
                            <td data-bind="text: $data.received_time"></td>

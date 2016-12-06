@@ -71,8 +71,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>城市</th>
                             <th>负责人</th>
                             <th>手机号</th>
-                            <th>电话</th>
-                            <th>传真</th>
+                            <th>结款方式</th>
+                            <th>合作状态</th>
+                            <th>备注</th>
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: suppliers">
@@ -82,8 +83,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.supplier_city"></td>
                             <td data-bind="text: $data.body_name"></td>
                             <td data-bind="text: $data.body_cellphone"></td>
-                            <td data-bind="text: $data.telephone"></td>
-                             <td data-bind="text: $data.fax"></td>            
+                            <td data-bind="text: $data.payment_type"></td>
+                             <td data-bind="text:$root.isMapping[$data.is_cooperate]"></td>    
+                             <td data-bind="text: $data.comment"></td>            
                         </tr>
                     </tbody>
                 </table>

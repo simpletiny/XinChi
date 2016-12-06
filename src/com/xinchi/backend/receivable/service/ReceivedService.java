@@ -12,4 +12,6 @@ public interface ReceivedService {
 	public void insertWithPk(ClientReceivedDetailBean detail);
 
 	public List<ClientReceivedDetailBean> getAllReceivedsByPage(Page page);
+
+	public String rollBackReceived(String received_pks);
 }

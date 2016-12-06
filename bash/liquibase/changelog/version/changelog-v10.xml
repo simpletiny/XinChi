@@ -948,4 +948,12 @@
 			<comment>ALTER TABLE supplier</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+				UPDATE supplier SET is_cooperate='Y',payment_type='未知';
+          		            ]]>
+			<comment>UPDATE supplier </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

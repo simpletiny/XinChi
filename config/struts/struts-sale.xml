@@ -76,6 +76,9 @@
 		<action name="applyStrike" class="receivedAction" method="applyStrike">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="rollBackReceived" class="receivedAction" method="rollBackReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchReceivedByPage" class="receivedAction" method="searchReceivedByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
