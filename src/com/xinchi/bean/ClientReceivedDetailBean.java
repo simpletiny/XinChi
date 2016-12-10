@@ -38,6 +38,8 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	
 	private BigDecimal allot_received;
 	
+	private String client_employee_pk;
+	private String client_employee_name;
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -156,6 +158,22 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setAllot_received(BigDecimal allot_received) {
 		this.allot_received = allot_received;
+	}
+
+	public String getClient_employee_pk() {
+		return client_employee_pk;
+	}
+
+	public void setClient_employee_pk(String client_employee_pk) {
+		this.client_employee_pk = client_employee_pk;
+	}
+
+	public String getClient_employee_name() {
+		return client_employee_name;
+	}
+
+	public void setClient_employee_name(String client_employee_name) {
+		this.client_employee_name = client_employee_name;
 	}
 
 }

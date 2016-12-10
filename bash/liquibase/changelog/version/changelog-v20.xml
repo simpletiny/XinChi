@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+				create view received_detail as
+			    select 
+			        *
+			    From
+			        client_received_detail
+			    where
+			        type <> 'SUM' 
+			    union select 
+			        *
+			    from
+			        client_received_detail
+			    where
+			        type = 'SUM'
+			    group by related_pk
+          		            ]]>
+			<comment>create view received_detail</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>

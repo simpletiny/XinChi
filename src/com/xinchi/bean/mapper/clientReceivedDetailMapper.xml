@@ -19,6 +19,8 @@
 	    <result column="pk" property="pk" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+ 	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -46,6 +48,30 @@
     <include refid="Base_Column_List" />
     from client_received_detail
     where pk = #{pk,jdbcType=CHAR}
+  </select>
+  <select id="selectByRelatedPks" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    	A.team_number, 
+    	A.received, 
+    	A.received_time, 
+    	A.type, 
+    	A.confirm_time, 
+    	A.status, 
+    	A.comment, 
+    	A.sum_received, 
+    	A.allot_received,
+    	A.related_pk, 
+    	A.card_pk, 
+    	A.card_account, 
+    	A.create_user, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_time,
+    	A.update_time,
+    	B.client_employee_name,
+    	B.client_employee_pk
+    from client_received_detail A left join budget_order B on A.team_number=B.team_number
+    where A.related_pk = #{related_pks,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -238,21 +264,39 @@
    
    <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 
-    	<include refid="Base_Column_List" />
-    from client_received_detail
+    	A.team_number, 
+    	A.received, 
+    	A.received_time, 
+    	A.type, 
+    	A.confirm_time, 
+    	A.status, 
+    	A.comment, 
+    	A.sum_received, 
+    	A.allot_received,
+    	A.related_pk, 
+    	A.card_pk, 
+    	A.card_account, 
+    	A.create_user, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_time,
+    	A.update_time,
+    	B.client_employee_name,
+    	B.client_employee_pk
+    from received_detail A left join budget_order B on A.team_number=B.team_number
      <where>
          <if test="params.bo.status != null and params.bo.status !=''">
             <!--TODO:修改为foreach 形式  -->
-	        and status in (${params.bo.status})
+	        and A.status in (${params.bo.status})
 	      </if>
 	      <if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and create_user  = #{params.bo.create_user,jdbcType=VARCHAR}
+	         and A.create_user  = #{params.bo.create_user,jdbcType=VARCHAR}
 	      </if>
 	       <if test="params.bo.date_from != null and params.bo.date_from !=''">
-	         and LEFT(received_time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+	         and LEFT(A.received_time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
 	      </if>
 	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
-	         and LEFT(received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+	         and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 	      </if>
     </where> 
    </select>

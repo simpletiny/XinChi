@@ -1,3 +1,5 @@
+var viewDetailLayer;
+var viewCommentLayer;
 var ReceivedContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -89,13 +91,13 @@ var ReceivedContext = function() {
 			fail_msg("请选择");
 			return;
 		}
-		var pks=new Array();
+		var pks = new Array();
 		var check = true;
 		$(self.chosenReceiveds()).each(function(idx, data) {
 			if (data.split(";")[1] == 'Y') {
 				check = false;
 				return false;
-			}else{
+			} else {
 				pks.push(data.split(";")[0]);
 			}
 		});
@@ -116,7 +118,7 @@ var ReceivedContext = function() {
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'sale/rollBackReceived',
-						data : "received_pks="+pks,
+						data : "received_pks=" + pks,
 						success : function(str) {
 							if (str != "OK") {
 								fail_msg("回滚失败，请联系管理员");
@@ -130,7 +132,84 @@ var ReceivedContext = function() {
 			}
 		});
 	};
+	self.sumDetails = ko.observable({
+		total : 0,
+		items : []
+	});
+	self.order = ko.observable({
+		team_number : "",
+		client_employee_name : "",
+		product : "",
+		people_count : "",
+		departure_date : ""
 
+	});
+	self.comment = ko.observable();
+	self.viewComment = function(detail) {
+		if (detail.type == "SUM") {
+			msg(detail.comment);
+		} else {
+			var param = "team_number=" + detail.team_number;
+			startLoadingSimpleIndicator("加载中");
+			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
+				self.order(data.order);
+				self.comment(detail.comment);
+				endLoadingIndicator();
+				viewCommentLayer = $.layer({
+					type : 1,
+					title : [ '摘要详情', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '700px', 'auto' ],
+					offset : [ '150px', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#comment'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+			});
+		}
+	};
+	self.sumDetail = ko.observable({
+		card_account : "",
+		sum_received : "",
+		client_employee_name : "",
+		allot_received : ""
+
+	});
+	self.viewDetail = function(related_pk) {
+		var param = "related_pks=" + related_pk;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+
+			self.sumDetails(data.receiveds);
+			self.sumDetail(self.sumDetails()[0]);
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : [ '合账详情', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', 'auto' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#sum_detail'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		});
+
+	};
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

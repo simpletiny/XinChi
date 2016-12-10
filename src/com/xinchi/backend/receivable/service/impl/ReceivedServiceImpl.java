@@ -11,6 +11,7 @@ import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
 @Service
@@ -45,12 +46,32 @@ public class ReceivedServiceImpl implements ReceivedService {
 		String[] pks = received_pks.split(",");
 		for (String pk : pks) {
 			ClientReceivedDetailBean detail = dao.selectByPk(pk);
-			detail.setReceived(BigDecimal.ZERO.subtract(detail.getReceived()));
-			receivableService.updateReceivableReceived(detail);
+			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM)) {
+				String[] related_pks = detail.getRelated_pk().split(",");
+				for (String related : related_pks) {
+					if (related.equals(detail.getPk()))
+						continue;
+					ClientReceivedDetailBean related_detail = dao
+							.selectByPk(related);
+					doRollBack(related_detail);
+				}
 
-			dao.deleteByPk(pk);
+			}
+			doRollBack(detail);
+
 		}
-		
+
 		return "OK";
+	}
+
+	private void doRollBack(ClientReceivedDetailBean detail) {
+		detail.setReceived(BigDecimal.ZERO.subtract(detail.getReceived()));
+		receivableService.updateReceivableReceived(detail);
+		dao.deleteByPk(detail.getPk());
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks) {
+		return dao.selectByRelatedPks(related_pks);
 	}
 }

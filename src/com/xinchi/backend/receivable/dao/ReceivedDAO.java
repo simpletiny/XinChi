@@ -17,4 +17,6 @@ public interface ReceivedDAO {
 			Page<ClientReceivedDetailBean> page);
 
 	public void deleteByPk(String pk);
+
+	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks);
 }

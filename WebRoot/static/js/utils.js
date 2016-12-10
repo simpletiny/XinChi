@@ -132,7 +132,17 @@ var inlineTextFunc = function(element, valueAccessor, allBindingsAccessor, data,
 		}
 	});
 };
-
+var msg= function(txt){
+	$.layer({
+		type : 0,
+		closeBtn : [ 1, true ],
+		area : [ '300px', 'auto' ],
+		dialog : {
+			type : -1,
+			msg : txt
+		}
+	});
+};
 var success_msg = function(msg) {
 	$.layer({
 		type : 0,

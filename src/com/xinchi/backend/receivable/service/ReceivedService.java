@@ -14,4 +14,6 @@ public interface ReceivedService {
 	public List<ClientReceivedDetailBean> getAllReceivedsByPage(Page page);
 
 	public String rollBackReceived(String received_pks);
+
+	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks);
 }

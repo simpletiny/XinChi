@@ -40,4 +40,6 @@ public interface SaleOrderService {
 	public void deleteReceivableDetail(String detail_pk);
 
 	public List<BudgetOrderBean> searchOrdersByPage(Page<BudgetOrderBean> page);
+
+	public BudgetOrderBean searchBudgetOrderByTeamNumber(String team_number);
 }

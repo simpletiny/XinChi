@@ -17,6 +17,9 @@
 		<action name="searchOneOrder" class="saleOrderAction" method="searchOneOrder">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchOrderByTeamNumber" class="saleOrderAction" method="searchOrderByTeamNumber">
+			<result name="success" type="json"></result>
+		</action>
 		<action name="searchOrderSupplier" class="saleOrderAction" method="searchOrderSupplier">
 			<result name="success" type="json"></result>
 		</action>
@@ -84,6 +87,9 @@
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
+		</action>
+		<action name="searchByRelatedPks" class="receivedAction" method="searchByRelatedPks">
+			<result name="success" type="json"></result>
 		</action>
 	</package>
 

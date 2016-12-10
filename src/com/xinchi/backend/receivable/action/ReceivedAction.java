@@ -154,10 +154,20 @@ public class ReceivedAction extends BaseAction {
 		receiveds = receivedService.getAllReceivedsByPage(page);
 		return SUCCESS;
 	}
+
 	private String received_pks;
+
 	public String rollBackReceived() {
-		
+
 		resultStr = receivedService.rollBackReceived(received_pks);
+		return SUCCESS;
+	}
+
+	private String related_pks;
+
+	public String searchByRelatedPks() {
+		receiveds = receivedService.selectByRelatedPks(related_pks);
+		
 		return SUCCESS;
 	}
 
@@ -191,6 +201,14 @@ public class ReceivedAction extends BaseAction {
 
 	public void setReceived_pks(String received_pks) {
 		this.received_pks = received_pks;
+	}
+
+	public String getRelated_pks() {
+		return related_pks;
+	}
+
+	public void setRelated_pks(String related_pks) {
+		this.related_pks = related_pks;
 	}
 
 }

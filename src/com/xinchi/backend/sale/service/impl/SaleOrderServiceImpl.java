@@ -110,4 +110,8 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 		return dao.selectAllByPage(page);
 	}
 
+	@Override
+	public BudgetOrderBean searchBudgetOrderByTeamNumber(String team_number) {
+		return dao.selectBudgetOrderByTeamNumber(team_number);
+	}
 }

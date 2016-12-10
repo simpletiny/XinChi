@@ -59,4 +59,9 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.deleteByPrimaryKey", pk);
 	}
 
+	@Override
+	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByRelatedPks", related_pks);
+	}
+
 }

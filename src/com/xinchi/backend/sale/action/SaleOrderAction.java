@@ -263,7 +263,10 @@ public class SaleOrderAction extends BaseAction {
 		resultStr = OK;
 		return SUCCESS;
 	}
-
+	public String searchOrderByTeamNumber(){
+		order = saleOrderService.searchBudgetOrderByTeamNumber(team_number);
+		return SUCCESS;
+	}
 	public BudgetOrderBean getOrder() {
 		return order;
 	}
