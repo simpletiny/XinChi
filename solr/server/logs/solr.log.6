@@ -1,0 +1,38 @@
+2016-11-19 04:03:17.469 INFO  (main) [   ] o.e.j.s.Server jetty-9.3.8.v20160314
+2016-11-19 04:03:18.307 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr? version 6.3.0
+2016-11-19 04:03:18.307 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
+2016-11-19 04:03:18.307 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: D:\ForCoding\workplace\XinChi\solr
+2016-11-19 04:03:18.413 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2016-11-19T04:03:18.310Z
+2016-11-19 04:03:18.414 INFO  (main) [   ] o.a.s.s.StartupLoggingUtils Property solr.log.muteconsole given. Muting ConsoleAppender named CONSOLE
+2016-11-19 04:03:18.643 INFO  (main) [   ] o.a.s.c.SolrResourceLoader Using system property solr.solr.home: D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-19 04:03:18.685 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\ForCoding\workplace\XinChi\solr\server\solr\solr.xml
+2016-11-19 04:03:19.747 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
+2016-11-19 04:03:29.267 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions underneath D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-19 04:03:29.293 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [receivable]
+2016-11-19 04:03:29.933 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@5b7c14{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-19 04:03:29.934 INFO  (main) [   ] o.e.j.s.Server Started @17516ms
+2016-11-19 04:03:29.973 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader [receivable] Added 3 libs to classloader, from paths: [/D:/ForCoding/workplace/XinChi/solr/extlib]
+2016-11-19 04:03:30.577 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 6.3.0
+2016-11-19 04:03:30.870 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [receivable] Schema name=receivable
+2016-11-19 04:03:31.729 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Loaded schema receivable/1.6 with uniqueid field id
+2016-11-19 04:03:32.318 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'receivable' using configuration from instancedir D:\ForCoding\workplace\XinChi\solr\server\solr\receivable
+2016-11-19 04:03:32.605 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.c.SolrCore [[receivable] ] Opening new SolrCore at [D:\ForCoding\workplace\XinChi\solr\server\solr\receivable], dataDir=[F:\data\]
+2016-11-19 04:03:32.842 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
+2016-11-19 04:03:43.335 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2016-11-19 04:03:43.335 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2016-11-19 04:03:43.587 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Hard AutoCommit: if uncommited for 15000ms; 
+2016-11-19 04:03:43.587 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Soft AutoCommit: disabled
+2016-11-19 04:03:43.852 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.SolrIndexSearcher Opening [Searcher@1e1950f[receivable] main]
+2016-11-19 04:03:43.973 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf
+2016-11-19 04:03:44.045 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2016-11-19 04:03:44.073 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4,maxQueryFrequency=0.01}
+2016-11-19 04:03:44.076 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf\elevate.xml
+2016-11-19 04:03:44.118 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
+2016-11-19 04:03:44.140 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener sending requests to Searcher@1e1950f[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
+2016-11-19 04:03:44.140 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2016-11-19 04:03:44.140 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2016-11-19 04:03:44.141 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.SolrCore [receivable] Registered new searcher Searcher@1e1950f[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
+2016-11-19 04:11:41.660 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@5b7c14{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-19 04:11:41.661 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=22192110
+2016-11-19 04:11:41.662 INFO  (coreCloseExecutor-12-thread-1) [   x:receivable] o.a.s.c.SolrCore [receivable]  CLOSING SolrCore org.apache.solr.core.SolrCore@6e70d3
+2016-11-19 04:11:41.851 WARN  (ShutdownMonitor) [   ] o.e.j.s.ServletContextHandler ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.
