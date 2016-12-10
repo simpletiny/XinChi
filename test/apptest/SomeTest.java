@@ -21,8 +21,8 @@ public class SomeTest {
 
 	public static void main(String[] args) throws SolrServerException,
 			IOException {
-		String[] a = {"1","3","5","6"};
-		System.out.println(Joiner.on(",").join(a));
+		
+		System.out.println("N".equals(null));
 	}
 
 	private static String buildQuery(ReceivableBean options) {
