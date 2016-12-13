@@ -51,6 +51,7 @@ public class ReceivableBean extends SupperBO implements Serializable {
 	private String team_status;
 	private String type;
 
+	private String sort_type;
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -225,6 +226,14 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	public void setBack_days(String back_days) {
 		this.back_days = back_days;
+	}
+
+	public String getSort_type() {
+		return sort_type;
+	}
+
+	public void setSort_type(String sort_type) {
+		this.sort_type = sort_type;
 	}
 
 }

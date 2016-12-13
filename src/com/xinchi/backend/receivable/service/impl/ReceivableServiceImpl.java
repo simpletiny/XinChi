@@ -67,12 +67,18 @@ public class ReceivableServiceImpl implements ReceivableService {
 				.getProperty("solr.receivableUrl"));
 
 		// 计算合计
-		String qStr = buildQuery((ReceivableBean) page.getParams().get("bo"));
+		ReceivableBean rb = (ReceivableBean) page.getParams().get("bo");
+		String qStr = buildQuery(rb);
 		if (qStr.equals("")) {
 			qStr = "*:*";
 		}
 		SolrQuery query = new SolrQuery(qStr);
-		query.add("sort", "departure_date desc");
+		if(rb.getSort_type().equals("倒序")){
+			query.add("sort", "departure_date desc");
+		}else if(rb.getSort_type().equals("正序")){
+			query.add("sort", "departure_date asc");
+		}
+		
 		query.setStart(page.getStart());
 		query.setRows(page.getCount());
 		List<ReceivableBean> receivables = new ArrayList<ReceivableBean>();

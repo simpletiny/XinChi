@@ -12,6 +12,7 @@ var OrderContext = function() {
 	self.chosenTypes = ko.observableArray([]);
 	self.recsum = ko.observable({});
 	self.chosenSales = ko.observable();
+	self.sortTypes = [ '倒序', '正序' ];
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
@@ -26,6 +27,8 @@ var OrderContext = function() {
 		total : 0,
 		items : []
 	});
+
+	self.store = ko.observableArray([]);
 
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
@@ -74,7 +77,7 @@ var OrderContext = function() {
 			self.tailMoney(re.final_balance);
 			self.team_number(re.team_number);
 			self.client_employee_name(re.client_employee_name);
-			
+
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
@@ -109,7 +112,7 @@ var OrderContext = function() {
 					fail_msg("申请失败，请联系管理员");
 				}
 				layer.close(tailLayer);
-				self.refresh();
+				self.search();
 				endLoadingIndicator();
 			}
 		});
@@ -223,7 +226,7 @@ var OrderContext = function() {
 					fail_msg("申请失败，请联系管理员");
 				}
 				layer.close(sumLayer);
-				self.refresh();
+				self.search();
 				endLoadingIndicator();
 			}
 		});
@@ -324,7 +327,7 @@ var OrderContext = function() {
 			}
 		}
 		allot_json += ']';
-		
+
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -335,7 +338,7 @@ var OrderContext = function() {
 					fail_msg("申请失败，请联系管理员");
 				}
 				layer.close(strikeLayer);
-				self.refresh();
+				self.search();
 				endLoadingIndicator();
 			}
 		});
@@ -344,9 +347,6 @@ var OrderContext = function() {
 	self.receive = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
-			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("收入只能选择一个订单");
 			return;
 		} else if (self.chosenOrders().length == 1) {
 			var re = null;
@@ -387,29 +387,138 @@ var OrderContext = function() {
 					console.log("Done");
 				}
 			});
+		} else {
+			self.chosenReceivables.removeAll();
+			var client_employee_pks = new Array();
+			$(self.store()).each(function(idx, data1) {
+				$(self.chosenOrders()).each(function(idx, data2) {
+					if (data1.pk == data2) {
+						self.chosenReceivables.push(data1);
+						return false;
+					}
+				});
+			});
+			var check_result = true;
+			$(self.chosenReceivables()).each(function(idx, data) {
+				client_employee_pks.push(data.client_employee_pk);
+				if (data.final_flg == "Y") {
+					if (data.final_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
+				} else {
+					if (data.budget_balance <= 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					}
+				}
+			});
+			if (!check_result)
+				return;
+			$(".rmb").formatCurrency();
+			startLoadingSimpleIndicator("检测中");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/isSameFinancialBody',
+				data : "client_employee_pks=" + client_employee_pks,
+				success : function(str) {
+					if (str == "NOT") {
+						fail_msg("客户不属于同一财务主体");
+					} else {
+						receiveLayer = $.layer({
+							type : 1,
+							title : [ '收入', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '820px', '800px' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#receive_sum_submit'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+						$("receive_sum_submit").attr("overflow", "yes");
+					}
+					endLoadingIndicator();
+				}
+			});
 		}
 	};
 
 	self.applyReceive = function() {
-		if (!$("#form-receive").valid()) {
-			return;
-		}
-		var data = $("#form-receive").serialize();
 
-		startLoadingSimpleIndicator("保存中");
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyReceive',
-			data : data,
-			success : function(str) {
-				if (str != "OK") {
-					fail_msg("申请失败，请联系管理员");
-				}
-				layer.close(receiveLayer);
-				self.refresh();
-				endLoadingIndicator();
+		if (self.chosenOrders().length == 1) {
+			if (!$("#form-receive").valid()) {
+				return;
 			}
-		});
+			var data = $("#form-receive").serialize();
+
+			startLoadingSimpleIndicator("保存中");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/applySum',
+				data : data,
+				success : function(str) {
+					if (str != "OK") {
+						fail_msg("申请失败，请联系管理员");
+					}
+					layer.close(receiveLayer);
+					self.search();
+					endLoadingIndicator();
+				}
+			});
+		} else {
+			if (!$("#form-receive-sum").valid())
+				return;
+			var sumAllot = 0;
+			$("[st='receive_received']").each(function(idx, data) {
+				sumAllot += $(data).val() - 0;
+			});
+			console.log(sumAllot);
+			console.log($(".amountRangeStart1").val() - 0);
+			if (sumAllot != $(".amountRangeStart1").val() - 0) {
+				fail_msg("分配金额合计和总金额不匹配");
+				return;
+			}
+
+			var data = $("#form-receive-sum").serialize();
+			data += "&detail.allot_received=" + $(".amountRangeStart1").val();
+			var allot_json = '[';
+			var allot = $("[st='receive_allot']");
+			for ( var i = 0; i < allot.length; i++) {
+				var current = allot[i];
+				var n = $(current).find("[st='team_number']").val();
+				console.log(n);
+				var r = $(current).find("[st='receive_received']").val();
+				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+				if (i == allot.length - 1) {
+					allot_json += '"}';
+				} else {
+					allot_json += '"},';
+				}
+			}
+			allot_json += ']';
+			startLoadingSimpleIndicator("保存中");
+			console.log(data);
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/applySum',
+				data : data + "&allot_json=" + allot_json,
+				success : function(str) {
+					if (str != "OK") {
+						fail_msg("申请失败，请联系管理员");
+					}
+					layer.close(receiveLayer);
+					self.search();
+					endLoadingIndicator();
+				}
+			});
+		}
+
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -435,12 +544,10 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
 			self.receivables(data.receivables);
-			self.chosenOrders.removeAll();
+			self.store(self.store().concat(self.receivables()));
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -472,7 +579,7 @@ var OrderContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
-			
+
 			$(".rmb").formatCurrency();
 			self.changeType();
 		});
@@ -507,10 +614,12 @@ var OrderContext = function() {
 			self.sales_name.push(data.user_name);
 			self.sales_number.push(data.user_number);
 		});
-		
+
 	});
 	self.search = function() {
-
+		self.chosenOrders.removeAll();
+		self.store.removeAll();
+		self.refresh();
 	};
 
 	self.resetPage = function() {
@@ -525,16 +634,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/sale/order-edit.jsp?key="
-					+ self.chosenOrders()[0];
+			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl
-				+ "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -571,8 +677,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -590,7 +695,7 @@ var ctx = new OrderContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
-	ctx.refresh();
+	ctx.search();
 	ctx.fetchSummary();
 	$('.month-picker-st').MonthPicker({
 		Button : false,

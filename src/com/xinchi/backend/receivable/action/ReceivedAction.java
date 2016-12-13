@@ -66,7 +66,7 @@ public class ReceivedAction extends BaseAction {
 
 		JSONArray array = JSONArray.fromObject(allot_json);
 
-		String[] pks = DBCommonUtil.genPks(3);
+		String[] pks = DBCommonUtil.genPks(array.size());
 		detail.setRelated_pk(Joiner.on(",").join(pks));
 
 		for (int i = 0; i < array.size(); i++) {

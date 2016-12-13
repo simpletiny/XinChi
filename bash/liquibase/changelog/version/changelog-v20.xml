@@ -23,4 +23,13 @@
 			<comment>create view received_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE client_received_detail CHANGE COLUMN related_pk related_pk VARCHAR(1100) NULL DEFAULT NULL  ;
+
+          		            ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

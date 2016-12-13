@@ -1,51 +1,49 @@
-2016-11-16 01:56:19.298 INFO  (main) [   ] o.e.j.s.Server jetty-9.3.8.v20160314
-2016-11-16 01:56:19.706 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr? version 6.3.0
-2016-11-16 01:56:19.706 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
-2016-11-16 01:56:19.706 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: D:\ForCoding\workplace\XinChi\solr
-2016-11-16 01:56:19.755 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2016-11-16T01:56:19.707Z
-2016-11-16 01:56:19.756 INFO  (main) [   ] o.a.s.s.StartupLoggingUtils Property solr.log.muteconsole given. Muting ConsoleAppender named CONSOLE
-2016-11-16 01:56:19.795 INFO  (main) [   ] o.a.s.c.SolrResourceLoader Using system property solr.solr.home: D:\ForCoding\workplace\XinChi\solr\server\solr
-2016-11-16 01:56:19.801 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\ForCoding\workplace\XinChi\solr\server\solr\solr.xml
-2016-11-16 01:56:20.032 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
-2016-11-16 01:56:29.100 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions underneath D:\ForCoding\workplace\XinChi\solr\server\solr
-2016-11-16 01:56:29.107 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [receivable]
-2016-11-16 01:56:29.147 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@533c67{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
-2016-11-16 01:56:29.148 INFO  (main) [   ] o.e.j.s.Server Started @10554ms
-2016-11-16 01:56:29.173 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader [receivable] Added 3 libs to classloader, from paths: [/D:/ForCoding/workplace/XinChi/solr/extlib]
-2016-11-16 01:56:29.302 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 6.3.0
-2016-11-16 01:56:29.443 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [receivable] Schema name=receivable
-2016-11-16 01:56:29.769 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Loaded schema receivable/1.6 with uniqueid field id
-2016-11-16 01:56:29.935 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'receivable' using configuration from instancedir D:\ForCoding\workplace\XinChi\solr\server\solr\receivable
-2016-11-16 01:56:29.973 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.c.SolrCore [[receivable] ] Opening new SolrCore at [D:\ForCoding\workplace\XinChi\solr\server\solr\receivable], dataDir=[F:\data\]
-2016-11-16 01:56:30.005 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
-2016-11-16 01:56:39.239 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
-2016-11-16 01:56:39.240 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
-2016-11-16 01:56:39.257 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Hard AutoCommit: if uncommited for 15000ms; 
-2016-11-16 01:56:39.257 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Soft AutoCommit: disabled
-2016-11-16 01:56:39.330 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.SolrIndexSearcher Opening [Searcher@18894e1[receivable] main]
-2016-11-16 01:56:39.336 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf
-2016-11-16 01:56:39.349 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
-2016-11-16 01:56:39.354 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4,maxQueryFrequency=0.01}
-2016-11-16 01:56:39.356 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf\elevate.xml
-2016-11-16 01:56:39.366 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
-2016-11-16 01:56:39.378 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener sending requests to Searcher@18894e1[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
-2016-11-16 01:56:39.378 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener done.
-2016-11-16 01:56:39.378 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
-2016-11-16 01:56:39.379 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.SolrCore [receivable] Registered new searcher Searcher@18894e1[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
-2016-11-16 01:57:55.722 INFO  (qtp31837390-19) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={} status=0 QTime=594
-2016-11-16 01:58:12.737 INFO  (qtp31837390-14) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261492622} status=0 QTime=1
-2016-11-16 01:58:12.932 INFO  (qtp31837390-15) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261492624} status=0 QTime=196
-2016-11-16 01:58:13.040 INFO  (qtp31837390-19) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261492624} status=0 QTime=102
-2016-11-16 01:58:15.589 INFO  (qtp31837390-18) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261492622} status=0 QTime=0
-2016-11-16 01:58:15.595 INFO  (qtp31837390-21) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/luke params={numTerms=0&show=index&wt=json&_=1479261495577} status=0 QTime=3
-2016-11-16 01:58:15.596 INFO  (qtp31837390-22) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/replication params={wt=json&command=details&_=1479261495578} status=0 QTime=4
-2016-11-16 01:58:15.597 INFO  (qtp31837390-15) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/ping params={action=status&wt=json&_=1479261492624&ts=1479261492624} status=503 QTime=1
-2016-11-16 01:58:15.825 INFO  (qtp31837390-23) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261492624} status=0 QTime=235
-2016-11-16 01:58:15.826 INFO  (qtp31837390-16) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/system params={wt=json&_=1479261495578} status=0 QTime=232
-2016-11-16 01:58:17.640 INFO  (qtp31837390-20) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261492622} status=0 QTime=0
-2016-11-16 01:58:17.756 INFO  (qtp31837390-19) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261492624} status=0 QTime=116
-2016-11-16 01:58:19.097 INFO  (qtp31837390-21) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/select params={q=*:*&indent=on&wt=json&_=1479261497600} hits=10 status=0 QTime=20
-2016-11-16 01:59:22.071 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@533c67{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
-2016-11-16 01:59:22.072 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=22192110
-2016-11-16 01:59:22.073 INFO  (coreCloseExecutor-12-thread-1) [   x:receivable] o.a.s.c.SolrCore [receivable]  CLOSING SolrCore org.apache.solr.core.SolrCore@8d2332
-2016-11-16 01:59:22.088 WARN  (ShutdownMonitor) [   ] o.e.j.s.ServletContextHandler ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.
+2016-11-16 01:59:26.890 INFO  (main) [   ] o.e.j.s.Server jetty-9.3.8.v20160314
+2016-11-16 01:59:27.281 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter  ___      _       Welcome to Apache Solr? version 6.3.0
+2016-11-16 01:59:27.281 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter / __| ___| |_ _   Starting in standalone mode on port 8983
+2016-11-16 01:59:27.281 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter \__ \/ _ \ | '_|  Install dir: D:\ForCoding\workplace\XinChi\solr
+2016-11-16 01:59:27.331 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter |___/\___/_|_|    Start time: 2016-11-16T01:59:27.282Z
+2016-11-16 01:59:27.332 INFO  (main) [   ] o.a.s.s.StartupLoggingUtils Property solr.log.muteconsole given. Muting ConsoleAppender named CONSOLE
+2016-11-16 01:59:27.352 INFO  (main) [   ] o.a.s.c.SolrResourceLoader Using system property solr.solr.home: D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-16 01:59:27.362 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\ForCoding\workplace\XinChi\solr\server\solr\solr.xml
+2016-11-16 01:59:27.592 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
+2016-11-16 01:59:36.659 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions underneath D:\ForCoding\workplace\XinChi\solr\server\solr
+2016-11-16 01:59:36.665 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Cores are: [receivable]
+2016-11-16 01:59:36.703 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@5b7c14{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-16 01:59:36.704 INFO  (main) [   ] o.e.j.s.Server Started @10498ms
+2016-11-16 01:59:36.733 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader [receivable] Added 3 libs to classloader, from paths: [/D:/ForCoding/workplace/XinChi/solr/extlib]
+2016-11-16 01:59:36.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 6.3.0
+2016-11-16 01:59:37.005 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [receivable] Schema name=receivable
+2016-11-16 01:59:37.339 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Loaded schema receivable/1.6 with uniqueid field id
+2016-11-16 01:59:37.485 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'receivable' using configuration from instancedir D:\ForCoding\workplace\XinChi\solr\server\solr\receivable
+2016-11-16 01:59:37.524 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.c.SolrCore [[receivable] ] Opening new SolrCore at [D:\ForCoding\workplace\XinChi\solr\server\solr\receivable], dataDir=[F:\data\]
+2016-11-16 01:59:37.555 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
+2016-11-16 01:59:46.810 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2016-11-16 01:59:46.810 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2016-11-16 01:59:46.828 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Hard AutoCommit: if uncommited for 15000ms; 
+2016-11-16 01:59:46.828 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.u.CommitTracker Soft AutoCommit: disabled
+2016-11-16 01:59:46.903 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.SolrIndexSearcher Opening [Searcher@837fd2[receivable] main]
+2016-11-16 01:59:46.909 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf
+2016-11-16 01:59:46.921 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2016-11-16 01:59:46.927 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=_text_,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4,maxQueryFrequency=0.01}
+2016-11-16 01:59:46.929 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: D:\ForCoding\workplace\XinChi\solr\server\solr\receivable\conf\elevate.xml
+2016-11-16 01:59:46.939 INFO  (coreLoadExecutor-6-thread-1) [   x:receivable] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
+2016-11-16 01:59:46.951 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener sending requests to Searcher@837fd2[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
+2016-11-16 01:59:46.952 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2016-11-16 01:59:46.952 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2016-11-16 01:59:46.952 INFO  (searcherExecutor-7-thread-1-processing-x:receivable) [   x:receivable] o.a.s.c.SolrCore [receivable] Registered new searcher Searcher@837fd2[receivable] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1c(6.3.0):C10)))}
+2016-11-16 02:00:02.734 INFO  (qtp31837390-14) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261602225} status=0 QTime=5
+2016-11-16 02:00:03.369 INFO  (qtp31837390-22) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261602226} status=0 QTime=639
+2016-11-16 02:00:03.513 INFO  (qtp31837390-19) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261602226} status=0 QTime=135
+2016-11-16 02:00:05.175 INFO  (qtp31837390-18) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261602225} status=0 QTime=0
+2016-11-16 02:00:05.184 INFO  (qtp31837390-23) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/luke params={numTerms=0&show=index&wt=json&_=1479261605165} status=0 QTime=4
+2016-11-16 02:00:05.186 INFO  (qtp31837390-14) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/replication params={wt=json&command=details&_=1479261605166} status=0 QTime=5
+2016-11-16 02:00:05.187 INFO  (qtp31837390-19) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/ping params={action=status&wt=json&_=1479261602227&ts=1479261602227} status=503 QTime=4
+2016-11-16 02:00:05.390 INFO  (qtp31837390-35) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261602226} status=0 QTime=214
+2016-11-16 02:00:05.390 INFO  (qtp31837390-16) [   x:receivable] o.a.s.c.S.Request [receivable]  webapp=/solr path=/admin/system params={wt=json&_=1479261605166} status=0 QTime=208
+2016-11-16 02:00:07.671 INFO  (qtp31837390-21) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/cores params={indexInfo=false&wt=json&_=1479261602225} status=0 QTime=0
+2016-11-16 02:00:07.788 INFO  (qtp31837390-18) [   ] o.a.s.s.HttpSolrCall [admin] webapp=null path=/admin/info/system params={wt=json&_=1479261602226} status=0 QTime=117
+2016-11-16 02:00:22.478 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@5b7c14{HTTP/1.1,[http/1.1]}{0.0.0.0:8983}
+2016-11-16 02:00:22.479 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=22192110
+2016-11-16 02:00:22.480 INFO  (coreCloseExecutor-12-thread-1) [   x:receivable] o.a.s.c.SolrCore [receivable]  CLOSING SolrCore org.apache.solr.core.SolrCore@810a5
+2016-11-16 02:00:22.495 WARN  (ShutdownMonitor) [   ] o.e.j.s.ServletContextHandler ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.
