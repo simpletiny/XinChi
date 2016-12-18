@@ -71,16 +71,17 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 
 	@Override
 	public void saveReceivableDetail(ClientReceivedDetailBean detail) {
-		BudgetOrderBean order = dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
-		if(null==order.getReceived()){
-			order.setReceived(detail.getReceived());
-		}else{
-			order.setReceived(order.getReceived().add(detail.getReceived()));
-		}
-		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
-		dao.updateBudgetOrder(order);
-		
-		dao.saveReceivableDetail(detail);
+		// BudgetOrderBean order =
+		// dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
+		// if(null==order.getReceived()){
+		// order.setReceived(detail.getReceived());
+		// }else{
+		// order.setReceived(order.getReceived().add(detail.getReceived()));
+		// }
+		// order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
+		// dao.updateBudgetOrder(order);
+		//
+		// dao.saveReceivableDetail(detail);
 	}
 
 	@Override
@@ -92,17 +93,19 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 
 	@Override
 	public void deleteReceivableDetail(String detail_pk) {
-		ClientReceivedDetailBean detail = dao.selectClientReceivedDetailByPk(detail_pk);
-		BudgetOrderBean order = dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
-		if(null==order.getReceived()){
-			//
-		}else{
-			order.setReceived(order.getReceived().subtract(detail.getReceived()));
-		}
-		
-		order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
-		dao.updateBudgetOrder(order);
-		dao.deleteReceivableDetail(detail_pk);
+		// ClientReceivedDetailBean detail =
+		// dao.selectClientReceivedDetailByPk(detail_pk);
+		// BudgetOrderBean order =
+		// dao.selectBudgetOrderByTeamNumber(detail.getTeam_number());
+		// if(null==order.getReceived()){
+		// //
+		// }else{
+		// order.setReceived(order.getReceived().subtract(detail.getReceived()));
+		// }
+		//
+		// order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
+		// dao.updateBudgetOrder(order);
+		// dao.deleteReceivableDetail(detail_pk);
 	}
 
 	@Override
@@ -113,5 +116,12 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 	@Override
 	public BudgetOrderBean searchBudgetOrderByTeamNumber(String team_number) {
 		return dao.selectBudgetOrderByTeamNumber(team_number);
+	}
+
+	@Override
+	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(
+			BudgetOrderSupplierBean bo) {
+
+		return dao.searchBudgetSupplierByParam(bo);
 	}
 }

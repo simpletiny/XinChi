@@ -22,6 +22,9 @@ public interface SaleOrderDAO {
 
 	public List<BudgetOrderSupplierBean> searchBudgetSupplier(String team_number);
 
+	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(
+			BudgetOrderSupplierBean bo);
+
 	public void deleteNameListByTeamNo(String team_number);
 
 	public void deleteOrderSupplierByTeamNumber(String team_number);
@@ -34,7 +37,7 @@ public interface SaleOrderDAO {
 			String team_number);
 
 	public void deleteReceivableDetail(String detail_pk);
-	
+
 	public BudgetOrderBean selectBudgetOrderByTeamNumber(String team_number);
 
 	public ClientReceivedDetailBean selectClientReceivedDetailByPk(

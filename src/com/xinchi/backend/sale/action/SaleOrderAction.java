@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.util.service.TeamNumberService;
@@ -44,6 +45,9 @@ public class SaleOrderAction extends BaseAction {
 
 	@Autowired
 	private ReceivableService receivableService;
+	
+	@Autowired
+	private PayableService payableService;
 	/**
 	 * 创建订单
 	 * 
@@ -112,11 +116,10 @@ public class SaleOrderAction extends BaseAction {
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 		order.setReturn_date(returnDate);
 		order.setPayable(sum);
-		order.setClient_debt(order.getReceivable());
-		order.setReceived(BigDecimal.ZERO);
 		saleOrderService.insert(order);
 		receivableService.updateByTeamNumber(order.getTeam_number());
 		saleOrderService.saveOrderSupplier(arrSupplier);
+		payableService.updateByTeamNumber(order.getTeam_number());
 		resultStr = OK;
 		return SUCCESS;
 	}
@@ -236,17 +239,18 @@ public class SaleOrderAction extends BaseAction {
 
 		saleOrderService.update(order);
 		receivableService.updateByTeamNumber(order.getTeam_number());
+		payableService.updateByTeamNumber(order.getTeam_number());
 		resultStr = OK;
 		return SUCCESS;
 	}
 
 	private ClientReceivedDetailBean detail;
 
-	public String saveReceivableDetail() {
-		saleOrderService.saveReceivableDetail(detail);
-		resultStr = OK;
-		return SUCCESS;
-	}
+//	public String saveReceivableDetail() {
+//		saleOrderService.saveReceivableDetail(detail);
+//		resultStr = OK;
+//		return SUCCESS;
+//	}
 
 	private List<ClientReceivedDetailBean> receivableDetails;
 

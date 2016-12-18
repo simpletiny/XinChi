@@ -10,6 +10,7 @@ import com.xinchi.backend.sale.dao.FinalOrderDAO;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.bean.BudgetOrderBean;
+import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.tools.Page;
@@ -56,13 +57,20 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 	}
 
 	@Override
+	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
+			FinalOrderSupplierBean bo) {
+
+		return dao.searchFinalSupplierByParam(bo);
+	}
+
+	@Override
 	public List<FinalOrderBean> searchOrdersByPage(Page<FinalOrderBean> page) {
 		return dao.selectAllByPage(page);
 	}
 
 	@Override
 	public FinalOrderBean getFinalOrderByTeamNo(String team_number) {
-		
+
 		return dao.selectByTeamNumber(team_number);
 	}
 

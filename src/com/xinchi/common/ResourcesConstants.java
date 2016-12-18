@@ -1,7 +1,9 @@
 package com.xinchi.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.xinchi.bean.TaskBean;
 
@@ -19,6 +21,11 @@ public class ResourcesConstants {
 
 	// 定时任务列表
 	public static List<TaskBean> ARRAY_TASK = new ArrayList<TaskBean>();
+
+	// 用户编号和用户姓名map
+	public static Map<Object, Object> MAP_USER_NO = new HashMap<Object, Object>();
+	public static Map<Object, Object> MAP_USER_NAME = new HashMap<Object, Object>();
+
 	// 执行一次
 	public static String TASK_ONETIME = "1";
 	// 每天执行

@@ -460,7 +460,7 @@ var OrderContext = function() {
 			startLoadingSimpleIndicator("保存中");
 			$.ajax({
 				type : "POST",
-				url : self.apiurl + 'sale/applySum',
+				url : self.apiurl + 'sale/applyReceive',
 				data : data,
 				success : function(str) {
 					if (str != "OK") {

@@ -1,6 +1,7 @@
 package com.xinchi.backend.user.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
@@ -11,6 +12,7 @@ import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.mybatis.param.MapParam;
 
 @Repository
 @Scope("prototype")
@@ -103,6 +105,11 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 	public UserBaseBean selectUserByName(String user_name) {
 		
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.UserBaseMapper.selectByUserName", user_name);
+	}
+
+	@Override
+	public Map<Object, Object> getUserMap(MapParam param) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.UserBaseMapper.selectUserMap", param);
 	}
 
 }

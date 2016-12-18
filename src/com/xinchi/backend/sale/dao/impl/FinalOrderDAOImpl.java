@@ -77,4 +77,13 @@ public class FinalOrderDAOImpl extends SqlSessionDaoSupport implements
 				team_number);
 	}
 
+	@Override
+	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
+			FinalOrderSupplierBean bo) {
+		return daoUtil
+				.selectByParam(
+						"com.xinchi.bean.mapper.FinalOrderSupplierMapper.selectByParam",
+						bo);
+	}
+
 }

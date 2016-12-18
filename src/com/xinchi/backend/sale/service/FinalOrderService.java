@@ -19,7 +19,9 @@ public interface FinalOrderService {
 	public List<FinalOrderSupplierBean> searchFinalSupplier(String team_number);
 
 	public List<FinalOrderBean> searchOrdersByPage(Page<FinalOrderBean> page);
-	
-	public FinalOrderBean  getFinalOrderByTeamNo(String team_number);
 
+	public FinalOrderBean getFinalOrderByTeamNo(String team_number);
+
+	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
+			FinalOrderSupplierBean bo);
 }

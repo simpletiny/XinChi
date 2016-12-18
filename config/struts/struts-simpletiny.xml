@@ -8,6 +8,13 @@
 		<action name="autoGenReceivable" class="simpletinyAction" method="autoGenReceivable">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="autoGenPayable" class="simpletinyAction" method="autoGenPayable">
+			<result name="success" type="redirect">/</result>
+		</action>
+		
+		<action name="currentDate" class="STDateAction" method="currentDate">
+			<result name="success" type="json"></result>
+		</action>
+		
 	</package>
-
 </struts>

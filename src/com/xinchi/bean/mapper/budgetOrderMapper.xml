@@ -14,11 +14,7 @@
 	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 	    <result column="receivable" property="receivable" jdbcType="DECIMAL" />
-	    <result column="received" property="received" jdbcType="DECIMAL" />
-	    <result column="client_debt" property="client_debt" jdbcType="DECIMAL" />
 	    <result column="payable" property="payable" jdbcType="DECIMAL" />
-	    <result column="paid" property="paid" jdbcType="DECIMAL" />
-	    <result column="supplier_debt" property="supplier_debt" jdbcType="DECIMAL" />
 	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
 	    <result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
 	    <result column="per_profit" property="per_profit" jdbcType="DECIMAL" />
@@ -46,11 +42,7 @@
     	client_employee_pk, 
     	client_employee_name, 
     	receivable, 
-    	received, 
-    	client_debt, 
     	payable, 
-    	paid, 
-    	supplier_debt, 
     	other_payment, 
     	create_user, 
     	update_user, 
@@ -110,20 +102,8 @@
 	 	<if test="receivable != null">
 	        receivable,
 	      </if>
-	 	<if test="received != null">
-	        received,
-	      </if>
-	 	<if test="client_debt != null">
-	        client_debt,
-	      </if>
 	 	<if test="payable != null">
 	        payable,
-	      </if>
-	 	<if test="paid != null">
-	        paid,
-	      </if>
-	 	<if test="supplier_debt != null">
-	        supplier_debt,
 	      </if>
 	 	<if test="other_payment != null">
 	        other_payment,
@@ -187,20 +167,8 @@
     	<if test="receivable != null">
 	        #{receivable,jdbcType=DECIMAL},
 	      </if>
-    	<if test="received != null">
-	        #{received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="client_debt != null">
-	        #{client_debt,jdbcType=DECIMAL},
-	      </if>
     	<if test="payable != null">
 	        #{payable,jdbcType=DECIMAL},
-	      </if>
-    	<if test="paid != null">
-	        #{paid,jdbcType=DECIMAL},
-	      </if>
-    	<if test="supplier_debt != null">
-	        #{supplier_debt,jdbcType=DECIMAL},
 	      </if>
     	<if test="other_payment != null">
 	        #{other_payment,jdbcType=DECIMAL},
@@ -269,20 +237,8 @@
     	<if test="receivable != null">
 	        receivable = #{receivable,jdbcType=DECIMAL},
 	      </if>
-    	<if test="received != null">
-	        received = #{received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="client_debt != null">
-	        client_debt = #{client_debt,jdbcType=DECIMAL},
-	      </if>
     	<if test="payable != null">
 	        payable = #{payable,jdbcType=DECIMAL},
-	      </if>
-    	<if test="paid != null">
-	        paid = #{paid,jdbcType=DECIMAL},
-	      </if>
-    	<if test="supplier_debt != null">
-	        supplier_debt = #{supplier_debt,jdbcType=DECIMAL},
 	      </if>
     	<if test="other_payment != null">
 	        other_payment = #{other_payment,jdbcType=DECIMAL},
@@ -338,11 +294,7 @@
     	A.client_employee_pk, 
     	A.client_employee_name, 
     	A.receivable, 
-    	A.received, 
-    	A.client_debt, 
     	A.payable, 
-    	A.paid, 
-    	A.supplier_debt, 
     	A.other_payment, 
     	(A.receivable - A.payable) as gross_profit,
     	CONVERT((A.receivable - A.payable)/A.people_count,decimal(12,2)) as per_profit,

@@ -42,4 +42,7 @@ public interface SaleOrderService {
 	public List<BudgetOrderBean> searchOrdersByPage(Page<BudgetOrderBean> page);
 
 	public BudgetOrderBean searchBudgetOrderByTeamNumber(String team_number);
+
+	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(
+			BudgetOrderSupplierBean bo);
 }

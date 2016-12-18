@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.user.dao.UserDAO;
-import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.bean.UserBaseBean;

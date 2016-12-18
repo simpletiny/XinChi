@@ -3,6 +3,7 @@ package apptest;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class SomeTest {
 	public static void main(String[] args) throws SolrServerException,
 			IOException {
 		
-		System.out.println("N".equals(null));
+		Calendar c = Calendar.getInstance();
+		System.out.println(DateUtil.getDateStr("yyyy-MM-dd"));
 	}
 
 	private static String buildQuery(ReceivableBean options) {

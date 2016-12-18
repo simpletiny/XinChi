@@ -56,11 +56,11 @@
 		<action name="searchReceivableSummary" class="receivableAction" method="searchReceivableSummary">
 			<result name="success" type="json"></result>
 		</action>
-		
+
 		<action name="isSameFinancialBody" class="receivableAction" method="isSameFinancialBody">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="searchReceivableByPage" class="receivableAction" method="searchReceivableByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -91,6 +91,18 @@
 		<action name="searchByRelatedPks" class="receivedAction" method="searchByRelatedPks">
 			<result name="success" type="json"></result>
 		</action>
+
+		<!-- payable action start -->
+		<action name="searchPayableByPage" class="payableAction" method="searchPayableByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPayableSummary" class="payableAction" method="searchPayableSummary">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- payable action end -->
 	</package>
 
 </struts>

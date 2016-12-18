@@ -12,13 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.bean.BudgetOrderBean;
+import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.FinalOrderBean;
+import com.xinchi.bean.FinalOrderSupplierBean;
+import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
@@ -101,9 +105,10 @@ public class SimpletinyAction extends BaseAction {
 
 				if (null != receivable.getFinal_flg()
 						&& receivable.getFinal_flg().equals("Y")) {
-					receivable.setFinal_balance(receivable.getFinal_receivable());
+					receivable.setFinal_balance(receivable
+							.getFinal_receivable());
 				}
-				
+
 				receivableService.insert(receivable);
 
 				SolrInputDocument document = castR2D(receivable);
@@ -120,6 +125,121 @@ public class SimpletinyAction extends BaseAction {
 			}
 		}
 		return SUCCESS;
+	}
+
+	@Autowired
+	private PayableService payableService;
+
+	public String autoGenPayable() {
+		SolrClient solr = solrService.getSolr(PropertiesUtil
+				.getProperty("solr.payableUrl"));
+
+		List<BudgetOrderSupplierBean> budgets = saleOrderService
+				.searchBudgetSupplierByParam(null);
+
+		if (null != budgets) {
+			for (BudgetOrderSupplierBean budget : budgets) {
+
+				BudgetOrderBean bob = saleOrderService
+						.searchBudgetOrderByTeamNumber(budget.getTeam_number());
+
+				PayableBean payable = new PayableBean();
+				payable.setTeam_number(budget.getTeam_number());
+				payable.setSupplier_employee_name(budget
+						.getSupplier_employee_name());
+				payable.setSupplier_employee_pk(budget
+						.getSupplier_employee_pk());
+
+				payable.setDeparture_date(bob.getDeparture_date());
+				payable.setReturn_date(bob.getReturn_date());
+
+				payable.setProduct(bob.getProduct());
+				payable.setPeople_count(bob.getPeople_count());
+				payable.setBudget_payable(budget.getPayable());
+				payable.setSales(bob.getCreate_user());
+
+				UserBaseBean userBase = userDao.getByUserNumber(bob
+						.getCreate_user());
+
+				payable.setSales_name(userBase.getUser_name());
+				payable.setPaid(BigDecimal.ZERO);
+				payable.setBudget_balance(budget.getPayable());
+
+				FinalOrderBean finalOrder = finalOrderService
+						.getFinalOrderByTeamNo(budget.getTeam_number());
+
+				if (null != finalOrder) {
+					payable.setFinal_flg("Y");
+
+					FinalOrderSupplierBean fosb = new FinalOrderSupplierBean();
+					fosb.setTeam_number(budget.getTeam_number());
+					fosb.setSupplier_employee_pk(budget
+							.getSupplier_employee_pk());
+
+					List<FinalOrderSupplierBean> fosbs = finalOrderService
+							.searchFinalSupplierByParam(fosb);
+					fosb = fosbs.get(0);
+
+					payable.setFinal_payable(fosb.getPayable());
+					payable.setFinal_balance(fosb.getPayable());
+				}
+
+				payableService.insert(payable);
+
+				SolrInputDocument document = castP2D(payable);
+
+				try {
+					solr.add(document);
+					solr.commit();
+				} catch (SolrServerException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+		return SUCCESS;
+	}
+
+	private SolrInputDocument castP2D(PayableBean payable) {
+		SolrInputDocument document = new SolrInputDocument();
+		document.addField("id", payable.getPk());
+		document.addField("team_number", payable.getTeam_number());
+		document.addField("final_flg", payable.getFinal_flg());
+		document.addField("supplier_employee_name",
+				payable.getSupplier_employee_name());
+		document.addField("supplier_employee_pk",
+				payable.getSupplier_employee_pk());
+
+		document.addField("departure_date",
+				DateUtil.castStr2Date(payable.getDeparture_date()));
+		document.addField("return_date",
+				DateUtil.castStr2Date(payable.getReturn_date()));
+		document.addField("product", payable.getProduct());
+		document.addField("people_count", payable.getPeople_count());
+		document.addField("budget_payable", (null == payable
+				.getBudget_payable() ? 0 : payable.getBudget_payable()
+				.doubleValue()));
+
+		document.addField("final_payable",
+				(null == payable.getFinal_payable() ? 0 : payable
+						.getFinal_payable().doubleValue()));
+
+		document.addField("paid", (null == payable.getPaid() ? 0 : payable
+				.getPaid().doubleValue()));
+
+		document.addField("budget_balance", (null == payable
+				.getBudget_balance() ? 0 : payable.getBudget_balance()
+				.doubleValue()));
+
+		document.addField("final_balance",
+				(null == payable.getFinal_balance() ? 0 : payable
+						.getFinal_balance().doubleValue()));
+
+		document.addField("sales", payable.getSales());
+		document.addField("sales_name", payable.getSales_name());
+		return document;
 	}
 
 	private SolrInputDocument castR2D(ReceivableBean receivable) {
@@ -149,11 +269,13 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("received", (null == receivable.getReceived() ? 0
 				: receivable.getReceived().doubleValue()));
 
-		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0
-				: receivable.getBudget_balance().doubleValue()));
-	
-		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0
-				: receivable.getFinal_balance().doubleValue()));
+		document.addField("budget_balance", (null == receivable
+				.getBudget_balance() ? 0 : receivable.getBudget_balance()
+				.doubleValue()));
+
+		document.addField("final_balance", (null == receivable
+				.getFinal_balance() ? 0 : receivable.getFinal_balance()
+				.doubleValue()));
 
 		document.addField("sales", receivable.getSales());
 		document.addField("sales_name", receivable.getSales_name());

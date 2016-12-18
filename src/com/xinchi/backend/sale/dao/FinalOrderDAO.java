@@ -22,4 +22,7 @@ public interface FinalOrderDAO {
 
 	public FinalOrderBean selectByTeamNumber(String team_number);
 
+	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
+			FinalOrderSupplierBean bo);
+
 }

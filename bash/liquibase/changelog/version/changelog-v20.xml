@@ -32,4 +32,214 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE budget_order DROP COLUMN supplier_debt , DROP COLUMN paid , DROP COLUMN client_debt , DROP COLUMN received ;
+          		            ]]>
+			<comment>ALTER TABLE budget_order,drop some unused columns</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE final_order DROP COLUMN supplier_debt , DROP COLUMN paid , DROP COLUMN supplier_employee_name , DROP COLUMN supplier_employee_pk , DROP COLUMN client_debt , DROP COLUMN received ;
+
+          		            ]]>
+			<comment>ALTER TABLE final_order ,drop some unused columns</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE payable (
+					  team_number VARCHAR(30) NOT NULL ,
+					  final_flg CHAR(1) NULL DEFAULT 'N',
+					  supplier_employee_name VARCHAR(10) NULL ,
+					  supplier_employee_pk CHAR(22) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  return_date VARCHAR(10) NULL ,
+					  product VARCHAR(100) NULL ,
+					  people_count INT NULL ,
+					  budget_payable DECIMAL(12,2) NULL ,
+					  final_payable DECIMAL(12,2) NULL ,
+					  paid DECIMAL(12,2) NULL ,
+					  budget_balance DECIMAL(12,2) NULL ,
+					  final_balance DECIMAL(12,2) NULL ,
+					  sales VARCHAR(300) NULL ,
+					  sales_name VARCHAR(200) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '应付款表';
+          		            ]]>
+			<comment>create table payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+				create view payable_return_date as
+				    select 
+				        sales_name,
+				        sales,
+				        budget_balance,
+				        final_balance,
+						return_date
+				    from
+				        receivable;
+				
+				create view payable_a as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as all_count,
+				        sum(budget_balance) as all_budget_balance,
+				        sum(final_balance) as all_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as all_balance
+				    from
+				        payable
+				    group by sales_name;
+				
+				create view payable_b as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as current_month_count,
+				        sum(budget_balance) as current_month_budget_balance,
+				        sum(final_balance) as current_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as current_month_balance
+				    from
+				        payable_return_date
+				    where
+				        LEFT(return_date,7) = date_format(curdate(),'%Y-%m')
+				    group by sales;
+				
+				
+				create view payable_c as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as one_month_count,
+				        sum(budget_balance) as one_month_budget_balance,
+				        sum(final_balance) as one_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as one_month_balance
+				    from
+				        payable_return_date
+				    where
+				        LEFT(return_date,7) = date_format(date_add(curdate(), interval - 1 month),'%Y-%m')
+				    group by sales;
+				
+				create view payable_d as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as two_month_count,
+				        sum(budget_balance) as two_month_budget_balance,
+				        sum(final_balance) as two_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as two_month_balance
+				    from
+				        payable_return_date
+				    where
+				        LEFT(return_date,7) = date_format(date_add(curdate(), interval - 2 month),'%Y-%m')
+				    group by sales;
+				
+				create view payable_e as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as three_month_count,
+				        sum(budget_balance) as three_month_budget_balance,
+				        sum(final_balance) as three_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as three_month_balance
+				    from
+				        payable_return_date
+				    where
+				        LEFT(return_date,7) = date_format(date_add(curdate(), interval - 3 month),'%Y-%m')
+				    group by sales;
+				
+				create view payable_f as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as earlier_month_count,
+				        sum(budget_balance) as earlier_month_budget_balance,
+				        sum(final_balance) as earlier_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as earlier_month_balance
+				    from
+				        payable_return_date
+				    where
+				        LEFT(return_date,7) < date_format(date_add(curdate(), interval - 3 month),'%Y-%m')
+				    group by sales;
+				
+				
+				create view payable_summary as
+				    select 
+				        A.user_number,
+				        A.user_name,
+				        B.all_count,
+				        B.all_budget_balance,
+				        B.all_final_balance,
+				        B.all_balance,
+				        C.current_month_count,
+				        C.current_month_budget_balance,
+				        C.current_month_final_balance,
+				        C.current_month_balance,
+				        D.one_month_count,
+				        D.one_month_budget_balance,
+				        D.one_month_final_balance,
+				        D.one_month_balance,
+						E.two_month_count,
+				        E.two_month_budget_balance,
+				        E.two_month_final_balance,
+				        E.two_month_balance,
+				        F.three_month_count,
+				        F.three_month_budget_balance,
+				        F.three_month_final_balance,
+				        F.three_month_balance,
+				        G.earlier_month_count,
+				        G.earlier_month_budget_balance,
+				        G.earlier_month_final_balance,
+				        G.earlier_month_balance
+				    from
+				        user_number A
+				            LEFT JOIN
+				        payable_a B ON A.user_number = B.sales
+				            LEFT JOIN
+				        payable_b C ON A.user_number = C.sales
+				            LEFT JOIN
+				        payable_c D ON A.user_number = D.sales
+				            LEFT JOIN
+				        payable_d E ON A.user_number = E.sales
+				            LEFT JOIN
+				        payable_e F ON A.user_number = F.sales
+				            LEFT JOIN
+				        payable_f G ON A.user_number = G.sales;
+          		            ]]>
+			<comment>create view payable</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

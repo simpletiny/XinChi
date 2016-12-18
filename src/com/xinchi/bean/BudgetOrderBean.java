@@ -28,15 +28,7 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 
 	private BigDecimal receivable;
 
-	private BigDecimal received;
-
-	private BigDecimal client_debt;
-
 	private BigDecimal payable;
-
-	private BigDecimal paid;
-
-	private BigDecimal supplier_debt;
 
 	private BigDecimal other_payment;
 	private BigDecimal gross_profit;
@@ -131,44 +123,12 @@ public class BudgetOrderBean extends SupperBO implements Serializable {
 		this.receivable = receivable;
 	}
 
-	public BigDecimal getReceived() {
-		return received;
-	}
-
-	public void setReceived(BigDecimal received) {
-		this.received = received;
-	}
-
-	public BigDecimal getClient_debt() {
-		return client_debt;
-	}
-
-	public void setClient_debt(BigDecimal client_debt) {
-		this.client_debt = client_debt;
-	}
-
 	public BigDecimal getPayable() {
 		return payable;
 	}
 
 	public void setPayable(BigDecimal payable) {
 		this.payable = payable;
-	}
-
-	public BigDecimal getPaid() {
-		return paid;
-	}
-
-	public void setPaid(BigDecimal paid) {
-		this.paid = paid;
-	}
-
-	public BigDecimal getSupplier_debt() {
-		return supplier_debt;
-	}
-
-	public void setSupplier_debt(BigDecimal supplier_debt) {
-		this.supplier_debt = supplier_debt;
 	}
 
 	public BigDecimal getOther_payment() {

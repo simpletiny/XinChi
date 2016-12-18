@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
@@ -41,7 +42,9 @@ public class FinalOrderAction extends BaseAction {
 	private SaleOrderService saleOrderService;
 	@Autowired
 	private ReceivableService receivableService;
-
+	
+	@Autowired
+	private PayableService payableService;
 	/**
 	 * 创建订单
 	 * 
@@ -110,10 +113,9 @@ public class FinalOrderAction extends BaseAction {
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 		order.setReturn_date(returnDate);
 		order.setPayable(sum);
-		// order.setClient_debt(order.getReceivable().subtract(order.getReceived()));
-		order.setClient_debt(order.getReceivable());
 		finalOrderService.insert(order);
 		receivableService.updateByTeamNumber(order.getTeam_number());
+		payableService.updateByTeamNumber(order.getTeam_number());
 		resultStr = OK;
 		return SUCCESS;
 	}

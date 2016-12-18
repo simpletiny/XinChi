@@ -157,6 +157,14 @@
    select 
     <include refid="Base_Column_List" />
     from final_order_supplier
+    <where>
+    	 <if test="team_number != null">
+	         and team_number = #{team_number,jdbcType=VARCHAR}
+	      </if>
+    	 <if test="supplier_employee_pk != null">
+	         and supplier_employee_pk = #{supplier_employee_pk,jdbcType=VARCHAR}
+	      </if>
+    </where>
    </select>
  <select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
    select 

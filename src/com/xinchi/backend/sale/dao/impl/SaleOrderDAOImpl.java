@@ -76,6 +76,15 @@ public class SaleOrderDAOImpl extends SqlSessionDaoSupport implements
 	}
 
 	@Override
+	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(
+			BudgetOrderSupplierBean bo) {
+		return daoUtil
+				.selectByParam(
+						"com.xinchi.bean.mapper.BudgetOrderSupplierMapper.selectByParam",
+						bo);
+	}
+
+	@Override
 	public void deleteNameListByTeamNo(String team_number) {
 		daoUtil.deleteByParam(
 				"com.xinchi.bean.mapper.SaleOrderNameListMapper.deleteByTeamNumber",

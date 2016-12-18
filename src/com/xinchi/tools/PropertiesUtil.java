@@ -24,6 +24,7 @@ public class PropertiesUtil extends PropertyPlaceholderConfigurer {
 			String keyStr = key.toString();
 			String value = props.getProperty(keyStr);
 			ctxPropertiesMap.put(keyStr, value);
+			
 		}
 	}
 

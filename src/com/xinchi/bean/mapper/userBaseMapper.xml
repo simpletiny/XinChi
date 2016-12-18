@@ -199,6 +199,10 @@
       select MAX(user_number) from user_base where user_number != 'admin'
    </select>
    
+   <select id="selectUserMap"  resultType="map" parameterType="com.xinchi.mybatis.param.MapParam">
+      select user_number,user_name from user_base
+   </select>
+   
    <select id="selectAllByPks" resultMap="BaseResultMap">
 	 select
 	 <include refid="Base_Column_List" />
@@ -207,4 +211,5 @@
 	  #{item}
  </foreach>
 </select>
+
 </mapper>

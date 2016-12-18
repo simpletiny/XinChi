@@ -14,6 +14,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -209,6 +210,7 @@ public class ReceivableServiceImpl implements ReceivableService {
 	private FinalOrderService finalOrderService;
 
 	@Override
+	@Async
 	public void updateByTeamNumber(String teamNumber) {
 		SolrClient solrClient = solr.getSolr(PropertiesUtil
 				.getProperty("solr.receivableUrl"));
