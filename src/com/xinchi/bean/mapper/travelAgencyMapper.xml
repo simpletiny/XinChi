@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.TravelAgencyMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.TravelAgencyBean">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="agency_name" property="agency_name" jdbcType="VARCHAR" />
+		<result column="credit_code" property="credit_code" jdbcType="VARCHAR" />
+		<result column="agency_provice" property="agency_provice" jdbcType="VARCHAR" />
+		<result column="agency_city" property="agency_city" jdbcType="VARCHAR" />
+		<result column="is_exit" property="is_exit" jdbcType="CHAR" />
+		<result column="main_bussines" property="main_bussines" jdbcType="VARCHAR" />
+		<result column="agency_type" property="agency_type" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="corporate_name" property="corporate_name" jdbcType="VARCHAR" />
+		<result column="corporate_sex" property="corporate_sex" jdbcType="CHAR" />
+		<result column="corporate_cellphone" property="corporate_cellphone" jdbcType="VARCHAR" />
+		<result column="corporate_id" property="corporate_id" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="is_cancel" property="is_cancel" jdbcType="CHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		agency_name,
+		credit_code,
+		agency_provice,
+		agency_city,
+		is_exit,
+		main_bussines,
+		agency_type,
+		comment,
+		corporate_name,
+		corporate_sex,
+		corporate_cellphone,
+		corporate_id,
+		pk,
+		update_user,
+		create_user,
+		create_time,update_time,
+		is_cancel
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from travel_agency
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectSameName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from travel_agency
+		where agency_name = #{content,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectSameCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from travel_agency
+	where credit_code = #{content,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from travel_agency
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.TravelAgencyBean">
+
+		insert into travel_agency
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="agency_name != null">
+				agency_name,
+			</if>
+			<if test="credit_code != null">
+				credit_code,
+			</if>
+			<if test="agency_provice != null">
+				agency_provice,
+			</if>
+			<if test="agency_city != null">
+				agency_city,
+			</if>
+			<if test="is_exit != null">
+				is_exit,
+			</if>
+			<if test="main_bussines != null">
+				main_bussines,
+			</if>
+			<if test="agency_type != null">
+				agency_type,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="corporate_name != null">
+				corporate_name,
+			</if>
+			<if test="corporate_sex != null">
+				corporate_sex,
+			</if>
+			<if test="corporate_cellphone != null">
+				corporate_cellphone,
+			</if>
+			<if test="corporate_id != null">
+				corporate_id,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="is_cancel != null">
+				is_cancel,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="agency_name != null">
+				#{agency_name,jdbcType=VARCHAR},
+			</if>
+			<if test="credit_code != null">
+				#{credit_code,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_provice != null">
+				#{agency_provice,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_city != null">
+				#{agency_city,jdbcType=VARCHAR},
+			</if>
+			<if test="is_exit != null">
+				#{is_exit,jdbcType=CHAR},
+			</if>
+			<if test="main_bussines != null">
+				#{main_bussines,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_type != null">
+				#{agency_type,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_name != null">
+				#{corporate_name,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_sex != null">
+				#{corporate_sex,jdbcType=CHAR},
+			</if>
+			<if test="corporate_cellphone != null">
+				#{corporate_cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_id != null">
+				#{corporate_id,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="is_cancel != null">
+				#{is_cancel,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.TravelAgencyBean">
+		update travel_agency
+		<set>
+			<if test="agency_name != null">
+				agency_name = #{agency_name,jdbcType=VARCHAR},
+			</if>
+			<if test="credit_code != null">
+				credit_code = #{credit_code,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_provice != null">
+				agency_provice = #{agency_provice,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_city != null">
+				agency_city = #{agency_city,jdbcType=VARCHAR},
+			</if>
+			<if test="is_exit != null">
+				is_exit = #{is_exit,jdbcType=CHAR},
+			</if>
+			<if test="main_bussines != null">
+				main_bussines = #{main_bussines,jdbcType=VARCHAR},
+			</if>
+			<if test="agency_type != null">
+				agency_type = #{agency_type,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_name != null">
+				corporate_name = #{corporate_name,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_sex != null">
+				corporate_sex = #{corporate_sex,jdbcType=CHAR},
+			</if>
+			<if test="corporate_cellphone != null">
+				corporate_cellphone = #{corporate_cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="corporate_id != null">
+				corporate_id = #{corporate_id,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="is_cancel != null">
+				is_cancel = #{is_cancel,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.TravelAgencyBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from travel_agency
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from travel_agency
+		<where>
+			<if test="params.bo.agency_name != null and params.bo.agency_name !=''">
+				and agency_name like CONCAT('%',#{params.bo.agency_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.credit_code != null and params.bo.credit_code !=''">
+				and credit_code like CONCAT('%',#{params.bo.credit_code,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.agency_type != null and params.bo.agency_type !=''">
+				and agency_type = #{params.bo.agency_type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.main_bussines!= null and params.bo.main_bussines !=''">
+				and main_bussines = #{params.bo.main_bussines,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.is_exit!= null and params.bo.is_exit !=''">
+				and is_exit = #{params.bo.is_exit,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.is_cancel != null and params.bo.is_cancel !=''">
+				and is_cancel = #{params.bo.is_cancel,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.agency_provice != null and params.bo.agency_provice !=''">
+				and agency_provice = #{params.bo.agency_provice,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.agency_city != null and params.bo.agency_city !=''">
+				and agency_city = #{params.bo.agency_city,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

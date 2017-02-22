@@ -30,37 +30,35 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 
 	@Override
 	public List<CardBean> getAllByParam(CardBean bo) {
-		List<CardBean> list = daoUtil.selectByBOParamT(
-				"com.xinchi.bean.mapper.CardMapper.selectByParam", bo);
+		List<CardBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.CardMapper.selectByParam", bo);
 		return list;
 	}
 
 	@Override
 	public List<String> getAllAccounts() {
-		List<String> list = (List) daoUtil
-				.selectList("com.xinchi.bean.mapper.CardMapper.selectAllAccounts");
+		List<String> list = (List) daoUtil.selectList("com.xinchi.bean.mapper.CardMapper.selectAllAccounts");
 		return list;
 	}
 
 	@Override
 	public String getAccountBalance(String account) {
-		String balance = daoUtil.selectOneValueByParam(
-				("com.xinchi.bean.mapper.CardMapper.selectBalanceByAccount"),
-				account);
+		String balance = daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectBalanceByAccount"), account);
 		return balance;
 	}
 
 	@Override
 	public CardBean getCardByAccount(String account) {
-		return daoUtil.selectOneValueByParam(
-				("com.xinchi.bean.mapper.CardMapper.selectCardByAccount"),
-				account);
+		return daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectCardByAccount"), account);
 	}
 
 	@Override
 	public void update(CardBean card) {
-		daoUtil.updateByPK(
-				"com.xinchi.bean.mapper.CardMapper.updateByPrimaryKey", card);
+		daoUtil.updateByPK("com.xinchi.bean.mapper.CardMapper.updateByPrimaryKey", card);
 
+	}
+
+	@Override
+	public CardBean getCardByNumber(String card_number) {
+		return daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectCardByNumber"), card_number);
 	}
 }

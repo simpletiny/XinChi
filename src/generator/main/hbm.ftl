@@ -15,7 +15,8 @@
   	<#list hbmMoudelVO.columnList as columnVO>
     	${columnVO.propertyName}, 
     </#list>  
-    	create_time,update_time
+    	create_time,
+    	update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -56,7 +57,7 @@
         ${r"#"}{create_time,jdbcType=VARCHAR},
       </if>
        <if test="update_time != null">
-        ${r"#"}{update_time,jdbcType=TIMESTAMP},
+        ${r"#"}{update_time,jdbcType=VARCHAR},
       </if>
     </trim>		
   </insert>
@@ -70,7 +71,7 @@
 	        ${columnVO.propertyName} = ${r"#"}{${columnVO.propertyName},jdbcType=${columnVO.jdbcType?upper_case}},
 	      </if>
 		 </#list> 
-      <if test="modify_time != null">
+      <if test="update_time != null">
         update_time = ${r"#"}{update_time,jdbcType=VARCHAR},
       </if>
     </set>

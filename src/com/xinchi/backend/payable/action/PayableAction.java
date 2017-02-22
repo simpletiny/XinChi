@@ -12,9 +12,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.payable.service.PayableService;
-import com.xinchi.backend.user.dao.UserDAO;
+import com.xinchi.backend.supplier.service.SupplierEmployeeService;
+import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
+import com.xinchi.bean.SupplierBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
@@ -66,7 +68,26 @@ public class PayableAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private String client_employee_pks;
+	private String supplier_employee_pks;
+	@Autowired
+	private SupplierEmployeeService employeeService;
+	@Autowired
+	private SupplierService supplierService;
+	private SupplierBean supplier;
+
+	private String isSame;
+
+	public String isSameFinancialBody2() {
+		String employee_pks[] = supplier_employee_pks.split(",");
+		List<String> body_pks = employeeService.getBodyPksByEmployeePks(employee_pks);
+		if (body_pks.size() > 1) {
+			isSame = "NOT";
+		} else {
+			isSame = OK;
+			supplier = supplierService.selectByPrimaryKey(body_pks.get(0));
+		}
+		return SUCCESS;
+	}
 
 	public String getSales_name() {
 		return sales_name;
@@ -74,14 +95,6 @@ public class PayableAction extends BaseAction {
 
 	public void setSales_name(String sales_name) {
 		this.sales_name = sales_name;
-	}
-
-	public String getClient_employee_pks() {
-		return client_employee_pks;
-	}
-
-	public void setClient_employee_pks(String client_employee_pks) {
-		this.client_employee_pks = client_employee_pks;
 	}
 
 	public PayableSummaryBean getSummary() {
@@ -106,5 +119,29 @@ public class PayableAction extends BaseAction {
 
 	public void setPayables(List<PayableBean> payables) {
 		this.payables = payables;
+	}
+
+	public String getSupplier_employee_pks() {
+		return supplier_employee_pks;
+	}
+
+	public void setSupplier_employee_pks(String supplier_employee_pks) {
+		this.supplier_employee_pks = supplier_employee_pks;
+	}
+
+	public SupplierBean getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SupplierBean supplier) {
+		this.supplier = supplier;
+	}
+
+	public String getIsSame() {
+		return isSame;
+	}
+
+	public void setIsSame(String isSame) {
+		this.isSame = isSame;
 	}
 }

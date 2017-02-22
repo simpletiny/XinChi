@@ -26,6 +26,7 @@ public class CardBean extends SupperBO implements Serializable {
 	private String create_user;
 
 	private String update_user;
+	private String bank_nickname;
 
 	public String getNumber() {
 		return number;
@@ -113,6 +114,14 @@ public class CardBean extends SupperBO implements Serializable {
 
 	public void setAccount(String account) {
 		this.account = account;
+	}
+
+	public String getBank_nickname() {
+		return bank_nickname;
+	}
+
+	public void setBank_nickname(String bank_nickname) {
+		this.bank_nickname = bank_nickname;
 	}
 
 }

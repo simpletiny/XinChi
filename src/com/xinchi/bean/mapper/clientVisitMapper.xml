@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ClientVisitMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientVisitBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="date" property="date" jdbcType="VARCHAR" />
+	    <result column="from_time" property="from_time" jdbcType="VARCHAR" />
+	    <result column="end_time" property="end_time" jdbcType="VARCHAR" />
+	    <result column="target" property="target" jdbcType="VARCHAR" />
+	    <result column="summary" property="summary" jdbcType="VARCHAR" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	client_employee_pk, 
+    	client_employee_name, 
+    	type, 
+    	date, 
+    	from_time, 
+    	end_time, 
+    	target, 
+    	summary, 
+    	comment, 
+    	create_user, 
+    	pk, 
+    	update_user, 
+    	create_time,
+    	update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from client_visit
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from client_visit
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.ClientVisitBean" >
+  	
+    insert into client_visit
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="client_employee_pk != null">
+	        client_employee_pk,
+	      </if>
+	 	<if test="client_employee_name != null">
+	        client_employee_name,
+	      </if>
+	 	<if test="type != null">
+	        type,
+	      </if>
+	 	<if test="date != null">
+	        date,
+	      </if>
+	 	<if test="from_time != null">
+	        from_time,
+	      </if>
+	 	<if test="end_time != null">
+	        end_time,
+	      </if>
+	 	<if test="target != null">
+	        target,
+	      </if>
+	 	<if test="summary != null">
+	        summary,
+	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="client_employee_pk != null">
+	        #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="type != null">
+	        #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="date != null">
+	        #{date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="from_time != null">
+	        #{from_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="end_time != null">
+	        #{end_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="target != null">
+	        #{target,jdbcType=VARCHAR},
+	      </if>
+    	<if test="summary != null">
+	        #{summary,jdbcType=VARCHAR},
+	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientVisitBean" >
+    update client_visit
+    <set >
+    	<if test="client_employee_pk != null">
+	        client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        client_employee_name = #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="type != null">
+	        type = #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="date != null">
+	        date = #{date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="from_time != null">
+	        from_time = #{from_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="end_time != null">
+	        end_time = #{end_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="target != null">
+	        target = #{target,jdbcType=VARCHAR},
+	      </if>
+    	<if test="summary != null">
+	        summary = #{summary,jdbcType=VARCHAR},
+	      </if>
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.ClientVisitBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from client_visit
+   </select>
+</mapper>

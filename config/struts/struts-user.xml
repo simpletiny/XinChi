@@ -28,6 +28,17 @@
 		<action name="searchAllSales" class="userAction" method="searchAllSales">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchAllUsers" class="userAction" method="searchAllUsers">
+			<result name="success" type="json"></result>
+		</action>
+
+		<action name="createGroup" class="userGroupAction" method="createGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<action name="searchAllGroups" class="userGroupAction" method="searchAllGroups">
+			<result name="success" type="json"></result>
+		</action>
 	</package>
 
 </struts>

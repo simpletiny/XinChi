@@ -18,6 +18,12 @@
 				<param name="bufferSize">1024</param>
 			</result>
 		</action>
-		
+		<action name="detailExcelUpload" class="fileAction" method="fileUpload">
+			<result name="success" type="chain">
+				  <param name="actionName">importDetailExcel</param>
+      			  <param name="namespace">/finance</param>
+      			  <param name="fileName">${fileName}</param>
+			</result>
+		</action>
 	</package>
 </struts>

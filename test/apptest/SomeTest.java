@@ -1,125 +1,39 @@
 package apptest;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.io.InputStream;
+import java.math.BigDecimal;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
-
-import com.google.common.base.Joiner;
-import com.xinchi.bean.ReceivableBean;
-import com.xinchi.common.DateUtil;
-import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
 
 public class SomeTest {
 	public static String source = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
 	public static String solr_url = "http://localhost:8983/solr/receivable";
 
-	public static void main(String[] args) throws SolrServerException,
-			IOException {
-		
-		Calendar c = Calendar.getInstance();
-		System.out.println(DateUtil.getDateStr("yyyy-MM-dd"));
+	public static void main(String[] args) throws SolrServerException, IOException {
+		String path = "C:\\Users\\simpletiny\\Desktop\\交易明细_9028_20161201_20161228.xls";
+		InputStream is = new FileInputStream(path);
+		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
+		HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(0);
+
+		HSSFRow hssfRow = hssfSheet.getRow(6);
+		System.out.println((new BigDecimal(SomeTest.getValue(hssfRow.getCell(4)))).compareTo(BigDecimal.ONE));
+		hssfWorkbook.close();
 	}
 
-	private static String buildQuery(ReceivableBean options) {
-		String separator = " AND ";
-		List<String> queryParts = new ArrayList<String>();
-
-		if (!SimpletinyString.isEmpty(options.getClient_employee_name())) {
-			queryParts.add("client_employee_name:\""
-					+ options.getClient_employee_name() + "\"");
-		}
-
-		if (!SimpletinyString.isEmpty(options.getSales_name())) {
-			queryParts.add("sales_name:\"" + options.getSales_name() + "\"");
-		}
-
-		String team_status = options.getTeam_status();
-		String from = "";
-		String to = "";
-		if (!SimpletinyString.isEmpty(team_status)) {
-			if (team_status.equals(ResourcesConstants.TEAM_STATUS_BEFORE)) {
-				from = DateUtil.getUTC();
-				to = "*";
-				queryParts.add("departure_date:[" + from + " TO " + to + "]");
-			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_AFTER)) {
-				from = "*";
-				to = DateUtil.getUTC();
-				queryParts.add("departure_date:[" + from + " TO " + to + "]");
-			} else if (team_status
-					.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
-				from = "*";
-				to = DateUtil.getUTC();
-				queryParts.add("return_date:[" + from + " TO " + to + "]");
-			}
-		}
-
-		String departure_month = options.getDeparture_month();
-		if (!SimpletinyString.isEmpty(departure_month)) {
-			from = DateUtil.getUTC(departure_month + "-01");
-			to =DateUtil.getUTC( DateUtil.getLastDay(departure_month));
-			queryParts.add("departure_date:[" + from + " TO " + to + "]");
-		}
-		return Joiner.on(separator).join(queryParts);
-	}
-
-	/**
-	 * 字符串MD5加密100次
-	 * 
-	 * @param strSource
-	 * @return 加密后的密文
-	 */
-	public static String MD5(String strSource) {
-		try {
-			for (int x = 0; x < 100; x++) {
-				strSource = MD5OneTime(strSource);
-			}
-			return strSource;
-		} catch (Exception e) {
-			return null;
+	private static String getValue(HSSFCell hssfCell) {
+		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
+			return String.valueOf(hssfCell.getBooleanCellValue());
+		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
+			return String.valueOf(hssfCell.getNumericCellValue());
+		} else {
+			return String.valueOf(hssfCell.getStringCellValue());
 		}
 	}
 
-	/**
-	 * md5执行一次
-	 * 
-	 * @param strSource
-	 * @return
-	 */
-	public static String MD5OneTime(String strSource) {
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-				'a', 'b', 'c', 'd', 'e', 'f' };
-		try {
-
-			byte[] strTemp = strSource.getBytes();
-			// 使用MD5创建MessageDigest对象
-			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
-			mdTemp.update(strTemp);
-			byte[] md = mdTemp.digest();
-			int j = md.length;
-			char str[] = new char[j * 2];
-			int k = 0;
-			for (int i = 0; i < j; i++) {
-				byte b = md[i];
-				// 将没个数(int)b进行双字节加密
-				str[k++] = hexDigits[b >> 4 & 0xf];
-				str[k++] = hexDigits[b & 0xf];
-			}
-			strSource = String.valueOf(str);
-
-			return strSource;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	private String safeGet(SolrDocument doc, String key) {
-		return doc.get(key) != null ? doc.get(key).toString() : null;
-	}
 }

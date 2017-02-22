@@ -1,297 +1,304 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.SupplierEmployeeMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierEmployeeBean" >
-	    <result column="name" property="name" jdbcType="VARCHAR" />
-	    <result column="sex" property="sex" jdbcType="CHAR" />
-	    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
-	    <result column="qq" property="qq" jdbcType="VARCHAR" />
-	    <result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
-	    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
-	    <result column="fax" property="fax" jdbcType="VARCHAR" />
-	    <result column="id" property="id" jdbcType="VARCHAR" />
-	    <result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
-	    <result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
-	    <result column="area" property="area" jdbcType="VARCHAR" />
-	    <result column="sales" property="sales" jdbcType="VARCHAR" />
-	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
-	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	    <result column="employee_provice" property="employee_provice" jdbcType="VARCHAR" />
-	    <result column="employee_city" property="employee_city" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	    <result column="comment" property="comment" jdbcType="VARCHAR" />
-	    <result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
- 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-  		
-    	name, 
-    	sex, 
-    	wechat, 
-    	qq, 
-    	cellphone, 
-    	telephone, 
-    	fax,
-    	id, 
-    	financial_body_pk, 
-    	financial_body_name, 
-    	area, 
-    	sales, 
-    	create_user, 
-    	update_user, 
-    	pk, 
-    	comment, 
-    	birth_year, 
-    	create_time,
-    	update_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from supplier_employee
-    where pk = #{pk,jdbcType=CHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from supplier_employee
-    where pk = #{pk,jdbcType=CHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.xinchi.bean.SupplierEmployeeBean" >
-  	
-    insert into supplier_employee
-    
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-	 	<if test="name != null">
-	        name,
-	      </if>
-	 	<if test="sex != null">
-	        sex,
-	      </if>
-	 	<if test="wechat != null">
-	        wechat,
-	      </if>
-	 	<if test="qq != null">
-	        qq,
-	      </if>
-	 	<if test="cellphone != null">
-	        cellphone,
-	      </if>
-	 	<if test="telephone != null">
-	        telephone,
-	      </if>
-	      	<if test="fax != null">
-	        fax,
-	      </if>
-	 	<if test="id != null">
-	        id,
-	      </if>
-	 	<if test="financial_body_pk != null">
-	        financial_body_pk,
-	      </if>
-	 	<if test="financial_body_name != null">
-	        financial_body_name,
-	      </if>
-	 	<if test="area != null">
-	        area,
-	      </if>
-	 	<if test="sales != null">
-	        sales,
-	      </if>
-	 	<if test="create_user != null">
-	        create_user,
-	      </if>
-	 	<if test="update_user != null">
-	        update_user,
-	      </if>
-	 	<if test="pk != null">
-	        pk,
-	      </if>
-	 	<if test="comment != null">
-	        comment,
-	      </if>
-	 	<if test="birth_year != null">
-	        birth_year,
-	      </if>
-      <if test="create_time != null">
-        create_time,
-      </if>
-      <if test="update_time != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-    	<if test="name != null">
-	        #{name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sex != null">
-	        #{sex,jdbcType=CHAR},
-	      </if>
-    	<if test="wechat != null">
-	        #{wechat,jdbcType=VARCHAR},
-	      </if>
-    	<if test="qq != null">
-	        #{qq,jdbcType=VARCHAR},
-	      </if>
-    	<if test="cellphone != null">
-	        #{cellphone,jdbcType=VARCHAR},
-	      </if>
-    	<if test="telephone != null">
-	        #{telephone,jdbcType=VARCHAR},
-	      </if>
-	       	<if test="fax != null">
-	        #{fax,jdbcType=VARCHAR},
-	      </if>
-    	<if test="id != null">
-	        #{id,jdbcType=VARCHAR},
-	      </if>
-    	<if test="financial_body_pk != null">
-	        #{financial_body_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="financial_body_name != null">
-	        #{financial_body_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="area != null">
-	        #{area,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sales != null">
-	        #{sales,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        #{pk,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="birth_year != null">
-	        #{birth_year,jdbcType=VARCHAR},
-	      </if>
-      <if test="create_time != null">
-        #{create_time,jdbcType=VARCHAR},
-      </if>
-       <if test="update_time != null">
-        #{update_time,jdbcType=TIMESTAMP},
-      </if>
-    </trim>		
-  </insert>
-  
+<mapper namespace="com.xinchi.bean.mapper.SupplierEmployeeMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierEmployeeBean">
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="CHAR" />
+		<result column="wechat" property="wechat" jdbcType="VARCHAR" />
+		<result column="qq" property="qq" jdbcType="VARCHAR" />
+		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
+		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="sales" property="sales" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="employee_provice" property="employee_provice" jdbcType="VARCHAR" />
+		<result column="employee_city" property="employee_city" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierEmployeeBean" >
-    update supplier_employee
-    <set >
-    	<if test="name != null">
-	        name = #{name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sex != null">
-	        sex = #{sex,jdbcType=CHAR},
-	      </if>
-    	<if test="wechat != null">
-	        wechat = #{wechat,jdbcType=VARCHAR},
-	      </if>
-    	<if test="qq != null">
-	        qq = #{qq,jdbcType=VARCHAR},
-	      </if>
-    	<if test="cellphone != null">
-	        cellphone = #{cellphone,jdbcType=VARCHAR},
-	      </if>
-    	<if test="telephone != null">
-	        telephone = #{telephone,jdbcType=VARCHAR},
-	      </if>
-	      	<if test="telephone != null">
-	        fax = #{fax,jdbcType=VARCHAR},
-	      </if>
-    	<if test="id != null">
-	        id = #{id,jdbcType=VARCHAR},
-	      </if>
-    	<if test="financial_body_pk != null">
-	        financial_body_pk = #{financial_body_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="financial_body_name != null">
-	        financial_body_name = #{financial_body_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="area != null">
-	        area = #{area,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sales != null">
-	        sales = #{sales,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        create_user = #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        update_user = #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        comment = #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="birth_year != null">
-	        birth_year = #{birth_year,jdbcType=VARCHAR},
-	      </if>
-       <if test="update_user != null">
-        update_user = #{update_user,jdbcType=VARCHAR},
-      </if>
-      <if test="update_time != null">
-        update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where pk = #{pk,jdbcType=CHAR}
-  </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.SupplierEmployeeBean" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from supplier_employee
-   </select>
- <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-   select 
-   		A.name, 
-    	A.sex, 
-    	A.wechat, 
-    	A.qq, 
-    	A.cellphone, 
-    	A.telephone, 
-    	A.fax,
-    	A.id, 
-    	A.financial_body_pk, 
-    	A.financial_body_name, 
-    	A.area, 
-    	A.sales, 
-    	A.create_user, 
-    	A.update_user, 
-    	A.pk, 
-    	A.comment, 
-    	A.birth_year, 
-    	A.create_time,
-    	A.update_time,
-    	B.supplier_city as employee_city
-    from supplier_employee A
-    
-    LEFT JOIN supplier B ON A.financial_body_pk = B.pk
-    
-   <where>
-	      <if test="params.bo.name != null and params.bo.name !=''">
-	         and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
-	      </if>
-	      <if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
-	         and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
-	      </if>
-	      	<if test="params.bo.employee_provice != null and params.bo.employee_provice !=''">
-	         and B.supplier_provice = #{params.bo.employee_provice,jdbcType=VARCHAR}
-	      </if>
-	      <if test="params.bo.employee_city != null and params.bo.employee_city !=''">
-	         and B.supplier_city = #{params.bo.employee_city,jdbcType=VARCHAR}
-	      </if>
-    </where> 
-    
-   </select>
+	<sql id="Base_Column_List">
+
+		name,
+		sex,
+		wechat,
+		qq,
+		cellphone,
+		telephone,
+		fax,
+		id,
+		financial_body_pk,
+		financial_body_name,
+		area,
+		sales,
+		create_user,
+		update_user,
+		pk,
+		comment,
+		birth_year,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_employee
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from supplier_employee
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.SupplierEmployeeBean">
+
+		insert into supplier_employee
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="wechat != null">
+				wechat,
+			</if>
+			<if test="qq != null">
+				qq,
+			</if>
+			<if test="cellphone != null">
+				cellphone,
+			</if>
+			<if test="telephone != null">
+				telephone,
+			</if>
+			<if test="fax != null">
+				fax,
+			</if>
+			<if test="id != null">
+				id,
+			</if>
+			<if test="financial_body_pk != null">
+				financial_body_pk,
+			</if>
+			<if test="financial_body_name != null">
+				financial_body_name,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+			<if test="sales != null">
+				sales,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="birth_year != null">
+				birth_year,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=CHAR},
+			</if>
+			<if test="wechat != null">
+				#{wechat,jdbcType=VARCHAR},
+			</if>
+			<if test="qq != null">
+				#{qq,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				#{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				#{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="financial_body_pk != null">
+				#{financial_body_pk,jdbcType=CHAR},
+			</if>
+			<if test="financial_body_name != null">
+				#{financial_body_name,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="sales != null">
+				#{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="birth_year != null">
+				#{birth_year,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierEmployeeBean">
+		update supplier_employee
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=CHAR},
+			</if>
+			<if test="wechat != null">
+				wechat = #{wechat,jdbcType=VARCHAR},
+			</if>
+			<if test="qq != null">
+				qq = #{qq,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				cellphone = #{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				telephone = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="financial_body_pk != null">
+				financial_body_pk = #{financial_body_pk,jdbcType=CHAR},
+			</if>
+			<if test="financial_body_name != null">
+				financial_body_name = #{financial_body_name,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="sales != null">
+				sales = #{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="birth_year != null">
+				birth_year = #{birth_year,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.SupplierEmployeeBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_employee
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.name,
+		A.sex,
+		A.wechat,
+		A.qq,
+		A.cellphone,
+		A.telephone,
+		A.fax,
+		A.id,
+		A.financial_body_pk,
+		A.financial_body_name,
+		A.area,
+		A.sales,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.comment,
+		A.birth_year,
+		A.create_time,
+		A.update_time,
+		B.supplier_city as employee_city
+		from supplier_employee A
+
+		LEFT JOIN supplier B ON A.financial_body_pk = B.pk
+
+		<where>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
+				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.employee_provice != null and params.bo.employee_provice !=''">
+				and B.supplier_provice = #{params.bo.employee_provice,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.employee_city != null and params.bo.employee_city !=''">
+				and B.supplier_city = #{params.bo.employee_city,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+	</select>
+	<select id="selectBodyPksByEmployeePks" resultType="java.lang.String">
+		select distinct financial_body_pk from supplier_employee
+		where pk in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

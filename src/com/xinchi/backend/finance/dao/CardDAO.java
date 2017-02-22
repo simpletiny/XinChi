@@ -21,4 +21,6 @@ public interface CardDAO {
 	public CardBean getCardByAccount(String account);
 
 	public void update(CardBean card);
+
+	public CardBean getCardByNumber(String card_number);
 }

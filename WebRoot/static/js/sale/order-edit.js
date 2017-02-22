@@ -150,7 +150,7 @@ var OrderContext = function() {
 		var nameList = $("#txt-name-list").val();
 		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(
 				new RegExp("：", "gm"), ":"));
-
+		var supplierArr = new Array();
 		var allSupplierEmployees = $("[st='supplier']");
 		var supplierJson = '[';
 		for ( var i = 0; i < allSupplierEmployees.length; i++) {
@@ -163,6 +163,7 @@ var OrderContext = function() {
 
 			if (supplierEmployeePk == "" || supplierEmployeeName == "")
 				continue;
+			supplierArr.push(supplierEmployeePk);
 			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName
 					+ '",' + '"supplierEmployeePk":"' + supplierEmployeePk
 					+ '",' + '"payable":"' + payable;
@@ -173,10 +174,12 @@ var OrderContext = function() {
 			}
 		}
 		supplierJson += ']';
-
+		if (supplierArr.isRepeat()) {
+			fail_msg("不能有重复的供应商！");
+			return;
+		}
 		var data = $("form").serialize() + "&nameList=" + nameList
 				+ "&supplierJson=" + supplierJson;
-		console.log(data);
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/updateOrder',

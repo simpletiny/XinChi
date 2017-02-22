@@ -67,8 +67,7 @@ public class UserAction extends BaseAction {
 
 			String ext = Utils.getFileExt(fileFileName);
 			String fileFolder = PropertiesUtil.getProperty("userIdFileFolder");
-			File destfile = new File(fileFolder + File.separator + ubb.getId()
-					+ "." + ext);
+			File destfile = new File(fileFolder + File.separator + ubb.getId() + "." + ext);
 			FileUtils.copyFile(file, destfile);
 			file.delete();
 			uib.setId_file_name(ubb.getId() + "." + ext);
@@ -108,8 +107,12 @@ public class UserAction extends BaseAction {
 	}
 
 	public String searchAllSales() {
-		users = userService
-				.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
+		users = userService.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
+		return SUCCESS;
+	}
+
+	public String searchAllUsers() {
+		users = userService.getAllUsers();
 		return SUCCESS;
 	}
 

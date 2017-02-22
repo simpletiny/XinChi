@@ -13,4 +13,18 @@ public interface PaymentDetailDAO {
 
 	public List<PaymentDetailBean> selectAllDetailsByPage(
 			Page<PaymentDetailBean> page);
+
+	public PaymentDetailBean selectById(String detailId);
+
+	public List<PaymentDetailBean> selectAfterByParam(PaymentDetailBean detail);
+
+	public void updateDetails(List<PaymentDetailBean> afterDetails);
+
+	public void delete(String pk);
+
+	public void updateDetail(PaymentDetailBean newDetail);
+
+	public PaymentDetailBean selectPreDetail(PaymentDetailBean newDetail);
+
+	public void insertDetails(List<PaymentDetailBean> details);
 }

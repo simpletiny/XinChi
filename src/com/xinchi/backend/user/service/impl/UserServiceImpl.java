@@ -41,8 +41,7 @@ public class UserServiceImpl implements UserService {
 			return "none";
 		} else {
 			UserBaseBean user = users.get(0);
-			if (user.getPassword().equals(
-					SimpletinyString.MD5(ubb.getPassword()))) {
+			if (user.getPassword().equals(SimpletinyString.MD5(ubb.getPassword()))) {
 
 				UserSessionBean sessionBean = new UserSessionBean();
 				try {
@@ -60,8 +59,7 @@ public class UserServiceImpl implements UserService {
 				sessionBean.setCellphone(uib.getCellphone());
 				sessionBean.setUser_status(user.getUser_status());
 				sessionBean.setUser_roles(uib.getUser_role());
-				XinChiApplicationContext.setSession(
-						ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
+				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 				return "success";
 			} else {
 				return "input";
@@ -88,8 +86,7 @@ public class UserServiceImpl implements UserService {
 	public String approveUser(String user_pk, String user_roles) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ubb.setApprove_time(DateUtil.getTimeMillis());
 		ubb.setApprove_user(sessionBean.getUser_number());
 		ubb.setUser_status(ResourcesConstants.USER_STATUS_NORMAL);
@@ -106,8 +103,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public String rejectUser(String user_pk) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ubb.setApprove_time(DateUtil.getTimeMillis());
 		ubb.setApprove_user(sessionBean.getUser_number());
 		ubb.setUser_status(ResourcesConstants.USER_STATUS_REJECT);
@@ -118,6 +114,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserCommonBean> getAllUsersByRole(String roles) {
 		return dao.getAllUsersByRole(roles);
+	}
+
+	@Override
+	public List<UserCommonBean> getAllUsers() {
+		return dao.getAllUserCommonByParam(null);
 	}
 
 	@Override

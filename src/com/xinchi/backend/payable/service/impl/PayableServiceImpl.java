@@ -33,6 +33,7 @@ import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
+import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.solr.service.SimpletinySolr;
@@ -299,4 +300,34 @@ public class PayableServiceImpl implements PayableService {
 	public PayableSummaryBean searchPayableSummary(String user_number) {
 		return dao.selectPayableSummary(user_number);
 	}
+
+	@Override
+	public void updatePayablePaid(SupplierPaidDetailBean detail) {
+		PayableBean options = new PayableBean();
+		options.setTeam_number(detail.getTeam_number());
+		options.setSupplier_employee_pk(detail.getSupplier_employee_pk());
+
+		PayableBean payable = dao.selectByParam(options);
+
+		payable.setPaid(payable.getPaid().add(detail.getMoney()));
+		payable.setBudget_balance(payable.getBudget_balance().subtract(detail.getMoney()));
+
+		if (payable.getFinal_flg().equals("Y")) {
+			payable.setFinal_balance(payable.getFinal_balance().subtract(detail.getMoney()));
+		}
+		dao.update(payable);
+
+		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
+
+		SolrInputDocument document = castP2D(payable);
+		try {
+			solrClient.add(document);
+			solrClient.commit();
+		} catch (SolrServerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

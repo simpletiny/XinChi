@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.UserGroupMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.UserGroupBean">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="group_name" property="group_name" jdbcType="VARCHAR" />
+		<result column="group_leader" property="group_leader" jdbcType="VARCHAR" />
+		<result column="group_duty" property="group_duty" jdbcType="VARCHAR" />
+		<result column="higher_ups" property="higher_ups" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		group_name,
+		group_leader,
+		group_duty,
+		higher_ups,
+		update_user,
+		create_user,
+		pk,
+		comment,
+		create_time,update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from user_group
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from user_group
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.UserGroupBean">
+
+		insert into user_group
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="group_name != null">
+				group_name,
+			</if>
+			<if test="group_leader != null">
+				group_leader,
+			</if>
+			<if test="group_duty != null">
+				group_duty,
+			</if>
+			<if test="higher_ups != null">
+				higher_ups,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="group_name != null">
+				#{group_name,jdbcType=VARCHAR},
+			</if>
+			<if test="group_leader != null">
+				#{group_leader,jdbcType=VARCHAR},
+			</if>
+			<if test="group_duty != null">
+				#{group_duty,jdbcType=VARCHAR},
+			</if>
+			<if test="higher_ups != null">
+				#{higher_ups,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.UserGroupBean">
+		update user_group
+		<set>
+			<if test="group_name != null">
+				group_name = #{group_name,jdbcType=VARCHAR},
+			</if>
+			<if test="group_leader != null">
+				group_leader = #{group_leader,jdbcType=VARCHAR},
+			</if>
+			<if test="group_duty != null">
+				group_duty = #{group_duty,jdbcType=VARCHAR},
+			</if>
+			<if test="higher_ups != null">
+				higher_ups = #{higher_ups,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.UserGroupBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_group
+		<where>
+			<if test="group_name !=null">
+				group_name = #{group_name,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

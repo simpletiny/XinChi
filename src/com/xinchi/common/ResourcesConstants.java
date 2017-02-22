@@ -58,6 +58,23 @@ public class ResourcesConstants {
 	public static String RECEIVED_TYPE_STRIKE = "STRIKE";
 	public static String RECEIVED_TYPE_RECEIVED = "RECEIVED";
 
+	// 供应商往来账种类
+	// 返款收入
+	public static String PAID_TYPE_BACK = "BACK";
+	// 支付
+	public static String PAID_TYPE_PAID = "PAID";
+	// 冲账
+	public static String PAID_TYPE_STRIKE = "STRIKE";
+	// 扣款
+	public static String PAID_TYPE_DEDUCT = "DEDUCT";
+	// 支出状态
+	// 待确认
+	public static String PAID_STATUS_ING = "I";
+	// 被驳回
+	public static String PAID_STATUS_NO = "N";
+	// 已入账
+	public static String PAID_STATUS_YES = "Y";
+
 	// 收入状态
 	// 待确认
 	public static String RECEIVED_STATUS_ING = "I";
@@ -80,4 +97,40 @@ public class ResourcesConstants {
 	public static String SUPPLIER_FILE_TYPE_CHIEF = "CHIEF";
 	// 其他文件
 	public static String SUPPLIER_FILE_TYPE_OTHER = "OTHER";
+
+	/**
+	 * 旅行社文件类型
+	 */
+	// 营业执照
+	public static String AGENCY_FILE_TYPE_LICENCE = "LICENCE";
+	// 许可证
+	public static String AGENCY_FILE_TYPE_PERMIT = "PERMIT";
+	// 责任险
+	public static String AGENCY_FILE_TYPE_INSURANCE = "INSURANCE";
+	// 法人身份证
+	public static String AGENCY_FILE_TYPE_CORPORATE = "CORPORATE";
+	// 负责人身份证
+	public static String AGENCY_FILE_TYPE_CHIEF = "CHIEF";
+	// 其他文件
+	public static String AGENCY_FILE_TYPE_OTHER = "OTHER";
+
+	/* 银行简称 */
+	// 建设银行
+	public static String BANK_CCB = "CCB";
+	// 农业银行
+	public static String BANK_ABC = "ABC";
+	// 工商银行
+	public static String BANK_ICBC = "ICBC";
+	// 中国银行
+	public static String BANK_BOC = "BOC";
+	// 招商银行
+	public static String BANK_CMB = "CMB";
+	// 交通银行
+	public static String BANK_BCM = "BCM";
+	// 邮储银行
+	public static String BANK_PSBC = "PSBC";
+	// 哈尔滨银行
+	public static String BANK_HRB = "HRB";
+	// 网商银行
+	public static String BANK_MY = "MY";
 }

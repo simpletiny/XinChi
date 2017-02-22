@@ -8,19 +8,28 @@
 		<action name="searchCard" class="cardAction" method="searchCard">
 			<result name="success" type="json"></result>
 		</action>
-	    <action name="searchAllAccounts" class="cardAction" method="searchAllAccounts">
+		<action name="searchAllAccounts" class="cardAction" method="searchAllAccounts">
 			<result name="success" type="json"></result>
 		</action>
 		<action name="checkAccount" class="cardAction" method="checkAccount">
 			<result name="success" type="str">resultStr</result>
 		</action>
-	    <action name="getAccountBalance" class="cardAction" method="getAccountBalance">
+		<action name="getAccountBalance" class="cardAction" method="getAccountBalance">
 			<result name="success" type="str">resultStr</result>
 		</action>
-	    <action name="createDetail" class="paymentDetailAction" method="createDetail">
+		<action name="createDetail" class="paymentDetailAction" method="createDetail">
 			<result name="success" type="str">resultStr</result>
 		</action>
-	    <action name="createInnerDetail" class="paymentDetailAction" method="createInnerDetail">
+		<action name="createInnerDetail" class="paymentDetailAction" method="createInnerDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteDetail" class="paymentDetailAction" method="deleteDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchDetailByPk" class="paymentDetailAction" method="searchDetailByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateDetail" class="paymentDetailAction" method="updateDetail">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="searchDetail" class="paymentDetailAction" method="searchDetail">
@@ -32,7 +41,9 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		<action name="importDetailExcel" class="paymentDetailAction" method="importDetailExcel">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

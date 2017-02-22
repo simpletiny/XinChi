@@ -26,8 +26,7 @@
 		<action name="searchEmployee" class="employeeAction" method="searchEmployee">
 			<result name="success" type="json"></result>
 		</action>
-		<action name="searchEmployeeByPage" class="employeeAction"
-			method="searchEmployeeByPage">
+		<action name="searchEmployeeByPage" class="employeeAction" method="searchEmployeeByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -39,6 +38,54 @@
 		<action name="updateEmployee" class="employeeAction" method="updateEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+
+		<!-- agency -->
+		<action name="createAgency" class="travelAgencyAction" method="createAgency">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchAgencyByPage" class="travelAgencyAction" method="searchAgencyByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneAgency" class="travelAgencyAction" method="searchOneAgency">
+			<result name="success" type="json">
+			</result>
+		</action>
+		<action name="searchAgencyFiles" class="travelAgencyAction" method="searchAgencyFiles">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateAgency" class="travelAgencyAction" method="updateAgency">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteAgencyFile" class="travelAgencyAction" method="deleteAgencyFile">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="cancelAgency" class="travelAgencyAction" method="cancelAgency">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="checkAgencySame" class="travelAgencyAction" method="checkAgencySame">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- client relation -->
+		<action name="createVisit" class="clientRelationAction" method="createVisit">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchRelationsByPage" class="clientRelationAction" method="searchRelationsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchClientSummary" class="clientRelationAction" method="searchClientSummary">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 	</package>
 
 </struts>

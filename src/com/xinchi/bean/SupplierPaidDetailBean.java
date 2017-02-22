@@ -1,29 +1,46 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
 import com.xinchi.common.SupperBO;
 
 public class SupplierPaidDetailBean extends SupperBO implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 439844938854617498L;
 
 	private String team_number;
 
-	private BigDecimal paid;
+	private String supplier_employee_name;
 
-	private String paid_time;
+	private String supplier_employee_pk;
 
-	private String supplier_pk;
+	private java.math.BigDecimal money;
 
-	private String supplier_name;
+	private String time;
+
+	private String type;
+
+	private String confirm_time;
+
+	private String status;
+
+	private String comment;
+
+	private java.math.BigDecimal sum_money;
+
+	private java.math.BigDecimal allot_money;
+
+	private String related_pk;
+
+	private String card_pk;
+
+	private String card_account;
 
 	private String create_user;
 
 	private String update_user;
 
 	private String pk;
-
+	private String limit_time;
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -32,36 +49,108 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 		this.team_number = team_number;
 	}
 
-	public BigDecimal getPaid() {
-		return paid;
+	public String getSupplier_employee_name() {
+		return supplier_employee_name;
 	}
 
-	public void setPaid(BigDecimal paid) {
-		this.paid = paid;
+	public void setSupplier_employee_name(String supplier_employee_name) {
+		this.supplier_employee_name = supplier_employee_name;
 	}
 
-	public String getPaid_time() {
-		return paid_time;
+	public String getSupplier_employee_pk() {
+		return supplier_employee_pk;
 	}
 
-	public void setPaid_time(String paid_time) {
-		this.paid_time = paid_time;
+	public void setSupplier_employee_pk(String supplier_employee_pk) {
+		this.supplier_employee_pk = supplier_employee_pk;
 	}
 
-	public String getSupplier_pk() {
-		return supplier_pk;
+	public java.math.BigDecimal getMoney() {
+		return money;
 	}
 
-	public void setSupplier_pk(String supplier_pk) {
-		this.supplier_pk = supplier_pk;
+	public void setMoney(java.math.BigDecimal money) {
+		this.money = money;
 	}
 
-	public String getSupplier_name() {
-		return supplier_name;
+	public String getTime() {
+		return time;
 	}
 
-	public void setSupplier_name(String supplier_name) {
-		this.supplier_name = supplier_name;
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getConfirm_time() {
+		return confirm_time;
+	}
+
+	public void setConfirm_time(String confirm_time) {
+		this.confirm_time = confirm_time;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public java.math.BigDecimal getSum_money() {
+		return sum_money;
+	}
+
+	public void setSum_money(java.math.BigDecimal sum_money) {
+		this.sum_money = sum_money;
+	}
+
+	public java.math.BigDecimal getAllot_money() {
+		return allot_money;
+	}
+
+	public void setAllot_money(java.math.BigDecimal allot_money) {
+		this.allot_money = allot_money;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
+	}
+
+	public String getCard_pk() {
+		return card_pk;
+	}
+
+	public void setCard_pk(String card_pk) {
+		this.card_pk = card_pk;
+	}
+
+	public String getCard_account() {
+		return card_account;
+	}
+
+	public void setCard_account(String card_account) {
+		this.card_account = card_account;
 	}
 
 	public String getCreate_user() {
@@ -86,6 +175,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getLimit_time() {
+		return limit_time;
+	}
+
+	public void setLimit_time(String limit_time) {
+		this.limit_time = limit_time;
 	}
 
 }

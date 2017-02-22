@@ -20,6 +20,15 @@ jQuery.validator.addMethod("date_year", function(value, element) {
 	return this.optional(element) || mobile.test(value);
 }, "请正确填写出生年");
 
+
+jQuery.validator.addMethod("isTime", function(value, element) {
+	var length = value.length;
+	var time = /^(([0-2][0-3])|([0-1][0-9])):[0-5][0-9]$/;
+	if (length != 5)
+		return this.optional(element) || false;
+	return this.optional(element) || time.test(value);
+}, "请正确填写时间");
+
 // jQuery.validator.addMethod("isDifferent", function(value,element) {
 // var allNeed = $(".different");
 // if(allNeed.length == 1){
@@ -106,6 +115,12 @@ $(".date_year").each(function() {
 $(".amountRangeEnd").each(function() {
 	$(this).rules("add", {
 		amountLimit : true
+	});
+});
+
+$(".time").each(function() {
+	$(this).rules("add", {
+		isTime : true
 	});
 });
 // $(".different").each(function(){

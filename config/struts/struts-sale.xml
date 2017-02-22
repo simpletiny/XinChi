@@ -102,7 +102,31 @@
 		<action name="searchPayableSummary" class="payableAction" method="searchPayableSummary">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="isSameFinancialBody2" class="payableAction" method="isSameFinancialBody2">
+			<result name="success" type="json"></result>
+		</action>
 		<!-- payable action end -->
+
+		<!-- paid action start -->
+		<action name="applyBackRecive" class="paidAction" method="applyBackRecive">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyPay" class="paidAction" method="applyPay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyStrike" class="paidAction" method="applyStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyDeduct" class="paidAction" method="applyDeduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchPaidByPage" class="paidAction" method="searchPaidByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- paid action end -->
 	</package>
 
 </struts>

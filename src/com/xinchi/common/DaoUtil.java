@@ -37,8 +37,7 @@ public class DaoUtil {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setCreate_user(ub.getUser_number());
 		}
@@ -48,8 +47,7 @@ public class DaoUtil {
 
 	public String insertBOWithPk(String mapper, SupperBO supperBO) {
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setCreate_user(ub.getUser_number());
 		}
@@ -64,16 +62,21 @@ public class DaoUtil {
 	 * @param supperBO
 	 * @return
 	 */
-	public String[] insertBOList(String mapper, List<SupperBO> bOList) {
+	public String[] insertBOList(String mapper, List<? extends SupperBO> bOList) {
+		if (null == bOList || bOList.size() == 0)
+			return null;
 		String[] rtnPks = new String[bOList.size()];
 		String date = DateUtil.getTimeMillis();
 		String[] pks = DBCommonUtil.genPks(bOList.size());
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		for (int i = 0; i < bOList.size(); i++) {
 			rtnPks[i] = pks[i];
 			bOList.get(i).setPk(pks[i]);
 			bOList.get(i).setCreate_time(date);
+			bOList.get(i).setCreate_user(ub.getUser_number());
+			sqlSession.insert(mapper, bOList.get(i));
 		}
-		sqlSession.insert(mapper, bOList);
+
 		return rtnPks;
 	}
 
@@ -183,8 +186,7 @@ public class DaoUtil {
 	 * List<SupperBO> listBo = sqlSession.selectList(mapper,param); return
 	 * listBo; }
 	 */
-	public <T extends SupperBO> List<T> selectByParam(String mapper,
-			Object param) {
+	public <T extends SupperBO> List<T> selectByParam(String mapper, Object param) {
 		List<T> listBo = sqlSession.selectList(mapper, param);
 		return listBo;
 	}
@@ -212,10 +214,8 @@ public class DaoUtil {
 	 *            :指定map key的列名
 	 * @return：BO的Map键值对对象
 	 */
-	public Map<String, Object> selectByMapParam(String mapper, Map map,
-			String keyColumn) {
-		Map<String, Object> rtnMap = sqlSession.selectMap(mapper, map,
-				keyColumn);
+	public Map<String, Object> selectByMapParam(String mapper, Map map, String keyColumn) {
+		Map<String, Object> rtnMap = sqlSession.selectMap(mapper, map, keyColumn);
 		return rtnMap;
 	}
 
@@ -226,8 +226,7 @@ public class DaoUtil {
 	 * @return
 	 */
 	public List<SupperBO> selectBySql(String sql) {
-		List<SupperBO> listBo = sqlSession.selectList(
-				"commonMapper.findRecords", sql);
+		List<SupperBO> listBo = sqlSession.selectList("commonMapper.findRecords", sql);
 		return listBo;
 	}
 
@@ -252,8 +251,7 @@ public class DaoUtil {
 	 */
 	public int updateByPK(String mapper, SupperBO supperBO) {
 		supperBO.setUpdate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setUpdate_user(ub.getUser_number());
 		}
@@ -286,7 +284,7 @@ public class DaoUtil {
 	 *            <SupperBO>：Bo对象数组
 	 * @return
 	 */
-	public void updateBOList(String mapper, List<SupperBO> listBo) {
+	public void updateBOList(String mapper, List<? extends SupperBO> listBo) {
 		for (SupperBO supperBO : listBo) {
 			this.updateByPK(mapper, supperBO);
 		}
@@ -309,8 +307,7 @@ public class DaoUtil {
 	 * @param obj
 	 * @return
 	 */
-	public <T extends Object> List<T> selectListByParam(String mapper,
-			Object obj) {
+	public <T extends Object> List<T> selectListByParam(String mapper, Object obj) {
 		return sqlSession.selectList(mapper, obj);
 	}
 
@@ -331,13 +328,11 @@ public class DaoUtil {
 	 * @param supperBO
 	 * @return
 	 */
-	public <T extends Object> T selectOneValueByParam(String mapper,
-			SupperBO supperBO) {
+	public <T extends Object> T selectOneValueByParam(String mapper, SupperBO supperBO) {
 		return (T) sqlSession.selectOne(mapper, supperBO);
 	}
 
-	public <T extends Object> T selectOneValueByParam(String mapper,
-			Object object) {
+	public <T extends Object> T selectOneValueByParam(String mapper, Object object) {
 		return (T) sqlSession.selectOne(mapper, object);
 	}
 

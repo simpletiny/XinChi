@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="culture" extends="default" namespace="/culture">
+		<action name="createWorldView" class="worldViewAction" method="createWorldView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchWorldViewByPage" class="worldViewAction" method="searchWorldViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneWorldView" class="worldViewAction" method="searchOneWorldView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateWorldView" class="worldViewAction" method="updateWorldView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteWorldView" class="worldViewAction" method="deleteWorldView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<action name="createValueView" class="valueViewAction" method="createValueView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchValueViewByPage" class="valueViewAction" method="searchValueViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneValueView" class="valueViewAction" method="searchOneValueView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateValueView" class="valueViewAction" method="updateValueView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteValueView" class="valueViewAction" method="deleteValueView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	</package>
+</struts>

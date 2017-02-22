@@ -45,4 +45,6 @@ public interface SupplierEmployeeDAO {
 
 	public List<SupplierEmployeeBean> getAllByPage(
 			Page<SupplierEmployeeBean> page);
+
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
 }

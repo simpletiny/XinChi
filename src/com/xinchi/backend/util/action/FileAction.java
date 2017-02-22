@@ -37,6 +37,7 @@ public class FileAction extends BaseAction {
 		File file = new File(baseFolder + File.separator + fileFileName);
 		fileName = file.getName();
 		fips = new FileInputStream(file);
+//		fips.close();
 		return SUCCESS;
 	}
 
@@ -50,6 +51,7 @@ public class FileAction extends BaseAction {
 		FileUtils.copyFile(file, destfile);
 		fileName = destfile.getName();
 		fips = new FileInputStream(destfile);
+//		fips.close();
 		return SUCCESS;
 	}
 

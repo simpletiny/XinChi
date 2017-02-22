@@ -40,8 +40,7 @@ public class SupplierEmployeeServiceImpl implements SupplierEmployeeService {
 	}
 
 	@Override
-	public List<SupplierEmployeeBean> getAllSupplierEmployeeByParam(
-			SupplierEmployeeBean bo) {
+	public List<SupplierEmployeeBean> getAllSupplierEmployeeByParam(SupplierEmployeeBean bo) {
 		return dao.getAllByParam(bo);
 	}
 
@@ -62,6 +61,12 @@ public class SupplierEmployeeServiceImpl implements SupplierEmployeeService {
 	@Override
 	public List<SupplierEmployeeBean> getAllSupplierEmployeeByPage(Page<SupplierEmployeeBean> page) {
 		return dao.getAllByPage(page);
+	}
+
+	@Override
+	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
+
+		return dao.getBodyPksByEmployeePks(employee_pks);
 	}
 
 }

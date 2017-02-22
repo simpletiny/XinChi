@@ -132,7 +132,7 @@ var inlineTextFunc = function(element, valueAccessor, allBindingsAccessor, data,
 		}
 	});
 };
-var msg= function(txt){
+var msg = function(txt) {
 	$.layer({
 		type : 0,
 		closeBtn : [ 1, true ],
@@ -274,10 +274,21 @@ String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
 };
 
-var getServerDate = function(){
+Array.prototype.isRepeat = function() {
+	var hash = {};
+	for ( var i in this) {
+		if (hash[this[i]]) {
+			return true;
+		}
+		hash[this[i]] = true;
+	}
+	return false;
+};
+
+var getServerDate = function() {
 	$.getJSON($("#hidden_apiurl").val() + 'simpletiny/currentDate', {}, function(data) {
 		var x = new Date(data.current_date);
-		x.setMonth(x.getMonth()+1); 
+		x.setMonth(x.getMonth() + 1);
 		console.log(x.Format("yyyy-MM-dd"));
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);

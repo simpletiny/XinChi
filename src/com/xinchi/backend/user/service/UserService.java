@@ -51,7 +51,7 @@ public interface UserService {
 	public List<com.xinchi.bean.UserBaseBean> getAllByParam(UserBaseBean bo);
 
 	public String login(UserBaseBean ubb);
-	
+
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo);
 
 	public String approveUser(String user_pk, String user_roles);
@@ -61,4 +61,6 @@ public interface UserService {
 	public String rejectUser(String user_pk);
 
 	public List<UserCommonBean> getAllUsersByRole(String uSER_ROLE_SALES);
+
+	public List<UserCommonBean> getAllUsers();
 }

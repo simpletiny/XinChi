@@ -30,7 +30,8 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String comment;
 	private String inner_flg;
 	private String inner_pk;
-
+	
+	private String month;
 	public String getAccount() {
 		return account;
 	}
@@ -133,6 +134,14 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setInner_pk(String inner_pk) {
 		this.inner_pk = inner_pk;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 }
