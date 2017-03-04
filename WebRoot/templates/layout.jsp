@@ -50,23 +50,23 @@
 					<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
 				</ol></li>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="client"><a href="<%=basePath%>templates/client/agency.jsp" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
-				<ol style="display: none;">
-					<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
-				</ol>	
-				
-				 <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-						<ol style="display: none;">
-							<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
-						</ol>
-					</s:if>
-					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
-					</ol>
+				<li class="client"><a href="<%=basePath%>templates/client/client-relation.jsp" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/client/client-relation.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户关系</a></li>
 					</ol>
-					</li>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
+					</ol> <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+						<ol style="display: none;">
+							<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
+						</ol>
+						<ol style="display: none;">
+							<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
+						</ol>
+
+
+
+					</s:if></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="product-box"><a href="#" onclick="$('.product-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品架</a></li>
@@ -74,7 +74,7 @@
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="order-box"><a href="#" onclick="$('.order-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a></li>
 			</s:if>
-						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="order"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>预决算管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>预算单管理</a></li>

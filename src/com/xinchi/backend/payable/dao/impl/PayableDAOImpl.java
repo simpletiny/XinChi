@@ -1,5 +1,7 @@
 package com.xinchi.backend.payable.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -58,6 +60,11 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 			}
 
 		}
+	}
+
+	@Override
+	public List<PayableBean> selectAllPayableWithSupplier() {
+		return	daoUtil.selectAll("com.xinchi.bean.mapper.PayableMapper.selectAllWithSupplier");
 	}
 
 }

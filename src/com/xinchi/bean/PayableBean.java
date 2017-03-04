@@ -16,7 +16,10 @@ public class PayableBean extends SupperBO implements Serializable {
 	private String supplier_employee_name;
 
 	private String supplier_employee_pk;
-
+	
+	private String supplier_name;
+	private String supplier_pk;
+	
 	private String departure_date;
 
 	private String return_date;
@@ -234,6 +237,22 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setBack_days(String back_days) {
 		this.back_days = back_days;
+	}
+
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
+	}
+
+	public String getSupplier_pk() {
+		return supplier_pk;
+	}
+
+	public void setSupplier_pk(String supplier_pk) {
+		this.supplier_pk = supplier_pk;
 	}
 
 }

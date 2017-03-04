@@ -13,6 +13,11 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<style type="text/css">
+span {
+	line-height: 150%;
+}
+</style>
 </head>
 <body>
 	<input type="hidden" id="view_key" value="<%=key%>" />
@@ -32,7 +37,7 @@
 				<div class="form-box info-form">
 					<h1 data-bind="text: view().title" style="text-align: center"></h1>
 					<div class="ip">
-						<p class="ip-default" data-bind="text: view().content"></p>
+						<p class="ip-default" style="padding: 30px 120px 100px 120px" data-bind="html: view().content"></p>
 					</div>
 				</div>
 			</div>

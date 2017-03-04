@@ -563,4 +563,17 @@
 			<comment> CREATE  TABLE client_visit</comment>
 		</sql>
 	</changeSet>
+	
+		<changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+            drop view if exists receivable_for_client;
+            create view receivable_for_client as
+			select client_employee_pk, sum(case when isnull(final_balance) then budget_balance else final_balance end) as receivable,
+			datediff(now(),min(case when isnull(final_balance) and budget_balance<>0 then  return_date when final_balance<> 0 then return_date else 9999999999 end) )as last_receivable_period
+			from receivable group by client_employee_pk;
+                    ]]>
+			<comment> alter view receivable_for_client</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

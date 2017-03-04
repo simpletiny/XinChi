@@ -123,6 +123,10 @@
 	<field name="final_flg" type="string" indexed="true" stored="true"  multiValued="false" />
 	<field name="supplier_employee_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
 	<field name="supplier_employee_pk" type="string" indexed="true" stored="true"  multiValued="false" />
+	
+	<field name="supplier_pk" type="string" indexed="true" stored="true"  multiValued="false" />
+	<field name="supplier_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+	
 	<field name="departure_date" type="date" indexed="true" stored="true"  multiValued="false" />
 	<field name="return_date" type="date" indexed="true" stored="true"  multiValued="false" />
 	<field name="product" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
@@ -145,6 +149,7 @@
          
    <copyField source="team_number" dest="_text_"/>
    <copyField source="supplier_employee_name" dest="_text_"/>
+   <copyField source="supplier_name" dest="_text_"/>
    <copyField source="product" dest="_text_"/>
    <copyField source="sales_name" dest="_text_"/>
 

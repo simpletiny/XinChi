@@ -27,12 +27,14 @@ import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.backend.supplier.dao.SupplierEmployeeDAO;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
+import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -59,7 +61,9 @@ public class PayableServiceImpl implements PayableService {
 
 	@Autowired
 	private FinalOrderService finalOrderService;
-
+	
+	@Autowired
+	private SupplierEmployeeDAO supplierEmployeeDAO;
 	@Override
 	@Async
 	public void updateByTeamNumber(String team_number) {
@@ -75,8 +79,10 @@ public class PayableServiceImpl implements PayableService {
 				bo.setTeam_number(team_number);
 				bo.setSupplier_employee_pk(budget.getSupplier_employee_pk());
 
+				SupplierEmployeeBean sb = supplierEmployeeDAO.selectByPrimaryKey(budget.getSupplier_employee_pk());
+				
 				PayableBean payable = dao.selectByParam(bo);
-
+				
 				if (null == payable) {
 					payable = new PayableBean();
 					payable.setTeam_number(team_number);
@@ -118,6 +124,9 @@ public class PayableServiceImpl implements PayableService {
 						update(payable);
 					}
 				}
+				
+				payable.setSupplier_name(sb.getFinancial_body_name());
+				payable.setSupplier_pk(sb.getFinancial_body_pk());
 
 				SolrInputDocument document = castP2D(payable);
 
@@ -146,7 +155,8 @@ public class PayableServiceImpl implements PayableService {
 		document.addField("final_flg", payable.getFinal_flg());
 		document.addField("supplier_employee_name", payable.getSupplier_employee_name());
 		document.addField("supplier_employee_pk", payable.getSupplier_employee_pk());
-
+		document.addField("supplier_name", payable.getSupplier_name());
+		document.addField("supplier_pk", payable.getSupplier_pk());
 		document.addField("departure_date", DateUtil.castStr2Date(payable.getDeparture_date()));
 		document.addField("return_date", DateUtil.castStr2Date(payable.getReturn_date()));
 		document.addField("product", payable.getProduct());
@@ -200,6 +210,10 @@ public class PayableServiceImpl implements PayableService {
 				payable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
 				payable.setSupplier_employee_name(safeGet(doc, "supplier_employee_name"));
 				payable.setSupplier_employee_pk(safeGet(doc, "supplier_employee_pk"));
+				
+				payable.setSupplier_pk(safeGet(doc, "supplier_pk"));
+				payable.setSupplier_name(safeGet(doc, "supplier_name"));
+				
 				payable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
 				payable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
 				payable.setProduct(safeGet(doc, "product"));
@@ -250,6 +264,10 @@ public class PayableServiceImpl implements PayableService {
 
 		if (!isEmpty(options.getSupplier_employee_name())) {
 			queryParts.add("supplier_employee_name:\"" + options.getSupplier_employee_name() + "\"");
+		}
+		
+		if (!isEmpty(options.getSupplier_name())) {
+			queryParts.add("supplier_name:\"" + options.getSupplier_name() + "\"");
 		}
 
 		if (!isEmpty(options.getTeam_number())) {

@@ -74,6 +74,12 @@
 					</div>
 					<div class="form-group">
 						<div class="span6">
+							<label class="col-md-1 control-label">财务主体</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="财务主体" name="payable.supplier_name" />
+							</div>
+						</div>
+						<div class="span6">
 							<label class="col-md-1 control-label">团号</label>
 							<div class="col-md-2">
 								<input type="text" class="form-control" placeholder="团号" name="payable.team_number" />
@@ -88,6 +94,9 @@
 								</div>
 							</div>
 						</s:if>
+
+					</div>
+					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">按出团日期</label>
 							<div class="col-md-2">
@@ -144,6 +153,7 @@
 							<tr role="row">
 								<th></th>
 								<th>供应商</th>
+								<th>主体</th>
 								<th>回团天数</th>
 								<th>决否</th>
 								<th>出团日期</th>
@@ -163,6 +173,7 @@
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
+								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.back_days"></td>
 								<td data-bind="text: $data.final_flg"></td>
 								<td data-bind="text: $data.departure_date"></td>

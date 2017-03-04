@@ -11,6 +11,9 @@
 		<action name="autoGenPayable" class="simpletinyAction" method="autoGenPayable">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="autoGenPayable2th" class="simpletinyAction" method="autoGenPayable2th">
+			<result name="success" type="redirect">/</result>
+		</action>
 		
 		<action name="currentDate" class="STDateAction" method="currentDate">
 			<result name="success" type="json"></result>

@@ -237,8 +237,8 @@ public class DaoUtil {
 	 * @param mapper
 	 * @return
 	 */
-	public List<SupperBO> selectAll(String mapper) {
-		List<SupperBO> listBo = sqlSession.selectList(mapper);
+	public <T extends SupperBO> List<T> selectAll(String mapper) {
+		List<T> listBo = sqlSession.selectList(mapper);
 		return listBo;
 	}
 

@@ -39,7 +39,8 @@
 						<div class="col-md-12">
 							<label class="l">内容</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="40" data-bind="value: view().content" name="view.content" placeholder="内容"></textarea>
+								<!-- <textarea type="text" class="ip-default" rows="40" data-bind="value: view().content" name="view.content" placeholder="内容"></textarea> -->
+								<textarea id="content" name="view.content" style="width:800px;height:600px;visibility:hidden;"></textarea>
 							</div>
 						</div>
 					</div>
@@ -58,7 +59,9 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-
+	<script src="<%=basePath%>static/vendor/kindeditor/kindeditor.js"></script>
+	<script src="<%=basePath%>static/vendor/kindeditor/lang/zh_CN.js"></script>
+	
 	<script src="<%=basePath%>static/js/culture/world-view-edit.js"></script>
 </body>
 </html>

@@ -150,5 +150,6 @@
 				and (sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
+		ORDER BY last_receivable_period DESC,last_order_period DESC,last_visit_period DESC,last_chat_period DESC
 	</select>
 </mapper>

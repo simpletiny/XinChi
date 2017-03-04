@@ -74,7 +74,7 @@
 						<div class="col-md-12 required">
 							<label class="l">总结</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary" name="visit.summary" placeholder="不少于50字" required="required"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary" name="visit.summary" placeholder="不少于20字" required="required"></textarea>
 							</div>
 						</div>
 					</div>

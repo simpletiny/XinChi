@@ -39,6 +39,7 @@ public class ClientRelationAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			relation = new ClientRelationSummaryBean();
 			relation.setSales(sessionBean.getPk());
 		}
 
@@ -57,7 +58,8 @@ public class ClientRelationAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			relation.setSales(sessionBean.getPk());
+			relation = new ClientRelationSummaryBean();
+			relation.setSales_name(sessionBean.getUser_name());
 		}
 
 		clientSummary = service.getClientSummary(relation);

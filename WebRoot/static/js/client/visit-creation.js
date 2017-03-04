@@ -22,8 +22,8 @@ var ClientContext = function() {
 
 			return;
 		}
-		if (self.visit().summary.length < 51) {
-			fail_msg("总结不得少于50个字");
+		if (self.visit().summary.length < 21) {
+			fail_msg("总结不得少于20个字");
 			return;
 		}
 		
