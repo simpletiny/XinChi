@@ -39,6 +39,10 @@
 		<action name="searchAllGroups" class="userGroupAction" method="searchAllGroups">
 			<result name="success" type="json"></result>
 		</action>
+		
+		<action name="getOnlineUsers" class="userListAction" method="onlineUsers">
+			<result name="success" type="json"></result>
+		</action>
 	</package>
 
 </struts>

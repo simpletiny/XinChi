@@ -1,5 +1,6 @@
 package com.xinchi.common;
 
+
 public class UserSessionBean {
 
 	private String id;
@@ -11,6 +12,9 @@ public class UserSessionBean {
 	private String cellphone;
 	private String user_status;
 	private String user_roles;
+
+	private String login_time;
+
 	public String getId() {
 		return id;
 	}
@@ -75,4 +79,19 @@ public class UserSessionBean {
 		this.user_roles = user_roles;
 	}
 
+	public String getLogin_time() {
+		return login_time;
+	}
+
+	public void setLogin_time(String login_time) {
+		this.login_time = login_time;
+	}
+	
+//	public boolean equals(Object obj) {
+//		UserSessionBean user = (UserSessionBean) obj;
+//		if (pk.equals(user.getPk())) {
+//			return true;
+//		}
+//		return false;
+//	}
 }

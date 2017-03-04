@@ -18,6 +18,10 @@ span {
 	line-height: 150%;
 }
 </style>
+<%-- <script>
+	document.oncontextmenu = new Function("event.returnValue=false;");
+	document.onselectstart = new Function("event.returnValue=false;");
+</script> --%>
 </head>
 <body>
 	<input type="hidden" id="view_key" value="<%=key%>" />

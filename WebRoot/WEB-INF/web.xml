@@ -43,6 +43,10 @@
   <listener>
     <listener-class>com.xinchi.listener.XinChiServletContextListener</listener-class>
   </listener>
+   
+   <listener>
+    <listener-class>com.xinchi.listener.UserListener</listener-class>
+  </listener>
   
  <filter>
 	<filter-name>loginfilter</filter-name>
