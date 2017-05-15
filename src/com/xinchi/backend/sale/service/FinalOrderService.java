@@ -24,4 +24,8 @@ public interface FinalOrderService {
 
 	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
 			FinalOrderSupplierBean bo);
+
+	public void deleteFinalOrderSupplier(String team_number);
+
+	public void deleteFinalOrderByPk(String order_pk);
 }

@@ -14,27 +14,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>客户员工新建<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>客户新建<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form">
-            
+             <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">昵称</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" maxlength="10" placeholder="昵称" name="employee.nick_name"/></div>
+                    </div>
+                </div>
                    <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">姓名</label>
-                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().body_name" placeholder="姓名" name="employee.name" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip- date-picker"  maxlength="10" placeholder="姓名" name="employee.name" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">性别</label>
-                        <div class="ip"><select class="form-control" data-bind="options: genders,value: employee().body_sex" name="employee.sex" required="required"></select></div>
+                        <div class="ip"><select class="form-control" data-bind="options: genders" name="employee.sex" required="required"></select></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
                    <div class="col-md-6 required">
                         <label class="l">手机号</label>
-                        <div class="ip"><input type="text" class="ip- cellphone" maxlength="11" data-bind="value: employee().body_cellphone" placeholder="手机号" name="employee.cellphone" required="required"/></div>
+                        <div class="ip"><input type="text" class="ip- cellphone" maxlength="11" placeholder="手机号" name="employee.cellphone" required="required"/></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
@@ -46,7 +51,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                    <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">身份证号</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().body_id" placeholder="身份证号" name="employee.id"/></div>
+                        <div class="ip"><input type="text" class="ip-"  maxlength="18" data-bind="value: employee().body_id" placeholder="身份证号" name="employee.id"/></div>
                     </div>
                     <div class="col-md-6">
                         <label class="l">出生年</label>
@@ -57,24 +62,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">电话</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().telephone" placeholder="电话" name="employee.telephone"/></div>
+                        <div class="ip"><input type="text" class="ip-"   maxlength="15" data-bind="value: employee().telephone" placeholder="电话" name="employee.telephone"/></div>
                     </div>
                     <div class="col-md-6 ">
                         <label class="l">传真</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
+                        <div class="ip"><input type="text" class="ip-" maxlength="15" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" /></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">QQ</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
+                        <div class="ip"><input type="text" class="ip-" maxlength="15" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
                     </div>
                      <div class="col-md-6 required">
                         <label class="l">类型</label>
                         <div class="ip"><select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type" required="required"></select></div>
                     </div>
                 </div>
-				<div class="input-row clearfloat required">
+<!-- 				<div class="input-row clearfloat required">
                     <div class="col-md-12">
                         <label class="l">所属销售</label>
                         <div class="ip">
@@ -88,11 +93,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                </em>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="input-row clearfloat">
                     <div class="col-md-12">
                         <label class="l">备注</label>
-                        <div class="ip"><textarea type="text" class="ip-default" rows="15" data-bind="value: employee().comment" name ="employee.comment" placeholder="需要备注说明的信息"></textarea></div>
+                        <div class="ip"><textarea type="text" class="ip-default" maxlength="100" rows="15" data-bind="value: employee().comment" name ="employee.comment" placeholder="需要备注说明的信息"></textarea></div>
                     </div>
                 </div>
             </form>

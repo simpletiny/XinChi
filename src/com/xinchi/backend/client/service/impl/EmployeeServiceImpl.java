@@ -14,6 +14,7 @@ import com.xinchi.bean.UserBaseBean;
 import com.xinchi.tools.Page;
 
 @Service
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeDAO dao;
@@ -44,67 +45,58 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<ClientEmployeeBean> getAllClientEmployeeByParam(
-			ClientEmployeeBean bo) {
+	public List<ClientEmployeeBean> getAllClientEmployeeByParam(ClientEmployeeBean bo) {
 		return dao.getAllByParam(bo);
 	}
 
 	@Override
-	@Transactional
 	public String createEmployee(ClientEmployeeBean employee) {
-		if (employee.getPublic_flg().equals("Y")) {
-			employee.setSales("");
-			employee.setSales_name("公开");
-		} else {
-			if (!employee.getSales().equals("")) {
-				String[] userPks = employee.getSales().split(",");
-				String sales_name = "";
 
-				List<UserBaseBean> users = userDao.getAllByPks(userPks);
-				for (UserBaseBean user : users) {
-					sales_name += user.getUser_name() + ",";
-				}
-				sales_name = sales_name.substring(0, sales_name.length() - 1);
-				employee.setSales_name(sales_name);
-			}
-		}
+		List<ClientEmployeeBean> exists = dao.getAllByParam(employee);
+
+		if (exists != null && exists.size() > 0)
+			return "exist";
 		dao.insert(employee);
 		return "success";
 	}
 
 	@Override
-	@Transactional
 	public String updateEmployee(ClientEmployeeBean employee) {
-		if (employee.getPublic_flg().equals("Y")) {
-			employee.setSales("");
-			employee.setSales_name("公开");
-		} else {
-			if (!employee.getSales().equals("")) {
-				String[] userPks = employee.getSales().split(",");
-				String sales_name = "";
+		List<ClientEmployeeBean> exists = dao.getAllByParam(employee);
 
-				List<UserBaseBean> users = userDao.getAllByPks(userPks);
-				for (UserBaseBean user : users) {
-					sales_name += user.getUser_name() + ",";
-				}
-				sales_name = sales_name.substring(0, sales_name.length() - 1);
-				employee.setSales_name(sales_name);
+		if (exists != null && exists.size() > 0) {
+			if (exists.get(0).getPk().equals(employee.getPk())) {
+				dao.update(employee);
+				return "success";
+			} else {
+				return "exist";
 			}
+		} else {
+			dao.update(employee);
+			return "success";
 		}
-		dao.update(employee);
-		return "success";
 	}
 
 	@Override
-	public List<ClientEmployeeBean> getAllClientEmployeeByPage(
-			Page<ClientEmployeeBean> page) {
+	public List<ClientEmployeeBean> getAllClientEmployeeByPage(Page<ClientEmployeeBean> page) {
 		return dao.getAllByPage(page);
 	}
 
 	@Override
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
-		
+
 		return dao.getBodyPksByEmployeePks(employee_pks);
+	}
+
+	@Override
+	public String deleteClientEmployee(List<String> employee_pks) {
+		dao.deleteClientEmployeeByPks(employee_pks);
+		return "success";
+	}
+	@Override
+	public String recoveryClientEmployee(List<String> employee_pks) {
+		dao.recoveryClientEmployeeByPks(employee_pks);
+		return "success";
 	}
 
 }

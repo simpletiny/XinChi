@@ -1,62 +1,47 @@
 package apptest;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Vector;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.solr.client.solrj.SolrServerException;
-
-import com.xinchi.common.UserSessionBean;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SomeTest {
-	public static String source = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
-	public static String solr_url = "http://localhost:8983/solr/receivable";
+	public static void main(String[] args) {
+		String test = "<p>"
+				+ "<img src=\"/XinChi/file/getFileStream?fileType=SYSTEM_GUIDE_FILE&subFolder=image&fileFileName=dHV-cnp6fHF3f3J0c392cg.jpg\" width=\"400\" height=\"300\" alt=\"\" /><img src=\"/XinChi/file/getFileStream?fileType=SYSTEM_GUIDE_FILE&subFolder=image&fileFileName=cXZ1fnuAfHh2doB8f3Z6gA.jpg\" width=\"500\" height=\"375\" title=\"还不知道\" alt=\"还不知道\" /> "
+				+ " </p>" + " <p>" + "你<a href=\"http://www.baidu.com\" target=\"_blank\">是收拾</a> " + " </p>";
+		String imgEx = "<img (src=\"/XinChi/file/getFileStream\\?)(.*?)\".*? \\/\\>";
+		// 编译正则表达式
+		Pattern imgPattern = Pattern.compile(imgEx);
+		// 忽略大小写的写法
+		// Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = imgPattern.matcher(test);
+		List<String> imgs = new ArrayList<String>();
 
-	public static void main(String[] args) throws SolrServerException, IOException {
-		// String path =
-		// "C:\\Users\\simpletiny\\Desktop\\交易明细_9028_20161201_20161228.xls";
-		// InputStream is = new FileInputStream(path);
-		// HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-		// HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(0);
-		//
-		// HSSFRow hssfRow = hssfSheet.getRow(6);
-		// System.out.println((new
-		// BigDecimal(SomeTest.getValue(hssfRow.getCell(4)))).compareTo(BigDecimal.ONE));
-		// hssfWorkbook.close();
+		while (matcher.find()) {
+			imgs.add(matcher.group(2));
+		}
 
-		Vector<UserSessionBean> v = new Vector<UserSessionBean>();
-		UserSessionBean user = new UserSessionBean();
-		user.setPk("s");
-		user.setCellphone("12312");
-		user.setNick_name("xxx");
+		List<Map<String, String>> deletes = new ArrayList<Map<String, String>>();
+		for (String img : imgs) {
+			String[] properties = img.split("&");
+			Map<String, String> map = new HashMap<String, String>();
+			for (String property : properties) {
 
-		v.addElement(user);
+				String[] names = property.split("=");
+				if (names.length > 1) {
+					map.put(names[0], names[1]);
+				}
+			}
+			deletes.add(map);
+		}
 
-		System.out.println(v.size());
-
-		UserSessionBean user1 = new UserSessionBean();
-		user1.setPk("s");
-		user1.setCellphone("12312");
-		user1.setNick_name("xxx");
-
-//		v.removeElement(user1);
-		System.out.println(v.indexOf(user1));
-	}
-
-	private static String getValue(HSSFCell hssfCell) {
-		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
-			return String.valueOf(hssfCell.getBooleanCellValue());
-		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
-			return String.valueOf(hssfCell.getNumericCellValue());
-		} else {
-			return String.valueOf(hssfCell.getStringCellValue());
+		for (Map<String, String> map : deletes) {
+			for (String key : map.keySet()) {
+				System.out.println(key+":"+map.get(key));
+			}
 		}
 	}
-
 }

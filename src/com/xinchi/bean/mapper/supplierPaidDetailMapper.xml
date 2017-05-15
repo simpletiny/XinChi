@@ -23,6 +23,7 @@
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
  	    <result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+ 	    <result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -46,7 +47,8 @@
     	pk, 
     	create_time,
     	update_time,
-    	limit_time
+    	limit_time,
+    	approve_user
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -125,6 +127,9 @@
       <if test="limit_time != null">
         limit_time,
       </if>
+      <if test="approve_user != null">
+        approve_user,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="team_number != null">
@@ -186,6 +191,9 @@
       </if>
        <if test="limit_time != null">
         #{limit_time,jdbcType=VARCHAR},
+      </if>
+       <if test="approve_user != null">
+        #{approve_user,jdbcType=VARCHAR},
       </if>
     </trim>		
   </insert>
@@ -251,14 +259,29 @@
       <if test="limit_time != null">
         limit_time = #{limit_time,jdbcType=VARCHAR},
       </if>
+      <if test="approve_user != null">
+        approve_user = #{approve_user,jdbcType=VARCHAR},
+      </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
+  
  <select id="selectByParam" parameterType="com.xinchi.bean.SupplierPaidDetailBean" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
     from supplier_paid_detail
-   </select>
+    
+    <where>
+         <if test="related_pk != null and related_pk !=''">
+	        and related_pk  = #{related_pk,jdbcType=VARCHAR}
+	     </if>
+	      <if test="pk != null and pk !=''">
+	        and pk  = #{pk,jdbcType=CHAR}
+	     </if>
+    </where> 
+ </select>
+   
+   
     <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 
   		A.team_number, 

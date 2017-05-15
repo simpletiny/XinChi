@@ -30,42 +30,27 @@ public class LoginFilter extends HttpServlet implements Filter {
 	private String[] escapeSysUrl;
 
 	@Override
-	public void doFilter(ServletRequest srquest, ServletResponse sresponse, FilterChain fc) throws IOException,
-			ServletException {
+	public void doFilter(ServletRequest srquest, ServletResponse sresponse, FilterChain fc) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srquest;
 		HttpServletResponse response = (HttpServletResponse) sresponse;
 		HttpSession session = request.getSession();
 		UserSessionBean sessionBean = (UserSessionBean) session.getAttribute(ResourcesConstants.LOGIN_SESSION_KEY);
 		String url = request.getServletPath();
 		String contextPath = request.getContextPath();
-		
-		if(url.indexOf("/admin/") >= 0 || url.indexOf("/sys/") >= 0 ){
-			if(isEscapseForSys(url)){
-				fc.doFilter(request, response);
-			}else if (isNotControlUrl(url)) {
-				fc.doFilter(request, response);
-			}else{
-				if(sessionBean == null || !DictionaryEnum.ADMIN_TYPE.getStringValue().equals(String.valueOf(sessionBean.getCellphone()))){
-					response.sendRedirect(contextPath + "/admin/loginsys/adminlogin.jsp");
-					return;
-				}
-				fc.doFilter(request, response);
+
+		// 如果是XMLHttpRequest则为Ajax请求
+		if (isEscapse(url)) {
+			fc.doFilter(request, response);
+		} else if (isNotControlUrl(url)) {
+			fc.doFilter(request, response);
+		} else {
+			if (sessionBean == null) {
+				response.sendRedirect(contextPath + "/templates/users/login.jsp");
+				return;
 			}
-		}else{
-			// 如果是XMLHttpRequest则为Ajax请求
-//			String isAjax = request.getHeader("x-requested-with");
-			if (isEscapse(url)) {
-				fc.doFilter(request, response);
-			} else if (isNotControlUrl(url)) {
-				fc.doFilter(request, response);
-			} else {
-				if (sessionBean == null) {
-					response.sendRedirect(contextPath + "/templates/users/login.jsp");
-					return;
-				}
-				fc.doFilter(request, response);
-			}
+			fc.doFilter(request, response);
 		}
+
 		// fc.doFilter(srquest, sresponse);
 	}
 
@@ -98,6 +83,7 @@ public class LoginFilter extends HttpServlet implements Filter {
 		}
 		return false;
 	}
+
 	/**
 	 * 判断是否逃脱过滤
 	 * 

@@ -45,9 +45,10 @@ public class SaleOrderAction extends BaseAction {
 
 	@Autowired
 	private ReceivableService receivableService;
-	
+
 	@Autowired
 	private PayableService payableService;
+
 	/**
 	 * 创建订单
 	 * 
@@ -127,8 +128,7 @@ public class SaleOrderAction extends BaseAction {
 	private List<BudgetOrderBean> orders;
 
 	public String searchOrder() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order = new BudgetOrderBean();
@@ -139,8 +139,7 @@ public class SaleOrderAction extends BaseAction {
 	}
 
 	public String searchOrderByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order.setCreate_user(sessionBean.getUser_number());
@@ -217,10 +216,12 @@ public class SaleOrderAction extends BaseAction {
 			}
 			arrSupplier.add(supplier);
 		}
-		saleOrderService
-				.deleteOrderSupplierByTeamNumber(order.getTeam_number());
+		saleOrderService.deleteOrderSupplierByTeamNumber(order.getTeam_number());
 
 		saleOrderService.saveOrderSupplier(arrSupplier);
+
+		// 删除之前的应付款
+		payableService.deletePayableByTeamNumber(order.getTeam_number());
 
 		if (null != order.getOther_payment()) {
 			sum = sum.add(order.getOther_payment());
@@ -246,17 +247,16 @@ public class SaleOrderAction extends BaseAction {
 
 	private ClientReceivedDetailBean detail;
 
-//	public String saveReceivableDetail() {
-//		saleOrderService.saveReceivableDetail(detail);
-//		resultStr = OK;
-//		return SUCCESS;
-//	}
+	// public String saveReceivableDetail() {
+	// saleOrderService.saveReceivableDetail(detail);
+	// resultStr = OK;
+	// return SUCCESS;
+	// }
 
 	private List<ClientReceivedDetailBean> receivableDetails;
 
 	public String searchReceivableDetails() {
-		receivableDetails = saleOrderService
-				.searchReceivableDetails(team_number);
+		receivableDetails = saleOrderService.searchReceivableDetails(team_number);
 		return SUCCESS;
 	}
 
@@ -267,10 +267,12 @@ public class SaleOrderAction extends BaseAction {
 		resultStr = OK;
 		return SUCCESS;
 	}
-	public String searchOrderByTeamNumber(){
+
+	public String searchOrderByTeamNumber() {
 		order = saleOrderService.searchBudgetOrderByTeamNumber(team_number);
 		return SUCCESS;
 	}
+
 	public BudgetOrderBean getOrder() {
 		return order;
 	}
@@ -339,8 +341,7 @@ public class SaleOrderAction extends BaseAction {
 		return receivableDetails;
 	}
 
-	public void setReceivableDetails(
-			List<ClientReceivedDetailBean> receivableDetails) {
+	public void setReceivableDetails(List<ClientReceivedDetailBean> receivableDetails) {
 		this.receivableDetails = receivableDetails;
 	}
 

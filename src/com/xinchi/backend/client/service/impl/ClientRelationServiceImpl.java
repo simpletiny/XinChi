@@ -1,5 +1,6 @@
 package com.xinchi.backend.client.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ClientVisitBean;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.tools.Page;
 
 @Service
@@ -35,27 +37,31 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	}
 
 	@Override
-	public ClientSummaryDto getClientSummary(ClientRelationSummaryBean relation) {
-		ClientSummaryDto cs = new ClientSummaryDto();
+	public List<ClientSummaryDto> getClientSummary(ClientRelationSummaryBean relation) {
 		String sales_name = relation.getSales_name();
-		String client_count = dao.selectClientCount(sales_name);
-		String week_order_count = dao.selectWeekOrderCount(sales_name);
-		String month_order_count = dao.selectMonthOrderCount(sales_name);
-		String yesterday_visit_count = dao.selectYesterdayVisitCount(sales_name);
-		String week_visit_count = dao.selectWeekVisitCount(sales_name);
-		String month_visit_count = dao.selectMonthVisitCount(sales_name);
-		String yesterday_chat_count = dao.selectYesterdayChatCount(sales_name);
-		String week_chat_count = dao.selectWeekChatCount(sales_name);
-		String month_chat_count = dao.selectMonthChatCount(sales_name);
-		cs.setClient_count(client_count);
-		cs.setWeek_order_count(week_order_count);
-		cs.setMonth_order_count(month_order_count);
-		cs.setYesterday_visit_count(yesterday_visit_count);
-		cs.setWeek_visit_count(week_visit_count);
-		cs.setMonth_visit_count(month_visit_count);
-		cs.setYesterday_chat_count(yesterday_chat_count);
-		cs.setWeek_chat_count(week_chat_count);
-		cs.setMonth_chat_count(month_chat_count);
+		List<ClientSummaryDto> cs = new ArrayList<ClientSummaryDto>();
+		if (SimpletinyString.isEmpty(relation.getLevel())) {
+			cs = dao.selectSummary(sales_name);
+		} else if (relation.getLevel().equals("关系度")) {
+			cs = dao.selectRelationSummary(sales_name);
+		} else if (relation.getLevel().equals("回款誉")) {
+			cs = dao.selectBackSummary(sales_name);
+		} else if (relation.getLevel().equals("市场力")) {
+			cs = dao.selectMarketSummary(sales_name);
+		}
+
 		return cs;
+	}
+
+	@Override
+	public String selectClientEmployeeCount(ClientRelationSummaryBean relation) {
+		String sales_name = relation.getSales_name();
+		return dao.selectClientCount(sales_name);
+	}
+
+	@Override
+	public String selectMonthOrderCount(ClientRelationSummaryBean relation) {
+		String sales_name = relation.getSales_name();
+		return dao.selectMonthOrderCount(sales_name);
 	}
 }

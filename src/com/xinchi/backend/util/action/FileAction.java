@@ -29,15 +29,14 @@ public class FileAction extends BaseAction {
 	private String fileType;
 
 	public String getFileStream() throws IOException {
-		String baseFolder = PropertiesUtil.getProperty(FileFolder.valueOf(
-				fileType).value());
+		String baseFolder = PropertiesUtil.getProperty(FileFolder.valueOf(fileType).value());
 		if (!isEmpty(subFolder)) {
 			baseFolder = baseFolder + File.separator + subFolder;
 		}
 		File file = new File(baseFolder + File.separator + fileFileName);
 		fileName = file.getName();
 		fips = new FileInputStream(file);
-//		fips.close();
+		// fips.close();
 		return SUCCESS;
 	}
 
@@ -46,12 +45,11 @@ public class FileAction extends BaseAction {
 	public String fileUpload() throws IOException {
 		String ext = Utils.getFileExt(fileFileName);
 		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
-		File destfile = new File(fileFolder + File.separator
-				+ DBCommonUtil.genPk() + "." + ext);
+		File destfile = new File(fileFolder + File.separator + DBCommonUtil.genPk() + "." + ext);
 		FileUtils.copyFile(file, destfile);
 		fileName = destfile.getName();
 		fips = new FileInputStream(destfile);
-//		fips.close();
+		// fips.close();
 		return SUCCESS;
 	}
 

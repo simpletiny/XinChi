@@ -80,8 +80,8 @@
 								<th>供应商</th>
 								<th>支出日期</th>
 								<th>账户名称</th>
-								<th>支出详情</th>
-								<th>摘要详情</th>
+	<!-- 							<th>支出详情</th>
+								<th>摘要详情</th> -->
 								<th>申请日期</th>
 								<th>入账日期</th>
 								<th>状态</th>
@@ -97,7 +97,20 @@
 								<!-- ko if:$data.type!='STRIKE' -->
 								<td data-bind="text: $data.allot_money" class="rmb"></td>
 								<!-- /ko -->
-								<td data-bind="text: $root.typeMapping[$data.type]"></td>
+								
+								<!-- ko if:$data.type=='BACK' -->
+									<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type=='PAID' -->
+									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type=='STRIKE' -->
+									<td style="color: purple" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type=='DEDUCT' -->
+									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<!-- /ko -->
+								
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<!-- ko if:$data.time!=null -->
 								<td data-bind="text: $data.time"></td>
@@ -123,11 +136,22 @@
 									<td data-bind="text: $data.card_account"></td>
 								<!-- /ko -->
 								
-								<td><a href="javascript:void(0)" >详情</a></td>
-								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewComment($data)}}">详情</a></td>
+			<!-- 					<td><a href="javascript:void(0)" >详情</a></td>
+								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewComment($data)}}">详情</a></td> -->
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
 								<td data-bind="text: $data.confirm_time"></td>
-								<td data-bind="text: $root.statusMapping[$data.status]"></td>
+								
+								<!-- ko if:$data.status=='I' -->
+									<td  data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='Y' -->
+									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								
+								<!-- ko if:$data.status=='N' -->
+									<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								
 								<td data-bind="text: $data.create_user"></td>
 							</tr>
 						</tbody>

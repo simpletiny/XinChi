@@ -20,6 +20,34 @@ var CompanyContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
+	self.recovery = function() {
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确认恢复该财务主体吗?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingSimpleIndicator("恢复中");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/recoveryCompany',
+						data : "company_pks=" + self.companyPk
+					}).success(function(str) {
+						if (str == "success") {
+							location.reload();
+							endLoadingIndicator();
+						} else {
+							fail_msg("恢复失败，请联系管理员！");
+						}
+					});
+				}
+			}
+		});
+
+	};
 };
 
 var ctx = new CompanyContext();

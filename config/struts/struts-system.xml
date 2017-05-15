@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="system" extends="default" namespace="/system">
+		<action name="createSystemGuide" class="systemGuideAction" method="createSystemGuide">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchSystemGuideByPage" class="systemGuideAction" method="searchSystemGuideByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneSystemGuide" class="systemGuideAction" method="searchOneSystemGuide">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateSystemGuide" class="systemGuideAction" method="updateSystemGuide">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteSystemGuide" class="systemGuideAction" method="deleteSystemGuide">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	</package>
+</struts>

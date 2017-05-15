@@ -4,10 +4,10 @@ var CompanyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.client = ko.observable({});
 	self.genders = [ '男', '女' ];
-	self.employeeType = ['未知','员工','老板','包桌'];
+	self.employeeType = [ '未知', '员工', '老板', '包桌' ];
 	// self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
 	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
-	self.sales = ko.observableArray([]);
+	// self.sales = ko.observableArray([]);
 	self.employee = ko.observable({});
 	self.clients = ko.observable({
 		total : 0,
@@ -17,9 +17,9 @@ var CompanyContext = function() {
 	self.choosenSales = ko.observableArray([]);
 	self.publicFlg = ko.observable("N");
 
-	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
-		self.sales(data.users);
-	});
+	// $.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+	// self.sales(data.users);
+	// });
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
@@ -41,11 +41,9 @@ var CompanyContext = function() {
 
 	self.refresh = function() {
 		var param = "client.client_short_name=" + $("#client_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -56,18 +54,18 @@ var CompanyContext = function() {
 
 	};
 
-	self.publicClient = function() {
-		if ($("#check-public").is(":checked")) {
-			$("[st='sales']").attr("checked", false);
-			$("[st='sales']").attr("disabled", true);
-			self.publicFlg("Y");
-			self.choosenSales = ko.observableArray([]);
-		} else {
-			$("[st='sales']").attr("disabled", false);
-			self.publicFlg("N");
-		}
-		return true;
-	};
+	// self.publicClient = function() {
+	// if ($("#check-public").is(":checked")) {
+	// $("[st='sales']").attr("checked", false);
+	// $("[st='sales']").attr("disabled", true);
+	// self.publicFlg("Y");
+	// self.choosenSales = ko.observableArray([]);
+	// } else {
+	// $("[st='sales']").attr("disabled", false);
+	// self.publicFlg("N");
+	// }
+	// return true;
+	// };
 
 	self.pickFinancial = function(name, pk) {
 		$("#financial_body_name").val(name);
@@ -80,19 +78,17 @@ var CompanyContext = function() {
 			return;
 		}
 
-		$.ajax(
-				{
-					type : "POST",
-					url : self.apiurl + 'client/createEmployee',
-					data : $("form").serialize() + "&employee.sales="
-							+ self.choosenSales()+"&employee.public_flg="+self.publicFlg()
-				}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/client/client-employee.jsp";
-					}
-				});
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'client/createEmployee',
+			data : $("form").serialize()
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/client/client-employee.jsp";
+			} else if (str = "exist") {
+				fail_msg("同一财务主体下存在同名客户！");
+			}
+		});
 	};
 
 	// start pagination
@@ -129,8 +125,7 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

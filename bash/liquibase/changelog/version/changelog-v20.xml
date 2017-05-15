@@ -563,8 +563,8 @@
 			<comment> CREATE  TABLE client_visit</comment>
 		</sql>
 	</changeSet>
-	
-		<changeSet id="23" author="simpletiny">
+
+	<changeSet id="23" author="simpletiny">
 		<sql>
             <![CDATA[
             drop view if exists receivable_for_client;
@@ -574,6 +574,366 @@
 			from receivable group by client_employee_pk;
                     ]]>
 			<comment> alter view receivable_for_client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+           CREATE  TABLE todo_list (
+				  content VARCHAR(200) NOT NULL ,
+				  limit_time CHAR(16) NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  done_flg CHAR NOT NULL DEFAULT 'N' ,
+				  type VARCHAR(10) NOT NULL ,
+				  ext1 VARCHAR(45) NULL ,
+				  ext2 VARCHAR(45) NULL ,
+				  ext3 VARCHAR(45) NULL ,
+				  ext4 VARCHAR(45) NULL ,
+				  ext5 VARCHAR(45) NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '用户待办列表';
+                    ]]>
+			<comment>CREATE  TABLE todo_list </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+           ALTER TABLE client_employee ADD COLUMN delete_flg CHAR(1) NULL DEFAULT 'N'  AFTER fax ;
+                    ]]>
+			<comment> ALTER TABLE client_employee  </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+            drop view if exists client_relation_summary;
+          create view client_relation_summary as
+				select A.name as client_employee_name,A.pk as client_employee_pk,A.sales,A.sales_name, A.delete_flg as delete_flg,
+				case when isnull(B.year_order_count)  then 0 else B.year_order_count end year_order_count,
+				case when isnull(C.month_order_count)  then 0 else C.month_order_count end month_order_count,
+				case when isnull(D.week_order_count)  then 0 else D.week_order_count end week_order_count,
+				E.last_confirm_date,E.last_order_period,
+				F.visit_count,F.last_visit_period,
+				G.chat_count,G.last_chat_period,
+				H.receivable,H.last_receivable_period
+				from client_employee A 
+				LEFT JOIN year_order_count B on A.pk = B.client_employee_pk
+				LEFT JOIN month_order_count C on A.pk = C.client_employee_pk
+				LEFT JOIN week_order_count D on A.pk = D.client_employee_pk
+				LEFT JOIN order_period E on A.pk = E.client_employee_pk
+				LEFT JOIN visit_summary F on A.pk = F.client_employee_pk
+				LEFT JOIN chat_summary G on A.pk = G.client_employee_pk
+				LEFT JOIN receivable_for_client H on A.pk = H.client_employee_pk;
+                    ]]>
+			<comment> ALTER view client_relation_summary  </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE  TABLE rule_view (
+				  title VARCHAR(20) NOT NULL ,
+				  content MEDIUMTEXT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '规章制度';
+             ]]>
+			<comment> CREATE TABLE rule_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE  TABLE academy_view (
+				  title VARCHAR(20) NOT NULL ,
+				  content MEDIUMTEXT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '销售学院';
+             ]]>
+			<comment> CREATE TABLE academy_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+              ALTER TABLE client_employee ADD COLUMN nick_name VARCHAR(10) NULL  AFTER name ;
+
+             ]]>
+			<comment> ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+             ALTER TABLE client CHANGE COLUMN telephone telephone VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL  ,
+              ADD COLUMN agency_name VARCHAR(30) NULL  AFTER public_flg , ADD COLUMN agency_pk CHAR(22) NULL 
+              AFTER agency_name , ADD COLUMN delete_flg CHAR(1) NOT NULL DEFAULT 'N'  AFTER agency_pk ;
+
+             ]]>
+			<comment>  ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client ADD COLUMN relate_flg CHAR(1) NOT NULL DEFAULT 'N'  AFTER delete_flg ;
+             ]]>
+			<comment>  ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE supplier_paid_detail ADD COLUMN approve_user VARCHAR(10) NULL  AFTER limit_time ;
+             ]]>
+			<comment> ALTER TABLE supplier_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_visit CHANGE COLUMN from_time from_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL  , CHANGE COLUMN end_time end_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL  ;
+             ]]>
+			<comment> ALTER TABLE client_visit </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_employee ADD COLUMN relation_level VARCHAR(10) NULL  AFTER delete_flg , ADD COLUMN back_level VARCHAR(10) NULL  AFTER relation_level , ADD COLUMN market_level VARCHAR(10) NULL  AFTER back_level ;
+
+             ]]>
+			<comment> ALTER TABLE client_employee </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+				drop view if exists year_order_count;
+drop view if exists month_order_count;
+drop view if exists week_order_count;
+drop view if exists order_period;
+drop view if exists visit_summary;
+drop view if exists chat_summary;
+drop view if exists receivable_for_client;
+drop view if exists client_relation_summary;
+
+-- 年订单
+create view year_order_count as
+    select 
+        A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as year_order_count,
+		B.relation_level as relation_level,
+        B.back_level as back_level,
+        B.market_level as market_level
+    from
+        budget_order A 
+		LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+    where
+        LEFT(confirm_date, 4) = DATE_FORMAT(NOW(), '%Y')
+    group by A.client_employee_pk;
+
+-- 月订单
+create view month_order_count as
+    select 
+        A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as month_order_count,
+		B.relation_level as relation_level,
+        B.back_level as back_level,
+        B.market_level as market_level
+    from
+		budget_order A 
+		LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+    where
+        LEFT(confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+    group by A.client_employee_pk;
+
+-- 周订单
+create view week_order_count as
+    select
+		A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as week_order_count,
+		B.relation_level as relation_level,
+        B.back_level as back_level,
+        B.market_level as market_level
+    from
+        budget_order A 
+		LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+    where
+        confirm_date >= DATE_ADD(CURDATE(),
+            INTERVAL - WEEKDAY(CURDATE()) DAY)
+            and confirm_date <= date_sub(curdate(),
+            INTERVAL WEEKDAY(curdate()) - 6 DAY)
+    group by A.client_employee_pk;
+
+-- 签单期间
+create view order_period as
+    select 
+        A.client_employee_pk,
+        max(A.confirm_date) as last_confirm_date,
+        datediff(now(), max(A.confirm_date)) last_order_period,
+		B.relation_level as relation_level,
+        B.back_level as back_level,
+        B.market_level as market_level
+    from
+        budget_order A 
+		LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+    group by A.client_employee_pk;
+
+-- 拜访汇总
+create view visit_summary as
+    select 
+        client_employee_pk,
+        count(*) as visit_count,
+        datediff(now(), max(date)) last_visit_period
+    from
+        client_visit
+    where
+        type = 'VISIT'
+    group by client_employee_pk;
+
+-- 通话汇总
+create view chat_summary as
+    select 
+        client_employee_pk,
+        count(*) as chat_count,
+        datediff(now(), max(date)) last_chat_period
+    from
+        client_visit
+    where
+        type = 'CHAT'
+    group by client_employee_pk;
+				
+-- 应收款汇总	 
+create view receivable_for_client as
+    select 
+        A.client_employee_pk,
+        sum(case
+            when isnull(A.final_balance) then A.budget_balance
+            else A.final_balance
+        end) as receivable,
+        datediff(now(),
+                min(case
+                    when
+                        isnull(A.final_balance)
+                            and A.budget_balance <> 0
+                    then
+                        A.return_date
+                    when A.final_balance <> 0 then A.return_date
+                    else 0
+                end)) as last_receivable_period,
+		B.relation_level as relation_level,
+        B.back_level as back_level,
+        B.market_level as market_level
+    from
+        receivable A
+		LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+    group by client_employee_pk;
+
+create view client_relation_summary as
+    select 
+        A.name as client_employee_name,
+        A.pk as client_employee_pk,
+        A.sales,
+        A.sales_name,
+        A.delete_flg as delete_flg,
+        A.relation_level as relation_level,
+        A.back_level as back_level,
+        A.market_level as market_level,
+        case
+            when isnull(B.year_order_count) then 0
+            else B.year_order_count
+        end year_order_count,
+        case
+            when isnull(C.month_order_count) then 0
+            else C.month_order_count
+        end month_order_count,
+        case
+            when isnull(D.week_order_count) then 0
+            else D.week_order_count
+        end week_order_count,
+        E.last_confirm_date,
+        E.last_order_period,
+        F.visit_count,
+        F.last_visit_period,
+        G.chat_count,
+        G.last_chat_period,
+        H.receivable,
+        H.last_receivable_period
+    from
+        client_employee A
+            LEFT JOIN
+        year_order_count B ON A.pk = B.client_employee_pk
+            LEFT JOIN
+        month_order_count C ON A.pk = C.client_employee_pk
+            LEFT JOIN
+        week_order_count D ON A.pk = D.client_employee_pk
+            LEFT JOIN
+        order_period E ON A.pk = E.client_employee_pk
+            LEFT JOIN
+        visit_summary F ON A.pk = F.client_employee_pk
+            LEFT JOIN
+        chat_summary G ON A.pk = G.client_employee_pk
+            LEFT JOIN
+        receivable_for_client H ON A.pk = H.client_employee_pk;
+
+             ]]>
+			<comment> ALTER VIEW client_relation_summary</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE system_guide (
+				  content MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  title VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin;
+				
+             ]]>
+			<comment>CREATE  TABLE system_guide</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE product_view (
+				  content MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  title VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin;
+				
+             ]]>
+			<comment>CREATE  TABLE product_view</comment>
 		</sql>
 	</changeSet>
 </databaseChangeLog>

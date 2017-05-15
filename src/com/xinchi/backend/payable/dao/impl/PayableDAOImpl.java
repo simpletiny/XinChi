@@ -33,9 +33,9 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 	}
 
 	@Override
-	public PayableBean selectByParam(PayableBean payable) {
+	public List<PayableBean> selectByParam(PayableBean payable) {
 
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableMapper.selectByParam", payable);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableMapper.selectByParam", payable);
 	}
 
 	@Override
@@ -64,7 +64,13 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 
 	@Override
 	public List<PayableBean> selectAllPayableWithSupplier() {
-		return	daoUtil.selectAll("com.xinchi.bean.mapper.PayableMapper.selectAllWithSupplier");
+		return daoUtil.selectAll("com.xinchi.bean.mapper.PayableMapper.selectAllWithSupplier");
+	}
+
+	@Override
+	public void deleteByTeamNumber(String team_number) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.PayableMapper.deleteByTeamNumber", team_number);
+
 	}
 
 }

@@ -26,8 +26,7 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 
 	@Override
 	public void insert(FinalOrderBean order) {
-		BudgetOrderBean budgetOrder = saleDao
-				.selectBudgetOrderByTeamNumber(order.getTeam_number());
+		BudgetOrderBean budgetOrder = saleDao.selectBudgetOrderByTeamNumber(order.getTeam_number());
 
 		budgetOrder.setFinal_flg("Y");
 		saleDao.updateBudgetOrder(budgetOrder);
@@ -57,8 +56,7 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 	}
 
 	@Override
-	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
-			FinalOrderSupplierBean bo) {
+	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(FinalOrderSupplierBean bo) {
 
 		return dao.searchFinalSupplierByParam(bo);
 	}
@@ -72,6 +70,16 @@ public class FinalOrderServiceImpl implements FinalOrderService {
 	public FinalOrderBean getFinalOrderByTeamNo(String team_number) {
 
 		return dao.selectByTeamNumber(team_number);
+	}
+
+	@Override
+	public void deleteFinalOrderSupplier(String team_number) {
+		dao.deleteByTeamNumber(team_number);
+	}
+
+	@Override
+	public void deleteFinalOrderByPk(String order_pk) {
+		dao.deleteFinalOrderByPk(order_pk);
 	}
 
 }

@@ -12,6 +12,7 @@ import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -24,6 +25,9 @@ public class EmployeeAction extends BaseAction {
 	private EmployeeService employeeService;
 
 	public String createEmployee() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		employee.setSales_name(sessionBean.getUser_name());
+		employee.setSales(sessionBean.getPk());
 		resultStr = employeeService.createEmployee(employee);
 		return SUCCESS;
 	}
@@ -33,29 +37,48 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String setClientEmployeeLevel() {
+		ClientEmployeeBean e = employeeService.selectByPrimaryKey(employee.getPk());
+		e.setRelation_level(employee.getRelation_level());
+		e.setMarket_level(employee.getMarket_level());
+		e.setBack_level(employee.getBack_level());
+
+		resultStr = employeeService.updateEmployee(e);
+		return SUCCESS;
+	}
+
 	private List<ClientEmployeeBean> employees;
+
+	private String employee_status;
 
 	@SuppressWarnings("unchecked")
 	public String searchEmployeeByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 		// employee = new ClientEmployeeBean();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			employee.setSales(sessionBean.getPk());
 		}
-
+		if (!SimpletinyString.isEmpty(employee_status)) {
+			String[] statuses = employee_status.split(",");
+			if (statuses.length == 1) {
+				if (statuses[0].equals(ResourcesConstants.STOP_STATUS_NORMAL)) {
+					employee.setDelete_flg("N");
+				} else {
+					employee.setDelete_flg("Y");
+				}
+			}
+		}
 		params.put("bo", employee);
 		page.setParams(params);
 		employees = employeeService.getAllClientEmployeeByPage(page);
-		
+
 		return SUCCESS;
 	}
 
 	public String searchEmployee() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -65,6 +88,18 @@ public class EmployeeAction extends BaseAction {
 
 		employees = employeeService.getAllClientEmployeeByParam(employee);
 		return SUCCESS;
+	}
+
+	private List<String> employee_pks;
+
+	public String deleteClientEmployee() {
+		resultStr = employeeService.deleteClientEmployee(employee_pks);
+		return resultStr;
+	}
+
+	public String recoveryClientEmployee() {
+		resultStr = employeeService.recoveryClientEmployee(employee_pks);
+		return resultStr;
 	}
 
 	private String employee_pk;
@@ -96,6 +131,22 @@ public class EmployeeAction extends BaseAction {
 
 	public void setEmployee_pk(String employee_pk) {
 		this.employee_pk = employee_pk;
+	}
+
+	public List<String> getEmployee_pks() {
+		return employee_pks;
+	}
+
+	public void setEmployee_pks(List<String> employee_pks) {
+		this.employee_pks = employee_pks;
+	}
+
+	public String getEmployee_status() {
+		return employee_status;
+	}
+
+	public void setEmployee_status(String employee_status) {
+		this.employee_status = employee_status;
 	}
 
 }

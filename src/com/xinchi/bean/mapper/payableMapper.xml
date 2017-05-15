@@ -60,6 +60,10 @@
 		delete from payable
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
+		delete from payable
+		where team_number = #{team_number,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.PayableBean">
 
@@ -257,14 +261,36 @@
 	</update>
 	<select id="selectByParam" parameterType="com.xinchi.bean.PayableBean" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from payable
+		A.team_number,
+		A.final_flg,
+		A.supplier_employee_name,
+		A.supplier_employee_pk,
+		A.departure_date,
+		A.return_date,
+		A.product,
+		A.people_count,
+		A.budget_payable,
+		A.final_payable,
+		A.paid,
+		A.budget_balance,
+		A.final_balance,
+		A.sales,
+		A.sales_name,
+		A.update_user,
+		A.pk,
+		A.create_user,
+		A.create_time,
+		A.update_time,
+		B.financial_body_name as supplier_name,
+		B.financial_body_pk as supplier_pk
+
+		from payable A LEFT JOIN supplier_employee B on A.supplier_employee_pk = B.pk
 		<where>
 			<if test="team_number != null">
-				and team_number = #{team_number,jdbcType=VARCHAR}
+				and A.team_number = #{team_number,jdbcType=VARCHAR}
 			</if>
 			<if test="supplier_employee_pk != null">
-				and supplier_employee_pk = #{supplier_employee_pk,jdbcType=VARCHAR}
+				and A.supplier_employee_pk = #{supplier_employee_pk,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -290,7 +316,8 @@
 		A.create_user,
 		A.create_time,
 		A.update_time,
-		B.financial_body_name as supplier_name,
+		B.financial_body_name as
+		supplier_name,
 		B.financial_body_pk as supplier_pk
 		from payable A LEFT JOIN supplier_employee B on A.supplier_employee_pk = B.pk
 	</select>

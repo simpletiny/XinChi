@@ -17,13 +17,27 @@ String key = request.getParameter("key");
  <input type="hidden" id="employee_key" value="<%=key%>">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>查看客户员工信息<a  href="<%=basePath %>/templates/client/client-employee.jsp"  class="cancel-create">返回</a></h2>
+        <h2>查看客户信息<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;"  class="cancel-create">返回</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
-            <hr>
+           <!-- ko if: employee().delete_flg =='Y' -->
+             <div class="form-group">
+             <label class="col-md-1 control-label"  style="color:red">已停用</label>
+                  <div class="ip">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click:recovery">恢复</button>
+                    </div>
+                    </div>
+           <!-- /ko -->
+            <hr />
             <div class="form-box info-form">
+               <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">昵称</label>
+                        <div class="ip"><p class="ip-default" data-bind="text: employee().nick_name"></p></div>
+                    </div>
+                </div>
                 <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">姓名</label>
@@ -83,7 +97,7 @@ String key = request.getParameter("key");
                <div class="input-row clearfloat">
                     <div class="col-md-12">
                         <label class="l">所属销售</label>
-                        <div class="ip"><p class="ip- date-picker" data-bind="text: employee().sales"></p></div>
+                        <div class="ip"><p class="ip- date-picker" data-bind="text: employee().sales_name"></p></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

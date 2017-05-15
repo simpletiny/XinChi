@@ -50,20 +50,21 @@ public class ClientRelationAction extends BaseAction {
 		relations = service.getRelationsByPage(page);
 		return SUCCESS;
 	}
-
-	private ClientSummaryDto clientSummary;
+	private String employeeCount;
+	private String monthOrderCount;
+	private List<ClientSummaryDto> clientSummary;
 
 	public String searchClientSummary() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			relation = new ClientRelationSummaryBean();
 			relation.setSales_name(sessionBean.getUser_name());
 		}
-
+		
 		clientSummary = service.getClientSummary(relation);
-
+		employeeCount = service.selectClientEmployeeCount(relation);
+		monthOrderCount = service.selectMonthOrderCount(relation);
 		return SUCCESS;
 	}
 
@@ -91,11 +92,27 @@ public class ClientRelationAction extends BaseAction {
 		this.relations = relations;
 	}
 
-	public ClientSummaryDto getClientSummary() {
+	public List<ClientSummaryDto> getClientSummary() {
 		return clientSummary;
 	}
 
-	public void setClientSummary(ClientSummaryDto clientSummary) {
+	public void setClientSummary(List<ClientSummaryDto> clientSummary) {
 		this.clientSummary = clientSummary;
+	}
+
+	public String getEmployeeCount() {
+		return employeeCount;
+	}
+
+	public void setEmployeeCount(String employeeCount) {
+		this.employeeCount = employeeCount;
+	}
+
+	public String getMonthOrderCount() {
+		return monthOrderCount;
+	}
+
+	public void setMonthOrderCount(String monthOrderCount) {
+		this.monthOrderCount = monthOrderCount;
 	}
 }

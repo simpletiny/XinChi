@@ -40,6 +40,11 @@
     where pk = #{pk,jdbcType=CHAR}
   </delete>
   
+ <delete id="deleteByTeamNumber" parameterType="java.lang.String" >
+    delete from final_order_supplier
+    where team_number = #{team_number,jdbcType=CHAR}
+  </delete>
+  
   <insert id="insert" parameterType="com.xinchi.bean.FinalOrderSupplierBean" >
   	
     insert into final_order_supplier

@@ -39,7 +39,6 @@ var DetailContext = function() {
 		$("#p-balance").text(self.balance);
 		$(".rmb").formatCurrency();
 	};
-
 	self.createDetail = function() {
 		if (!$("form").valid()) {
 			return;
@@ -53,20 +52,17 @@ var DetailContext = function() {
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
-					$.ajax(
-							{
-								type : "POST",
-								url : self.apiurl + 'finance/createDetail',
-								data : $("form").serialize()
-										+ "&detail.balance=" + self.balance
-										+ "&detail.type=收入"
-							}).success(
-							function(str) {
-								if (str == "success") {
-									window.location.href = self.apiurl
-											+ "templates/finance/detail.jsp";
-								}
-							});
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'finance/createDetail',
+						data : $("form").serialize() + "&detail.balance=" + self.balance + "&detail.type=收入"
+					}).success(function(str) {
+						if (str == "success") {
+							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						} else if (str == "time") {
+							fail_msg("同一账户下的明细账，时间不能相同，请调整时间。");
+						}
+					});
 					layer.close(index);
 				}
 			}

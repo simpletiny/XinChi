@@ -55,5 +55,15 @@ public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO{
 		List<com.xinchi.bean.ClientBean> list=daoUtil.selectByParam("com.xinchi.bean.mapper.ClientMapper.selectByPage", page);
 		return list;
 	}
+
+	@Override
+	public void deleteCompanyByPks(List<String> company_pks) {
+		daoUtil.updateByParam("com.xinchi.bean.mapper.ClientMapper.stopCompany", company_pks);
+	}
+
+	@Override
+	public void recoveryCompanyByPks(List<String> company_pks) {
+		daoUtil.updateByParam("com.xinchi.bean.mapper.ClientMapper.recoveryCompany", company_pks);
+	}
 	
 }

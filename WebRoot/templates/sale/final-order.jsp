@@ -10,6 +10,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
     <title>欣驰国际</title>
 	<link rel="stylesheet" type="text/css" href="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.css"/>
+	    <style>
+                    .form-group { margin-bottom: 5px; }
+                    .form-control{ height: 30px; }
+                </style>
 </head>
 <body>
 <div class="main-body">
@@ -21,12 +25,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="main-container">
        <div class="main-box">
          <form class="form-horizontal search-panel">
-                <style>
-                    .form-group { margin-bottom: 5px; }
-                    .form-control{ height: 30px; }
-                </style>
-                    <div class="form-group" >
-	                </div>
+            	<s:if test="#session.user.user_roles.contains('ADMIN')">
+                	<div class="form-group">
+						<div style="width: 30%; float: right">
+							<div>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
+							</div>
+						</div>
+					</div>
+	                </s:if>
                 <div class="form-group">
                     <div class="span6">
                         <label class="col-md-1 control-label">团号</label>
@@ -74,6 +81,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr role="row">
+                        	<th></th>
                             <th>团号</th>
                             <th>客户</th>
                              <th>确认日期</th>
@@ -91,6 +99,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </thead>
                     <tbody data-bind="foreach: orders">
                         <tr>
+                        	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'final-order-detail.jsp?key='+$data.pk}"></a> </td>
                             <td data-bind="text: $data.client_employee_name"></td>
                             <td data-bind="text: $data.confirm_date"></td>

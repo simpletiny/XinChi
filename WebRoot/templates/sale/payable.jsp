@@ -226,6 +226,7 @@
 							<td></td>
 							<td></td>
 							<td></td>
+							<td></td>
 							<td>合计</td>
 							<td data-bind="text:totalPeople"></td>
 							<td></td>
@@ -236,6 +237,8 @@
 							<td st="all" data-bind="text:totalBalance" class="rmb"></td>
 							<td st="budget" style="display: none" data-bind="text:totalBudgetBalance" class="rmb"></td>
 							<td st="final" style="display: none" data-bind="text:totalFinalBalance" class="rmb"></td>
+							<td></td>
+						
 							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<td></td>
 							</s:if>

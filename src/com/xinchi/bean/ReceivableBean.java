@@ -45,7 +45,10 @@ public class ReceivableBean extends SupperBO implements Serializable {
 	private String create_user;
 	
 	private String back_days;
-
+	
+	private String financial_body_name;
+	private String financial_body_pk;
+	
 	// search condition
 	private String departure_month;
 	private String team_status;
@@ -234,6 +237,22 @@ public class ReceivableBean extends SupperBO implements Serializable {
 
 	public void setSort_type(String sort_type) {
 		this.sort_type = sort_type;
+	}
+
+	public String getFinancial_body_name() {
+		return financial_body_name;
+	}
+
+	public void setFinancial_body_name(String financial_body_name) {
+		this.financial_body_name = financial_body_name;
+	}
+
+	public String getFinancial_body_pk() {
+		return financial_body_pk;
+	}
+
+	public void setFinancial_body_pk(String financial_body_pk) {
+		this.financial_body_pk = financial_body_pk;
 	}
 
 }

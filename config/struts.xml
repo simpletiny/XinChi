@@ -2,6 +2,7 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
 	"http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
+	
 	<constant name="struts.objectFactory" value="spring" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	 <!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
@@ -14,10 +15,17 @@
      <!-- 限定上传文件最大大小4M,struts2默认maxSize为2M -->  
     <constant name="struts.multipart.maxSize" value="4194304"></constant>
     <!-- 指定上传文件时临时文件的存放路径,设为"/tempUpload"将在 项目所在盘下创建文件夹tempUpload-->  
-     <constant name="struts.multipart.saveDir" value="/tempUpload"></constant> 
-  <!-- <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant> -->
-    <package name="default" extends="struts-default,json-default" namespace="/"> 
+   <!-- <constant name="struts.multipart.saveDir" value="/tempUpload"></constant> -->
+    <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant> 
+  		<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest"
+  		name="simpletinyRequestParse" class="com.xinchi.struts.parse.SimpletinyRequestParser"
+  		scope="default" optional="true" />
+  		
+    <constant name="struts.multipart.handler" value="simpletinyRequestParse" />
 
+
+    <package name="default" extends="struts-default,json-default" namespace="/">
+    
          <result-types>
 			<!-- 返回字符串 -->
 		<result-type name="str" class="stringResult" />

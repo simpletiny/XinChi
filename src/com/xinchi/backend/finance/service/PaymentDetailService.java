@@ -8,7 +8,7 @@ import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.tools.Page;
 
 public interface PaymentDetailService {
-	public void insert(PaymentDetailBean bo);
+	public String insert(PaymentDetailBean bo);
 
 	public List<PaymentDetailBean> getAllDetailsByParam(PaymentDetailBean bean);
 

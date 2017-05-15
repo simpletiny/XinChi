@@ -20,4 +20,6 @@ public interface PayableService {
 	public PayableSummaryBean searchPayableSummary(String user_number);
 
 	public void updatePayablePaid(SupplierPaidDetailBean detail);
+
+	public void deletePayableByTeamNumber(String team_number);
 }

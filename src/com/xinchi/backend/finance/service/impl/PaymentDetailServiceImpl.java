@@ -40,10 +40,21 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 	@Override
 	@Transactional
-	public void insert(PaymentDetailBean detail) {
+	public String insert(PaymentDetailBean detail) {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		detail.setRecord_user(sessionBean.getUser_number());
 		detail.setRecord_time(DateUtil.getTimeMillis());
+
+		// check same time in same account
+		PaymentDetailBean time = new PaymentDetailBean();
+		time.setTime(detail.getTime());
+		time.setAccount(detail.getAccount());
+
+		List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(time);
+
+		if (null != sameDetail && sameDetail.size() > 0) {
+			return "time";
+		}
 
 		List<PaymentDetailBean> afterDetails = dao.selectAfterByParam(detail);
 		BigDecimal wrong = detail.getMoney();
@@ -61,6 +72,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			cardDao.update(card);
 		}
 		dao.insert(detail);
+
+		return "success";
 	}
 
 	@Override
@@ -184,6 +197,21 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Override
 	@Transactional
 	public String updateDetail(PaymentDetailBean newDetail) {
+		// check same time
+		PaymentDetailBean time = new PaymentDetailBean();
+		time.setTime(newDetail.getTime());
+		time.setAccount(newDetail.getAccount());
+
+		List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(time);
+
+		if (null != sameDetail && sameDetail.size() > 0) {
+			for (PaymentDetailBean detail : sameDetail) {
+				if (!detail.getPk().equals(newDetail.getPk())) {
+					return "time";
+				}
+			}
+		}
+
 		PaymentDetailBean oldDetail = dao.selectById(newDetail.getPk());
 		List<PaymentDetailBean> oldAfterDetails = dao.selectAfterByParam(oldDetail);
 		BigDecimal wrong = oldDetail.getMoney();

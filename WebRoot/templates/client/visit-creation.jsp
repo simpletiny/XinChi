@@ -5,6 +5,7 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -16,6 +17,7 @@
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
+		<input type="hidden" id="client_key" value="<%=key%>" />
 		<div class="subtitle">
 			<h2>
 				新增维护<a href="<%=basePath%>/templates/client/client-relation.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a>
@@ -26,21 +28,23 @@
 			<div class="main-box">
 				<form class="form-box info-form">
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">客户</label>
+							
 							<div class="ip">
-								<input type="text" class="ip-default" id="txt-client-employee-name" data-bind="value: visit().client_employee_name,event:{click:choseClientEmployee}" placeholder="姓名"
-									name="visit.client_employee_name" required="required" /> <input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: visit().client_employee_pk" style="display: none"
+								<p class="ip-default"  data-bind="text: visit().client_employee_name"></p>
+								<input type="hidden" class="ip-default" data-bind="value: visit().client_employee_name"
+									name="visit.client_employee_name" required="required" /> <input type="text" class="ip-" data-bind="value: visit().client_employee_pk" style="display: none"
 									name="visit.client_employee_pk" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6">
+						<!-- <div class="col-md-6">
 							<div class="ip">
 								<em class="small-box"> <input type="radio" name="visit.type" value="CHAT" /><label>有效沟通</label>
 								</em> <em class="small-box"> <input type="radio" name="visit.type" checked="checked" value="VISIT" /><label>有效拜访</label>
 								</em>
 							</div>
-						</div>
+						</div> -->
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
@@ -48,7 +52,7 @@
 								<label class="l" style="width: 40%">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: visit().date" placeholder="2013-10-19" name="visit.date"
 									required="required" />
 							</div>
-							<div class="ip required" style="width: 20%">
+							<!-- <div class="ip required" style="width: 20%">
 								<label class="l" style="width: 40%">开始时刻</label> <input type="text" id="from_time" style="width: 50%" class="ip-default time" data-bind="value: visit().from_time,event{blur:calTime}" placeholder="10:20" name="visit.from_time"
 									required="required" />
 							</div>
@@ -59,7 +63,7 @@
 							<div class="ip" style="width: 20%">
 								<label class="l" style="width: 40%">累计时长：</label>
 								<p class="ip-default" id="sum_time">0分种</p>
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<div class="input-row clearfloat">
@@ -72,9 +76,9 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12 required">
-							<label class="l">总结</label>
+							<label class="l">效果评估</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary" name="visit.summary" placeholder="不少于20字" required="required"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary" name="visit.summary" placeholder="效果评估" required="required"></textarea>
 							</div>
 						</div>
 					</div>
@@ -85,7 +89,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="client-pick" style="display: none;">
+	<%-- <div id="client-pick" style="display: none;">
 		<div class="main-container">
 			<div class="main-box" style="width: 600px">
 				<div class="form-group">
@@ -129,7 +133,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --%>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>

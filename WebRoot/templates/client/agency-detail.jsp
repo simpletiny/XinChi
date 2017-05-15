@@ -16,11 +16,11 @@
 </head>
 <body>
 	<div class="main-body">
-		<input type="hidden" id="agency_key" value="<%=key%>">
+		<input type="hidden" id="agency_key" value="<%=key%>" />
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				查看旅游公司信息<a href="<%=basePath%>/templates/client/agency.jsp" class="cancel-create">返回</a>
+				查看旅游公司信息<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;"  class="cancel-create">返回</a>
 			</h2>
 		</div>
 

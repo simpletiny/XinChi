@@ -61,9 +61,10 @@ public class PayableServiceImpl implements PayableService {
 
 	@Autowired
 	private FinalOrderService finalOrderService;
-	
+
 	@Autowired
 	private SupplierEmployeeDAO supplierEmployeeDAO;
+
 	@Override
 	@Async
 	public void updateByTeamNumber(String team_number) {
@@ -80,9 +81,12 @@ public class PayableServiceImpl implements PayableService {
 				bo.setSupplier_employee_pk(budget.getSupplier_employee_pk());
 
 				SupplierEmployeeBean sb = supplierEmployeeDAO.selectByPrimaryKey(budget.getSupplier_employee_pk());
-				
-				PayableBean payable = dao.selectByParam(bo);
-				
+
+				List<PayableBean> payables = dao.selectByParam(bo);
+				PayableBean payable = null;
+				if (null != payables && payables.size() > 0)
+					payable = payables.get(0);
+
 				if (null == payable) {
 					payable = new PayableBean();
 					payable.setTeam_number(team_number);
@@ -107,6 +111,17 @@ public class PayableServiceImpl implements PayableService {
 				} else {
 					FinalOrderBean finalOrder = finalOrderService.getFinalOrderByTeamNo(team_number);
 
+					payable.setSupplier_employee_name(budget.getSupplier_employee_name());
+					payable.setSupplier_employee_pk(budget.getSupplier_employee_pk());
+
+					payable.setDeparture_date(bob.getDeparture_date());
+					payable.setReturn_date(bob.getReturn_date());
+
+					payable.setProduct(bob.getProduct());
+					payable.setPeople_count(bob.getPeople_count());
+					payable.setBudget_payable(budget.getPayable());
+					payable.setBudget_balance(budget.getPayable().subtract(payable.getPaid()));
+
 					if (null != finalOrder) {
 						payable.setFinal_flg("Y");
 
@@ -119,12 +134,17 @@ public class PayableServiceImpl implements PayableService {
 						fosb = fosbs.get(0);
 
 						payable.setFinal_payable(fosb.getPayable());
-						payable.setFinal_balance(fosb.getPayable());
+						payable.setFinal_balance(fosb.getPayable().subtract(payable.getPaid()));
 
-						update(payable);
+					} else {
+						payable.setFinal_flg("N");
+						payable.setFinal_payable(null);
+						payable.setFinal_balance(null);
 					}
+
+					update(payable);
 				}
-				
+
 				payable.setSupplier_name(sb.getFinancial_body_name());
 				payable.setSupplier_pk(sb.getFinancial_body_pk());
 
@@ -173,13 +193,13 @@ public class PayableServiceImpl implements PayableService {
 
 		document.addField("sales", payable.getSales());
 		document.addField("sales_name", payable.getSales_name());
+
 		return document;
 	}
 
 	@Override
 	public List<PayableBean> searchPayableByPage(Page<PayableBean> page) {
 		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
-
 		// 计算合计
 		PayableBean pb = (PayableBean) page.getParams().get("bo");
 		String qStr = buildQuery(pb);
@@ -210,10 +230,10 @@ public class PayableServiceImpl implements PayableService {
 				payable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
 				payable.setSupplier_employee_name(safeGet(doc, "supplier_employee_name"));
 				payable.setSupplier_employee_pk(safeGet(doc, "supplier_employee_pk"));
-				
+
 				payable.setSupplier_pk(safeGet(doc, "supplier_pk"));
 				payable.setSupplier_name(safeGet(doc, "supplier_name"));
-				
+
 				payable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
 				payable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
 				payable.setProduct(safeGet(doc, "product"));
@@ -265,7 +285,7 @@ public class PayableServiceImpl implements PayableService {
 		if (!isEmpty(options.getSupplier_employee_name())) {
 			queryParts.add("supplier_employee_name:\"" + options.getSupplier_employee_name() + "\"");
 		}
-		
+
 		if (!isEmpty(options.getSupplier_name())) {
 			queryParts.add("supplier_name:\"" + options.getSupplier_name() + "\"");
 		}
@@ -325,7 +345,13 @@ public class PayableServiceImpl implements PayableService {
 		options.setTeam_number(detail.getTeam_number());
 		options.setSupplier_employee_pk(detail.getSupplier_employee_pk());
 
-		PayableBean payable = dao.selectByParam(options);
+		List<PayableBean> payables = dao.selectByParam(options);
+		PayableBean payable = new PayableBean();
+		if (null != payables && payables.size() > 0) {
+			payable = payables.get(0);
+		} else {
+			return;
+		}
 
 		payable.setPaid(payable.getPaid().add(detail.getMoney()));
 		payable.setBudget_balance(payable.getBudget_balance().subtract(detail.getMoney()));
@@ -348,4 +374,22 @@ public class PayableServiceImpl implements PayableService {
 		}
 	}
 
+	@Override
+	public void deletePayableByTeamNumber(String team_number) {
+		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
+		PayableBean options = new PayableBean();
+		options.setTeam_number(team_number);
+		List<PayableBean> payables = dao.selectByParam(options);
+		List<String> ids = new ArrayList<String>();
+		for (PayableBean payable : payables) {
+			ids.add(payable.getPk());
+		}
+		try {
+			solrClient.deleteById(ids);
+			solrClient.commit();
+		} catch (SolrServerException | IOException e) {
+			e.printStackTrace();
+		}
+		dao.deleteByTeamNumber(team_number);
+	}
 }

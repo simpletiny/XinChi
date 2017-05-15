@@ -44,10 +44,14 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private String pk;
 	
+	private String delete_flg;
+	private String agency_name;
+	private String agency_pk;
+	
 	private String sales;
 	private String sales_name;
 	private String public_flg;
-
+	private String relate_flg;
 	public String getClient_name() {
 		return client_name;
 	}
@@ -222,6 +226,38 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setPublic_flg(String public_flg) {
 		this.public_flg = public_flg;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
+	}
+
+	public String getAgency_name() {
+		return agency_name;
+	}
+
+	public void setAgency_name(String agency_name) {
+		this.agency_name = agency_name;
+	}
+
+	public String getAgency_pk() {
+		return agency_pk;
+	}
+
+	public void setAgency_pk(String agency_pk) {
+		this.agency_pk = agency_pk;
+	}
+
+	public String getRelate_flg() {
+		return relate_flg;
+	}
+
+	public void setRelate_flg(String relate_flg) {
+		this.relate_flg = relate_flg;
 	}
 
 }

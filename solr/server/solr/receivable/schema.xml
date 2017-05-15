@@ -134,7 +134,9 @@
 	<field name="final_balance" type="double" indexed="true" stored="true"  multiValued="false" />
 	<field name="sales" type="string" indexed="true" stored="true"  multiValued="false" />
 	<field name="sales_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
-
+	<field name="financial_body_name" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+	<field name="financial_body_pk" type="text_smartcn" indexed="true" stored="true"  multiValued="false" />
+	
     <!-- doc values are enabled by default for primitive types such as long so we don't index the version field  -->
     <field name="_version_" type="long" indexed="false" stored="false"/>
     <field name="_root_" type="string" indexed="true" stored="false" docValues="false" />
@@ -145,6 +147,7 @@
          
    <copyField source="team_number" dest="_text_"/>
    <copyField source="client_employee_name" dest="_text_"/>
+   <copyField source="financial_body_name" dest="_text_"/>
    <copyField source="product" dest="_text_"/>
    <copyField source="sales_name" dest="_text_"/>
 

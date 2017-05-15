@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
+import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
@@ -116,6 +117,29 @@ public class SimpletinyAction extends BaseAction {
 					e.printStackTrace();
 				}
 
+			}
+		}
+		return SUCCESS;
+	}
+
+	private List<ReceivableBean> receivables;
+
+	@Autowired
+	private ReceivableDAO receivableDao;
+
+	public String autoGenReceivable2th() {
+		SolrClient solr = solrService.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
+
+		receivables = receivableDao.selectAllReceivablesWithFinancial();
+		for (ReceivableBean receivable : receivables) {
+			SolrInputDocument document = castR2D(receivable);
+			try {
+				solr.add(document);
+				solr.commit();
+			} catch (SolrServerException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return SUCCESS;
@@ -258,9 +282,11 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
 
 		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
-
+		document.addField("financial_body_name", receivable.getFinancial_body_name());
+		document.addField("financial_body_pk", receivable.getFinancial_body_pk());
 		document.addField("sales", receivable.getSales());
 		document.addField("sales_name", receivable.getSales_name());
+
 		return document;
 	}
 
@@ -270,5 +296,13 @@ public class SimpletinyAction extends BaseAction {
 
 	public void setPayables(List<PayableBean> payables) {
 		this.payables = payables;
+	}
+
+	public List<ReceivableBean> getReceivables() {
+		return receivables;
+	}
+
+	public void setReceivables(List<ReceivableBean> receivables) {
+		this.receivables = receivables;
 	}
 }

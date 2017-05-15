@@ -48,7 +48,17 @@
 				</ol>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
-				</ol></li>
+				</ol>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>规章制度</a></li>
+				</ol>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/culture/academy-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售学院</a></li>
+				</ol>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/culture/product-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
+				</ol>
+				</li>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="client"><a href="<%=basePath%>templates/client/client-relation.jsp" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
@@ -56,16 +66,14 @@
 					</ol>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
-					</ol> <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+					</ol> 
 						<ol style="display: none;">
 							<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
 						</ol>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 						<ol style="display: none;">
 							<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
 						</ol>
-
-
-
 					</s:if></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
@@ -110,6 +118,8 @@
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>应付款</a></li>
 						<li><a href="<%=basePath%>templates/sale/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出详表</a></li>
+						<li><a href="<%=basePath%>templates/accounting/pay-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出审批</a></li>
+						<li><a href="<%=basePath%>templates/accounting/waiting-for-paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待支付</a></li>
 					</ol></li>
 			</s:if>
 
@@ -132,7 +142,11 @@
 						<li><a href="<%=basePath%>templates/users/user-online.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>在线员工</a></li>
 					</ol></li>
 			</s:if>
-
+			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-users fa-lg fa-fw"></i>系统相关</a>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>系统使用手册</a></li>
+				</ol>
+			</li>
 
 		</ul>
 	</div>

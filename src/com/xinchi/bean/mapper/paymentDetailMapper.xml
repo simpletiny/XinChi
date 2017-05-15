@@ -205,6 +205,14 @@
 		select
 		<include refid="Base_Column_List" />
 		from payment_detail
+		<where>
+			<if test="time != null and time !=''">
+				and time=#{time,jdbcType=VARCHAR}
+			</if>
+			<if test="account != null and account !=''">
+				and account = #{account,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 	<select id="selectAfterByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
 		select
@@ -251,7 +259,7 @@
 			<if test="params.bo.month != null and params.bo.month !=''">
 				and left(time,7) = #{params.bo.month,jdbcType=VARCHAR}
 			</if>
-			
+
 		</where>
 		ORDER BY time desc
 	</select>

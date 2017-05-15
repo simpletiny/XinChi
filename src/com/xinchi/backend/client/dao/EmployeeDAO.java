@@ -46,4 +46,8 @@ public interface EmployeeDAO {
 	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page);
 
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
+
+	public void deleteClientEmployeeByPks(List<String> employee_pks);
+	
+	public void recoveryClientEmployeeByPks(List<String> employee_pks);
 }

@@ -149,6 +149,8 @@ var OrderContext = function() {
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
+					layer.close(index);
+					startLoadingSimpleIndicator("保存中");
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'sale/createOrder',

@@ -22,6 +22,8 @@
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="financial_body_pk" property="financial_body_pk" jdbcType="VARCHAR" />
+ 	    <result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -56,9 +58,31 @@
   
   <select id="selectReceivableByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
-    <include refid="Base_Column_List" />
-    from receivable
-    where team_number = #{team_number,jdbcType=VARCHAR}
+        A.team_number, 
+    	A.final_flg, 
+    	A.client_employee_name, 
+    	A.client_employee_pk, 
+    	A.departure_date, 
+    	A.return_date,
+    	A.product, 
+    	A.people_count, 
+    	A.budget_receivable, 
+    	A.final_receivable, 
+    	A.received, 
+    	A.budget_balance, 
+    	A.final_balance, 
+    	A.sales, 
+    	A.sales_name, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_user, 
+    	A.create_time,
+    	A.update_time,
+    	B.financial_body_pk,
+    	B.financial_body_name
+    from receivable A
+    LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
+    where A.team_number = #{team_number,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -265,4 +289,33 @@
     <include refid="Base_Column_List" />
     from receivable
    </select>
+   
+ <select id="selectAllReceivablesWithFinancial" parameterType="com.xinchi.bean.ReceivableBean" resultMap="BaseResultMap">
+   select 
+        A.team_number, 
+    	A.final_flg, 
+    	A.client_employee_name, 
+    	A.client_employee_pk, 
+    	A.departure_date, 
+    	A.return_date,
+    	A.product, 
+    	A.people_count, 
+    	A.budget_receivable, 
+    	A.final_receivable, 
+    	A.received, 
+    	A.budget_balance, 
+    	A.final_balance, 
+    	A.sales, 
+    	A.sales_name, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_user, 
+    	A.create_time,
+    	A.update_time,
+    	B.financial_body_pk,
+    	B.financial_body_name
+    from receivable A
+    LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
+   </select>
+   
 </mapper>

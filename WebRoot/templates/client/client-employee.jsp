@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>客户员工管理</h2>
+        <h2>客户资料</h2>
     </div>
 
     <div class="main-container">
@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
 		                    </div>
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">停用</button>
 		                    </div>
 		                 </div>
 	                </div>
@@ -53,13 +53,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </div>
                     </div>
                     <div class="span6">
-                         <label class="col-md-1 control-label">客户简称</label>
+                         <label class="col-md-2 control-label">财务主体简称</label>
                          <div class="col-md-2">
-                             <input type="text" class="form-control" placeholder="客户简称"  name="employee.financial_body_name"/>
+                             <input type="text" class="form-control" placeholder="财务主体简称"  name="employee.financial_body_name"/>
                          </div>
                     </div>
+                                  <div class="span6">
+                 	    <div data-bind="foreach: status">
+                            <em class="small-box ">
+                                <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}"/><label data-bind="text: $data"></label>
+                            </em>
+                        </div>
                     </div>
+                    </div>
+
                   <div class="form-group">
+      
                   <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                      <div class="span6">
                         <label class="col-md-1 control-label">销售</label>
@@ -81,12 +90,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <thead>
                         <tr role="row">
                         	<th></th>
-                            <th>姓名</th>
+                        	<th>姓名</th>
+                            <th>昵称</th>
                             <th>性别</th>
-                            <th>年龄</th>
+                            <th>状态</th>
                             <th>类型</th>
                             <th>地区</th>
-                            <th>客户简称</th>
+                            <th>财务主体简称</th>
                             <th>手机号</th>
                             <th>QQ</th>
                             <th>所属销售</th>
@@ -96,8 +106,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <tr>
                         	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees"/></td>
                             <td ><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a> </td>
+                            <td data-bind="text: $data.nick_name"></td>
                             <td data-bind="text: $data.sex"></td>
-                            <td data-bind="text: $data.age"></td>
+                            <!-- ko if:$data.delete_flg =='Y' -->
+                            <td style="color:red">停用</td>
+                            <!-- /ko -->
+                            
+                            <!-- ko if:$data.delete_flg =='N' -->
+                            <td style="color:green">正常</td>
+                            <!-- /ko -->
+                            
                             <td data-bind="text: $data.type"></td>
                             <td data-bind="text: $data.area"></td>
                             <td data-bind="text: $data.financial_body_name"></td>

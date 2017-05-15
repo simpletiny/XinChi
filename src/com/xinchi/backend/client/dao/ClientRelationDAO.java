@@ -3,6 +3,7 @@ package com.xinchi.backend.client.dao;
 import java.util.List;
 
 import com.xinchi.bean.ClientRelationSummaryBean;
+import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.tools.Page;
 
 public interface ClientRelationDAO {
@@ -26,5 +27,13 @@ public interface ClientRelationDAO {
 	public String selectWeekChatCount(String sales_name);
 
 	public String selectMonthChatCount(String sales_name);
+
+	public List<ClientSummaryDto> selectMarketSummary(String sales_name);
+
+	public List<ClientSummaryDto> selectRelationSummary(String sales_name);
+
+	public List<ClientSummaryDto> selectBackSummary(String sales_name);
+
+	public List<ClientSummaryDto> selectSummary(String sales_name);
 
 }

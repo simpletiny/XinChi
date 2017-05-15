@@ -7,7 +7,7 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-
+	private String nick_name;
 	private String sex;
 	private String age;
 	private String wechat;
@@ -41,7 +41,11 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String birth_year;
 
 	private String public_flg;
-
+	
+	private String relation_level;
+	private String back_level;
+	private String market_level;
+	
 	public String getName() {
 		return name;
 	}
@@ -208,6 +212,38 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setAge(String age) {
 		this.age = age;
+	}
+
+	public String getNick_name() {
+		return nick_name;
+	}
+
+	public void setNick_name(String nick_name) {
+		this.nick_name = nick_name;
+	}
+
+	public String getRelation_level() {
+		return relation_level;
+	}
+
+	public void setRelation_level(String relation_level) {
+		this.relation_level = relation_level;
+	}
+
+	public String getBack_level() {
+		return back_level;
+	}
+
+	public void setBack_level(String back_level) {
+		this.back_level = back_level;
+	}
+
+	public String getMarket_level() {
+		return market_level;
+	}
+
+	public void setMarket_level(String market_level) {
+		this.market_level = market_level;
 	}
 
 }

@@ -67,6 +67,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     </div>
                    <div class="form-group">
+                     <div class="span6">
+                        <label class="col-md-1 control-label">财务主体</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="财务主体"
+                                  name="receivable.financial_body_name"/>
+                        </div>
+                    </div>
                    <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
                      <div class="span6">
                         <label class="col-md-1 control-label">销售</label>
@@ -135,6 +142,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <th>回团天数</th>
                             <th>决否</th>
                             <th>客户</th>
+                            <th>主体</th>
                             <th>出团日期</th>
                             <th>产品</th>
                             <th>人数</th>
@@ -153,6 +161,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td data-bind="text: $data.back_days"></td>
                             <td data-bind="text: $data.final_flg"></td>
                             <td data-bind="text: $data.client_employee_name"></td>
+                            <td data-bind="text: $data.financial_body_name"></td>
                             <td data-bind="text: $data.departure_date"></td>
                             <td data-bind="text: $data.product"></td> 
                              <td data-bind="text: $data.people_count"></td>

@@ -28,8 +28,7 @@ public class PaymentDetailAction extends BaseAction {
 	private PaymentDetailBean detail;
 
 	public String createDetail() {
-		pds.insert(detail);
-		resultStr = SUCCESS;
+		resultStr = pds.insert(detail);
 		return SUCCESS;
 	}
 

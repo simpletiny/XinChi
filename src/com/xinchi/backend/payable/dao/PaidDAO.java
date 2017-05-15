@@ -6,6 +6,9 @@ import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.tools.Page;
 
 public interface PaidDAO {
+	public List<SupplierPaidDetailBean> selectByParam(SupplierPaidDetailBean options);
+
+	public void update(SupplierPaidDetailBean detail);
 
 	public void insertWithPk(SupplierPaidDetailBean detail);
 

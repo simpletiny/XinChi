@@ -77,8 +77,7 @@ $(document).ready(function() {
 		window.editor =K.create('#content', {
 			themeType : 'qq',
 			items : [
-				'bold','italic','underline','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent','link'
-			]
+				'bold','italic','underline','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent','link','|','image']
 		});
 	});
 });

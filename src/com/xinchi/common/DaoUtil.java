@@ -321,6 +321,10 @@ public class DaoUtil {
 		sqlSession.update("commonMapper.executeBySql", sql);
 	}
 
+	public void updateByParam(String mapper, Object arg0) {
+		sqlSession.update(mapper, arg0);
+	}
+
 	/**
 	 * 根据参数取得一个值
 	 * 

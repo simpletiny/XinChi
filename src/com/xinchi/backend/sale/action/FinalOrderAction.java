@@ -18,6 +18,7 @@ import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.common.BaseAction;
@@ -42,9 +43,10 @@ public class FinalOrderAction extends BaseAction {
 	private SaleOrderService saleOrderService;
 	@Autowired
 	private ReceivableService receivableService;
-	
+
 	@Autowired
 	private PayableService payableService;
+
 	/**
 	 * 创建订单
 	 * 
@@ -107,6 +109,7 @@ public class FinalOrderAction extends BaseAction {
 		if (null != order.getTraffic_payment()) {
 			sum = sum.add(order.getTraffic_payment());
 		}
+
 		// 保存订单
 		String departureDate = order.getDeparture_date();
 		int days = order.getDays();
@@ -120,11 +123,38 @@ public class FinalOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 决算单回滚
+	 * 
+	 * @return
+	 */
+	public String rollBackFinalOrder() {
+		order = finalOrderService.searchFinalOrderByPk(order_pk);
+
+		// 删除final supplier
+		finalOrderService.deleteFinalOrderSupplier(order.getTeam_number());
+		// 更新budget order
+		BudgetOrderBean budgetOrder = saleOrderService.searchBudgetOrderByTeamNumber(order.getTeam_number());
+		budgetOrder.setFinal_flg("N");
+		saleOrderService.update(budgetOrder);
+		
+		// 删除final order
+		finalOrderService.deleteFinalOrderByPk(order_pk);
+
+		// 更新应收solr
+		receivableService.updateByTeamNumber(order.getTeam_number());
+
+		// 更新应付solr
+		payableService.updateByTeamNumber(order.getTeam_number());
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	private List<FinalOrderBean> orders;
 
 	public String searchFinalOrders() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order = new FinalOrderBean();
@@ -136,8 +166,7 @@ public class FinalOrderAction extends BaseAction {
 	}
 
 	public String searchFinalOrdersByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order.setCreate_user(sessionBean.getUser_number());
@@ -162,8 +191,7 @@ public class FinalOrderAction extends BaseAction {
 	private String team_number;
 
 	public String searchFinalOrderSupplier() {
-		finalOrderSuppliers = finalOrderService
-				.searchFinalSupplier(team_number);
+		finalOrderSuppliers = finalOrderService.searchFinalSupplier(team_number);
 		return SUCCESS;
 	}
 
@@ -203,8 +231,7 @@ public class FinalOrderAction extends BaseAction {
 		return finalOrderSuppliers;
 	}
 
-	public void setFinalOrderSuppliers(
-			List<FinalOrderSupplierBean> finalOrderSuppliers) {
+	public void setFinalOrderSuppliers(List<FinalOrderSupplierBean> finalOrderSuppliers) {
 		this.finalOrderSuppliers = finalOrderSuppliers;
 	}
 

@@ -10,7 +10,6 @@ import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.bean.ClientBean;
-import com.xinchi.bean.UserBaseBean;
 import com.xinchi.tools.Page;
 
 @Service
@@ -24,22 +23,13 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional
 	public String createCompany(ClientBean client) {
-		if (client.getPublic_flg().equals("Y")) {
-			client.setSales("");
-			client.setSales_name("公开");
-		} else {
-			if (!client.getSales().equals("")) {
-				String[] userPks = client.getSales().split(",");
-				String sales_name = "";
+		ClientBean options = new ClientBean();
+		options.setSales(client.getSales());
+		options.setClient_name(client.getClient_name());
 
-				List<UserBaseBean> users = userDao.getAllByPks(userPks);
-				for (UserBaseBean user : users) {
-					sales_name += user.getUser_name() + ",";
-				}
-				sales_name = sales_name.substring(0, sales_name.length() - 1);
-				client.setSales_name(sales_name);
-			}
-		}
+		List<ClientBean> exists = dao.getAllByParam(options);
+		if (exists != null && exists.size() > 0)
+			return "exist";
 
 		dao.insert(client);
 		return "success";
@@ -67,36 +57,46 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public List<com.xinchi.bean.ClientBean> getAllCompaniesByParam(
-			com.xinchi.bean.ClientBean bo) {
+	public List<com.xinchi.bean.ClientBean> getAllCompaniesByParam(com.xinchi.bean.ClientBean bo) {
 		return dao.getAllByParam(bo);
 	}
 
 	@Override
 	public String updateCompany(ClientBean client) {
-		if (client.getPublic_flg().equals("Y")) {
-			client.setSales("");
-			client.setSales_name("公开");
-		} else {
-			if (!client.getSales().equals("")) {
-				String[] userPks = client.getSales().split(",");
-				String sales_name = "";
+		ClientBean options = new ClientBean();
+		options.setSales(client.getSales());
+		options.setClient_name(client.getClient_name());
 
-				List<UserBaseBean> users = userDao.getAllByPks(userPks);
-				for (UserBaseBean user : users) {
-					sales_name += user.getUser_name() + ",";
-				}
-				sales_name = sales_name.substring(0, sales_name.length() - 1);
-				client.setSales_name(sales_name);
+		List<ClientBean> exists = dao.getAllByParam(options);
+
+		if (exists != null && exists.size() > 0) {
+			if (exists.get(0).getPk().equals(client.getPk())) {
+				dao.update(client);
+				return "success";
+			} else {
+				return "exist";
 			}
+		} else {
+			dao.update(client);
+			return "success";
 		}
-		dao.update(client);
-		return "success";
 	}
 
 	@Override
 	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page) {
 		return dao.getAllCompaniesByPage(page);
+	}
+
+	@Override
+	public String deleteClientEmployee(List<String> company_pks) {
+		dao.deleteCompanyByPks(company_pks);
+		return "success";
+	}
+
+	@Override
+	public String recoveryClientEmployee(List<String> company_pks) {
+		dao.recoveryCompanyByPks(company_pks);
+		return "success";
 	}
 
 }

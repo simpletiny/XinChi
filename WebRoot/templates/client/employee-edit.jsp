@@ -15,14 +15,20 @@ String key = request.getParameter("key");
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>客户员工编辑<a href="<%=basePath %>/templates/client/client-employee.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>客户资料编辑<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
             <form class="form-box info-form">
-             <input type="hidden" id="employee_key" name = "employee.pk" value="<%=key%>">
-                   <div class="input-row clearfloat">
+             <input type="hidden" id="employee_key" name = "employee.pk" value="<%=key%>" />
+                <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">昵称</label>
+                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().nick_name" placeholder="昵称" name="employee.nick_name"/></div>
+                    </div>
+                </div>
+                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">姓名</label>
                         <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().name" placeholder="姓名" name="employee.name" required="required"/></div>
@@ -73,21 +79,6 @@ String key = request.getParameter("key");
                      <div class="col-md-6 required">
                         <label class="l">类型</label>
                         <div class="ip"><select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type" required="required"></select></div>
-                    </div>
-                </div>
-				<div class="input-row clearfloat required">
-                    <div class="col-md-12">
-                        <label class="l">所属销售</label>
-                        <div class="ip">
-                            <div data-bind="foreach: sales">
-                                <em class="small-box">
-                                    <input type="checkbox" st='sales' name="choosenSales" required="required" data-bind="attr: {'value': $data.pk}, checked: $root.choosenSales"/><label data-bind="text: $data.user_name"></label>
-                                </em>
-                            </div>
-                            <em class="small-box">
-                                <input type="checkbox" id="check-public" name="choosenSales" required="required" data-bind="click:publicClient"/><label style="color:red;">公开</label>
-                            </em>
-                        </div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.bean.ClientRelationSummaryBean;
+import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -73,6 +74,26 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	@Override
 	public String selectMonthChatCount(String sales_name) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectMonthChat", sales_name);
+	}
+
+	@Override
+	public List<ClientSummaryDto> selectMarketSummary(String sales_name) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectMarketLevelSummary", sales_name);
+	}
+
+	@Override
+	public List<ClientSummaryDto> selectRelationSummary(String sales_name) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectRelationLevelSummary", sales_name);
+	}
+
+	@Override
+	public List<ClientSummaryDto> selectBackSummary(String sales_name) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectBackLevelSummary", sales_name);
+	}
+
+	@Override
+	public List<ClientSummaryDto> selectSummary(String sales_name) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectSummary", sales_name);
 	}
 
 }

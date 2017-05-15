@@ -133,4 +133,12 @@ public class ResourcesConstants {
 	public static String BANK_HRB = "HRB";
 	// 网商银行
 	public static String BANK_MY = "MY";
+	
+	//客户.供应商等停用状态
+	public static String STOP_STATUS_NORMAL="正常";
+	public static String STOP_STATUS_STOP="已停用";
+	
+	//财务主体关联旅游公司状态
+	public static String RELATE_STATUS_YES="已关联";
+	public static String RELATE_STATUS_NO="未关联";
 }

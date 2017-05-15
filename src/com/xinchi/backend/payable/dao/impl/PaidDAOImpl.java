@@ -39,4 +39,16 @@ public class PaidDAOImpl extends SqlSessionDaoSupport implements PaidDAO {
 		List<SupplierPaidDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByPage", page);
 		return list;
 	}
+
+	@Override
+	public List<SupplierPaidDetailBean> selectByParam(SupplierPaidDetailBean options) {
+		List<SupplierPaidDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByParam", options);
+		return list;
+	}
+
+	@Override
+	public void update(SupplierPaidDetailBean detail) {
+		daoUtil.updateByBOParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.updateByPrimaryKey", detail);
+
+	}
 }

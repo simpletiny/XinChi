@@ -45,9 +45,17 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">新增维护</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">新增拜访</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
 					</div>
 					<div class="form-group">
+							<div class="span6">
+								<label class="col-md-1 control-label">评级</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:fetchSummary}"
+										name="relation.level"></select>
+								</div>
+							</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
@@ -59,48 +67,58 @@
 						</s:if>
 					</div>
 				</form>
+				
+				
 				<div class="list-result">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
-								<td>客户总数</td>
-								<td data-bind="text:clientSummary().client_count"></td>
-								<td>昨日新增拜访</td>
-								<td data-bind="text:clientSummary().yesterday_visit_count"></td>
-								<td>昨日新增通话</td>
-								<td data-bind="text:clientSummary().yesterday_chat_count"></td>
+								<td width="11.11%">客户总数</td>
+								<td width="11.11%" data-bind="text:clientEmployeeCount()"></td>
+								<td width="11.11%">本月订单</td>
+								<td width="11.11%"  data-bind="text:monthOrderCount()"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
 							</tr>
 							<tr>
-								<td>本周订单</td>
-								<td data-bind="text:clientSummary().week_order_count"></td>
-								<td>本周新增拜访</td>
-								<td data-bind="text:clientSummary().week_visit_count"></td>
-								<td>本周新增通话</td>
-								<td data-bind="text:clientSummary().week_chat_count"></td>
-							</tr>
-							<tr>
-								<td>本月订单</td>
-								<td data-bind="text:clientSummary().month_order_count"></td>
-								<td>本月新增拜访</td>
-								<td data-bind="text:clientSummary().month_visit_count"></td>
-								<td>本月新增通话</td>
-								<td data-bind="text:clientSummary().month_chat_count"></td>
+								<th>评级</th>
+								<th colspan="2">客户总数</th>
+								<th colspan="2">本月订单</th>
+								<th colspan="2">本月拜访</th>
+								<th colspan="2">本周拜访</th>
 							</tr>
 						</thead>
+							<tbody id="tbody-data" data-bind="foreach: clientSummary">
+							<tr>
+								<td data-bind="text: $data.level"></td>
+								<td  colspan="2" data-bind="text: $data.client_count"></td>
+								<td colspan="2" data-bind="text: $data.month_order_count"></td>
+								<td colspan="2" data-bind="text: $data.month_visit_count"></td>
+								<td colspan="2" data-bind="text: $data.week_visit_count"></td>
+							</tr>
+							</tbody>
+				
 					</table>
 				</div>
 				<div class="list-result">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
+								<th></th>
 								<th>客户姓名</th>
-								<th>年订单</th>
+								<th>关系度</th>
+								<th>回款誉</th>
+								<th>市场力</th>
+								<!-- <th>年订单</th> -->
 								<th>月订单</th>
 								<th>签单期间</th>
-								<th>拜访累计</th>
-								<th>拜访期间</th>
-								<th>有效通话</th>
-								<th>通话期间</th>
+								<th>最近拜访</th>
+								<!-- <th>拜访期间</th> -->
+								<!-- <th>有效通话</th>
+								<th>通话期间</th> -->
 								<th>应收款总计</th>
 								<th>最长账期</th>
 								<th>待办事宜</th>
@@ -111,18 +129,23 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: relations">
 							<tr>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.client_employee_pk+';'+$data.client_employee_name}, checked: $root.chosenEmployee" /></td>
 								<td data-bind="text: $data.client_employee_name"></td>
-								<td data-bind="text: $data.year_order_count"></td>
+								<td data-bind="text: $data.relation_level"></td>
+								<td data-bind="text: $data.back_level"></td>
+								<td data-bind="text: $data.market_level"></td>
+								<!-- <td data-bind="text: $data.year_order_count"></td> -->
 								<td data-bind="text: $data.month_order_count"></td>
 								<td data-bind="text: $data.last_order_period"></td>
 								<td data-bind="text: $data.visit_count"></td>
-								<td data-bind="text: $data.last_visit_period"></td>
-								<td data-bind="text: $data.chat_count"></td>
-								<td data-bind="text: $data.last_chat_period"></td>
+								<!-- <td data-bind="text: $data.last_visit_period"></td> -->
+								<!-- <td data-bind="text: $data.chat_count"></td>
+								<td data-bind="text: $data.last_chat_period"></td> -->
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.last_receivable_period"></td>
-								<td></td>
-								
+								<td><a href="javascript:void(0)" data-bind="event: {click:function(){$root.createToDo($data.client_employee_pk)}}">新增</a>&nbsp; <a href="javascript:void(0)"
+									data-bind="event: {click:function(){$root.viewToDo($data.pk)}}">查看</a></td>
+
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.sales_name"></td>
 								</s:if>
@@ -145,7 +168,51 @@
 			</div>
 		</div>
 	</div>
-
+	<div id="todo-create" style="display: none">
+		<div class="input-row clearfloat" style="width: 400px;">
+			<div class="ip">
+				<input type="text" id="todo_content" class="form-control" maxlength="10" placeholder="十个字以内" />
+				<input type="hidden" id="client_employee_pk" />
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="width: 400px;">
+			<div class="ip" style="float: right">
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doCreateToDo}" value="保存"></input> <input type="button" data-bind="event:{click:cancelCreateToDo}"
+					class="btn btn-green col-md-1" value="取消"></input>
+			</div>
+		</div>
+	</div>
+	<div id="client-level" style="display: none;width:800px" >
+	<div class="form-horizontal search-panel">
+		<div class="form-group" style="width:800px">
+				<div class="span6">
+					<label class="col-md-1 control-label">关系度</label>
+					<div class="col-md-3">
+						<select class="form-control" data-bind="options: relationLevel, optionsCaption: '无',value:chosenRelationLevel"
+							name="relation.level"></select>
+					</div>
+				</div>
+				<div class="span6">
+					<label class="col-md-1 control-label">市场力</label>
+					<div class="col-md-3">
+						<select class="form-control" data-bind="options: marketLevel, optionsCaption: '无',value:chosenMarketLevel"
+							name="relation.level"></select>
+					</div>
+				</div>
+				<div class="span6">
+					<label class="col-md-1 control-label">回款誉</label>
+					<div class="col-md-3">
+						<select class="form-control" data-bind="options: backLevel, optionsCaption: '无',value:chosenBackLevel"
+							name="relation.level"></select>
+					</div>
+				</div>
+		</div>
+		<div class="form-group" style="float:right">
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doSetClientLevel}" value="保存"></input>
+				<input type="button" data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
+		</div>
+	</div>
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>

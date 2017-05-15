@@ -34,9 +34,9 @@ var PaidContext = function() {
 	self.allStatus = [ 'I', 'N', 'Y' ];
 
 	self.statusMapping = {
-		'I' : '待确认',
+		'I' : '待审批',
 		'N' : '被驳回',
-		'Y' : '已入账'
+		'Y' : '已同意'
 	};
 
 	self.typeMapping = {

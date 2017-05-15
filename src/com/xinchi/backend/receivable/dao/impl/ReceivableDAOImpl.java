@@ -1,5 +1,7 @@
 package com.xinchi.backend.receivable.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -72,5 +74,10 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements
 				"com.xinchi.bean.mapper.ReceivableMapper.updateByPrimaryKey",
 				receivable);
 
+	}
+
+	@Override
+	public List<ReceivableBean> selectAllReceivablesWithFinancial() {
+		return daoUtil.selectAll("com.xinchi.bean.mapper.ReceivableMapper.selectAllReceivablesWithFinancial");
 	}
 }

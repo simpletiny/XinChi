@@ -331,7 +331,7 @@ var OrderContext = function() {
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'sale/applyStrike',
+			url : self.apiurl + 'sale/applyReceiveStrike',
 			data : data + "&allot_json=" + allot_json,
 			success : function(str) {
 				if (str != "OK") {
@@ -456,7 +456,7 @@ var OrderContext = function() {
 				return;
 			}
 			var data = $("#form-receive").serialize();
-
+			layer.close(receiveLayer);
 			startLoadingSimpleIndicator("保存中");
 			$.ajax({
 				type : "POST",
@@ -466,7 +466,7 @@ var OrderContext = function() {
 					if (str != "OK") {
 						fail_msg("申请失败，请联系管理员");
 					}
-					layer.close(receiveLayer);
+					
 					self.search();
 					endLoadingIndicator();
 				}

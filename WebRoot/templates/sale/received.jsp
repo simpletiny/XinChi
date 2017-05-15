@@ -12,6 +12,15 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+			<style>
+.form-group {
+	margin-bottom: 5px;
+}
+
+.form-control {
+	height: 30px;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -23,15 +32,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-					<style>
-.form-group {
-	margin-bottom: 5px;
-}
-
-.form-control {
-	height: 30px;
-}
-</style>
+		
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>

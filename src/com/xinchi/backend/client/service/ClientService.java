@@ -48,4 +48,8 @@ public interface ClientService {
 	public String updateCompany(ClientBean client);
 
 	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page);
+
+	public String deleteClientEmployee(List<String> company_pks);
+
+	public String recoveryClientEmployee(List<String> company_pks);
 }

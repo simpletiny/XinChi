@@ -39,4 +39,8 @@ public interface ClientDAO{
 	public List<com.xinchi.bean.ClientBean> getAllByParam(com.xinchi.bean.ClientBean bo);
 
 	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page);
+
+	public void deleteCompanyByPks(List<String> company_pks);
+
+	public void recoveryCompanyByPks(List<String> company_pks);
 }

@@ -14,15 +14,23 @@ String key = request.getParameter("key");
 </head>
 <body>
 <div class="main-body">
- <input type="hidden" id="client_key" value="<%=key%>">
+ <input type="hidden" id="client_key" value="<%=key%>" />
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>查看财务主体信息<a  href="<%=basePath %>/templates/client/company.jsp"  class="cancel-create">返回</a></h2>
+        <h2>查看财务主体信息<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;"  class="cancel-create">返回</a></h2>
     </div>
 
     <div class="main-container">
         <div class="main-box">
-            <hr>
+                   <!-- ko if: company().delete_flg =='Y' -->
+             <div class="form-group">
+             <label class="col-md-1 control-label"  style="color:red">已停用</label>
+                  <div class="ip">
+                        <button type="submit" class="btn btn-green col-md-1" data-bind="click:recovery">恢复</button>
+                    </div>
+                    </div>
+           <!-- /ko -->
+            <hr />
             <div class="form-box info-form">
                 <div class="input-row clearfloat">
                     <div class="col-md-6">

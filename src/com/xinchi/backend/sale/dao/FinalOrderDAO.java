@@ -25,4 +25,8 @@ public interface FinalOrderDAO {
 	public List<FinalOrderSupplierBean> searchFinalSupplierByParam(
 			FinalOrderSupplierBean bo);
 
+	public void deleteByTeamNumber(String team_number);
+
+	public void deleteFinalOrderByPk(String order_pk);
+
 }

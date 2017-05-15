@@ -36,6 +36,11 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	private Integer last_receivable_period;
 
+	private String level;
+	private String relation_level;
+	private String back_level;
+	private String market_level;
+
 	public String getClient_employee_name() {
 		return client_employee_name;
 	}
@@ -154,6 +159,38 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	public void setLast_receivable_period(Integer last_receivable_period) {
 		this.last_receivable_period = last_receivable_period;
+	}
+
+	public String getRelation_level() {
+		return relation_level;
+	}
+
+	public void setRelation_level(String relation_level) {
+		this.relation_level = relation_level;
+	}
+
+	public String getBack_level() {
+		return back_level;
+	}
+
+	public void setBack_level(String back_level) {
+		this.back_level = back_level;
+	}
+
+	public String getMarket_level() {
+		return market_level;
+	}
+
+	public void setMarket_level(String market_level) {
+		this.market_level = market_level;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 }

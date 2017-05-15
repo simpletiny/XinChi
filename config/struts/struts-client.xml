@@ -8,6 +8,12 @@
 		<action name="updateCompany" class="clientAction" method="updateCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="deleteCompany" class="clientAction" method="deleteCompany">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="recoveryCompany" class="clientAction" method="recoveryCompany">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchCompany" class="clientAction" method="searchCompany">
 			<result name="success" type="json"></result>
 		</action>
@@ -36,6 +42,15 @@
 			<result name="success" type="json"></result>
 		</action>
 		<action name="updateEmployee" class="employeeAction" method="updateEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="setClientEmployeeLevel" class="employeeAction" method="setClientEmployeeLevel">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteClientEmployee" class="employeeAction" method="deleteClientEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="recoveryClientEmployee" class="employeeAction" method="recoveryClientEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
 

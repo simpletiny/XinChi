@@ -42,7 +42,7 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
 							</div>
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
 							</div>
 						</div>
 					</div>
@@ -59,15 +59,33 @@
 								<select class="form-control" style="height: 34px" data-bind="options: clientArea, optionsCaption: '-- 请选择 --'" name="client.client_area"></select>
 							</div>
 						</div>
-
-						<div align="left">
-							<label class="col-md-1 control-label" style="width: 50px;">销售</label>
-							<div class="col-md-2" style="width: 200px;">
+						<div class="span6">
+							<div data-bind="foreach: status">
+								<em class="small-box " > <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label data-bind="text: $data"></label>
+								</em>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6 col-md-3">
+							<label class="col-md-1 control-label">&nbsp;</label>
+							<div data-bind="foreach: relates">
+								<em class="small-box "> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label data-bind="text: $data"></label>
+								</em>
+							</div>
+						</div>
+						<s:if test="#session.user.user_roles.contains('ADMIN')">
+						<div class="span6">
+							<label class="col-md-1 control-label">销售</label>
+							<div class="col-md-2">
 								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="client.sales_name"></select>
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						</s:if>
+						<div class="span6" style="float: right">
+							<div style="padding-top: 3px;">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							</div>
 						</div>
 					</div>
 				</form>
@@ -78,7 +96,9 @@
 								<th></th>
 								<th>简称</th>
 								<th>地区</th>
+								<th>状态</th>
 								<th>类型</th>
+								<th>关联</th>
 								<th>全称</th>
 								<th>负责人</th>
 								<th>手机号</th>
@@ -90,7 +110,23 @@
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies" /></td>
 								<td><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.client_area"></td>
+								<!-- ko if:$data.delete_flg =='Y' -->
+								<td style="color: red">停用</td>
+								<!-- /ko -->
+
+								<!-- ko if:$data.delete_flg =='N' -->
+								<td style="color: green">正常</td>
+								<!-- /ko -->
+								
 								<td data-bind="text: $data.client_type"></td>
+								<!-- ko if:$data.relate_flg =='N' -->
+								<td style="color: red">未关联</td>
+								<!-- /ko -->
+
+								<!-- ko if:$data.relate_flg =='Y' -->
+								<td style="color: blue"><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td> 
+								<!-- /ko -->
+								
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.body_name"></td>
 								<td data-bind="text: $data.body_cellphone"></td>

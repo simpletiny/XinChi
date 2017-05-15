@@ -26,6 +26,10 @@
 	     <result column="public_flg" property="public_flg" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="agency_name" property="agency_name" jdbcType="VARCHAR" />
+ 	    <result column="agency_pk" property="agency_pk" jdbcType="CHAR" />
+ 	    <result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+ 	    <result column="relate_flg" property="relate_flg" jdbcType="CHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -52,7 +56,12 @@
     	sales,
     	sales_name,
     	public_flg,
-    	create_time,update_time
+    	create_time,
+    	update_time,
+    	delete_flg,
+    	agency_name,
+    	agency_pk,
+    	relate_flg
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -66,6 +75,19 @@
     where pk = #{pk,jdbcType=CHAR}
   </delete>
   
+	<update id="stopCompany">
+		update client set delete_flg='Y' where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="recoveryCompany">
+		update client set delete_flg='N' where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
   <insert id="insert" parameterType="com.xinchi.bean.ClientBean" >
   	
     insert into client
@@ -143,6 +165,18 @@
       <if test="update_time != null">
         update_time,
       </if>
+      <if test="delete_flg != null">
+        delete_flg,
+      </if>
+      <if test="agency_name != null">
+        agency_name,
+      </if>
+      <if test="agency_pk != null">
+        agency_pk,
+      </if>
+      <if test="relate_flg != null">
+        relate_flg,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="client_name != null">
@@ -216,6 +250,18 @@
       </if>
        <if test="update_time != null">
         #{update_time,jdbcType=VARCHAR},
+      </if>
+       <if test="delete_flg != null">
+        #{delete_flg,jdbcType=CHAR},
+      </if>
+       <if test="agency_name != null">
+        #{agency_name,jdbcType=VARCHAR},
+      </if>
+       <if test="agency_pk != null">
+        #{agency_pk,jdbcType=CHAR},
+      </if>
+       <if test="relate_flg != null">
+        #{relate_flg,jdbcType=CHAR},
       </if>
     </trim>		
   </insert>
@@ -293,6 +339,18 @@
     	<if test="public_flg != null">
 	        public_flg = #{public_flg,jdbcType=CHAR},
 	      </if>
+    	<if test="delete_flg != null">
+	        delete_flg = #{delete_flg,jdbcType=CHAR},
+	      </if>
+    	<if test="agency_name != null">
+	        agency_name = #{agency_name,jdbcType=CHAR},
+	      </if>
+    	<if test="agency_pk != null">
+	        agency_pk = #{agency_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="relate_flg != null">
+	        relate_flg = #{relate_flg,jdbcType=CHAR},
+	      </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}
   </update>
@@ -303,6 +361,12 @@
     <where>
     	<if test="create_user != null">
 	         and create_user = #{create_user,jdbcType=VARCHAR}
+	      </if>
+			<if test="sales != null">
+				and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
+			</if>
+	      	<if test="client_name != null">
+	         and client_name = #{client_name,jdbcType=VARCHAR}
 	      </if>
     </where>
    </select>
@@ -325,6 +389,12 @@
 	      </if>
 	      <if test="params.bo.sales_name != null and params.bo.sales_name !=''">
 	         and sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
+	      </if>
+	      <if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
+	         and delete_flg = #{params.bo.delete_flg,jdbcType=VARCHAR}
+	      </if>
+	      <if test="params.bo.relate_flg != null and params.bo.relate_flg !=''">
+	         and relate_flg = #{params.bo.relate_flg,jdbcType=VARCHAR}
 	      </if>
     </where> 
    </select>

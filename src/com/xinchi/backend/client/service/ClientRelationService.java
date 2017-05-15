@@ -13,6 +13,10 @@ public interface ClientRelationService {
 
 	public List<ClientRelationSummaryBean> getRelationsByPage(Page page);
 
-	public ClientSummaryDto getClientSummary(ClientRelationSummaryBean relation);
+	public List<ClientSummaryDto> getClientSummary(ClientRelationSummaryBean relation);
+
+	public String selectClientEmployeeCount(ClientRelationSummaryBean relation);
+
+	public String selectMonthOrderCount(ClientRelationSummaryBean relation);
 
 }

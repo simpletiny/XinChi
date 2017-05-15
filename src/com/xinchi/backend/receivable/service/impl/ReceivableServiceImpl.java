@@ -64,8 +64,7 @@ public class ReceivableServiceImpl implements ReceivableService {
 
 	@Override
 	public List<ReceivableBean> searchReceivableByPage(Page<ReceivableBean> page) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil
-				.getProperty("solr.receivableUrl"));
+		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
 
 		// 计算合计
 		ReceivableBean rb = (ReceivableBean) page.getParams().get("bo");
@@ -74,12 +73,12 @@ public class ReceivableServiceImpl implements ReceivableService {
 			qStr = "*:*";
 		}
 		SolrQuery query = new SolrQuery(qStr);
-		if(rb.getSort_type().equals("倒序")){
+		if (rb.getSort_type().equals("倒序")) {
 			query.add("sort", "departure_date desc");
-		}else if(rb.getSort_type().equals("正序")){
+		} else if (rb.getSort_type().equals("正序")) {
 			query.add("sort", "departure_date asc");
 		}
-		
+
 		query.setStart(page.getStart());
 		query.setRows(page.getCount());
 		List<ReceivableBean> receivables = new ArrayList<ReceivableBean>();
@@ -94,33 +93,22 @@ public class ReceivableServiceImpl implements ReceivableService {
 				ReceivableBean receivable = new ReceivableBean();
 				receivable.setTeam_number(safeGet(doc, "team_number"));
 				receivable.setPk(safeGet(doc, "id"));
-				receivable.setFinal_flg((null==safeGet(doc, "final_flg"))?"N":safeGet(doc, "final_flg"));
-				receivable.setClient_employee_name(safeGet(doc,
-						"client_employee_name"));
-				receivable.setClient_employee_pk(safeGet(doc,
-						"client_employee_pk"));
-				receivable.setDeparture_date(DateUtil.castDate2Str((Date) doc
-						.get("departure_date")));
-				receivable.setReturn_date(DateUtil.castDate2Str((Date) doc
-						.get("return_date")));
+				receivable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
+				receivable.setClient_employee_name(safeGet(doc, "client_employee_name"));
+				receivable.setClient_employee_pk(safeGet(doc, "client_employee_pk"));
+				receivable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
+				receivable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
 				receivable.setProduct(safeGet(doc, "product"));
-				receivable.setPeople_count(SimpletinyString.str2Int(safeGet(
-						doc, "people_count")));
+				receivable.setPeople_count(SimpletinyString.str2Int(safeGet(doc, "people_count")));
+				receivable.setFinancial_body_name(safeGet(doc, "financial_body_name"));
 				receivable.setSales(safeGet(doc, "sales"));
 				receivable.setSales_name(safeGet(doc, "sales_name"));
-				receivable.setBudget_receivable(SimpletinyString
-						.str2Decimal(safeGet(doc, "budget_receivable")));
-				receivable.setFinal_receivable(SimpletinyString
-						.str2Decimal(safeGet(doc, "final_receivable")));
-				receivable.setReceived(SimpletinyString.str2Decimal(safeGet(
-						doc, "received")));
-				receivable.setBudget_balance(SimpletinyString
-						.str2Decimal(safeGet(doc, "budget_balance")));
-				receivable.setFinal_balance(SimpletinyString
-						.str2Decimal(safeGet(doc, "final_balance")));
-				receivable.setBack_days(getBackDays(
-						receivable.getDeparture_date(),
-						receivable.getReturn_date()));
+				receivable.setBudget_receivable(SimpletinyString.str2Decimal(safeGet(doc, "budget_receivable")));
+				receivable.setFinal_receivable(SimpletinyString.str2Decimal(safeGet(doc, "final_receivable")));
+				receivable.setReceived(SimpletinyString.str2Decimal(safeGet(doc, "received")));
+				receivable.setBudget_balance(SimpletinyString.str2Decimal(safeGet(doc, "budget_balance")));
+				receivable.setFinal_balance(SimpletinyString.str2Decimal(safeGet(doc, "final_balance")));
+				receivable.setBack_days(getBackDays(receivable.getDeparture_date(), receivable.getReturn_date()));
 				receivables.add(receivable);
 			}
 			return receivables;
@@ -157,12 +145,15 @@ public class ReceivableServiceImpl implements ReceivableService {
 		List<String> queryParts = new ArrayList<String>();
 
 		if (!SimpletinyString.isEmpty(options.getClient_employee_name())) {
-			queryParts.add("client_employee_name:\""
-					+ options.getClient_employee_name() + "\"");
+			queryParts.add("client_employee_name:\"" + options.getClient_employee_name() + "\"");
 		}
 
 		if (!SimpletinyString.isEmpty(options.getSales_name())) {
 			queryParts.add("sales_name:\"" + options.getSales_name() + "\"");
+		}
+
+		if (!SimpletinyString.isEmpty(options.getFinancial_body_name())) {
+			queryParts.add("financial_body_name:\"" + options.getFinancial_body_name() + "\"");
 		}
 
 		if (!SimpletinyString.isEmpty(options.getSales())) {
@@ -181,8 +172,7 @@ public class ReceivableServiceImpl implements ReceivableService {
 				from = "*";
 				to = DateUtil.getUTC();
 				queryParts.add("departure_date:[" + from + " TO " + to + "]");
-			} else if (team_status
-					.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
 				from = "*";
 				to = DateUtil.getUTC();
 				queryParts.add("return_date:[" + from + " TO " + to + "]");
@@ -212,19 +202,15 @@ public class ReceivableServiceImpl implements ReceivableService {
 	@Override
 	@Async
 	public void updateByTeamNumber(String teamNumber) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil
-				.getProperty("solr.receivableUrl"));
-		ReceivableBean receivable = dao
-				.selectReceivableByTeamNumber(teamNumber);
+		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
+		ReceivableBean receivable = dao.selectReceivableByTeamNumber(teamNumber);
 
 		if (null == receivable) {
 			receivable = new ReceivableBean();
-			BudgetOrderBean budget = budgetDao
-					.selectBudgetOrderByTeamNumber(teamNumber);
+			BudgetOrderBean budget = budgetDao.selectBudgetOrderByTeamNumber(teamNumber);
 
 			receivable.setTeam_number(budget.getTeam_number());
-			receivable
-					.setClient_employee_name(budget.getClient_employee_name());
+			receivable.setClient_employee_name(budget.getClient_employee_name());
 			receivable.setClient_employee_pk(budget.getClient_employee_pk());
 			receivable.setDeparture_date(budget.getDeparture_date());
 			receivable.setReturn_date(budget.getReturn_date());
@@ -233,28 +219,35 @@ public class ReceivableServiceImpl implements ReceivableService {
 			receivable.setBudget_receivable(budget.getReceivable());
 			receivable.setSales(budget.getCreate_user());
 
-			UserBaseBean userBase = userDao.getByUserNumber(budget
-					.getCreate_user());
+			UserBaseBean userBase = userDao.getByUserNumber(budget.getCreate_user());
 
 			receivable.setSales_name(userBase.getUser_name());
 			receivable.setReceived(BigDecimal.ZERO);
 
 			receivable.setBudget_balance(receivable.getBudget_receivable());
-
-			if (null != receivable.getFinal_flg()
-					&& receivable.getFinal_flg().equals("Y")) {
-				receivable.setFinal_balance(receivable.getFinal_receivable());
-			}
+			
 			insert(receivable);
 		} else {
-			FinalOrderBean finalOrder = finalOrderService
-					.getFinalOrderByTeamNo(teamNumber);
-
+			FinalOrderBean finalOrder = finalOrderService.getFinalOrderByTeamNo(teamNumber);
+			BudgetOrderBean budget = budgetDao.selectBudgetOrderByTeamNumber(teamNumber);
+			
+			receivable.setClient_employee_name(budget.getClient_employee_name());
+			receivable.setClient_employee_pk(budget.getClient_employee_pk());
+			receivable.setDeparture_date(budget.getDeparture_date());
+			receivable.setReturn_date(budget.getReturn_date());
+			receivable.setProduct(budget.getProduct());
+			receivable.setPeople_count(budget.getPeople_count());
+			receivable.setBudget_receivable(budget.getReceivable());
+			receivable.setBudget_balance(budget.getReceivable().subtract(receivable.getReceived()));
+			
 			if (null != finalOrder) {
 				receivable.setFinal_flg("Y");
 				receivable.setFinal_receivable(finalOrder.getReceivable());
-				receivable.setFinal_balance(finalOrder.getReceivable()
-						.subtract(receivable.getReceived()));
+				receivable.setFinal_balance(finalOrder.getReceivable().subtract(receivable.getReceived()));
+			}else {
+				receivable.setFinal_flg("N");
+				receivable.setFinal_receivable(null);
+				receivable.setFinal_balance(null);
 			}
 
 			update(receivable);
@@ -273,40 +266,28 @@ public class ReceivableServiceImpl implements ReceivableService {
 
 	private SolrInputDocument castR2D(ReceivableBean receivable) {
 		SolrInputDocument document = new SolrInputDocument();
-
+		
 		document.addField("id", receivable.getPk());
 		document.addField("team_number", receivable.getTeam_number());
 		document.addField("final_flg", receivable.getFinal_flg());
-		document.addField("client_employee_name",
-				receivable.getClient_employee_name());
-		document.addField("client_employee_pk",
-				receivable.getClient_employee_pk());
+		document.addField("client_employee_name", receivable.getClient_employee_name());
+		document.addField("client_employee_pk", receivable.getClient_employee_pk());
 
-		document.addField("departure_date",
-				DateUtil.castStr2Date(receivable.getDeparture_date()));
-		document.addField("return_date",
-				DateUtil.castStr2Date(receivable.getReturn_date()));
+		document.addField("departure_date", DateUtil.castStr2Date(receivable.getDeparture_date()));
+		document.addField("return_date", DateUtil.castStr2Date(receivable.getReturn_date()));
 		document.addField("product", receivable.getProduct());
 		document.addField("people_count", receivable.getPeople_count());
-		document.addField("budget_receivable", (null == receivable
-				.getBudget_receivable() ? 0 : receivable.getBudget_receivable()
-				.doubleValue()));
+		document.addField("budget_receivable", (null == receivable.getBudget_receivable() ? 0 : receivable.getBudget_receivable().doubleValue()));
 
-		document.addField("final_receivable", (null == receivable
-				.getFinal_receivable() ? 0 : receivable.getFinal_receivable()
-				.doubleValue()));
+		document.addField("final_receivable", (null == receivable.getFinal_receivable() ? 0 : receivable.getFinal_receivable().doubleValue()));
 
-		document.addField("received", (null == receivable.getReceived() ? 0
-				: receivable.getReceived().doubleValue()));
+		document.addField("received", (null == receivable.getReceived() ? 0 : receivable.getReceived().doubleValue()));
 
-		document.addField("budget_balance", (null == receivable
-				.getBudget_balance() ? 0 : receivable.getBudget_balance()
-				.doubleValue()));
+		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
 
-		document.addField("final_balance", (null == receivable
-				.getFinal_balance() ? 0 : receivable.getFinal_balance()
-				.doubleValue()));
-
+		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
+		document.addField("financial_body_name", receivable.getFinancial_body_name());
+		document.addField("financial_body_pk", receivable.getFinancial_body_pk());
 		document.addField("sales", receivable.getSales());
 		document.addField("sales_name", receivable.getSales_name());
 		return document;
@@ -314,23 +295,18 @@ public class ReceivableServiceImpl implements ReceivableService {
 
 	@Override
 	public void updateReceivableReceived(ClientReceivedDetailBean detail) {
-		ReceivableBean receivable = dao.selectReceivableByTeamNumber(detail
-				.getTeam_number());
+		ReceivableBean receivable = dao.selectReceivableByTeamNumber(detail.getTeam_number());
 
-		receivable.setReceived(receivable.getReceived().add(
-				detail.getReceived()));
-		receivable.setBudget_balance(receivable.getBudget_balance().subtract(
-				detail.getReceived()));
+		receivable.setReceived(receivable.getReceived().add(detail.getReceived()));
+		receivable.setBudget_balance(receivable.getBudget_balance().subtract(detail.getReceived()));
 
 		if (receivable.getFinal_flg().equals("Y")) {
-			receivable.setFinal_balance(receivable.getFinal_balance().subtract(
-					detail.getReceived()));
+			receivable.setFinal_balance(receivable.getFinal_balance().subtract(detail.getReceived()));
 		}
 
 		dao.update(receivable);
 
-		SolrClient solrClient = solr.getSolr(PropertiesUtil
-				.getProperty("solr.receivableUrl"));
+		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
 
 		SolrInputDocument document = castR2D(receivable);
 		try {

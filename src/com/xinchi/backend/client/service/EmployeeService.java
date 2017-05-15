@@ -40,8 +40,7 @@ public interface EmployeeService {
 	 * 
 	 * @param bo
 	 */
-	public List<com.xinchi.bean.ClientEmployeeBean> getAllClientEmployeeByParam(
-			com.xinchi.bean.ClientEmployeeBean bo);
+	public List<com.xinchi.bean.ClientEmployeeBean> getAllClientEmployeeByParam(com.xinchi.bean.ClientEmployeeBean bo);
 
 	public String createEmployee(ClientEmployeeBean client);
 
@@ -50,4 +49,7 @@ public interface EmployeeService {
 	public List<ClientEmployeeBean> getAllClientEmployeeByPage(Page<ClientEmployeeBean> page);
 
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
+
+	public String deleteClientEmployee(List<String> employee_pks);
+	public String recoveryClientEmployee(List<String> employee_pks);
 }

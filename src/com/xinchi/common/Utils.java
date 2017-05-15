@@ -1,5 +1,11 @@
 package com.xinchi.common;
 
+import static com.xinchi.common.SimpletinyString.isEmpty;
+
+import java.io.File;
+import java.io.FileInputStream;
+
+import com.xinchi.tools.PropertiesUtil;
 
 public class Utils {
 
@@ -22,5 +28,15 @@ public class Utils {
 			return "";
 		ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 		return ext;
+	}
+
+	public static String deleteFileFromDisk(String fileType, String subFolder, String fileName) {
+		String baseFolder = PropertiesUtil.getProperty(FileFolder.valueOf(fileType).value());
+		if (!isEmpty(subFolder)) {
+			baseFolder = baseFolder + File.separator + subFolder;
+		}
+		File file = new File(baseFolder + File.separator + fileName);
+		file.delete();
+		return "success";
 	}
 }

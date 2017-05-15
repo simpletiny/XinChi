@@ -10,6 +10,8 @@ public class SupperBO {
 	private String date_from;
 	private String date_to;
 
+	private String delete_flg;
+
 	public String getUpdate_time() {
 		return update_time;
 	}
@@ -64,6 +66,14 @@ public class SupperBO {
 
 	public void setDate_to(String date_to) {
 		this.date_to = date_to;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
 	}
 
 }

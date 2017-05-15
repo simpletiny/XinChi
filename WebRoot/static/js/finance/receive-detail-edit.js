@@ -14,7 +14,7 @@ var DetailContext = function() {
 		fail_msg(reason.responseText);
 	});
 
-	$.getJSON(self.apiurl + 'finance/searchDetailByPk',"detailId="+self.detailId, function(data) {
+	$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + self.detailId, function(data) {
 		if (data.detail) {
 			self.detail(data.detail);
 		} else {
@@ -46,6 +46,8 @@ var DetailContext = function() {
 						endLoadingIndicator();
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						} else if (str == "time") {
+							fail_msg("同一账户下的明细账，时间不能相同，请调整时间。");
 						}
 					});
 					layer.close(index);

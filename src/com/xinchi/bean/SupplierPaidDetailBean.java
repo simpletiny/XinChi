@@ -41,6 +41,9 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	private String pk;
 	private String limit_time;
+
+	private String approve_user;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -183,6 +186,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setLimit_time(String limit_time) {
 		this.limit_time = limit_time;
+	}
+
+	public String getApprove_user() {
+		return approve_user;
+	}
+
+	public void setApprove_user(String approve_user) {
+		this.approve_user = approve_user;
 	}
 
 }
