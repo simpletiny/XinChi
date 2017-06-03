@@ -19,6 +19,12 @@
 		<action name="searchNewUsers" class="userAction" method="searchNewUsers">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchUsersByPage" class="userAction" method="searchUsersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="approveUser" class="userAction" method="approveUser">
 			<result name="success" type="str">resultStr</result>
 		</action>

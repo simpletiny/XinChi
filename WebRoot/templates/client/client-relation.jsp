@@ -121,7 +121,7 @@
 								<th>通话期间</th> -->
 								<th>应收款总计</th>
 								<th>最长账期</th>
-								<th>待办事宜</th>
+								<!-- <th>待办事宜</th> -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
@@ -143,8 +143,8 @@
 								<td data-bind="text: $data.last_chat_period"></td> -->
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.last_receivable_period"></td>
-								<td><a href="javascript:void(0)" data-bind="event: {click:function(){$root.createToDo($data.client_employee_pk)}}">新增</a>&nbsp; <a href="javascript:void(0)"
-									data-bind="event: {click:function(){$root.viewToDo($data.pk)}}">查看</a></td>
+								<!-- <td><a href="javascript:void(0)" data-bind="event: {click:function(){$root.createToDo($data.client_employee_pk)}}">新增</a>&nbsp; <a href="javascript:void(0)"
+									data-bind="event: {click:function(){$root.viewToDo($data.pk)}}">查看</a></td> -->
 
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.sales_name"></td>
@@ -188,21 +188,21 @@
 				<div class="span6">
 					<label class="col-md-1 control-label">关系度</label>
 					<div class="col-md-3">
-						<select class="form-control" data-bind="options: relationLevel, optionsCaption: '无',value:chosenRelationLevel"
+						<select class="form-control" data-bind="options: relationLevel, value:chosenRelationLevel"
 							name="relation.level"></select>
 					</div>
 				</div>
 				<div class="span6">
 					<label class="col-md-1 control-label">市场力</label>
 					<div class="col-md-3">
-						<select class="form-control" data-bind="options: marketLevel, optionsCaption: '无',value:chosenMarketLevel"
+						<select class="form-control" data-bind="options: marketLevel,value:chosenMarketLevel"
 							name="relation.level"></select>
 					</div>
 				</div>
 				<div class="span6">
 					<label class="col-md-1 control-label">回款誉</label>
 					<div class="col-md-3">
-						<select class="form-control" data-bind="options: backLevel, optionsCaption: '无',value:chosenBackLevel"
+						<select class="form-control" data-bind="options: backLevel,value:chosenBackLevel"
 							name="relation.level"></select>
 					</div>
 				</div>

@@ -8,7 +8,20 @@
 		<action name="rejectPayApply" class="accountingAction" method="rejectPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		
+		<!-- 待支付页面 -->
+		<action name="searchWaitingForPaidByPage" class="accPaidAction" method="searchWaitingForPaidByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneWFP" class="accPaidAction" method="searchOneWFP">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="pay" class="accPaidAction" method="pay">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

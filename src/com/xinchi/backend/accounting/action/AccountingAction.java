@@ -1,4 +1,4 @@
-package com.xinchi.backend.accounting;
+package com.xinchi.backend.accounting.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;

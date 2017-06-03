@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.WaitingForPaidMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.WaitingForPaidBean">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="pay_number" property="pay_number" jdbcType="CHAR" />
+		<result column="item" property="item" jdbcType="VARCHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="approval_user" property="approval_user" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pay_number,
+		item,
+		receiver,
+		money,
+		limit_time,
+		apply_user,
+		approval_user,
+		status,
+		create_user,
+		pk,
+		related_pk,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from waiting_for_paid
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByPayNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from waiting_for_paid
+		where pay_number = #{pay_number,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from waiting_for_paid
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.WaitingForPaidBean">
+
+		insert into waiting_for_paid
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pay_number != null">
+				pay_number,
+			</if>
+			<if test="item != null">
+				item,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="limit_time != null">
+				limit_time,
+			</if>
+			<if test="apply_user != null">
+				apply_user,
+			</if>
+			<if test="approval_user != null">
+				approval_user,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pay_number != null">
+				#{pay_number,jdbcType=CHAR},
+			</if>
+			<if test="item != null">
+				#{item,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="limit_time != null">
+				#{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_user != null">
+				#{apply_user,jdbcType=VARCHAR},
+			</if>
+			<if test="approval_user != null">
+				#{approval_user,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.WaitingForPaidBean">
+		update waiting_for_paid
+		<set>
+			<if test="pay_number != null">
+				pay_number = #{pay_number,jdbcType=CHAR},
+			</if>
+			<if test="item != null">
+				item = #{item,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="limit_time != null">
+				limit_time = #{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_user != null">
+				apply_user = #{apply_user,jdbcType=VARCHAR},
+			</if>
+			<if test="approval_user != null">
+				approval_user = #{approval_user,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.WaitingForPaidBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from waiting_for_paid
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.pay_number,
+		A.item,
+		A.receiver,
+		A.money,
+		A.limit_time,
+		B.user_name as apply_user,
+		C.user_name as approval_user,
+		A.status,
+		A.create_user,
+		A.pk,
+		A.related_pk,
+		A.update_user,
+		A.create_time,
+		A.update_time
+		from waiting_for_paid A
+		LEFT JOIN user_base B on A.apply_user=B.user_number
+		LEFT JOIN user_base C on A.approval_user = C.user_number
+		<where>
+			<if test="params.bo.status != null and params.bo.status !=''">
+				and A.status in (${params.bo.status})
+			</if>
+		</where>
+	</select>
+</mapper>

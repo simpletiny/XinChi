@@ -2,7 +2,9 @@ package com.xinchi.backend.user.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -95,6 +97,17 @@ public class UserAction extends BaseAction {
 
 	public String searchNewUsers() {
 		users = userService.getAllNewUsers();
+		return SUCCESS;
+	}
+
+	private UserCommonBean ucb;
+
+	public String searchUsersByPage() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", ucb);
+		page.setParams(params);
+
+		users = userService.selectByPage(page);
 		return SUCCESS;
 	}
 
@@ -206,6 +219,14 @@ public class UserAction extends BaseAction {
 
 	public void setUser_roles(String user_roles) {
 		this.user_roles = user_roles;
+	}
+
+	public UserCommonBean getUcb() {
+		return ucb;
+	}
+
+	public void setUcb(UserCommonBean ucb) {
+		this.ucb = ucb;
 	}
 
 }

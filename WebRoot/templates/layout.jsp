@@ -114,12 +114,10 @@
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-				<li class="product"><a href="<%=basePath%>templates/sale/payable.jsp"><i class="fa fa-users fa-lg fa-fw"></i>应付款管理</a>
+				<li class="product"><a href="<%=basePath%>templates/sale/payable.jsp"><i class="fa fa-users fa-lg fa-fw"></i>地接款管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>应付款</a></li>
 						<li><a href="<%=basePath%>templates/sale/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出详表</a></li>
-						<li><a href="<%=basePath%>templates/accounting/pay-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出审批</a></li>
-						<li><a href="<%=basePath%>templates/accounting/waiting-for-paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待支付</a></li>
 					</ol></li>
 			</s:if>
 
@@ -128,9 +126,8 @@
 				<li class="finance"><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-users fa-lg fa-fw"></i>出纳</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/finance/card.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>账户管理</a></li>
-					</ol>
-					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/finance/detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>明细账</a></li>
+						<li><a href="<%=basePath%>templates/finance/detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>银行流水</a></li>
+						<li><a href="<%=basePath%>templates/accounting/waiting-for-paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待支付</a></li>
 					</ol></li>
 			</s:if>
 
@@ -138,8 +135,15 @@
 				<li class="user"><a href="<%=basePath%>templates/users/user-approve.jsp"><i class="fa fa-users fa-lg fa-fw"></i>用户管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/users/user-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>新用户审批</a></li>
+						<li><a href="<%=basePath%>templates/users/users.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户管理</a></li>
 						<li><a href="<%=basePath%>templates/users/user-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户组</a></li>
 						<li><a href="<%=basePath%>templates/users/user-online.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>在线员工</a></li>
+					</ol></li>
+			</s:if>
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+				<li class="approval"><a href="<%=basePath%>templates/accounting/pay-approve.jsp"><i class="fa fa-users fa-lg fa-fw"></i>审批</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/accounting/pay-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出审批</a></li>
 					</ol></li>
 			</s:if>
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-users fa-lg fa-fw"></i>系统相关</a>

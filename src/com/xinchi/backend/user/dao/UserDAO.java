@@ -6,6 +6,7 @@ import java.util.Map;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.mybatis.param.MapParam;
+import com.xinchi.tools.Page;
 
 public interface UserDAO {
 
@@ -59,4 +60,6 @@ public interface UserDAO {
 	public UserBaseBean selectUserByName(String user_name);
 	
 	public Map<Object, Object> getUserMap(MapParam param);
+
+	public List<UserCommonBean> selectByPage(Page page);
 }

@@ -53,4 +53,12 @@
     ON A.id = B.id
     where B.user_role like CONCAT('%',#{roles},'%')
   </select>
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id
+    where A.user_number!='N00000'
+    ORDER BY user_number
+  </select>
 </mapper>

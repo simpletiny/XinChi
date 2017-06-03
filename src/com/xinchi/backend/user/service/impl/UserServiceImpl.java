@@ -21,6 +21,7 @@ import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
+import com.xinchi.tools.Page;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -156,6 +157,11 @@ public class UserServiceImpl implements UserService {
 	public List<UserCommonBean> getAllNewUsers() {
 		return dao.getAllNewUsers();
 
+	}
+
+	@Override
+	public List<UserCommonBean> selectByPage(Page page) {
+		return dao.selectByPage(page);
 	}
 
 }

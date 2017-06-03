@@ -406,6 +406,9 @@
 			<if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
 				and A.delete_flg =#{params.bo.delete_flg,jdbcType=VARCHAR}
 			</if>
+			 <if test="params.bo.delete_flg == null or params.bo.delete_flg ==''">
+	         and A.delete_flg = 'N'
+	      </if>
 		</where>
 	</select>
 </mapper>

@@ -165,6 +165,7 @@ var OrderContext = function() {
 			}
 		}
 		allot_json += ']';
+		layer.close(receiveLayer);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -174,7 +175,7 @@ var OrderContext = function() {
 				if (str != "OK") {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(receiveLayer);
+
 				self.search();
 				endLoadingIndicator();
 			},
@@ -215,12 +216,14 @@ var OrderContext = function() {
 						totalPay += (data.final_balance - 0);
 					}
 				} else {
-					if (data.budget_balance <= 0) {
-						fail_msg(data.team_number + "尾款必须为正");
-						check_result = false;
-					} else {
-						totalPay += (data.budget_balance - 0);
-					}
+					// if (data.budget_balance <= 0) {
+					// fail_msg(data.team_number + "尾款必须为正");
+					// check_result = false;
+					// } else {
+					// totalPay += (data.budget_balance - 0);
+					// }
+					fail_msg(data.team_number + "还未决算!");
+					check_result = false;
 				}
 			});
 			if (!check_result)
@@ -289,6 +292,7 @@ var OrderContext = function() {
 			}
 		}
 		allot_json += ']';
+		layer.close(payLayer);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -298,7 +302,7 @@ var OrderContext = function() {
 				if (str != "OK") {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(payLayer);
+
 				self.search();
 				endLoadingIndicator();
 			},
@@ -363,7 +367,7 @@ var OrderContext = function() {
 		if (!$("#form-strike").valid())
 			return;
 		var data = $("#form-strike").serialize();
-		console.log(data);
+		layer.close(strikeLayer);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -373,7 +377,7 @@ var OrderContext = function() {
 				if (str != "OK") {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(strikeLayer);
+
 				self.search();
 				endLoadingIndicator();
 			}
@@ -401,7 +405,7 @@ var OrderContext = function() {
 			$(self.chosenPayables()).each(function(idx, data) {
 				supplier_employee_pks.push(data.supplier_employee_pk);
 				if (data.final_flg != "Y") {
-					fail_msg(data.team_number + "还未决算，不能执行扣款申请");
+					fail_msg(data.team_number + "还未决算");
 					check_result = false;
 
 				} else {
@@ -475,6 +479,7 @@ var OrderContext = function() {
 			}
 		}
 		allot_json += ']';
+		layer.close(deductLayer);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -484,7 +489,7 @@ var OrderContext = function() {
 				if (str != "OK") {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(deductLayer);
+
 				self.search();
 				endLoadingIndicator();
 			},

@@ -280,7 +280,33 @@
 	     </if>
     </where> 
  </select>
-   
+ 
+ <select id="selectByRelatedPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select 
+  		A.team_number, 
+    	B.financial_body_name as supplier_employee_name, 
+    	B.financial_body_pk as supplier_employee_pk, 
+    	A.money, 
+    	LEFT(A.time,10) AS time, 
+    	A.type, 
+    	A.confirm_time, 
+    	A.status, 
+    	A.comment, 
+    	A.sum_money, 
+    	A.allot_money, 
+    	A.related_pk, 
+    	A.card_pk, 
+    	A.card_account, 
+    	A.create_user, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_time,
+    	A.update_time,
+    	A.limit_time
+    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+     
+    where A.related_pk = #{related_pk,jdbcType=VARCHAR}
+ </select>
    
     <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 

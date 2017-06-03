@@ -133,12 +133,43 @@ public class ResourcesConstants {
 	public static String BANK_HRB = "HRB";
 	// 网商银行
 	public static String BANK_MY = "MY";
-	
-	//客户.供应商等停用状态
-	public static String STOP_STATUS_NORMAL="正常";
-	public static String STOP_STATUS_STOP="已停用";
-	
-	//财务主体关联旅游公司状态
-	public static String RELATE_STATUS_YES="已关联";
-	public static String RELATE_STATUS_NO="未关联";
+
+	// 客户.供应商等停用状态
+	public static String STOP_STATUS_NORMAL = "正常";
+	public static String STOP_STATUS_STOP = "已停用";
+
+	// 财务主体关联旅游公司状态
+	public static String RELATE_STATUS_YES = "已关联";
+	public static String RELATE_STATUS_NO = "未关联";
+
+	/**
+	 * 计数种类
+	 */
+	// 支付单号计数
+	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
+
+	/**
+	 * 支付种类
+	 */
+	// 地接款
+	public static String PAY_TYPE_DIJIE = "D";
+	// 销售费用
+	public static String PAY_TYPE_XIAOSHOU = "X";
+	// 办公费用
+	public static String PAY_TYPE_BANGONG = "B";
+	// 产品费用
+	public static String PAY_TYPE_CHANPIN = "C";
+	// 票务费用
+	public static String PAY_TYPE_PIAOWU = "P";
+	// 交通费用
+	public static String PAY_TYPE_JIAOTONG = "J";
+	// 工资费用
+	public static String PAY_TYPE_GONGZI = "G";
+	// 其他费用
+	public static String PAY_TYPE_QITA = "Q";
+
+	public static String PAY_STATUS_ING = "I";
+	public static String PAY_STATUS_YES = "Y";
+	public static String PAY_STATUS_NO = "N";
+
 }

@@ -11,11 +11,11 @@ var ClientContext = function() {
 	// 维度
 	self.level = [ '关系度', '回款誉', '市场力' ];
 	// 关系度
-	self.relationLevel = [ '朋友级', '商务级', '市场级', '绝缘级', '排斥级' ];
+	self.relationLevel = [ '朋友级', '商务级', '市场级', '新增级', '排斥级' ];
 	// 回款誉
-	self.marketLevel = [ '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+	self.marketLevel = [ '未知','主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	// 市场力
-	self.backLevel = [ '提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
+	self.backLevel = [ '未知','提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
 	self.chosenLevel = ko.observableArray([]);
 
 	self.chosenRelationLevel = ko.observableArray([]);

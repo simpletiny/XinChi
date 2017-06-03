@@ -51,4 +51,10 @@ public class PaidDAOImpl extends SqlSessionDaoSupport implements PaidDAO {
 		daoUtil.updateByBOParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.updateByPrimaryKey", detail);
 
 	}
+
+	@Override
+	public SupplierPaidDetailBean selectByRelatedPk(String related_pk) {
+		
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByRelatedPk", related_pk);
+	}
 }

@@ -13,9 +13,9 @@ import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.mybatis.param.MapParam;
+import com.xinchi.tools.Page;
 
 @Repository
-@Scope("prototype")
 public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 
 	private SqlSession sqlSession;
@@ -35,64 +35,52 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 
 	@Override
 	public void update(UserBaseBean bo) {
-		daoUtil.updateByPK(
-				"com.xinchi.bean.mapper.UserBaseMapper.updateByPrimaryKey", bo);
+		daoUtil.updateByPK("com.xinchi.bean.mapper.UserBaseMapper.updateByPrimaryKey", bo);
 	}
 
 	@Override
 	public void delete(String id) {
-		daoUtil.deleteByPK(
-				"com.xinchi.bean.mapper.UserBaseMapper.deleteByPrimaryKey", id);
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.UserBaseMapper.deleteByPrimaryKey", id);
 	}
 
 	@Override
 	public UserBaseBean selectByPrimaryKey(String id) {
-		return (UserBaseBean) daoUtil.selectByPK(
-				"com.xinchi.bean.mapper.UserBaseMapper.selectByPrimaryKey", id);
+		return (UserBaseBean) daoUtil.selectByPK("com.xinchi.bean.mapper.UserBaseMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<UserBaseBean> getAllByParam(UserBaseBean bo) {
-		List<UserBaseBean> list = daoUtil.selectByBOParamT(
-				"com.xinchi.bean.mapper.UserBaseMapper.selectByParam", bo);
+		List<UserBaseBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserBaseMapper.selectByParam", bo);
 		return list;
 	}
 
 	@Override
 	public String getMaxUserNumber() {
-		String max = daoUtil
-				.selectOneValue("com.xinchi.bean.mapper.UserBaseMapper.selectMaxUserNumber");
+		String max = daoUtil.selectOneValue("com.xinchi.bean.mapper.UserBaseMapper.selectMaxUserNumber");
 		return max;
 	}
 
 	@Override
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo) {
-		List<UserCommonBean> list = daoUtil.selectByBOParamT(
-				"com.xinchi.bean.mapper.UserCommonMapper.selectAllByParam", bo);
+		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllByParam", bo);
 		return list;
 	}
 
 	@Override
 	public List<UserCommonBean> getAllNewUsers() {
-		List<UserCommonBean> list = daoUtil.selectByBOParamT(
-				"com.xinchi.bean.mapper.UserCommonMapper.selectAllNewUsers",
-				null);
+		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllNewUsers", null);
 		return list;
 	}
 
 	@Override
 	public List<UserCommonBean> getAllUsersByRole(String roles) {
-		List<UserCommonBean> list = daoUtil.selectByParam(
-				"com.xinchi.bean.mapper.UserCommonMapper.selectAllUsersByRole",
-				roles);
+		List<UserCommonBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.UserCommonMapper.selectAllUsersByRole", roles);
 		return list;
 	}
 
 	@Override
 	public List<UserBaseBean> getAllByPks(String[] pks) {
-		List<UserBaseBean> list = daoUtil.selectByParam(
-				"com.xinchi.bean.mapper.UserBaseMapper.selectAllByPks",
-				pks);
+		List<UserBaseBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.UserBaseMapper.selectAllByPks", pks);
 		return list;
 	}
 
@@ -103,13 +91,18 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 
 	@Override
 	public UserBaseBean selectUserByName(String user_name) {
-		
+
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.UserBaseMapper.selectByUserName", user_name);
 	}
 
 	@Override
 	public Map<Object, Object> getUserMap(MapParam param) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.UserBaseMapper.selectUserMap", param);
+	}
+
+	@Override
+	public List<UserCommonBean> selectByPage(Page page) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.UserCommonMapper.selectByPage", page);
 	}
 
 }

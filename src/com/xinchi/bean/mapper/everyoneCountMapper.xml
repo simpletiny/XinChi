@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.EveryoneCountMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.EveryoneCountBean" >
+	    <result column="count" property="count" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    	count, 
+    	type, 
+    	pk
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from everyone_count
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+   <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientVisitBean" >
+    update everyone_count
+    <set >
+    	<if test="count != null">
+	        count = #{count,jdbcType=CHAR},
+	      </if>
+    	<if test="type != null">
+	        type = #{type,jdbcType=CHAR},
+	      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+  <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from everyone_count
+    where type = #{type,jdbcType=CHAR}
+  </select>
+ <select id="selectByParam" parameterType="com.xinchi.bean.EveryoneCountBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from everyone_count
+   </select>
+</mapper>

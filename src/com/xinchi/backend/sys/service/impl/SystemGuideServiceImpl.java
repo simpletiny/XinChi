@@ -52,7 +52,7 @@ public class SystemGuideServiceImpl implements SystemGuideService {
 			return;
 		
 		//删除保存在磁盘中的图片
-		String imgEx = "<img (src=\"/XinChi/file/getFileStream\\?)(.*?)\".*? \\/\\>";
+		String imgEx = "<img (src=\".*?/file/getFileStream\\?)(.*?)\".*? \\/\\>";
 		Pattern imgPattern = Pattern.compile(imgEx);
 		Matcher matcher = imgPattern.matcher(view.getContent());
 		List<String> imgs = new ArrayList<String>();

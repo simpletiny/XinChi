@@ -15,5 +15,7 @@ public interface PaidDAO {
 	public void insert(SupplierPaidDetailBean detail);
 
 	public List<SupplierPaidDetailBean> getAllByPage(Page page);
+	
+	public SupplierPaidDetailBean selectByRelatedPk(String related_pk);
 
 }

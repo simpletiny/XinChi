@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.SaleOrderService;
-import com.xinchi.backend.util.service.TeamNumberService;
+import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -41,7 +41,7 @@ public class SaleOrderAction extends BaseAction {
 	private SaleOrderService saleOrderService;
 
 	@Autowired
-	private TeamNumberService teamNumberService;
+	private NumberService numberService;
 
 	@Autowired
 	private ReceivableService receivableService;
@@ -56,7 +56,7 @@ public class SaleOrderAction extends BaseAction {
 	 * @throws ParseException
 	 */
 	public String createOrder() {
-		String team_number = teamNumberService.generateTeamNumber();
+		String team_number = numberService.generateTeamNumber();
 		order.setTeam_number(team_number);
 
 		// 保存名单

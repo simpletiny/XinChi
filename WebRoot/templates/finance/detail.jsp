@@ -53,7 +53,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">发生日期</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control date-picker" onchange="test" placeholder="发生日期" name="detail.time" />
+								<input type="text" class="form-control date-picker" placeholder="发生日期" name="detail.time" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">

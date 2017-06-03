@@ -4,16 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.util.dao.EveryoneCountDAO;
 import com.xinchi.backend.util.dao.TeamNumberDAO;
-import com.xinchi.backend.util.service.TeamNumberService;
+import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.EveryoneCountBean;
 import com.xinchi.bean.TeamNumberBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.Utils;
 import com.xinchi.common.XinChiApplicationContext;
 
 @Service
 @Transactional
-public class TeamNumberServiceImpl implements TeamNumberService {
+public class NumberServiceImpl implements NumberService {
 
 	@Autowired
 	private TeamNumberDAO dao;
@@ -21,15 +25,12 @@ public class TeamNumberServiceImpl implements TeamNumberService {
 	@Override
 	public String generateTeamNumber() {
 		String team_number = "";
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		String sale_pk = sessionBean.getPk();
 		String user_number = sessionBean.getUser_number();
 
-		String prefix = "N"
-				+ user_number.substring(user_number.length() - 2,
-						user_number.length());
+		String prefix = "N" + user_number.substring(user_number.length() - 2, user_number.length());
 		TeamNumberBean tb = dao.selectTeamNumberBySalePk(sale_pk);
 
 		String next = "";
@@ -51,6 +52,25 @@ public class TeamNumberServiceImpl implements TeamNumberService {
 		}
 
 		return team_number;
+	}
+
+	@Autowired
+	private EveryoneCountDAO countDao;
+
+	/**
+	 * 生成支付单号
+	 * 
+	 * @return
+	 */
+	@Override
+	public String generatePayOrderNumber(String type, String orderType, String date) {
+		String number = orderType;
+		EveryoneCountBean count = countDao.selectCountByType(type);
+		String tail = Utils.fullFill(count.getCount(), "0", 7);
+		number += date + tail;
+		count.setCount(count.getCount() + 1);
+		countDao.update(count);
+		return number;
 	}
 
 	private String addOne(String value) {

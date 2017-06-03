@@ -281,7 +281,7 @@
 	</div>
 
 	<script>
-		$(".product").addClass("current").children("ol").css("display", "block");
+		$(".approval").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

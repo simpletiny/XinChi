@@ -5,6 +5,7 @@ import java.util.List;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
+import com.xinchi.tools.Page;
 
 public interface UserService {
 
@@ -63,4 +64,6 @@ public interface UserService {
 	public List<UserCommonBean> getAllUsersByRole(String uSER_ROLE_SALES);
 
 	public List<UserCommonBean> getAllUsers();
+
+	public List<UserCommonBean> selectByPage(Page page);
 }

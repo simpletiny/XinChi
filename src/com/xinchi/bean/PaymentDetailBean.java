@@ -30,8 +30,13 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String comment;
 	private String inner_flg;
 	private String inner_pk;
-	
+
 	private String month;
+	// 凭证号
+	private String voucher_number;
+	// 收款方，支出的时候有用
+	private String receiver;
+
 	public String getAccount() {
 		return account;
 	}
@@ -142,6 +147,22 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setMonth(String month) {
 		this.month = month;
+	}
+
+	public String getVoucher_number() {
+		return voucher_number;
+	}
+
+	public void setVoucher_number(String voucher_number) {
+		this.voucher_number = voucher_number;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 
 }

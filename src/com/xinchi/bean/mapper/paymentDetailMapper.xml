@@ -17,6 +17,8 @@
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="inner_flg" property="inner_flg" jdbcType="CHAR" />
 		<result column="inner_pk" property="inner_pk" jdbcType="CHAR" />
+		<result column="voucher_number" property="voucher_number" jdbcType="CHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -35,7 +37,9 @@
 		update_time,
 		comment,
 		inner_flg,
-		inner_pk
+		inner_pk,
+		voucher_number,
+		receiver
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -99,6 +103,12 @@
 			<if test="inner_pk != null">
 				inner_pk,
 			</if>
+			<if test="voucher_number != null">
+				voucher_number,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="account != null">
@@ -145,6 +155,12 @@
 			</if>
 			<if test="inner_pk != null">
 				#{inner_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_number != null">
+				#{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -196,7 +212,13 @@
 				inner_flg = #{inner_flg,jdbcType=VARCHAR},
 			</if>
 			<if test="inner_pk != null">
-				inner_pk = #{inner_pk,jdbcType=VARCHAR},
+				inner_pk = #{inner_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_number != null">
+				voucher_number = #{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

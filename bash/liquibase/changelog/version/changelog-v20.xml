@@ -936,4 +936,106 @@ create view client_relation_summary as
 			<comment>CREATE  TABLE product_view</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+			ALTER TABLE client_employee CHANGE COLUMN relation_level relation_level VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT '新增级'  , CHANGE COLUMN back_level back_level VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT '未知'  , CHANGE COLUMN market_level market_level VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT '未知'  ;
+
+				
+             ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+				UPDATE client_employee set relation_level='新增级' where relation_level='绝缘级' or relation_level is null;
+
+             ]]>
+			<comment>UPDATE TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+				UPDATE client_employee set market_level='未知' where market_level is null;
+				UPDATE client_employee set back_level='未知' where back_level is null;
+
+             ]]>
+			<comment>UPDATE TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE  TABLE everyone_count (
+				  count INT NOT NULL ,
+				  type VARCHAR(20) NOT NULL ,
+				  pk VARCHAR(10) NOT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '计数表';
+             ]]>
+			<comment>CREATE  TABLE everyone_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+				insert into everyone_count values(1,'PAY_ORDER_NUMBER','1');
+             ]]>
+			<comment>insert data to everyone_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE waiting_for_paid (
+				  pay_number CHAR(16) NOT NULL ,
+				  item VARCHAR(10) NOT NULL ,
+				  receiver VARCHAR(100) NULL ,
+				  money DECIMAL(12,2) NOT NULL ,
+				  limit_time VARCHAR(19) NULL ,
+				  apply_user VARCHAR(10) NOT NULL ,
+				  approval_user VARCHAR(10) NOT NULL ,
+				  status CHAR(1) NOT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '待支付表';
+
+             ]]>
+			<comment>CREATE TABLE waiting_for_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE waiting_for_paid ADD COLUMN related_pk VARCHAR(1100) NULL  AFTER update_user ;
+             ]]>
+			<comment>ALTER TABLE waiting_for_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE payment_detail ADD COLUMN voucher_number CHAR(16) NULL  AFTER inner_pk ;
+             ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE payment_detail ADD COLUMN receiver VARCHAR(100) NULL COMMENT '只有是支出的时候有用'  AFTER voucher_number ;
+             ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

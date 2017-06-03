@@ -35,7 +35,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <ul>
             <li><input type="text" id="username" placeholder="用户名" class="ip-default" name="ubb.login_name" required="required" /></li>
             <li><input type="password" id="password" placeholder="密码" class="ip-default" name="ubb.password" required="required" /></li>
-            <li><input type="checkbox" id="auto-login"/><label>自动登录</label></li>
+            <li><input type="checkbox" id="auto-login"/><label>记住密码</label></li>
             <li><div style="padding-top: 15px;"><button type="submit" class="btn btn-green">登录</button></div></li>
             <li><div style="padding-top: 5px;"><a style="cursor: pointer" href="<%=basePath%>templates/users/register.jsp">注册</a></div></li>
         </ul>

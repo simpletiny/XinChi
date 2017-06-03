@@ -393,6 +393,9 @@
 	      <if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
 	         and delete_flg = #{params.bo.delete_flg,jdbcType=VARCHAR}
 	      </if>
+	       <if test="params.bo.delete_flg == null or params.bo.delete_flg ==''">
+	         and delete_flg = 'N'
+	      </if>
 	      <if test="params.bo.relate_flg != null and params.bo.relate_flg !=''">
 	         and relate_flg = #{params.bo.relate_flg,jdbcType=VARCHAR}
 	      </if>
