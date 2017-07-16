@@ -25,6 +25,7 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 	private Integer last_order_period;
 
 	private int visit_count;
+	private int accurate_count;
 
 	private Integer last_visit_period;
 
@@ -191,6 +192,14 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	public void setLevel(String level) {
 		this.level = level;
+	}
+
+	public int getAccurate_count() {
+		return accurate_count;
+	}
+
+	public void setAccurate_count(int accurate_count) {
+		this.accurate_count = accurate_count;
 	}
 
 }

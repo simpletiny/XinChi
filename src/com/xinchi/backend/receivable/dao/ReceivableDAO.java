@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
+import com.xinchi.tools.Page;
 
 public interface ReceivableDAO {
 
@@ -16,5 +17,7 @@ public interface ReceivableDAO {
 	public void update(ReceivableBean receivable);
 
 	public List<ReceivableBean> selectAllReceivablesWithFinancial();
+
+	public List<ReceivableBean> selectByPage(Page<ReceivableBean> page);
 
 }

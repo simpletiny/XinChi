@@ -51,8 +51,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 				for (String related : related_pks) {
 					if (related.equals(detail.getPk()))
 						continue;
-					ClientReceivedDetailBean related_detail = dao
-							.selectByPk(related);
+					ClientReceivedDetailBean related_detail = dao.selectByPk(related);
 					doRollBack(related_detail);
 				}
 
@@ -73,5 +72,15 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks) {
 		return dao.selectByRelatedPks(related_pks);
+	}
+
+	@Override
+	public void update(ClientReceivedDetailBean detail) {
+		dao.update(detail);
+	}
+
+	@Override
+	public ClientReceivedDetailBean selectByPk(String received_pk) {
+		return dao.selectByPk(received_pk);
 	}
 }

@@ -44,6 +44,12 @@
 		<action name="importDetailExcel" class="paymentDetailAction" method="importDetailExcel">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="matchReceived" class="paymentDetailAction" method="matchReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="cancelMatchReceived" class="paymentDetailAction" method="cancelMatchReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

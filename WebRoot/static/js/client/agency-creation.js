@@ -235,7 +235,6 @@ function checkSame(txt, inputType) {
 			} else if (inputType == "CODE") {
 				code_check = false;
 			}
-			console.log(name_check==false)
 			if (name_check==false && code_check==false) {
 				$("#btn_save").attr("disabled", false);
 			}

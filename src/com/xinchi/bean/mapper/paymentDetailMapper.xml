@@ -3,6 +3,7 @@
 <mapper namespace="com.xinchi.bean.mapper.PaymentDetailMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.PaymentDetailBean">
 		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="account_pk" property="account_pk" jdbcType="CHAR" />
 		<result column="time" property="time" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="money" property="money" jdbcType="DECIMAL" />
@@ -19,6 +20,8 @@
 		<result column="inner_pk" property="inner_pk" jdbcType="CHAR" />
 		<result column="voucher_number" property="voucher_number" jdbcType="CHAR" />
 		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="voucher_file_name" property="voucher_file_name" jdbcType="VARCHAR" />
+		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -39,13 +42,41 @@
 		inner_flg,
 		inner_pk,
 		voucher_number,
-		receiver
+		receiver,
+		voucher_file_name,
+		match_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from payment_detail
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByVoucherNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.account,
+		B.pk as account_pk,
+		A.time,
+		A.type,
+		A.money,
+		A.balance,
+		A.record_time,
+		A.record_user,
+		A.update_user,
+		A.create_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.comment,
+		A.inner_flg,
+		A.inner_pk,
+		A.voucher_number,
+		A.receiver,
+		A.voucher_file_name,
+		A.match_flg
+		from payment_detail A
+		LEFT JOIN card B ON A.account = B.account
+		where voucher_number = #{voucher_number,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -109,6 +140,12 @@
 			<if test="receiver != null">
 				receiver,
 			</if>
+			<if test="voucher_file_name != null">
+				voucher_file_name,
+			</if>
+			<if test="match_flg != null">
+				match_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="account != null">
@@ -161,6 +198,12 @@
 			</if>
 			<if test="receiver != null">
 				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file_name != null">
+				#{voucher_file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="match_flg != null">
+				#{match_flg,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -220,6 +263,12 @@
 			<if test="receiver != null">
 				receiver = #{receiver,jdbcType=VARCHAR},
 			</if>
+			<if test="voucher_file_name != null">
+				voucher_file_name = #{voucher_file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="match_flg != null">
+				match_flg = #{match_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -235,6 +284,7 @@
 				and account = #{account,jdbcType=VARCHAR}
 			</if>
 		</where>
+		order by time
 	</select>
 	<select id="selectAfterByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
 		select
@@ -249,6 +299,7 @@
 			</if>
 		</where>
 	</select>
+
 	<select id="selectPreDetail" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -258,7 +309,10 @@
 				and account=#{account,jdbcType=VARCHAR}
 			</if>
 			<if test="time != null and time !=''">
-				and time &lt; #{time,jdbcType=VARCHAR}
+				and time &lt;= #{time,jdbcType=VARCHAR}
+			</if>
+			<if test="pk != null and pk !=''">
+				and pk != #{pk,jdbcType=VARCHAR}
 			</if>
 		</where>
 		order by time desc limit 1
@@ -274,6 +328,9 @@
 			</if>
 			<if test="params.bo.type != null and params.bo.type !=''">
 				and type = #{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.match_flg != null and params.bo.match_flg !=''">
+				and match_flg = #{params.bo.match_flg,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.time != null and params.bo.time !=''">
 				and left(time,10) = #{params.bo.time,jdbcType=VARCHAR}

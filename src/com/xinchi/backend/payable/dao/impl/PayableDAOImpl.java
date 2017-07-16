@@ -14,6 +14,7 @@ import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+import com.xinchi.tools.Page;
 
 @Repository
 public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
@@ -71,6 +72,11 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 	public void deleteByTeamNumber(String team_number) {
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.PayableMapper.deleteByTeamNumber", team_number);
 
+	}
+
+	@Override
+	public List<PayableBean> selectByPage(Page<PayableBean> page) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableMapper.selectByPage",page);
 	}
 
 }

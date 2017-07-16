@@ -1,0 +1,478 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	drop VIEW if exists visit_count;
+            	create VIEW visit_count AS 
+            select A.pk as client_employee_pk,count( CASE WHEN B.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
+										and B.date <=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and B.type='VISIT' THEN  B.pk END) as week_visit_count,
+							count(CASE WHEN LEFT(B.date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND B.type='VISIT' THEN B.pk END) as month_visit_count
+					
+				from client_employee A left join 
+ 				client_visit B on A.pk=B.client_employee_pk 
+					group by A.pk
+             ]]>
+			<comment> ALTER VIEW visit_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE reimbursment (
+					  item CHAR(1) NOT NULL ,
+					  date VARCHAR(10) NOT NULL ,
+					  money DECIMAL(12,2) NOT NULL ,
+					  comment VARCHAR(200) NULL ,
+					  status CHAR(1) NULL DEFAULT 'I' COMMENT 'I申请中,Y已同意,N已拒绝,P已支付' ,
+					  apply_user VARCHAR(10) NULL ,
+					  approval_user VARCHAR(10) NULL ,
+					  pay_user VARCHAR(10) NULL ,
+					  approval_time VARCHAR(19) NULL ,
+					  pay_time VARCHAR(19) NULL ,
+					  pay_number CHAR(16) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '报销表';
+
+             ]]>
+			<comment> CREATE  TABLE reimbursment</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP TABLE IF EXISTS reimbursment;
+            	CREATE  TABLE reimbursement (
+					  item CHAR(1) NOT NULL ,
+					  date VARCHAR(10) NOT NULL ,
+					  money DECIMAL(12,2) NOT NULL ,
+					  comment VARCHAR(200) NULL ,
+					  status CHAR(1) NULL DEFAULT 'I' COMMENT 'I申请中,Y已同意,N已拒绝,P已支付' ,
+					  apply_user VARCHAR(10) NULL ,
+					  approval_user VARCHAR(10) NULL ,
+					  pay_user VARCHAR(10) NULL ,
+					  approval_time VARCHAR(19) NULL ,
+					  pay_time VARCHAR(19) NULL ,
+					  pay_number CHAR(16) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '报销表';
+
+             ]]>
+			<comment> CREATE  TABLE reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	create view approval_all as 
+			select 
+			    	B.financial_body_name as receiver,
+			    	A.money as money, 
+			    	'D' as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	A.related_pk as related_pk, 
+			    	C.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	A.limit_time as limit_time
+			    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+			    LEFT JOIN user_base C on A.create_user = C.user_number
+			    UNION ALL 
+			    select
+			    	B.user_name as receiver,
+			    	A.money as money, 
+			    	A.item as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	null as related_pk, 
+			    	B.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	null as limit_time
+			    	from reimbursement A 
+			    	LEFT JOIN user_base B on A.apply_user = B.user_number
+
+             ]]>
+			<comment>    create view approval_all</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		UPDATE client_received_detail set related_pk=pk where related_pk is null;
+             ]]>
+			<comment> UPDATE client_received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE payment_detail ADD COLUMN match_flg CHAR(1) NULL DEFAULT 'N'  AFTER voucher_file_name;
+             ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE  TABLE received_match (
+						  detail_pk CHAR(22) NOT NULL ,
+						  received_pk CHAR(22) NOT NULL ,
+						  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+						  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+						  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+						  PRIMARY KEY (pk) )
+						DEFAULT CHARACTER SET = utf8
+						COLLATE = utf8_bin;
+             ]]>
+			<comment>CREATE  TABLE received_match</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE  TABLE accurate_sale (
+					  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  product VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  summary VARCHAR(500) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  comment VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin;
+
+             ]]>
+			<comment>CREATE  TABLE accurate_sale</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		drop view if exists accurate_sale_summary;
+				create view accurate_sale_summary as
+				select 
+				        client_employee_pk,
+				        count(*) as accurate_count,
+				        datediff(now(), max(date)) last_accurate_period
+				    from
+				        accurate_sale
+				    group by client_employee_pk;
+				    
+				DROP VIEW IF EXISTS client_relation_summary;
+				CREATE VIEW client_relation_summary AS
+			    select 
+			        A.name as client_employee_name,
+			        A.pk as client_employee_pk,
+			        A.sales,
+			        A.sales_name,
+			        A.delete_flg as delete_flg,
+			        A.relation_level as relation_level,
+			        A.back_level as back_level,
+			        A.market_level as market_level,
+			        case
+			            when isnull(B.year_order_count) then 0
+			            else B.year_order_count
+			        end year_order_count,
+			        case
+			            when isnull(C.month_order_count) then 0
+			            else C.month_order_count
+			        end month_order_count,
+			        case
+			            when isnull(D.week_order_count) then 0
+			            else D.week_order_count
+			        end week_order_count,
+			        E.last_confirm_date,
+			        E.last_order_period,
+			        F.visit_count,
+			        F.last_visit_period,
+			        G.chat_count,
+			        G.last_chat_period,
+			        H.receivable,
+			        H.last_receivable_period,
+					I.accurate_count
+			    from
+			        client_employee A
+			            LEFT JOIN
+			        year_order_count B ON A.pk = B.client_employee_pk
+			            LEFT JOIN
+			        month_order_count C ON A.pk = C.client_employee_pk
+			            LEFT JOIN
+			        week_order_count D ON A.pk = D.client_employee_pk
+			            LEFT JOIN
+			        order_period E ON A.pk = E.client_employee_pk
+			            LEFT JOIN
+			        visit_summary F ON A.pk = F.client_employee_pk
+			            LEFT JOIN
+			        chat_summary G ON A.pk = G.client_employee_pk
+			            LEFT JOIN
+					receivable_for_client H ON A.pk = H.client_employee_pk
+						LEFT JOIN
+					accurate_sale_summary I ON A.pk = I.client_employee_pk;
+			     
+             ]]>
+			<comment>CREATE  TABLE accurate_sale</comment>
+		</sql>
+	</changeSet>
+		<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE client_visit ADD COLUMN sub_target VARCHAR(50) NULL  AFTER target ;
+	          ]]>
+			<comment>ALTER TABLE client_visit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE accurate_sale ADD COLUMN type VARCHAR(10) NOT NULL  AFTER create_time ;
+	          ]]>
+			<comment>ALTER TABLE accurate_salet</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+					DROP VIEW IF EXISTS month_order_count;
+					CREATE VIEW month_order_count AS
+					select 
+				        A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as month_order_count,
+						B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+						LEFT(A.confirm_date, 7) as month
+				    from
+						budget_order A 
+						LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+				
+				        
+				    group by A.client_employee_pk,month;
+	          ]]>
+			<comment>ALTER VIEW month_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+					DROP VIEW IF EXISTS week_order_count;
+					CREATE VIEW week_order_count AS
+					select
+						A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as week_order_count,
+						B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+						'本周' as week_no
+				    from
+				        budget_order A 
+						LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+				    where
+				        confirm_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+						and confirm_date <= DATE_SUB(curdate(),INTERVAL WEEKDAY(curdate()) - 6 DAY)
+				    group by A.client_employee_pk
+				
+					UNION ALL 
+					select
+						A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as week_order_count,
+						B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+						'上周' as week_no
+				    from
+				        budget_order A 
+						LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+				    where
+				        confirm_date >=DATE_SUB(CURDATE(),INTERVAL WEEKDAY(CURDATE())+7 DAY)
+				            and confirm_date <= DATE_SUB(CURDATE(),INTERVAL WEEKDAY(CURDATE())+1 DAY)
+				    group by A.client_employee_pk
+					UNION ALL 
+					select
+						A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as week_order_count,
+						B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+						'上上周' as week_no
+				    from
+				        budget_order A 
+						LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+				    where
+				        confirm_date >= DATE_SUB(CURDATE(),INTERVAL WEEKDAY(CURDATE())+14 DAY)
+				            and confirm_date <= DATE_SUB(CURDATE(),INTERVAL WEEKDAY(CURDATE())+8 DAY)
+				    group by A.client_employee_pk;
+	          ]]>
+			<comment>ALTER VIEW week_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+					CREATE  TABLE user_log (
+						  method VARCHAR(50) NOT NULL COMMENT '方法名' ,
+						  method_des VARCHAR(100) NOT NULL COMMENT '方法描述' ,
+						  class_name VARCHAR(150) NULL COMMENT '类名' ,
+						  class_des VARCHAR(250) NULL COMMENT '类描述' ,
+						  target VARCHAR(153) NULL COMMENT '实现类名' ,
+						  parameter TEXT NULL COMMENT '参数' ,
+						  user_number VARCHAR(10) NULL COMMENT '用户编号' ,
+						  time VARCHAR(19) NULL COMMENT '操作时间' ,
+						  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+						  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  PRIMARY KEY (pk) ,
+						  INDEX method (method ASC) )
+						DEFAULT CHARACTER SET = utf8
+						COLLATE = utf8_bin
+						COMMENT = '用户操作日志表';
+	          ]]>
+			<comment>CREATE  TABLE user_log</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS approval_all;
+            	create view approval_all as 
+				select 
+			    	C.supplier_short_name as receiver,
+			    	A.allot_money as money, 
+			    	'D' as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	A.related_pk as related_pk, 
+			    	D.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	A.limit_time as limit_time
+			    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+				LEFT JOIN supplier C on B.financial_body_pk = C.pk
+			    LEFT JOIN user_base D on A.create_user = D.user_number
+			    UNION ALL 
+			    select
+			    	B.user_name as receiver,
+			    	A.money as money, 
+			    	A.item as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	null as related_pk, 
+			    	B.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	null as limit_time
+			    	from reimbursement A 
+			    	LEFT JOIN user_base B on A.apply_user = B.user_number
+
+             ]]>
+			<comment>    create view approval_all</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE product_group (
+				  group_name VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  group_leader VARCHAR(8) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  comment VARCHAR(500) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品小组';
+             ]]>
+			<comment>CREATE  TABLE product_group</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE product_group_member (
+					  group_pk CHAR(22) NOT NULL ,
+					  member VARCHAR(8) NOT NULL ,
+					  pk CHAR(22) NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '产品小组成员';
+
+             ]]>
+			<comment>CREATE  TABLE product_group_member</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+            CREATE  TABLE product_group_supplier (
+				  group_pk CHAR(22) NOT NULL ,
+				  supplier_pk CHAR(22) NOT NULL ,
+				  pk CHAR(22) NOT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品小组供应商权限';
+             ]]>
+			<comment> CREATE  TABLE product_group_supplier</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+            CREATE  TABLE product (
+				  name VARCHAR(8) NOT NULL ,
+				  product_number VARCHAR(4) NOT NULL ,
+				  location VARCHAR(10) NULL ,
+				  days INT NULL ,
+				  profit_space DECIMAL(12,2) NULL ,
+				  max_profit_substract DECIMAL(12,2) NULL COMMENT '最大让利' ,
+				  business_price DECIMAL(12,2) NULL ,
+				  product_manager VARCHAR(10) NULL ,
+				  sale_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否上架',
+				  comment VARCHAR(200) NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '旅游产品表';
+             ]]>
+			<comment>CREATE  TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			  INSERT INTO everyone_count (count, type, pk) VALUES ('0', 'PRODUCT_NUMBER', '2');
+             ]]>
+			<comment>INSERT INTO everyone_count</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>

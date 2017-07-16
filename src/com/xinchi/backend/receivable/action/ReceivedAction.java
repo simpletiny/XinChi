@@ -126,8 +126,11 @@ public class ReceivedAction extends BaseAction {
 	public String applyReceive() {
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-
-		receivedService.insert(detail);
+		String pk = DBCommonUtil.genPk();
+		detail.setPk(pk);
+		detail.setRelated_pk(pk);
+		
+		receivedService.insertWithPk(detail);
 		receivableService.updateReceivableReceived(detail);
 
 		resultStr = OK;

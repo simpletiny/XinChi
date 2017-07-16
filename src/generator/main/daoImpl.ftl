@@ -25,28 +25,28 @@ public class ${clazzName?cap_first}DAOImpl extends SqlSessionDaoSupport implemen
 	}
 	
 	@Override
-	public void insert(${vo} bo) {
-		daoUtil.insertBO("seentao.xhsn.bean.mappers.${vo}Mapper.insert", bo);
+	public void insert(${voName} bean) {
+		daoUtil.insertBO("com.xinchi.bean.mapper.${voName}Mapper.insert", bean);
 	}
 
 	@Override
-	public void update(${vo} bo) {
-		daoUtil.updateByPK("seentao.xhsn.bean.mappers.${vo}Mapper.updateByPrimaryKey", bo);
+	public void update(${voName} bean) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.${voName}Mapper.updateByPrimaryKey", bean);
 	}
 
 	@Override
 	public void delete(String id) {
-		daoUtil.deleteByPK("seentao.xhsn.bean.mappers.${vo}Mapper.deleteByPrimaryKey", id);
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.${voName}Mapper.deleteByPrimaryKey", id);
 	}
 
 	@Override
-	public ${vo} selectByPrimaryKey(String id) {
-		return (${vo}) daoUtil.selectByPK("seentao.xhsn.bean.mappers.${vo}Mapper.selectByPrimaryKey", id);
+	public ${voName} selectByPrimaryKey(String id) {
+		return (${voName}) daoUtil.selectByPK("com.xinchi.bean.mapper.${voName}Mapper.selectByPrimaryKey", id);
 	}
 
 	@Override
-	public List<${vo}> getAllByParam(${vo} bo) {
-		List<${vo}> list=daoUtil.selectByBOParamT("seentao.xhsn.bean.mappers.${vo}Mapper.selectByParam", bo);
+	public List<${voName}> getAllByParam(${voName} bean) {
+		List<${voName}> list=daoUtil.selectByBOParamT("com.xinchi.bean.mapper.${voName}Mapper.selectByParam", bean);
 		return list;
 	}
 	

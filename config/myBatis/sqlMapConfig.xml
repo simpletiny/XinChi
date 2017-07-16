@@ -11,8 +11,8 @@
 		<setting name="logImpl" value="LOG4J" />
 	</settings>
 	<plugins>
-		<plugin interceptor="com.xinchi.mybatis.interceptor.PaginationInterceptor"/>
-		<plugin interceptor="com.xinchi.mybatis.interceptor.MapResultInterceptor"/>
+		<plugin interceptor="com.xinchi.mybatis.interceptor.PaginationInterceptor" />
+		<plugin interceptor="com.xinchi.mybatis.interceptor.MapResultInterceptor" />
 	</plugins>
 	<mappers>
 		<!-- 配置sql语句文件 -->
@@ -56,6 +56,13 @@
 		<mapper resource="com/xinchi/bean/mapper/productViewMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/everyoneCountMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/waitingForPaidMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/reimbursementMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/receivedMatchMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/accurateSaleMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userLogMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productGroupMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productGroupSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

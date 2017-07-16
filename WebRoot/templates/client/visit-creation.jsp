@@ -20,7 +20,7 @@
 		<input type="hidden" id="client_key" value="<%=key%>" />
 		<div class="subtitle">
 			<h2>
-				新增维护<a href="<%=basePath%>/templates/client/client-relation.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				新增拜访<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -52,25 +52,25 @@
 								<label class="l" style="width: 40%">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: visit().date" placeholder="2013-10-19" name="visit.date"
 									required="required" />
 							</div>
-							<!-- <div class="ip required" style="width: 20%">
-								<label class="l" style="width: 40%">开始时刻</label> <input type="text" id="from_time" style="width: 50%" class="ip-default time" data-bind="value: visit().from_time,event{blur:calTime}" placeholder="10:20" name="visit.from_time"
-									required="required" />
-							</div>
-							<div class="ip required" style="width: 20%">
-								<label class="l" style="width: 40%">结束时刻</label> <input type="text"  id="end_time" style="width: 50%" class="ip-default time" data-bind="value: visit().end_time,event{blur:calTime}" placeholder="11:20" name="visit.end_time"
-									required="required" />
-							</div>
-							<div class="ip" style="width: 20%">
-								<label class="l" style="width: 40%">累计时长：</label>
-								<p class="ip-default" id="sum_time">0分种</p>
-							</div> -->
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12 required">
-							<label class="l">目的</label>
+						<div class="col-md-6 required">
+							<label class="l">主要目的</label>
 							<div class="ip">
-								<input type="text" class="ip-default" data-bind="value: visit().target" maxlength="100" placeholder="不少于10个字" name="visit.target" required="required" />
+								<select class="form-control" data-bind="options: target,optionsCaption: '-- 请选择--'" name="visit.target" required="required"></select>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-12">
+							<label class="l">辅助目的</label>
+							<div class="ip">
+							<div data-bind="foreach: target" style="padding-top: 4px;">
+	                           <em class="small-box">
+	                                 <input type="checkbox" data-bind="attr: {'value': $data},checked: $root.chosenSubTargets"/><label data-bind="text: $data"></label>
+	                            </em>
+	                        </div>
 							</div>
 						</div>
 					</div>

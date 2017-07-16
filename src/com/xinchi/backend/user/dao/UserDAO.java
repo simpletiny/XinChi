@@ -58,8 +58,10 @@ public interface UserDAO {
 	public UserBaseBean getByUserNumber(String user_number);
 
 	public UserBaseBean selectUserByName(String user_name);
-	
+
 	public Map<Object, Object> getUserMap(MapParam param);
 
 	public List<UserCommonBean> selectByPage(Page page);
+
+	public UserCommonBean selectUserCommonByPk(String user_pk);
 }

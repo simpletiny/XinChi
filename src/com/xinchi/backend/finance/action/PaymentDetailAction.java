@@ -1,22 +1,27 @@
 package com.xinchi.backend.finance.action;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.finance.service.ReceivedMatchService;
+import com.xinchi.backend.receivable.service.ReceivedService;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ReceivedMatchBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.DBCommonUtil;
-import com.xinchi.common.Utils;
+import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.PropertiesUtil;
 
 @Controller
@@ -91,6 +96,62 @@ public class PaymentDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String json;
+
+	@Autowired
+	private ReceivedMatchService rms;
+	@Autowired
+	private ReceivedService receivedService;
+
+	public String matchReceived() {
+		JSONObject obj = JSONObject.fromObject(json);
+		String detail_id = obj.getString("detailId");
+		JSONArray arr = obj.getJSONArray("arr");
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject receiveds = JSONObject.fromObject(arr.get(i));
+			String related_pk = receiveds.getString("related_pk");
+
+			List<ClientReceivedDetailBean> receivedDetails = receivedService.selectByRelatedPks(related_pk);
+			for (ClientReceivedDetailBean detail : receivedDetails) {
+				detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+				detail.setConfirm_time(DateUtil.getMinStr());
+				receivedService.update(detail);
+
+				ReceivedMatchBean rmb = new ReceivedMatchBean();
+				rmb.setDetail_pk(detail_id);
+				rmb.setReceived_pk(detail.getPk());
+				rms.insert(rmb);
+			}
+		}
+		PaymentDetailBean thisDetail = pds.selectByPk(detail_id);
+		thisDetail.setMatch_flg("Y");
+		pds.updateDetail(thisDetail);
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	// 取消匹配
+	public String cancelMatchReceived() {
+		// 更新收入详情
+		detail = pds.selectByPk(detailId);
+		detail.setMatch_flg("N");
+		pds.updateDetail(detail);
+
+		List<ReceivedMatchBean> rmbs = rms.selectByDetailPk(detailId);
+		// 更新收入详表
+		for (ReceivedMatchBean rmb : rmbs) {
+			ClientReceivedDetailBean crdb = receivedService.selectByPk(rmb.getReceived_pk());
+			crdb.setConfirm_time(null);
+			crdb.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			receivedService.update(crdb);
+			// 删除匹配关联
+			rms.delete(rmb.getPk());
+		}
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	public PaymentDetailBean getDetail() {
 		return detail;
 	}
@@ -129,5 +190,13 @@ public class PaymentDetailAction extends BaseAction {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
 	}
 }

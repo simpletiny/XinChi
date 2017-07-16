@@ -317,5 +317,67 @@
     from receivable A
     LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
    </select>
-   
+    	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+	 select 
+        A.team_number, 
+    	A.final_flg, 
+    	B.name AS client_employee_name, 
+    	A.client_employee_pk, 
+    	A.departure_date, 
+    	A.return_date,
+    	A.product, 
+    	A.people_count, 
+    	A.budget_receivable, 
+    	A.final_receivable, 
+    	A.received, 
+    	A.budget_balance, 
+    	A.final_balance,
+    	TIMESTAMPDIFF(day,A.return_date,now())+1 AS back_days,
+    	A.sales, 
+    	C.user_name AS sales_name, 
+    	A.update_user, 
+    	A.pk, 
+    	A.create_user, 
+    	A.create_time,
+    	A.update_time,
+    	B.financial_body_pk,
+    	D.client_short_name AS financial_body_name
+    from receivable A
+    LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
+    LEFT JOIN user_base C ON A.sales = C.user_number
+    LEFT JOIN client D ON B.financial_body_pk = D.pk
+	    <where>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and B.name LIKE CONCAT('%', #{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
+				and C.user_name LIKE CONCAT('%', #{params.bo.sales_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
+				and D.client_name LIKE CONCAT('%', #{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.sales != null and params.bo.sales !=''">
+				and A.sales = #{params.bo.sales,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_month != null and params.bo.departure_month !=''">
+				and LEFT(A.departure_date,7) = #{params.bo.departure_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_from != null and params.bo.departure_from !=''">
+				and A.departure_date > #{params.bo.departure_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_to != null and params.bo.departure_to !=''">
+				and A.departure_date &lt;= #{params.bo.departure_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.return_to != null and params.bo.return_to !=''">
+				and A.return_date &lt;= #{params.bo.return_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+			<if test='params.bo.sort_type!=null and params.bo.sort_type=="D"'>
+				ORDER BY A.departure_date DESC
+			</if>
+			<if test='params.bo.sort_type!=null and params.bo.sort_type=="Z"'>
+				ORDER BY A.departure_date ASC
+			</if>
+	</select>
 </mapper>

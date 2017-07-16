@@ -12,17 +12,6 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
-</head>
-<body>
-	<div class="main-body">
-		<jsp:include page="../layout.jsp" />
-		<div class="subtitle">
-			<h2>支出详表</h2>
-		</div>
-
-		<div class="main-container">
-			<div class="main-box">
-				<form class="form-horizontal search-panel">
 					<style>
 .form-group {
 	margin-bottom: 5px;
@@ -32,10 +21,25 @@
 	height: 30px;
 }
 </style>
+
+</head>
+
+<body>
+	<div class="main-body">
+		<jsp:include page="../layout.jsp" />
+		<div class="subtitle">
+			<h2>往来详表</h2>
+		</div>
+
+		<div class="main-container">
+			<div class="main-box">
+				<form class="form-horizontal search-panel">
+
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button>
 							</div>
 						</div>
 					</div>
@@ -77,11 +81,7 @@
 								<th></th>
 								<th>金额</th>
 								<th>类型</th>
-								<th>供应商</th>
-								<th>支出日期</th>
-								<th>账户名称</th>
-	<!-- 							<th>支出详情</th>
-								<th>摘要详情</th> -->
+								<th>收款方</th>
 								<th>申请日期</th>
 								<th>入账日期</th>
 								<th>状态</th>
@@ -90,69 +90,26 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
-								<!-- ko if:$data.type=='STRIKE' -->
+								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status+';'+$data.item+';'+$data.related_pk}, checked: $root.chosenPaids" /></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type!='STRIKE' -->
-								<td data-bind="text: $data.allot_money" class="rmb"></td>
-								<!-- /ko -->
-								
-								<!-- ko if:$data.type=='BACK' -->
-									<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='PAID' -->
-									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='STRIKE' -->
-									<td style="color: purple" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='DEDUCT' -->
-									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								
-								<td data-bind="text: $data.supplier_employee_name"></td>
-								<!-- ko if:$data.time!=null -->
-								<td data-bind="text: $data.time"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.time==null -->
-								<td>未入账</td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='PAID' -->
-									<!-- ko if:$data.card_account==null -->
-										<td>未支付</td>
-									<!-- /ko -->
-									<!-- ko if:$data.card_account!=null -->
-										<td data-bind="text: $data.card_account"></td>
-									<!-- /ko -->
-								<!-- /ko -->
-								<!-- ko if:$data.type=='DEDUCT' -->
-									<td>扣款</td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='STRIKE' -->
-									<td>冲账</td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='BACK' -->
-									<td data-bind="text: $data.card_account"></td>
-								<!-- /ko -->
-								
-			<!-- 					<td><a href="javascript:void(0)" >详情</a></td>
-								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewComment($data)}}">详情</a></td> -->
-								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
-								<td data-bind="text: $data.confirm_time"></td>
-								
+								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<td data-bind="text: $data.receiver"></td>
+								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
+								<td data-bind="text: $data.pay_time"></td>
 								<!-- ko if:$data.status=='I' -->
 									<td  data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='Y' -->
 									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
-								
+								<!-- ko if:$data.status=='P' -->
+									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
 									<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								
-								<td data-bind="text: $data.create_user"></td>
+								<td data-bind="text: $data.apply_user"></td>
 							</tr>
 						</tbody>
 					</table>

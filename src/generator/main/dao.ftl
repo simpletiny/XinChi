@@ -9,15 +9,15 @@ public interface ${clazzName?cap_first}DAO{
 	
 	/**
 	 * 新增
-	 * @param bo
+	 * @param bean
 	 */
-	public void insert(${vo} bo);
+	public void insert(${voName} bean);
 	
 	/**
 	 * 修改
-	 * @param bo
+	 * @param bean
 	 */
-	public void update(${vo} bo);
+	public void update(${voName} bean);
 	
 	/**
 	 * 删除
@@ -29,11 +29,11 @@ public interface ${clazzName?cap_first}DAO{
 	 * 根据主键查找
 	 * @param id
 	 */
-	public ${vo} selectByPrimaryKey(String id);
+	public ${voName} selectByPrimaryKey(String id);
 	
 	/**
 	 * 根据条件查找
-	 * @param bo
+	 * @param bean
 	 */
-	public List<${vo}> getAllByParam(${vo} bo);
+	public List<${voName}> getAllByParam(${voName} bean);
 }

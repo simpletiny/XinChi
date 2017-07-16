@@ -8,7 +8,10 @@
 		<action name="rejectPayApply" class="accountingAction" method="rejectPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+		<!-- 支出详表页面 -->
+		<action name="rollBackPayApply" class="accountingAction" method="rollBackPayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 待支付页面 -->
 		<action name="searchWaitingForPaidByPage" class="accPaidAction" method="searchWaitingForPaidByPage">
 			<result name="success" type="json">
@@ -20,6 +23,20 @@
 			<result name="success" type="json"></result>
 		</action>
 		<action name="pay" class="accPaidAction" method="pay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 已支付页面 -->
+		
+		<action name="searchPaidDetailByPayNumber" class="accPaidAction" method="searchPaidDetailByPayNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<!-- 费用报销 -->
+		<action name="saveReimbursement" class="reimbursementAction" method="saveReimbursement">
 			<result name="success" type="str">resultStr</result>
 		</action>
 	</package>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="product" extends="default" namespace="/product">
+		<action name="searchGroupsByPage" class="productGroupAction" method="searchGroupsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchGroupByPk" class="productGroupAction" method="searchByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchSuppliersByGroupPk" class="productGroupAction" method="searchSuppliersByGroupPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="createGroup" class="productGroupAction" method="createGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateGroup" class="productGroupAction" method="updateGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteGroup" class="productGroupAction" method="deleteGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 产品管理 -->
+		<action name="searchProductsByPage" class="productAction" method="searchProductsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProduct" class="productAction" method="createProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateProduct" class="productAction" method="updateProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="onSaleProduct" class="productAction" method="onSaleProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchProductByPk" class="productAction" method="searchProductByPk">
+			<result name="success" type="json"></result>
+		</action>
+	</package>
+</struts>

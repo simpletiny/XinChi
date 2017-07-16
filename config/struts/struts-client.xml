@@ -88,6 +88,9 @@
 		<action name="createVisit" class="clientRelationAction" method="createVisit">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="createAccurateSale" class="accurateSaleAction" method="createAccurateSale">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchRelationsByPage" class="clientRelationAction" method="searchRelationsByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -95,6 +98,18 @@
 			</result>
 		</action>
 		<action name="searchClientSummary" class="clientRelationAction" method="searchClientSummary">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchVisitByPage" class="clientRelationAction" method="searchVisitByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchAccurateSaleByPage" class="accurateSaleAction" method="searchAccurateSaleByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

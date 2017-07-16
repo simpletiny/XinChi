@@ -1038,4 +1038,46 @@ create view client_relation_summary as
 			<comment>ALTER TABLE payment_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+				create view visit_count as
+					select client_employee_pk,count( CASE WHEN date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
+										and date <=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and type='VISIT' THEN  pk END) as week_visit_count,
+							count(CASE WHEN LEFT(date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND type='VISIT' THEN pk END) as month_visit_count
+					from client_visit where type='VISIT'
+					group by client_employee_pk
+             ]]>
+			<comment>create view visit_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE payment_detail ADD COLUMN voucher_file_name VARCHAR(30) NULL  AFTER receiver ;
+             ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE waiting_for_paid ADD COLUMN pay_user VARCHAR(10) NULL COMMENT '支付人'  AFTER related_pk ;
+             ]]>
+			<comment>ALTER TABLE waiting_for_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists paid_detail;
+          		CREATE VIEW paid_detail AS 
+				SELECT * FROM supplier_paid_detail WHERE type='STRIKE'
+				union all
+				SELECT * FROM supplier_paid_detail WHERE type<>'STRIKE' 
+				GROUP BY related_pk
+             ]]>
+			<comment> ALTER VIEW paid_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

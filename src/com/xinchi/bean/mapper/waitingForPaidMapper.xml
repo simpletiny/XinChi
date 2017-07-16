@@ -17,6 +17,15 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="PaidDetailSummaryResultMap" type="com.xinchi.bean.PaidDetailSummary">
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="apply_date" property="apply_date" jdbcType="VARCHAR" />
+		<result column="approval_user" property="approval_user" jdbcType="VARCHAR" />
+		<result column="approval_date" property="approval_date" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -34,13 +43,29 @@
 		related_pk,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		pay_user
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from waiting_for_paid
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectPaidSummaryByPayNumber" resultMap="PaidDetailSummaryResultMap" parameterType="java.lang.String">
+		SELECT
+		B.money as money,
+		C.user_name as pay_user,
+		D.user_name as apply_user,
+		B.create_time as apply_date,
+		E.user_name as approval_user,
+		B.update_time as approval_date
+		from waiting_for_paid A
+		LEFT JOIN paid_detail B ON A.related_pk=B.related_pk
+		LEFT JOIN user_base C ON A.pay_user = C.user_number
+		LEFT JOIN user_base D ON B.create_user = D.user_number
+		LEFT JOIN user_base E ON B.approve_user = E.user_number
+		where A.pay_number = #{voucher_number,jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectByPayNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -102,6 +127,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="pay_user != null">
+				pay_user,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="pay_number != null">
@@ -145,6 +173,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pay_user != null">
+				#{pay_user,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -192,6 +223,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="pay_user != null">
+				pay_user = #{pay_user,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -216,10 +250,12 @@
 		A.related_pk,
 		A.update_user,
 		A.create_time,
-		A.update_time
+		A.update_time,
+		D.user_name as pay_user
 		from waiting_for_paid A
 		LEFT JOIN user_base B on A.apply_user=B.user_number
 		LEFT JOIN user_base C on A.approval_user = C.user_number
+		LEFT JOIN user_base D on A.pay_user = D.user_number
 		<where>
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status in (${params.bo.status})

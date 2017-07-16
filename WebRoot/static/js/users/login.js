@@ -40,7 +40,11 @@ $(document).ready(function() {
 	} else if (login_result == "input") {
 		layer.msg("密码不正确！", 2, 8);
 		$("#login_result").val("");
+	}else if(login_result=="stop"){
+		layer.msg("用户已停用，请联系管理员！", 2, 8);
+		$("#login_result").val("");
 	}
+	
 	$("form").submit(function(e) {
 		if ($("#auto-login").prop("checked")) {
 			var str_username = $("#username").val();

@@ -16,6 +16,7 @@ import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
@@ -51,13 +52,32 @@ public class ReceivableAction extends BaseAction {
 	private List<ReceivableBean> receivables;
 
 	public String searchReceivableByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			receivable.setSales(sessionBean.getUser_number());
 		}
-
+		String team_status = receivable.getTeam_status();
+		String departure_from = "";
+		String departure_to = "";
+		String return_to = "";
+		if (!SimpletinyString.isEmpty(team_status)) {
+			if (team_status.equals(ResourcesConstants.TEAM_STATUS_BEFORE)) {
+				departure_from = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_AFTER)) {
+				departure_to = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
+				return_to = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			}
+		}
+		receivable.setDeparture_from(departure_from);
+		receivable.setDeparture_to(departure_to);
+		receivable.setReturn_to(return_to);
+		if (receivable.getSort_type().equals("倒序")) {
+			receivable.setSort_type("D");
+		} else if (receivable.getSort_type().equals("正序")) {
+			receivable.setSort_type("Z");
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", receivable);
 		page.setParams(params);
@@ -65,18 +85,19 @@ public class ReceivableAction extends BaseAction {
 		receivables = receivableService.searchReceivableByPage(page);
 		return SUCCESS;
 	}
-	
+
 	private String client_employee_pks;
-	
+
 	@Autowired
 	private EmployeeService employeeService;
-	//判断是否为同一财务主体
+
+	// 判断是否为同一财务主体
 	public String isSameFinancialBody() {
 		String employee_pks[] = client_employee_pks.split(",");
 		List<String> body_pks = employeeService.getBodyPksByEmployeePks(employee_pks);
-		if(body_pks.size()>1){
+		if (body_pks.size() > 1) {
 			resultStr = "NOT";
-		}else{
+		} else {
 			resultStr = OK;
 		}
 		return SUCCESS;

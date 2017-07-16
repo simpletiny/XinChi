@@ -114,8 +114,18 @@ public class UserAction extends BaseAction {
 	private String user_pk;
 	private String user_roles;
 
+	public String searchUserByPk() {
+		ucb = userService.selectUserCommonByPk(user_pk);
+		return SUCCESS;
+	}
+
 	public String approveUser() {
 		resultStr = userService.approveUser(user_pk, user_roles);
+		return SUCCESS;
+	}
+
+	public String updateUserRoles() {
+		resultStr = userService.updateUserRoles(user_pk, user_roles);
 		return SUCCESS;
 	}
 
@@ -125,12 +135,29 @@ public class UserAction extends BaseAction {
 	}
 
 	public String searchAllUsers() {
-		users = userService.getAllUsers();
+		users = userService.getAllUsers(null);
+		return SUCCESS;
+	}
+
+	public String searchAllUseUsers() {
+		UserCommonBean ucb = new UserCommonBean();
+		ucb.setDelete_flg("N");
+		users = userService.getAllUsers(ucb);
 		return SUCCESS;
 	}
 
 	public String rejectUser() {
 		resultStr = userService.rejectUser(user_pk);
+		return SUCCESS;
+	}
+
+	/**
+	 * 停用用户
+	 * 
+	 * @return
+	 */
+	public String stopUser() {
+		resultStr = userService.stopUser(user_pk);
 		return SUCCESS;
 	}
 

@@ -20,10 +20,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <div class="main-container">
        <div class="main-box">
+       <form class="form-horizontal search-panel">
+			<div class="form-group">
+				<div style="width: 30%; float: right">
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editUserRole() }">修改角色</button>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stop() }">停用</button>
+					</div>
+				</div>
+			</div>
+		</form>
        <div class="list-result">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr role="row">
+                        	<th></th>
                             <th>登录名</th>
                             <th>姓名</th>
                             <th>昵称</th>
@@ -36,8 +49,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: users">
-                        <tr>
-                        	 <td data-bind="text: $data.login_name"></td>
+                  
+                    		<!-- ko if:$data.delete_flg=='Y' -->
+              			<tr style="color:red">
+                        	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenUsers" /></td>
+                        	<td data-bind="text: $data.login_name"></td>
                             <td data-bind="text: $data.user_name"></td>
                             <td data-bind="text: $data.nick_name"></td>
                             <td data-bind="text: $data.user_number"></td>
@@ -47,6 +63,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td><a href="javascript:void(0)" data-bind="click: function() {$parent.checkIdPic($data.id_file_name)} ">查看</a></td>
                               <td data-bind="text: $data.user_roles"></td>
                         </tr>
+							<!-- /ko -->
+                     		<!-- ko if:$data.delete_flg=='N' -->
+ 								<tr>
+                        	<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenUsers" /></td>
+                        	<td data-bind="text: $data.login_name"></td>
+                            <td data-bind="text: $data.user_name"></td>
+                            <td data-bind="text: $data.nick_name"></td>
+                            <td data-bind="text: $data.user_number"></td>
+                            <td data-bind="text: $data.id"></td>
+                            <td data-bind="text: $root.sexMapping[$data.sex]"></td>
+                            <td data-bind="text: $data.cellphone"></td>
+                            <td><a href="javascript:void(0)" data-bind="click: function() {$parent.checkIdPic($data.id_file_name)} ">查看</a></td>
+                              <td data-bind="text: $data.user_roles"></td>
+                        </tr>
+							<!-- /ko -->
+				
                     </tbody>
                 </table>
                 <div class="pagination clearfloat">
@@ -64,6 +96,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             </div>
        </div>
     </div>
+  </div>
+  <div id="edit-role" style="display:none">
+  	<input type="hidden" id="current-pk" />
+      <div class="input-row clearfloat">
+	        <div class="col-md-12">
+	             <label class="l">员工角色</label>
+	                 <div class="ip">
+	                       <div data-bind="foreach: allRoles" style="padding-top: 4px;">
+	                           <em class="small-box">
+	                                 <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenUserRoles"/><label data-bind="text: $root.roleMapping[$data]"></label>
+	                            </em>
+	                        </div>
+	                   </div>
+	       </div>
+       </div>
+       <div class="input-row clearfloat" style="float:right">
+	       <a type="submit" class="btn btn-green btn-r" data-bind="click: doSave">保存</a>
+	       <a type="submit" class="btn btn-green btn-r" data-bind="click: doCancel">取消</a>
+     </div>
   </div>
  <div id="pic-check" style="display:none">
  	<jsp:include page="../common/check-picture.jsp" />

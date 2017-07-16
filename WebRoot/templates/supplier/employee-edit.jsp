@@ -119,7 +119,7 @@ String key = request.getParameter("key");
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: suppliers">
-                        <tr data-bind="event: {dblclick: function(){ $parent.pickFinancial($data.supplier_short_name,$data.pk)}}">
+                        <tr data-bind="event: {click: function(){ $parent.pickFinancial($data.supplier_short_name,$data.pk)}}">
                             <td data-bind="text: $data.supplier_short_name"> </td>
                             <td data-bind="text: $data.body_name"></td> 
                         </tr>

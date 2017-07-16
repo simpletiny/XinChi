@@ -48,6 +48,15 @@ var employeeContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
+	
+	//查看拜访记录
+	self.visitRecord = function(){
+		window.location.href = self.apiurl + "templates/client/visit-view.jsp?key="+self.employeePk;
+	};
+	//查看精推
+	self.accurateSaleRecord = function(){
+		window.location.href = self.apiurl + "templates/client/accurate-sale-view.jsp?key="+self.employeePk;
+	};
 };
 
 var ctx = new employeeContext();

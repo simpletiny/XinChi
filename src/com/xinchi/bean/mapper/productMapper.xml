@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductBean">
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="product_number" property="product_number" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="profit_space" property="profit_space" jdbcType="DECIMAL" />
+		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
+		<result column="business_price" property="business_price" jdbcType="DECIMAL" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="sale_flg" property="sale_flg" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		name,
+		product_number,
+		location,
+		days,
+		profit_space,
+		max_profit_substract,
+		business_price,
+		product_manager,
+		sale_flg,
+		comment,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductBean">
+
+		insert into product
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="product_number != null">
+				product_number,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="days != null">
+				days,
+			</if>
+			<if test="profit_space != null">
+				profit_space,
+			</if>
+			<if test="max_profit_substract != null">
+				max_profit_substract,
+			</if>
+			<if test="business_price != null">
+				business_price,
+			</if>
+			<if test="product_manager != null">
+				product_manager,
+			</if>
+			<if test="sale_flg != null">
+				sale_flg,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="product_number != null">
+				#{product_number,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				#{days,jdbcType=INTEGER},
+			</if>
+			<if test="profit_space != null">
+				#{profit_space,jdbcType=DECIMAL},
+			</if>
+			<if test="max_profit_substract != null">
+				#{max_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="business_price != null">
+				#{business_price,jdbcType=DECIMAL},
+			</if>
+			<if test="product_manager != null">
+				#{product_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_flg != null">
+				#{sale_flg,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductBean">
+		update product
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="product_number != null">
+				product_number = #{product_number,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				days = #{days,jdbcType=INTEGER},
+			</if>
+			<if test="profit_space != null">
+				profit_space = #{profit_space,jdbcType=DECIMAL},
+			</if>
+			<if test="max_profit_substract != null">
+				max_profit_substract = #{max_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="business_price != null">
+				business_price = #{business_price,jdbcType=DECIMAL},
+			</if>
+			<if test="product_manager != null">
+				product_manager = #{product_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_flg != null">
+				sale_flg = #{sale_flg,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		<where>
+			<if test="name !=null and name !='' ">
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectByPks" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where pk in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.name,
+		A.product_number,
+		A.location,
+		A.days,
+		A.profit_space,
+		A.max_profit_substract,
+		A.business_price,
+		B.user_name AS product_manager,
+		A.sale_flg,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time
+		from product A
+		LEFT JOIN user_base B on A.product_manager=B.user_number
+		<where>
+			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
+				and A.product_manager = #{params.bo.product_manager,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+		order by A.create_time DESC
+	</select>
+</mapper>

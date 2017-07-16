@@ -145,19 +145,19 @@ public class PayableServiceImpl implements PayableService {
 					update(payable);
 				}
 
-				payable.setSupplier_name(sb.getFinancial_body_name());
-				payable.setSupplier_pk(sb.getFinancial_body_pk());
-
-				SolrInputDocument document = castP2D(payable);
-
-				try {
-					solrClient.add(document);
-					solrClient.commit();
-				} catch (SolrServerException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				payable.setSupplier_name(sb.getFinancial_body_name());
+//				payable.setSupplier_pk(sb.getFinancial_body_pk());
+//
+//				SolrInputDocument document = castP2D(payable);
+//
+//				try {
+//					solrClient.add(document);
+//					solrClient.commit();
+//				} catch (SolrServerException e) {
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 
 			}
 		}
@@ -199,65 +199,67 @@ public class PayableServiceImpl implements PayableService {
 
 	@Override
 	public List<PayableBean> searchPayableByPage(Page<PayableBean> page) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
-		// 计算合计
-		PayableBean pb = (PayableBean) page.getParams().get("bo");
-		String qStr = buildQuery(pb);
-		if (qStr.equals("")) {
-			qStr = "*:*";
-		}
-		SolrQuery query = new SolrQuery(qStr);
-		if (pb.getSort_type().equals("倒序")) {
-			query.add("sort", "departure_date desc");
-		} else if (pb.getSort_type().equals("正序")) {
-			query.add("sort", "departure_date asc");
-		}
-
-		query.setStart(page.getStart());
-		query.setRows(page.getCount());
-		List<PayableBean> payables = new ArrayList<PayableBean>();
-
-		try {
-			QueryResponse response = solrClient.query(query);
-
-			SolrDocumentList list = response.getResults();
-			page.setTotal((int) list.getNumFound());
-
-			for (SolrDocument doc : list) {
-				PayableBean payable = new PayableBean();
-				payable.setTeam_number(safeGet(doc, "team_number"));
-				payable.setPk(safeGet(doc, "id"));
-				payable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
-				payable.setSupplier_employee_name(safeGet(doc, "supplier_employee_name"));
-				payable.setSupplier_employee_pk(safeGet(doc, "supplier_employee_pk"));
-
-				payable.setSupplier_pk(safeGet(doc, "supplier_pk"));
-				payable.setSupplier_name(safeGet(doc, "supplier_name"));
-
-				payable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
-				payable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
-				payable.setProduct(safeGet(doc, "product"));
-				payable.setPeople_count(str2Int(safeGet(doc, "people_count")));
-				payable.setSales(safeGet(doc, "sales"));
-				payable.setSales_name(safeGet(doc, "sales_name"));
-				payable.setBudget_payable(str2Decimal(safeGet(doc, "budget_payable")));
-				payable.setFinal_payable(str2Decimal(safeGet(doc, "final_payable")));
-				payable.setPaid(str2Decimal(safeGet(doc, "paid")));
-				payable.setBudget_balance(str2Decimal(safeGet(doc, "budget_balance")));
-				payable.setFinal_balance(str2Decimal(safeGet(doc, "final_balance")));
-				payable.setBack_days(getBackDays(payable.getDeparture_date(), payable.getReturn_date()));
-
-				payables.add(payable);
-			}
-			return payables;
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// SimpleOrderedMap
-		return null;
+		
+		return dao.selectByPage(page);
+//		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
+//		// 计算合计
+//		PayableBean pb = (PayableBean) page.getParams().get("bo");
+//		String qStr = buildQuery(pb);
+//		if (qStr.equals("")) {
+//			qStr = "*:*";
+//		}
+//		SolrQuery query = new SolrQuery(qStr);
+//		if (pb.getSort_type().equals("倒序")) {
+//			query.add("sort", "departure_date desc");
+//		} else if (pb.getSort_type().equals("正序")) {
+//			query.add("sort", "departure_date asc");
+//		}
+//
+//		query.setStart(page.getStart());
+//		query.setRows(page.getCount());
+//		List<PayableBean> payables = new ArrayList<PayableBean>();
+//
+//		try {
+//			QueryResponse response = solrClient.query(query);
+//
+//			SolrDocumentList list = response.getResults();
+//			page.setTotal((int) list.getNumFound());
+//
+//			for (SolrDocument doc : list) {
+//				PayableBean payable = new PayableBean();
+//				payable.setTeam_number(safeGet(doc, "team_number"));
+//				payable.setPk(safeGet(doc, "id"));
+//				payable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
+//				payable.setSupplier_employee_name(safeGet(doc, "supplier_employee_name"));
+//				payable.setSupplier_employee_pk(safeGet(doc, "supplier_employee_pk"));
+//
+//				payable.setSupplier_pk(safeGet(doc, "supplier_pk"));
+//				payable.setSupplier_name(safeGet(doc, "supplier_name"));
+//
+//				payable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
+//				payable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
+//				payable.setProduct(safeGet(doc, "product"));
+//				payable.setPeople_count(str2Int(safeGet(doc, "people_count")));
+//				payable.setSales(safeGet(doc, "sales"));
+//				payable.setSales_name(safeGet(doc, "sales_name"));
+//				payable.setBudget_payable(str2Decimal(safeGet(doc, "budget_payable")));
+//				payable.setFinal_payable(str2Decimal(safeGet(doc, "final_payable")));
+//				payable.setPaid(str2Decimal(safeGet(doc, "paid")));
+//				payable.setBudget_balance(str2Decimal(safeGet(doc, "budget_balance")));
+//				payable.setFinal_balance(str2Decimal(safeGet(doc, "final_balance")));
+//				payable.setBack_days(getBackDays(payable.getDeparture_date(), payable.getReturn_date()));
+//
+//				payables.add(payable);
+//			}
+//			return payables;
+//		} catch (SolrServerException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		// SimpleOrderedMap
+//		return null;
 	}
 
 	private String getBackDays(String departure_date, String return_date) {
@@ -361,17 +363,17 @@ public class PayableServiceImpl implements PayableService {
 		}
 		dao.update(payable);
 
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
-
-		SolrInputDocument document = castP2D(payable);
-		try {
-			solrClient.add(document);
-			solrClient.commit();
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
+//
+//		SolrInputDocument document = castP2D(payable);
+//		try {
+//			solrClient.add(document);
+//			solrClient.commit();
+//		} catch (SolrServerException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -385,8 +387,10 @@ public class PayableServiceImpl implements PayableService {
 			ids.add(payable.getPk());
 		}
 		try {
-			solrClient.deleteById(ids);
-			solrClient.commit();
+			if(ids.size()>0){
+				solrClient.deleteById(ids);
+				solrClient.commit();
+			}
 		} catch (SolrServerException | IOException e) {
 			e.printStackTrace();
 		}

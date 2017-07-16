@@ -33,4 +33,16 @@ public class PaidServiceImpl implements PaidService {
 		return dao.getAllByPage(page);
 	}
 
+	@Override
+	public String update(SupplierPaidDetailBean detail) {
+		dao.update(detail);
+		return "success";
+	}
+
+	@Override
+	public List<SupplierPaidDetailBean> selectByRelatedPk(String related_pk) {
+	
+		return dao.selectSupplierPaidDetailByRelatedPk(related_pk);
+	}
+
 }

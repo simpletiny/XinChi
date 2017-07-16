@@ -97,5 +97,13 @@
 	<!-- service类添加@Transactional或者单一原子方法@Transactional(propagation=Propagation.REQUIRED)注解即可 -->
 	<context:component-scan base-package="com.xinchi" />
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
+	
+	<!-- AOP日志 -->
+	<bean id="simpletinyLog" class="com.xinchi.common.SimpletinyLog"></bean>
+	<aop:config>
+		<aop:aspect id="mylog" ref="simpletinyLog">
+		<aop:pointcut id="log" expression="execution(* com.xinchi.backend.*.service.*.*(..))"/>
+		<aop:after pointcut-ref="log" method="after"/>
+		</aop:aspect>
+	</aop:config>
 </beans>

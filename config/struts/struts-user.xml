@@ -9,6 +9,7 @@
 			<result name="success" type="redirect">/templates/home.jsp</result>
 			<result name="none">/</result>
 			<result name="input">/</result>
+			<result name="stop">/</result>
 		</action>
 		<action name="logout" class="userAction" method="logout">
 			<result name="SUCCESS" type="redirect">/templates/users/login.jsp</result>
@@ -17,6 +18,9 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="searchNewUsers" class="userAction" method="searchNewUsers">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchUserByPk" class="userAction" method="searchUserByPk">
 			<result name="success" type="json"></result>
 		</action>
 		<action name="searchUsersByPage" class="userAction" method="searchUsersByPage">
@@ -28,7 +32,13 @@
 		<action name="approveUser" class="userAction" method="approveUser">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="updateUserRoles" class="userAction" method="updateUserRoles">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="rejectUser" class="userAction" method="rejectUser">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="stopUser" class="userAction" method="stopUser">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="searchAllSales" class="userAction" method="searchAllSales">
@@ -37,17 +47,27 @@
 		<action name="searchAllUsers" class="userAction" method="searchAllUsers">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchAllUseUsers" class="userAction" method="searchAllUseUsers">
+			<result name="success" type="json"></result>
+		</action>
 
 		<action name="createGroup" class="userGroupAction" method="createGroup">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="searchAllGroups" class="userGroupAction" method="searchAllGroups">
 			<result name="success" type="json"></result>
 		</action>
-		
+
 		<action name="getOnlineUsers" class="userListAction" method="onlineUsers">
 			<result name="success" type="json"></result>
+		</action>
+
+		<action name="searchUserLogs" class="userLogAction" method="searchUserLogs">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 	</package>
 

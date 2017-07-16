@@ -11,7 +11,7 @@ String src=request.getParameter("src");
 <head>
 </head>
 <body>
-	<img src="<%=src %>" id="img-pic-big" alt="身份证图片" />
+	<img src="<%=src %>" id="img-pic-big" alt="图片" />
 </body>
 </html>
 

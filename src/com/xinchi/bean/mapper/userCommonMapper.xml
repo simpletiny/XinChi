@@ -34,6 +34,13 @@
 		B.cellphone,
 		B.user_role as user_roles
   </sql>
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id 
+    where A.pk = #{pk,jdbcType=CHAR}
+  </select>
    <select id="selectAllNewUsers" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -45,6 +52,12 @@
     <include refid="Base_Column_List" />
     from user_base A LEFT JOIN user_info B 
     ON A.id = B.id
+    <where>
+    	  <if test="delete_flg != null and delete_flg !='' ">
+	        and  A.delete_flg = #{delete_flg,jdbcType=CHAR}
+	     </if>
+	     and A.user_number !='N00000'
+    </where>
   </select>
     <select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -52,13 +65,14 @@
     from user_base A LEFT JOIN user_info B 
     ON A.id = B.id
     where B.user_role like CONCAT('%',#{roles},'%')
+    AND A.delete_flg='N'
   </select>
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean" >
     select 
     <include refid="Base_Column_List" />
     from user_base A LEFT JOIN user_info B 
     ON A.id = B.id
-    where A.user_number!='N00000'
+    where A.user_number!='N00000' and A.user_number !='N00001'
     ORDER BY user_number
   </select>
 </mapper>

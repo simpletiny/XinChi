@@ -284,7 +284,14 @@ Array.prototype.isRepeat = function() {
 	}
 	return false;
 };
-
+Array.prototype.contains = function(obj) {
+	for (var i=0;i<this.length;i++) {
+		if (this[i] == obj) {
+			return true;
+		}
+	}
+	return false;
+};
 var getServerDate = function() {
 	$.getJSON($("#hidden_apiurl").val() + 'simpletiny/currentDate', {}, function(data) {
 		var x = new Date(data.current_date);

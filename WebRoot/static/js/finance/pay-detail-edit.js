@@ -42,9 +42,11 @@ var DetailContext = function() {
 						url : self.apiurl + 'finance/updateDetail',
 						data : $("form").serialize() + "&detail.type=支出"
 					}).success(function(str) {
-						endLoadingIndicator();
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						}else if(str == "time"){
+							fail_msg("同一时间同一账户存在明细");
+							endLoadingIndicator();
 						}
 					});
 					layer.close(index);

@@ -36,7 +36,8 @@ var PaidContext = function() {
 	self.statusMapping = {
 		'I' : '待审批',
 		'N' : '被驳回',
-		'Y' : '已同意'
+		'Y' : '已同意',
+		'P' : '已支付'
 	};
 
 	self.typeMapping = {
@@ -85,26 +86,32 @@ var PaidContext = function() {
 			$(".rmb").formatCurrency();
 		});
 	};
-
+	self.reimbursement = function() {
+		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
+	};
 	self.rollBack = function() {
-		if (self.chosenPaids().length == 0) {
+		if (self.chosenPaids().length < 1) {
 			fail_msg("请选择");
 			return;
-		}
-		var pks = new Array();
-		var check = true;
-		$(self.chosenPaids()).each(function(idx, data) {
-			if (data.split(";")[1] == 'Y') {
-				check = false;
-				return false;
-			} else {
-				pks.push(data.split(";")[0]);
-			}
-		});
-		if (!check) {
-			fail_msg("请选择未入账的收入");
+		} else if (self.chosenPaids().length > 1) {
+			fail_msg("只能选择一个");
 			return;
 		}
+
+		var sourceData = self.chosenPaids()[0].split(";");
+
+		if (sourceData[1] == 'Y' || sourceData[1] == 'P') {
+			fail_msg("请选择没有同意的申请");
+			return;
+		}
+
+		var data;
+		if (sourceData[2] == 'D') {
+			data = "item=" + sourceData[2] + "&related_pk=" + sourceData[3] + "&pk=" + sourceData[0];
+		} else {
+			data = "item=" + sourceData[2] + "&pk=" + sourceData[0];
+		}
+
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
@@ -117,10 +124,10 @@ var PaidContext = function() {
 					layer.close(index);
 					$.ajax({
 						type : "POST",
-						url : self.apiurl + 'sale/rollBackReceived',
-						data : "received_pks=" + pks,
+						url : self.apiurl + 'accounting/rollBackPayApply',
+						data : data,
 						success : function(str) {
-							if (str != "OK") {
+							if (str != "success") {
 								fail_msg("回滚失败，请联系管理员");
 							}
 							self.refresh();

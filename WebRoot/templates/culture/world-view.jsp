@@ -25,7 +25,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>欣驰世界观</h2>
+			<h2>欣驰故事</h2>
 		</div>
 
 		<div class="main-container">

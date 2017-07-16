@@ -8,24 +8,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <head>
 <jsp:include page="layout.jsp" />
-    <title>欣驰国际</title>
-
-</head>
-<body>
-
-  <div class="main-body">
-    <div class="subtitle">
-        
-    </div>
-
-    <div class="main-container">
-        <canvas id="userChart" width="1000" height="400"></canvas>
-    </div>
-  </div>
-
-
-<script src="<%=basePath %>static/vendor/chart/Chart.js"></script>
-
+<title>欣驰国际</title>
+<script src="<%=basePath %>static/vendor/chart/chart.js"></script>
 <script>
     options = {
 
@@ -132,7 +116,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     };
 
     var ctx = $("#userChart").get(0).getContext("2d");
-    //var userChart = new Chart(ctx).Line(data, options);
+    var userChart = new Chart(ctx).Line(data, options);
    </script>
+</head>
+<body>
+
+  <div class="main-body">
+
+
+    <div class="main-container">
+        <canvas id="userChart" width="1000" height="400"></canvas>
+    </div>
+  </div>
+
+
+
+
+
  </body>
 </html>

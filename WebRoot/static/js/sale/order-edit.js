@@ -146,7 +146,7 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-
+		startLoadingSimpleIndicator("保存中");
 		var nameList = $("#txt-name-list").val();
 		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(
 				new RegExp("：", "gm"), ":"));

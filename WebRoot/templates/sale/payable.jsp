@@ -38,7 +38,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>应付款</h2>
+			<h2>地接往来</h2>
 		</div>
 
 		<div class="main-container">
@@ -163,7 +163,7 @@
 								<th>总款项</th>
 								<th>已付款</th>
 								<th>应付款</th>
-								<th>产品经理</th>
+				
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
@@ -214,7 +214,6 @@
 								<!-- ko if: $data.final_flg=="N" -->
 								<td st="all" data-bind="text:$data.budget_balance" class="rmb"></td>
 								<!-- /ko -->
-								<td></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.sales_name"></td>
 								</s:if>
@@ -260,7 +259,7 @@
 
 				<div class="fixed">
 					<div style="margin-top: 5px">
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">返款收入</button>
+						<button type="submit" disabled="disabled" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">返款收入</button>
 					</div>
 					<div style="margin-top: 5px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deduct() }">扣款申请</button>

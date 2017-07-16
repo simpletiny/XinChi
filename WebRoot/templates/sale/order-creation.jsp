@@ -141,7 +141,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: clientEmployees">
-                        <tr data-bind="event: {dblclick: function(){ $parent.pickClientEmployee($data.name,$data.pk)}}">
+                        <tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data.name,$data.pk)}}">
                             <td data-bind="text: $data.name"> </td>
                             <td data-bind="text: $data.financial_body_name"></td> 
                         </tr>
@@ -187,7 +187,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: supplierEmployees">
-                        <tr data-bind="event: {dblclick: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
+                        <tr data-bind="event: {click: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
                             <td data-bind="text: $data.name"> </td>
                             <td data-bind="text: $data.financial_body_name"></td> 
                         </tr>

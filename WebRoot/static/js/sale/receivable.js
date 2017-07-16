@@ -532,7 +532,7 @@ var OrderContext = function() {
 	self.totalBudgetBalance = ko.observable(0);
 	self.totalBalance = ko.observable(0);
 	self.totalFinalBalance = ko.observable(0);
-
+	var pages = new Array();
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalBudgetReceivable = 0;
@@ -542,12 +542,16 @@ var OrderContext = function() {
 		var totalBudgetBalance = 0;
 		var totalBalance = 0;
 		var totalFinalBalance = 0;
-
+		
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
 			self.receivables(data.receivables);
-			self.store(self.store().concat(self.receivables()));
+			if (!pages.contains(self.currentPage())) {
+				self.store(self.store().concat(self.receivables()));
+				pages.push(self.currentPage());
+			}
+			
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -617,6 +621,7 @@ var OrderContext = function() {
 
 	});
 	self.search = function() {
+		pages=new Array();
 		self.chosenOrders.removeAll();
 		self.store.removeAll();
 		self.refresh();

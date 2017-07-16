@@ -5,5 +5,9 @@ public interface NumberService {
 	public static String first = "GT9R";
 
 	public String generateTeamNumber();
-	public String generatePayOrderNumber(String type,String orderType, String date);
+
+	public String generatePayOrderNumber(String type, String orderType, String date);
+
+	// 生成产品编号，唯一
+	public String generateProductNumber();
 }

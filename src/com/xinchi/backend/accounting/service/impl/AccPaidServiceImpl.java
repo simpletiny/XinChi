@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.accounting.dao.AccPaidDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
+import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.tools.Page;
 
@@ -44,6 +45,11 @@ public class AccPaidServiceImpl implements AccPaidService {
 	@Override
 	public void update(WaitingForPaidBean wfp) {
 		dao.update(wfp);
+	}
+
+	@Override
+	public PaidDetailSummary selectPaidDetailSummaryByPayNumber(String voucher_number) {
+		return dao.selectPaidSummaryByPayNumber(voucher_number);
 	}
 
 }

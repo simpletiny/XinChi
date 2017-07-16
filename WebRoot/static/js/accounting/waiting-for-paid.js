@@ -30,7 +30,7 @@ var PaidContext = function() {
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
-	self.chosenStatus = ko.observableArray([]);
+	self.chosenStatus = ko.observableArray(['I']);
 	self.allStatus = [ 'I', 'N', 'Y' ];
 	self.chosenStatus.push('I');
 
@@ -40,9 +40,9 @@ var PaidContext = function() {
 		'B' : '办公费用',
 		'C' : '产品费用',
 		'P' : '票务费用',
-		'J' : '交通费用',
+		'J' : '交通垫付',
 		'G' : '工资费用',
-		'Q' : '其他费用'
+		'Q' : '其他支出'
 	};
 
 	self.statusMapping = {

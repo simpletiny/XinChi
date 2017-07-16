@@ -16,7 +16,7 @@ var ClientContext = function() {
 	self.marketLevel = [ '未知','主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	// 市场力
 	self.backLevel = [ '未知','提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
-	self.chosenLevel = ko.observableArray([]);
+	self.chosenLevel = ko.observableArray(['关系度']);
 
 	self.chosenRelationLevel = ko.observableArray([]);
 	self.chosenBackLevel = ko.observableArray([]);
@@ -25,6 +25,7 @@ var ClientContext = function() {
 	self.refresh = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		console.log(param);
 		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param, function(data) {
 			self.relations(data.relations);
 
@@ -59,6 +60,21 @@ var ClientContext = function() {
 		} else if (self.chosenEmployee().length == 1) {
 			window.location.href = self.apiurl + "templates/client/visit-creation.jsp?key=" + self.chosenEmployee();
 		}
+	};
+	//新增精推
+	self.createAccurateSale = function() {
+		if (self.chosenEmployee().length == 0) {
+			fail_msg("请选择客户");
+			return;
+		} else if (self.chosenEmployee().length > 1) {
+			fail_msg("只能选中一个");
+			return;
+		} else if (self.chosenEmployee().length == 1) {
+			window.location.href = self.apiurl + "templates/client/accurate-sale-creation.jsp?key=" + self.chosenEmployee();
+		}
+	};
+	self.reimbursement = function() {
+		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 	self.employee = ko.observable({
 		sales : []

@@ -73,6 +73,7 @@ var OrderContext = function() {
 	};
 
 	self.choseClientEmployee = function() {
+		$("#txt-client-employee-name").blur();
 		clientEmployeeLayer = $.layer({
 			type : 1,
 			title : [ '选择客户操作', '' ],

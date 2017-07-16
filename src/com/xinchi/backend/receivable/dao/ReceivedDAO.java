@@ -19,4 +19,6 @@ public interface ReceivedDAO {
 	public void deleteByPk(String pk);
 
 	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks);
+
+	public void update(ClientReceivedDetailBean detail);
 }

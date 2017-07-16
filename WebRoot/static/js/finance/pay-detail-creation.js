@@ -3,8 +3,6 @@ var DetailContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.detail = ko.observable({});
 	self.accounts = ko.observableArray([]);
-	self.balance = '0';
-	self.initBalance = "0";
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
 			self.accounts(data.accounts);
@@ -14,31 +12,6 @@ var DetailContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-
-	self.changeAccount = function() {
-		if (self.detail().account == "") {
-			self.balance = 0;
-			self.initBalance = 0;
-			return;
-		}
-
-		$.getJSON(self.apiurl + 'finance/getAccountBalance', {
-			account : self.detail().account
-		}, function(data) {
-			self.balance = data;
-			self.initBalance = data;
-			self.calculateBalance();
-		}).fail(function(reason) {
-			fail_msg(reason.responseText);
-		});
-
-	};
-	// 计算余额
-	self.calculateBalance = function() {
-		self.balance = Number((self.initBalance - 0) - ($("#txt-money").val() - 0)).toFixed(2);
-		$("#p-balance").text(self.balance);
-		$(".rmb").formatCurrency();
-	};
 
 	self.createDetail = function() {
 		if (!$("form").valid()) {
@@ -53,19 +26,20 @@ var DetailContext = function() {
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
-					$.ajax(
-							{
-								type : "POST",
-								url : self.apiurl + 'finance/createDetail',
-								data : $("form").serialize()
-										+ "&detail.balance=" + self.balance+"&detail.type=支出"
-							}).success(
-							function(str) {
-								if (str == "success") {
-									window.location.href = self.apiurl
-											+ "templates/finance/detail.jsp";
-								}
-							});
+					startLoadingSimpleIndicator("保存中");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'finance/createDetail',
+						data : $("form").serialize() + "&detail.type=支出"
+					}).success(function(str) {
+						if (str == "success") {
+							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						} else if (str == "time") {
+							endLoadingIndicator();
+							fail_msg("同一时间同一账户存在明细账");
+						}
+
+					});
 					layer.close(index);
 				}
 			}

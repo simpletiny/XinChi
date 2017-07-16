@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.SupplierPaidDetailMapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierPaidDetailBean" >
-    	<id column="id" property="id" jdbcType="CHAR" />
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
 	    <result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
 	    <result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
@@ -25,7 +24,18 @@
  	    <result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
  	    <result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
   </resultMap>
-  
+   <resultMap id="ReimbursementMap" type="com.xinchi.bean.ReimbursementDto" >
+	    <result column="item" property="item" jdbcType="CHAR" />
+	    <result column="money" property="money" jdbcType="DECIMAL" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="CHAR" />
+	    <result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	    <result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+	    <result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+	    <result column="apply_time" property="apply_time" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
   		
     	team_number, 
@@ -55,6 +65,13 @@
     <include refid="Base_Column_List" />
     from supplier_paid_detail
     where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectSupplierPaidDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_paid_detail
+    where related_pk = #{related_pk,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -308,44 +325,23 @@
     where A.related_pk = #{related_pk,jdbcType=VARCHAR}
  </select>
    
-    <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+    <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="ReimbursementMap">
    select 
-  		A.team_number, 
-    	B.financial_body_name as supplier_employee_name, 
-    	B.financial_body_pk as supplier_employee_pk, 
-    	A.money, 
-    	LEFT(A.time,10) AS time, 
-    	A.type, 
-    	A.confirm_time, 
-    	A.status, 
-    	A.comment, 
-    	A.sum_money, 
-    	A.allot_money, 
-    	A.related_pk, 
-    	A.card_pk, 
-    	A.card_account, 
-    	C.user_name AS create_user, 
-    	A.update_user, 
-    	A.pk, 
-    	A.create_time,
-    	A.update_time,
-    	A.limit_time
-    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
-    LEFT JOIN user_base C on A.create_user = C.user_number
+    	* from approval_all
      <where>
-         <if test="params.bo.status != null and params.bo.status !=''">
-            <!--TODO:修改为foreach 形式  -->
-	        and A.status in (${params.bo.status})
+    	  <if test="params.bo.status != null and params.bo.status !=''">
+            <!-- TODO:修改为foreach 形式  -->
+	        and status in (${params.bo.status})
 	      </if>
 	      <if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and C.user_name  like concat('%', #{params.bo.create_user,jdbcType=VARCHAR},'%')
+	         and apply_user  like concat('%', #{params.bo.create_user,jdbcType=VARCHAR},'%')
 	      </if>
 	       <if test="params.bo.date_from != null and params.bo.date_from !=''">
-	         and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+	         and from_unixtime((apply_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
 	      </if>
 	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
-	         and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+	         and from_unixtime((apply_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 	      </if>
-    </where> 
+    </where>
    </select>
 </mapper>

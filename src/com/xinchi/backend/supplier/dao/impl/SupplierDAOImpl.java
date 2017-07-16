@@ -11,26 +11,26 @@ import com.xinchi.bean.SupplierBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
-
 @Repository
-public class SupplierDAOImpl extends SqlSessionDaoSupport implements SupplierDAO{
+public class SupplierDAOImpl extends SqlSessionDaoSupport implements SupplierDAO {
 
 	private SqlSession sqlSession;
 	private DaoUtil daoUtil;
-	public void initDao(){
-		if(daoUtil==null){
-			sqlSession=sqlSession==null?getSqlSession():sqlSession;
-			daoUtil=new DaoUtil(sqlSession);
+
+	public void initDao() {
+		if (daoUtil == null) {
+			sqlSession = sqlSession == null ? getSqlSession() : sqlSession;
+			daoUtil = new DaoUtil(sqlSession);
 		}
 	}
-	
+
 	@Override
-	public void insert(com.xinchi.bean.SupplierBean bo) {
+	public void insert(SupplierBean bo) {
 		daoUtil.insertBO("com.xinchi.bean.mapper.SupplierMapper.insert", bo);
 	}
 
 	@Override
-	public void update(com.xinchi.bean.SupplierBean bo) {
+	public void update(SupplierBean bo) {
 		daoUtil.updateByPK("com.xinchi.bean.mapper.SupplierMapper.updateByPrimaryKey", bo);
 	}
 
@@ -40,20 +40,25 @@ public class SupplierDAOImpl extends SqlSessionDaoSupport implements SupplierDAO
 	}
 
 	@Override
-	public com.xinchi.bean.SupplierBean selectByPrimaryKey(String id) {
-		return (com.xinchi.bean.SupplierBean) daoUtil.selectByPK("com.xinchi.bean.mapper.SupplierMapper.selectByPrimaryKey", id);
+	public SupplierBean selectByPrimaryKey(String id) {
+		return (SupplierBean) daoUtil.selectByPK("com.xinchi.bean.mapper.SupplierMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
-	public List<com.xinchi.bean.SupplierBean> getAllByParam(com.xinchi.bean.SupplierBean bo) {
-		List<com.xinchi.bean.SupplierBean> list=daoUtil.selectByBOParamT("com.xinchi.bean.mapper.SupplierMapper.selectByParam", bo);
+	public List<SupplierBean> getAllByParam(SupplierBean bo) {
+		List<SupplierBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.SupplierMapper.selectByParam", bo);
 		return list;
 	}
 
 	@Override
 	public List<SupplierBean> getAllByPage(Page<SupplierBean> page) {
-		List<com.xinchi.bean.SupplierBean> list=daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierMapper.selectByPage", page);
+		List<SupplierBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierMapper.selectByPage", page);
 		return list;
 	}
-	
+
+	@Override
+	public List<SupplierBean> selectByPks(List<String> supplier_pks) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierMapper.selectByPks", supplier_pks);
+	}
+
 }

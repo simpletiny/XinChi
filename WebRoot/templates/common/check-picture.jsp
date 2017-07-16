@@ -8,5 +8,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <div id="div-pic">
-	<img src="" id="img-pic" alt="身份证图片" style="width:590px;height:600px;cursor:pointer" />
+	<img src="" id="img-pic" alt="图片" style="width:590px;height:600px;cursor:pointer" />
 </div>

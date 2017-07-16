@@ -63,7 +63,7 @@ var OrderContext = function() {
 			self.sales_name.push(data.user_name);
 		});
 	});
-
+	// 打回重报
 	self.rollBack = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择决算单");
@@ -99,6 +99,18 @@ var OrderContext = function() {
 				}
 			}
 		});
+	};
+	// 编辑
+	self.edit = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("编辑只能选中一个");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			window.location.href = self.apiurl + "templates/sale/final-order-edit.jsp?key=" + self.chosenOrders()[0];
+		}
 	};
 	self.search = function() {
 

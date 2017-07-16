@@ -13,6 +13,7 @@
 		<result column="last_confirm_date" property="last_confirm_date" jdbcType="VARCHAR" />
 		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
 		<result column="visit_count" property="visit_count" jdbcType="BIGINT" />
+		<result column="accurate_count" property="accurate_count" jdbcType="BIGINT" />
 		<result column="last_visit_period" property="last_visit_period" jdbcType="INTEGER" />
 		<result column="chat_count" property="chat_count" jdbcType="BIGINT" />
 		<result column="last_chat_period" property="last_chat_period" jdbcType="INTEGER" />
@@ -52,7 +53,8 @@
 		last_receivable_period,
 		relation_level,
 		back_level,
-		market_level
+		market_level,
+		accurate_count
 	</sql>
 
 	<select id="selectByParam" parameterType="com.xinchi.bean.ClientRelationSummaryBean" resultMap="BaseResultMap">
@@ -66,10 +68,9 @@
 		select 
 		count(C.month_order_count) as month_order_count,
 		count(distinct A.pk) as client_count,
-		count(CASE WHEN B.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
-					and B.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and B.type='VISIT' THEN B.pk END) as week_visit_count,
-		count(CASE WHEN LEFT(B.date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND B.type='VISIT' THEN B.pk END) as month_visit_count
-		,A.market_level as level from client_employee A LEFT JOIN client_visit B on A.pk= B.client_employee_pk
+		sum(B.month_visit_count) as month_visit_count,
+		sum(B.week_visit_count) as week_visit_count
+		,A.market_level as level from client_employee A LEFT JOIN visit_count B on A.pk= B.client_employee_pk
 		LEFT JOIN month_order_count C ON A.pk= C.client_employee_pk
 		LEFT JOIN user_base D ON A.sales like CONCAT('%',D.pk,'%') 
 					
@@ -89,10 +90,9 @@
 		select 
 		count(C.month_order_count) as month_order_count,
 		count(distinct A.pk) as client_count,
-		count(CASE WHEN B.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
-					and B.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and B.type='VISIT' THEN B.pk END) as week_visit_count,
-		count(CASE WHEN LEFT(B.date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND B.type='VISIT' THEN B.pk END) as month_visit_count
-		,A.back_level as level from client_employee A LEFT JOIN client_visit B on A.pk= B.client_employee_pk
+		sum(B.month_visit_count) as month_visit_count,
+		sum(B.week_visit_count) as week_visit_count
+		,A.back_level as level from client_employee A LEFT JOIN visit_count B on A.pk= B.client_employee_pk
 		LEFT JOIN month_order_count C ON A.pk= C.client_employee_pk
 		LEFT JOIN user_base D ON A.sales like CONCAT('%',D.pk,'%') 
 					
@@ -112,10 +112,9 @@
 		select 
 		count(C.month_order_count) as month_order_count,
 		count(distinct A.pk) as client_count,
-		count(CASE WHEN B.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
-					and B.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and B.type='VISIT' THEN B.pk END) as week_visit_count,
-		count(CASE WHEN LEFT(B.date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND B.type='VISIT' THEN B.pk END) as month_visit_count
-		,A.relation_level as level from client_employee A LEFT JOIN client_visit B on A.pk= B.client_employee_pk
+		sum(B.month_visit_count) as month_visit_count,
+		sum(B.week_visit_count) as week_visit_count
+		,A.relation_level as level from client_employee A LEFT JOIN visit_count B on A.pk= B.client_employee_pk
 		LEFT JOIN month_order_count C ON A.pk= C.client_employee_pk
 		LEFT JOIN user_base D ON A.sales like CONCAT('%',D.pk,'%') 
 					
@@ -132,16 +131,14 @@
 	
 		<select id="selectSummary" parameterType="java.lang.String" resultMap="ClientSummaryMap">
 		
-		select 
-		count(C.month_order_count) as month_order_count,
+		SELECT 
+		sum(C.month_order_count) as month_order_count,
 		count(distinct A.pk) as client_count,
-		count(CASE WHEN B.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
-					and B.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY) and B.type='VISIT' THEN B.pk END) as week_visit_count,
-		count(CASE WHEN LEFT(B.date,7)=DATE_FORMAT(NOW(),'%Y-%m') AND B.type='VISIT' THEN B.pk END) as month_visit_count
-		,'全部' as level from client_employee A LEFT JOIN client_visit B on A.pk= B.client_employee_pk
+		sum(B.month_visit_count) as month_visit_count,
+		sum(B.week_visit_count) as week_visit_count
+		,'全部' as level from client_employee A LEFT JOIN visit_count B on A.pk= B.client_employee_pk
 		LEFT JOIN month_order_count C ON A.pk= C.client_employee_pk
-		LEFT JOIN user_base D ON A.sales like CONCAT('%',D.pk,'%') 
-					
+		LEFT JOIN user_base D ON A.sales like CONCAT('%',D.pk,'%')		
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (A.sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -254,6 +251,9 @@
 			</if>
 			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
 				and (sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and (client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%'))
 			</if>
 			and delete_flg='N'
 		</where>

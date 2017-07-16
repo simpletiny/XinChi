@@ -43,11 +43,11 @@ var DetailContext = function() {
 						url : self.apiurl + 'finance/updateDetail',
 						data : $("form").serialize() + "&detail.type=收入"
 					}).success(function(str) {
-						endLoadingIndicator();
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";
 						} else if (str == "time") {
 							fail_msg("同一账户下的明细账，时间不能相同，请调整时间。");
+							endLoadingIndicator();
 						}
 					});
 					layer.close(index);

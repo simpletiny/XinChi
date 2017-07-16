@@ -10,6 +10,7 @@
 	    <result column="from_time" property="from_time" jdbcType="VARCHAR" />
 	    <result column="end_time" property="end_time" jdbcType="VARCHAR" />
 	    <result column="target" property="target" jdbcType="VARCHAR" />
+	    <result column="sub_target" property="sub_target" jdbcType="VARCHAR" />
 	    <result column="summary" property="summary" jdbcType="VARCHAR" />
 	    <result column="comment" property="comment" jdbcType="VARCHAR" />
 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -27,7 +28,8 @@
     	date, 
     	from_time, 
     	end_time, 
-    	target, 
+    	target,
+    	sub_target,
     	summary, 
     	comment, 
     	create_user, 
@@ -74,6 +76,9 @@
 	 	<if test="target != null">
 	        target,
 	      </if>
+	 	<if test="sub_target != null">
+	        sub_target,
+	      </if>
 	 	<if test="summary != null">
 	        summary,
 	      </if>
@@ -117,6 +122,9 @@
 	      </if>
     	<if test="target != null">
 	        #{target,jdbcType=VARCHAR},
+	      </if>
+    	<if test="sub_target != null">
+	        #{sub_target,jdbcType=VARCHAR},
 	      </if>
     	<if test="summary != null">
 	        #{summary,jdbcType=VARCHAR},
@@ -167,6 +175,9 @@
     	<if test="target != null">
 	        target = #{target,jdbcType=VARCHAR},
 	      </if>
+    	<if test="sub_target != null">
+	        sub_target = #{sub_target,jdbcType=VARCHAR},
+	      </if>
     	<if test="summary != null">
 	        summary = #{summary,jdbcType=VARCHAR},
 	      </if>
@@ -192,5 +203,16 @@
    select 
     <include refid="Base_Column_List" />
     from client_visit
+   </select>
+    <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from client_visit
+    <where>
+			<if test="params.bo.client_employee_pk != null and params.bo.client_employee_pk !=''">
+				and client_employee_pk = #{params.bo.client_employee_pk,jdbcType=VARCHAR}
+			</if>
+	</where>
+	ORDER BY date
    </select>
 </mapper>

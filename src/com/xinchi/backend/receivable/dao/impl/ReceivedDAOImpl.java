@@ -12,8 +12,7 @@ import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
 @Repository
-public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
-		ReceivedDAO {
+public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO {
 
 	private SqlSession sqlSession;
 	private DaoUtil daoUtil;
@@ -27,25 +26,17 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 
 	@Override
 	public void insert(ClientReceivedDetailBean detail) {
-		daoUtil.insertBO(
-				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
-				detail);
+		daoUtil.insertBO("com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert", detail);
 	}
 
 	@Override
 	public void insertWithPk(ClientReceivedDetailBean detail) {
-		daoUtil.insertBOWithPk(
-				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert",
-				detail);
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.ClientReceivedDetailMapper.insert", detail);
 	}
 
 	@Override
-	public List<ClientReceivedDetailBean> getAllByPage(
-			Page<ClientReceivedDetailBean> page) {
-		List<ClientReceivedDetailBean> list = daoUtil
-				.selectByParam(
-						"com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPage",
-						page);
+	public List<ClientReceivedDetailBean> getAllByPage(Page<ClientReceivedDetailBean> page) {
+		List<ClientReceivedDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPage", page);
 		return list;
 	}
 
@@ -62,6 +53,11 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements
 	@Override
 	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByRelatedPks", related_pks);
+	}
+
+	@Override
+	public void update(ClientReceivedDetailBean detail) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.updateByPrimaryKey", detail);
 	}
 
 }

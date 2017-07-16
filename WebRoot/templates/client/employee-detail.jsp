@@ -14,7 +14,7 @@ String key = request.getParameter("key");
 </head>
 <body>
 <div class="main-body">
- <input type="hidden" id="employee_key" value="<%=key%>">
+ <input type="hidden" id="employee_key" value="<%=key%>" />
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
         <h2>查看客户信息<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;"  class="cancel-create">返回</a></h2>
@@ -31,7 +31,10 @@ String key = request.getParameter("key");
                     </div>
            <!-- /ko -->
             <hr />
+            <button  style ="float:right;margin-top:10px" type="submit" class="btn btn-green col-md-1" data-bind="click:visitRecord">拜访记录</button>
+            <button  style ="float:right;margin-top:10px" type="submit" class="btn btn-green col-md-1" data-bind="click:accurateSaleRecord">精推记录</button>
             <div class="form-box info-form">
+            
                <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">昵称</label>

@@ -39,7 +39,6 @@ public class ClientRelationAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			relation = new ClientRelationSummaryBean();
 			relation.setSales(sessionBean.getPk());
 		}
 
@@ -50,6 +49,7 @@ public class ClientRelationAction extends BaseAction {
 		relations = service.getRelationsByPage(page);
 		return SUCCESS;
 	}
+
 	private String employeeCount;
 	private String monthOrderCount;
 	private List<ClientSummaryDto> clientSummary;
@@ -61,10 +61,22 @@ public class ClientRelationAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			relation.setSales_name(sessionBean.getUser_name());
 		}
-		
+
 		clientSummary = service.getClientSummary(relation);
 		employeeCount = service.selectClientEmployeeCount(relation);
 		monthOrderCount = service.selectMonthOrderCount(relation);
+		return SUCCESS;
+	}
+
+	private List<ClientVisitBean> visits;
+
+	// 搜索拜访记录
+	public String searchVisitByPage() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", visit);
+		page.setParams(params);
+		
+		visits = service.selectVisitByPage(page);
 		return SUCCESS;
 	}
 
@@ -114,5 +126,13 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setMonthOrderCount(String monthOrderCount) {
 		this.monthOrderCount = monthOrderCount;
+	}
+
+	public List<ClientVisitBean> getVisits() {
+		return visits;
+	}
+
+	public void setVisits(List<ClientVisitBean> visits) {
+		this.visits = visits;
 	}
 }

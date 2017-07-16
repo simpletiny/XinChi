@@ -14,13 +14,21 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.accounting.service.AccPaidService;
+import com.xinchi.backend.accounting.service.ReimbursementService;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -59,6 +67,11 @@ public class AccPaidAction extends BaseAction {
 	private PaymentDetailService pds;
 	@Autowired
 	private CardService cs;
+	@Autowired
+	private PaidService paidService;
+
+	@Autowired
+	private ReimbursementService reimService;
 
 	public String pay() {
 		JSONArray array = JSONArray.fromObject(json);
@@ -69,6 +82,8 @@ public class AccPaidAction extends BaseAction {
 			String receiver = obj.getString("receiver");
 			BigDecimal balance = new BigDecimal(cs.getAccountBalance(account));
 			BigDecimal money = new BigDecimal(obj.getString("money"));
+			String voucher_file_name = obj.getString("voucherFile");
+
 			PaymentDetailBean detail = new PaymentDetailBean();
 			detail.setVoucher_number(voucher_number);
 			detail.setAccount(account);
@@ -78,6 +93,7 @@ public class AccPaidAction extends BaseAction {
 			detail.setBalance(balance.subtract(money));
 			detail.setType("支出");
 			detail.setComment(receiver + ",凭证号：" + voucher_number);
+			detail.setVoucher_file_name(voucher_file_name);
 			resultStr = pds.insert(detail);
 			if (!resultStr.equals(SUCCESS)) {
 				return SUCCESS;
@@ -86,8 +102,39 @@ public class AccPaidAction extends BaseAction {
 		// 更新待支付状态
 		wfp = service.selectByPayNumber(voucher_number);
 		wfp.setStatus(ResourcesConstants.PAY_STATUS_YES);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		wfp.setPay_user(sessionBean.getUser_number());
 		service.update(wfp);
+
+		String related_pk = wfp.getRelated_pk();
+		// 更新申请状态
+		if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
+			List<SupplierPaidDetailBean> details = paidService.selectByRelatedPk(related_pk);
+			for (SupplierPaidDetailBean detail : details) {
+				detail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+				detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+				paidService.update(detail);
+			}
+		} else {
+			ReimbursementBean reim = reimService.selectByPk(related_pk);
+			reim.setPay_user(sessionBean.getUser_number());
+			reim.setPay_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+			reim.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			reimService.update(reim);
+		}
+
 		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	private List<PaymentDetailBean> details;
+	private PaidDetailSummary ps;
+
+	// 查询支付详情
+	public String searchPaidDetailByPayNumber() {
+		details = pds.selectByVoucherNumber(voucher_number);
+		ps = service.selectPaidDetailSummaryByPayNumber(voucher_number);
+
 		return SUCCESS;
 	}
 
@@ -129,5 +176,21 @@ public class AccPaidAction extends BaseAction {
 
 	public void setVoucher_number(String voucher_number) {
 		this.voucher_number = voucher_number;
+	}
+
+	public List<PaymentDetailBean> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<PaymentDetailBean> details) {
+		this.details = details;
+	}
+
+	public PaidDetailSummary getPs() {
+		return ps;
+	}
+
+	public void setPs(PaidDetailSummary ps) {
+		this.ps = ps;
 	}
 }

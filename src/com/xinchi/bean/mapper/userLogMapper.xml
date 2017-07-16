@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.UserLogMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.UserLogBean" >
+	    <result column="method" property="method" jdbcType="VARCHAR" />
+	    <result column="method_des" property="method_des" jdbcType="VARCHAR" />
+	    <result column="class_name" property="class_name" jdbcType="VARCHAR" />
+	    <result column="class_des" property="class_des" jdbcType="VARCHAR" />
+	    <result column="target" property="target" jdbcType="VARCHAR" />
+	    <result column="parameter" property="parameter" jdbcType="VARCHAR" />
+	    <result column="user_number" property="user_number" jdbcType="VARCHAR" />
+	    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+	    <result column="time" property="time" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	method, 
+    	method_des,
+    	class_name, 
+    	class_des,
+    	target, 
+    	parameter, 
+    	user_number, 
+    	time, 
+    	pk, 
+    	update_user, 
+    	create_user, 
+    	create_time,
+    	update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_log
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_log
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.UserLogBean" >
+  	
+    insert into user_log
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="method != null">
+	        method,
+	      </if>
+	 	<if test="method_des != null">
+	        method_des,
+	      </if>
+	 	<if test="class_name != null">
+	        class_name,
+	      </if>
+	 	<if test="class_des != null">
+	        class_des,
+	      </if>
+	 	<if test="target != null">
+	        target,
+	      </if>
+	 	<if test="parameter != null">
+	        parameter,
+	      </if>
+	 	<if test="user_number != null">
+	        user_number,
+	      </if>
+	 	<if test="time != null">
+	        time,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="method != null">
+	        #{method,jdbcType=VARCHAR},
+	      </if>
+    	<if test="method_des != null">
+	        #{method_des,jdbcType=VARCHAR},
+	      </if>
+    	<if test="class_name != null">
+	        #{class_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="class_des != null">
+	        #{class_des,jdbcType=VARCHAR},
+	      </if>
+    	<if test="target != null">
+	        #{target,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parameter != null">
+	        #{parameter,jdbcType=VARCHAR},
+	      </if>
+    	<if test="user_number != null">
+	        #{user_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="time != null">
+	        #{time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.UserLogBean" >
+    update user_log
+    <set >
+    	<if test="method != null">
+	        method = #{method,jdbcType=VARCHAR},
+	      </if>
+    	<if test="method_des != null">
+	        method_des = #{method_des,jdbcType=VARCHAR},
+	      </if>
+    	<if test="class_name != null">
+	        class_name = #{class_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="class_des != null">
+	        class_des = #{class_des,jdbcType=VARCHAR},
+	      </if>
+    	<if test="target != null">
+	        target = #{target,jdbcType=VARCHAR},
+	      </if>
+    	<if test="parameter != null">
+	        parameter = #{parameter,jdbcType=VARCHAR},
+	      </if>
+    	<if test="user_number != null">
+	        user_number = #{user_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="time != null">
+	        time = #{time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.UserLogBean" resultMap="BaseResultMap">
+   select 
+   		A.method, 
+    	A.method_des,
+    	A.class_name, 
+    	A.class_des,
+    	A.target, 
+    	A.parameter, 
+    	B.user_name, 
+    	A.time, 
+    	A.pk, 
+    	A.update_user, 
+    	A.create_user, 
+    	A.create_time,
+    	A.update_time
+    from user_log A LEFT JOIN user_base B on A.user_number = B.user_number
+   </select>
+   <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+	 select 
+   		A.method, 
+    	A.method_des,
+    	A.class_name, 
+    	A.class_des,
+    	A.target, 
+    	A.parameter, 
+    	B.user_name, 
+    	A.time, 
+    	A.pk, 
+    	A.update_user, 
+    	A.create_user, 
+    	A.create_time,
+    	A.update_time
+    from user_log A LEFT JOIN user_base B on A.user_number = B.user_number
+		    <where>
+			<if test="params.bo.user_name != null and params.bo.user_name !=''">
+				and B.user_name like CONCAT('%',#{params.bo.user_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.time != null and params.bo.time !=''">
+				and LEFT(A.time,10) = #{params.bo.time,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

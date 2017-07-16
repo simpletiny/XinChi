@@ -24,6 +24,7 @@ import com.xinchi.exception.BusinessException;
 import com.xinchi.tools.Page;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDAO dao;
@@ -44,6 +45,8 @@ public class UserServiceImpl implements UserService {
 			UserBaseBean user = users.get(0);
 			if (user.getPassword().equals(SimpletinyString.MD5(ubb.getPassword()))) {
 
+				if (user.getDelete_flg().equals("Y"))
+					return "stop";
 				UserSessionBean sessionBean = new UserSessionBean();
 				try {
 					PropertyUtils.copyProperties(sessionBean, ubb);
@@ -69,7 +72,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public void register(UserBaseBean bo, UserInfoBean uib) {
 		String userNumber = uus.getNextUserNumber();
 		bo.setPassword(SimpletinyString.MD5(bo.getPassword()));
@@ -83,7 +85,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public String approveUser(String user_pk, String user_roles) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
@@ -101,7 +102,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public String rejectUser(String user_pk) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -118,8 +118,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserCommonBean> getAllUsers() {
-		return dao.getAllUserCommonByParam(null);
+	public List<UserCommonBean> getAllUsers(UserCommonBean bo) {
+		return dao.getAllUserCommonByParam(bo);
 	}
 
 	@Override
@@ -162,6 +162,29 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserCommonBean> selectByPage(Page page) {
 		return dao.selectByPage(page);
+	}
+
+	@Override
+	public String stopUser(String user_pk) {
+		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
+		ubb.setDelete_flg("Y");
+		dao.update(ubb);
+		return "success";
+	}
+
+	@Override
+	public UserCommonBean selectUserCommonByPk(String user_pk) {
+
+		return dao.selectUserCommonByPk(user_pk);
+	}
+
+	@Override
+	public String updateUserRoles(String user_pk, String user_roles) {
+		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
+		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
+		uib.setUser_role(user_roles);
+		infoDao.update(uib);
+		return "success";
 	}
 
 }

@@ -64,4 +64,10 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		String sales_name = relation.getSales_name();
 		return dao.selectMonthOrderCount(sales_name);
 	}
+
+	@Override
+	public List<ClientVisitBean> selectVisitByPage(Page page) {
+
+		return visitDao.selectByPage(page);
+	}
 }

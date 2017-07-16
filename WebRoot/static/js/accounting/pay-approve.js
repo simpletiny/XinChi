@@ -33,18 +33,21 @@ var PaidContext = function() {
 	self.chosenStatus = ko.observableArray([]);
 	self.allStatus = [ 'I', 'N', 'Y' ];
 	self.chosenStatus.push('I');
-	
+
 	self.statusMapping = {
 		'I' : '待审批',
 		'Y' : '已同意',
 		'N' : '已驳回'
 	};
-
-	self.typeMapping = {
-		'BACK' : '返款',
-		'PAID' : '支付',
-		'STRIKE' : '冲账',
-		'DEDUCT' : '扣款'
+	self.itemMapping = {
+		'D' : '地接款',
+		'X' : '销售费用',
+		'B' : '办公费用',
+		'C' : '产品费用',
+		'P' : '票务费用',
+		'J' : '交通垫付',
+		'G' : '工资费用',
+		'Q' : '其他支出'
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -52,7 +55,7 @@ var PaidContext = function() {
 	self.totalPayable = ko.observable(0);
 	self.totalProfit = ko.observable(0);
 	self.totalPerProfit = ko.observable(0);
-	
+
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalReceivable = 0;
@@ -85,9 +88,14 @@ var PaidContext = function() {
 			$(".rmb").formatCurrency();
 		});
 	};
-	
-	self.agree = function(paid){
-		var data = "type="+paid.type+"&related_pk="+paid.related_pk+"&pk="+paid.pk;
+
+	self.agree = function(paid) {
+		var data;
+		if (paid.item == 'D') {
+			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
+		} else {
+			data = "item=" + paid.item + "&pk=" + paid.pk;
+		}
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
@@ -112,9 +120,14 @@ var PaidContext = function() {
 			}
 		});
 	};
-	
-	self.reject= function(paid){
-		var data = "type="+paid.type+"&related_pk="+paid.related_pk+"&pk="+paid.pk;
+
+	self.reject = function(paid) {
+		var data;
+		if (paid.item == 'D') {
+			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
+		} else {
+			data = "item=" + paid.item + "&pk=" + paid.pk;
+		}
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {

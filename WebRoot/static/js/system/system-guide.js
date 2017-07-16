@@ -6,7 +6,6 @@ var ViewContext = function() {
 	self.createGuide = function() {
 		window.location.href = self.apiurl + "templates/system/system-guide-creation.jsp";
 	};
-
 	self.views = ko.observable({
 		total : 0,
 		items : []

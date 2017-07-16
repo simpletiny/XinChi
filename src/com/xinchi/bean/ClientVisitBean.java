@@ -19,6 +19,7 @@ public class ClientVisitBean extends SupperBO implements Serializable {
 	private String end_time;
 
 	private String target;
+	private String sub_target;
 
 	private String summary;
 
@@ -124,6 +125,14 @@ public class ClientVisitBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getSub_target() {
+		return sub_target;
+	}
+
+	public void setSub_target(String sub_target) {
+		this.sub_target = sub_target;
 	}
 
 }

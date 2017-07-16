@@ -69,11 +69,8 @@
 							<tr role="row">
 								<th></th>
 								<th>金额</th>
-								<th>类型</th>
-								<th>供应商</th>
-								<th>账户名称</th>
-								<!-- <th>支出详情</th>
-								<th>摘要详情</th> -->
+								<th>项目</th>
+								<th>收款方</th>
 								<th>申请日期</th>
 								<th>支付时限</th>
 								<th>状态</th>
@@ -84,49 +81,10 @@
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
-								<!-- ko if:$data.type=='STRIKE' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type!='STRIKE' -->
-								<td data-bind="text: $data.allot_money" class="rmb"></td>
-								<!-- /ko -->
-								
-								<!-- ko if:$data.type=='BACK' -->
-									<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='PAID' -->
-									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='STRIKE' -->
-									<td style="color: purple" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='DEDUCT' -->
-									<td style="color: red" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<!-- /ko -->
-		
-								
-								<td data-bind="text: $data.supplier_employee_name"></td>
-								
-								<!-- ko if:$data.type=='PAID' -->
-									<!-- ko if:$data.card_account==null -->
-										<td>未支付</td>
-									<!-- /ko -->
-									<!-- ko if:$data.card_account!=null -->
-										<td data-bind="text: $data.card_account"></td>
-									<!-- /ko -->
-								<!-- /ko -->
-								<!-- ko if:$data.type=='DEDUCT' -->
-									<td>扣款</td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='STRIKE' -->
-									<td>冲账</td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='BACK' -->
-									<td data-bind="text: $data.card_account"></td>
-								<!-- /ko -->
-
-
-								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+								<td data-bind="text: $root.itemMapping[$data.item]"></td>
+								<td data-bind="text: $data.receiver"></td>
+								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
 								
 								<!-- ko if: moment().isAfter($data.limit_time+' 23:59') -->
 									<td style="color: red"  data-bind="text: $data.limit_time"></td>
@@ -139,7 +97,7 @@
 								<!-- /ko -->
 								
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
-								<td data-bind="text: $data.create_user"></td>
+								<td data-bind="text: $data.apply_user"></td>
 								
 								<!-- ko if:$data.status=='I' -->
 								<td>
@@ -281,7 +239,7 @@
 	</div>
 
 	<script>
-		$(".approval").addClass("current").children("ol").css("display", "block");
+		$(".manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

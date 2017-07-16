@@ -101,7 +101,12 @@
 								<!-- /ko -->
 								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewComment($data)}}">详情</a></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
-								<td data-bind="text: $data.confirm_time"></td>
+								<!-- ko if:$data.status!='E' -->
+								<td></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='E' -->
+								<td data-bind="text: moment($data.confirm_time).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 							</tr>
 						</tbody>

@@ -209,21 +209,20 @@ var OrderContext = function() {
 				supplier_employee_pks.push(data.supplier_employee_pk);
 
 				if (data.final_flg == "Y") {
-					if (data.final_balance <= 0) {
-						fail_msg(data.team_number + "尾款必须为正");
+					if (data.final_balance == 0) {
+						fail_msg(data.team_number + "尾款已清");
 						check_result = false;
 					} else {
 						totalPay += (data.final_balance - 0);
 					}
+
 				} else {
-					// if (data.budget_balance <= 0) {
-					// fail_msg(data.team_number + "尾款必须为正");
-					// check_result = false;
-					// } else {
-					// totalPay += (data.budget_balance - 0);
-					// }
-					fail_msg(data.team_number + "还未决算!");
-					check_result = false;
+					if (data.budget_balance == 0) {
+						fail_msg(data.team_number + "尾款已清");
+						check_result = false;
+					} else {
+						totalPay += (data.budget_balance - 0);
+					}
 				}
 			});
 			if (!check_result)
@@ -498,6 +497,10 @@ var OrderContext = function() {
 			}
 		});
 	};
+	
+	self.chosenAll = function(obj){
+		console.log(obj);
+	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 
@@ -511,6 +514,8 @@ var OrderContext = function() {
 	self.totalBalance = ko.observable(0);
 	self.totalFinalBalance = ko.observable(0);
 
+	
+	var pages = new Array();
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalBudgetPayable = 0;
@@ -523,9 +528,13 @@ var OrderContext = function() {
 
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+
 		$.getJSON(self.apiurl + 'sale/searchPayableByPage', param, function(data) {
 			self.payables(data.payables);
-			self.store(self.store().concat(self.payables()));
+			if (!pages.contains(self.currentPage())) {
+				self.store(self.store().concat(self.payables()));
+				pages.push(self.currentPage());
+			}
 			// 计算合计
 			$(self.payables()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -595,6 +604,7 @@ var OrderContext = function() {
 
 	});
 	self.search = function() {
+		pages=new Array();
 		self.chosenOrders.removeAll();
 		self.store.removeAll();
 		self.refresh();

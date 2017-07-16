@@ -22,5 +22,9 @@
 			<result name="success" type="json"></result>
 		</action>
 		
+		<action name="autoFixBalance" class="simpletinyAction" method="autoFixBalance">
+		<result name="success" type="redirect">/</result>
+		</action>
+		
 	</package>
 </struts>

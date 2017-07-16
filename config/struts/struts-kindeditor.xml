@@ -8,5 +8,8 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="keFileDelete" class="kindEditorAction" method="keFileDelete">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 </struts>

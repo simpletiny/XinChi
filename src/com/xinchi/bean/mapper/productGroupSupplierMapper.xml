@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductGroupSupplierMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductGroupSupplierBean">
+		<result column="group_pk" property="group_pk" jdbcType="CHAR" />
+		<result column="supplier_pk" property="supplier_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		group_pk,
+		supplier_pk,
+		pk
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_group_supplier
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_group_supplier
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByGroupPk" parameterType="java.lang.String">
+		delete from product_group_supplier
+		where group_pk = #{group_pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductGroupSupplierBean">
+
+		insert into product_group_supplier
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="group_pk != null">
+				group_pk,
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="group_pk != null">
+				#{group_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_pk != null">
+				#{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductGroupSupplierBean">
+		update product_group_supplier
+		<set>
+			<if test="group_pk != null">
+				group_pk = #{group_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk = #{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductGroupSupplierBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_group_supplier
+		<where>
+			<if test="group_pk != null and group_pk !=''">
+				and group_pk=#{group_pk,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

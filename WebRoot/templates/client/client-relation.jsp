@@ -44,12 +44,22 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">新增拜访</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
-					</div>
 					<div class="form-group">
-							<div class="span6">
+					
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">新增拜访</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createAccurateSale() }">新增精推</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button>
+					</div>
+		
+					<div class="form-group">
+						<div class="span6">
+								<label class="col-md-1 control-label">客户</label>
+								<div class="col-md-2">
+									 <input type="text" class="form-control" placeholder="客户" maxlength="20" name="relation.client_employee_name" />
+								</div>
+							</div>
+								<div class="span6">
 								<label class="col-md-1 control-label">评级</label>
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px" data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:fetchSummary}"
@@ -65,6 +75,7 @@
 								</div>
 							</div>
 						</s:if>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 					</div>
 				</form>
 				
@@ -83,21 +94,40 @@
 								<td width="11.11%"></td>
 								<td width="11.11%"></td>
 							</tr>
+					</thead>
+					</table>
+					<table class="table table-striped table-hover">
+					<thead>
+							<tr>
+								<th colspan="2" style="border-right:solid 1px #ff0000;"></th>
+								<th colspan="4" style="border-right:solid 1px #ff0000;">月度数据</th>
+								<th colspan="4">周数据</th>
+							</tr>
 							<tr>
 								<th>评级</th>
-								<th colspan="2">客户总数</th>
-								<th colspan="2">本月订单</th>
-								<th colspan="2">本月拜访</th>
-								<th colspan="2">本周拜访</th>
+								<th style="border-right:solid 1px #ff0000;">客户总数</th>
+								<th>升级</th>
+								<th>订单</th>
+								<th>拜访</th>
+								<th style="border-right:solid 1px #ff0000;">精推</th>
+								<th>升级</th>
+								<th>订单</th>
+								<th>拜访</th>
+								<th>精推</th>
 							</tr>
 						</thead>
 							<tbody id="tbody-data" data-bind="foreach: clientSummary">
 							<tr>
 								<td data-bind="text: $data.level"></td>
-								<td  colspan="2" data-bind="text: $data.client_count"></td>
-								<td colspan="2" data-bind="text: $data.month_order_count"></td>
-								<td colspan="2" data-bind="text: $data.month_visit_count"></td>
-								<td colspan="2" data-bind="text: $data.week_visit_count"></td>
+								<td style="border-right:solid 1px #ff0000;" data-bind="text: $data.client_count"></td>
+								<td>-</td>
+								<td data-bind="text: $data.month_visit_count"></td>
+								<td data-bind="text: $data.month_visit_count"></td>
+								<td style="border-right:solid 1px #ff0000;" data-bind="text: $data.month_visit_count"></td>
+								<td>-</td>
+								<td data-bind="text: $data.month_visit_count"></td>
+								<td data-bind="text: $data.month_visit_count"></td>
+								<td data-bind="text: $data.week_visit_count"></td>
 							</tr>
 							</tbody>
 				
@@ -115,7 +145,8 @@
 								<!-- <th>年订单</th> -->
 								<th>月订单</th>
 								<th>签单期间</th>
-								<th>最近拜访</th>
+								<th>拜访目的</th>
+								<th>最近精推</th>
 								<!-- <th>拜访期间</th> -->
 								<!-- <th>有效通话</th>
 								<th>通话期间</th> -->
@@ -130,7 +161,7 @@
 						<tbody id="tbody-data" data-bind="foreach: relations">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.client_employee_pk+';'+$data.client_employee_name}, checked: $root.chosenEmployee" /></td>
-								<td data-bind="text: $data.client_employee_name"></td>
+								<td> <a href="javascript:void(0)" data-bind="text: $data.client_employee_name,attr: {href: 'employee-detail.jsp?key='+$data.client_employee_pk}"></a></td>
 								<td data-bind="text: $data.relation_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.market_level"></td>
@@ -138,6 +169,7 @@
 								<td data-bind="text: $data.month_order_count"></td>
 								<td data-bind="text: $data.last_order_period"></td>
 								<td data-bind="text: $data.visit_count"></td>
+								<td data-bind="text: $data.accurate_count"></td>
 								<!-- <td data-bind="text: $data.last_visit_period"></td> -->
 								<!-- <td data-bind="text: $data.chat_count"></td>
 								<td data-bind="text: $data.last_chat_period"></td> -->

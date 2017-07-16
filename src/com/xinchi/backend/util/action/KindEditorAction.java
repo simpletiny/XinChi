@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.FileFolder;
+import com.xinchi.common.Utils;
 import com.xinchi.tools.PropertiesUtil;
 
 @Controller
@@ -130,6 +131,16 @@ public class KindEditorAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String fileType;
+	private String subFolder;
+	private String fileFileName;
+
+	// 删除文件
+	public String keFileDelete() {
+		resultStr = Utils.deleteFileFromDisk(fileType, subFolder, fileFileName);
+		return SUCCESS;
+	}
+
 	public InputStream getFips() {
 		return fips;
 	}
@@ -160,6 +171,30 @@ public class KindEditorAction extends BaseAction {
 
 	public void setError(int error) {
 		this.error = error;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public String getSubFolder() {
+		return subFolder;
+	}
+
+	public void setSubFolder(String subFolder) {
+		this.subFolder = subFolder;
+	}
+
+	public String getFileFileName() {
+		return fileFileName;
+	}
+
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
 	}
 
 }

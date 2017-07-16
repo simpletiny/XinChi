@@ -16,10 +16,10 @@ public class PayableBean extends SupperBO implements Serializable {
 	private String supplier_employee_name;
 
 	private String supplier_employee_pk;
-	
+
 	private String supplier_name;
 	private String supplier_pk;
-	
+
 	private String departure_date;
 
 	private String return_date;
@@ -54,6 +54,9 @@ public class PayableBean extends SupperBO implements Serializable {
 	private String team_status;
 	private String type;
 	private String sort_type;
+	private String departure_from;
+	private String departure_to;
+	private String return_to;
 
 	public String getTeam_number() {
 		return team_number;
@@ -253,6 +256,30 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setSupplier_pk(String supplier_pk) {
 		this.supplier_pk = supplier_pk;
+	}
+
+	public String getDeparture_from() {
+		return departure_from;
+	}
+
+	public void setDeparture_from(String departure_from) {
+		this.departure_from = departure_from;
+	}
+
+	public String getDeparture_to() {
+		return departure_to;
+	}
+
+	public void setDeparture_to(String departure_to) {
+		this.departure_to = departure_to;
+	}
+
+	public String getReturn_to() {
+		return return_to;
+	}
+
+	public void setReturn_to(String return_to) {
+		this.return_to = return_to;
 	}
 
 }

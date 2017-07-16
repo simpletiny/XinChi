@@ -3,15 +3,11 @@ package com.xinchi.backend.receivable.service.impl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -64,62 +60,77 @@ public class ReceivableServiceImpl implements ReceivableService {
 
 	@Override
 	public List<ReceivableBean> searchReceivableByPage(Page<ReceivableBean> page) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
+		return dao.selectByPage(page);
 
-		// 计算合计
-		ReceivableBean rb = (ReceivableBean) page.getParams().get("bo");
-		String qStr = buildQuery(rb);
-		if (qStr.equals("")) {
-			qStr = "*:*";
-		}
-		SolrQuery query = new SolrQuery(qStr);
-		if (rb.getSort_type().equals("倒序")) {
-			query.add("sort", "departure_date desc");
-		} else if (rb.getSort_type().equals("正序")) {
-			query.add("sort", "departure_date asc");
-		}
-
-		query.setStart(page.getStart());
-		query.setRows(page.getCount());
-		List<ReceivableBean> receivables = new ArrayList<ReceivableBean>();
-
-		try {
-			QueryResponse response = solrClient.query(query);
-
-			SolrDocumentList list = response.getResults();
-			page.setTotal((int) list.getNumFound());
-
-			for (SolrDocument doc : list) {
-				ReceivableBean receivable = new ReceivableBean();
-				receivable.setTeam_number(safeGet(doc, "team_number"));
-				receivable.setPk(safeGet(doc, "id"));
-				receivable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" : safeGet(doc, "final_flg"));
-				receivable.setClient_employee_name(safeGet(doc, "client_employee_name"));
-				receivable.setClient_employee_pk(safeGet(doc, "client_employee_pk"));
-				receivable.setDeparture_date(DateUtil.castDate2Str((Date) doc.get("departure_date")));
-				receivable.setReturn_date(DateUtil.castDate2Str((Date) doc.get("return_date")));
-				receivable.setProduct(safeGet(doc, "product"));
-				receivable.setPeople_count(SimpletinyString.str2Int(safeGet(doc, "people_count")));
-				receivable.setFinancial_body_name(safeGet(doc, "financial_body_name"));
-				receivable.setSales(safeGet(doc, "sales"));
-				receivable.setSales_name(safeGet(doc, "sales_name"));
-				receivable.setBudget_receivable(SimpletinyString.str2Decimal(safeGet(doc, "budget_receivable")));
-				receivable.setFinal_receivable(SimpletinyString.str2Decimal(safeGet(doc, "final_receivable")));
-				receivable.setReceived(SimpletinyString.str2Decimal(safeGet(doc, "received")));
-				receivable.setBudget_balance(SimpletinyString.str2Decimal(safeGet(doc, "budget_balance")));
-				receivable.setFinal_balance(SimpletinyString.str2Decimal(safeGet(doc, "final_balance")));
-				receivable.setBack_days(getBackDays(receivable.getDeparture_date(), receivable.getReturn_date()));
-				receivables.add(receivable);
-			}
-			return receivables;
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// SolrClient solrClient =
+		// solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
+		//
+		// // 计算合计
+		// ReceivableBean rb = (ReceivableBean) page.getParams().get("bo");
+		// String qStr = buildQuery(rb);
+		// if (qStr.equals("")) {
+		// qStr = "*:*";
+		// }
+		// SolrQuery query = new SolrQuery(qStr);
+		// if (rb.getSort_type().equals("倒序")) {
+		// query.add("sort", "departure_date desc");
+		// } else if (rb.getSort_type().equals("正序")) {
+		// query.add("sort", "departure_date asc");
+		// }
+		//
+		// query.setStart(page.getStart());
+		// query.setRows(page.getCount());
+		// List<ReceivableBean> receivables = new ArrayList<ReceivableBean>();
+		//
+		// try {
+		// QueryResponse response = solrClient.query(query);
+		//
+		// SolrDocumentList list = response.getResults();
+		// page.setTotal((int) list.getNumFound());
+		//
+		// for (SolrDocument doc : list) {
+		// ReceivableBean receivable = new ReceivableBean();
+		// receivable.setTeam_number(safeGet(doc, "team_number"));
+		// receivable.setPk(safeGet(doc, "id"));
+		// receivable.setFinal_flg((null == safeGet(doc, "final_flg")) ? "N" :
+		// safeGet(doc, "final_flg"));
+		// receivable.setClient_employee_name(safeGet(doc,
+		// "client_employee_name"));
+		// receivable.setClient_employee_pk(safeGet(doc, "client_employee_pk"));
+		// receivable.setDeparture_date(DateUtil.castDate2Str((Date)
+		// doc.get("departure_date")));
+		// receivable.setReturn_date(DateUtil.castDate2Str((Date)
+		// doc.get("return_date")));
+		// receivable.setProduct(safeGet(doc, "product"));
+		// receivable.setPeople_count(SimpletinyString.str2Int(safeGet(doc,
+		// "people_count")));
+		// receivable.setFinancial_body_name(safeGet(doc,
+		// "financial_body_name"));
+		// receivable.setSales(safeGet(doc, "sales"));
+		// receivable.setSales_name(safeGet(doc, "sales_name"));
+		// receivable.setBudget_receivable(SimpletinyString.str2Decimal(safeGet(doc,
+		// "budget_receivable")));
+		// receivable.setFinal_receivable(SimpletinyString.str2Decimal(safeGet(doc,
+		// "final_receivable")));
+		// receivable.setReceived(SimpletinyString.str2Decimal(safeGet(doc,
+		// "received")));
+		// receivable.setBudget_balance(SimpletinyString.str2Decimal(safeGet(doc,
+		// "budget_balance")));
+		// receivable.setFinal_balance(SimpletinyString.str2Decimal(safeGet(doc,
+		// "final_balance")));
+		// receivable.setBack_days(getBackDays(receivable.getDeparture_date(),
+		// receivable.getReturn_date()));
+		// receivables.add(receivable);
+		// }
+		// return receivables;
+		// } catch (SolrServerException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 		// SimpleOrderedMap
-		return null;
+		// return null;
 	}
 
 	private String getBackDays(String departure_date, String return_date) {
@@ -225,12 +236,12 @@ public class ReceivableServiceImpl implements ReceivableService {
 			receivable.setReceived(BigDecimal.ZERO);
 
 			receivable.setBudget_balance(receivable.getBudget_receivable());
-			
+
 			insert(receivable);
 		} else {
 			FinalOrderBean finalOrder = finalOrderService.getFinalOrderByTeamNo(teamNumber);
 			BudgetOrderBean budget = budgetDao.selectBudgetOrderByTeamNumber(teamNumber);
-			
+
 			receivable.setClient_employee_name(budget.getClient_employee_name());
 			receivable.setClient_employee_pk(budget.getClient_employee_pk());
 			receivable.setDeparture_date(budget.getDeparture_date());
@@ -239,12 +250,12 @@ public class ReceivableServiceImpl implements ReceivableService {
 			receivable.setPeople_count(budget.getPeople_count());
 			receivable.setBudget_receivable(budget.getReceivable());
 			receivable.setBudget_balance(budget.getReceivable().subtract(receivable.getReceived()));
-			
+
 			if (null != finalOrder) {
 				receivable.setFinal_flg("Y");
 				receivable.setFinal_receivable(finalOrder.getReceivable());
 				receivable.setFinal_balance(finalOrder.getReceivable().subtract(receivable.getReceived()));
-			}else {
+			} else {
 				receivable.setFinal_flg("N");
 				receivable.setFinal_receivable(null);
 				receivable.setFinal_balance(null);
@@ -253,20 +264,20 @@ public class ReceivableServiceImpl implements ReceivableService {
 			update(receivable);
 
 		}
-		SolrInputDocument document = castR2D(receivable);
-		try {
-			solrClient.add(document);
-			solrClient.commit();
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// SolrInputDocument document = castR2D(receivable);
+		// try {
+		// solrClient.add(document);
+		// solrClient.commit();
+		// } catch (SolrServerException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	private SolrInputDocument castR2D(ReceivableBean receivable) {
 		SolrInputDocument document = new SolrInputDocument();
-		
+
 		document.addField("id", receivable.getPk());
 		document.addField("team_number", receivable.getTeam_number());
 		document.addField("final_flg", receivable.getFinal_flg());
@@ -306,16 +317,17 @@ public class ReceivableServiceImpl implements ReceivableService {
 
 		dao.update(receivable);
 
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
-
-		SolrInputDocument document = castR2D(receivable);
-		try {
-			solrClient.add(document);
-			solrClient.commit();
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// SolrClient solrClient =
+		// solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
+		//
+		// SolrInputDocument document = castR2D(receivable);
+		// try {
+		// solrClient.add(document);
+		// solrClient.commit();
+		// } catch (SolrServerException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 }

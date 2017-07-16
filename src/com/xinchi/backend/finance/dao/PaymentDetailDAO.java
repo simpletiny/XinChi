@@ -8,11 +8,9 @@ import com.xinchi.tools.Page;
 public interface PaymentDetailDAO {
 	public void insert(PaymentDetailBean bo);
 
-	public List<PaymentDetailBean> selectAllDetailsByParam(
-			PaymentDetailBean bean);
+	public List<PaymentDetailBean> selectAllDetailsByParam(PaymentDetailBean bean);
 
-	public List<PaymentDetailBean> selectAllDetailsByPage(
-			Page<PaymentDetailBean> page);
+	public List<PaymentDetailBean> selectAllDetailsByPage(Page<PaymentDetailBean> page);
 
 	public PaymentDetailBean selectById(String detailId);
 
@@ -27,4 +25,6 @@ public interface PaymentDetailDAO {
 	public PaymentDetailBean selectPreDetail(PaymentDetailBean newDetail);
 
 	public void insertDetails(List<PaymentDetailBean> details);
+
+	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number);
 }

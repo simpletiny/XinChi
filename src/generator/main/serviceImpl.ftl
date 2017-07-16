@@ -12,19 +12,20 @@ import ${pac}.dao.${clazzName?cap_first}DAO;
 import ${pac}.service.${clazzName?cap_first}Service;
 
 @Service
+@Transactional
 public class ${clazzName?cap_first}ServiceImpl implements ${clazzName?cap_first}Service{
 
 	@Autowired
 	private ${clazzName?cap_first}DAO dao;
 	
 	@Override
-	public void insert(${vo} bo) {
-		dao.insert(bo);
+	public void insert(${voName} bean) {
+		dao.insert(bean);
 	}
 
 	@Override
-	public void update(${vo} bo) {
-		dao.update(bo);
+	public void update(${voName} bean) {
+		dao.update(bean);
 	}
 
 	@Override
@@ -33,13 +34,13 @@ public class ${clazzName?cap_first}ServiceImpl implements ${clazzName?cap_first}
 	}
 
 	@Override
-	public ${vo} selectByPrimaryKey(String id) {
+	public ${voName} selectByPrimaryKey(String id) {
 		return dao.selectByPrimaryKey(id);
 	}
 
 	@Override
-	public List<${vo}> getAllByParam(${vo} bo) {
-		return dao.getAllByParam(bo);
+	public List<${voName}> getAllByParam(${voName} bean) {
+		return dao.getAllByParam(bean);
 	}
 	
 }

@@ -20,6 +20,7 @@ import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
+import com.xinchi.backend.util.service.SimpletinyService;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.FinalOrderBean;
@@ -230,6 +231,15 @@ public class SimpletinyAction extends BaseAction {
 				e.printStackTrace();
 			}
 		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private SimpletinyService service;
+
+	// 自动修正流水账余额
+	public String autoFixBalance() {
+		service.autoFixBalance();
 		return SUCCESS;
 	}
 

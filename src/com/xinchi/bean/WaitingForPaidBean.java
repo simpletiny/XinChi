@@ -28,8 +28,10 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String update_user;
-	
+
 	private String related_pk;
+
+	private String pay_user;
 
 	public String getPay_number() {
 		return pay_number;
@@ -125,6 +127,14 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 
 	public void setRelated_pk(String related_pk) {
 		this.related_pk = related_pk;
+	}
+
+	public String getPay_user() {
+		return pay_user;
+	}
+
+	public void setPay_user(String pay_user) {
+		this.pay_user = pay_user;
 	}
 
 }

@@ -1,19 +1,21 @@
 var idCheckLayer;
+var userRoleLayer;
 var UsersContext = function() {
 	var self = this;
-	self.basePath = $("#hidden_apiurl").val();
+	self.apiurl = $("#hidden_apiurl").val();
 	self.users = ko.observable({
 		total : 0,
 		items : []
 	});
-	self.chosenUserRoles = ko.observableArray([]);
+	self.chosenUserRoles = ko.observableArray();
+	self.chosenUsers = ko.observableArray([]);
 
 	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE' ];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'
 	};
-	
+
 	self.roleMapping = {
 		'MANAGER' : '经理',
 		'ADMIN' : '管理员',
@@ -26,7 +28,7 @@ var UsersContext = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.basePath + 'user/searchUsersByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'user/searchUsersByPage', param, function(data) {
 			var users = data.users;
 			$(users).each(function(idx, user) {
 				var user_roles = user.user_roles;
@@ -35,7 +37,7 @@ var UsersContext = function() {
 				for ( var i = 0; i < arr.length; i++) {
 					roles_name += self.roleMapping[arr[i]] + ",";
 				}
-				
+
 				roles_name = roles_name.substring(0, roles_name.length - 1);
 				user.user_roles = ko.observable();
 				user.user_roles(roles_name);
@@ -47,7 +49,105 @@ var UsersContext = function() {
 		});
 	};
 
+	// 修改用户角色
+	self.editUserRole = function() {
+		if (self.chosenUsers().length < 1) {
+			fail_msg("请选择用户");
+			return;
+		} else if (self.chosenUsers().length > 1) {
+			fail_msg("只能选择一个用户");
+			return;
+		} else {
+
+			$.getJSON(self.apiurl + 'user/searchUserByPk', "user_pk=" + self.chosenUsers()[0], function(data) {
+				self.chosenUserRoles.removeAll();
+				var user = data.ucb;
+				var roles = user.user_roles.split(",");
+				for ( var i = 0; i < roles.length; i++) {
+					if (roles[i] == '')
+						continue;
+					self.chosenUserRoles.push(roles[i]);
+				}
+
+				userRoleLayer = $.layer({
+					type : 1,
+					title : [ '修改用户角色', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '600px', '200px' ],
+					offset : [ '200px', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#edit-role'
+					},
+					end : function() {
+
+					}
+				});
+			});
+
+		}
+	};
+	self.doSave = function() {
+		startLoadingSimpleIndicator("保存中");
+		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles();
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'user/updateUserRoles',
+			data : data
+		}).success(function(str) {
+			if (str == "success") {
+				self.refresh();
+				endLoadingIndicator();
+				layer.close(userRoleLayer);
+			}
+		});
+	};
+
+	self.doCancel = function() {
+		layer.close(userRoleLayer);
+	};
+
+	// 停用用户
+	self.stop = function() {
+		if (self.chosenUsers().length < 1) {
+			fail_msg("请选择用户");
+			return;
+		} else if (self.chosenUsers().length > 1) {
+			fail_msg("只能选择一个用户");
+			return;
+		} else {
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要停用该用户吗?',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("停用中");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'user/stopUser',
+							data : 'user_pk=' + self.chosenUsers()[0]
+						}).success(function(str) {
+							if (str == "success") {
+								self.refresh();
+								endLoadingIndicator();
+							}
+						});
+					}
+				}
+			});
+		}
+
+	};
+
+	// 查看身份证图片
 	self.checkIdPic = function(fileName) {
+		$("#img-pic").attr("src", "");
 		idCheckLayer = $.layer({
 			type : 1,
 			title : [ '查看身份证图片', '' ],
@@ -65,11 +165,11 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.basePath + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on('click', function() {
-		window.open(self.basePath + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
+		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
 	});
 
 	// start pagination

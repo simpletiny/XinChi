@@ -78,7 +78,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </div>
   <script>
-    $(".finance").addClass("current").children("ol").css("display", "block");
+    $(".manager").addClass("current").children("ol").css("display", "block");
   </script>
     <script src="<%=basePath%>static/js/finance/card.js"></script>
 </body>

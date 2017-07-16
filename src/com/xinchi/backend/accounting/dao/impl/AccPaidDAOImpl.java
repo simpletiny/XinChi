@@ -7,6 +7,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.accounting.dao.AccPaidDAO;
+import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -48,5 +49,10 @@ public class AccPaidDAOImpl extends SqlSessionDaoSupport implements AccPaidDAO {
 	@Override
 	public void update(WaitingForPaidBean wfp) {
 	daoUtil.updateByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.updateByPrimaryKey", wfp);
+	}
+
+	@Override
+	public PaidDetailSummary selectPaidSummaryByPayNumber(String voucher_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectPaidSummaryByPayNumber", voucher_number);
 	}
 }

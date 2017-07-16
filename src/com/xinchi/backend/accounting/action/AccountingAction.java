@@ -17,37 +17,37 @@ public class AccountingAction extends BaseAction {
 	@Autowired
 	private AccountingService service;
 
-	private String type;
+	private String item;
 	private String related_pk;
 	private String pk;
 
 	public String agreePayApply() {
-		if (type.equals(ResourcesConstants.PAID_TYPE_STRIKE)) {
-			resultStr = service.updatePaid(pk, ResourcesConstants.PAID_STATUS_YES);
-		} else {
+		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
 			resultStr = service.updateRelatedPaid(related_pk, ResourcesConstants.PAID_STATUS_YES);
+		} else {
+			resultStr = service.agreePayApply(pk);
 		}
-
 		return SUCCESS;
 	}
 
 	public String rejectPayApply() {
-		if (type.equals(ResourcesConstants.PAID_TYPE_STRIKE)) {
-			resultStr = service.updatePaid(pk, ResourcesConstants.PAID_STATUS_NO);
-		} else {
+		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
 			resultStr = service.updateRelatedPaid(related_pk, ResourcesConstants.PAID_STATUS_NO);
+		} else {
+			resultStr = service.rejectPayApply(pk);
 		}
 		return SUCCESS;
 	}
-
-	public String getType() {
-		return type;
+	
+	public String rollBackPayApply(){
+		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
+			resultStr = service.rollBackRelatedPayApply(related_pk);
+		} else {
+			resultStr = service.rollBackPayApply(pk);
+		}
+		
+		return SUCCESS;
 	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getRelated_pk() {
 		return related_pk;
 	}
@@ -62,5 +62,13 @@ public class AccountingAction extends BaseAction {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getItem() {
+		return item;
+	}
+
+	public void setItem(String item) {
+		this.item = item;
 	}
 }

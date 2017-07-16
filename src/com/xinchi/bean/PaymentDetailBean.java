@@ -10,6 +10,7 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	private String account;
 
+	private String account_pk;
 	private String time;
 
 	private String type;
@@ -36,6 +37,10 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String voucher_number;
 	// 收款方，支出的时候有用
 	private String receiver;
+	// 凭证文件名
+	private String voucher_file_name;
+	// 收入匹配状态
+	private String match_flg;
 
 	public String getAccount() {
 		return account;
@@ -163,6 +168,30 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
+	}
+
+	public String getVoucher_file_name() {
+		return voucher_file_name;
+	}
+
+	public void setVoucher_file_name(String voucher_file_name) {
+		this.voucher_file_name = voucher_file_name;
+	}
+
+	public String getAccount_pk() {
+		return account_pk;
+	}
+
+	public void setAccount_pk(String account_pk) {
+		this.account_pk = account_pk;
+	}
+
+	public String getMatch_flg() {
+		return match_flg;
+	}
+
+	public void setMatch_flg(String match_flg) {
+		this.match_flg = match_flg;
 	}
 
 }

@@ -72,16 +72,20 @@ public class ResourcesConstants {
 	public static String PAID_STATUS_ING = "I";
 	// 被驳回
 	public static String PAID_STATUS_NO = "N";
-	// 已入账
+	// 已同意
 	public static String PAID_STATUS_YES = "Y";
+	// 已支付
+	public static String PAID_STATUS_PAID = "P";
 
 	// 收入状态
 	// 待确认
 	public static String RECEIVED_STATUS_ING = "I";
 	// 被驳回
 	public static String RECEIVED_STATUS_NO = "N";
-	// 已入账
+	//
 	public static String RECEIVED_STATUS_YES = "Y";
+	// 已入账 enter
+	public static String RECEIVED_STATUS_ENTER = "E";
 	/**
 	 * 供应商文件类型
 	 */
@@ -147,6 +151,7 @@ public class ResourcesConstants {
 	 */
 	// 支付单号计数
 	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
+	public static String COUNT_TYPE_PRODUCT_ORDER = "PRODUCT_NUMBER";
 
 	/**
 	 * 支付种类

@@ -18,7 +18,9 @@ import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -58,6 +60,27 @@ public class PayableAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			payable.setSales(sessionBean.getUser_number());
+		}
+		String team_status = payable.getTeam_status();
+		String departure_from = "";
+		String departure_to = "";
+		String return_to = "";
+		if (!SimpletinyString.isEmpty(team_status)) {
+			if (team_status.equals(ResourcesConstants.TEAM_STATUS_BEFORE)) {
+				departure_from = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_AFTER)) {
+				departure_to = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			} else if (team_status.equals(ResourcesConstants.TEAM_STATUS_RETURN)) {
+				return_to = DateUtil.getDateStr(DateUtil.YYYY_MM_DD);
+			}
+		}
+		payable.setDeparture_from(departure_from);
+		payable.setDeparture_to(departure_to);
+		payable.setReturn_to(return_to);
+		if (payable.getSort_type().equals("倒序")) {
+			payable.setSort_type("D");
+		} else if (payable.getSort_type().equals("正序")) {
+			payable.setSort_type("Z");
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();

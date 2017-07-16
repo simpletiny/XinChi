@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,9 +27,11 @@ import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 public class PaymentDetailServiceImpl implements PaymentDetailService {
@@ -52,13 +55,13 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 		List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(time);
 
-		if (null != sameDetail && sameDetail.size() > 0) {
+		if (null != sameDetail && sameDetail.size() > 0 && (null==detail.getInner_flg()||detail.getInner_flg().equals("N"))) {
 			return "time";
 		}
 
 		List<PaymentDetailBean> afterDetails = dao.selectAfterByParam(detail);
 		BigDecimal wrong = detail.getMoney();
-		if (detail.getType().equals("收入")) {
+		if (detail.getType().equals("支出")) {
 			wrong = wrong.multiply(BigDecimal.valueOf(-1));
 		}
 		for (PaymentDetailBean d : afterDetails) {
@@ -66,13 +69,34 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		}
 		dao.updateDetails(afterDetails);
 
-		CardBean card = cardDao.getCardByAccount(detail.getAccount());
-		if (null != card) {
-			card.setBalance(detail.getBalance());
-			cardDao.update(card);
-		}
-		dao.insert(detail);
+		PaymentDetailBean beforeDetail = dao.selectPreDetail(detail);
 
+		CardBean card = cardDao.getCardByAccount(detail.getAccount());
+
+		if (null == beforeDetail) {
+			detail.setBalance(card.getInit_money());
+		} else {
+			detail.setBalance(beforeDetail.getBalance().add(wrong));
+		}
+
+		card.setBalance(card.getBalance().add(wrong));
+		cardDao.update(card);
+
+		// 保存凭证文件
+		if (!SimpletinyString.isEmpty(detail.getVoucher_file_name())) {
+			String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+			File sourceFile = new File(tempFolder + File.separator + detail.getVoucher_file_name());
+			File destfile = new File(fileFolder + File.separator + card.getPk() + File.separator + detail.getVoucher_file_name());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
+
+		dao.insert(detail);
 		return "success";
 	}
 
@@ -91,10 +115,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Transactional
 	public void saveInnerDetail(InnerTransferBean innerTransfer) {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-
-		CardBean fromCard = cardDao.getCardByAccount(innerTransfer.getFrom_account());
-
-		CardBean toCard = cardDao.getCardByAccount(innerTransfer.getTo_account());
 
 		String inner_pk = DBCommonUtil.genPk();
 
@@ -123,14 +143,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		receiveDetail.setInner_flg("Y");
 		receiveDetail.setInner_pk(inner_pk);
 
-		// 计算明细余额
-		BigDecimal payBalance = fromCard.getBalance().subtract(payDetail.getMoney());
-		BigDecimal receiveBalance = toCard.getBalance().add(payDetail.getMoney());
-		payDetail.setBalance(payBalance);
-		receiveDetail.setBalance(receiveBalance);
-
-		dao.insert(payDetail);
-		dao.insert(receiveDetail);
+		insert(payDetail);
+		insert(receiveDetail);
 
 		// 汇兑明细
 		if (null != innerTransfer.getExchange_account()) {
@@ -138,14 +152,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 			if (innerTransfer.getExchange_account().equals("out")) {
 				exchangeDetail.setAccount(innerTransfer.getFrom_account());
-				payBalance = payBalance.subtract(innerTransfer.getExchange_money());
-				exchangeDetail.setBalance(payBalance);
 
 			} else {
 				exchangeDetail.setAccount(innerTransfer.getTo_account());
-				receiveBalance = receiveBalance.subtract(innerTransfer.getExchange_money());
-
-				exchangeDetail.setBalance(receiveBalance);
 			}
 
 			exchangeDetail.setType("支出");
@@ -157,14 +166,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			exchangeDetail.setInner_flg("Y");
 			exchangeDetail.setInner_pk(inner_pk);
 
-			dao.insert(exchangeDetail);
+			insert(exchangeDetail);
 		}
-
-		// 更新账户
-		fromCard.setBalance(payBalance);
-		toCard.setBalance(receiveBalance);
-		cardDao.update(fromCard);
-		cardDao.update(toCard);
 	}
 
 	@Override
@@ -438,5 +441,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		result += date.substring(6, 8);
 		result += " " + time;
 		return result;
+	}
+
+	@Override
+	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number) {
+
+		return dao.selectByVoucherNumber(voucher_number);
 	}
 }

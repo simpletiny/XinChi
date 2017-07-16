@@ -37,15 +37,7 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: pay">支付</button>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="ip">
-							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" /><label data-bind="text: $root.statusMapping[$data]"></label>
-								</em>
-							</div>
-						</div>
 
-					</div>
 					<div class="form-group">
 						<!-- <div align="left">
 							<label class="col-md-1 control-label">申请日期</label>

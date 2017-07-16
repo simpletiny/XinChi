@@ -54,7 +54,17 @@ public class PaidDAOImpl extends SqlSessionDaoSupport implements PaidDAO {
 
 	@Override
 	public SupplierPaidDetailBean selectByRelatedPk(String related_pk) {
-		
+
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByRelatedPk", related_pk);
+	}
+
+	@Override
+	public List<SupplierPaidDetailBean> selectSupplierPaidDetailByRelatedPk(String related_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectSupplierPaidDetailByRelatedPk", related_pk);
+	}
+
+	@Override
+	public void deleteByPk(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.SupplierPaidDetailMapper.deleteByPrimaryKey", pk);
 	}
 }

@@ -31,12 +31,12 @@ var ReceivedContext = function() {
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
-	self.allStatus = [ 'I', 'N', 'Y' ];
+	self.allStatus = [ 'I', 'N', 'E' ];
 
 	self.statusMapping = {
 		'I' : '待确认',
 		'N' : '被驳回',
-		'Y' : '已入账'
+		'E' : '已入账'
 	};
 
 	self.typeMapping = {

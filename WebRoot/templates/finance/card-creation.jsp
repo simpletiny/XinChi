@@ -66,7 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </div>
   <script>
-    $(".finance").addClass("current").children("ol").css("display", "block");
+    $(".manager").addClass("current").children("ol").css("display", "block");
   </script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>

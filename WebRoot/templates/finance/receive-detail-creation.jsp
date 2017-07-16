@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">账户</label>
-                        <div class="ip"><select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --', value: detail().account,event: {change:changeAccount}" name="detail.account" required="required"></select></div>
+                        <div class="ip"><select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --', value: detail().account" name="detail.account" required="required"></select></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">发生时间</label>
@@ -34,13 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
 					 <div class="col-md-6 required">
                         <label class="l">收入金额</label>
-                        <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money,event:{keyup:calculateBalance}" placeholder="收入金额" name="detail.money" required="required"/></div>
-                    </div>
-                </div>
-                <div class="input-row clearfloat">
-                    <div class="col-md-6">
-                        <label class="l">账户余额</label>
-                        <div class="ip"><p class="ip-default rmb" id="p-balance" data-bind="text: balance"></p></div>
+                        <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money" placeholder="收入金额" name="detail.money" required="required"/></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">

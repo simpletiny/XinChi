@@ -105,4 +105,9 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.UserCommonMapper.selectByPage", page);
 	}
 
+	@Override
+	public UserCommonBean selectUserCommonByPk(String user_pk) {
+		return (UserCommonBean)daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByPrimaryKey", user_pk);
+	}
+
 }

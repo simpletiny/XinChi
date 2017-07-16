@@ -30,6 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<div style="width: 30%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: edit">修改</button>
 							</div>
 						</div>
 					</div>

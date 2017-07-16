@@ -14,9 +14,14 @@ import java.util.Date;
 public class DateUtil {
 	public static String YYYYMMDD = "yyyyMMdd";
 	public static String YYYY_MM_DD = "yyyy-MM-dd";
+	public static String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+	public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
 	public static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 	public static SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM");
+
+	public static SimpleDateFormat sdf3 = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+	public static SimpleDateFormat sdf4 = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
 
 	/**
 	 * 
@@ -57,6 +62,16 @@ public class DateUtil {
 
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(c.getTime());
+	}
+
+	public static String getMinStr() {
+		Calendar c = Calendar.getInstance();
+		return sdf3.format(c.getTime());
+	}
+
+	public static String getTimeStr() {
+		Calendar c = Calendar.getInstance();
+		return sdf4.format(c.getTime());
 	}
 
 	public static int dateDiff(String date1, String... date2) {
@@ -138,8 +153,16 @@ public class DateUtil {
 
 		return sdf1.format(cal.getTime());
 	}
-
+	
+	public static String addOneMin(String source){
+		Date d = castStr2Date(source,YYYY_MM_DD_HH_MM);
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.add(Calendar.MINUTE, 1);
+		
+		return sdf3.format(c.getTime());
+	}
 	public static void main(String[] args) {
-		System.out.println(getLastDay("2016-11"));
+		System.out.println(addOneMin("2016-11-05 23:59"));
 	}
 }

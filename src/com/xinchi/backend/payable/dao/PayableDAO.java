@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
+import com.xinchi.tools.Page;
 
 public interface PayableDAO {
 
@@ -18,5 +19,7 @@ public interface PayableDAO {
 	public List<PayableBean> selectAllPayableWithSupplier();
 
 	public void deleteByTeamNumber(String team_number);
+
+	public List<PayableBean> selectByPage(Page<PayableBean> page);
 
 }
