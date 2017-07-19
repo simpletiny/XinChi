@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 /**
  * 访问数据库Dao工具类,要求所有访问数据库都使用此工具类
  * 
- * @author gongjk
+ * @author simpletiny
  * 
  */
 public class DaoUtil {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductReportMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductReportDto">
+		<result column="product_number" property="product_number" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+	select 
+		IF(ISNULL(B.product_number),'非标',B.product_number) AS product_number,
+		A.product_name,
+		CASE WHEN A.confirm_flg ='Y' THEN '已确认' 
+			WHEN A.confirm_flg = 'N' THEN '待确认'
+		end AS status,
+        A.team_number,
+		A.departure_date,
+		A.adult_count,
+		A.special_count,
+		A.create_user AS sale_name,
+		A.product_manager_number,
+		C.user_name AS product_manager
+			from budget_order_view A 
+			LEFT JOIN product B ON A.product_pk=B.pk
+			LEFT JOIN user_base C ON A.product_manager_number = C.user_number
+		<where>
+			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
+				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.product_number!= null and params.bo.product_number !=''">
+				and B.product_number like CONCAT('%',#{params.bo.product_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+			ORDER BY departure_date DESC
+	</select>
+</mapper>

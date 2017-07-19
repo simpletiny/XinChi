@@ -72,13 +72,18 @@
 					</ol></li>
 					
 			</s:if>
+			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp" onclick="$('.product-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品架</a>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
+				</ol>
+			</li>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="product-box"><a href="#" onclick="$('.product-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品架</a>
-			
+				<li class="order-box"><a href="<%=basePath%>templates/order/tbc-order.jsp" onclick="$('.order-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/order/tbc-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待确认</a></li>
+						<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
+					</ol>
 				</li>
-			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="order-box"><a href="#" onclick="$('.order-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="order"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>预决算管理</a>
@@ -101,6 +106,7 @@
 				<li class="product-manager"><a href="<%=basePath%>templates/product/product.jsp" onclick="$('.product-manage').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品管理</a></li>
+						<li><a href="<%=basePath%>templates/product/product-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品报表</a></li>
 					</ol>
 				</li>
 			</s:if>

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//WebRoot/static=UTF-8
 encoding//WebRoot/static/css/style-web.css=UTF-8
+encoding//WebRoot/static/js/order/upload.css=UTF-8
 encoding//WebRoot/templates/companies/companies.html=UTF-8
 encoding//WebRoot/templates/companies/company-edit.html=UTF-8
 encoding//WebRoot/templates/employees/employees.html=UTF-8

@@ -1,6 +1,8 @@
 package com.xinchi.backend.util.service;
 
-public interface NumberService {
+import com.xinchi.common.BaseService;
+
+public interface NumberService extends BaseService{
 	public static String source = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
 	public static String first = "GT9R";
 

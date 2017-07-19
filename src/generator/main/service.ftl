@@ -3,9 +3,9 @@ package ${pac}.service;
 import java.util.List;
 
 import ${vo};
+import com.xinchi.common.BaseService;
 
-
-public interface ${clazzName?cap_first}Service{
+public interface ${clazzName?cap_first}Service extends BaseService{
 	
 	/**
 	 * 新增
@@ -35,5 +35,5 @@ public interface ${clazzName?cap_first}Service{
 	 * 根据条件查找
 	 * @param bean
 	 */
-	public List<${voName}> getAllByParam(${voName} bean);
+	public List<${voName}> selectByParam(${voName} bean);
 }

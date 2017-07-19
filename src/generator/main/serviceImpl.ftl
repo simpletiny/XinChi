@@ -39,8 +39,8 @@ public class ${clazzName?cap_first}ServiceImpl implements ${clazzName?cap_first}
 	}
 
 	@Override
-	public List<${voName}> getAllByParam(${voName} bean) {
-		return dao.getAllByParam(bean);
+	public List<${voName}> selectByParam(${voName} bean) {
+		return dao.selectByParam(bean);
 	}
 	
 }

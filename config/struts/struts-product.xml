@@ -30,6 +30,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 产品架产品搜索 -->
+		<action name="searchOnSaleProducts" class="productAction" method="searchOnSaleProducts">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="createProduct" class="productAction" method="createProduct">
 			<result name="success" type="str">resultStr</result>
@@ -42,6 +49,14 @@
 		</action>
 		<action name="searchProductByPk" class="productAction" method="searchProductByPk">
 			<result name="success" type="json"></result>
+		</action>
+		
+		<!-- 产品报表 -->
+		<action name="searchProductReportByPage" class="productAction" method="searchProductReportByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 	</package>
 </struts>

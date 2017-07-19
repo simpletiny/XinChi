@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.OrderMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderDto">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+		<result column="special_cost" property="special_cost" jdbcType="DECIMAL" />
+		<result column="fy" property="fy" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="other_cost_comment" property="other_cost_comment" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
+		<result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="create_user_number" property="create_user_number" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="back_days" property="back_days" jdbcType="INTEGER" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select * from budget_order_view
+		<where>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			and confirm_flg='N'
+		</where>
+			ORDER BY departure_date DESC
+	</select>
+	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select  
+		    team_number, 
+	    	product_name,
+			product_pk,
+	    	client_employee_pk,
+	    	client_employee_name,
+	    	independent_flg, 
+	    	comment, 
+	    	other_cost_comment, 
+	    	other_cost, 
+	    	fy, 
+	    	special_cost, 
+	    	special_count, 
+	    	adult_cost, 
+	    	adult_count, 
+	    	receivable, 
+	    	days, 
+	    	departure_date, 
+	    	pk, 
+	    	update_user, 
+	    	create_user_number, 
+	    	create_user,
+	    	confirm_flg, 
+	    	create_time,
+	    	update_time,
+	    	confirm_date,
+	    	confirm_file,
+	    	standard_flg,
+	    	IF(ISNULL(adult_count),0,adult_count)+ IF(ISNULL(special_count),0,special_count)  AS people_count,
+	    	case when departure_date>now() then '未出团' 
+					when now()>=departure_date and DATE_ADD(departure_date,interval days-1 day) > now() then '出团中'
+					when now()>=DATE_ADD(departure_date,interval days-1 day) then '已回团'
+			end
+			AS status,
+	    	TIMESTAMPDIFF(day,departure_date,now())-days+2 AS back_days,
+	    	product_manager_number,
+	    	product_manager
+	    	 from budget_order_view
+		<where>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			and confirm_flg='Y'
+		</where>
+			ORDER BY departure_date DESC
+	</select>
+</mapper>

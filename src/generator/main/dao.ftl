@@ -35,5 +35,5 @@ public interface ${clazzName?cap_first}DAO{
 	 * 根据条件查找
 	 * @param bean
 	 */
-	public List<${voName}> getAllByParam(${voName} bean);
+	public List<${voName}> selectByParam(${voName} bean);
 }

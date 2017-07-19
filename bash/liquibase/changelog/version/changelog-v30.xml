@@ -237,7 +237,7 @@
 			<comment>CREATE  TABLE accurate_sale</comment>
 		</sql>
 	</changeSet>
-		<changeSet id="10" author="simpletiny">
+	<changeSet id="10" author="simpletiny">
 		<sql>
             <![CDATA[
 					ALTER TABLE client_visit ADD COLUMN sub_target VARCHAR(50) NULL  AFTER target ;
@@ -473,6 +473,329 @@
        			  INSERT INTO everyone_count (count, type, pk) VALUES ('0', 'PRODUCT_NUMBER', '2');
              ]]>
 			<comment>INSERT INTO everyone_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			CREATE  TABLE budget_standard_order (
+					  team_number VARCHAR(10) NULL ,
+					  client_employee_pk CHAR(22) NOT NULL ,
+					  product_pk CHAR(22) NULL ,
+					  departure_date VARCHAR(10) NULL ,
+					  days INT NULL ,
+					  receivable DECIMAL(12,2) NULL ,
+					  adult_count INT NULL ,
+					  adult_cost DECIMAL(12,2) NULL ,
+					  special_count INT NULL ,
+					  special_cost DECIMAL(12,2) NULL ,
+					  fy DECIMAL(12,2) NULL ,
+					  other_cost DECIMAL(12,2) NULL ,
+					  other_cost_comment VARCHAR(50) NULL ,
+					  comment VARCHAR(200) NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '标准预算订单';
+             ]]>
+			<comment>CREATE  TABLE budget_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			ALTER TABLE budget_standard_order ADD COLUMN independent_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否为独立团'  AFTER pk ;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			CREATE  TABLE budget_non_standard_order (
+					  team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  product_name VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  independent_flg CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'N' COMMENT '是否为独立团' ,
+					  comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  other_cost_comment VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  other_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+					  fy DECIMAL(12,2) NULL ,
+					  special_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+					  special_count INT(11) NULL DEFAULT NULL ,
+					  adult_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+					  adult_count INT(11) NULL DEFAULT NULL ,
+					  receivable DECIMAL(12,2) NULL DEFAULT NULL ,
+					  days INT(11) NULL DEFAULT NULL ,
+					  departure_date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '预算非标准订单';
+             ]]>
+			<comment>CREATE  TABLE budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			ALTER TABLE budget_standard_order ADD COLUMN confirm_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否确认'  AFTER independent_flg ;
+       			ALTER TABLE budget_non_standard_order ADD COLUMN confirm_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否确认'  AFTER update_user ;
+       			ALTER TABLE budget_non_standard_order ADD COLUMN create_user VARCHAR(10) NULL  AFTER confirm_flg ;
+       			ALTER TABLE budget_standard_order ADD COLUMN create_user VARCHAR(10) NULL  AFTER confirm_flg ;
+       			ALTER TABLE budget_non_standard_order ADD COLUMN confirm_date VARCHAR(10) NULL  AFTER create_user ;
+       			ALTER TABLE budget_standard_order ADD COLUMN confirm_date VARCHAR(10) NULL  AFTER create_user ;
+       			
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	'N' AS standard_flg
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	'Y' AS standard_flg
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       			
+             ]]>
+			<comment>create view tbc_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+       			ALTER TABLE budget_non_standard_order ADD COLUMN product_manager VARCHAR(10) NULL COMMENT '非标订单指定产品经理'  AFTER confirm_date ;
+             ]]>
+			<comment>ALTER TABLE budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>create view tbc_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order ADD COLUMN confirm_file VARCHAR(30) NULL  AFTER confirm_date ;
+            	ALTER TABLE budget_non_standard_order ADD COLUMN confirm_file VARCHAR(30) NULL  AFTER product_manager ;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_order CHANGE COLUMN team_number team_number VARCHAR(30) NULL  ;
+             ]]>
+			<comment>ALTER TABLE budget_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>create view tbc_order</comment>
 		</sql>
 	</changeSet>
 </databaseChangeLog>

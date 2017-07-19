@@ -1,4 +1,3 @@
-var supplierLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();

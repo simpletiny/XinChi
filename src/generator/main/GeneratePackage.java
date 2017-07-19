@@ -21,11 +21,11 @@ import freemarker.template.TemplateException;
 
 public class GeneratePackage {
 
-	public static final String clazzName = "product";
-	public static final String desc = "产品";
-	public static final String voName = "ProductBean";
-	public static final String baseFolder = "src/com/xinchi/backend/product";
-	public static final String basePackage = "com.xinchi.backend.product";
+	public static final String clazzName = "budgetNonStandardOrder";
+	public static final String desc = "非标准预算订单";
+	public static final String voName = "BudgetNonStandardOrderBean";
+	public static final String baseFolder = "src/com/xinchi/backend/order";
+	public static final String basePackage = "com.xinchi.backend.order";
 
 	/**
 	 * @param args

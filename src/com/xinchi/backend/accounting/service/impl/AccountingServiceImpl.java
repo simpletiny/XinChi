@@ -61,7 +61,7 @@ public class AccountingServiceImpl implements AccountingService {
 
 			waiting.setItem(ResourcesConstants.PAY_TYPE_DIJIE);
 			waiting.setReceiver(detail.getSupplier_employee_name());
-			waiting.setMoney(detail.getMoney());
+			waiting.setMoney(detail.getAllot_money());
 			waiting.setLimit_time(detail.getLimit_time());
 			waiting.setApply_user(detail.getCreate_user());
 			waiting.setApproval_user(approve_user);

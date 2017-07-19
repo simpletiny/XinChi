@@ -240,6 +240,15 @@
 			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
 				and A.product_manager = #{params.bo.product_manager,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.product_number != null and params.bo.product_number !=''">
+				and A.product_number like concat('%', #{params.bo.product_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.location != null and params.bo.location !=''">
+				and A.location = #{params.bo.location,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.sale_flg != null and params.bo.sale_flg !=''">
+				and A.sale_flg = #{params.bo.sale_flg,jdbcType=VARCHAR}
+			</if>
 		</where>
 
 		order by A.create_time DESC

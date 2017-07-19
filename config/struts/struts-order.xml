@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="order" extends="default" namespace="/order">
+		<!-- 订单管理 -->
+		<!-- 创建标准订单 -->
+		<action name="createBudgetStandardOrder" class="orderAction" method="createBudgetStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 创建非标订单 -->
+		<action name="createBudgetNonStandardOrder" class="orderAction" method="createBudgetNonStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 搜索待确认订单 -->
+		<action name="searchTbcOrdersByPage" class="orderAction" method="searchTbcOrdersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<!-- 搜索已确认订单 -->
+		<action name="searchCOrdersByPage" class="orderAction" method="searchCOrdersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 删除待确认订单 -->
+		<action name="deleteTbcOrder" class="orderAction" method="deleteTbcOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 更新标准预算单 -->
+		<action name="updateBudgetStandardOrder" class="orderAction" method="updateBudgetStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 按pk查询标准预算单 -->
+		<action name="searchTbcBsOrderByPk" class="orderAction" method="searchTbcBsOrderByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 更新非标准预算单 -->
+		<action name="updateBudgetNonStandardOrder" class="orderAction" method="updateBudgetNonStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 按PK查询非标准预算单 -->
+		<action name="searchTbcBnsOrderByPk" class="orderAction" method="searchTbcBnsOrderByPk">
+			<result name="success" type="json"></result>
+		</action>
+	</package>
+</struts>

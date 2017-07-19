@@ -35,15 +35,12 @@
 
 					<div class="form-group">
 						<div style="width: 30%; float: right">
-							<div>
+						<!-- 	<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOrder() }">新建</button>
-							</div>
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+							</div> -->
+							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('PRODUCT')">
 								<div>
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-								</div>
-								<div>
-									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
 								</div>
 							</s:if>
 						</div>

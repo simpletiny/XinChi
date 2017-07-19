@@ -45,8 +45,8 @@ public class ${clazzName?cap_first}DAOImpl extends SqlSessionDaoSupport implemen
 	}
 
 	@Override
-	public List<${voName}> getAllByParam(${voName} bean) {
-		List<${voName}> list=daoUtil.selectByBOParamT("com.xinchi.bean.mapper.${voName}Mapper.selectByParam", bean);
+	public List<${voName}> selectByParam(${voName} bean) {
+		List<${voName}> list=daoUtil.selectByParam("com.xinchi.bean.mapper.${voName}Mapper.selectByParam", bean);
 		return list;
 	}
 	

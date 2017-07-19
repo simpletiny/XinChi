@@ -142,12 +142,12 @@ var OrderContext = function() {
 			$(self.chosenReceivables()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
-					if (data.final_balance <= 0) {
+					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
 				} else {
-					if (data.budget_balance <= 0) {
+					if (data.budget_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
@@ -253,12 +253,12 @@ var OrderContext = function() {
 			$(self.chosenReceivables()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
-					if (data.final_balance <= 0) {
+					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
 				} else {
-					if (data.budget_balance <= 0) {
+					if (data.budget_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
@@ -357,12 +357,12 @@ var OrderContext = function() {
 				}
 			});
 			if (re.final_flg == "Y") {
-				if (re.final_balance <= 0) {
+				if (re.final_balance == 0) {
 					fail_msg("尾款已结清");
 					return;
 				}
 			} else {
-				if (re.budget_balance <= 0) {
+				if (re.budget_balance == 0) {
 					fail_msg("尾款已结清");
 					return;
 				}
@@ -402,12 +402,12 @@ var OrderContext = function() {
 			$(self.chosenReceivables()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
-					if (data.final_balance <= 0) {
+					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
 				} else {
-					if (data.budget_balance <= 0) {
+					if (data.budget_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					}
