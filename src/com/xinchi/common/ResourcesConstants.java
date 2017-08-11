@@ -45,6 +45,7 @@ public class ResourcesConstants {
 	public static String USER_ROLE_SALES = "SALES";
 	public static String USER_ROLE_PRODUCT = "PRODUCT";
 	public static String USER_ROLE_FINANCE = "FINANCE";
+	public static String USER_ROLE_TICKET = "TICKET";
 
 	// 团队状态
 	public static String TEAM_STATUS_BEFORE = "未出团";
@@ -177,4 +178,8 @@ public class ResourcesConstants {
 	public static String PAY_STATUS_YES = "Y";
 	public static String PAY_STATUS_NO = "N";
 
+	// 产品机票包票人
+	public static String PRODUCT_AIR_TICKET_CHARGE_PRODUCT = "PRODUCT";
+	public static String PRODUCT_AIR_TICKET_CHARGE_SALE = "SALE";
+	public static String PRODUCT_AIR_TICKET_CHARGE_NONE = "NONE";
 }

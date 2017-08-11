@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
+import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -29,6 +30,9 @@ public class OrderAction extends BaseAction {
 	private BudgetStandardOrderService bsoService;
 
 	private BudgetStandardOrderBean bsOrder;
+
+	@Autowired
+	private OrderNameListService orderNameService;
 
 	public String createBudgetStandardOrder() {
 		resultStr = bsoService.insert(bsOrder);
@@ -112,6 +116,7 @@ public class OrderAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 更新标准预算单
 	 * 
@@ -119,6 +124,22 @@ public class OrderAction extends BaseAction {
 	 */
 	public String updateBudgetStandardOrder() {
 		resultStr = bsoService.update(bsOrder);
+		return SUCCESS;
+	}
+
+	/**
+	 * 更新订单备注
+	 * 
+	 * @return
+	 */
+	public String updateComment() {
+		if (standard_flg.equals("N")) {
+			resultStr = bnsoService.updateComment(bnsOrder);
+		} else if (standard_flg.equals("Y")) {
+			resultStr = bsoService.updateComment(bsOrder);
+		} else {
+			resultStr = "lol";
+		}
 		return SUCCESS;
 	}
 

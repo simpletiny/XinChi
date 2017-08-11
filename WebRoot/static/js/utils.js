@@ -7,6 +7,14 @@ var changeValueByPath = function(obj, path, value) {
 	co[ps[ps.length - 1]] = value;
 };
 
+//$(document).ready(function() {
+//	if($("input[type='number']")!=null){
+//		$("input[type='number']").mousewheel(function() {
+//			return false;
+//		});
+//	}
+//});
+
 // to use this function pls impl changeRichText function.
 ko.bindingHandlers.richText = {
 	init : function(element, valueAccessor) {
@@ -270,6 +278,12 @@ Date.prototype.Format = function(fmt) { // author: meizz
 			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 	return fmt;
 };
+Date.prototype.addDate = function(days) {
+	var x = this.valueOf();
+	x = x + days * 24 * 60 * 60 * 1000;
+	x = new Date(x);
+	return x;
+};
 String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
 };
@@ -285,7 +299,7 @@ Array.prototype.isRepeat = function() {
 	return false;
 };
 Array.prototype.contains = function(obj) {
-	for (var i=0;i<this.length;i++) {
+	for ( var i = 0; i < this.length; i++) {
 		if (this[i] == obj) {
 			return true;
 		}

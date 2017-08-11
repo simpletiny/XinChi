@@ -50,7 +50,17 @@
 		<action name="searchProductByPk" class="productAction" method="searchProductByPk">
 			<result name="success" type="json"></result>
 		</action>
-		
+		<action name="searchProductAirTicketInfoByProductPk" class="productAction" method="searchProductAirTicketInfoByProductPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchProductAirTicketInfoByTeamNumber" class="productAction" method="searchProductAirTicketInfoByTeamNumber">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 保存产品机票信息 -->
+		<action name="saveAirTicket" class="productAction" method="saveAirTicket">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 		<!-- 产品报表 -->
 		<action name="searchProductReportByPage" class="productAction" method="searchProductReportByPage">
 			<result name="success" type="json">

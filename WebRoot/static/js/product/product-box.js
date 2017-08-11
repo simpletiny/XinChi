@@ -1,3 +1,4 @@
+var airTickeChecktLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -37,68 +38,41 @@ var ProductBoxContext = function() {
 	};
 
 	self.chosenProducts = ko.observableArray([]);
-	// 编辑产品
-	self.edit = function() {
-		if (self.chosenProducts().length == 0) {
-			fail_msg("请选择产品！");
-			return;
-		} else if (self.chosenProducts().length > 1) {
-			fail_msg("维护只能选择一个产品！");
-			return;
-		} else if (self.chosenProducts().length == 1) {
-			window.location.href = self.apiurl + "templates/product/product-edit.jsp?key=" + self.chosenProducts();
-		}
-	};
-	self.onSale = function(sale_flg) {
-		if (self.chosenProducts().length == 0) {
-			fail_msg("请选择产品！");
-			return;
-		} else if (self.chosenProducts().length > 0) {
-			var msg = "确认要";
-			if (sale_flg == "Y") {
-				msg += "上架";
-			} else {
-				msg += "下架";
-			}
+	
+	//查看机票信息
+	self.product = ko.observable({});
+	self.airTickets = ko.observableArray([]);
+	self.chargeMapping = {
+			'PRODUCT' : '产品包票',
+			'SALE' : '销售包票',
+			'NONE' : '无机票'
+		};
+	self.checkAirTicket = function(product_pk) {
 
-			if (self.chosenProducts().length == 1) {
-				msg += "此";
+		$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
+			product_pk : product_pk
+		}, function(data) {
+			self.product(data.product);
 
-			} else {
-				msg += "这些";
-			}
-			msg += "产品吗？";
-
-			$.layer({
-				area : [ 'auto', 'auto' ],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : [ '确认', '取消' ],
-					yes : function(index) {
-						layer.close(index);
-						startLoadingIndicator("保存中！");
-						var data = "sale_flg=" + sale_flg + "&product_pks=" + self.chosenProducts();
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'product/onSaleProduct',
-							data : data
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.refresh();
-								self.chosenProducts.removeAll();
-							} else {
-								fail_msg(str);
-							}
-						});
-					}
+			self.airTickets(data.air_tickets);
+			airTicketCheckLayer = $.layer({
+				type : 1,
+				title : [ '机票信息', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '500px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#air-ticket-check'
+				},
+				end : function() {
 				}
 			});
-		}
+		});
 	};
-
+	
 	self.products = ko.observable({
 		total : 0,
 		items : []
@@ -115,7 +89,7 @@ var ProductBoxContext = function() {
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 10;
+	self.perPage = 20;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

@@ -22,6 +22,7 @@
 		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
 		<result column="voucher_file_name" property="voucher_file_name" jdbcType="VARCHAR" />
 		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
+		<result column="exchange_flg" property="exchange_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -44,7 +45,8 @@
 		voucher_number,
 		receiver,
 		voucher_file_name,
-		match_flg
+		match_flg,
+		exchange_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -73,10 +75,12 @@
 		A.voucher_number,
 		A.receiver,
 		A.voucher_file_name,
-		A.match_flg
+		A.match_flg,
+		A.exchange_flg
 		from payment_detail A
 		LEFT JOIN card B ON A.account = B.account
-		where voucher_number = #{voucher_number,jdbcType=CHAR}
+		where voucher_number =
+		#{voucher_number,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -146,6 +150,9 @@
 			<if test="match_flg != null">
 				match_flg,
 			</if>
+			<if test="exchange_flg != null">
+				exchange_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="account != null">
@@ -204,6 +211,9 @@
 			</if>
 			<if test="match_flg != null">
 				#{match_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="exchange_flg != null">
+				#{exchange_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -338,7 +348,17 @@
 			<if test="params.bo.month != null and params.bo.month !=''">
 				and left(time,7) = #{params.bo.month,jdbcType=VARCHAR}
 			</if>
+			<!-- 内转搜索条件 -->
+			<if test="params.bo.inner_flg != null and params.bo.inner_flg !=''">
+				and inner_flg = #{params.bo.inner_flg,jdbcType=VARCHAR}
+			</if>
+			<!-- <if test="params.bo.from_account != null and params.bo.from_account !='' and params.bo.to_account != null and params.bo.to_account !=''">
+				and ((account like CONCAT('%',#{params.bo.from_account,jdbcType=VARCHAR},'%') and type='支出') OR (account like
+				CONCAT('%',#{params.bo.to_account,jdbcType=VARCHAR},'%') and type='收入'))
+			</if>
+			<elseif test="params.bo.from_account ! null and params.bo.from_account ! =''">
 
+			</elseif> -->
 		</where>
 		ORDER BY time desc
 	</select>

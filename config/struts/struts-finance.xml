@@ -41,6 +41,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<!-- 搜索内转详情 -->
+		<action name="searchInnerTransferByPage" class="innerTransferAction" method="searchInnerTransferByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="importDetailExcel" class="paymentDetailAction" method="importDetailExcel">
 			<result name="success" type="str">resultStr</result>
 		</action>

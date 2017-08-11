@@ -29,7 +29,7 @@ var DetailContext = function() {
 	self.today(x.Format("yyyy-MM-dd"));
 
 	self.refresh = function() {
-		var param = $("form").serialize() + "&detail.type=收入";
+		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
 			self.details(data.details);

@@ -151,11 +151,21 @@
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
+
 	<select id="selectByParam" parameterType="com.xinchi.bean.AccurateSaleBean" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from accurate_sale
+		<where>
+			<if test="client_employee_pk != null and client_employee_pk !=''">
+				and client_employee_pk = #{client_employee_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="date != null and date !=''">
+				and date = #{date,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
+
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />

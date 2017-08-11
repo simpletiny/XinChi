@@ -147,7 +147,7 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-		var confirm_file = $("input[name='confirmFile']").val();
+		var confirm_file = $("#txt-confirm-file").val();
 		if (confirm_file == "") {
 			fail_msg("请上传确认件！");
 			return;
@@ -220,3 +220,37 @@ $(document).ready(function() {
 		changeFile(this);
 	});
 });
+function formatNameList(txt) {
+	nameList = $(txt).val();
+	if (nameList.trim() == "")
+		return;
+	var illegal = /[^\u4e00-\u9fa5,0-9,X,x]|[\n\r]/gm;
+
+	nameList = nameList.replace(illegal, "");
+	var namePattern = /[\u4e00-\u9fa5]+/gm;
+	var names = nameList.match(namePattern);
+
+	if (null == names) {
+		fail_msg("请填写正确的名单！");
+		return;
+	}
+
+	for ( var i = 0; i < names.length; i++) {
+		var name = names[i];
+		nameList = nameList.replace(name, ";" + name + ":");
+	}
+	nameList = nameList.replace(";","")+";";
+	
+	var names = nameList.split(";");
+	var newNameList = "";
+	for ( var i = 0; i < names.length; i++) {
+		if (names[i] == "")
+			continue;
+		if (i % 2 == 1) {
+			newNameList += names[i] + ";\n";
+		} else {
+			newNameList += names[i] + ";";
+		}
+	}
+	$(txt).val(newNameList);
+}

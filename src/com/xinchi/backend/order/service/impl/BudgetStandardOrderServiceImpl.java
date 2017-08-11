@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
+import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
@@ -20,6 +21,7 @@ import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -57,6 +59,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	@Autowired
 	private ReceivableDAO receivableDao;
 
+	@Autowired
+	private OrderNameListDAO nameListDao;
+
 	@Override
 	public String update(BudgetStandardOrderBean bean) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
@@ -71,6 +76,22 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 		if (bean.getConfirm_flg().equals("Y")) {
 			bean.setTeam_number(numberService.generateTeamNumber());
+
+			// 保存名单
+			String[] names = bean.getName_list().split(";");
+			if (names.length != 0) {
+				for (String str : names) {
+					String people[] = str.split(":");
+					if (people.length != 2)
+						continue;
+
+					SaleOrderNameListBean name = new SaleOrderNameListBean();
+					name.setName(people[0]);
+					name.setId(people[1]);
+					name.setTeam_number(bean.getTeam_number());
+					nameListDao.insert(name);
+				}
+			}
 
 			// 生成预算单
 			BudgetOrderBean budgetOrder = new BudgetOrderBean();
@@ -113,9 +134,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			receivable.setBudget_receivable(bean.getReceivable());
 
 			receivable.setBudget_balance(bean.getReceivable());
-
-			receivable.setSales(bean.getCreate_user());
-			receivable.setCreate_user(bean.getCreate_user());
+			receivable.setReceived(BigDecimal.ZERO);
+			receivable.setSales(old.getCreate_user());
+			receivable.setCreate_user(old.getCreate_user());
 
 			receivableDao.insert(receivable);
 		}
@@ -162,6 +183,12 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	@Override
 	public List<BudgetStandardOrderBean> selectByParam(BudgetStandardOrderBean bean) {
 		return dao.selectByParam(bean);
+	}
+
+	@Override
+	public String updateComment(BudgetStandardOrderBean bean) {
+		dao.update(bean);
+		return SUCCESS;
 	}
 
 }

@@ -59,21 +59,11 @@ var OrderContext = function() {
 	};
 
 	self.addSupplier = function(data, event) {
-		$(event.toElement)
-				.parent()
-				.parent()
-				.prev()
-				.after(
-						' <div class="input-row clearfloat" st="supplier">'
-								+ '<div class="col-md-6">'
-								+ '<label class="l">供应商</label>'
-								+ '<div class="ip"><input type="text" class="ip-" onclick="choseSupplierEmployee(this,event)" placeholder="供应商" st="supplierEmployeeName"/></div>'
-								+ '<input type="text" class="ip-" st="supplierEmployeePk" style="display:none" />'
-								+ '</div>'
-								+ '<div class="col-md-6">'
-								+ '<label class="l">应付款</label>'
-								+ '<div class="ip"><input type="number" st="payable" class="ip-" placeholder="应付款" /></div>'
-								+ '</div>' + '</div>');
+		$(event.toElement).parent().parent().prev().after(
+				' <div class="input-row clearfloat" st="supplier">' + '<div class="col-md-6">' + '<label class="l">供应商</label>'
+						+ '<div class="ip"><input type="text" class="ip-" onclick="choseSupplierEmployee(this,event)" placeholder="供应商" st="supplierEmployeeName"/></div>'
+						+ '<input type="text" class="ip-" st="supplierEmployeePk" style="display:none" />' + '</div>' + '<div class="col-md-6">' + '<label class="l">应付款</label>'
+						+ '<div class="ip"><input type="number" st="payable" class="ip-" placeholder="应付款" /></div>' + '</div>' + '</div>');
 	};
 
 	self.recordNameList = function() {
@@ -140,24 +130,19 @@ var OrderContext = function() {
 		}
 
 		var nameList = $("#txt-name-list").val();
-		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(
-				new RegExp("：", "gm"), ":"));
+		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(new RegExp("：", "gm"), ":"));
 
 		var allSupplierEmployees = $("[st='supplier']");
 		var supplierJson = '[';
 		for ( var i = 0; i < allSupplierEmployees.length; i++) {
 			var current = allSupplierEmployees[i];
-			var supplierEmployeeName = $(current).find(
-					"[st='supplierEmployeeName']").val();
-			var supplierEmployeePk = $(current).find(
-					"[st='supplierEmployeePk']").val();
+			var supplierEmployeeName = $(current).find("[st='supplierEmployeeName']").val();
+			var supplierEmployeePk = $(current).find("[st='supplierEmployeePk']").val();
 			var payable = $(current).find("[st='payable']").val();
 
 			if (supplierEmployeePk == "" || supplierEmployeeName == "")
 				continue;
-			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName
-					+ '",' + '"supplierEmployeePk":"' + supplierEmployeePk
-					+ '",' + '"payable":"' + payable;
+			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName + '",' + '"supplierEmployeePk":"' + supplierEmployeePk + '",' + '"payable":"' + payable;
 			if (i == allSupplierEmployees.length - 1) {
 				supplierJson += '"}';
 			} else {
@@ -166,8 +151,7 @@ var OrderContext = function() {
 		}
 		supplierJson += ']';
 
-		var data = $("form").serialize() + "&nameList=" + nameList
-				+ "&supplierJson=" + supplierJson;
+		var data = $("form").serialize() + "&nameList=" + nameList + "&supplierJson=" + supplierJson;
 
 		$.layer({
 			area : [ 'auto', 'auto' ],
@@ -177,17 +161,19 @@ var OrderContext = function() {
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
+					startLoadingIndicator("保存中...");
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'sale/createFinalOrder',
 						data : data
-					}).success(
-							function(str) {
-								if (str == "OK") {
-									window.location.href = self.apiurl
-											+ "templates/sale/final-order.jsp";
-								}
-							});
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "OK") {
+							window.location.href = self.apiurl + "templates/sale/final-order.jsp";
+						}else{
+							fail_msg(str);
+						}
+					});
 				}
 			}
 		});

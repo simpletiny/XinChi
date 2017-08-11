@@ -25,6 +25,8 @@
  	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
  	    <result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
  	    <result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
+ 	    <result column="name_list" property="name_list" jdbcType="VARCHAR" />
+ 	    <result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -51,7 +53,9 @@
     	update_time,
     	create_user,
     	confirm_date,
-    	confirm_file
+    	confirm_file,
+    	name_list,
+    	air_ticket_cost
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -139,6 +143,12 @@
       <if test="confirm_file != null">
         confirm_file,
       </if>
+      <if test="name_list != null">
+        name_list,
+      </if>
+      <if test="air_ticket_cost != null">
+        air_ticket_cost,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="team_number != null">
@@ -209,6 +219,12 @@
       </if>
        <if test="confirm_file != null">
         #{confirm_file,jdbcType=VARCHAR},
+      </if>
+       <if test="name_list != null">
+        #{name_list,jdbcType=VARCHAR},
+      </if>
+       <if test="air_ticket_cost != null">
+        #{air_ticket_cost,jdbcType=DECIMAL},
       </if>
     </trim>		
   </insert>
@@ -282,6 +298,12 @@
       </if>
       <if test="confirm_file != null">
         confirm_file = #{confirm_file,jdbcType=VARCHAR},
+      </if>
+      <if test="name_list != null">
+        name_list = #{name_list,jdbcType=VARCHAR},
+      </if>
+      <if test="air_ticket_cost != null">
+        air_ticket_cost = #{air_ticket_cost,jdbcType=DECIMAL},
       </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}

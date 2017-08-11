@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="ticket" extends="default" namespace="/ticket">
+		<action name="searchAirTicketNeedByPage" class="ticketAction" method="searchAirTicketNeedByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchAirTicketOrderByPage" class="ticketAction" method="searchAirTicketOrderByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchAirTicketNameListByPage" class="ticketAction" method="searchAirTicketNameListByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="createTicketOrder" class="ticketAction" method="createTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="operatePassengers" class="ticketAction" method="operatePassengers">
+			<result name="success">
+				/templates/ticket/operate-name-list.jsp
+			</result>
+		</action>
+		<action name="allotTicket" class="ticketAction" method="allotTicket">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+	</package>
+</struts>

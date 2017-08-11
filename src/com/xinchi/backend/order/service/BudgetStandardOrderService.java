@@ -41,4 +41,7 @@ public interface BudgetStandardOrderService extends BaseService {
 	 * @param bean
 	 */
 	public List<BudgetStandardOrderBean> selectByParam(BudgetStandardOrderBean bean);
+	
+	
+	public String updateComment(BudgetStandardOrderBean bean);
 }

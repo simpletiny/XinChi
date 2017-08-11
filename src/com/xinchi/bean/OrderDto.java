@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class OrderDto extends SupperBO implements Serializable {
@@ -48,12 +50,19 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	private String confirm_date;
 
+	private BigDecimal air_ticket_cost;
 	private String status;
 	private String back_days;
 	private String people_count;
 	private String product_manager_number;
 	private String product_manager;
 	private String confirm_file;
+
+	private String departure_date_from;
+	private String departure_date_to;
+	private String confirm_date_from;
+	private String confirm_date_to;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -284,6 +293,46 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setConfirm_file(String confirm_file) {
 		this.confirm_file = confirm_file;
+	}
+
+	public String getDeparture_date_from() {
+		return departure_date_from;
+	}
+
+	public void setDeparture_date_from(String departure_date_from) {
+		this.departure_date_from = departure_date_from;
+	}
+
+	public String getDeparture_date_to() {
+		return departure_date_to;
+	}
+
+	public void setDeparture_date_to(String departure_date_to) {
+		this.departure_date_to = departure_date_to;
+	}
+
+	public String getConfirm_date_from() {
+		return confirm_date_from;
+	}
+
+	public void setConfirm_date_from(String confirm_date_from) {
+		this.confirm_date_from = confirm_date_from;
+	}
+
+	public String getConfirm_date_to() {
+		return confirm_date_to;
+	}
+
+	public void setConfirm_date_to(String confirm_date_to) {
+		this.confirm_date_to = confirm_date_to;
+	}
+
+	public BigDecimal getAir_ticket_cost() {
+		return air_ticket_cost;
+	}
+
+	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
+		this.air_ticket_cost = air_ticket_cost;
 	}
 
 }

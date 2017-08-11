@@ -40,7 +40,7 @@ public class AccurateSaleServiceImpl implements AccurateSaleService {
 
 	@Override
 	public List<AccurateSaleBean> getAllByParam(AccurateSaleBean bean) {
-		return dao.getAllByParam(bean);
+		return dao.selectByParam(bean);
 	}
 
 	@Override

@@ -77,11 +77,25 @@ public class ProductServiceImpl implements ProductService {
 	public String onSale(String product_pks, String sale_flg) {
 		String[] pks = product_pks.split(",");
 		List<ProductBean> products = dao.selectByPks(pks);
+
+		if (sale_flg.equals("Y")) {
+			for (ProductBean product : products) {
+				if (product.getAir_ticket_charge().equals("NO")) {
+					return "请绑定产品：" + product.getProduct_number() + "机票信息";
+				}
+			}
+		}
+
 		for (ProductBean product : products) {
 			product.setSale_flg(sale_flg);
 			dao.update(product);
 		}
 		return "success";
+	}
+
+	@Override
+	public void updateStraight(ProductBean product) {
+		dao.update(product);
 	}
 
 }

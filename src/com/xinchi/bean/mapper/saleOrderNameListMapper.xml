@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.SaleOrderNameListMapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.SaleOrderNameListBean" >
-    	<id column="id" property="id" jdbcType="CHAR" />
 	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
 	    <result column="name" property="name" jdbcType="VARCHAR" />
 	    <result column="id" property="id" jdbcType="VARCHAR" />
@@ -28,6 +27,13 @@
     <include refid="Base_Column_List" />
     from sale_order_name_list
     where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sale_order_name_list
+    where team_number = #{team_number,jdbcType=CHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

@@ -3,7 +3,9 @@ package com.xinchi.backend.util.action;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -12,21 +14,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
+import com.xinchi.backend.order.service.BudgetStandardOrderService;
+import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
+import com.xinchi.backend.product.service.ProductAirTicketService;
+import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.backend.ticket.service.AirTicketNeedService;
+import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.util.service.SimpletinyService;
+import com.xinchi.bean.AirTicketNeedBean;
+import com.xinchi.bean.AirTicketOrderBean;
+import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
+import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.PayableBean;
+import com.xinchi.bean.ProductAirTicketBean;
+import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -298,6 +314,102 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("sales_name", receivable.getSales_name());
 
 		return document;
+	}
+
+	@Autowired
+	private AirTicketNeedService needService;
+
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private ProductAirTicketService productAirTicketService;
+
+	@Autowired
+	private AirTicketOrderService airTicketOrderService;
+	@Autowired
+	private BudgetStandardOrderService bsoService;
+
+	@Autowired
+	private BudgetNonStandardOrderService bnsoService;
+
+	@Autowired
+	private OrderNameListService orderNamelistService;
+
+	public String autoGenTicketOrder() {
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		AirTicketNeedBean x = new AirTicketNeedBean();
+		params.put("bo", x);
+
+		page.setParams(params);
+		page.setStart(0);
+		page.setCount(1000);
+		List<AirTicketNeedBean> list = needService.selectOrderByPage(page);
+		for (AirTicketNeedBean need : list) {
+			String names = "";
+			if (need.getConfirm_flg().equals("Y")) {
+				if (need.getStandard_flg().equals("Y")) {
+					BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(need.getSale_order_pk());
+					names = bsOrder.getName_list();
+				} else {
+					BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(need.getSale_order_pk());
+					names = bnsOrder.getName_list();
+				}
+			}
+			if (names == null)
+				continue;
+			String arrName[] = names.split(";");
+			List<SaleOrderNameListBean> nnnn = new ArrayList<SaleOrderNameListBean>();
+			for (String name : arrName) {
+				String[] info = name.split(":");
+				if (info.length < 2)
+					continue;
+				SaleOrderNameListBean y = new SaleOrderNameListBean();
+
+				y.setName(info[0]);
+				y.setId(info[1]);
+				y.setTeam_number(need.getTeam_number());
+				nnnn.add(y);
+			}
+
+			orderNamelistService.saveNameList(nnnn);
+
+			AirTicketOrderBean airTicketOrder = new AirTicketOrderBean();
+			if (need.getStandard_flg().equals("Y")) {
+				// 销售的产品
+				ProductBean saleProduct = productService.selectByPrimaryKey(need.getProduct_pk());
+				if (saleProduct == null)
+					continue;
+
+				// 产品机票信息
+				List<ProductAirTicketBean> productAirTickets = productAirTicketService.selectByProductPk(saleProduct.getPk());
+				ProductAirTicketBean firstTicketInfo = productAirTickets.get(0);
+
+				airTicketOrder.setClient_number(need.getTicket_client_number());
+				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());
+				airTicketOrder.setFirst_ticket_date(need.getFirst_ticket_date());
+
+				airTicketOrder.setFirst_start_city(firstTicketInfo.getStart_city());
+				airTicketOrder.setFirst_end_city(firstTicketInfo.getEnd_city());
+				airTicketOrder.setPeople_count(need.getPeople_count());
+				airTicketOrder.setTeam_number(need.getTeam_number());
+				airTicketOrder.setTour_product_pk(saleProduct.getPk());
+				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
+				
+			} else {
+				airTicketOrder.setClient_number(need.getTicket_client_number());
+				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());
+				airTicketOrder.setPeople_count(need.getPeople_count());
+				airTicketOrder.setTeam_number(need.getTeam_number());
+				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
+			}
+			airTicketOrder.setSale_standard_flg(need.getStandard_flg());
+			airTicketOrderService.insert(airTicketOrder);
+		}
+
+		return SUCCESS;
+
 	}
 
 	public List<PayableBean> getPayables() {

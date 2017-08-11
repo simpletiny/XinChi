@@ -26,27 +26,39 @@
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">创建订单</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
 							</div>
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">创建非标</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
 							</div>
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">产品线</label>
-							<div class="col-md-2">
-								<select class="form-control" data-bind="options: locations, optionsCaption: '-- 请选择 --',event: {change:refresh}" name="product.location"></select>
+							<div class="col-md-6">
+		                       <div data-bind="foreach: locations" style="padding-top: 4px;">
+		                           <em class="small-box">
+		                                 <input type="checkbox" data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="product.locations"/><label data-bind="text: $data"></label>
+		                            </em>
+		                        </div>
 							</div>
 						</div>
+					</div>
+					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">产品编号</label>
 							<div class="col-md-2">
 								<input class="form-control" name="product.product_number"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品名称</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
 					</div>
@@ -73,6 +85,7 @@
 								<th>产品活动</th>
 								<th>注意事项</th>
 								<th>产品编号</th>
+								<th>机票信息</th>
 								<th>产品经理</th>
 							</tr>
 						</thead>
@@ -89,6 +102,7 @@
 								<td></td>
 								<td></td>
 								<td data-bind="text: $data.product_number"></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>
@@ -106,6 +120,39 @@
 						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div id="air-ticket-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="width: 100%">
+				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label> <label class="l" data-bind="text:product().product_number"></label> <label
+					class="l" data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
+			</div>
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">航段</th>
+							<th style="width: 10%">天次</th>
+							<th style="width: 30%">起飞城市</th>
+							<th style="width: 10%">天次</th>
+							<th style="width: 30%">抵达城市</th>
+							<th style="width: 20%">航班号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:airTickets">
+						<tr>
+							<td data-bind="text:$data.ticket_index"></td>
+							<td data-bind="text:$data.start_day"></td>
+							<td data-bind="text:$data.start_city"></td>
+							<td data-bind="text:$data.end_day"></td>
+							<td data-bind="text:$data.end_city"></td>
+							<td data-bind="text:$data.ticket_number"></td>
+						</tr>
+					</tbody>
+					<!-- /ko -->
+				</table>
 			</div>
 		</div>
 	</div>

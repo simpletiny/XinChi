@@ -45,4 +45,6 @@ public interface ProductService {
 	public List<ProductBean> selectByPage(Page<ProductBean> page);
 
 	public String onSale(String product_pks, String sale_flg);
+
+	public void updateStraight(ProductBean product);
 }

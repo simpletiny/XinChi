@@ -7,8 +7,11 @@ import com.xinchi.tools.Page;
 
 public interface ClientVisitDAO {
 
-	void insert(ClientVisitBean visit);
+	public void insert(ClientVisitBean visit);
 
-	List<ClientVisitBean> selectByPage(Page page);
+	public List<ClientVisitBean> selectByPage(Page page);
+	
+	public List<ClientVisitBean> selectByParam(ClientVisitBean visit);
+	
 
 }

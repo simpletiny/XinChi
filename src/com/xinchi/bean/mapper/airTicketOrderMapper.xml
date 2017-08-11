@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirTicketOrderMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketOrderBean">
+		<result column="client_number" property="client_number" jdbcType="VARCHAR" />
+		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
+		<result column="first_start_city" property="first_start_city" jdbcType="VARCHAR" />
+		<result column="first_end_city" property="first_end_city" jdbcType="VARCHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="tour_product_pk" property="tour_product_pk" jdbcType="CHAR" />
+		<result column="sale_order_pk" property="sale_order_pk" jdbcType="CHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="sale_standard_flg" property="sale_standard_flg" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
+		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		client_number,
+		ticket_cost,
+		first_ticket_date,
+		first_start_city,
+		first_end_city,
+		people_count,
+		team_number,
+		tour_product_pk,
+		sale_order_pk,
+		status,
+		lock_flg,
+		sale_standard_flg,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_order
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPks" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_order
+		<where>
+			and pk in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_ticket_order
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirTicketOrderBean">
+
+		insert into air_ticket_order
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="client_number != null">
+				client_number,
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost,
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date,
+			</if>
+			<if test="first_start_city != null">
+				first_start_city,
+			</if>
+			<if test="first_end_city != null">
+				first_end_city,
+			</if>
+			<if test="people_count != null">
+				people_count,
+			</if>
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="tour_product_pk != null">
+				tour_product_pk,
+			</if>
+			<if test="sale_order_pk != null">
+				sale_order_pk,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="lock_flg != null">
+				lock_flg,
+			</if>
+			<if test="sale_standard_flg != null">
+				sale_standard_flg,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="client_number != null">
+				#{client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				#{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="first_ticket_date != null">
+				#{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_start_city != null">
+				#{first_start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="first_end_city != null">
+				#{first_end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="people_count != null">
+				#{people_count,jdbcType=INTEGER},
+			</if>
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="tour_product_pk != null">
+				#{tour_product_pk,jdbcType=CHAR},
+			</if>
+			<if test="sale_order_pk != null">
+				#{sale_order_pk,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="lock_flg != null">
+				#{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="sale_standard_flg != null">
+				#{sale_standard_flg,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirTicketOrderBean">
+		update air_ticket_order
+		<set>
+			<if test="client_number != null">
+				client_number = #{client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date = #{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_start_city != null">
+				first_start_city = #{first_start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="first_end_city != null">
+				first_end_city = #{first_end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="people_count != null">
+				people_count = #{people_count,jdbcType=INTEGER},
+			</if>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="tour_product_pk != null">
+				tour_product_pk = #{tour_product_pk,jdbcType=CHAR},
+			</if>
+			<if test="sale_order_pk != null">
+				sale_order_pk = #{sale_order_pk,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="lock_flg != null">
+				lock_flg = #{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="sale_standard_flg != null">
+				sale_standard_flg = #{sale_standard_flg,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirTicketOrderBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_order
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.client_number,
+		B.user_name AS client_name,
+		A.ticket_cost,
+		A.first_ticket_date,
+		CONCAT(A.first_start_city,'--',A.first_end_city) AS first_from_to,
+		A.first_start_city,
+		A.first_end_city,
+		A.people_count,
+		A.team_number,
+		A.tour_product_pk,
+		A.sale_order_pk,
+		A.status,
+		A.lock_flg,
+		A.sale_standard_flg,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time
+		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
+		<!-- <where>
+			<if test="params.bo.status != null and params.bo.status !=''">
+				and A.confirm_flg in
+				<foreach item="item" index="index" collection="params.bo.status" open="(" separator="," close=")">
+					#{params.bo.status[${index}]}
+				</foreach>
+			</if>
+			and A.air_ticket_cost IS NULL
+		</where> -->
+		order by A.first_ticket_date
+	</select>
+</mapper>

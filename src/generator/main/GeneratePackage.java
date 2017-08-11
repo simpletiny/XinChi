@@ -20,12 +20,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class GeneratePackage {
-
-	public static final String clazzName = "budgetNonStandardOrder";
-	public static final String desc = "非标准预算订单";
-	public static final String voName = "BudgetNonStandardOrderBean";
-	public static final String baseFolder = "src/com/xinchi/backend/order";
-	public static final String basePackage = "com.xinchi.backend.order";
+	public static final String clazzName = "innerTransfer";
+	public static final String desc = "内转明细";
+	public static final String voName = "InnerTransferBean";
+	public static final String baseFolder = "src/com/xinchi/backend/finance";
+	public static final String basePackage = "com.xinchi.backend.finance";
 
 	/**
 	 * @param args

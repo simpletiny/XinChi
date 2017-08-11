@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class BudgetNonStandardOrderBean extends SupperBO implements Serializable {
@@ -46,6 +48,11 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String product_manager;
 	private String confirm_file;
+	private String standard_flg = "N";
+
+	private String name_list;
+
+	private BigDecimal air_ticket_cost;
 
 	public String getTeam_number() {
 		return team_number;
@@ -213,6 +220,30 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setConfirm_file(String confirm_file) {
 		this.confirm_file = confirm_file;
+	}
+
+	public String getStandard_flg() {
+		return standard_flg;
+	}
+
+	public void setStandard_flg(String standard_flg) {
+		this.standard_flg = standard_flg;
+	}
+
+	public String getName_list() {
+		return name_list;
+	}
+
+	public void setName_list(String name_list) {
+		this.name_list = name_list;
+	}
+
+	public BigDecimal getAir_ticket_cost() {
+		return air_ticket_cost;
+	}
+
+	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
+		this.air_ticket_cost = air_ticket_cost;
 	}
 
 }

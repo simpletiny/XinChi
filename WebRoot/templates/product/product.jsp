@@ -11,7 +11,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<style>
+#table-ticket th,#table-ticket td {
+	text-align: center;
+}
 
+#table-ticket tr td input {
+	width: 90%;
+}
+
+#table-ticket {
+	border-collapse: separate;
+	border-spacing: 0px 10px;
+}
+
+#air-ticket input[type="button"] {
+	width: 30px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.required th[class="r"]:after {
+	content: " *";
+	color: red;
+	font-weight: bold;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -22,20 +47,49 @@
 
 		<div class="main-container">
 			<div class="main-box">
-				<form class="form-horizontal search-panel">
+				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
 						<div style="width: 50%; float: right">
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { create() }">新建</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { create() }">新建</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { bindingTicket() }">机票</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">产品编号</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品编号" name="product.product_number"></input>
 							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品名称</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
+						</div>
+						<div align="left">
+							<label class="col-md-1 control-label">产品线</label>
+							<div class="col-md-2" style="float: left">
+								<select class="form-control" style="height: 34px" data-bind="options: locations,value:product().location, optionsCaption: '--请选择--',event:{change:refresh}" name="product.location"></select>
 							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+							<div class="span6">
+								<label class="col-md-1 control-label">产品经理</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+										name="product.product_manager"></select>
+								</div>
+							</div>
+						</s:if>
+						<div style="width: 30%; float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 							</div>
 						</div>
 					</div>
@@ -53,7 +107,10 @@
 								<th>同业价格</th>
 								<th>销售利润</th>
 								<th>最大让利</th>
+								<th>机票信息</th>
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<th>产品经理</th>
+								</s:if>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: products">
@@ -72,7 +129,15 @@
 								<td data-bind="text: $data.business_price"></td>
 								<td data-bind="text: $data.profit_space"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
+								<!-- ko if: $data.air_ticket_charge=='NO' -->
+								<td>未绑定</td>
+								<!-- /ko -->
+								<!-- ko if: $data.air_ticket_charge!='NO' -->
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
+								<!-- /ko -->
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<td data-bind="text: $data.product_manager"></td>
+								</s:if>
 							</tr>
 						</tbody>
 					</table>
@@ -89,6 +154,101 @@
 						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<div id="air-ticket" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<form id="form-ticket">
+				<div style="width: 100%">
+					<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <input type="hidden" data-bind="value:product().pk" name="product_pk" /> <label class="l">产品编号</label> <label
+						class="l" data-bind="text:product().product_number"></label>
+					<div data-bind="foreach: allCharges" style="padding-top: 4px;">
+						<em class="small-box"> <input type="radio" value="PRODUCT" name="ticket_charge" data-bind="attr: {'value': $data}, checked: $root.chosenCharge" onclick="changeCharge($(this).val())" /><label
+							data-bind="text:$root.chargeMapping[$data]"></label>
+						</em>
+					</div>
+				</div>
+			</form>
+			<div style="margin-top: 20px; height: 300px" id="div-ticket">
+				<table style="width: 100%" id="table-ticket">
+					<thead>
+						<tr class="required">
+							<th class="r" style="width: 10%">航段</th>
+							<th class="r" style="width: 10%">天次</th>
+							<th class="r" style="width: 30%">起飞城市</th>
+							<th class="r" style="width: 10%">天次</th>
+							<th class="r" style="width: 30%">抵达城市</th>
+							<th style="width: 20%">航班号</th>
+						</tr>
+					</thead>
+					<!-- ko if:airTickets().length>0 -->
+					<tbody data-bind="foreach:airTickets">
+						<tr>
+							<td st="index" data-bind="text:$data.ticket_index"></td>
+							<td><input onkeyup="sameEnd(this)" st="start-day" type="text" data-bind="value:$data.start_day" /></td>
+							<td><input st="start-city" type="text" data-bind="value:$data.start_city" /></td>
+							<td><input st="end-day" type="text" data-bind="value:$data.end_day" /></td>
+							<td><input st="end-city" type="text" data-bind="value:$data.end_city" /></td>
+							<td><input st="ticket-number" type="text" data-bind="value:$data.ticket_number" /></td>
+						</tr>
+					</tbody>
+					<!-- /ko -->
+					<!-- ko if:airTickets().length<1 -->
+					<tbody>
+						<tr>
+							<td st="index">1</td>
+							<td><input onkeyup="sameEnd(this)" st="start-day" type="text" /></td>
+							<td><input st="start-city" type="text" /></td>
+							<td><input st="end-day" type="text" /></td>
+							<td><input st="end-city" type="text" /></td>
+							<td><input st="ticket-number" type="text" /></td>
+						</tr>
+					</tbody>
+					<!-- /ko -->
+
+				</table>
+				<div style="margin-top: 20px; float: right">
+					<input type="button" value="-" onclick="deleteRow()""></input> <input type="button" value="+" onclick="addRow()"></input>
+				</div>
+			</div>
+
+			<div style="margin-top: 50px; width: 700px; float: right">
+				<button type="submit" style="float: right" class="btn btn-green col-md-1" onclick="cancelTicket()">取消</button>
+				<button type="submit" style="float: right" class="btn btn-green col-md-1" onclick="saveTicket()">保存</button>
+			</div>
+		</div>
+
+	</div>
+	<div id="air-ticket-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="width: 100%">
+				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label> <label class="l" data-bind="text:product().product_number"></label> <label
+					class="l" data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
+			</div>
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">航段</th>
+							<th style="width: 10%">天次</th>
+							<th style="width: 30%">起飞城市</th>
+							<th style="width: 10%">天次</th>
+							<th style="width: 30%">抵达城市</th>
+							<th style="width: 20%">航班号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:airTickets">
+						<tr>
+							<td data-bind="text:$data.ticket_index"></td>
+							<td data-bind="text:$data.start_day"></td>
+							<td data-bind="text:$data.start_city"></td>
+							<td data-bind="text:$data.end_day"></td>
+							<td data-bind="text:$data.end_city"></td>
+							<td data-bind="text:$data.ticket_number"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>

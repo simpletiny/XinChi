@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -41,6 +42,17 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String voucher_file_name;
 	// 收入匹配状态
 	private String match_flg;
+	//汇兑标签
+	private String exchange_flg;
+
+	// 内转搜索条件
+	private List<String> exchange_type;
+	private String from_date;
+	private String to_date;
+	private String from_account;
+	private String to_account;
+	private String from_month;
+	private String to_month;
 
 	public String getAccount() {
 		return account;
@@ -192,6 +204,70 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setMatch_flg(String match_flg) {
 		this.match_flg = match_flg;
+	}
+
+	public List<String> getExchange_type() {
+		return exchange_type;
+	}
+
+	public void setExchange_type(List<String> exchange_type) {
+		this.exchange_type = exchange_type;
+	}
+
+	public String getFrom_date() {
+		return from_date;
+	}
+
+	public void setFrom_date(String from_date) {
+		this.from_date = from_date;
+	}
+
+	public String getTo_date() {
+		return to_date;
+	}
+
+	public void setTo_date(String to_date) {
+		this.to_date = to_date;
+	}
+
+	public String getFrom_account() {
+		return from_account;
+	}
+
+	public void setFrom_account(String from_account) {
+		this.from_account = from_account;
+	}
+
+	public String getTo_account() {
+		return to_account;
+	}
+
+	public void setTo_account(String to_account) {
+		this.to_account = to_account;
+	}
+
+	public String getFrom_month() {
+		return from_month;
+	}
+
+	public void setFrom_month(String from_month) {
+		this.from_month = from_month;
+	}
+
+	public String getTo_month() {
+		return to_month;
+	}
+
+	public void setTo_month(String to_month) {
+		this.to_month = to_month;
+	}
+
+	public String getExchange_flg() {
+		return exchange_flg;
+	}
+
+	public void setExchange_flg(String exchange_flg) {
+		this.exchange_flg = exchange_flg;
 	}
 
 }

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirTicketNameListMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketNameListBean">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="client_number" property="client_number" jdbcType="VARCHAR" />
+		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
+		<result column="first_start_city" property="first_start_city" jdbcType="VARCHAR" />
+		<result column="first_end_city" property="first_end_city" jdbcType="VARCHAR" />
+		<result column="ticket_order_pk" property="ticket_order_pk" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="sale_product_pk" property="sale_product_pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
+		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		team_number,
+		client_number,
+		first_ticket_date,
+		first_start_city,
+		first_end_city,
+		ticket_order_pk,
+		name,
+		id,
+		sale_product_pk,
+		create_user,
+		pk,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_name_list
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectByPks" resultMap="BaseResultMap">
+		select
+			<include refid="Base_Column_List" />
+		from air_ticket_name_list
+		where pk in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_ticket_name_list
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNameListBean">
+
+		insert into air_ticket_name_list
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="client_number != null">
+				client_number,
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date,
+			</if>
+			<if test="first_start_city != null">
+				first_start_city,
+			</if>
+			<if test="first_end_city != null">
+				first_end_city,
+			</if>
+			<if test="ticket_order_pk != null">
+				ticket_order_pk,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sale_product_pk != null">
+				sale_product_pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="client_number != null">
+				#{client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="first_ticket_date != null">
+				#{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_start_city != null">
+				#{first_start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="first_end_city != null">
+				#{first_end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_order_pk != null">
+				#{ticket_order_pk,jdbcType=CHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_product_pk != null">
+				#{sale_product_pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirTicketNameListBean">
+		update air_ticket_name_list
+		<set>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="client_number != null">
+				client_number = #{client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date = #{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_start_city != null">
+				first_start_city = #{first_start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="first_end_city != null">
+				first_end_city = #{first_end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_order_pk != null">
+				ticket_order_pk = #{ticket_order_pk,jdbcType=CHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_product_pk != null">
+				sale_product_pk = #{sale_product_pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirTicketNameListBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_name_list
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.client_number,
+		B.user_name AS client_name,
+		CONCAT(A.first_start_city,'--',A.first_end_city) AS first_from_to,
+		A.first_ticket_date,
+		A.first_start_city,
+		A.first_end_city,
+		A.ticket_order_pk,
+		A.name,
+		A.id,
+		A.sale_product_pk,
+		A.create_user,
+		A.pk,
+		A.update_user,
+		A.create_time,
+		A.update_time
+		from air_ticket_name_list A LEFT JOIN user_base B ON A.client_number= B.user_number
+	</select>
+</mapper>

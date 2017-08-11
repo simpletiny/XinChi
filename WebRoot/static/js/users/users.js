@@ -10,7 +10,7 @@ var UsersContext = function() {
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE' ];
+	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET' ];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'
@@ -21,7 +21,8 @@ var UsersContext = function() {
 		'ADMIN' : '管理员',
 		'SALES' : '销售人员',
 		'PRODUCT' : '产品',
-		'FINANCE' : '财务'
+		'FINANCE' : '财务',
+		'TICKET' : '票务'
 	};
 
 	self.refresh = function() {

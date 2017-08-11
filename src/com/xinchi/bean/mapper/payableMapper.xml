@@ -338,7 +338,7 @@
 		A.budget_balance,
 		A.final_balance,
 		A.sales,
-		A.sales_name,
+		C.user_name AS sales_name,
 		A.update_user,
 		A.pk,
 		A.create_user,

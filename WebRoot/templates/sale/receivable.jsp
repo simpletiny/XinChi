@@ -78,7 +78,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                      <div class="span6">
                         <label class="col-md-1 control-label">销售</label>
                         <div class="col-md-2">
-                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部',value:chosenSales,event:{change:fetchSummary}" name="receivable.sales_name"></select>
+                        	 <select class="form-control" style="height:34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部',value:chosenSales,event:{change:function(){fetchSummary();search()}}" name="receivable.sales_name"></select>
                         </div>
                     </div>
                     </s:if>

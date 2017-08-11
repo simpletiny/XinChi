@@ -11,7 +11,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
-
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 </head>
 <body>
 	<div class="main-body">
@@ -38,20 +38,39 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<%-- <div class="span6">
-							<label class="col-md-1 control-label">产品线</label>
+						<div class="span6">
+							<label class="col-md-1 control-label">客户</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: locations, optionsCaption: '-- 请选择 --',event: {change:refresh}" name="product.location"></select>
+								<input class="form-control" placeholder="客户" name="option.client_employee_name"></input>
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">产品编号</label>
+							<label class="col-md-1 control-label">产品</label>
 							<div class="col-md-2">
-								<input class="form-control" name="product.product_number"></input>
+								<input class="form-control" placeholder="产品" name="option.product_name"></input>
 							</div>
-						</div> --%>
+						</div>
+						<div align="left">
+							<label class="col-md-1 control-label">出团日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" />
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+							<div class="span6">
+								<label class="col-md-1 control-label">销售</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"  name="option.create_user"></select>
+								</div>
+							</div>
+						</s:if>
 						<div style="width: 30%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
@@ -73,7 +92,9 @@
 								<th>总团款</th>
 								<th>团款说明</th>
 								<th>确认件</th>
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<th>销售</th>
+								</s:if>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -93,7 +114,9 @@
 								<!-- ko if: $data.confirm_file==null || $data.confirm_file == '' -->
 								<td></td>
 								<!-- /ko -->
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<td data-bind="text: $data.create_user"></td>
+								</s:if>
 							</tr>
 						</tbody>
 					</table>
@@ -113,12 +136,14 @@
 			</div>
 		</div>
 	</div>
-	<div id="pic-check" style="display:none">
- 	<jsp:include page="../common/check-picture.jsp" />
- </div>
+	<div id="pic-check" style="display: none">
+		<jsp:include page="../common/check-picture.jsp" />
+	</div>
 	<script>
 		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/tbc-order.js"></script>
 </body>
 </html>

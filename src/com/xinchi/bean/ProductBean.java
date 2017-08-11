@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -13,6 +14,8 @@ public class ProductBean extends SupperBO implements Serializable {
 	private String product_number;
 
 	private String location;
+
+	private List<String> locations;
 
 	private Integer days;
 
@@ -32,6 +35,7 @@ public class ProductBean extends SupperBO implements Serializable {
 	private String create_user;
 
 	private String update_user;
+	private String air_ticket_charge;
 
 	public String getName() {
 		return name;
@@ -136,5 +140,22 @@ public class ProductBean extends SupperBO implements Serializable {
 	public void setSale_flg(String sale_flg) {
 		this.sale_flg = sale_flg;
 	}
+
+	public String getAir_ticket_charge() {
+		return air_ticket_charge;
+	}
+
+	public void setAir_ticket_charge(String air_ticket_charge) {
+		this.air_ticket_charge = air_ticket_charge;
+	}
+
+	public List<String> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<String> locations) {
+		this.locations = locations;
+	}
+
 
 }

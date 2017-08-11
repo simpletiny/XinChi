@@ -1,10 +1,17 @@
 var confirmCheckLayer;
+var commentLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.order = ko.observable({});
+
 	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 	self.chosenOrders = ko.observableArray([]);
+
+	// 销售信息
+	self.sales = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+		self.sales(data.users);
+	});
 	// 删除订单
 	self.deleteOrder = function() {
 		if (self.chosenOrders().length == 0) {
@@ -87,6 +94,84 @@ var ProductBoxContext = function() {
 		}
 	};
 
+	self.order = ko.observable({});
+	// 添加/修改备注
+	self.editComment = function(order_pk, standard_flg) {
+		var url = "";
+		if (standard_flg == "Y") {
+			url = "order/searchTbcBsOrderByPk";
+		} else {
+			url = "order/searchTbcBnsOrderByPk";
+		}
+
+		$.getJSON(self.apiurl + url, {
+			order_pk : order_pk
+		}, function(data) {
+			if (standard_flg == "Y") {
+				self.order(data.bsOrder);
+			} else {
+				self.order(data.bnsOrder);
+			}
+
+			commentLayer = $.layer({
+				type : 1,
+				title : [ '备注', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '500px', '300px' ],
+				offset : [ '50px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#comment-edit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+
+		});
+	};
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+
+		$("#txt-order-pk").val('');
+		$("#txt-standard-flg").val('');
+		$("#txt-comment").val('');
+	};
+
+	self.updateComment = function() {
+		var order_pk = $("#txt-order-pk").val();
+		var standard_flg = $("#txt-standard-flg").val();
+		var comment = $("#txt-comment").val();
+		var param = "";
+		var data = "";
+		if (standard_flg == "Y") {
+			param = "bsOrder";
+		} else {
+			param = "bnsOrder";
+		}
+
+		data = param + ".pk=" + order_pk + "&" + param + ".comment=" + comment + "&standard_flg=" + standard_flg;
+		startLoadingIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + "order/updateComment",
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			console.log(str);
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+				$("#txt-order-pk").val('');
+				$("#txt-standard-flg").val('');
+				$("#txt-comment").val('');
+			}
+		});
+	};
+
 	self.orders = ko.observable({});
 
 	self.refresh = function() {
@@ -102,7 +187,7 @@ var ProductBoxContext = function() {
 		});
 	};
 	// 查看身份证图片
-	self.checkIdPic = function(fileName,user_number) {
+	self.checkIdPic = function(fileName, user_number) {
 		$("#img-pic").attr("src", "");
 		confirmCheckLayer = $.layer({
 			type : 1,
@@ -121,7 +206,7 @@ var ProductBoxContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder="+user_number);
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on('click', function() {
@@ -129,7 +214,7 @@ var ProductBoxContext = function() {
 	});
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 10;
+	self.perPage = 20;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {
@@ -180,3 +265,15 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+var check = function(radio) {
+	var r = $(radio).val();
+	if (r == "1") {
+		$("input[st='st-date-1']").attr("disabled", false);
+		$("input[st='st-date-2']").val("");
+		$("input[st='st-date-2']").attr("disabled", true);
+	} else {
+		$("input[st='st-date-1']").attr("disabled", true);
+		$("input[st='st-date-2']").attr("disabled", false);
+		$("input[st='st-date-1']").val("");
+	}
+};

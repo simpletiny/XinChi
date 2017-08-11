@@ -53,11 +53,11 @@
 		<action name="searchFinalOrderSupplier" class="finalOrderAction" method="searchFinalOrderSupplier">
 			<result name="success" type="json"></result>
 		</action>
-		
+
 		<action name="rollBackFinalOrder" class="finalOrderAction" method="rollBackFinalOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="searchReceivableSummary" class="receivableAction" method="searchReceivableSummary">
 			<result name="success" type="json"></result>
 		</action>
@@ -132,6 +132,13 @@
 			</result>
 		</action>
 		<!-- paid action end -->
+		<!-- 销售工作报表 -->
+		<action name="searchSwrByPage" class="saleWorkReportAction" method="searchSwrByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 
 </struts>

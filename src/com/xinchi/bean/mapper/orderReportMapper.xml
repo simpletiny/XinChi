@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.OrderReportMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderReportDto">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="order_type" property="order_type" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="train_ticket_cost" property="train_ticket_cost" jdbcType="DECIMAL" />
+		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="fy" property="fy" jdbcType="DECIMAL" />
+		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
+		<result column="per_profit" property="per_profit" jdbcType="DECIMAL" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		team_number,
+		product_name,
+		client_employee_pk,
+		client_employee_name,
+		other_cost,
+		fy,
+		receivable,
+		air_ticket_cost,
+		departure_date,
+		pk,
+		'budget' AS order_type,
+		(adult_count+if(ISNULL(special_count),0,special_count)) AS people_count,
+		update_user,
+		create_user_number AS sale_number,
+		create_user AS sale_name,
+		confirm_flg,
+		create_time,
+		update_time,
+		confirm_date
+		from budget_order_view
+		<where>
+			<if test="params.bo.sale_name!= null and params.bo.sale_name !=''">
+				and create_user like CONCAT('%', #{params.bo.sale_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and departure_date &gt;= #{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and departure_date &lt;= #{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_from != null and params.bo.confirm_date_from !=''">
+				and confirm_date &gt;= #{params.bo.confirm_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
+				and confirm_date &lt;= #{params.bo.confirm_date_to,jdbcType=VARCHAR}
+			</if>
+			and confirm_flg='Y'
+		</where>
+		ORDER BY departure_date DESC
+	</select>
+</mapper>

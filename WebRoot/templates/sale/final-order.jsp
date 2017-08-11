@@ -121,6 +121,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>合计</td>
                             <td data-bind="text:totalPeople"></td>
                             <td data-bind="text:totalReceivable"  class="rmb"></td>

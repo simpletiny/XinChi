@@ -39,7 +39,6 @@
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('receive') }">收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('pay') }">支出</button>
-								 <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('inner') }">内转</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify() }">修改</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail() }">删除</button>
 

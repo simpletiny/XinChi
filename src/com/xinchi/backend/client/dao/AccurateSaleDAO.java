@@ -36,7 +36,7 @@ public interface AccurateSaleDAO{
 	 * 根据条件查找
 	 * @param bean
 	 */
-	public List<AccurateSaleBean> getAllByParam(AccurateSaleBean bean);
+	public List<AccurateSaleBean> selectByParam(AccurateSaleBean bean);
 
 	public List<AccurateSaleBean> selectByPage(Page page);
 }

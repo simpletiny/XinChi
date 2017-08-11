@@ -25,6 +25,7 @@ var DetailContext = function() {
 			return;
 		}
 		
+		console.log($("form").serialize());
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
@@ -37,13 +38,11 @@ var DetailContext = function() {
 						type : "POST",
 						url : self.apiurl + 'finance/createInnerDetail',
 						data : $("form").serialize()
-					}).success(
-							function(str) {
-								if (str == "success") {
-									window.location.href = self.apiurl
-											+ "templates/finance/detail.jsp";
-								}
-							});
+					}).success(function(str) {
+						if (str == "success") {
+							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						}
+					});
 					layer.close(index);
 				}
 			}
@@ -68,5 +67,8 @@ function checkExchange() {
 		$("#exchange-money").val("");
 		$("#exchange-money-error").remove();
 	}
+}
 
+function setInMoney(txt) {
+	$("#in-money").val($(txt).val());
 }

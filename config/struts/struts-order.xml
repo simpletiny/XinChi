@@ -18,7 +18,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<!-- 搜索已确认订单 -->
 		<action name="searchCOrdersByPage" class="orderAction" method="searchCOrdersByPage">
 			<result name="success" type="json">
@@ -46,6 +46,19 @@
 		<!-- 按PK查询非标准预算单 -->
 		<action name="searchTbcBnsOrderByPk" class="orderAction" method="searchTbcBnsOrderByPk">
 			<result name="success" type="json"></result>
+		</action>
+		<!-- 更新订单备注 -->
+		<action name="updateComment" class="orderAction" method="updateComment">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 单团核算单 -->
+		<!-- 搜索信息 -->
+		<action name="searchOrderReportByPage" class="orderReportAction" method="searchOrderReportByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 	</package>
 </struts>

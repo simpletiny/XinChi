@@ -17,6 +17,7 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="air_ticket_charge" property="air_ticket_charge" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -35,7 +36,8 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		air_ticket_charge
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -99,6 +101,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="air_ticket_charge != null">
+				air_ticket_charge,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -145,6 +150,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="air_ticket_charge != null">
+				#{air_ticket_charge,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -195,6 +203,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="air_ticket_charge != null">
+				air_ticket_charge = #{air_ticket_charge,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -233,7 +244,8 @@
 		A.create_user,
 		A.update_user,
 		A.create_time,
-		A.update_time
+		A.update_time,
+		A.air_ticket_charge
 		from product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number
 		<where>
@@ -243,8 +255,14 @@
 			<if test="params.bo.product_number != null and params.bo.product_number !=''">
 				and A.product_number like concat('%', #{params.bo.product_number,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.location != null and params.bo.location !=''">
-				and A.location = #{params.bo.location,jdbcType=VARCHAR}
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name like concat('%', #{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.locations != null and params.bo.locations !=''">
+				and A.location in 
+				<foreach item="item" index="index" collection="params.bo.locations" open="(" separator="," close=")">
+					#{params.bo.locations[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.sale_flg != null and params.bo.sale_flg !=''">
 				and A.sale_flg = #{params.bo.sale_flg,jdbcType=VARCHAR}

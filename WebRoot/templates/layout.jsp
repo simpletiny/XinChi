@@ -19,6 +19,11 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css" />
 <link rel="stylesheet" href="<%=basePath%>static/vendor/font-awesome-4.2.0/css/font-awesome.min.css" />
 <title>欣驰国际</title>
+<style>
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
+	-webkit-appearance: none !important;
+}
+</style>
 </head>
 <body>
 	<!-- head start -->
@@ -57,33 +62,34 @@
 				</ol>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/product-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
-				</ol>
-				</li>
+				</ol></li>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="client"><a href="<%=basePath%>templates/client/client-relation.jsp" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
+				<li class="client"><a href="<%=basePath%>templates/client/client-relation.jsp" onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i
+						class="fa fa-users fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/client/client-relation.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户关系</a></li>
 						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
-							<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
+						<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
 						</s:if>
 						<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
 					</ol></li>
-					
+
 			</s:if>
-			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp" onclick="$('.product-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品架</a>
+			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp" onclick="$('.product-box').addClass('current').children('ol').css('display', 'block')"><i
+					class="fa fa-users fa-lg fa-fw"></i>产品架</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
-				</ol>
-			</li>
+				</ol></li>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="order-box"><a href="<%=basePath%>templates/order/tbc-order.jsp" onclick="$('.order-box').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
+				<li class="order-box"><a href="<%=basePath%>templates/order/tbc-order.jsp" onclick="$('.order-box').addClass('current').children('ol').css('display', 'block')"><i
+						class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/order/tbc-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待确认</a></li>
 						<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
-					</ol>
-				</li>
+						<li><a href="<%=basePath%>templates/order/order-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>单团核算单</a></li>
+					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="order"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>预决算管理</a>
@@ -103,12 +109,12 @@
 			</s:if>
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-				<li class="product-manager"><a href="<%=basePath%>templates/product/product.jsp" onclick="$('.product-manage').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>产品管理</a>
+				<li class="product-manager"><a href="<%=basePath%>templates/product/product.jsp" onclick="$('.product-manage').addClass('current').children('ol').css('display', 'block')"><i
+						class="fa fa-users fa-lg fa-fw"></i>产品管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品管理</a></li>
 						<li><a href="<%=basePath%>templates/product/product-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品报表</a></li>
-					</ol>
-				</li>
+					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="supplier"><a href="#" onclick="$('.supplier').addClass('current').children('ol').css('display', 'block')"><i class="fa fa-users fa-lg fa-fw"></i>供应商管理</a> <s:if
@@ -128,15 +134,19 @@
 						<li><a href="<%=basePath%>templates/sale/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')">
-				<li class="ticket"><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-users fa-lg fa-fw"></i>票务管理</a>
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+				<li class="ticket"><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-users fa-lg fa-fw"></i>票务管理</a>
 					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单列表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>名单操作</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')">
 				<li class="accounting"><a href="<%=basePath%>templates/finance/received-match.jsp"><i class="fa fa-users fa-lg fa-fw"></i>会计</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/finance/received-match.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收入匹配</a></li>
+						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>内转明细</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')">
@@ -155,7 +165,7 @@
 						<li><a href="<%=basePath%>templates/users/users.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户管理</a></li>
 						<li><a href="<%=basePath%>templates/users/user-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户组</a></li>
 						<li><a href="<%=basePath%>templates/users/user-online.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>在线员工</a></li>
-						
+
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -165,14 +175,14 @@
 						<li><a href="<%=basePath%>templates/accounting/pay-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>支出审批</a></li>
 						<li><a href="<%=basePath%>templates/users/user-log.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户操作日志</a></li>
 						<li><a href="<%=basePath%>templates/product/product-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品小组</a></li>
-					
+						<li><a href="<%=basePath%>templates/sale/sale-work-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售工作报表</a></li>
+
 					</ol></li>
 			</s:if>
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-users fa-lg fa-fw"></i>系统相关</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>系统使用手册</a></li>
-				</ol>
-			</li>
+				</ol></li>
 
 		</ul>
 	</div>

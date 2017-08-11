@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>内转<a href="<%=basePath %>/templates/finance/detail.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>内转<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
 
     <div class="main-container">
@@ -33,12 +33,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
                 <div class="input-row clearfloat">
                       <div class="col-md-6 required">
-                        <label class="l">发生时间</label>
-                        <div class="ip"><input type="text" class="ip- datetime-picker"  data-bind="value: detail().time" placeholder="发生时间" name="innerTransfer.time" required="required"/></div>
+                        <label class="l">转出时间</label>
+                        <div class="ip"><input type="text" class="ip- datetime-picker-same-1"  data-bind="value: detail().from_time" placeholder="转出时间" name="innerTransfer.from_time" required="required"/></div>
+                    </div>
+                        <div class="col-md-6 required">
+                        <label class="l">转入时间</label>
+                        <div class="ip"><input type="text" class="ip- datetime-picker-same-2"  data-bind="value: detail().to_time" placeholder="转入时间" name="innerTransfer.to_time" required="required"/></div>
+                    </div>
+               </div>
+               <div class="input-row clearfloat">
+					 <div class="col-md-6 required">
+                        <label class="l">转出金额</label>
+                        <div class="ip"><input type="number" class="ip-" data-bind="value: detail().from_money"  onkeyup="setInMoney(this)" placeholder="转出金额" name="innerTransfer.from_money" required="required"/></div>
                     </div>
 					 <div class="col-md-6 required">
-                        <label class="l">发生金额</label>
-                        <div class="ip"><input type="number" class="ip-" data-bind="value: detail().money" placeholder="发生金额" name="innerTransfer.money" required="required"/></div>
+                        <label class="l">转入金额</label>
+                        <div class="ip"><input type="number" class="ip-" data-bind="value: detail().to_money" id="in-money" placeholder="转入金额" name="innerTransfer.to_money" required="required"/></div>
                     </div>
                 </div>
                  <div class="input-row clearfloat">
@@ -72,7 +82,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
     <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
   <script>
-    $(".finance").addClass("current").children("ol").css("display", "block");
+    $(".accounting").addClass("current").children("ol").css("display", "block");
   </script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>static/vendor/messages_zh.min.js"></script>

@@ -798,4 +798,432 @@
 			<comment>create view tbc_order</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE product_air_ticket (
+						  product_pk CHAR(22) NOT NULL ,
+						  ticket_index INT NULL ,
+						  start_day INT NULL ,
+						  start_city VARCHAR(10) NULL ,
+						  end_day INT NULL ,
+						  end_city VARCHAR(10) NULL ,
+						  ticket_number VARCHAR(10) NULL ,
+						  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+						  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+						  pk CHAR(22) NOT NULL ,
+						  PRIMARY KEY (pk) )
+						DEFAULT CHARACTER SET = utf8
+						COLLATE = utf8_bin
+						COMMENT = '产品机票信息表';
+             ]]>
+			<comment>CREATE  TABLE product_air_ticket</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product ADD COLUMN air_ticket_charge VARCHAR(10) NULL DEFAULT 'NO'  AFTER update_time ;
+             ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order ADD COLUMN name_list VARCHAR(3000) NULL  AFTER confirm_file ;
+				ALTER TABLE budget_non_standard_order ADD COLUMN name_list VARCHAR(3000) NULL  AFTER confirm_file ;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS air_ticket_need;
+				CREATE VIEW air_ticket_need AS
+				
+				SELECT A.confirm_flg, 
+				B.pk AS product_pk,
+				A.pk AS sale_order_pk,
+				CASE WHEN isnull(B.pk) THEN A.product_manager_number
+					 WHEN B.air_ticket_charge ='PRODUCT' THEN A.product_manager_number
+					 WHEN B.air_ticket_charge ='SALE' THEN A.create_user_number
+					ELSE null
+				end AS ticket_client_number,
+				CASE WHEN isnull(A.departure_date) OR isnull(C.pk) THEN null
+					 ELSE DATE_ADD(A.departure_date,INTERVAL C.start_day-1 DAY)
+				END AS first_ticket_date,
+				CASE WHEN isnull(C.pk) THEN null
+					 ELSE CONCAT(C.start_city,'--',C.end_city)
+				END AS first_from_to,
+				(if(isnull(A.adult_count),0,A.adult_count)+if(isnull(A.special_count),0,A.special_count)) AS people_count,
+				A.team_number
+				 FROM xinchi.budget_order_view A
+				LEFT JOIN product B on A.product_pk=B.pk
+				LEFT JOIN product_air_ticket C ON B.pk = C.product_pk AND C.ticket_index = 1
+				where isnull(B.air_ticket_charge) OR B.air_ticket_charge<>'NO';
+             ]]>
+			<comment>CREATE VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order ADD COLUMN air_ticket_cost DECIMAL(12,2) NULL COMMENT '机票款'  AFTER name_list ;
+				ALTER TABLE budget_non_standard_order ADD COLUMN air_ticket_cost DECIMAL(12,2) NULL COMMENT '机票款'  AFTER name_list ;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>create view tbc_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS air_ticket_need;
+				CREATE VIEW air_ticket_need AS
+				
+				SELECT A.confirm_flg,
+				A.air_ticket_cost,
+				A.standard_flg,
+				B.pk AS product_pk,
+				A.pk AS sale_order_pk,
+				CASE WHEN isnull(B.pk) THEN A.product_manager_number
+					 WHEN B.air_ticket_charge ='PRODUCT' THEN A.product_manager_number
+					 WHEN B.air_ticket_charge ='SALE' THEN A.create_user_number
+					ELSE null
+				end AS ticket_client_number,
+				CASE WHEN isnull(A.departure_date) OR isnull(C.pk) THEN null
+					 ELSE DATE_ADD(A.departure_date,INTERVAL C.start_day-1 DAY)
+				END AS first_ticket_date,
+				CASE WHEN isnull(C.pk) THEN null
+					 ELSE CONCAT(C.start_city,'--',C.end_city)
+				END AS first_from_to,
+				(if(isnull(A.adult_count),0,A.adult_count)+if(isnull(A.special_count),0,A.special_count)) AS people_count,
+				A.team_number
+				 FROM xinchi.budget_order_view A
+				LEFT JOIN product B on A.product_pk=B.pk
+				LEFT JOIN product_air_ticket C ON B.pk = C.product_pk AND C.ticket_index = 1
+				where isnull(B.air_ticket_charge) OR B.air_ticket_charge<>'NO';
+             ]]>
+			<comment>CREATE VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP TABLE IF EXISTS air_ticket_order;
+            	CREATE  TABLE air_ticket_order (
+					  client_number VARCHAR(10) NOT NULL ,
+					  ticket_cost DECIMAL(12,2) NOT NULL ,
+					  first_ticket_date VARCHAR(10) NULL ,
+					  first_start_city VARCHAR(10) NULL ,
+					  first_end_city VARCHAR(10) NULL ,
+					  people_count INT NULL ,
+					  team_number VARCHAR(10) NULL ,
+					  tour_product_pk CHAR(22) NULL COMMENT '旅游产品的pk，用来查询航段信息' ,
+					  sale_order_pk CHAR(22) NULL COMMENT '销售订单pk，只有在没有团号的时候用' ,
+					  status CHAR(1) NULL DEFAULT 'I' COMMENT 'A for 新订单，B for 待出票，C for 已出票，D for 已决算' ,
+					  lock_flg CHAR(1) NULL DEFAULT 0 COMMENT '是否锁定，0未锁定，1已锁定' ,
+					  sale_standard_flg CHAR(1) NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '机票订单列表';
+             ]]>
+			<comment>CREATE  TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP TABLE IF EXISTS air_ticket_name_list;
+            	CREATE  TABLE air_ticket_name_list (
+					  team_number VARCHAR(30) NOT NULL ,
+					  client_number VARCHAR(45) NULL ,
+					  first_ticket_date VARCHAR(10) NULL ,
+					  first_start_city VARCHAR(10) NULL ,
+					  first_end_city VARCHAR(10) NULL ,
+					  ticket_order_pk CHAR(22) NULL ,
+					  name VARCHAR(45) NULL DEFAULT NULL ,
+					  id VARCHAR(45) NULL ,
+					  sale_product_pk CHAR(22) NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '出票名单列表';
+             ]]>
+			<comment>CREATE  TABLE air_ticket_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP TABLE IF EXISTS passenger_ticket_info;
+            	CREATE  TABLE passenger_ticket_info (
+				  ticket_source VARCHAR(50) NOT NULL ,
+				  ticket_cost DECIMAL(12,2) NOT NULL ,
+				  PNR VARCHAR(50) NOT NULL ,
+				  passenger_pk CHAR(22) NULL ,
+				  ticket_index INT NULL ,
+				  ticket_date VARCHAR(10) NULL ,
+				  ticket_number VARCHAR(10) NULL ,
+				  from_to_time VARCHAR(20) NULL ,
+				  from_to_city VARCHAR(50) NULL ,
+				  from_airport VARCHAR(10) NULL ,
+				  to_airport VARCHAR(10) NULL ,
+				  terminal VARCHAR(10) NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin;
+             ]]>
+			<comment>CREATE TABLE passenger_ticket_info </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS receivable_back_days;
+				create view receivable_back_days as
+				    select 
+				        B.user_name AS sales_name,
+				        A.sales,
+				        A.budget_balance,
+				        A.final_balance,
+				        DATEDIFF(curdate(), A.return_date) as back_days
+				    from
+				        receivable A LEFT JOIN user_base B ON A.sales = B.user_number;
+				        
+				DROP VIEW IF EXISTS receivable_a;	
+				create view receivable_a as
+				    select 
+				        B.user_name AS sales_name,
+				        A.sales,
+				        count(A.pk) as all_count,
+				        sum(A.budget_balance) as all_budget_balance,
+				        sum(A.final_balance) as all_final_balance,
+				        sum(CASE
+				            WHEN isnull(A.final_balance) THEN A.budget_balance
+				            ELSE A.final_balance
+				        END) as all_balance
+				    from
+				        receivable A LEFT JOIN user_base B ON A.sales = B.user_number
+				    group by A.sales;
+								
+			DROP VIEW IF EXISTS receivable_b;			
+			create view receivable_b as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as one_month_count,
+				        sum(budget_balance) as one_month_budget_balance,
+				        sum(final_balance) as one_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as one_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 0 and back_days <= 30
+				    group by sales;
+				    
+				DROP VIEW IF EXISTS receivable_c;				 
+				create view receivable_c as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as two_month_count,
+				        sum(budget_balance) as two_month_budget_balance,
+				        sum(final_balance) as two_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as two_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 30 and back_days <= 60
+				    group by sales;
+										
+					DROP VIEW IF EXISTS receivable_d;					
+					create view receivable_d as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as six_month_count,
+				        sum(budget_balance) as six_month_budget_balance,
+				        sum(final_balance) as six_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as six_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 60 and back_days <= 180
+				    group by sales;
+										
+			DROP VIEW IF EXISTS receivable_e;						  
+			 create view receivable_e as
+				    select 
+				        sales_name,
+				        sales,
+				        count(*) as bad_month_count,
+				        sum(budget_balance) as bad_month_budget_balance,
+				        sum(final_balance) as bad_month_final_balance,
+				        sum(CASE
+				            WHEN isnull(final_balance) THEN budget_balance
+				            ELSE final_balance
+				        END) as bad_month_balance
+				    from
+				        receivable_back_days
+				    where
+				        back_days > 180
+				    group by sales;
+				        
+          		            ]]>
+			<comment>alter receivable_summary views</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		  ALTER TABLE payment_detail ADD COLUMN exchange_flg CHAR(1) NULL DEFAULT 'N' COMMENT '汇兑标签'  AFTER match_flg ;
+             ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
+	
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS inner_out;
+            		DROP VIEW IF EXISTS inner_in;
+            		DROP VIEW IF EXISTS inner_exchange;
+            		DROP VIEW IF EXISTS inner_transfer;
+            		
+          		    create view inner_out as
+					select * from payment_detail where  type='支出' and  inner_flg='Y' and exchange_flg='N';
+					create view inner_in as
+					select * from payment_detail where  type='收入' and  inner_flg='Y' and exchange_flg='N';
+					create view inner_exchange as
+					select * from payment_detail where  exchange_flg='Y';
+					
+					CREATE VIEW inner_transfer AS
+					select 
+					A.inner_pk AS inner_pk,
+					A.account AS from_account,
+					A.time AS from_time,
+					A.money AS from_money,
+					B.account AS to_account,
+					B.time AS to_time,
+					B.money AS to_money,
+					C.account AS exchange_account,
+					C.money AS exchange_money,
+					A.comment AS comment,
+					IF(ISNULL(C.account),'NONE',if(C.account=A.account,'OUT','IN')) AS exchange_type
+					
+					from inner_out A
+					LEFT JOIN inner_in B on A.inner_pk=B.inner_pk
+					LEFT JOIN inner_exchange C on A.inner_pk = C.inner_pk;
+
+             ]]>
+			<comment>CREATE VIEW inner_transfer</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

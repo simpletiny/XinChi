@@ -702,9 +702,5 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.search();
 	ctx.fetchSummary();
-	$('.month-picker-st').MonthPicker({
-		Button : false,
-		MonthFormat : 'yy-mm'
-	});
 
 });

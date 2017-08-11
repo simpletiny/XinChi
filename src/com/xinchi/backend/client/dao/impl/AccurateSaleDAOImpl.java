@@ -45,9 +45,8 @@ public class AccurateSaleDAOImpl extends SqlSessionDaoSupport implements Accurat
 	}
 
 	@Override
-	public List<AccurateSaleBean> getAllByParam(AccurateSaleBean bean) {
-		List<AccurateSaleBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.AccurateSaleMapper.selectByParam", bean);
-		return list;
+	public List<AccurateSaleBean> selectByParam(AccurateSaleBean bean) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AccurateSaleMapper.selectByParam", bean);
 	}
 
 	@Override

@@ -121,9 +121,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		// 支出明细
 		PaymentDetailBean payDetail = new PaymentDetailBean();
 		payDetail.setAccount(innerTransfer.getFrom_account());
-		payDetail.setTime(innerTransfer.getTime());
+		payDetail.setTime(innerTransfer.getFrom_time());
 		payDetail.setType("支出");
-		payDetail.setMoney(innerTransfer.getMoney());
+		payDetail.setMoney(innerTransfer.getFrom_money());
 		payDetail.setRecord_user(sessionBean.getUser_number());
 		payDetail.setRecord_time(DateUtil.getTimeMillis());
 		payDetail.setComment(innerTransfer.getComment());
@@ -134,9 +134,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		PaymentDetailBean receiveDetail = new PaymentDetailBean();
 
 		receiveDetail.setAccount(innerTransfer.getTo_account());
-		receiveDetail.setTime(innerTransfer.getTime());
+		receiveDetail.setTime(innerTransfer.getTo_time());
 		receiveDetail.setType("收入");
-		receiveDetail.setMoney(innerTransfer.getMoney());
+		receiveDetail.setMoney(innerTransfer.getTo_money());
 		receiveDetail.setRecord_user(sessionBean.getUser_number());
 		receiveDetail.setRecord_time(DateUtil.getTimeMillis());
 		receiveDetail.setComment(innerTransfer.getComment());
@@ -152,20 +152,21 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 			if (innerTransfer.getExchange_account().equals("out")) {
 				exchangeDetail.setAccount(innerTransfer.getFrom_account());
-
+				exchangeDetail.setTime(innerTransfer.getFrom_time());
 			} else {
 				exchangeDetail.setAccount(innerTransfer.getTo_account());
+				exchangeDetail.setTime(innerTransfer.getTo_time());
 			}
 
 			exchangeDetail.setType("支出");
-			exchangeDetail.setTime(innerTransfer.getTime());
 			exchangeDetail.setMoney(innerTransfer.getExchange_money());
 			exchangeDetail.setRecord_user(sessionBean.getUser_number());
 			exchangeDetail.setRecord_time(DateUtil.getTimeMillis());
 			exchangeDetail.setComment("汇兑：" + innerTransfer.getComment());
 			exchangeDetail.setInner_flg("Y");
 			exchangeDetail.setInner_pk(inner_pk);
-
+			exchangeDetail.setExchange_flg("Y");
+			
 			insert(exchangeDetail);
 		}
 	}

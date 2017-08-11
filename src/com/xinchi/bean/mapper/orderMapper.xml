@@ -35,6 +35,7 @@
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -43,55 +44,89 @@
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and departure_date &lt;=#{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
 			and confirm_flg='N'
 		</where>
-			ORDER BY departure_date DESC
+		ORDER BY departure_date DESC
 	</select>
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-		select  
-		    team_number, 
-	    	product_name,
-			product_pk,
-	    	client_employee_pk,
-	    	client_employee_name,
-	    	independent_flg, 
-	    	comment, 
-	    	other_cost_comment, 
-	    	other_cost, 
-	    	fy, 
-	    	special_cost, 
-	    	special_count, 
-	    	adult_cost, 
-	    	adult_count, 
-	    	receivable, 
-	    	days, 
-	    	departure_date, 
-	    	pk, 
-	    	update_user, 
-	    	create_user_number, 
-	    	create_user,
-	    	confirm_flg, 
-	    	create_time,
-	    	update_time,
-	    	confirm_date,
-	    	confirm_file,
-	    	standard_flg,
-	    	IF(ISNULL(adult_count),0,adult_count)+ IF(ISNULL(special_count),0,special_count)  AS people_count,
-	    	case when departure_date>now() then '未出团' 
-					when now()>=departure_date and DATE_ADD(departure_date,interval days-1 day) > now() then '出团中'
-					when now()>=DATE_ADD(departure_date,interval days-1 day) then '已回团'
-			end
-			AS status,
-	    	TIMESTAMPDIFF(day,departure_date,now())-days+2 AS back_days,
-	    	product_manager_number,
-	    	product_manager
-	    	 from budget_order_view
+		select
+		team_number,
+		product_name,
+		product_pk,
+		client_employee_pk,
+		client_employee_name,
+		independent_flg,
+		comment,
+		other_cost_comment,
+		other_cost,
+		fy,
+		special_cost,
+		special_count,
+		adult_cost,
+		adult_count,
+		receivable,
+		days,
+		departure_date,
+		pk,
+		update_user,
+		create_user_number,
+		create_user,
+		confirm_flg,
+		create_time,
+		update_time,
+		confirm_date,
+		confirm_file,
+		standard_flg,
+		air_ticket_cost,
+		IF(ISNULL(adult_count),0,adult_count)+ IF(ISNULL(special_count),0,special_count) AS people_count,
+		case when departure_date>now() then '未出团'
+		when now()>=departure_date and DATE_ADD(departure_date,interval days-1 day) > now() then '出团中'
+		when now()>=DATE_ADD(departure_date,interval days-1 day) then '已回团'
+		end
+		AS status,
+		TIMESTAMPDIFF(day,departure_date,now())-days+2 AS back_days,
+		product_manager_number,
+		product_manager
+		from budget_order_view
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and departure_date &lt;=#{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_from != null and params.bo.confirm_date_from !=''">
+				and confirm_date >=#{params.bo.confirm_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
+				and confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
+			</if>
 			and confirm_flg='Y'
 		</where>
-			ORDER BY departure_date DESC
+		ORDER BY departure_date DESC
 	</select>
 </mapper>

@@ -25,6 +25,8 @@
 		<action name="autoFixBalance" class="simpletinyAction" method="autoFixBalance">
 		<result name="success" type="redirect">/</result>
 		</action>
-		
+			<action name="autoGenTicketOrder" class="simpletinyAction" method="autoGenTicketOrder">
+		<result name="success" type="redirect">/</result>
+		</action>
 	</package>
 </struts>

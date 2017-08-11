@@ -9,14 +9,15 @@ var UsersContext = function() {
 	});
 	self.chosenUserRoles = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE' ];
+	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET' ];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
 		'ADMIN' : '管理员',
 		'SALES' : '销售人员',
 		'PRODUCT' : '产品',
-		'FINANCE' : '财务'
+		'FINANCE' : '财务',
+		'TICKET' : '票务'
 	};
 
 	self.refresh = function() {
@@ -43,10 +44,7 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr(
-				"src",
-				self.basePath + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=USER_ID");
+		$("#img-pic").attr("src", self.basePath + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
 	};
 
 	self.agreeUser = function(pk) {
@@ -85,8 +83,7 @@ var UsersContext = function() {
 		$.ajax({
 			url : self.basePath + "user/approveUser",
 			type : "post",
-			data : "user_pk=" + pk + "&" + "user_roles="
-					+ self.chosenUserRoles(),
+			data : "user_pk=" + pk + "&" + "user_roles=" + self.chosenUserRoles(),
 			success : function(data) {
 				if (data == "success") {
 					success_msg("审批成功");
@@ -126,13 +123,9 @@ var UsersContext = function() {
 		});
 	};
 	// 新标签页显示大图片
-	$("#img-pic").on(
-			'click',
-			function() {
-				window.open(self.basePath
-						+ "templates/common/check-picture-big.jsp?src="
-						+ encodeURIComponent($(this).attr("src")));
-			});
+	$("#img-pic").on('click', function() {
+		window.open(self.basePath + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
+	});
 };
 
 var ctx = new UsersContext();
