@@ -1,316 +1,338 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.BudgetStandardOrderMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.BudgetStandardOrderBean" >
-	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
-	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
-	    <result column="product_pk" property="product_pk" jdbcType="CHAR" />
-	    <result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
-	    <result column="days" property="days" jdbcType="INTEGER" />
-	    <result column="receivable" property="receivable" jdbcType="DECIMAL" />
-	    <result column="adult_count" property="adult_count" jdbcType="INTEGER" />
-	    <result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
-	    <result column="special_count" property="special_count" jdbcType="INTEGER" />
-	    <result column="special_cost" property="special_cost" jdbcType="DECIMAL" />
-	    <result column="fy" property="fy" jdbcType="DECIMAL" />
-	    <result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
-	    <result column="other_cost_comment" property="other_cost_comment" jdbcType="VARCHAR" />
-	    <result column="comment" property="comment" jdbcType="VARCHAR" />
-	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	    <result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
-	    <result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
- 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
- 	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
- 	    <result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
- 	    <result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
- 	    <result column="name_list" property="name_list" jdbcType="VARCHAR" />
- 	    <result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-  		
-    	team_number, 
-    	client_employee_pk, 
-    	product_pk, 
-    	departure_date, 
-    	days, 
-    	receivable, 
-    	adult_count, 
-    	adult_cost, 
-    	special_count, 
-    	special_cost, 
-    	fy, 
-    	other_cost, 
-    	other_cost_comment, 
-    	comment, 
-    	update_user, 
-    	pk, 
-    	independent_flg, 
-    	confirm_flg, 
-    	create_time,
-    	update_time,
-    	create_user,
-    	confirm_date,
-    	confirm_file,
-    	name_list,
-    	air_ticket_cost
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from budget_standard_order
-    where pk = #{pk,jdbcType=CHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from budget_standard_order
-    where pk = #{pk,jdbcType=CHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.xinchi.bean.BudgetStandardOrderBean" >
-  	
-    insert into budget_standard_order
-    
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-	 	<if test="team_number != null">
-	        team_number,
-	      </if>
-	 	<if test="client_employee_pk != null">
-	        client_employee_pk,
-	      </if>
-	 	<if test="product_pk != null">
-	        product_pk,
-	      </if>
-	 	<if test="departure_date != null">
-	        departure_date,
-	      </if>
-	 	<if test="days != null">
-	        days,
-	      </if>
-	 	<if test="receivable != null">
-	        receivable,
-	      </if>
-	 	<if test="adult_count != null">
-	        adult_count,
-	      </if>
-	 	<if test="adult_cost != null">
-	        adult_cost,
-	      </if>
-	 	<if test="special_count != null">
-	        special_count,
-	      </if>
-	 	<if test="special_cost != null">
-	        special_cost,
-	      </if>
-	 	<if test="fy != null">
-	        fy,
-	      </if>
-	 	<if test="other_cost != null">
-	        other_cost,
-	      </if>
-	 	<if test="other_cost_comment != null">
-	        other_cost_comment,
-	      </if>
-	 	<if test="comment != null">
-	        comment,
-	      </if>
-	 	<if test="update_user != null">
-	        update_user,
-	      </if>
-	 	<if test="pk != null">
-	        pk,
-	      </if>
-	 	<if test="independent_flg != null">
-	        independent_flg,
-	      </if>
-	 	<if test="confirm_flg != null">
-	        confirm_flg,
-	      </if>
-      <if test="create_time != null">
-        create_time,
-      </if>
-      <if test="update_time != null">
-        update_time,
-      </if>
-      <if test="create_user != null">
-        create_user,
-      </if>
-      <if test="confirm_date != null">
-        confirm_date,
-      </if>
-      <if test="confirm_file != null">
-        confirm_file,
-      </if>
-      <if test="name_list != null">
-        name_list,
-      </if>
-      <if test="air_ticket_cost != null">
-        air_ticket_cost,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-    	<if test="team_number != null">
-	        #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="client_employee_pk != null">
-	        #{client_employee_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="product_pk != null">
-	        #{product_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="departure_date != null">
-	        #{departure_date,jdbcType=VARCHAR},
-	      </if>
-    	<if test="days != null">
-	        #{days,jdbcType=INTEGER},
-	      </if>
-    	<if test="receivable != null">
-	        #{receivable,jdbcType=DECIMAL},
-	      </if>
-    	<if test="adult_count != null">
-	        #{adult_count,jdbcType=INTEGER},
-	      </if>
-    	<if test="adult_cost != null">
-	        #{adult_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="special_count != null">
-	        #{special_count,jdbcType=INTEGER},
-	      </if>
-    	<if test="special_cost != null">
-	        #{special_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="fy != null">
-	        #{fy,jdbcType=DECIMAL},
-	      </if>
-    	<if test="other_cost != null">
-	        #{other_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="other_cost_comment != null">
-	        #{other_cost_comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="comment != null">
-	        #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        #{pk,jdbcType=CHAR},
-	      </if>
-    	<if test="independent_flg != null">
-	        #{independent_flg,jdbcType=CHAR},
-	      </if>
-    	<if test="confirm_flg != null">
-	        #{confirm_flg,jdbcType=CHAR},
-	      </if>
-      <if test="create_time != null">
-        #{create_time,jdbcType=VARCHAR},
-      </if>
-       <if test="update_time != null">
-        #{update_time,jdbcType=VARCHAR},
-      </if>
-       <if test="create_user != null">
-        #{create_user,jdbcType=VARCHAR},
-      </if>
-       <if test="confirm_date != null">
-        #{confirm_date,jdbcType=VARCHAR},
-      </if>
-       <if test="confirm_file != null">
-        #{confirm_file,jdbcType=VARCHAR},
-      </if>
-       <if test="name_list != null">
-        #{name_list,jdbcType=VARCHAR},
-      </if>
-       <if test="air_ticket_cost != null">
-        #{air_ticket_cost,jdbcType=DECIMAL},
-      </if>
-    </trim>		
-  </insert>
-  
+<mapper namespace="com.xinchi.bean.mapper.BudgetStandardOrderMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.BudgetStandardOrderBean">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+		<result column="special_cost" property="special_cost" jdbcType="DECIMAL" />
+		<result column="fy" property="fy" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="other_cost_comment" property="other_cost_comment" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
+		<result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
+		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
+		<result column="name_list" property="name_list" jdbcType="VARCHAR" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+	</resultMap>
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.BudgetStandardOrderBean" >
-    update budget_standard_order
-    <set >
-    	<if test="team_number != null">
-	        team_number = #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="client_employee_pk != null">
-	        client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="product_pk != null">
-	        product_pk = #{product_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="departure_date != null">
-	        departure_date = #{departure_date,jdbcType=VARCHAR},
-	      </if>
-    	<if test="days != null">
-	        days = #{days,jdbcType=INTEGER},
-	      </if>
-    	<if test="receivable != null">
-	        receivable = #{receivable,jdbcType=DECIMAL},
-	      </if>
-    	<if test="adult_count != null">
-	        adult_count = #{adult_count,jdbcType=INTEGER},
-	      </if>
-    	<if test="adult_cost != null">
-	        adult_cost = #{adult_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="special_count != null">
-	        special_count = #{special_count,jdbcType=INTEGER},
-	      </if>
-    	<if test="special_cost != null">
-	        special_cost = #{special_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="fy != null">
-	        fy = #{fy,jdbcType=DECIMAL},
-	      </if>
-    	<if test="other_cost != null">
-	        other_cost = #{other_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="other_cost_comment != null">
-	        other_cost_comment = #{other_cost_comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="comment != null">
-	        comment = #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        update_user = #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-    	<if test="independent_flg != null">
-	        independent_flg = #{independent_flg,jdbcType=CHAR},
-	      </if>
-    	<if test="confirm_flg != null">
-	        confirm_flg = #{confirm_flg,jdbcType=CHAR},
-	      </if>
-      <if test="update_time != null">
-        update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-      <if test="create_user != null">
-        create_user = #{create_user,jdbcType=VARCHAR},
-      </if>
-      <if test="confirm_date != null">
-        confirm_date = #{confirm_date,jdbcType=VARCHAR},
-      </if>
-      <if test="confirm_file != null">
-        confirm_file = #{confirm_file,jdbcType=VARCHAR},
-      </if>
-      <if test="name_list != null">
-        name_list = #{name_list,jdbcType=VARCHAR},
-      </if>
-      <if test="air_ticket_cost != null">
-        air_ticket_cost = #{air_ticket_cost,jdbcType=DECIMAL},
-      </if>
-    </set>
-    where pk = #{pk,jdbcType=CHAR}
-  </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.BudgetStandardOrderBean" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from budget_standard_order
-   </select>
+	<sql id="Base_Column_List">
+
+		team_number,
+		client_employee_pk,
+		product_pk,
+		departure_date,
+		days,
+		receivable,
+		adult_count,
+		adult_cost,
+		special_count,
+		special_cost,
+		fy,
+		other_cost,
+		other_cost_comment,
+		comment,
+		update_user,
+		pk,
+		independent_flg,
+		confirm_flg,
+		operate_flg,
+		create_time,
+		update_time,
+		create_user,
+		confirm_date,
+		confirm_file,
+		name_list,
+		air_ticket_cost,
+		product_cost
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from budget_standard_order
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from budget_standard_order
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.BudgetStandardOrderBean">
+
+		insert into budget_standard_order
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk,
+			</if>
+			<if test="product_pk != null">
+				product_pk,
+			</if>
+			<if test="departure_date != null">
+				departure_date,
+			</if>
+			<if test="days != null">
+				days,
+			</if>
+			<if test="receivable != null">
+				receivable,
+			</if>
+			<if test="adult_count != null">
+				adult_count,
+			</if>
+			<if test="adult_cost != null">
+				adult_cost,
+			</if>
+			<if test="special_count != null">
+				special_count,
+			</if>
+			<if test="special_cost != null">
+				special_cost,
+			</if>
+			<if test="fy != null">
+				fy,
+			</if>
+			<if test="other_cost != null">
+				other_cost,
+			</if>
+			<if test="other_cost_comment != null">
+				other_cost_comment,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="independent_flg != null">
+				independent_flg,
+			</if>
+			<if test="confirm_flg != null">
+				confirm_flg,
+			</if>
+			<if test="operate_flg != null">
+				operate_flg,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="confirm_date != null">
+				confirm_date,
+			</if>
+			<if test="confirm_file != null">
+				confirm_file,
+			</if>
+			<if test="name_list != null">
+				name_list,
+			</if>
+			<if test="air_ticket_cost != null">
+				air_ticket_cost,
+			</if>
+			<if test="product_cost != null">
+				product_cost,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				#{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_pk != null">
+				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="departure_date != null">
+				#{departure_date,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				#{days,jdbcType=INTEGER},
+			</if>
+			<if test="receivable != null">
+				#{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="adult_count != null">
+				#{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="adult_cost != null">
+				#{adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="special_count != null">
+				#{special_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_cost != null">
+				#{special_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="fy != null">
+				#{fy,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				#{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost_comment != null">
+				#{other_cost_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="independent_flg != null">
+				#{independent_flg,jdbcType=CHAR},
+			</if>
+			<if test="confirm_flg != null">
+				#{confirm_flg,jdbcType=CHAR},
+			</if>
+			<if test="operate_flg != null">
+				#{operate_flg,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_date != null">
+				#{confirm_date,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_file != null">
+				#{confirm_file,jdbcType=VARCHAR},
+			</if>
+			<if test="name_list != null">
+				#{name_list,jdbcType=VARCHAR},
+			</if>
+			<if test="air_ticket_cost != null">
+				#{air_ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="product_cost != null">
+				#{product_cost,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.BudgetStandardOrderBean">
+		update budget_standard_order
+		<set>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_pk != null">
+				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="departure_date != null">
+				departure_date = #{departure_date,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				days = #{days,jdbcType=INTEGER},
+			</if>
+			<if test="receivable != null">
+				receivable = #{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="adult_count != null">
+				adult_count = #{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="adult_cost != null">
+				adult_cost = #{adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="special_count != null">
+				special_count = #{special_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_cost != null">
+				special_cost = #{special_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="fy != null">
+				fy = #{fy,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				other_cost = #{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost_comment != null">
+				other_cost_comment = #{other_cost_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="independent_flg != null">
+				independent_flg = #{independent_flg,jdbcType=CHAR},
+			</if>
+			<if test="confirm_flg != null">
+				confirm_flg = #{confirm_flg,jdbcType=CHAR},
+			</if>
+			<if test="operate_flg != null">
+				operate_flg = #{operate_flg,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_date != null">
+				confirm_date = #{confirm_date,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_file != null">
+				confirm_file = #{confirm_file,jdbcType=VARCHAR},
+			</if>
+			<if test="name_list != null">
+				name_list = #{name_list,jdbcType=VARCHAR},
+			</if>
+			<if test="air_ticket_cost != null">
+				air_ticket_cost = #{air_ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="product_cost != null">
+				product_cost = #{product_cost,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.BudgetStandardOrderBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from budget_standard_order
+	</select>
 </mapper>

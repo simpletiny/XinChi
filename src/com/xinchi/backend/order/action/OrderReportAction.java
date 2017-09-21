@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.OrderReportService;
-import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderReportDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
@@ -41,7 +40,7 @@ public class OrderReportAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			option.setSale_name(sessionBean.getUser_name());
+			option.setProduct_manager_number(sessionBean.getUser_number());
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();

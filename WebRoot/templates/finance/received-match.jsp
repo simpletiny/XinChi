@@ -37,7 +37,8 @@
 					<div class="form-group">
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: match">匹配</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: match">主营收入</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: matchOther">其他收入</button>
 								<button id = "btn-cancel" style="display:none" type="submit" class="btn btn-green col-md-1" data-bind="click: cancelMatch">取消匹配</button>
 							</div>
 						</div>
@@ -93,11 +94,11 @@
 								<td data-bind="text: $data.time"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: $data.comment"></td>
-								<!-- ko if: $data.match_flg =='Y' -->
-								<td style="color:green">已匹配</td>
+								<!-- ko if: $data.match_flg =='Y' || $data.match_flg =='O'-->
+								<td style="color:green" data-bind="text: $root.statusMapping[$data.match_flg]"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.match_flg =='N' -->
-								<td style="color:red">未匹配</td>
+								<td style="color:red" data-bind="text: $root.statusMapping[$data.match_flg]"></td>
 								<!-- /ko -->
 							</tr>
 						</tbody>

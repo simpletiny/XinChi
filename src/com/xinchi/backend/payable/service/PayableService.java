@@ -14,6 +14,8 @@ public interface PayableService {
 	@LogDescription(ignore = true)
 	public void insert(PayableBean payable);
 
+	public List<PayableBean> selectByParam(PayableBean payable);
+
 	@LogDescription(ignore = true)
 	public void updateByTeamNumber(String team_number);
 
@@ -31,4 +33,6 @@ public interface PayableService {
 
 	@LogDescription(ignore = true)
 	public void deletePayableByTeamNumber(String team_number);
+
+	public void deleteByPk(String pk);
 }

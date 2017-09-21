@@ -186,12 +186,13 @@ public class TicketAction extends BaseAction {
 				}
 				String[] arrName = names.split(";");
 				for (String name : arrName) {
-					if (name.length() < 2)
-						continue;
+
 					String[] info = name.split(":");
+					if (info.length < 2)
+						continue;
 					SaleOrderNameListBean nn = new SaleOrderNameListBean();
-					nn.setName(info[0]);
-					nn.setId(info[1]);
+					nn.setName(info[0].trim());
+					nn.setId(info[1].trim());
 					nameList.add(nn);
 				}
 

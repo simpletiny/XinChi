@@ -79,13 +79,17 @@
 								<th>产品名称</th>
 								<th>天数</th>
 								<th>同业报价</th>
-								<th>销售利润</th>
+								<th>产品分值</th>
 								<th>最大让利</th>
 								<th>现结立减</th>
 								<th>产品活动</th>
 								<th>注意事项</th>
 								<th>产品编号</th>
 								<th>机票信息</th>
+								<th>机票成本</th>
+								<th>其它成本</th>
+								<th>毛利</th>
+								<th>毛利率</th>
 								<th>产品经理</th>
 							</tr>
 						</thead>
@@ -96,13 +100,17 @@
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.business_price"></td>
-								<td data-bind="text: $data.profit_space"></td>
+								<td data-bind="text: $data.product_value"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
 								<td></td>
 								<td></td>
 								<td></td>
 								<td data-bind="text: $data.product_number"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
+								<td data-bind="text: $data.air_ticket_cost"></td>
+								<td data-bind="text: $data.other_cost"></td>
+								<td data-bind="text: $data.gross_profit"></td>
+								<td data-bind="text: $data.gross_profit_rate+'%'"></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>

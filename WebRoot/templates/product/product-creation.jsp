@@ -12,6 +12,26 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<style>
+#table-supplier th,#table-supplier td {
+	text-align: center;
+}
+
+#table-supplier tr td input {
+	width: 90%;
+}
+
+#table-supplier {
+	border-collapse: separate;
+	border-spacing: 0px 10px;
+}
+
+.required th[class="r"]:after {
+	content: " *";
+	color: red;
+	font-weight: bold;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -29,14 +49,13 @@
 						<div class="col-md-6 required">
 							<label class="l">产品名称</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8"  name="product.name" required="required" />
+								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8" name="product.name" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">产品线</label>
 							<div class="ip">
-								<select class="form-control" style="height: 34px" data-bind="options: locations,value:product().location, optionsCaption: '--请选择--'" name="product.location"
-									required="required"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: locations,value:product().location, optionsCaption: '--请选择--'" name="product.location" required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -50,22 +69,98 @@
 						<div class="col-md-6 required">
 							<label class="l">同业价格</label>
 							<div class="ip">
-								<input type="number" class="ip-" data-bind="value: product().business_price" placeholder="同业价格" name="product.business_price" required="required" />
+								<input type="number" class="ip-" id="business-price" onkeyup="caculateGrossProfit()" data-bind="value: product().business_price" placeholder="同业价格" name="product.business_price" required="required" />
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">销售利润</label>
+						<div class="col-md-6 required">
+							<label class="l">产品分值</label>
 							<div class="ip">
-								<input type="number" class="ip-" data-bind="value: product().profit_space" placeholder="销售利润" name="product.profit_space" />
+								<input type="number" class="ip-" max="5" value="1" min="0" required ="required" value="1" data-bind="value: product().product_value" placeholder="产品分值" name="product.product_value" />
+							</div>
+						</div>
+						<div class="col-md-6 required">
+							<label class="l">最大让利</label>
+							<div class="ip">
+								<input type="number" class="ip-" required ="required" id="max-profit-substract" onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利" name="product.max_profit_substract" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6 required">
+							<label class="l">机票成本</label>
+							<div class="ip">
+								<input type="number" class="ip-" required ="required" id="air-ticket-cost" onkeyup="caculateGrossProfit()" data-bind="value: product().air_ticket_cost" placeholder="机票成本" name="product.air_ticket_cost" />
+							</div>
+						</div>
+						<div class="col-md-6 required">
+							<label class="l">其它成本</label>
+							<div class="ip">
+								<input type="number" class="ip-" required ="required" data-bind="value: product().other_cost" id="other-cost" placeholder="自动汇总" name="product.other_cost" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6 required">
+							<label class="l">产品毛利</label>
+							<div class="ip">
+								<input type="number" class="ip-" id="gross-profit" required ="required" data-bind="value: product().gross_profit" placeholder="产品毛利" name="product.gross_profit" />
 							</div>
 						</div>
 						<div class="col-md-6">
-							<label class="l">最大让利</label>
-							<div class="ip">
-								<input type="number" class="ip-" data-bind="value: product().max_profit_substract" placeholder="最大让利" name="product.max_profit_substract"/>
-							</div>
+							<label class="l">毛利率</label>
+							 <div class="ip"><p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"  name="product.gross_profit_rate" ></p></div>
+						</div>
+					</div>
+					<hr />
+					<h3>供应商信息</h3>
+					<div style="margin-top: 20px;">
+						<table style="width: 90%" id="table-supplier">
+							<thead>
+								<tr class="required">
+									<th style="width: 5%">序号</th>
+									<th class="r" style="width: 10%">供应商</th>
+									<th class="r" style="width: 10%">产品名称</th>
+									<th class="r" style="width: 5%">价格</th>
+									<th class="r" style="width: 9%">接团天次</th>
+									<th style="width: 10%">接团方式</th>
+									<th style="width: 10%">接团人</th>
+									<th style="width: 10%">联系方式</th>
+									<th class="r" style="width: 9%">送团天次</th>
+									<th style="width: 10%">送团方式</th>
+									<th style="width: 2%"></th>
+								</tr>
+								<!-- 						<tr class="required">
+							<th class="r" style="width: 10%">序号</th>
+							<th class="r" style="width: 20%">供应商</th>
+							<th class="r" style="width: 9%">接团天次</th>
+							<th class="r" style="width: 20%">接团方式</th>
+							<th class="r" style="width: 10%">接团人</th>
+							<th class="r" style="width: 20%">联系方式</th>
+							<th class="r" style="width: 9%">送团天次</th>
+							<th style="width: 2%"></th>
+						</tr> -->
+							</thead>
+							<tbody>
+								<tr>
+									<td st="index">1</td>
+									<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" />
+									<input type="text" class="need" st="supplier-pk" style="display: none" /></td>
+									<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
+									<td><input class="need" onkeyup="caculateOtherCost()" st="supplier-cost" type="number" /></td>
+									<td><input class="need" st="land-day" type="number" /></td>
+									<td><input st="pick-type" maxlength="50" type="text" /></td>
+									<td><input st="picker" maxlength="10" type="text" /></td>
+									<td><input st="picker-cellphone" maxlength="15" type="number" /></td>
+									<td><input class="need" st="off-day" type="number" /></td>
+									<td><input st="send-type" maxlength="50" type="text" /></td>
+									<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="margin-top: 20px; padding-left: 200px">
+							<input type="button" value="添加供应商" onclick="addRow()"></input>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
@@ -80,6 +175,51 @@
 
 				<div align="right">
 					<a type="submit" class="btn btn-green btn-r" data-bind="click: createProduct">保存</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="supplier-pick" style="display: none;">
+		<div class="main-container">
+			<div class="main-box" style="width: 600px">
+				<div class="form-group">
+					<div class="span8">
+						<label class="col-md-2 control-label">姓名</label>
+						<div class="col-md-6">
+							<input type="text" id="supplier_name" class="form-control" placeholder="姓名" />
+						</div>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>姓名</th>
+								<th>财务主体</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: supplierEmployees">
+							<tr data-bind="event: {click: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
+								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.financial_body_name"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNums -->
+						<!-- ko if: $data == $root.currentPage() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPage() -->
+						<a data-bind="text: $data, click: $root.turnPage"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+					</div>
 				</div>
 			</div>
 		</div>

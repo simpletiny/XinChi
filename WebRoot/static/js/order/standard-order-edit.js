@@ -14,6 +14,9 @@ var OrderContext = function() {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bsOrder);
+		if (self.order().name_list_lock == '1')
+			$("#txt-name-list").disabled();
+
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
 		}
@@ -234,8 +237,8 @@ function formatNameList(txt) {
 		var name = names[i];
 		nameList = nameList.replace(name, ";" + name + ":");
 	}
-	nameList = nameList.replace(";","")+";";
-	
+	nameList = nameList.replace(";", "") + ";";
+
 	var names = nameList.split(";");
 	var newNameList = "";
 	for ( var i = 0; i < names.length; i++) {

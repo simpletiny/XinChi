@@ -5,7 +5,8 @@ var DetailContext = function() {
 	self.allStatus = [ 'N', 'Y' ];
 	self.statusMapping = {
 		'N' : '未匹配',
-		'Y' : '已匹配'
+		'Y' : '已匹配',
+		'O' : '其他收入'
 	};
 	self.chosenStatus = ko.observable('N');
 	self.chosenDetails = ko.observableArray([]);
@@ -40,7 +41,7 @@ var DetailContext = function() {
 		});
 	};
 
-	// 匹配
+	// 匹配主营业务收入
 	self.match = function() {
 		if (self.chosenDetails().length == 0) {
 			fail_msg("请选择收入");
@@ -49,9 +50,48 @@ var DetailContext = function() {
 			fail_msg("只能选择一笔收入");
 			return;
 		} else if (self.chosenDetails().length == 1) {
-			window.location.href = self.apiurl + "templates/finance/do-match.jsp?key=" + self.chosenDetails();
+			var key = self.chosenDetails()[0];
+			self.chosenDetails.removeAll();
+			window.open(self.apiurl + "templates/finance/do-match.jsp?key=" + key,'_blank');
 		}
+	};
+	// 匹配其他收入
+	self.matchOther = function() {
+		if (self.chosenDetails().length == 0) {
+			fail_msg("请选择收入");
+			return;
+		} else if (self.chosenDetails().length > 1) {
+			fail_msg("只能选择一笔收入");
+			return;
+		} else if (self.chosenDetails().length == 1) {
 
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认标记为其他收入吗?',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						startLoadingSimpleIndicator("保存中...");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'finance/matchOtherReceived',
+							data : "detailId=" + self.chosenDetails()
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.search();
+							} else {
+								fail_msg(str);
+							}
+							self.chosenDetails.removeAll();
+						});
+						layer.close(index);
+					}
+				}
+			});
+		}
 	};
 	// 取消匹配
 	self.cancelMatch = function() {

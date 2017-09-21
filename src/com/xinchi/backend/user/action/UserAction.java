@@ -161,6 +161,14 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String checkPassword(){
+		resultStr = userService.checkPassword(ucb);
+		return SUCCESS;
+	}
+	public String changePassword(){
+		resultStr = userService.changePassword(ucb);
+		return SUCCESS;
+	}
 	@JSON(serialize = false)
 	public UserBaseBean getUbb() {
 		return ubb;

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductSupplierMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductSupplierBean">
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="supplier_index" property="supplier_index" jdbcType="INTEGER" />
+		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
+		<result column="supplier_cost" property="supplier_cost" jdbcType="DECIMAL" />
+		<result column="land_day" property="land_day" jdbcType="INTEGER" />
+		<result column="pick_type" property="pick_type" jdbcType="VARCHAR" />
+		<result column="picker" property="picker" jdbcType="VARCHAR" />
+		<result column="picker_cellphone" property="picker_cellphone" jdbcType="VARCHAR" />
+		<result column="off_day" property="off_day" jdbcType="INTEGER" />
+		<result column="send_type" property="send_type" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		product_pk,
+		supplier_employee_pk,
+		supplier_index,
+		supplier_product_name,
+		supplier_cost,
+		land_day,
+		pick_type,
+		picker,
+		picker_cellphone,
+		off_day,
+		send_type,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_supplier
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByProductPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.product_pk,
+		A.supplier_employee_pk,
+		A.supplier_index,
+		A.supplier_product_name,
+		A.supplier_cost,
+		A.land_day,
+		A.pick_type,
+		A.picker,
+		A.picker_cellphone,
+		A.off_day,
+		A.send_type,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.name AS supplier_employee_name
+		from
+		product_supplier A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		where A.product_pk = #{product_pk,jdbcType=CHAR}
+		ORDER BY
+		supplier_index
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_supplier
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<delete id="deleteByProductPk" parameterType="java.lang.String">
+		delete from product_supplier
+		where product_pk = #{product_pk,jdbcType=CHAR}
+	</delete>
+
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductSupplierBean">
+
+		insert into product_supplier
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="product_pk != null">
+				product_pk,
+			</if>
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk,
+			</if>
+			<if test="supplier_index != null">
+				supplier_index,
+			</if>
+			<if test="supplier_product_name != null">
+				supplier_product_name,
+			</if>
+			<if test="supplier_cost != null">
+				supplier_cost,
+			</if>
+			<if test="land_day != null">
+				land_day,
+			</if>
+			<if test="pick_type != null">
+				pick_type,
+			</if>
+			<if test="picker != null">
+				picker,
+			</if>
+			<if test="picker_cellphone != null">
+				picker_cellphone,
+			</if>
+			<if test="off_day != null">
+				off_day,
+			</if>
+			<if test="send_type != null">
+				send_type,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="product_pk != null">
+				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_employee_pk != null">
+				#{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_index != null">
+				#{supplier_index,jdbcType=INTEGER},
+			</if>
+			<if test="supplier_product_name != null">
+				#{supplier_product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_cost != null">
+				#{supplier_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="land_day != null">
+				#{land_day,jdbcType=INTEGER},
+			</if>
+			<if test="pick_type != null">
+				#{pick_type,jdbcType=VARCHAR},
+			</if>
+			<if test="picker != null">
+				#{picker,jdbcType=VARCHAR},
+			</if>
+			<if test="picker_cellphone != null">
+				#{picker_cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="off_day != null">
+				#{off_day,jdbcType=INTEGER},
+			</if>
+			<if test="send_type != null">
+				#{send_type,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductSupplierBean">
+		update product_supplier
+		<set>
+			<if test="product_pk != null">
+				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_index != null">
+				supplier_index = #{supplier_index,jdbcType=INTEGER},
+			</if>
+			<if test="supplier_product_name != null">
+				supplier_product_name = #{supplier_product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_cost != null">
+				supplier_cost = #{supplier_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="land_day != null">
+				land_day = #{land_day,jdbcType=INTEGER},
+			</if>
+			<if test="pick_type != null">
+				pick_type = #{pick_type,jdbcType=VARCHAR},
+			</if>
+			<if test="picker != null">
+				picker = #{picker,jdbcType=VARCHAR},
+			</if>
+			<if test="picker_cellphone != null">
+				picker_cellphone = #{picker_cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="off_day != null">
+				off_day = #{off_day,jdbcType=INTEGER},
+			</if>
+			<if test="send_type != null">
+				send_type = #{send_type,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductSupplierBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_supplier
+	</select>
+</mapper>

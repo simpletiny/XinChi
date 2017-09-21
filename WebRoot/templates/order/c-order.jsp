@@ -20,6 +20,15 @@ tr td {
 	white-space: nowrap;
 	text-align: left
 }
+.download-panel {
+	position: absolute;
+	background: #FFEC8B;
+	border: solid 1px red;
+	z-index: 200;
+	width:150px;
+	height:50px;
+	text-align: center;
+}
 </style>
 </head>
 <body>
@@ -120,6 +129,7 @@ tr td {
 								<th>产品经理</th>
 								<th>确认件</th>
 								<th>备注</th>
+								<th>文件下载</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
@@ -134,7 +144,7 @@ tr td {
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
-								<td></td>
+								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">查看</a></td>
 								<td data-bind="text: $data.back_days"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.receivable"></td>
@@ -146,6 +156,7 @@ tr td {
 								<!-- ko if: $data.comment!=null && $data.comment!=''-->
 								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
 								<!-- /ko -->
+								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>
 								</s:if>

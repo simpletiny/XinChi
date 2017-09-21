@@ -187,4 +187,21 @@ public class UserServiceImpl implements UserService {
 		return "success";
 	}
 
+	@Override
+	public String checkPassword(UserCommonBean ucb) {
+		UserBaseBean user = dao.selectByPrimaryKey(ucb.getPk());
+		if (user.getPassword().equals(SimpletinyString.MD5(ucb.getPassword()))) {
+			return SUCCESS;
+		} else {
+			return FAIL;
+		}
+	}
+
+	@Override
+	public String changePassword(UserCommonBean ucb) {
+		UserBaseBean user = dao.selectByPrimaryKey(ucb.getPk());
+		user.setPassword(SimpletinyString.MD5(ucb.getPassword()));
+		dao.update(user);
+		return SUCCESS;
+	}
 }

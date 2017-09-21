@@ -15,7 +15,9 @@ import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
+import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ReceivableBean;
@@ -164,9 +166,16 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		return SUCCESS;
 	}
 
+	@Autowired
+	private AirTicketOrderService airTicketOrderService;
+
 	@Override
 	public BudgetNonStandardOrderBean selectByPrimaryKey(String id) {
-		return dao.selectByPrimaryKey(id);
+		BudgetNonStandardOrderBean order = dao.selectByPrimaryKey(id);
+		AirTicketOrderBean ticketOrder = airTicketOrderService.selectBySaleOrderPk(id);
+		if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
+			order.setName_list_lock("1");
+		return order;
 	}
 
 	@Override

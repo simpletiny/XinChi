@@ -16,7 +16,7 @@ String key = request.getParameter("key");
 <div class="main-body">
 <jsp:include page="../layout.jsp" />
     <div class="subtitle">
-        <h2>收入<a href="<%=basePath %>/templates/finance/detail.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
+        <h2>财务收入<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a></h2>
     </div>
    
     <div class="main-container">
@@ -36,7 +36,7 @@ String key = request.getParameter("key");
                 <div class="input-row clearfloat">
 					 <div class="col-md-6 required">
                         <label class="l">收入金额</label>
-                        <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money" placeholder="收入金额" name="detail.money" required="required"/></div>
+                        <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money"  max="100" placeholder="收入金额" name="detail.money" required="required"/></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">

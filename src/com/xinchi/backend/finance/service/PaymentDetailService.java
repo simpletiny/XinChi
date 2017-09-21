@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "银行流水")
-public interface PaymentDetailService {
+public interface PaymentDetailService extends BaseService {
 	@LogDescription(des = "新建银行流水")
 	public String insert(PaymentDetailBean bo);
 
@@ -36,4 +37,6 @@ public interface PaymentDetailService {
 
 	@LogDescription(ignore = true)
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number);
+
+	public String update(PaymentDetailBean thisDetail);
 }

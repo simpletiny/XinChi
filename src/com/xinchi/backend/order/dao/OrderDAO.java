@@ -8,5 +8,8 @@ import com.xinchi.tools.Page;
 public interface OrderDAO {
 
 	public List<OrderDto> selectTbcByPage(Page<OrderDto> page);
+
 	public List<OrderDto> selectCByPage(Page<OrderDto> page);
+
+	public OrderDto selectByTeamNumber(String team_number);
 }

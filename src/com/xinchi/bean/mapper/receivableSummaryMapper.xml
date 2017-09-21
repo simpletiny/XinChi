@@ -22,6 +22,10 @@
 	    <result column="bad_month_budget_balance" property="bad_month_budget_balance" jdbcType="DECIMAL" />
 	    <result column="bad_month_final_balance" property="bad_month_final_balance" jdbcType="DECIMAL" />
 	    <result column="bad_month_balance" property="bad_month_balance" jdbcType="DECIMAL" />
+	    <result column="before_count" property="before_count" jdbcType="BIGINT" />
+	    <result column="before_budget_balance" property="before_budget_balance" jdbcType="DECIMAL" />
+	    <result column="before_final_balance" property="before_final_balance" jdbcType="DECIMAL" />
+	    <result column="before_balance" property="before_balance" jdbcType="DECIMAL" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -45,7 +49,11 @@
     	bad_month_count, 
     	bad_month_budget_balance, 
     	bad_month_final_balance, 
-    	bad_month_balance
+    	bad_month_balance,
+    	before_count, 
+    	before_budget_balance, 
+    	before_final_balance, 
+    	before_balance
   </sql>
    <select id="selectReceivableSummary" parameterType="com.xinchi.bean.ReceivableSummaryBean" resultMap="BaseResultMap">
    select 
@@ -68,7 +76,11 @@
 	sum(bad_month_count) AS bad_month_count,
 	sum(bad_month_budget_balance) AS bad_month_budget_balance,
 	sum(bad_month_final_balance) AS bad_month_final_balance,
-	sum(bad_month_balance) AS bad_month_balance
+	sum(bad_month_balance) AS bad_month_balance,
+	sum(before_count) AS before_count,
+	sum(before_budget_balance) AS before_budget_balance,
+	sum(before_final_balance) AS before_final_balance,
+	sum(before_balance) AS before_balance
     from receivable_summary
    </select>
    

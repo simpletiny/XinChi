@@ -19,8 +19,6 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private Integer days;
 
-	private BigDecimal profit_space;
-
 	private BigDecimal max_profit_substract;
 
 	private BigDecimal business_price;
@@ -36,6 +34,13 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private String update_user;
 	private String air_ticket_charge;
+
+	private BigDecimal air_ticket_cost;
+	private BigDecimal other_cost;
+	private BigDecimal gross_profit;
+	private float gross_profit_rate;
+
+	private Integer product_value;
 
 	public String getName() {
 		return name;
@@ -67,14 +72,6 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setDays(Integer days) {
 		this.days = days;
-	}
-
-	public BigDecimal getProfit_space() {
-		return profit_space;
-	}
-
-	public void setProfit_space(BigDecimal profit_space) {
-		this.profit_space = profit_space;
 	}
 
 	public BigDecimal getMax_profit_substract() {
@@ -157,5 +154,44 @@ public class ProductBean extends SupperBO implements Serializable {
 		this.locations = locations;
 	}
 
+	public BigDecimal getAir_ticket_cost() {
+		return air_ticket_cost;
+	}
+
+	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
+		this.air_ticket_cost = air_ticket_cost;
+	}
+
+	public BigDecimal getOther_cost() {
+		return other_cost;
+	}
+
+	public void setOther_cost(BigDecimal other_cost) {
+		this.other_cost = other_cost;
+	}
+
+	public BigDecimal getGross_profit() {
+		return gross_profit;
+	}
+
+	public void setGross_profit(BigDecimal gross_profit) {
+		this.gross_profit = gross_profit;
+	}
+
+	public float getGross_profit_rate() {
+		return gross_profit_rate;
+	}
+
+	public void setGross_profit_rate(float gross_profit_rate) {
+		this.gross_profit_rate = gross_profit_rate;
+	}
+
+	public Integer getProduct_value() {
+		return product_value;
+	}
+
+	public void setProduct_value(Integer product_value) {
+		this.product_value = product_value;
+	}
 
 }

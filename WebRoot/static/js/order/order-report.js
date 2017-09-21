@@ -29,7 +29,7 @@ var ProductBoxContext = function() {
 
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 10;
+	self.perPage = 20;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

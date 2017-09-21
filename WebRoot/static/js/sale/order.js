@@ -3,22 +3,20 @@ var OrderContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenOrders = ko.observableArray([]);
 	self.createOrder = function() {
-		window.location.href = self.apiurl
-				+ "templates/sale/order-creation.jsp";
+		window.location.href = self.apiurl + "templates/sale/order-creation.jsp";
 	};
 
 	self.orders = ko.observable({
 		total : 0,
 		items : []
 	});
-	
+
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	var x = new Date();
-	//self.dateTo(x.Format("yyyy-MM-")+x.getDaysInMonth());
 	self.dateTo(x.Format("yyyy-MM-dd"));
 	self.dateFrom(x.Format("yyyy-MM-dd"));
-	
+
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 	self.totalReceivable = ko.observable(0);
@@ -32,33 +30,31 @@ var OrderContext = function() {
 		var totalPayable = 0;
 		var totalProfit = 0;
 		var totalPerProfit = 0;
-		
-		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchOrderByPage', param,
-				function(data) {
-					self.orders(data.orders);
 
-					// 计算合计
-					$(self.orders()).each(function(idx, data) {
-						totalPeople += data.people_count;
-						totalReceivable += data.receivable;
-						totalPayable += data.payable;
-						totalProfit += data.gross_profit;
-					});
-					
-					self.totalPeople(totalPeople);
-					self.totalReceivable(totalReceivable);
-					self.totalPayable(totalPayable);
-					self.totalProfit(totalProfit);
-					self.totalPerProfit((totalProfit/totalPeople).toFixed(2));
-					
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-					
-					$(".rmb").formatCurrency();
-				});
+		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchOrderByPage', param, function(data) {
+			self.orders(data.orders);
+
+			// 计算合计
+			$(self.orders()).each(function(idx, data) {
+				totalPeople += data.people_count;
+				totalReceivable += data.receivable;
+				totalPayable += data.payable == null ? 0 : data.payable;
+				totalProfit += data.gross_profit== null ? 0 : data.gross_profit;
+			});
+
+			self.totalPeople(totalPeople);
+			self.totalReceivable(totalReceivable);
+			self.totalPayable(totalPayable);
+			self.totalProfit(totalProfit);
+			self.totalPerProfit((totalProfit / totalPeople).toFixed(2));
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+
+			$(".rmb").formatCurrency();
+		});
 	};
 
 	// 销售信息
@@ -96,16 +92,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/sale/order-edit.jsp?key="
-					+ self.chosenOrders()[0];
+			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl
-				+ "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -142,8 +135,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

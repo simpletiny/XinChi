@@ -75,6 +75,9 @@
 		<mapper resource="com/xinchi/bean/mapper/airTicketNameListMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/passengerTicketInfoMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/innerTransferMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productOrderOperationMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

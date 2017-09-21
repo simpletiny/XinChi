@@ -32,7 +32,8 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String comment;
 	private String inner_flg;
 	private String inner_pk;
-
+	
+	private String finance_flg;
 	private String month;
 	// 凭证号
 	private String voucher_number;
@@ -268,6 +269,14 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setExchange_flg(String exchange_flg) {
 		this.exchange_flg = exchange_flg;
+	}
+
+	public String getFinance_flg() {
+		return finance_flg;
+	}
+
+	public void setFinance_flg(String finance_flg) {
+		this.finance_flg = finance_flg;
 	}
 
 }

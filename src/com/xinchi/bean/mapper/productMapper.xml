@@ -6,7 +6,7 @@
 		<result column="product_number" property="product_number" jdbcType="VARCHAR" />
 		<result column="location" property="location" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
-		<result column="profit_space" property="profit_space" jdbcType="DECIMAL" />
+	
 		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
 		<result column="business_price" property="business_price" jdbcType="DECIMAL" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
@@ -18,6 +18,12 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="air_ticket_charge" property="air_ticket_charge" jdbcType="VARCHAR" />
+		
+		<result column="product_value" property="product_value" jdbcType="INTEGER" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
+		<result column="gross_profit_rate" property="gross_profit_rate" jdbcType="FLOAT" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -26,7 +32,6 @@
 		product_number,
 		location,
 		days,
-		profit_space,
 		max_profit_substract,
 		business_price,
 		product_manager,
@@ -37,7 +42,12 @@
 		update_user,
 		create_time,
 		update_time,
-		air_ticket_charge
+		air_ticket_charge,
+		air_ticket_cost,
+		other_cost,
+		gross_profit,
+		gross_profit_rate,
+		product_value
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -67,9 +77,6 @@
 			</if>
 			<if test="days != null">
 				days,
-			</if>
-			<if test="profit_space != null">
-				profit_space,
 			</if>
 			<if test="max_profit_substract != null">
 				max_profit_substract,
@@ -104,6 +111,21 @@
 			<if test="air_ticket_charge != null">
 				air_ticket_charge,
 			</if>
+			<if test="air_ticket_cost != null">
+				air_ticket_cost,
+			</if>
+			<if test="other_cost != null">
+				other_cost,
+			</if>
+			<if test="gross_profit != null">
+				gross_profit,
+			</if>
+			<if test="gross_profit_rate != null">
+				gross_profit_rate,
+			</if>
+			<if test="product_value != null">
+				product_value,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -117,9 +139,6 @@
 			</if>
 			<if test="days != null">
 				#{days,jdbcType=INTEGER},
-			</if>
-			<if test="profit_space != null">
-				#{profit_space,jdbcType=DECIMAL},
 			</if>
 			<if test="max_profit_substract != null">
 				#{max_profit_substract,jdbcType=DECIMAL},
@@ -154,6 +173,22 @@
 			<if test="air_ticket_charge != null">
 				#{air_ticket_charge,jdbcType=VARCHAR},
 			</if>
+			
+			<if test="air_ticket_cost != null">
+				#{air_ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				#{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit != null">
+				#{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit_rate != null">
+				#{gross_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="product_value != null">
+				#{product_value,jdbcType=FLOAT},
+			</if>
 		</trim>
 	</insert>
 
@@ -172,9 +207,6 @@
 			</if>
 			<if test="days != null">
 				days = #{days,jdbcType=INTEGER},
-			</if>
-			<if test="profit_space != null">
-				profit_space = #{profit_space,jdbcType=DECIMAL},
 			</if>
 			<if test="max_profit_substract != null">
 				max_profit_substract = #{max_profit_substract,jdbcType=DECIMAL},
@@ -206,6 +238,22 @@
 			<if test="air_ticket_charge != null">
 				air_ticket_charge = #{air_ticket_charge,jdbcType=VARCHAR},
 			</if>
+			
+			<if test="air_ticket_cost != null">
+				air_ticket_cost = #{air_ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				other_cost = #{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit != null">
+				gross_profit =#{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit_rate != null">
+				gross_profit_rate = #{gross_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="product_value != null">
+				product_value = #{product_value,jdbcType=FLOAT},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -234,7 +282,6 @@
 		A.product_number,
 		A.location,
 		A.days,
-		A.profit_space,
 		A.max_profit_substract,
 		A.business_price,
 		B.user_name AS product_manager,
@@ -245,7 +292,12 @@
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		A.air_ticket_charge
+		A.air_ticket_charge,
+		A.air_ticket_cost,
+		A.other_cost,
+		A.gross_profit,
+		A.gross_profit_rate,
+		A.product_value
 		from product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number
 		<where>

@@ -16,11 +16,25 @@ var ReportContext = function() {
 		items : []
 	});
 
+	self.totalAdult = ko.observable();
+	self.totalSpecial = ko.observable();
 	self.refresh = function() {
+		var totalAdult = 0;
+		var totalSpecial = 0;
 		var param = $('form').serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductReportByPage', param, function(data) {
 			self.reports(data.reports);
+
+			$(self.reports()).each(function(idx, data) {
+				totalAdult += data.adult_count - 0;
+				if (data.special_count != null) {
+					totalSpecial += data.special_count - 0;
+				}
+			});
+
+			self.totalAdult(totalAdult);
+			self.totalSpecial(totalSpecial);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());

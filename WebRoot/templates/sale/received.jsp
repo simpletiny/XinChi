@@ -12,7 +12,9 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
-			<style>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
+<style>
 .form-group {
 	margin-bottom: 5px;
 }
@@ -32,7 +34,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-		
+
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
@@ -50,6 +52,21 @@
 					</div>
 					<div class="form-group">
 						<div align="left">
+							<label class="col-md-1 control-label">账户</label>
+							<div class="col-md-2" style="float: left">
+								<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" name="detail.card_account"></select>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">出团月份</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control month-picker-st" onblur="baseMonth(this)" placeholder="出团月份" name="detail.month" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div align="left">
 							<label class="col-md-1 control-label">收入日期</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="detail.date_from" />
@@ -60,6 +77,15 @@
 								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="detail.date_to" />
 							</div>
 						</div>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+							<div class="span6">
+								<label class="col-md-1 control-label">销售</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',click:refresh, optionsCaption: '--全部--'"
+										name="detail.create_user"></select>
+								</div>
+							</div>
+						</s:if>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
@@ -78,6 +104,9 @@
 								<th>摘要</th>
 								<th>填报日期</th>
 								<th>入账日期</th>
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+									<th>销售</th>
+								</s:if>
 								<th>状态</th>
 							</tr>
 						</thead>
@@ -107,6 +136,10 @@
 								<!-- ko if:$data.status=='E' -->
 								<td data-bind="text: moment($data.confirm_time).format('YYYY-MM-DD')"></td>
 								<!-- /ko -->
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+									<td data-bind="text: $data.user_name"></td>
+								</s:if>
+
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 							</tr>
 						</tbody>
@@ -238,6 +271,8 @@
 		$(".sale").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/sale/received.js"></script>
 </body>

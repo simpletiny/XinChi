@@ -36,7 +36,13 @@
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
 	</resultMap>
+
+	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from budget_order_view
+		where team_number =	#{team_number,jdbcType=VARCHAR}
+	</select>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select * from budget_order_view
@@ -60,6 +66,7 @@
 		</where>
 		ORDER BY departure_date DESC
 	</select>
+
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		team_number,
@@ -90,9 +97,12 @@
 		confirm_file,
 		standard_flg,
 		air_ticket_cost,
-		IF(ISNULL(adult_count),0,adult_count)+ IF(ISNULL(special_count),0,special_count) AS people_count,
+		product_cost,
+		IF(ISNULL(adult_count),0,adult_count)+
+		IF(ISNULL(special_count),0,special_count) AS people_count,
 		case when departure_date>now() then '未出团'
-		when now()>=departure_date and DATE_ADD(departure_date,interval days-1 day) > now() then '出团中'
+		when now()>=departure_date and
+		DATE_ADD(departure_date,interval days-1 day) > now() then '出团中'
 		when now()>=DATE_ADD(departure_date,interval days-1 day) then '已回团'
 		end
 		AS status,

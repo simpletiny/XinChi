@@ -51,6 +51,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String confirm_date;
 
 	private BigDecimal air_ticket_cost;
+	private BigDecimal product_cost;
 	private String status;
 	private String back_days;
 	private String people_count;
@@ -333,6 +334,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
 		this.air_ticket_cost = air_ticket_cost;
+	}
+
+	public BigDecimal getProduct_cost() {
+		return product_cost;
+	}
+
+	public void setProduct_cost(BigDecimal product_cost) {
+		this.product_cost = product_cost;
 	}
 
 }

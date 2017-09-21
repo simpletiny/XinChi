@@ -466,7 +466,7 @@ var OrderContext = function() {
 					if (str != "OK") {
 						fail_msg("申请失败，请联系管理员");
 					}
-					
+
 					self.search();
 					endLoadingIndicator();
 				}
@@ -542,7 +542,7 @@ var OrderContext = function() {
 		var totalBudgetBalance = 0;
 		var totalBalance = 0;
 		var totalFinalBalance = 0;
-		
+
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
@@ -551,7 +551,7 @@ var OrderContext = function() {
 				self.store(self.store().concat(self.receivables()));
 				pages.push(self.currentPage());
 			}
-			
+
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -607,6 +607,11 @@ var OrderContext = function() {
 		return true;
 	};
 
+	self.zeroBalance = function() {
+		self.refresh();
+		return true;
+	};
+
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
@@ -621,7 +626,7 @@ var OrderContext = function() {
 
 	});
 	self.search = function() {
-		pages=new Array();
+		pages = new Array();
 		self.chosenOrders.removeAll();
 		self.store.removeAll();
 		self.refresh();

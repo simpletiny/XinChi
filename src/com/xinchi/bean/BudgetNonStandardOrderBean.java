@@ -54,6 +54,13 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private BigDecimal air_ticket_cost;
 
+	private BigDecimal product_cost;
+
+	// 名单是否被锁定
+	private String name_list_lock = "0";
+
+	private String operate_flg;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -244,6 +251,30 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
 		this.air_ticket_cost = air_ticket_cost;
+	}
+
+	public String getName_list_lock() {
+		return name_list_lock;
+	}
+
+	public void setName_list_lock(String name_list_lock) {
+		this.name_list_lock = name_list_lock;
+	}
+
+	public String getOperate_flg() {
+		return operate_flg;
+	}
+
+	public void setOperate_flg(String operate_flg) {
+		this.operate_flg = operate_flg;
+	}
+
+	public BigDecimal getProduct_cost() {
+		return product_cost;
+	}
+
+	public void setProduct_cost(BigDecimal product_cost) {
+		this.product_cost = product_cost;
 	}
 
 }

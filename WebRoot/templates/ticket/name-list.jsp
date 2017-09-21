@@ -71,7 +71,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th><input type="checkbox" />全选</th>
+								<th><input type="checkbox" onclick="checkAll(this)"/>全选</th>
 								<th>客户</th>
 								<th>团号</th>
 								<th>首段日期</th>
@@ -81,7 +81,7 @@
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
-							<tr style="overflow: hidden">
+							<tr style="overflow: hidden" onclick="showDetail(this)">
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+':'+$data.name}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.team_number"></td>

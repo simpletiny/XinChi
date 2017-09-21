@@ -55,6 +55,11 @@
 		<action name="matchReceived" class="paymentDetailAction" method="matchReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		
+		<action name="matchOtherReceived" class="paymentDetailAction" method="matchOtherReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
 		<action name="cancelMatchReceived" class="paymentDetailAction" method="cancelMatchReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>

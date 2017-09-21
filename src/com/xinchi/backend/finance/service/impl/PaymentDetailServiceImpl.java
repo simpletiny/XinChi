@@ -55,7 +55,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 		List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(time);
 
-		if (null != sameDetail && sameDetail.size() > 0 && (null==detail.getInner_flg()||detail.getInner_flg().equals("N"))) {
+		if (null != sameDetail && sameDetail.size() > 0 && (null == detail.getInner_flg() || detail.getInner_flg().equals("N"))) {
 			return "time";
 		}
 
@@ -95,7 +95,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			}
 			sourceFile.delete();
 		}
-
+		detail.setFinance_flg("Y");
 		dao.insert(detail);
 		return "success";
 	}
@@ -128,6 +128,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		payDetail.setRecord_time(DateUtil.getTimeMillis());
 		payDetail.setComment(innerTransfer.getComment());
 		payDetail.setInner_flg("Y");
+		payDetail.setFinance_flg("Y");
 		payDetail.setInner_pk(inner_pk);
 
 		// 收入明细
@@ -141,6 +142,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		receiveDetail.setRecord_time(DateUtil.getTimeMillis());
 		receiveDetail.setComment(innerTransfer.getComment());
 		receiveDetail.setInner_flg("Y");
+		receiveDetail.setFinance_flg("Y");
 		receiveDetail.setInner_pk(inner_pk);
 
 		insert(payDetail);
@@ -166,7 +168,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			exchangeDetail.setInner_flg("Y");
 			exchangeDetail.setInner_pk(inner_pk);
 			exchangeDetail.setExchange_flg("Y");
-			
+			exchangeDetail.setFinance_flg("Y");
+
 			insert(exchangeDetail);
 		}
 	}
@@ -175,6 +178,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Transactional
 	public String deleteDetail(String detailId) {
 		PaymentDetailBean detail = dao.selectById(detailId);
+		if (detail.getFinance_flg().equals("N"))
+			return "forbidden";
+
 		List<PaymentDetailBean> afterDetails = dao.selectAfterByParam(detail);
 		BigDecimal wrong = detail.getMoney();
 		if (detail.getType().equals("收入")) {
@@ -448,5 +454,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number) {
 
 		return dao.selectByVoucherNumber(voucher_number);
+	}
+
+	@Override
+	public String update(PaymentDetailBean detail) {
+		dao.updateDetail(detail);
+		return SUCCESS;
 	}
 }

@@ -13,6 +13,7 @@
 		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -28,6 +29,7 @@
 		A.special_count,
 		A.create_user AS sale_name,
 		A.product_manager_number,
+		A.operate_flg,
 		C.user_name AS product_manager
 			from budget_order_view A 
 			LEFT JOIN product B ON A.product_pk=B.pk

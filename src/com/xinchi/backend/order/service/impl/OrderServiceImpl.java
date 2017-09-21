@@ -29,4 +29,9 @@ public class OrderServiceImpl implements OrderService {
 		return dao.selectCByPage(page);
 	}
 
+	@Override
+	public OrderDto selectByTeamNumber(String team_number) {
+		return dao.selectByTeamNumber(team_number);
+	}
+
 }

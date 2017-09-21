@@ -48,6 +48,14 @@
 		from air_ticket_order
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectBySaleOrderPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_order
+		where sale_order_pk = #{sale_order_pk,jdbcType=CHAR}
+	</select>
+	
 	<select id="selectByPks" resultMap="BaseResultMap" >
 		select
 		<include refid="Base_Column_List" />

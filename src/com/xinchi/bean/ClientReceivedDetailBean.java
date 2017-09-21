@@ -31,7 +31,7 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private String card_account;
 
 	private String create_user;
-
+	private String user_name;
 	private String update_user;
 
 	private String pk;
@@ -40,6 +40,8 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	
 	private String client_employee_pk;
 	private String client_employee_name;
+	
+	private String month;
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -174,6 +176,22 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setClient_employee_name(String client_employee_name) {
 		this.client_employee_name = client_employee_name;
+	}
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 }

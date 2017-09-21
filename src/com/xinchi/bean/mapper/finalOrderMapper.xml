@@ -286,7 +286,7 @@
     	A.traffic_payment, 
     	A.people_count, 
     	A.client_employee_pk, 
-    	A.client_employee_name, 
+    	C.name AS client_employee_name, 
     	A.receivable, 
     	A.payable, 
     	A.other_payment, 
@@ -302,6 +302,7 @@
     	A.update_time
     
     from final_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+    LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
         <where>
     	<if test="params.bo.create_user != null and params.bo.create_user !=''">
 	         and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}

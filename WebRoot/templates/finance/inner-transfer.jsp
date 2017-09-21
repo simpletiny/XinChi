@@ -115,15 +115,26 @@
 							<tr>
 								<td data-bind="text: $data.from_account"></td>
 								<td data-bind="text: $data.from_time"></td>
-								<td data-bind="text: $data.from_money"></td>
+								<td data-bind="text: $data.from_money" class="rmb"></td>
 								<td data-bind="text: $data.to_account"></td>
 								<td data-bind="text: $data.to_time"></td>
-								<td data-bind="text: $data.to_money"></td>
+								<td data-bind="text: $data.to_money" class="rmb"></td>
 								<td data-bind="text: $data.exchange_account"></td>
-								<td data-bind="text: $data.exchange_money"></td>
+								<td data-bind="text: $data.exchange_money" class="rmb"></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>
+						<tr id="total-row">
+							<td></td>
+							<td>汇总</td>
+							<td data-bind="text:totalOut" class="rmb"></td>
+							<td></td>
+							<td></td>
+							<td data-bind="text:totalIn" class="rmb"></td>
+							<td></td>
+							<td data-bind="text:totalExchange" class="rmb"></td>
+							<td></td>
+						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>

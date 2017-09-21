@@ -31,6 +31,8 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String departure_date_to;
 	private String confirm_date_from;
 	private String confirm_date_to;
+	
+	private String product_manager_number;
 
 	public String getTeam_number() {
 		return team_number;
@@ -206,5 +208,13 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setConfirm_date_to(String confirm_date_to) {
 		this.confirm_date_to = confirm_date_to;
+	}
+
+	public String getProduct_manager_number() {
+		return product_manager_number;
+	}
+
+	public void setProduct_manager_number(String product_manager_number) {
+		this.product_manager_number = product_manager_number;
 	}
 }

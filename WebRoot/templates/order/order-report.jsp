@@ -32,9 +32,9 @@
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">客户</label>
+							<label class="col-md-1 control-label">产品</label>
 							<div class="col-md-2">
-								<input class="form-control" placeholder="客户" name="option.client_employee_name"></input>
+								<input class="form-control" placeholder="产品" name="option.product_name"></input>
 							</div>
 						</div>
 						<div align="left">
@@ -52,29 +52,18 @@
 					<div class="form-group">
 
 
-						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-							<div class="span6" style="text-align: center">
-								<div class="col-md-3">
-									<input value="budget" type="checkbox" name="option.order_type" />预算 <input value="final" type="checkbox" name="option.order_type" />决算
-								</div>
+						<div class="span6" style="text-align: center">
+							<div class="col-md-3">
+								<input value="budget" type="checkbox" name="option.order_type" />预算 <input value="final" type="checkbox" name="option.order_type" />决算
 							</div>
-							<div class="span6">
-								<label class="col-md-1 control-label">销售</label>
-								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="option.sale_number"></select>
-								</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">销售</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+									name="option.sale_number"></select>
 							</div>
-						</s:if>
-						<s:else>
-
-							<div class="span6" style="text-align: center">
-								<div class="col-md-6">
-									<input value="budget" type="checkbox" name="option.order_type" />预算 <input value="final" type="checkbox" name="option.order_type" />决算
-								</div>
-							</div>
-						</s:else>
-
+						</div>
 						<div align="left">
 							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" name="radio-date" />确认日期</label>
 							<div class="col-md-2" style="float: left">
@@ -99,7 +88,6 @@
 							<tr role="row">
 								<th>团号</th>
 								<th>预/决</th>
-								<th>客户</th>
 								<th>出团日期</th>
 								<th>产品名称</th>
 								<th>人数</th>
@@ -112,16 +100,13 @@
 								<th>毛利润</th>
 								<th>人均毛利</th>
 								<th>确认日期</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>销售</th>
-								</s:if>
+								<th>销售</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: reports">
 							<tr>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $root.orderTypeMapping[$data.order_type]"></td>
-								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
@@ -134,9 +119,7 @@
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
 								<td data-bind="text: $data.per_profit" class="rmb"></td>
 								<td data-bind="text: $data.confirm_date"></td>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.sale_name"></td>
-								</s:if>
+								<td data-bind="text: $data.sale_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -157,7 +140,7 @@
 		</div>
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

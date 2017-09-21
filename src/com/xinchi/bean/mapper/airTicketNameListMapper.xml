@@ -223,5 +223,6 @@
 		A.create_time,
 		A.update_time
 		from air_ticket_name_list A LEFT JOIN user_base B ON A.client_number= B.user_number
+		ORDER BY team_number
 	</select>
 </mapper>

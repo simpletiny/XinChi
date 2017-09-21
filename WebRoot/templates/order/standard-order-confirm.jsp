@@ -94,7 +94,7 @@
 						<div class="col-md-12">
 							<label class="l">名单（请不要输入客人电话和产品名称，谢谢^0^）</label>
 							<div class="ip">
-								<textarea style="width:500px" type="text" onblur="formatNameList(this)" class="ip-default" rows="15" data-bind="value: order().name_list" name="bsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
+								<textarea style="width:500px" type="text" onblur="formatNameList(this)" id="txt-name-list" class="ip-default" rows="15" data-bind="value: order().name_list" name="bsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
 							</div>
 						</div>
 					</div>

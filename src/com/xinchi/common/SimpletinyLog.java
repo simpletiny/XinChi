@@ -17,6 +17,10 @@ public class SimpletinyLog {
 	private UserLogService service;
 
 	public void after(JoinPoint jp) {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		if (null == sessionBean)
+			return;
+		
 		Signature st = jp.getSignature();
 		// 方法名
 		String method = st.getName();
@@ -69,7 +73,6 @@ public class SimpletinyLog {
 			}
 		}
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		// 操作用户编号
 		String user_number = sessionBean.getUser_number();
 		if (user_number.equals("N00000"))

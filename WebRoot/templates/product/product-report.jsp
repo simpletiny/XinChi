@@ -90,6 +90,19 @@
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>
+						<tr id="total-row">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>汇总</td>
+							<td data-bind="text:totalAdult" ></td>
+							<td data-bind="text:totalSpecial"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>

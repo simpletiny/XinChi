@@ -7,13 +7,13 @@ var changeValueByPath = function(obj, path, value) {
 	co[ps[ps.length - 1]] = value;
 };
 
-//$(document).ready(function() {
-//	if($("input[type='number']")!=null){
-//		$("input[type='number']").mousewheel(function() {
-//			return false;
-//		});
-//	}
-//});
+// $(document).ready(function() {
+// if($("input[type='number']")!=null){
+// $("input[type='number']").mousewheel(function() {
+// return false;
+// });
+// }
+// });
 
 // to use this function pls impl changeRichText function.
 ko.bindingHandlers.richText = {
@@ -315,3 +315,15 @@ var getServerDate = function() {
 		fail_msg(reason.responseText);
 	});
 };
+
+// jq 扩展
+jQuery.fn.extend({
+	disabled : function() {
+		this.addClass("disabled");
+		this.focus(function() {
+			this.blur();
+		});
+	}
+});
+
+

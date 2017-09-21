@@ -30,11 +30,30 @@ var DetailContext = function() {
 		total : 0,
 		items : []
 	});
+	self.totalOut = ko.observable();
+	self.totalIn = ko.observable();
+	self.totalExchange = ko.observable();
+
 	self.refresh = function() {
+		var totalOut = 0;
+		var totalIn = 0;
+		var totalExchange = 0;
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'finance/searchInnerTransferByPage', param, function(data) {
 			self.details(data.inners);
+			$(self.details()).each(function(idx, data) {
+				totalOut += data.from_money;
+				totalIn += data.to_money;
+				if (data.exchange_money != null) {
+					totalExchange += data.exchange_money;
+				}
+			});
+
+			self.totalOut(totalOut);
+			self.totalIn(totalIn);
+			self.totalExchange(totalExchange);
+
 			$(".rmb").formatCurrency();
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));

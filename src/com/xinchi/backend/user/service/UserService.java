@@ -5,11 +5,12 @@ import java.util.List;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "用户")
-public interface UserService {
+public interface UserService extends BaseService {
 
 	/**
 	 * 新增
@@ -91,4 +92,8 @@ public interface UserService {
 
 	@LogDescription(des = "修改用户角色")
 	public String updateUserRoles(String user_pk, String user_roles);
+
+	public String checkPassword(UserCommonBean ucb);
+
+	public String changePassword(UserCommonBean ucb);
 }

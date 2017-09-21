@@ -10,4 +10,7 @@ public interface OrderService extends BaseService {
 
 	public List<OrderDto> selectTbcByPage(Page<OrderDto> page);
 	public List<OrderDto> selectCByPage(Page<OrderDto> page);
+	
+	public OrderDto selectByTeamNumber(String teamNumber);
+	
 }

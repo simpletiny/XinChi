@@ -125,8 +125,17 @@ public class PaymentDetailAction extends BaseAction {
 		}
 		PaymentDetailBean thisDetail = pds.selectByPk(detail_id);
 		thisDetail.setMatch_flg("Y");
-		pds.updateDetail(thisDetail);
-		resultStr = SUCCESS;
+		resultStr = pds.update(thisDetail);
+		return SUCCESS;
+	}
+
+	public String matchOtherReceived() {
+
+		PaymentDetailBean thisDetail = pds.selectByPk(detailId);
+		// O for other received
+		thisDetail.setMatch_flg("O");
+
+		resultStr = pds.update(thisDetail);
 		return SUCCESS;
 	}
 
@@ -135,7 +144,7 @@ public class PaymentDetailAction extends BaseAction {
 		// 更新收入详情
 		detail = pds.selectByPk(detailId);
 		detail.setMatch_flg("N");
-		pds.updateDetail(detail);
+		pds.update(detail);
 
 		List<ReceivedMatchBean> rmbs = rms.selectByDetailPk(detailId);
 		// 更新收入详表

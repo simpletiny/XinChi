@@ -60,7 +60,9 @@ public class PayableAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			payable.setSales(sessionBean.getUser_number());
+			payable.setCreate_user(sessionBean.getUser_number());
 		}
+		
 		String team_status = payable.getTeam_status();
 		String departure_from = "";
 		String departure_to = "";

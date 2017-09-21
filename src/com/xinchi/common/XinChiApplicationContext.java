@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.struts2.ServletActionContext;
 
 /**
- * 新道应用上下文
+ * 欣驰应用上下文
  * 
  * @author
  *

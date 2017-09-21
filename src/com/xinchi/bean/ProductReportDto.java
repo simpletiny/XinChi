@@ -27,7 +27,8 @@ public class ProductReportDto extends SupperBO implements Serializable {
 
 	private String date_from;
 	private String date_to;
-
+	
+	private String operate_flg;
 	public String getProduct_number() {
 		return product_number;
 	}
@@ -130,6 +131,14 @@ public class ProductReportDto extends SupperBO implements Serializable {
 
 	public void setDate_to(String date_to) {
 		this.date_to = date_to;
+	}
+
+	public String getOperate_flg() {
+		return operate_flg;
+	}
+
+	public void setOperate_flg(String operate_flg) {
+		this.operate_flg = operate_flg;
 	}
 
 }

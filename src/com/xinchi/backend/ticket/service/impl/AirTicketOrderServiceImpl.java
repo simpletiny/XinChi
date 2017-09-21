@@ -13,11 +13,11 @@ import com.xinchi.tools.Page;
 
 @Service
 @Transactional
-public class AirTicketOrderServiceImpl implements AirTicketOrderService{
+public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 	@Autowired
 	private AirTicketOrderDAO dao;
-	
+
 	@Override
 	public void insert(AirTicketOrderBean bean) {
 		dao.insert(bean);
@@ -52,5 +52,11 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService{
 	public List<AirTicketOrderBean> selectByPks(List<String> airTicketOrderPks) {
 		return dao.selectByPks(airTicketOrderPks);
 	}
-	
+
+	@Override
+	public AirTicketOrderBean selectBySaleOrderPk(String pk) {
+
+		return dao.selectBySaleOrderPk(pk);
+	}
+
 }

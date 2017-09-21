@@ -23,6 +23,7 @@
 		<result column="voucher_file_name" property="voucher_file_name" jdbcType="VARCHAR" />
 		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
 		<result column="exchange_flg" property="exchange_flg" jdbcType="CHAR" />
+		<result column="finance_flg" property="finance_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -46,7 +47,8 @@
 		receiver,
 		voucher_file_name,
 		match_flg,
-		exchange_flg
+		exchange_flg,
+		finance_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -76,7 +78,8 @@
 		A.receiver,
 		A.voucher_file_name,
 		A.match_flg,
-		A.exchange_flg
+		A.exchange_flg,
+		A.finance_flg
 		from payment_detail A
 		LEFT JOIN card B ON A.account = B.account
 		where voucher_number =
@@ -153,6 +156,9 @@
 			<if test="exchange_flg != null">
 				exchange_flg,
 			</if>
+			<if test="finance_flg != null">
+				finance_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="account != null">
@@ -214,6 +220,9 @@
 			</if>
 			<if test="exchange_flg != null">
 				#{exchange_flg,jdbcType=CHAR},
+			</if>
+			<if test="finance_flg != null">
+				#{finance_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -279,6 +288,9 @@
 			<if test="match_flg != null">
 				match_flg = #{match_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="finance_flg != null">
+				finance_flg = #{finance_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -339,8 +351,11 @@
 			<if test="params.bo.type != null and params.bo.type !=''">
 				and type = #{params.bo.type,jdbcType=VARCHAR}
 			</if>
-			<if test="params.bo.match_flg != null and params.bo.match_flg !=''">
-				and match_flg = #{params.bo.match_flg,jdbcType=VARCHAR}
+			<if test='params.bo.match_flg != null and params.bo.match_flg =="N"'>
+				and match_flg = 'N'
+			</if>
+			<if test='params.bo.match_flg != null and params.bo.match_flg =="Y"'>
+				and (match_flg = 'Y' OR match_flg='O')
 			</if>
 			<if test="params.bo.time != null and params.bo.time !=''">
 				and left(time,10) = #{params.bo.time,jdbcType=VARCHAR}

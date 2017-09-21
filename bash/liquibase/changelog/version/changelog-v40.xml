@@ -1,0 +1,120 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_non_standard_order ADD COLUMN product_cost DECIMAL(12,2) NULL  AFTER operate_flg;
+				ALTER TABLE budget_standard_order ADD COLUMN product_cost DECIMAL(12,2) NULL  AFTER operate_flg;
+             ]]>
+			<comment> ALTER TABLE budget_non_standard_order and budget_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>alter view budget_order_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product_order_operation ADD COLUMN send_date VARCHAR(10) NULL  AFTER pk ;
+            	ALTER TABLE product_order_operation ADD COLUMN status CHAR(1) NULL DEFAULT 'I'  AFTER send_date ;
+             ]]>
+			<comment>ALTER TABLE product_order_operation</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product_order_operation ADD COLUMN land_day INT NULL  AFTER status , ADD COLUMN picker VARCHAR(10) NULL  AFTER land_day , ADD COLUMN off_day INT NULL  AFTER picker ;
+             ]]>
+			<comment>ALTER TABLE product_order_operation</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product DROP COLUMN profit_space , ADD COLUMN product_value TINYINT NULL DEFAULT 1 COMMENT '产品分值'  AFTER air_ticket_charge , ADD COLUMN air_ticket_cost DECIMAL(12,2) NULL  AFTER product_value , ADD COLUMN other_cost DECIMAL(12,2) NULL  AFTER air_ticket_cost , ADD COLUMN gross_profit DECIMAL(12,2) NULL  AFTER other_cost , ADD COLUMN gross_profit_rate FLOAT(7,2) NULL  AFTER gross_profit ;
+             ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>

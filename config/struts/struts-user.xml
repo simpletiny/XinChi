@@ -69,6 +69,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="checkPassword" class="userAction" method="checkPassword">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="changePassword" class="userAction" method="changePassword">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 
 </struts>

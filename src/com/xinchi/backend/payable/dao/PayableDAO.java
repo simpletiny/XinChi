@@ -22,4 +22,6 @@ public interface PayableDAO {
 
 	public List<PayableBean> selectByPage(Page<PayableBean> page);
 
+	public void deleteByPk(String pk);
+
 }

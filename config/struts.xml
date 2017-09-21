@@ -15,8 +15,7 @@
      <!-- 限定上传文件最大大小4M,struts2默认maxSize为2M -->  
     <constant name="struts.multipart.maxSize" value="4194304"></constant>
     <!-- 指定上传文件时临时文件的存放路径,设为"/tempUpload"将在 项目所在盘下创建文件夹tempUpload-->  
- 	   <constant name="struts.multipart.saveDir" value="/tempUpload"></constant>
-      <!--   <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant>  -->
+     <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant> 
   		<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest"
   		name="simpletinyRequestParse" class="com.xinchi.struts.parse.SimpletinyRequestParser"
   		scope="default" optional="true" />

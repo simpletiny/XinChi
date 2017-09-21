@@ -48,6 +48,14 @@ public class ReceivableSummaryBean extends SupperBO implements Serializable {
 
 	private BigDecimal bad_month_balance = BigDecimal.ZERO;
 
+	private int before_count;
+
+	private BigDecimal before_budget_balance = BigDecimal.ZERO;
+
+	private BigDecimal before_final_balance = BigDecimal.ZERO;
+
+	private BigDecimal before_balance = BigDecimal.ZERO;
+
 	public int getAll_count() {
 		return all_count;
 	}
@@ -206,6 +214,38 @@ public class ReceivableSummaryBean extends SupperBO implements Serializable {
 
 	public void setBad_month_balance(BigDecimal bad_month_balance) {
 		this.bad_month_balance = bad_month_balance;
+	}
+
+	public int getBefore_count() {
+		return before_count;
+	}
+
+	public void setBefore_count(int before_count) {
+		this.before_count = before_count;
+	}
+
+	public BigDecimal getBefore_budget_balance() {
+		return before_budget_balance;
+	}
+
+	public void setBefore_budget_balance(BigDecimal before_budget_balance) {
+		this.before_budget_balance = before_budget_balance;
+	}
+
+	public BigDecimal getBefore_final_balance() {
+		return before_final_balance;
+	}
+
+	public void setBefore_final_balance(BigDecimal before_final_balance) {
+		this.before_final_balance = before_final_balance;
+	}
+
+	public BigDecimal getBefore_balance() {
+		return before_balance;
+	}
+
+	public void setBefore_balance(BigDecimal before_balance) {
+		this.before_balance = before_balance;
 	}
 
 }

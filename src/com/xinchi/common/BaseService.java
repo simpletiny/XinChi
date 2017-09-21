@@ -4,5 +4,6 @@ public interface BaseService {
 	public static String OK = "OK";
 	public static String SUCCESS = "success";
 	public static String EXISTS = "exists";
+	public static String FAIL = "fail";
 
 }

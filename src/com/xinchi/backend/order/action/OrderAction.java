@@ -25,7 +25,6 @@ import com.xinchi.common.XinChiApplicationContext;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class OrderAction extends BaseAction {
 	private static final long serialVersionUID = -6272167129826318077L;
-
 	@Autowired
 	private BudgetStandardOrderService bsoService;
 

@@ -45,10 +45,14 @@ var DetailContext = function() {
 			$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
 				if (data.detail) {
 					var detail = data.detail;
-					if (detail.type == "收入") {
-						window.location.href = self.apiurl + "templates/finance/receive-detail-edit.jsp?key=" + self.chosenDetails()[0];
+					if (detail.finance_flg == "Y") {
+						if (detail.type == "收入") {
+							window.location.href = self.apiurl + "templates/finance/receive-detail-edit.jsp?key=" + self.chosenDetails()[0];
+						} else {
+							window.location.href = self.apiurl + "templates/finance/pay-detail-edit.jsp?key=" + self.chosenDetails()[0];
+						}
 					} else {
-						window.location.href = self.apiurl + "templates/finance/pay-detail-edit.jsp?key=" + self.chosenDetails()[0];
+						fail_msg("只能修改财务收支！");
 					}
 				} else {
 					fail_msg("不存的明细");
@@ -81,13 +85,16 @@ var DetailContext = function() {
 							url : self.apiurl + 'finance/deleteDetail',
 							data : "detailId=" + detailId
 						}).success(function(str) {
-							self.search();
 
 							if (str == "success") {
 								success_msg("删除成功！");
+								self.chosenDetails.removeAll();
+							} else if (str == "forbidden") {
+								fail_msg("只能删除财务收支！");
 							} else {
 								fail_msg("删除失败，请联系管理员");
 							}
+							self.search();
 							endLoadingIndicator();
 						});
 						layer.close(index);

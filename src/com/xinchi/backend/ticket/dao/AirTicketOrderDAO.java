@@ -41,4 +41,6 @@ public interface AirTicketOrderDAO{
 	public List<AirTicketOrderBean> selectByPage(Page<AirTicketOrderBean> page);
 
 	public List<AirTicketOrderBean> selectByPks(List<String> airTicketOrderPks);
+
+	public AirTicketOrderBean selectBySaleOrderPk(String pk);
 }

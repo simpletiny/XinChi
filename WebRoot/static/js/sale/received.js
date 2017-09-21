@@ -5,11 +5,29 @@ var ReceivedContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenReceiveds = ko.observableArray([]);
 
+	// 销售信息
+	self.sales = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+		self.sales(data.users);
+	});
+
 	self.receiveds = ko.observable({
 		total : 0,
 		items : []
 	});
-
+	
+	//账户信息
+	self.accounts = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
+		if (data.accounts) {
+			self.accounts(data.accounts);
+		} else {
+			fail_msg("不存在账户，无法建立明细账！");
+		}
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+	
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	// var x = new Date();
@@ -264,3 +282,9 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+
+function baseMonth(txt){
+	if($(txt).val().trim()!=''){
+		$('.date-picker').val("");
+	}
+}

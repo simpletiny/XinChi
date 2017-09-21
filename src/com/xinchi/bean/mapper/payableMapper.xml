@@ -356,8 +356,8 @@
 			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
 				and C.user_name LIKE CONCAT('%', #{params.bo.sales_name,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and A.sales = #{params.bo.sales,jdbcType=VARCHAR}
+			<if test="params.bo.sales != null and params.bo.sales !='' and params.bo.create_user !=null and params.bo.create_user !=''">
+				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} or A.create_user = #{params.bo.create_user,jdbcType=VARCHAR})
 			</if>
 			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
 				and D.supplier_short_name LIKE CONCAT('%', #{params.bo.supplier_name,jdbcType=VARCHAR},'%')
