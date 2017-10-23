@@ -15,25 +15,15 @@ var CompanyContext = function() {
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
-	self.sales_name = ko.observableArray([]);
 	self.status = [ '正常', '已停用' ];
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("正常");
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
-		self.sales_name.push("公开");
-		$(self.sales()).each(function(idx, data) {
-			self.sales_name.push(data.user_name);
-		});
-
-		// $('.multi-select').multipleSelect({
-		// placeholder : '全部',
-		// selectAllText : '全选',
-		// width : '180px',
-		// minimumCountSelected : 1,
-		// countSelected : '已选: #',
-		// allSelected : '已全选'
-		// });
+		var pub = new Object();
+		pub.user_name = "公开";
+		pub.pk = "public";
+		self.sales.push(pub);
 	});
 	self.createClientEmployee = function() {
 		window.location.href = self.apiurl + "templates/client/employee-creation.jsp";

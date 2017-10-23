@@ -1,3 +1,4 @@
+var salesLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -13,31 +14,29 @@ var CompanyContext = function() {
 	self.status = [ '正常', '已停用' ];
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("正常");
-	
-	
+
 	self.relates = [ '未关联', '已关联' ];
 	self.chosenRelates = ko.observableArray([]);
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
-	self.sales_name = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
-		self.sales_name.push("公开");
-		$(self.sales()).each(function(idx, data) {
-			self.sales_name.push(data.user_name);
-		});
+		var pub = new Object();
+		pub.user_name = "公开";
+		pub.pk = "public";
+		self.sales.push(pub);
 	});
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
-		var param = $("form").serialize() + "&company_status=" + self.chosenStatus()+"&relate_status="+self.chosenRelates();
+		var param = $("form").serialize() + "&company_status=" + self.chosenStatus() + "&relate_status=" + self.chosenRelates();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
-
+			$(".rmb").formatCurrency();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 			endLoadingIndicator();
@@ -48,12 +47,12 @@ var CompanyContext = function() {
 		self.refresh();
 		return true;
 	};
-	
+
 	self.changeRelate = function() {
 		self.refresh();
 		return true;
 	};
-	
+
 	self.stopCompany = function() {
 		if (self.chosenCompanies().length == 0) {
 			fail_msg("请选择财务主体");
@@ -90,6 +89,81 @@ var CompanyContext = function() {
 			});
 		}
 	};
+	self.chosenUser = ko.observable("");
+
+	/**
+	 * 调整财务主体所属销售
+	 */
+	self.changeSales = function() {
+		if (self.chosenCompanies().length == 0) {
+			fail_msg("请选择公司");
+			return;
+		} else {
+			salesLayer = $.layer({
+				type : 1,
+				title : [ '修改财务主体销售', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '600px', '400px' ],
+				offset : [ '200px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#edit-sale'
+				},
+				end : function() {
+
+				}
+			});
+		}
+	};
+
+	self.doChangeSale = function() {
+		if (self.chosenUser() == "") {
+			fail_msg("请选择销售！");
+			return;
+		}
+
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确认将选中的财务主体移至新销售名下吗?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					var data = {
+						company_pks : self.chosenCompanies(),
+						sale_pk : self.chosenUser()
+					};
+
+					startLoadingSimpleIndicator("转移中...");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/changeClientSales',
+						traditional : true,
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							layer.close(salesLayer);
+							self.refresh();
+							self.chosenCompanies.removeAll();
+							self.chosenUser("");
+						} else {
+							fail_msg("转移失败，请联系管理员！");
+						}
+					});
+				}
+			}
+		});
+	};
+
+	self.doCancelChangeSale = function() {
+		layer.close(salesLayer);
+	};
+
 	self.search = function() {
 
 	};

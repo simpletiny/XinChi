@@ -373,7 +373,7 @@
 		A.financial_body_name,
 		B.client_area as area,
 		A.sales,
-		A.sales_name,
+		IF(ISNULL(C.user_name),'公开',C.user_name) AS sales_name,
 		A.create_user,
 		A.update_user,
 		A.pk,
@@ -387,6 +387,7 @@
 		A.back_level,
 		A.market_level
 		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
+		LEFT JOIN user_base C ON A.sales = C.pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and (A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') or A.public_flg ='Y')
@@ -402,6 +403,9 @@
 			</if>
 			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
 				and A.sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.sales != null and params.bo.sales !=''">
+				and A.sales = #{params.bo.sales,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
 				and A.delete_flg =#{params.bo.delete_flg,jdbcType=VARCHAR}

@@ -4,9 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.ReimbursementService;
+import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Service
 @Transactional
@@ -15,10 +20,26 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 	@Autowired
 	private ReimbursementDAO dao;
 
+	@Autowired
+	private PayApprovalDAO payApprovalDao;
+
 	@Override
 	public String save(ReimbursementBean reimbursement) {
 		dao.insert(reimbursement);
-		return "success";
+		
+		// 生成支付审批
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		PayApprovalBean pa = new PayApprovalBean();
+		pa.setReceiver(sessionBean.getUser_name());
+		pa.setMoney(reimbursement.getMoney());
+		pa.setItem(reimbursement.getItem());
+		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+		pa.setComment(reimbursement.getComment());
+		pa.setApply_user(reimbursement.getApply_user());
+		pa.setBack_pk(reimbursement.getPk());
+		payApprovalDao.insert(pa);
+		
+		return SUCCESS;
 	}
 
 	@Override
@@ -28,7 +49,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
 	@Override
 	public void update(ReimbursementBean reim) {
-		 dao.update(reim);
+		dao.update(reim);
 	}
 
 }

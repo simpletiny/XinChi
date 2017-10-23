@@ -1,5 +1,6 @@
 var confirmCheckLayer;
 var commentLayer;
+var passengerCheckLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -13,7 +14,7 @@ var ProductBoxContext = function() {
 		self.sales(data.users);
 	});
 	// 删除订单
-	self.deleteOrder = function() {
+	self.finalOrder = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单！");
 			return;
@@ -24,33 +25,11 @@ var ProductBoxContext = function() {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
 			var standard_flg = data[1];
-			$.layer({
-				area : [ 'auto', 'auto' ],
-				dialog : {
-					msg : '确认要删除此订单吗？',
-					btns : 2,
-					type : 4,
-					btn : [ '确认', '取消' ],
-					yes : function(index) {
-						layer.close(index);
-						startLoadingIndicator("删除中！");
-						var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'order/deleteTbcOrder',
-							data : data
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.refresh();
-								self.chosenOrders.removeAll();
-							} else {
-								fail_msg(str);
-							}
-						});
-					}
-				}
-			});
+			if (standard_flg == "Y") {
+				window.location.href = self.apiurl + "templates/order/standard-order-final-create.jsp?key=" + order_pk;
+			} else if (standard_flg == "N") {
+				window.location.href = self.apiurl + "templates/order/non-standard-order-final-create.jsp?key=" + order_pk;
+			}
 		}
 	};
 	// 编辑订单
@@ -130,6 +109,35 @@ var ProductBoxContext = function() {
 				}
 			});
 
+		});
+	};
+
+	self.passengers = ko.observableArray([]);
+	// 查看乘客信息
+	self.checkPassengers = function(data, event) {
+		self.passengers.removeAll();
+		var team_number = data.team_number;
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.passengers(data.passengers);
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : [ '游客信息', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '500px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
 		});
 	};
 

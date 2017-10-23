@@ -78,6 +78,13 @@
 		<mapper resource="com/xinchi/bean/mapper/productOrderMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/productSupplierMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/productOrderOperationMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketPayableMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketPaidDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientChangeSaleLogMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/payApprovalMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalNonStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/viewAirTicketPaidDetailMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

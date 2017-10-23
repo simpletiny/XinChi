@@ -99,11 +99,11 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
 	<!-- AOP日志 -->
-	<bean id="simpletinyLog" class="com.xinchi.common.SimpletinyLog"></bean>
+<!-- 	<bean id="simpletinyLog" class="com.xinchi.common.SimpletinyLog"></bean>
 	<aop:config>
 		<aop:aspect id="mylog" ref="simpletinyLog">
 		<aop:pointcut id="log" expression="execution(* com.xinchi.backend.*.service.*.*(..))"/>
 		<aop:after pointcut-ref="log" method="after"/>
 		</aop:aspect>
-	</aop:config>
+	</aop:config> -->
 </beans>

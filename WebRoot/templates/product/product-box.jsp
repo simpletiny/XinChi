@@ -86,10 +86,6 @@
 								<th>注意事项</th>
 								<th>产品编号</th>
 								<th>机票信息</th>
-								<th>机票成本</th>
-								<th>其它成本</th>
-								<th>毛利</th>
-								<th>毛利率</th>
 								<th>产品经理</th>
 							</tr>
 						</thead>
@@ -107,10 +103,6 @@
 								<td></td>
 								<td data-bind="text: $data.product_number"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
-								<td data-bind="text: $data.air_ticket_cost"></td>
-								<td data-bind="text: $data.other_cost"></td>
-								<td data-bind="text: $data.gross_profit"></td>
-								<td data-bind="text: $data.gross_profit_rate+'%'"></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>

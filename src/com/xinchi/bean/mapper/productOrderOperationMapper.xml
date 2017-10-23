@@ -7,6 +7,7 @@
 		<result column="supplier_count" property="supplier_count" jdbcType="INTEGER" />
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
 		<result column="supplier_cost" property="supplier_cost" jdbcType="DECIMAL" />
+		<result column="final_supplier_cost" property="final_supplier_cost" jdbcType="DECIMAL" />
 		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
 		<result column="people_count" property="people_count" jdbcType="INTEGER" />
 		<result column="pick_date" property="pick_date" jdbcType="VARCHAR" />
@@ -23,6 +24,8 @@
 		<result column="off_day" property="off_day" jdbcType="INTEGER" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
+		<result column="supplier_pk" property="supplier_pk" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -32,6 +35,7 @@
 		supplier_count,
 		supplier_employee_pk,
 		supplier_cost,
+		final_supplier_cost,
 		supplier_product_name,
 		people_count,
 		pick_date,
@@ -221,6 +225,9 @@
 			<if test="supplier_cost != null">
 				supplier_cost = #{supplier_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="final_supplier_cost != null">
+				final_supplier_cost = #{final_supplier_cost,jdbcType=DECIMAL},
+			</if>
 			<if test="supplier_product_name != null">
 				supplier_product_name = #{supplier_product_name,jdbcType=VARCHAR},
 			</if>
@@ -282,6 +289,7 @@
 		A.supplier_employee_pk,
 		B.name AS supplier_employee_name,
 		A.supplier_cost,
+		A.final_supplier_cost,
 		A.supplier_product_name,
 		A.people_count,
 		A.pick_date,
@@ -297,15 +305,33 @@
 		A.status,
 		A.picker,
 		A.land_day,
-		A.off_day
+		A.off_day,
+		C.supplier_short_name AS supplier_name,
+		C.pk AS supplier_pk
 		from product_order_operation A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status = #{params.bo.status,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number LIKE CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.supplier_product_name != null and params.bo.supplier_product_name !=''">
+				and A.supplier_product_name LIKE CONCAT('%',#{params.bo.supplier_product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
+				and B.name LIKE CONCAT('%',#{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
+				and C.supplier_short_name LIKE CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.pick_month != null and params.bo.pick_month !=''">
+				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY team_number,operate_index,pick_date DESC
@@ -320,6 +346,7 @@
 		A.supplier_employee_pk,
 		B.name AS supplier_employee_name,
 		A.supplier_cost,
+		A.final_supplier_cost,
 		A.supplier_product_name,
 		A.people_count,
 		A.pick_date,
@@ -338,7 +365,8 @@
 		A.off_day
 		from
 		product_order_operation A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		where A.team_number = #{team_number,jdbcType=CHAR}
+		where A.team_number =
+		#{team_number,jdbcType=CHAR}
 		ORDER BY
 		A.operate_index
 	</select>

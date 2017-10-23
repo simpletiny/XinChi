@@ -129,6 +129,21 @@ public class PaymentDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private ClientReceivedDetailBean received_detail;
+
+	public String searchReceivedDetailByPaymentDetailPk() {
+		List<ReceivedMatchBean> matchs = rms.selectByDetailPk(detailId);
+
+		if (null != matchs && matchs.size() > 0) {
+			String received_pk = matchs.get(0).getReceived_pk();
+			ClientReceivedDetailBean receivedDetail = receivedService.selectByPk(received_pk);
+
+			received_detail = receivedService.selectReceivedDetailByRelatedPk(receivedDetail.getRelated_pk());
+		}
+
+		return SUCCESS;
+	}
+
 	public String matchOtherReceived() {
 
 		PaymentDetailBean thisDetail = pds.selectByPk(detailId);
@@ -207,5 +222,13 @@ public class PaymentDetailAction extends BaseAction {
 
 	public void setJson(String json) {
 		this.json = json;
+	}
+
+	public ClientReceivedDetailBean getReceived_detail() {
+		return received_detail;
+	}
+
+	public void setReceived_detail(ClientReceivedDetailBean received_detail) {
+		this.received_detail = received_detail;
 	}
 }

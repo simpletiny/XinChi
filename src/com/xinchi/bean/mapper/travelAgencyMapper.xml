@@ -21,6 +21,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="is_cancel" property="is_cancel" jdbcType="CHAR" />
+		<result column="agency_client_count" property="agency_client_count" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -252,32 +253,49 @@
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from travel_agency
+			A.agency_name,
+			A.credit_code,
+			A.agency_provice,
+			A.agency_city,
+			A.is_exit,
+			A.main_bussines,
+			A.agency_type,
+			A.comment,
+			A.corporate_name,
+			A.corporate_sex,
+			A.corporate_cellphone,
+			A.corporate_id,
+			A.pk,
+			A.update_user,
+			A.create_user,
+			A.create_time,update_time,
+			A.is_cancel,
+			IF(ISNULL(B.agency_client_count),0,B.agency_client_count) AS agency_client_count
+		from travel_agency A LEFT JOIN view_agency_client_count B ON A.pk = B.agency_pk
 		<where>
 			<if test="params.bo.agency_name != null and params.bo.agency_name !=''">
-				and agency_name like CONCAT('%',#{params.bo.agency_name,jdbcType=VARCHAR},'%')
+				and A.agency_name like CONCAT('%',#{params.bo.agency_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.credit_code != null and params.bo.credit_code !=''">
-				and credit_code like CONCAT('%',#{params.bo.credit_code,jdbcType=VARCHAR},'%')
+				and A.credit_code like CONCAT('%',#{params.bo.credit_code,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.agency_type != null and params.bo.agency_type !=''">
-				and agency_type = #{params.bo.agency_type,jdbcType=VARCHAR}
+				and A.agency_type = #{params.bo.agency_type,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.main_bussines!= null and params.bo.main_bussines !=''">
-				and main_bussines = #{params.bo.main_bussines,jdbcType=VARCHAR}
+				and A.main_bussines = #{params.bo.main_bussines,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.is_exit!= null and params.bo.is_exit !=''">
-				and is_exit = #{params.bo.is_exit,jdbcType=VARCHAR}
+				and A.is_exit = #{params.bo.is_exit,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.is_cancel != null and params.bo.is_cancel !=''">
-				and is_cancel = #{params.bo.is_cancel,jdbcType=VARCHAR}
+				and A.is_cancel = #{params.bo.is_cancel,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.agency_provice != null and params.bo.agency_provice !=''">
-				and agency_provice = #{params.bo.agency_provice,jdbcType=VARCHAR}
+				and A.agency_provice = #{params.bo.agency_provice,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.agency_city != null and params.bo.agency_city !=''">
-				and agency_city = #{params.bo.agency_city,jdbcType=VARCHAR}
+				and A.agency_city = #{params.bo.agency_city,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

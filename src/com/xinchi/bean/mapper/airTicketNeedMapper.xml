@@ -13,6 +13,7 @@
 		<result column="sale_order_pk" property="sale_order_pk" jdbcType="VARCHAR" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -53,7 +54,8 @@
 		A.product_pk,
 		A.sale_order_pk,
 		A.air_ticket_cost,
-		A.standard_flg
+		A.standard_flg,
+		substring_index(A.passengers,':',1) AS passenger
 		from air_ticket_need A LEFT JOIN
 		user_base B ON A.ticket_client_number = B.user_number
 		<where>

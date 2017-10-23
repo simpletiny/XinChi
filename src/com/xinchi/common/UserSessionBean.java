@@ -2,7 +2,6 @@ package com.xinchi.common;
 
 
 public class UserSessionBean {
-
 	private String id;
 	private String user_number;
 

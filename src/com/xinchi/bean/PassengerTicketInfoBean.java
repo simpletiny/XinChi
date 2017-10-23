@@ -8,6 +8,8 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	private String ticket_source;
 
+	private String ticket_source_pk;
+
 	private java.math.BigDecimal ticket_cost;
 
 	private String PNR;
@@ -35,6 +37,8 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String passenger_pk;
+
+	private String base_pk;
 
 	public String getTicket_source() {
 		return ticket_source;
@@ -154,6 +158,22 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	public void setPassenger_pk(String passenger_pk) {
 		this.passenger_pk = passenger_pk;
+	}
+
+	public String getTicket_source_pk() {
+		return ticket_source_pk;
+	}
+
+	public void setTicket_source_pk(String ticket_source_pk) {
+		this.ticket_source_pk = ticket_source_pk;
+	}
+
+	public String getBase_pk() {
+		return base_pk;
+	}
+
+	public void setBase_pk(String base_pk) {
+		this.base_pk = base_pk;
 	}
 
 }

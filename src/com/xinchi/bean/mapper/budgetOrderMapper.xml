@@ -276,10 +276,35 @@
    </select>
    
  <select id="selectBudgetOrderByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from budget_order
-    where team_number = #{team_number,jdbcType=VARCHAR}
+    select 
+   		A.team_number, 
+    	A.product, 
+    	A.departure_date, 
+    	A.confirm_date,
+    	A.return_date, 
+    	A.days, 
+    	A.traffic_payment, 
+    	A.people_count, 
+    	A.client_employee_pk, 
+    	C.name AS client_employee_name, 
+    	A.receivable, 
+    	A.payable, 
+    	A.other_payment, 
+    	(A.receivable - A.payable) as gross_profit,
+    	CONVERT((A.receivable - A.payable)/A.people_count,decimal(12,2)) as per_profit,
+    	A.create_user,
+    	B.user_name as create_user_name,
+    	A.update_user, 
+    	A.pk, 
+    	A.comment,
+    	A.payment_comment,
+    	A.final_flg,
+    	A.create_time,
+    	A.update_time
+    from budget_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+    LEFT JOIN client_employee C ON A.client_employee_pk=C.pk
+    where A.team_number = #{team_number,jdbcType=VARCHAR}
+    
    </select>
  <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
    select 

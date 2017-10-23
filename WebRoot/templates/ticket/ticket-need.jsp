@@ -84,7 +84,7 @@
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkPassengers($data.sale_order_pk,$data.standard_flg)}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.sale_order_pk,$data.standard_flg)}">查看</a></td>
 								<!-- /ko -->
 								<td></td>
 								<td data-bind="text: $data.team_number"></td>

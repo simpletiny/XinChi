@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class ClientBean extends SupperBO implements Serializable {
@@ -43,15 +45,20 @@ public class ClientBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String pk;
-	
+
 	private String delete_flg;
 	private String agency_name;
 	private String agency_pk;
-	
+
 	private String sales;
 	private String sales_name;
 	private String public_flg;
 	private String relate_flg;
+	private Integer client_employee_count;
+	private BigDecimal sum_balance;
+	private Integer client_year_order_count;
+	private String last_order_date;
+
 	public String getClient_name() {
 		return client_name;
 	}
@@ -258,6 +265,38 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setRelate_flg(String relate_flg) {
 		this.relate_flg = relate_flg;
+	}
+
+	public Integer getClient_employee_count() {
+		return client_employee_count;
+	}
+
+	public void setClient_employee_count(Integer client_employee_count) {
+		this.client_employee_count = client_employee_count;
+	}
+
+	public BigDecimal getSum_balance() {
+		return sum_balance;
+	}
+
+	public void setSum_balance(BigDecimal sum_balance) {
+		this.sum_balance = sum_balance;
+	}
+
+	public Integer getClient_year_order_count() {
+		return client_year_order_count;
+	}
+
+	public void setClient_year_order_count(Integer client_year_order_count) {
+		this.client_year_order_count = client_year_order_count;
+	}
+
+	public String getLast_order_date() {
+		return last_order_date;
+	}
+
+	public void setLast_order_date(String last_order_date) {
+		this.last_order_date = last_order_date;
 	}
 
 }

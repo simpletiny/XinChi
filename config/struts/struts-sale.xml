@@ -75,6 +75,14 @@
 		<action name="applyRidTail" class="receivedAction" method="applyRidTail">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 单笔多付返还支出申请 -->
+		<action name="applyIfMorePay" class="receivedAction" method="applyIfMorePay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 代收申请 -->
+		<action name="applyCollect" class="receivedAction" method="applyCollect">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="applySum" class="receivedAction" method="applySum">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -130,6 +138,9 @@
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
+		</action>
+		<action name="rollBackPayApply" class="paidAction" method="rollBackPayApply">
+			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- paid action end -->
 		<!-- 销售工作报表 -->

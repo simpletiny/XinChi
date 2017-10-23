@@ -126,14 +126,15 @@ var PassengerContext = function() {
 			$(padiv).append(hiddenPk);
 			$(passengerBoxGrandson).append(padiv);
 		}
-
 		$(passengerBoxChild).append(passengerBoxGrandson);
 		$(passengerBox).append(passengerBoxChild);
 		$(passengerDiv).append(passengerBox);
 		$(sourceDiv).append(deleteDiv);
 		$(sourceDiv).append(
 				'<div class="input-row clearfloat" style="padding: 20px 10px 0 0px">' + '<div class="col-md-12">' + '<label class="l" style="width: 20%">票源</label>'
-						+ '<div class="ip" style="width: 80%">' + '<input type="text" class="ip- txt-ticket-source" placeholder="票源" maxlength="20"' + ' />' + '</div>' + '</div>');
+						+ '<div class="ip" style="width: 80%">'
+						+ '<input  st="supplier-name" type="text" onclick="choseSupplierEmployee(event)"  class="ip- txt-ticket-source" placeholder="票源" maxlength="20"'
+						+ ' /><input type="text" st="supplier-pk" style="display: none" />' + '</div>' + '</div>');
 
 		$(sourceDiv).append(passengerDiv);
 		$(".right-div").append(sourceDiv);
@@ -168,7 +169,8 @@ var PassengerContext = function() {
 		$(label).parent().remove();
 	};
 	self.refresh = function() {
-		var param = "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'ticket/searchAirTicketNameListByPage', param, function(data) {
 			self.passengers(data.airTicketNameList);
 
@@ -194,13 +196,14 @@ var PassengerContext = function() {
 			for ( var i = 0; i < all.length; i++) {
 				var current = all[i];
 				var sourceName = $(current).find("input.txt-ticket-source").val();
+				var sourcePk = $(current).find("[st='supplier-pk']").val();
 				var pks = $(current).find("input.passenger-pk");
 				var passengerPks = "";
 				for ( var j = 0; j < pks.length; j++) {
 					passengerPks += $(pks[j]).val() + ",";
 				}
 				passengerPks = passengerPks.substr(0, passengerPks.length - 1);
-				json += '{"sourceName":"' + sourceName + '","passengerPks":"' + passengerPks + '"},';
+				json += '{"sourceName":"' + sourceName + '","sourcePk":"' + sourcePk + '","passengerPks":"' + passengerPks + '"},';
 			}
 			json = json.substr(0, json.length - 1);
 			json += ']';
@@ -268,6 +271,75 @@ var PassengerContext = function() {
 		self.refresh();
 	};
 	// end pagination
+
+	// 供应商选择
+	self.supplierEmployees = ko.observable({});
+	self.refreshSupplier = function() {
+		var param = "employee.type=A&employee.name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
+
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
+	};
+
+	self.searchSupplierEmployee = function() {
+		self.refreshSupplier();
+	};
+	self.pickSupplierEmployee = function(name, pk) {
+		$(currentSupplier).val(name);
+		$(currentSupplier).next().val(pk);
+		layer.close(supplierEmployeeLayer);
+	};
+
+	// start pagination
+	self.currentPage1 = ko.observable(1);
+	self.perPage1 = 10;
+	self.pageNums1 = ko.observableArray();
+	self.totalCount1 = ko.observable(1);
+	self.startIndex1 = ko.computed(function() {
+		return (self.currentPage1() - 1) * self.perPage1;
+	});
+
+	self.resetPage1 = function() {
+		self.currentPage1(1);
+	};
+
+	self.previousPage1 = function() {
+		if (self.currentPage1() > 1) {
+			self.currentPage1(self.currentPage1() - 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.nextPage1 = function() {
+		if (self.currentPage1() < self.pageNums1().length) {
+			self.currentPage1(self.currentPage1() + 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.turnPage1 = function(pageIndex) {
+		self.currentPage1(pageIndex);
+		self.refreshPage1();
+	};
+
+	self.setPageNums1 = function(curPage) {
+		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
+		var pageNums1 = [];
+		for ( var i = startPage1; i <= endPage1; i++) {
+			pageNums1.push(i);
+		}
+		self.pageNums1(pageNums1);
+	};
+
+	self.refreshPage1 = function() {
+		self.searchSupplierEmployee();
+	};
+	// end pagination
 };
 
 var ctx = new PassengerContext();
@@ -291,4 +363,28 @@ function showDetail(tr) {
 	var style = $("<tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>");
 	$(tr).after(style);
 
+}
+
+var currentSupplier;
+var supplierEmployeeLayer;
+function choseSupplierEmployee(event) {
+	supplierEmployeeLayer = $.layer({
+		type : 1,
+		title : [ '选择供应商操作', '' ],
+		maxmin : false,
+		closeBtn : [ 1, true ],
+		shadeClose : false,
+		area : [ '600px', '650px' ],
+		offset : [ '50px', '' ],
+		scrollbar : true,
+		page : {
+			dom : '#supplier-pick'
+		},
+		end : function() {
+			console.log("Done");
+		}
+	});
+
+	currentSupplier = event.toElement;
+	$(currentSupplier).blur();
 }

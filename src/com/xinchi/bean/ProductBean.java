@@ -40,7 +40,7 @@ public class ProductBean extends SupperBO implements Serializable {
 	private BigDecimal gross_profit;
 	private float gross_profit_rate;
 
-	private Integer product_value;
+	private BigDecimal product_value;
 
 	public String getName() {
 		return name;
@@ -186,11 +186,11 @@ public class ProductBean extends SupperBO implements Serializable {
 		this.gross_profit_rate = gross_profit_rate;
 	}
 
-	public Integer getProduct_value() {
+	public BigDecimal getProduct_value() {
 		return product_value;
 	}
 
-	public void setProduct_value(Integer product_value) {
+	public void setProduct_value(BigDecimal product_value) {
 		this.product_value = product_value;
 	}
 

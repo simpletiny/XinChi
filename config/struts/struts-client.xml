@@ -14,6 +14,9 @@
 		<action name="recoveryCompany" class="clientAction" method="recoveryCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="changeClientSales" class="clientAction" method="changeClientSales">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchCompany" class="clientAction" method="searchCompany">
 			<result name="success" type="json"></result>
 		</action>

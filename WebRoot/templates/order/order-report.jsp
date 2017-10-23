@@ -60,7 +60,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">销售</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
 									name="option.sale_number"></select>
 							</div>
 						</div>

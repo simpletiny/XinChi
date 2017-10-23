@@ -77,12 +77,12 @@
 		</action>
 
 		<!-- 产品订单操作 start -->
-		
+
 		<!-- 搜索产品供应商信息 -->
 		<action name="searchProductSuppliersByPk" class="productOrderOperationAction" method="searchProductSuppliersByPk">
 			<result name="success" type="json"></result>
 		</action>
-		
+
 		<!-- 生成产品订单 -->
 		<action name="createOrderOperation" class="productOrderOperationAction" method="createOrderOperation">
 			<result name="success" type="str">
@@ -91,6 +91,12 @@
 		</action>
 		<!-- 确认产品订单 -->
 		<action name="confirmOperation" class="productOrderOperationAction" method="confirmOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 决算产品订单 -->
+		<action name="finalOperation" class="productOrderOperationAction" method="finalOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>
@@ -111,6 +117,18 @@
 		</action>
 		<!-- 通过团号搜索操作订单 -->
 		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 删除产品订单操作 -->
+		<action name="deleteOperation" class="productOrderOperationAction" method="deleteOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 打回订单操作至未决算状态 -->
+		<action name="rollBackOperation" class="productOrderOperationAction" method="rollBackOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>

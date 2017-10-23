@@ -36,4 +36,6 @@ public interface BudgetNonStandardOrderDAO{
 	 * @param bean
 	 */
 	public List<BudgetNonStandardOrderBean> selectByParam(BudgetNonStandardOrderBean bean);
+
+	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number);
 }

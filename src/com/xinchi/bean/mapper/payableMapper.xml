@@ -377,6 +377,9 @@
 			<if test="params.bo.return_to != null and params.bo.return_to !=''">
 				and A.return_date &lt;= #{params.bo.return_to,jdbcType=VARCHAR}
 			</if>
+			<if test='params.bo.zero_flg == null or params.bo.zero_flg !="Y"'>
+				and if(final_flg='N',budget_balance!=0,final_balance!=0)
+			</if>
 		</where>
 
 			<if test='params.bo.sort_type!=null and params.bo.sort_type=="D"'>

@@ -63,6 +63,9 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String departure_date_to;
 	private String confirm_date_from;
 	private String confirm_date_to;
+	private String passenger;
+	
+	private BigDecimal balance;
 
 	public String getTeam_number() {
 		return team_number;
@@ -342,6 +345,22 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setProduct_cost(BigDecimal product_cost) {
 		this.product_cost = product_cost;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 }

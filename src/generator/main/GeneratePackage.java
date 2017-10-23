@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.mina.core.IoUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -20,11 +18,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class GeneratePackage {
-	public static final String clazzName = "productOrderOperation";
-	public static final String desc = "产品订单操作表";
-	public static final String voName = "ProductOrderOperationBean";
-	public static final String baseFolder = "src/com/xinchi/backend/product";
-	public static final String basePackage = "com.xinchi.backend.product";
+	public static final String clazzName = "finalNonStandardOrder";
+	public static final String desc = "非标订单决算";
+	public static final String voName = "FinalNonStandardOrderBean";
+	public static final String baseFolder = "src/com/xinchi/backend/order";
+	public static final String basePackage = "com.xinchi.backend.order";
 
 	/**
 	 * @param args

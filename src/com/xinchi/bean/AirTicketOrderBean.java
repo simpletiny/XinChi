@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -29,6 +30,7 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 	private String status;
 
 	private String lock_flg;
+	private List<String> lock_flgs;
 	private String sale_standard_flg;
 
 	private String pk;
@@ -40,6 +42,7 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 	private String first_from_to;
 	private String client_name;
 
+	private String passenger;
 	public String getClient_number() {
 		return client_number;
 	}
@@ -174,6 +177,22 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 
 	public void setSale_standard_flg(String sale_standard_flg) {
 		this.sale_standard_flg = sale_standard_flg;
+	}
+
+	public List<String> getLock_flgs() {
+		return lock_flgs;
+	}
+
+	public void setLock_flgs(List<String> lock_flgs) {
+		this.lock_flgs = lock_flgs;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
 	}
 
 }

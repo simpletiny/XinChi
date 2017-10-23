@@ -49,4 +49,9 @@ public class BudgetNonStandardOrderDAOImpl extends SqlSessionDaoSupport implemen
 		return list;
 	}
 
+	@Override
+	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByTeamNumber", team_number);
+	}
+
 }

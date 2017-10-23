@@ -25,13 +25,12 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>供应商财务主体管理</h2>
+			<h2>旅游公司</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
@@ -91,14 +90,9 @@
 							<em class="small-box"> <label>注销</label> <input type="checkbox" name="agency.is_cancel" value="Y" />
 							</em>
 						</div>
-
 					</div>
-					<div class="form-group" style="float: right">
-						<div class="span6">
-							<div style="padding-top: 3px;">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
-							</div>
-						</div>
+					<div class="form-group">
+							<button  style="float:right" type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
@@ -107,6 +101,7 @@
 							<tr role="row">
 								<th></th>
 								<th>主营</th>
+								<th>财体数量</th>
 								<th>公司全称</th>
 								<th>所属地区</th>
 								<th>公司类型</th>
@@ -120,6 +115,7 @@
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenAgencys" /></td>
 								<td data-bind="text: $data.main_bussines"></td>
+								<td data-bind="text: $data.agency_client_count"></td>
 								<td><a href="javascript:void(0)" data-bind="text: $data.agency_name,attr: {href: 'agency-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.agency_city"></td>
 								<td data-bind="text: $data.agency_type"></td>

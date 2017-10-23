@@ -20,13 +20,14 @@ tr td {
 	white-space: nowrap;
 	text-align: left
 }
+
 .download-panel {
 	position: absolute;
 	background: #FFEC8B;
 	border: solid 1px red;
 	z-index: 200;
-	width:150px;
-	height:50px;
+	width: 150px;
+	height: 50px;
 	text-align: center;
 }
 </style>
@@ -43,9 +44,12 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="width: 10%; float: right">
+						<div style="width: 20%; float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">决算</button>
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
+								</s:if>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finalOrder() }">决算</button>
 							</div>
 						</div>
 					</div>
@@ -144,7 +148,7 @@ tr td {
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
-								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td data-bind="text: $data.back_days"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.receivable"></td>
@@ -179,24 +183,47 @@ tr td {
 			</div>
 		</div>
 	</div>
+
+	<!-- 查看乘客信息 -->
+	<div id="passengers-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:passengers">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<div id="comment-edit" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div>
-				<input type="hidden" data-bind="value:order().pk" id="txt-order-pk"/>
-				<input type="hidden" data-bind="value:order().standard_flg" id="txt-standard-flg"/>
-				<label class="l">备注</label>
+				<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" /> <input type="hidden" data-bind="value:order().standard_flg" id="txt-standard-flg" /> <label class="l">备注</label>
 				<div class="ip">
 					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment" data-bind="value: order().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
-		<div align="right">
-			<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
-		</div>
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
 		</div>
 	</div>
 	<script>

@@ -1,228 +1,250 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.PassengerTicketInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.PassengerTicketInfoBean" >
-	    <result column="ticket_source" property="ticket_source" jdbcType="VARCHAR" />
-	    <result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
-	    <result column="PNR" property="PNR" jdbcType="VARCHAR" />
-	    <result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
-	    <result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
-	    <result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
-	    <result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
-	    <result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
-	    <result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
-	    <result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
-	    <result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
-	    <result column="terminal" property="terminal" jdbcType="VARCHAR" />
-	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
- 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-  		
-    	ticket_source, 
-    	ticket_cost, 
-    	PNR, 
-    	passenger_pk,
-    	ticket_index, 
-    	ticket_date, 
-    	ticket_number, 
-    	from_to_time, 
-    	from_to_city, 
-    	from_airport, 
-    	to_airport, 
-    	terminal, 
-    	update_user, 
-    	create_user, 
-    	pk, 
-    	create_time,
-    	update_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from passenger_ticket_info
-    where pk = #{pk,jdbcType=CHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from passenger_ticket_info
-    where pk = #{pk,jdbcType=CHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.xinchi.bean.PassengerTicketInfoBean" >
-  	
-    insert into passenger_ticket_info
-    
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-	 	<if test="ticket_source != null">
-	        ticket_source,
-	      </if>
-	 	<if test="ticket_cost != null">
-	        ticket_cost,
-	      </if>
-	 	<if test="PNR != null">
-	        PNR,
-	      </if>
-	 	<if test="passenger_pk != null">
-	        passenger_pk,
-	      </if>
-	 	<if test="ticket_index != null">
-	        ticket_index,
-	      </if>
-	 	<if test="ticket_date != null">
-	        ticket_date,
-	      </if>
-	 	<if test="ticket_number != null">
-	        ticket_number,
-	      </if>
-	 	<if test="from_to_time != null">
-	        from_to_time,
-	      </if>
-	 	<if test="from_to_city != null">
-	        from_to_city,
-	      </if>
-	 	<if test="from_airport != null">
-	        from_airport,
-	      </if>
-	 	<if test="to_airport != null">
-	        to_airport,
-	      </if>
-	 	<if test="terminal != null">
-	        terminal,
-	      </if>
-	 	<if test="update_user != null">
-	        update_user,
-	      </if>
-	 	<if test="create_user != null">
-	        create_user,
-	      </if>
-	 	<if test="pk != null">
-	        pk,
-	      </if>
-      <if test="create_time != null">
-        create_time,
-      </if>
-      <if test="update_time != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-    	<if test="ticket_source != null">
-	        #{ticket_source,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket_cost != null">
-	        #{ticket_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="PNR != null">
-	        #{PNR,jdbcType=VARCHAR},
-	      </if>
-    	<if test="passenger_pk != null">
-	        #{passenger_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="ticket_index != null">
-	        #{ticket_index,jdbcType=INTEGER},
-	      </if>
-    	<if test="ticket_date != null">
-	        #{ticket_date,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket_number != null">
-	        #{ticket_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_to_time != null">
-	        #{from_to_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_to_city != null">
-	        #{from_to_city,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_airport != null">
-	        #{from_airport,jdbcType=VARCHAR},
-	      </if>
-    	<if test="to_airport != null">
-	        #{to_airport,jdbcType=VARCHAR},
-	      </if>
-    	<if test="terminal != null">
-	        #{terminal,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="create_time != null">
-        #{create_time,jdbcType=VARCHAR},
-      </if>
-       <if test="update_time != null">
-        #{update_time,jdbcType=VARCHAR},
-      </if>
-    </trim>		
-  </insert>
-  
+<mapper namespace="com.xinchi.bean.mapper.PassengerTicketInfoMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PassengerTicketInfoBean">
+		<result column="ticket_source" property="ticket_source" jdbcType="VARCHAR" />
+		<result column="ticket_source_pk" property="ticket_source_pk" jdbcType="CHAR" />
+		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
+		<result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
+		<result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
+		<result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
+		<result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
+		<result column="terminal" property="terminal" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+	</resultMap>
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PassengerTicketInfoBean" >
-    update passenger_ticket_info
-    <set >
-    	<if test="ticket_source != null">
-	        ticket_source = #{ticket_source,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket_cost != null">
-	        ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
-	      </if>
-    	<if test="PNR != null">
-	        PNR = #{PNR,jdbcType=VARCHAR},
-	      </if>
-    	<if test="passenger_pk != null">
-	        passenger_pk = #{passenger_pk,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket_index != null">
-	        ticket_index = #{ticket_index,jdbcType=INTEGER},
-	      </if>
-    	<if test="ticket_date != null">
-	        ticket_date = #{ticket_date,jdbcType=VARCHAR},
-	      </if>
-    	<if test="ticket_number != null">
-	        ticket_number = #{ticket_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_to_time != null">
-	        from_to_time = #{from_to_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_to_city != null">
-	        from_to_city = #{from_to_city,jdbcType=VARCHAR},
-	      </if>
-    	<if test="from_airport != null">
-	        from_airport = #{from_airport,jdbcType=VARCHAR},
-	      </if>
-    	<if test="to_airport != null">
-	        to_airport = #{to_airport,jdbcType=VARCHAR},
-	      </if>
-    	<if test="terminal != null">
-	        terminal = #{terminal,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        update_user = #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        create_user = #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="update_time != null">
-        update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where pk = #{pk,jdbcType=CHAR}
-  </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.PassengerTicketInfoBean" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from passenger_ticket_info
-   </select>
+	<sql id="Base_Column_List">
+
+		ticket_source,
+		ticket_cost,
+		PNR,
+		passenger_pk,
+		ticket_index,
+		ticket_date,
+		ticket_number,
+		from_to_time,
+		from_to_city,
+		from_airport,
+		to_airport,
+		terminal,
+		update_user,
+		create_user,
+		pk,
+		create_time,
+		update_time,
+		ticket_source_pk,
+		base_pk
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from passenger_ticket_info
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from passenger_ticket_info
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.PassengerTicketInfoBean">
+
+		insert into passenger_ticket_info
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ticket_source != null">
+				ticket_source,
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost,
+			</if>
+			<if test="PNR != null">
+				PNR,
+			</if>
+			<if test="passenger_pk != null">
+				passenger_pk,
+			</if>
+			<if test="ticket_index != null">
+				ticket_index,
+			</if>
+			<if test="ticket_date != null">
+				ticket_date,
+			</if>
+			<if test="ticket_number != null">
+				ticket_number,
+			</if>
+			<if test="from_to_time != null">
+				from_to_time,
+			</if>
+			<if test="from_to_city != null">
+				from_to_city,
+			</if>
+			<if test="from_airport != null">
+				from_airport,
+			</if>
+			<if test="to_airport != null">
+				to_airport,
+			</if>
+			<if test="terminal != null">
+				terminal,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="ticket_source_pk != null">
+				ticket_source_pk,
+			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ticket_source != null">
+				#{ticket_source,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				#{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="PNR != null">
+				#{PNR,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_pk != null">
+				#{passenger_pk,jdbcType=CHAR},
+			</if>
+			<if test="ticket_index != null">
+				#{ticket_index,jdbcType=INTEGER},
+			</if>
+			<if test="ticket_date != null">
+				#{ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_number != null">
+				#{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_time != null">
+				#{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_city != null">
+				#{from_to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="from_airport != null">
+				#{from_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="to_airport != null">
+				#{to_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="terminal != null">
+				#{terminal,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_source_pk != null">
+				#{ticket_source_pk,jdbcType=CHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PassengerTicketInfoBean">
+		update passenger_ticket_info
+		<set>
+			<if test="ticket_source != null">
+				ticket_source = #{ticket_source,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="PNR != null">
+				PNR = #{PNR,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_pk != null">
+				passenger_pk = #{passenger_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_index != null">
+				ticket_index = #{ticket_index,jdbcType=INTEGER},
+			</if>
+			<if test="ticket_date != null">
+				ticket_date = #{ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_number != null">
+				ticket_number = #{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_time != null">
+				from_to_time = #{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_city != null">
+				from_to_city = #{from_to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="from_airport != null">
+				from_airport = #{from_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="to_airport != null">
+				to_airport = #{to_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="terminal != null">
+				terminal = #{terminal,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_source_pk != null">
+				ticket_source_pk = #{ticket_source_pk,jdbcType=CHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.PassengerTicketInfoBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from passenger_ticket_info
+	</select>
 </mapper>

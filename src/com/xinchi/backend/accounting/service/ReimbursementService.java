@@ -1,10 +1,11 @@
 package com.xinchi.backend.accounting.service;
 
 import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 
 @LogDescription(des = "支出报销")
-public interface ReimbursementService {
+public interface ReimbursementService extends BaseService {
 
 	@LogDescription(des = "报销申请")
 	public String save(ReimbursementBean reimbursement);

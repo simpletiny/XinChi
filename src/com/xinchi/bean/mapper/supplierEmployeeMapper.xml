@@ -291,6 +291,12 @@
 			<if test="params.bo.employee_city != null and params.bo.employee_city !=''">
 				and B.supplier_city = #{params.bo.employee_city,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and B.type = #{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.type == null or params.bo.type ==''">
+				and B.type = 'D'
+			</if>
 		</where>
 
 	</select>

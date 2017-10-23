@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
@@ -41,23 +43,28 @@ public class ReceivedServiceImpl implements ReceivedService {
 		return dao.getAllByPage(page);
 	}
 
+	@Autowired
+	private PayApprovalDAO payApprovalDao;
+
 	@Override
 	public String rollBackReceived(String received_pks) {
 		String[] pks = received_pks.split(",");
 		for (String pk : pks) {
 			ClientReceivedDetailBean detail = dao.selectByPk(pk);
-			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM)) {
+			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM) || detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
+					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN)) {
 				String[] related_pks = detail.getRelated_pk().split(",");
 				for (String related : related_pks) {
-					if (related.equals(detail.getPk()))
-						continue;
 					ClientReceivedDetailBean related_detail = dao.selectByPk(related);
 					doRollBack(related_detail);
 				}
-
+			} else if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
+				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getPk());
+				payApprovalDao.delete(pa.getPk());
+				doRollBack(detail);
+			} else {
+				doRollBack(detail);
 			}
-			doRollBack(detail);
-
 		}
 
 		return "OK";
@@ -82,5 +89,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public ClientReceivedDetailBean selectByPk(String received_pk) {
 		return dao.selectByPk(received_pk);
+	}
+
+	@Override
+	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk) {
+		return dao.selectReceivedDetailByRelatedPk(related_pk);
 	}
 }

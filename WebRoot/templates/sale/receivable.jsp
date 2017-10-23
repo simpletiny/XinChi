@@ -27,10 +27,17 @@
 	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 0px;
+	right: 20px;
 	top: 200px;
 	margin-left: 10px;
 	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
 }
 </style>
 </head>
@@ -79,6 +86,12 @@
 								<input type="text" class="form-control" placeholder="财务主体" name="receivable.financial_body_name" />
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="团号" name="receivable.team_number" />
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
@@ -100,7 +113,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">尾款为0</label>
 							<div class="col-md-2">
-							<input type="checkbox" value="Y" name="receivable.zero_flg"  data-bind="event:{click:zeroBalance}" />
+								<input type="checkbox" value="Y" name="receivable.zero_flg" data-bind="event:{click:zeroBalance}" />
 							</div>
 						</div>
 						<div style="padding-top: 3px; float: right">
@@ -176,8 +189,8 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: receivables">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.team_number,attr: {href: 'order-detail.jsp?key='+$data.pk}"></a></td>
+								<td><input type="checkbox" data-bind="checkedValue: $data, checked: $root.chosenOrders" /></td>
+								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.back_days"></td>
 								<td data-bind="text: $data.final_flg"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
@@ -261,23 +274,17 @@
 				</div>
 
 				<div class="fixed">
-					<div style="margin-top: 5px">
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ridTail() }">抹零申请</button>
-					</div>
-					<div style="margin-top: 5px">
-						<button type="submit" disabled="disabled" class="btn btn-green col-md-1" data-bind="click: function() { sumOrder() }">合账申请</button>
-					</div>
-					<div style="margin-top: 5px">
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { strike() }">冲账申请</button>
-					</div>
-					<div style="margin-top: 5px">
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive()}">收入</button>
-					</div>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ridTail() }">抹零申请</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pay() }">支出申请</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { strike() }">冲账申请</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { collect()}">代收</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive()}">收入</button>
 				</div>
 			</div>
 
 		</div>
 	</div>
+	<!-- 抹零申请 -->
 	<div id="tail_submit" style="display: none; width: 1100px; padding-top: 30px;">
 		<form id="form-tail">
 			<div class="input-row clearfloat">
@@ -319,98 +326,133 @@
 			</div>
 		</form>
 	</div>
-
-	<div id="sum_submit" style="display: none; width: 800px; padding-top: 30px;">
-		<form id="form-sum">
+	<!-- 代收申请 -->
+	<div id="collect-submit" style="display: none; width: 1100px; padding-top: 30px;">
+		<form id="form-collect">
 			<div class="input-row clearfloat">
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">账户</label>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">尾款</label>
 					<div class="ip" style="width: 70%">
-						<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" name="detail.card_account" required="required"></select>
+						<p class="ip-default rmb" data-bind="text:tailMoney()"></p>
 					</div>
 				</div>
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账总金额</label>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">团号</label>
 					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.sum_received" class="ip- amountRangeStart" required="required" />
+						<p class="ip-default" data-bind="text:team_number()"></p>
+						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
 					</div>
 				</div>
-			</div>
-			<div class="input-row clearfloat">
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账时间</label>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.received_time" class="form-control datetime-picker" required="required" />
-					</div>
-				</div>
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">我组金额</label>
-					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.allot_received" class="ip- amountRangeEnd" required="required" />
+						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
-				<div class="col-md-3">
-					<label class="l" style="width: 100%">团号</label>
-				</div>
-				<div class="col-md-3">
-					<label class="l" style="width: 100%">客户</label>
-				</div>
-				<div class="col-md-3">
-					<label class="l" style="width: 100%">尾款</label>
-				</div>
-				<div class="col-md-3 required">
-					<label class="l" style="width: 100%">分配金额</label>
-				</div>
-			</div>
-			<!-- ko foreach:chosenReceivables -->
-			<div class="input-row clearfloat" st="allot">
-				<div class="col-md-3">
-					<div class="ip">
-						<p class="ip-default" data-bind="text:$data.team_number"></p>
-						<input type="hidden" data-bind="value:$data.team_number" st="team_number" />
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="ip">
-						<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="ip">
-						<!-- ko if:$data.final_flg=="Y" -->
-						<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
-						<!-- /ko -->
-						<!-- ko if:$data.final_flg=="N" -->
-						<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
-						<!-- /ko -->
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="ip">
-						<input type="number" class="form-control" st="received" data-bind="attr:{'name':'name-'+$data.pk}" required="required" />
+				<div class="col-md-4 required">
+					<label class="l" style="width: 30%">代收金额</label>
+					<div class="ip" style="width: 70%">
+						<input type="number" name="detail.received" id="collect-money" class="form-control" required="required" />
 					</div>
 				</div>
 			</div>
-			<!-- /ko -->
+			<div class="input-row clearfloat">
+				<div class="col-md-12 required">
+					<label class="l" style="width: 10%">说明</label>
+					<div class="ip" style="width: 90%">
+						<input type="text" maxlength="200" class="ip-" placeholder="说明" name="detail.comment" required="required" />
+					</div>
+				</div>
+			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
-						<a type="button" class="btn btn-green btn-r" data-bind="click: applySum">申请</a>
+						<a type="button" class="btn btn-green btn-r" data-bind="click: applyCollect">申请</a>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 
-	<div id="strike_submit" style="display: none; width: 800px; padding-top: 30px;">
+	<!-- 支出申请 -->
+	<div id="pay-sumbit" style="display: none; width: 900px; padding-top: 30px;">
+		<form id="form-pay">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">团号</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:team_number()"></p>
+						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">客户</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:client_employee_name()"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">多付金额</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default rmb" data-bind="text:more_money()"></p>
+					</div>
+				</div>
+				<div class="col-md-4 required">
+					<label class="l" style="width: 30%">返还金额</label>
+					<div class="ip" style="width: 70%">
+						<input type="number" name="detail.received" class="form-control" required="required" />
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">支付时限</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="detail.limit_time" class="form-control datetime-picker" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12 required">
+					<label class="l" style="width: 10%">备注</label>
+					<div class="ip">
+						<textarea type="text" class="ip-default" rows="15" name="detail.comment" maxlength="200" placeholder="备注" required="required"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="margin-top: 10px">
+					<div align="right">
+						<a type="button" class="btn btn-green btn-r" data-bind="click: applyPay">申请</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- 冲账申请 -->
+	<div id="strike-submit" style="display: none; width: 900px; padding-top: 30px;">
 		<form id="form-strike">
 			<div class="input-row clearfloat">
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">冲账金额</label>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.allot_received" class="form-control" id="strike-money" required="required" />
+						<p class="ip-default" data-bind="text:client_employee_name()"></p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">团号</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:team_number()"></p>
+						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">冲账总金额</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:max_strike_money()"></p>
 					</div>
 				</div>
 			</div>
@@ -428,7 +470,7 @@
 					<label class="l" style="width: 100%">分配金额</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenReceivables -->
+			<!-- ko foreach:positiveReceivables -->
 			<div class="input-row clearfloat" st="strike-allot">
 				<div class="col-md-3">
 					<div class="ip">
@@ -453,7 +495,7 @@
 				</div>
 				<div class="col-md-3">
 					<div class="ip">
-						<input type="number" class="form-control" st="strike-received" data-bind="attr:{'name':'name-'+$data.pk}" required="required" />
+						<input type="number" class="form-control" st="strike-received" required="required" />
 					</div>
 				</div>
 			</div>
@@ -476,6 +518,7 @@
 		</form>
 	</div>
 
+	<!-- 收入申请 -->
 	<div id="receive_submit" style="display: none; width: 800px; padding-top: 30px;">
 		<form id="form-receive">
 			<div class="input-row clearfloat">
@@ -562,7 +605,7 @@
 					<label class="l" style="width: 100%">分配金额</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenReceivables -->
+			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="receive_allot">
 				<div class="col-md-3">
 					<div class="ip">

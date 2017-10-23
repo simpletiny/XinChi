@@ -117,4 +117,931 @@
 			<comment>ALTER TABLE product</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE supplier ADD COLUMN type CHAR(1) NULL DEFAULT 'D' COMMENT 'D for 地接，A for air ticket supplier'  AFTER corporate_id ;
+             ]]>
+			<comment>ALTER TABLE supplier</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE passenger_ticket_info CHANGE COLUMN ticket_source ticket_source VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL  , ADD COLUMN ticket_source_pk CHAR(22) NOT NULL  AFTER ticket_source ;
+             ]]>
+			<comment>ALTER TABLE passenger_ticket_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE air_ticket_payable (
+					  supplier_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  PNR VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  budget_payable DECIMAL(12,2) NULL DEFAULT NULL ,
+					  final_payable DECIMAL(12,2) NULL DEFAULT NULL ,
+					  budget_balance DECIMAL(12,2) NULL DEFAULT NULL ,
+					  final_balance DECIMAL(12,2) NULL DEFAULT NULL ,
+					  paid DECIMAL(12,2) NULL DEFAULT NULL ,
+					  final_flg CHAR(1) NULL DEFAULT 'N' ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '机票应付款';
+             ]]>
+			<comment>CREATE TABLE air_ticket_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE passenger_ticket_info ADD COLUMN base_pk CHAR(22) NULL COMMENT '机票汇总信息pk，现在对应的是air_ticket_payable pk'  AFTER pk ;
+             ]]>
+			<comment>ALTER TABLE passenger_ticket_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE air_ticket_paid_detail (
+					  supplier_employee_pk CHAR(22) NOT NULL ,
+					  money DECIMAL(12,2) NOT NULL ,
+					  allot_money DECIMAL(12,2) NULL DEFAULT NULL ,
+					  sum_money DECIMAL(12,2) NULL ,
+					  status CHAR(1) NULL DEFAULT NULL ,
+					  type VARCHAR(10) NULL DEFAULT NULL ,
+					  time VARCHAR(16) NULL DEFAULT NULL ,
+					  limit_time VARCHAR(16) NULL DEFAULT NULL COMMENT '支付时限' ,
+					  confirm_time VARCHAR(16) NULL DEFAULT NULL ,
+					  approve_user VARCHAR(10) NULL ,
+					  related_pk CHAR(22) NULL ,
+					  comment VARCHAR(200) NULL DEFAULT NULL ,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					  base_pk CHAR(22) NULL ,
+					  PNR VARCHAR(50) NULL ,
+					  PRIMARY KEY (pk) )
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '机票支付详表';
+             ]]>
+			<comment>CREATE TABLE air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists view_air_ticket_paid_detail;
+          		CREATE VIEW view_air_ticket_paid_detail AS 
+				SELECT * FROM air_ticket_paid_detail WHERE type='STRIKE'
+				union all
+				SELECT * FROM air_ticket_paid_detail WHERE type<>'STRIKE' 
+				GROUP BY related_pk
+             ]]>
+			<comment>CREATE VIEW view_air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS approval_all;
+				 create VIEW approval_all AS
+				select 
+			    	C.supplier_short_name as receiver,
+			    	A.allot_money as money, 
+			    	'D' as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	A.related_pk as related_pk, 
+			    	D.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	A.limit_time as limit_time
+			    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+				LEFT JOIN supplier C on B.financial_body_pk = C.pk
+			    LEFT JOIN user_base D on A.create_user = D.user_number
+			    UNION ALL 
+			    select
+			    	B.user_name as receiver,
+			    	A.money as money, 
+			    	A.item as item, 
+			    	A.status as status, 
+			    	A.comment as comment, 
+			    	null as related_pk, 
+			    	B.user_name AS apply_user, 
+			    	A.pk as pk, 
+			    	A.create_time as apply_time,
+			    	null as limit_time
+			    	from reimbursement A 
+			    	LEFT JOIN user_base B on A.apply_user = B.user_number
+			   UNION ALL
+				select 
+					C.supplier_name AS receiver,
+					A.allot_money AS money,
+					'P' AS item,
+					A.status as status,
+					A.comment as comment,
+				    A.related_pk as related_pk,
+					D.user_name  AS apply_user,
+                    A.pk AS pk,
+					A.create_time AS apply_time,
+                    A.limit_time AS limit_time
+				from view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+				LEFT JOIN supplier C ON B.financial_body_pk = C.pk LEFT JOIN user_base D ON A.create_user = D.user_number
+             ]]>
+			<comment>Alter VIEW approval_all</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE client_change_sale_log (
+				  pre_sale_pk CHAR(22) NULL ,
+				  client_pk CHAR(22) NULL ,
+				  change_user VARCHAR(10) NULL ,
+				  type VARCHAR(10) NULL ,
+				  combine_client_pk CHAR(22) NULL COMMENT '如果新销售下存在同名财务主体时属于合并，新销售下已存在的财务主体PK' ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '客户财务主体改变销售记录表';
+             ]]>
+			<comment>CREATE  TABLE client_change_sale_log</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	update client set sales='public' where public_flg='Y';
+             ]]>
+			<comment>update client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	update client_employee set sales='public' where public_flg='Y';
+             ]]>
+			<comment>update client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_client_receivable;
+				CREATE VIEW view_client_receivable AS 
+					SELECT C.client_name,C.body_name,C.pk AS client_pk, SUM( IF(A.final_flg='Y',A.final_balance, A.budget_balance)) AS sum_balance 
+					from receivable A LEFT JOIN client_employee B ON A.client_employee_pk = B.pk
+					LEFT JOIN client C ON B.financial_body_pk = C.pk
+					GROUP BY B.financial_body_pk
+             ]]>
+			<comment>CREATE VIEW view_client_receivable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_client_employee_count;
+				CREATE VIEW view_client_employee_count AS
+					SELECT B.client_name,B.pk AS client_pk, B.body_name,count(A.pk) AS client_employee_count from client_employee A 
+					LEFT JOIN client B ON A.financial_body_pk = B.pk
+					GROUP BY A.financial_body_pk
+             ]]>
+			<comment>CREATE VIEW view_client_employee_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_client_year_order_count;
+					CREATE VIEW view_client_year_order_count AS 
+					SELECT C.client_name,C.body_name,C.pk AS client_pk, count(A.pk) AS client_year_order_count FROM budget_order A 
+					LEFT JOIN client_employee B ON A.client_employee_pk = B.pk
+					LEFT JOIN client C ON B.financial_body_pk = C.pk
+					WHERE LEFT(A.confirm_date,4) =  DATE_FORMAT(NOW(), '%Y')
+					GROUP BY C.pk;
+             ]]>
+			<comment>CREATE VIEW view_client_year_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_client_last_order;
+					CREATE VIEW view_client_last_order AS
+					SELECT C.client_name,C.body_name,C.pk AS client_pk, MAX(confirm_date) as last_order_date ,A.pk AS order_pk FROM budget_order A
+					LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
+					LEFT JOIN client C ON B.financial_body_pk = C.pk
+					group by C.pk;
+             ]]>
+			<comment>CREATE VIEW view_client_last_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_agency_client_count;
+					CREATE VIEW view_agency_client_count AS
+					SELECT COUNT(A.pk)  AS agency_client_count ,B.agency_name,B.pk AS agency_pk from client A
+					LEFT JOIN travel_agency B ON A.agency_pk = B.pk
+					WHERE B.pk IS NOT NULL
+					GROUP BY A.agency_pk;
+             ]]>
+			<comment>CREATE VIEW view_agency_client_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_order_count;
+				CREATE VIEW view_order_count AS
+				    select 
+				        A.client_employee_pk as client_employee_pk,
+				        count(A.pk) as order_count,
+				        B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+				        A.confirm_date as order_date
+				    from
+				        budget_order A
+				            LEFT JOIN
+				        client_employee B ON A.client_employee_pk = B.pk
+				    group by A.client_employee_pk , order_date;
+             ]]>
+			<comment>CREATE VIEW view_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_visit_count;
+				CREATE VIEW view_visit_count AS
+				    select 
+				        A.client_employee_pk as client_employee_pk,
+				        count(A.pk) as visit_count,
+				        B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+				        A.date as visit_date
+				    from
+				        client_visit A
+				            LEFT JOIN
+				        client_employee B ON A.client_employee_pk = B.pk
+				    WHERE
+				        A.type = 'VISIT'
+				    group by A.client_employee_pk , date;
+             ]]>
+			<comment>CREATE VIEW view_visit_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_last_client_visit;
+				CREATE VIEW  view_last_client_visit AS 
+				SELECT 
+				    client_employee_pk,pk, target, MAX(date) AS last_visit_date
+				FROM
+				    client_visit
+				WHERE
+				    type = 'VISIT'
+				GROUP BY client_employee_pk;
+             ]]>
+			<comment>CREATE VIEW  view_last_client_visit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_accurate_sale_count;
+				CREATE VIEW view_accurate_sale_count AS
+				    select 
+				        A.client_employee_pk as client_employee_pk,
+				        count(A.pk) as accurate_sale_count,
+				        B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+				        A.date as accurate_sale_date
+				    from
+				        accurate_sale A
+				            LEFT JOIN
+				        client_employee B ON A.client_employee_pk = B.pk
+				    group by A.client_employee_pk , date;
+             ]]>
+			<comment>CREATE VIEW view_accurate_sale_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_last_accurate_sale;
+				CREATE VIEW view_last_accurate_sale AS
+				    SELECT 
+				        client_employee_pk,pk, summary, MAX(date) AS view_last_accurate_sale
+				    FROM
+				        accurate_sale
+				    GROUP BY client_employee_pk;
+             ]]>
+			<comment>CREATE VIEW view_last_accurate_sale</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS receivable_for_client;
+				CREATE VIEW receivable_for_client AS
+				SELECT 
+				    A.client_employee_pk,
+				    sum(IF(A.final_flg = 'N',
+				        A.budget_balance,
+				        A.final_balance)) AS receivable,
+				    A.return_date,
+				    datediff(now(),
+				            min(case
+				                when
+				                    (A.final_flg = 'N'
+				                        and A.budget_balance <> 0)
+				                        OR (A.final_flg = 'Y'
+				                        and A.final_balance <> 0)
+				                then
+				                    A.return_date
+				            end)) as last_receivable_period,
+				    B.relation_level as relation_level,
+				    B.back_level as back_level,
+				    B.market_level as market_level
+				from
+				    receivable A
+				        LEFT JOIN
+				    client_employee B ON A.client_employee_pk = B.pk
+				group by client_employee_pk;
+             ]]>
+			<comment>ALTER VIEW receivable_for_client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS client_relation_summary;
+				CREATE VIEW client_relation_summary AS
+				    SELECT 
+				        A.name as client_employee_name,
+				        A.pk as client_employee_pk,
+				        A.sales,
+				        IF(ISNULL(G.user_name),'公开',G.user_name) AS sales_name,
+				        A.delete_flg as delete_flg,
+				        A.relation_level as relation_level,
+				        A.back_level as back_level,
+				        A.market_level as market_level,
+				        SUM(IF(LEFT(B.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+				            B.order_count,
+				            0)) as month_order_count,
+				        C.last_confirm_date,
+				        C.last_order_period,
+				        D.receivable,
+				        D.last_receivable_period,
+				        E.target AS last_client_visit_target,
+				        F.summary AS last_accurate_sale_summary
+				    from
+				        client_employee A
+				            LEFT JOIN
+				        view_order_count B ON A.pk = B.client_employee_pk
+				            LEFT JOIN
+				        order_period C ON A.pk = C.client_employee_pk
+				            LEFT JOIN
+				        receivable_for_client D ON A.pk = D.client_employee_pk
+				            LEFT JOIN
+				        view_last_client_visit E ON A.pk = E.client_employee_pk
+				            LEFT JOIN
+				        view_last_accurate_sale F ON A.pk = F.client_employee_pk
+							LEFT JOIN
+						user_base G ON A.sales = G.pk
+				    GROUP BY A.pk;
+
+             ]]>
+			<comment>ALTER VIEW client_relation_summary</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+       			create view budget_order_view as
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>ALTER VIEW budget_order_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS air_ticket_need;
+				CREATE VIEW air_ticket_need AS
+				SELECT 
+				    A.confirm_flg,
+				    A.air_ticket_cost,
+				    A.standard_flg,
+				    B.pk AS product_pk,
+				    A.pk AS sale_order_pk,
+					A.name_list AS passengers,
+				    CASE
+				        WHEN isnull(B.pk) THEN A.product_manager_number
+				        WHEN B.air_ticket_charge = 'PRODUCT' THEN A.product_manager_number
+				        WHEN B.air_ticket_charge = 'SALE' THEN A.create_user_number
+				        ELSE null
+				    end AS ticket_client_number,
+				    CASE
+				        WHEN isnull(A.departure_date) OR isnull(C.pk) THEN null
+				        ELSE DATE_ADD(A.departure_date,
+				            INTERVAL C.start_day - 1 DAY)
+				    END AS first_ticket_date,
+				    CASE
+				        WHEN isnull(C.pk) THEN null
+				        ELSE CONCAT(C.start_city, '--', C.end_city)
+				    END AS first_from_to,
+				    (if(isnull(A.adult_count),
+				        0,
+				        A.adult_count) + if(isnull(A.special_count),
+				        0,
+				        A.special_count)) AS people_count,
+				    A.team_number
+				FROM
+				    budget_order_view A
+				        LEFT JOIN
+				    product B ON A.product_pk = B.pk
+				        LEFT JOIN
+				    product_air_ticket C ON B.pk = C.product_pk
+				        AND C.ticket_index = 1
+				where
+				    isnull(B.air_ticket_charge)
+				        OR B.air_ticket_charge <> 'NO';
+             ]]>
+			<comment>ALTER VIEW budget_order_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE pay_approval (
+				  receiver VARCHAR(100) NULL ,
+				  money DECIMAL(12,2) NULL ,
+				  item CHAR(1) NULL ,
+				  status CHAR(1) NULL ,
+				  related_pk VARCHAR(1100) NULL ,
+				  apply_user VARCHAR(10) NULL ,
+				  apply_time VARCHAR(15) NULL ,
+				  limit_time VARCHAR(16) NULL ,
+				  back_pk CHAR(22) NULL COMMENT '从其他表存入的数据pk' ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  comment VARCHAR(200) NULL ,
+				  approval_user CHAR(22) NULL ,
+				  approval_time VARCHAR(16) NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '支出审批表';
+             ]]>
+			<comment>CREATE  TABLE pay_approval</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_temp;
+				CREATE VIEW view_temp AS
+				    select 
+				        C.supplier_short_name as receiver,
+				        A.allot_money as money,
+				        'D' as item,
+				        A.status as status,
+				        A.comment as comment,
+				        A.related_pk as related_pk,
+				        A.create_user AS apply_user,
+				        A.pk as back_pk,
+				        A.create_time as apply_time,
+				        A.limit_time as limit_time,
+				        A.create_time,
+				        A.create_user
+				    from
+				        paid_detail A
+				            left join
+				        supplier_employee B ON A.supplier_employee_pk = B.pk
+				            LEFT JOIN
+				        supplier C ON B.financial_body_pk = C.pk 
+				    UNION ALL select 
+				        B.user_name as receiver,
+				        A.money as money,
+				        A.item as item,
+				        A.status as status,
+				        A.comment as comment,
+				        null as related_pk,
+				        A.apply_user AS apply_user,
+				        A.pk as back_pk,
+				        A.create_time as apply_time,
+				        null as limit_time,
+				        A.create_time,
+				        A.create_user
+				    from
+				        reimbursement A
+				            LEFT JOIN
+				        user_base B ON A.apply_user = B.user_number 
+				    UNION ALL select 
+				        C.supplier_name AS receiver,
+				        A.allot_money AS money,
+				        'P' AS item,
+				        A.status as status,
+				        A.comment as comment,
+				        A.related_pk as related_pk,
+				        A.create_user AS apply_user,
+				        A.pk AS back_pk,
+				        A.create_time AS apply_time,
+				        A.limit_time AS limit_time,
+				        A.create_time,
+				        A.create_user
+				    from
+				        view_air_ticket_paid_detail A
+				            LEFT JOIN
+				        supplier_employee B ON A.supplier_employee_pk = B.pk
+				            LEFT JOIN
+				        supplier C ON B.financial_body_pk = C.pk;
+				INSERT INTO pay_approval
+				select receiver,money,item,status,related_pk,
+				apply_user,apply_time,limit_time,back_pk,back_pk,
+				create_time,create_user,null,null,comment,null,null from view_temp;
+				DROP VIEW IF EXISTS view_temp;
+             ]]>
+			<comment>insert data to pay_approval</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE client_received_detail CHANGE COLUMN received_time received_time VARCHAR(16) NULL  ;
+             ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE supplier_paid_detail CHANGE COLUMN supplier_employee_name supplier_employee_name VARCHAR(10) NULL;
+             ]]>
+			<comment>ALTER TABLE supplier_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists paid_detail;
+          		CREATE VIEW paid_detail AS 
+				SELECT * FROM supplier_paid_detail WHERE type like '%STRIKE%'
+				union all
+				SELECT * FROM supplier_paid_detail WHERE type not like '%STRIKE%' 
+				GROUP BY related_pk
+             ]]>
+			<comment> ALTER VIEW paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE final_non_standard_order (
+				  team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  product_name VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  independent_flg CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'N' COMMENT '是否为独立团' ,
+				  comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  other_cost_comment VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  other_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  fy DECIMAL(12,2) NULL DEFAULT NULL ,
+				  special_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  special_count INT(11) NULL DEFAULT NULL ,
+				  adult_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  adult_count INT(11) NULL DEFAULT NULL ,
+				  receivable DECIMAL(12,2) NULL DEFAULT NULL ,
+				  days INT(11) NULL DEFAULT NULL ,
+				  departure_date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  confirm_date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  product_manager VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '非标订单指定产品经理' ,
+				  confirm_file VARCHAR(30) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  name_list VARCHAR(3000) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  air_ticket_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '机票款' ,
+				  operate_flg CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'N' ,
+				  product_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '非标订单决算表';
+             ]]>
+			<comment>CREATE  TABLE final_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE  TABLE final_standard_order (
+				  team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  product_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  departure_date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  days INT(11) NULL DEFAULT NULL ,
+				  receivable DECIMAL(12,2) NULL DEFAULT NULL ,
+				  adult_count INT(11) NULL DEFAULT NULL ,
+				  adult_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  special_count INT(11) NULL DEFAULT NULL ,
+				  special_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  fy DECIMAL(12,2) NULL DEFAULT NULL ,
+				  other_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  other_cost_comment VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+				  independent_flg CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'N' COMMENT '是否为独立团' ,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  confirm_date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  confirm_file VARCHAR(30) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  name_list VARCHAR(3000) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+				  air_ticket_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '机票款' ,
+				  operate_flg CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'N' ,
+				  product_cost DECIMAL(12,2) NULL DEFAULT NULL ,
+				  PRIMARY KEY (pk) )
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '标准订单决算表';
+             ]]>
+			<comment>CREATE  TABLE final_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP VIEW IF EXISTS final_order_view;
+       		create view final_order_view as
+			    select 
+			        A.team_number,
+			        A.product_name,
+			        '' as product_pk,
+			        A.client_employee_pk,
+			        C.name AS client_employee_name,
+			        A.independent_flg,
+			        A.comment,
+			        A.other_cost_comment,
+			        A.other_cost,
+			        A.fy,
+			        A.special_cost,
+			        A.special_count,
+			        A.adult_cost,
+			        A.adult_count,
+			        A.receivable,
+			        A.days,
+			        A.departure_date,
+			        A.pk,
+			        A.update_user,
+			        A.create_user AS create_user_number,
+			        B.user_name AS create_user,
+			        A.create_time,
+			        A.update_time,
+			        A.confirm_date,
+			        A.confirm_file,
+			        'N' AS standard_flg,
+			        A.product_manager AS product_manager_number,
+			        D.user_name AS product_manager,
+			        A.air_ticket_cost,
+			        A.product_cost,
+			        A.operate_flg,
+			        A.name_list
+			    from
+			        final_non_standard_order A
+			            LEFT JOIN
+			        user_base B ON A.create_user = B.user_number
+			            LEFT JOIN
+			        client_employee C ON A.client_employee_pk = C.pk
+			            LEFT JOIN
+			        user_base D ON A.product_manager = D.user_number 
+			    union all select 
+			        A.team_number,
+			        C.name AS product_name,
+			        A.product_pk,
+			        A.client_employee_pk,
+			        D.name AS client_employee_name,
+			        A.independent_flg,
+			        A.comment,
+			        A.other_cost_comment,
+			        A.other_cost,
+			        A.fy,
+			        A.special_cost,
+			        A.special_count,
+			        A.adult_cost,
+			        A.adult_count,
+			        A.receivable,
+			        A.days,
+			        A.departure_date,
+			        A.pk,
+			        A.update_user,
+			        A.create_user AS create_user_number,
+			        B.user_name AS create_user,
+			        A.create_time,
+			        A.update_time,
+			        A.confirm_date,
+			        A.confirm_file,
+			        'Y' AS standard_flg,
+			        C.product_manager AS product_manager_number,
+			        E.user_name AS product_manager,
+			        A.air_ticket_cost,
+			        A.product_cost,
+			        A.operate_flg,
+			        A.name_list
+			    from
+			        final_standard_order A
+			            LEFT JOIN
+			        user_base B ON A.create_user = B.user_number
+			            LEFT JOIN
+			        product C ON A.product_pk = C.pk
+			            LEFT JOIN
+			        client_employee D ON A.client_employee_pk = D.pk
+			            LEFT JOIN
+			        user_base E ON C.product_manager = E.user_number
+             ]]>
+			<comment>create view final_order_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+        	  ALTER TABLE product_order_operation ADD COLUMN final_supplier_cost DECIMAL(12,2) NULL  AFTER supplier_cost;
+             ]]>
+			<comment> ALTER TABLE product_order_operation</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists view_air_ticket_paid_detail;
+          		CREATE VIEW view_air_ticket_paid_detail AS 
+				SELECT * FROM air_ticket_paid_detail WHERE type LIKE '%STRIKE%'
+				union all
+				SELECT * FROM air_ticket_paid_detail WHERE type NOT LIKE '%STRIKE%' 
+				GROUP BY related_pk
+             ]]>
+			<comment>ALTER VIEW view_air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_all_paid_detail;
+				CREATE VIEW view_all_paid_detail AS
+				SELECT 
+				    A.related_pk AS related_pk,
+				    A.confirm_time AS confirm_time,
+				    A.create_time AS apply_time,
+				    A.allot_money AS money,
+				    A.create_user AS apply_user,
+				    A.approve_user AS approval_user
+				FROM
+				    paid_detail A 
+				UNION ALL SELECT 
+				    B.related_pk AS related_pk,
+				    B.confirm_time AS confirm_time,
+				    B.create_time AS apply_time,
+				    B.allot_money AS money,
+				    B.create_user AS apply_user,
+				    B.approve_user AS approval_user
+				from
+				    view_air_ticket_paid_detail B 
+				UNION ALL SELECT 
+				    C.pk AS related_pk,
+				    C.approval_time AS confirm_time,
+				    C.create_time AS apply_time,
+				    C.money AS money,
+				    C.create_user AS apply_user,
+				    C.approval_user AS approval_user
+				FROM
+				    reimbursement C;
+             ]]>
+			<comment>CREATE VIEW view_all_paid_detail </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	update supplier_paid_detail set confirm_time = update_time;
+				update reimbursement set approval_time = update_time;
+             ]]>
+			<comment>update supplier_paid_detail and reimbursement </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE card ADD COLUMN purpose VARCHAR(10) NULL DEFAULT 'NONE' COMMENT '用途'  AFTER bank_nickname ;
+             ]]>
+			<comment> ALTER TABLE card</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE product CHANGE COLUMN product_value product_value DECIMAL(3,2) NULL DEFAULT '1' COMMENT '产品分值' ;
+             ]]>
+			<comment>  ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

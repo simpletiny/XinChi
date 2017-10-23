@@ -44,4 +44,8 @@ public interface BudgetStandardOrderService extends BaseService {
 	
 	
 	public String updateComment(BudgetStandardOrderBean bean);
+
+	public BudgetStandardOrderBean selectByTeamNumber(String team_number);
+
+	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bsOrder);
 }

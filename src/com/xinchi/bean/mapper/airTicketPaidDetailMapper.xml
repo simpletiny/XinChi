@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirTicketPaidDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketPaidDetailBean">
+		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="CHAR" />
+		<result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
+		<result column="financial_body_name" property="financial_body_name" jdbcType="CHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="allot_money" property="allot_money" jdbcType="DECIMAL" />
+		<result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+		<result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
+		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		supplier_employee_pk,
+		money,
+		allot_money,
+		sum_money,
+		status,
+		type,
+		time,
+		limit_time,
+		confirm_time,
+		approve_user,
+		related_pk,
+		comment,
+		pk,
+		create_user,
+		update_user,
+		base_pk,
+		PNR,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_paid_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_paid_detail
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectGroupDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		B.financial_body_pk,
+		C.supplier_name AS financial_body_name,
+		A.money,
+		A.allot_money,
+		A.sum_money,
+		A.status,
+		A.type,
+		A.time,
+		A.limit_time,
+		A.confirm_time,
+		A.approve_user,
+		A.related_pk,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.base_pk,
+		A.PNR,
+		A.create_time,
+		A.update_time
+
+		from view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		where related_pk = #{related_pk,jdbcType=CHAR}
+		
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_ticket_paid_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirTicketPaidDetailBean">
+
+		insert into air_ticket_paid_detail
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="allot_money != null">
+				allot_money,
+			</if>
+			<if test="sum_money != null">
+				sum_money,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+			<if test="limit_time != null">
+				limit_time,
+			</if>
+			<if test="confirm_time != null">
+				confirm_time,
+			</if>
+			<if test="approve_user != null">
+				approve_user,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+			<if test="PNR != null">
+				PNR,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="supplier_employee_pk != null">
+				#{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_money != null">
+				#{allot_money,jdbcType=DECIMAL},
+			</if>
+			<if test="sum_money != null">
+				#{sum_money,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				#{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				#{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="approve_user != null">
+				#{approve_user,jdbcType=VARCHAR},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="PNR != null">
+				#{PNR,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirTicketPaidDetailBean">
+		update air_ticket_paid_detail
+		<set>
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_money != null">
+				allot_money = #{allot_money,jdbcType=DECIMAL},
+			</if>
+			<if test="sum_money != null">
+				sum_money = #{sum_money,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				limit_time = #{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				confirm_time = #{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="approve_user != null">
+				approve_user = #{approve_user,jdbcType=VARCHAR},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="PNR != null">
+				PNR = #{PNR,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirTicketPaidDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_paid_detail
+	</select>
+</mapper>

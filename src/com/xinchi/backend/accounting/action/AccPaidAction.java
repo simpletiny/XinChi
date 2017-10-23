@@ -17,7 +17,9 @@ import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.ReimbursementService;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReimbursementBean;
@@ -73,6 +75,9 @@ public class AccPaidAction extends BaseAction {
 	@Autowired
 	private ReimbursementService reimService;
 
+	@Autowired
+	private AirTicketPaidDetailService airTicketPaidDetailService;
+
 	public String pay() {
 		JSONArray array = JSONArray.fromObject(json);
 		for (int i = 0; i < array.size(); i++) {
@@ -114,6 +119,13 @@ public class AccPaidAction extends BaseAction {
 				detail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
 				detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
 				paidService.update(detail);
+			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+			List<AirTicketPaidDetailBean> paids = airTicketPaidDetailService.selectByRelatedPk(related_pk);
+			for (AirTicketPaidDetailBean paid : paids) {
+				paid.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+				paid.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+				airTicketPaidDetailService.update(paid);
 			}
 		} else {
 			ReimbursementBean reim = reimService.selectByPk(related_pk);

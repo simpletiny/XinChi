@@ -26,6 +26,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 搜索已决算订单 -->
+		<action name="searchFOrdersByPage" class="orderAction" method="searchFOrdersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 删除待确认订单 -->
 		<action name="deleteTbcOrder" class="orderAction" method="deleteTbcOrder">
 			<result name="success" type="str">resultStr</result>
@@ -35,12 +42,34 @@
 		<action name="updateBudgetStandardOrder" class="orderAction" method="updateBudgetStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 更新已确认标准预算单 -->
+		<action name="updateConfirmedStandardOrder" class="orderAction" method="updateConfirmedStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 决算标准预算单 -->
+		<action name="finalBudgetStandardOrder" class="orderAction" method="finalBudgetStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 决算非标准预算单 -->
+		<action name="finalBudgetNonStandardOrder" class="orderAction" method="finalBudgetNonStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 决算订单打回重报 -->
+		<action name="rollBackFinalOrder" class="orderAction" method="rollBackFinalOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 		<!-- 按pk查询标准预算单 -->
 		<action name="searchTbcBsOrderByPk" class="orderAction" method="searchTbcBsOrderByPk">
 			<result name="success" type="json"></result>
 		</action>
 		<!-- 更新非标准预算单 -->
 		<action name="updateBudgetNonStandardOrder" class="orderAction" method="updateBudgetNonStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 更新已确认非标准预算单 -->
+		<action name="updateConfirmedNonStandardOrder" class="orderAction" method="updateConfirmedNonStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 按PK查询非标准预算单 -->
@@ -51,7 +80,13 @@
 		<action name="updateComment" class="orderAction" method="updateComment">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		<!-- 根据团号搜索乘客名单 -->
+		<action name="selectSaleOrderNameListByTeamNumber" class="orderAction" method="selectSaleOrderNameListByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 单团核算单 -->
 		<!-- 搜索信息 -->
 		<action name="searchOrderReportByPage" class="orderReportAction" method="searchOrderReportByPage">
@@ -60,5 +95,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+
 	</package>
 </struts>

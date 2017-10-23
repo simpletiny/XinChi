@@ -71,7 +71,7 @@
 						<div class="col-md-6 required">
 							<label class="l">同业价格</label>
 							<div class="ip">
-								<input type="number" class="ip-" id="business-price" data-bind="value: product().business_price" placeholder="同业价格" name="product.business_price" required="required" />
+								<input type="number" class="ip-" id="business-price" onkeyup="caculateGrossProfit()" data-bind="value: product().business_price" placeholder="同业价格" name="product.business_price" required="required" />
 							</div>
 						</div>
 					</div>

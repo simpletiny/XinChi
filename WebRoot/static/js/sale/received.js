@@ -15,8 +15,8 @@ var ReceivedContext = function() {
 		total : 0,
 		items : []
 	});
-	
-	//账户信息
+
+	// 账户信息
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
@@ -27,7 +27,7 @@ var ReceivedContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
+
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	// var x = new Date();
@@ -61,7 +61,11 @@ var ReceivedContext = function() {
 		'TAIL' : '抹零',
 		'SUM' : '合账',
 		'STRIKE' : '冲账',
-		'RECEIVED' : '收入'
+		'RECEIVED' : '收入',
+		'PAY' : '支出',
+		'STRIKEOUT' : '冲账/出',
+		'STRIKEIN' : '冲账/入',
+		'COLLECT' : '代收'
 	};
 
 	// 计算合计
@@ -197,7 +201,6 @@ var ReceivedContext = function() {
 		sum_received : "",
 		client_employee_name : "",
 		allot_received : ""
-
 	});
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
@@ -283,8 +286,8 @@ $(document).ready(function() {
 	ctx.refresh();
 });
 
-function baseMonth(txt){
-	if($(txt).val().trim()!=''){
+function baseMonth(txt) {
+	if ($(txt).val().trim() != '') {
 		$('.date-picker').val("");
 	}
 }

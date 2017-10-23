@@ -40,11 +40,26 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public String checkAccount(String account) {
 		CardBean card = dao.getCardByAccount(account);
-		if (card!=null){
+		if (card != null) {
 			return "exist";
-		}else{
+		} else {
 			return "ok";
 		}
+	}
+
+	@Override
+	public CardBean selectByPk(String pk) {
+		return dao.selectByPk(pk);
+	}
+
+	@Override
+	public void update(CardBean bean) {
+		dao.update(bean);
+	}
+
+	@Override
+	public List<CardBean> selectByPurpose(String purpose) {
+		return dao.selectByPurpose(purpose);
 	}
 
 }

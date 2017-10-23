@@ -104,6 +104,7 @@
 									<label class="l" style="width: 60px">票源方</label>
 									<div class="ip">
 										<input type="text" class="ip-" maxlength="50" st="ticket-source" placeholder="票源方" value='<s:property value="#ta.ticket_source"/>' required="required" />
+										<input style="display:none" value='<s:property value="#ta.ticket_source_pk"/>' st="ticket-source-pk"/>
 									</div>
 								</div>
 								<div class="col-md-3 required">

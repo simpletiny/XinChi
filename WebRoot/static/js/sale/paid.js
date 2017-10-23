@@ -30,8 +30,7 @@ var PaidContext = function() {
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
-	self.chosenStatus = ko.observableArray([]);
-	self.allStatus = [ 'I', 'N', 'Y' ];
+	self.allStatus = [ 'I', 'N', 'Y', 'P' ];
 
 	self.statusMapping = {
 		'I' : '待审批',
@@ -44,7 +43,9 @@ var PaidContext = function() {
 		'BACK' : '返款',
 		'PAID' : '支付',
 		'STRIKE' : '冲账',
-		'DEDUCT' : '扣款'
+		'DEDUCT' : '扣款',
+		'STRIKEOUT' : '冲账/出',
+		'STRIKEIN' : '冲账/入'
 	};
 
 	// 计算合计
@@ -61,7 +62,7 @@ var PaidContext = function() {
 		var totalProfit = 0;
 		var totalPerProfit = 0;
 
-		var param = $("form").serialize() + "&detail.status=" + self.chosenStatus();
+		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'sale/searchPaidByPage', param, function(data) {
@@ -98,19 +99,14 @@ var PaidContext = function() {
 			return;
 		}
 
-		var sourceData = self.chosenPaids()[0].split(";");
+		var sourceData = self.chosenPaids()[0];
 
-		if (sourceData[1] == 'Y' || sourceData[1] == 'P') {
+		if (sourceData.status == 'Y' || sourceData.status == 'P') {
 			fail_msg("请选择没有同意的申请");
 			return;
 		}
 
-		var data;
-		if (sourceData[2] == 'D') {
-			data = "item=" + sourceData[2] + "&related_pk=" + sourceData[3] + "&pk=" + sourceData[0];
-		} else {
-			data = "item=" + sourceData[2] + "&pk=" + sourceData[0];
-		}
+		var data = "related_pk=" + sourceData.related_pk;
 
 		$.layer({
 			area : [ 'auto', 'auto' ],
@@ -124,7 +120,7 @@ var PaidContext = function() {
 					layer.close(index);
 					$.ajax({
 						type : "POST",
-						url : self.apiurl + 'accounting/rollBackPayApply',
+						url : self.apiurl + 'sale/rollBackPayApply',
 						data : data,
 						success : function(str) {
 							if (str != "success") {

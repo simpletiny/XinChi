@@ -16,8 +16,11 @@ import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -64,9 +67,16 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	@Autowired
 	private OrderNameListDAO nameListDao;
 
+	@Autowired
+	private AirTicketOrderDAO airTicketOrderDao;
+
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
 	@Override
 	public String update(BudgetStandardOrderBean bean) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
+		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
 				deleteFile(old);
@@ -77,7 +87,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		}
 
 		if (bean.getConfirm_flg().equals("Y")) {
-			bean.setTeam_number(numberService.generateTeamNumber());
+			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
+				bean.setTeam_number(numberService.generateTeamNumber());
+			}
 
 			// 保存名单
 			String[] names = bean.getName_list().split(";");
@@ -88,8 +100,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 						continue;
 
 					SaleOrderNameListBean name = new SaleOrderNameListBean();
-					name.setName(people[0]);
-					name.setId(people[1]);
+					name.setName(people[0].trim());
+					name.setId(people[1].trim());
 					name.setTeam_number(bean.getTeam_number());
 					nameListDao.insert(name);
 				}
@@ -141,14 +153,112 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			receivable.setCreate_user(old.getCreate_user());
 
 			receivableDao.insert(receivable);
+
+			// 更新票务信息团号
+			AirTicketOrderBean airTicketOrder = airTicketOrderDao.selectBySaleOrderPk(bean.getPk());
+
+			if (null != airTicketOrder) {
+				airTicketOrder.setTeam_number(bean.getTeam_number());
+				airTicketOrderDao.update(airTicketOrder);
+				AirTicketNameListBean airTicketNameListOption = new AirTicketNameListBean();
+				airTicketNameListOption.setTicket_order_pk(airTicketOrder.getPk());
+				List<AirTicketNameListBean> airTicketNameList = airTicketNameListDao.selectByParam(airTicketNameListOption);
+
+				if (null != airTicketNameList && airTicketNameList.size() > 0) {
+					for (AirTicketNameListBean passenger : airTicketNameList) {
+						passenger.setTeam_number(bean.getTeam_number());
+						airTicketNameListDao.update(passenger);
+					}
+				}
+			}
 		}
 		dao.update(bean);
 		return SUCCESS;
 	}
 
+	@Override
+	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bean) {
+		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
+		bean.setCreate_user(old.getCreate_user());
+		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
+			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
+				deleteFile(old);
+				saveFile(bean);
+			}
+		} else {
+			deleteFile(old);
+		}
+
+		// 更新名单
+		// 删除之前保存的名单
+		nameListDao.selectByTeamNumber(bean.getTeam_number());
+		String[] names = bean.getName_list().split(";");
+		if (names.length != 0) {
+			for (String str : names) {
+				String people[] = str.split(":");
+				if (people.length != 2)
+					continue;
+
+				SaleOrderNameListBean name = new SaleOrderNameListBean();
+				name.setName(people[0].trim());
+				name.setId(people[1].trim());
+				name.setTeam_number(bean.getTeam_number());
+				nameListDao.insert(name);
+			}
+		}
+
+		// 更新预算单
+		BudgetOrderBean budgetOrder = budgetOrderDao.selectBudgetOrderByTeamNumber(bean.getTeam_number());
+		ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
+		budgetOrder.setProduct(product.getName());
+		budgetOrder.setDeparture_date(bean.getDeparture_date());
+		String departureDate = bean.getDeparture_date();
+		int days = bean.getDays();
+		String returnDate = DateUtil.addDate(departureDate, days - 1);
+		budgetOrder.setDays(days);
+		budgetOrder.setReturn_date(returnDate);
+		budgetOrder.setComment(bean.getComment());
+		budgetOrder.setReceivable(bean.getReceivable());
+		budgetOrder.setConfirm_date(bean.getConfirm_date());
+		budgetOrder
+				.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
+						: bean.getFy())));
+
+		String other_cost_comment = "";
+		if (bean.getFy() != null) {
+			other_cost_comment += bean.getOther_cost_comment() + "fy:" + bean.getFy();
+		}
+
+		budgetOrder.setPayment_comment(other_cost_comment);
+		budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+		budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
+		budgetOrderDao.updateBudgetOrder(budgetOrder);
+
+		// 更新应收款
+		ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
+		receivable.setClient_employee_pk(bean.getClient_employee_pk());
+
+		receivable.setDeparture_date(bean.getDeparture_date());
+		receivable.setReturn_date(returnDate);
+		receivable.setProduct(product.getName());
+		receivable.setPeople_count(budgetOrder.getPeople_count());
+		receivable.setBudget_receivable(bean.getReceivable());
+		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivableDao.update(receivable);
+
+		dao.update(bean);
+		return SUCCESS;
+	}
+
 	private void saveFile(BudgetStandardOrderBean bean) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String user_number = sessionBean.getUser_number();
+		String user_number = "";
+		if (null == bean.getCreate_user()) {
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			user_number = sessionBean.getUser_number();
+		} else {
+			user_number = bean.getCreate_user();
+		}
+
 		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
 		File sourceFile = new File(tempFolder + File.separator + bean.getConfirm_file());
@@ -162,8 +272,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	}
 
 	private void deleteFile(BudgetStandardOrderBean old) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String user_number = sessionBean.getUser_number();
+		String user_number = old.getCreate_user();
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
 		File oldFile = new File(fileFolder + File.separator + user_number + File.separator + old.getConfirm_file());
 		oldFile.delete();
@@ -172,6 +281,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	@Override
 	public String delete(String id) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(id);
+		AirTicketOrderBean ticketOrder = airTicketOrderService.selectBySaleOrderPk(id);
+		if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
+			return "air_ticket_lock";
 		deleteFile(old);
 		dao.delete(id);
 		return SUCCESS;
@@ -199,6 +311,11 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	public String updateComment(BudgetStandardOrderBean bean) {
 		dao.update(bean);
 		return SUCCESS;
+	}
+
+	@Override
+	public BudgetStandardOrderBean selectByTeamNumber(String team_number) {
+		return dao.selectByTeamNumber(team_number);
 	}
 
 }

@@ -43,10 +43,10 @@
 		from air_ticket_name_list
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectByPks" resultMap="BaseResultMap">
 		select
-			<include refid="Base_Column_List" />
+		<include refid="Base_Column_List" />
 		from air_ticket_name_list
 		where pk in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
@@ -203,6 +203,11 @@
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_name_list
+		<where>
+			<if test="ticket_order_pk != null and ticket_order_pk !='' ">
+				and ticket_order_pk = #{ticket_order_pk,jdbcType=CHAR}
+			</if>
+		</where>
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -223,6 +228,17 @@
 		A.create_time,
 		A.update_time
 		from air_ticket_name_list A LEFT JOIN user_base B ON A.client_number= B.user_number
-		ORDER BY team_number
+		<where>
+			<if test="params.bo.client_name != null and params.bo.client_name !=''">
+				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+		ORDER BY team_number,ticket_order_pk,first_ticket_date
 	</select>
 </mapper>

@@ -2,6 +2,12 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 	<package name="accounting" extends="default" namespace="/accounting">
+		<action name="searchPaidApplyByPage" class="payApprovalAction" method="searchPaidApplyByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="agreePayApply" class="accountingAction" method="agreePayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -9,6 +15,7 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 支出详表页面 -->
+		
 		<action name="rollBackPayApply" class="accountingAction" method="rollBackPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>

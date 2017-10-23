@@ -23,4 +23,8 @@ public interface CardDAO {
 	public void update(CardBean card);
 
 	public CardBean getCardByNumber(String card_number);
+
+	public CardBean selectByPk(String pk);
+
+	public List<CardBean> selectByPurpose(String purpose);
 }

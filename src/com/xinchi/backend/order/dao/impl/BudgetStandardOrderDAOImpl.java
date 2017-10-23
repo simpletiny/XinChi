@@ -49,4 +49,9 @@ public class BudgetStandardOrderDAOImpl extends SqlSessionDaoSupport implements 
 		return list;
 	}
 
+	@Override
+	public BudgetStandardOrderBean selectByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetStandardOrderMapper.selectByTeamNumber", team_number);
+	}
+
 }

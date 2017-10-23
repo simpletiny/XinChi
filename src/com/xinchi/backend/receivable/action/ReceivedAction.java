@@ -14,14 +14,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.google.common.base.Joiner;
+import com.xinchi.backend.accounting.service.PayApprovalService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.PayApprovalBean;
+import com.xinchi.bean.ReceivableBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -44,12 +48,31 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyRidTail() {
+		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 		detail.setReceived_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+		detail.setClient_employee_pk(receivable.getClient_employee_pk());
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
 		resultStr = OK;
+		return SUCCESS;
+	}
+
+	/**
+	 * 代收
+	 * 
+	 * @return
+	 */
+	public String applyCollect() {
+		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_COLLECT);
+		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+		detail.setReceived_time(DateUtil.getMinStr());
+		detail.setClient_employee_pk(receivable.getClient_employee_pk());
+		receivedService.insert(detail);
+		receivableService.updateReceivableReceived(detail);
+		resultStr = SUCCESS;
 		return SUCCESS;
 	}
 
@@ -88,37 +111,88 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private PayApprovalService payApprovalService;
+
+	/**
+	 * 单笔多付返还支付申请
+	 * 
+	 * @return
+	 */
+	public String applyIfMorePay() {
+
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_PAY);
+		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+		String related_pk = DBCommonUtil.genPk();
+		detail.setRelated_pk(related_pk);
+		detail.setReceived_time(DateUtil.getMinStr());
+		detail.setReceived(detail.getReceived().negate());
+		receivedService.insert(detail);
+		receivableService.updateReceivableReceived(detail);
+
+		// 生成支付审批数据
+		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
+		PayApprovalBean pa = new PayApprovalBean();
+		pa.setReceiver(receivable.getClient_employee_name());
+		pa.setMoney(detail.getReceived().negate());
+		pa.setItem(ResourcesConstants.PAY_TYPE_MORE_BACK);
+		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+		pa.setRelated_pk(related_pk);
+		pa.setComment(detail.getComment());
+		pa.setApply_user(SimpletinyUser.getUser_number());
+		pa.setBack_pk(detail.getPk());
+		pa.setApply_time(DateUtil.getTimeMillis());
+		pa.setLimit_time(detail.getLimit_time());
+
+		payApprovalService.insert(pa);
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	/**
 	 * 冲账申请
 	 * 
 	 * @return
 	 */
 	public String applyStrike() {
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE);
+
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setReceived_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+		detail.setReceived_time(DateUtil.getMinStr());
+
+		BigDecimal out_money = BigDecimal.ZERO;
 
 		JSONArray array = JSONArray.fromObject(allot_json);
 
-		String[] pks = DBCommonUtil.genPks(3);
-		detail.setRelated_pk(Joiner.on(",").join(pks));
+		String related_pk = DBCommonUtil.genPk();
+		detail.setRelated_pk(related_pk);
 
 		for (int i = 0; i < array.size(); i++) {
+			ClientReceivedDetailBean current = new ClientReceivedDetailBean();
+			current.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN);
+			current.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			current.setReceived_time(DateUtil.getMinStr());
+			current.setRelated_pk(related_pk);
+
 			JSONObject obj = JSONObject.fromObject(array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
-			detail.setTeam_number(t);
-			detail.setPk(pks[i]);
+			current.setTeam_number(t);
 
 			if (!SimpletinyString.isEmpty(r)) {
-				detail.setReceived(new BigDecimal(r));
+				current.setReceived(new BigDecimal(r));
+				out_money = out_money.add(new BigDecimal(r));
 			}
 
-			receivedService.insertWithPk(detail);
-			receivableService.updateReceivableReceived(detail);
+			receivedService.insert(current);
+			receivableService.updateReceivableReceived(current);
 		}
 
-		resultStr = OK;
+		detail.setReceived(out_money.negate());
+		receivedService.insert(detail);
+		receivableService.updateReceivableReceived(detail);
+		resultStr = SUCCESS;
 		return SUCCESS;
 	}
 
@@ -129,7 +203,7 @@ public class ReceivedAction extends BaseAction {
 		String pk = DBCommonUtil.genPk();
 		detail.setPk(pk);
 		detail.setRelated_pk(pk);
-		
+
 		receivedService.insertWithPk(detail);
 		receivableService.updateReceivableReceived(detail);
 
@@ -141,8 +215,7 @@ public class ReceivedAction extends BaseAction {
 
 	public String searchReceivedByPage() {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -161,7 +234,6 @@ public class ReceivedAction extends BaseAction {
 	private String received_pks;
 
 	public String rollBackReceived() {
-
 		resultStr = receivedService.rollBackReceived(received_pks);
 		return SUCCESS;
 	}
@@ -170,7 +242,7 @@ public class ReceivedAction extends BaseAction {
 
 	public String searchByRelatedPks() {
 		receiveds = receivedService.selectByRelatedPks(related_pks);
-		
+
 		return SUCCESS;
 	}
 

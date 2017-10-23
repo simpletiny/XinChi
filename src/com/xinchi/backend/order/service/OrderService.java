@@ -12,5 +12,7 @@ public interface OrderService extends BaseService {
 	public List<OrderDto> selectCByPage(Page<OrderDto> page);
 	
 	public OrderDto selectByTeamNumber(String teamNumber);
+
+	public List<OrderDto> selectFByPage(Page page);
 	
 }

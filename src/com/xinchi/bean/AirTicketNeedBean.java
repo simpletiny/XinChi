@@ -28,6 +28,7 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 	private BigDecimal air_ticket_cost;
 	private String standard_flg;
 
+	private String passenger;
 	private List<String> status;
 
 	public String getConfirm_flg() {
@@ -124,6 +125,14 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 
 	public void setStatus(List<String> status) {
 		this.status = status;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
 	}
 
 }

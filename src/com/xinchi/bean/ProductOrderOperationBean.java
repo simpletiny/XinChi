@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class ProductOrderOperationBean extends SupperBO implements Serializable {
@@ -16,7 +18,7 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 	private String supplier_employee_pk;
 	private String supplier_employee_name;
 
-	private java.math.BigDecimal supplier_cost;
+	private BigDecimal supplier_cost;
 
 	private String supplier_product_name;
 
@@ -44,6 +46,13 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 	private String picker;
 
 	private Integer off_day;
+
+	private BigDecimal final_supplier_cost;
+
+	private String supplier_name;
+	private String supplier_pk;
+	
+	private String pick_month;
 
 	public String getTeam_number() {
 		return team_number;
@@ -77,11 +86,11 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 		this.supplier_employee_pk = supplier_employee_pk;
 	}
 
-	public java.math.BigDecimal getSupplier_cost() {
+	public BigDecimal getSupplier_cost() {
 		return supplier_cost;
 	}
 
-	public void setSupplier_cost(java.math.BigDecimal supplier_cost) {
+	public void setSupplier_cost(BigDecimal supplier_cost) {
 		this.supplier_cost = supplier_cost;
 	}
 
@@ -203,6 +212,38 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setOff_day(Integer off_day) {
 		this.off_day = off_day;
+	}
+
+	public BigDecimal getFinal_supplier_cost() {
+		return final_supplier_cost;
+	}
+
+	public void setFinal_supplier_cost(BigDecimal final_supplier_cost) {
+		this.final_supplier_cost = final_supplier_cost;
+	}
+
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
+	}
+
+	public String getSupplier_pk() {
+		return supplier_pk;
+	}
+
+	public void setSupplier_pk(String supplier_pk) {
+		this.supplier_pk = supplier_pk;
+	}
+
+	public String getPick_month() {
+		return pick_month;
+	}
+
+	public void setPick_month(String pick_month) {
+		this.pick_month = pick_month;
 	}
 
 }

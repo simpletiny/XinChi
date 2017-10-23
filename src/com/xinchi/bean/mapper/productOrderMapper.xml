@@ -46,6 +46,9 @@
 			<if test="params.bo.product_number!= null and params.bo.product_number !=''">
 				and B.product_number like CONCAT('%',#{params.bo.product_number,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name!=''">
 				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>

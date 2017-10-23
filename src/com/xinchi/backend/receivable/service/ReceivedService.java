@@ -29,4 +29,6 @@ public interface ReceivedService {
 
 	@LogDescription(ignore = true)
 	public ClientReceivedDetailBean selectByPk(String received_pk);
+
+	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk);
 }

@@ -5,29 +5,18 @@ var EmployeeContext = function() {
 	self.employeePk = $("#employee_key").val();
 	self.employee = ko.observable({});
 	self.genders = [ '男', '女' ];
-	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
-//	self.supplierType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
-	self.sales = ko.observableArray([]);
 	self.suppliers = ko.observable({
 		total : 0,
 		items : []
 	});
-	self.choosenSales = ko.observableArray([]);
 	
 	startLoadingSimpleIndicator("加载中");
-
-	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
-		self.sales(data.users);
-	});
 	
 	$.getJSON(self.apiurl + 'supplier/searchOneEmployee', {
 		employee_pk : self.employeePk
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
-			 $(self.employee().sales.split(",")).each(function (idx, id) {
-				 self.choosenSales.push(id);
-	            });
 		} else {
 			fail_msg("员工不存在！");
 		}

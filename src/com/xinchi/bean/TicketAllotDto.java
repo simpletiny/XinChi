@@ -6,6 +6,7 @@ import java.util.List;
 public class TicketAllotDto {
 
 	private String ticket_source;
+	private String ticket_source_pk;
 	private List<AirTicketNameListBean> passengers = new ArrayList<AirTicketNameListBean>();
 
 	public String getTicket_source() {
@@ -22,5 +23,13 @@ public class TicketAllotDto {
 
 	public void setPassengers(List<AirTicketNameListBean> passengers) {
 		this.passengers = passengers;
+	}
+
+	public String getTicket_source_pk() {
+		return ticket_source_pk;
+	}
+
+	public void setTicket_source_pk(String ticket_source_pk) {
+		this.ticket_source_pk = ticket_source_pk;
 	}
 }

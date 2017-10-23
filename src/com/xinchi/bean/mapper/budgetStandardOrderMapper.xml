@@ -67,6 +67,13 @@
 		from budget_standard_order
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from budget_standard_order
+		where team_number = #{team_number,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from budget_standard_order

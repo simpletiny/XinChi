@@ -27,4 +27,6 @@ public interface ReceivableService {
 
 	@LogDescription(ignore = true)
 	public void updateReceivableReceived(ClientReceivedDetailBean detail);
+
+	public ReceivableBean selectByTeamNumber(String team_number);
 }

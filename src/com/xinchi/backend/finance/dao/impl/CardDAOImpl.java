@@ -61,4 +61,14 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 	public CardBean getCardByNumber(String card_number) {
 		return daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectCardByNumber"), card_number);
 	}
+
+	@Override
+	public CardBean selectByPk(String pk) {
+		return (CardBean) daoUtil.selectByPK("com.xinchi.bean.mapper.CardMapper.selectByPk", pk);
+	}
+
+	@Override
+	public List<CardBean> selectByPurpose(String purpose) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.CardMapper.selectByPurpose", purpose);
+	}
 }

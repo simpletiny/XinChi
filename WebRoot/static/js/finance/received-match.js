@@ -1,3 +1,4 @@
+var matchDetailLayer;
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -52,7 +53,7 @@ var DetailContext = function() {
 		} else if (self.chosenDetails().length == 1) {
 			var key = self.chosenDetails()[0];
 			self.chosenDetails.removeAll();
-			window.open(self.apiurl + "templates/finance/do-match.jsp?key=" + key,'_blank');
+			window.open(self.apiurl + "templates/finance/do-match.jsp?key=" + key, '_blank');
 		}
 	};
 	// 匹配其他收入
@@ -93,6 +94,88 @@ var DetailContext = function() {
 			});
 		}
 	};
+	self.received = ko.observable({
+		user_name : "",
+		create_time : ""
+	});
+	self.sumDetails = ko.observableArray([]);
+	self.sumDetail = ko.observable({
+		card_account : "",
+		sum_received : "",
+		client_employee_name : "",
+		allot_received : ""
+	});
+
+	self.order = ko.observable({
+		team_number : "",
+		client_employee_name : "",
+		product : "",
+		people_count : "",
+		departure_date : ""
+	});
+	self.comment = ko.observable();
+
+	self.showDetails = function(data, event) {
+		var detail_pk = data.pk;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'finance/searchReceivedDetailByPaymentDetailPk', {
+			detailId : detail_pk
+		}, function(data) {
+			self.received(data.received_detail);
+
+			if (self.received().type == "SUM") {
+				var param = "related_pks=" + self.received().related_pk;
+
+				$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+					self.sumDetails(data.receiveds);
+					self.sumDetail(self.sumDetails()[0]);
+					$(".rmb").formatCurrency();
+					endLoadingIndicator();
+					matchDetailLayer = $.layer({
+						type : 1,
+						title : [ '合账详情', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '800px', 'auto' ],
+						offset : [ '150px', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#sum_detail'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+			} else {
+				var param = "team_number=" + self.received().team_number;
+				$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
+					self.order(data.order);
+					self.comment(self.received().comment);
+					endLoadingIndicator();
+					matchDetailLayer = $.layer({
+						type : 1,
+						title : [ '摘要详情', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '700px', 'auto' ],
+						offset : [ '150px', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#comment'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+			}
+
+		});
+	};
+
 	// 取消匹配
 	self.cancelMatch = function() {
 		if (self.chosenDetails().length == 0) {

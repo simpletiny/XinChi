@@ -43,6 +43,8 @@ var ProductBoxContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOrders.removeAll();
+							} else if (str == "air_ticket_lock") {
+								fail_msg("票务已锁定，不能删除！");
 							} else {
 								fail_msg(str);
 							}

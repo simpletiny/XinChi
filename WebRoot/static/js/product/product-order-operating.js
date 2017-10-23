@@ -46,7 +46,8 @@ var OrderContext = function() {
 
 			self.totalPeopleCount(total_people_count);
 			self.totalSupplierCost(total_supplier_cost);
-
+			
+			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -80,6 +81,50 @@ var OrderContext = function() {
 					self.chosenOperations.removeAll();
 				} else {
 					fail_msg(str);
+				}
+			});
+		}
+	};
+
+	// 删除订单操作
+	self.deleteOperation = function() {
+		if (self.chosenOperations().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else if (self.chosenOperations().length > 0) {
+			var team_numbers = "";
+			for ( var i = 0; i < self.chosenOperations().length; i++) {
+				var current = self.chosenOperations()[i].split(";");
+				team_numbers += current[1] + ",";
+			}
+
+			team_numbers = team_numbers.substr(0, team_numbers.length - 1);
+
+			var data = "team_numbers=" + team_numbers;
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '删除会将关联的操作订单一并删除，并将产品订单设置为未操作状态！',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中...");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'product/deleteOperation',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenOperations.removeAll();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
 				}
 			});
 		}

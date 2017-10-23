@@ -1,314 +1,343 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.ClientReceivedDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.ClientReceivedDetailBean" >
-	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
-	    <result column="received" property="received" jdbcType="DECIMAL" />
-	    <result column="received_time" property="received_time" jdbcType="VARCHAR" />
-	    <result column="type" property="type" jdbcType="VARCHAR" />
-	    <result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
-	    <result column="status" property="status" jdbcType="CHAR" />
-	    <result column="comment" property="comment" jdbcType="VARCHAR" />
-	    <result column="sum_received" property="sum_received" jdbcType="DECIMAL" />
-	    <result column="allot_received" property="allot_received" jdbcType="DECIMAL" />
-	    <result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
-	    <result column="card_pk" property="card_pk" jdbcType="CHAR" />
-	    <result column="card_account" property="card_account" jdbcType="VARCHAR" />
-	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
-	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
- 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
- 	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
- 	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
- 	    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-  		
-    	team_number, 
-    	received, 
-    	received_time, 
-    	type, 
-    	confirm_time, 
-    	status, 
-    	comment, 
-    	sum_received, 
-    	allot_received,
-    	related_pk, 
-    	card_pk, 
-    	card_account, 
-    	create_user, 
-    	update_user, 
-    	pk, 
-    	create_time,
-    	update_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from client_received_detail
-    where pk = #{pk,jdbcType=CHAR}
-  </select>
-  <select id="selectByRelatedPks" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    	A.team_number, 
-    	A.received, 
-    	A.received_time, 
-    	A.type, 
-    	A.confirm_time, 
-    	A.status, 
-    	A.comment, 
-    	A.sum_received, 
-    	A.allot_received,
-    	A.related_pk, 
-    	A.card_pk, 
-    	A.card_account, 
-    	A.create_user, 
-    	A.update_user, 
-    	A.pk, 
-    	A.create_time,
-    	A.update_time,
-    	B.client_employee_name,
-    	B.client_employee_pk
-    from client_received_detail A left join budget_order B on A.team_number=B.team_number
-    where A.related_pk = #{related_pks,jdbcType=VARCHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from client_received_detail
-    where pk = #{pk,jdbcType=CHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.xinchi.bean.ClientReceivedDetailBean" >
-  	
-    insert into client_received_detail
-    
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-	 	<if test="team_number != null">
-	        team_number,
-	      </if>
-	 	<if test="received != null">
-	        received,
-	      </if>
-	 	<if test="received_time != null">
-	        received_time,
-	      </if>
-	 	<if test="type != null">
-	        type,
-	      </if>
-	 	<if test="confirm_time != null">
-	        confirm_time,
-	      </if>
-	 	<if test="status != null">
-	        status,
-	      </if>
-	 	<if test="comment != null">
-	        comment,
-	      </if>
-	 	<if test="sum_received != null">
-	        sum_received,
-	      </if>
-	 	<if test="allot_received != null">
-	        allot_received,
-	      </if>
-	 	<if test="related_pk != null">
-	        related_pk,
-	      </if>
-	 	<if test="card_pk != null">
-	        card_pk,
-	      </if>
-	 	<if test="card_account != null">
-	        card_account,
-	      </if>
-	 	<if test="create_user != null">
-	        create_user,
-	      </if>
-	 	<if test="update_user != null">
-	        update_user,
-	      </if>
-	 	<if test="pk != null">
-	        pk,
-	      </if>
-      <if test="create_time != null">
-        create_time,
-      </if>
-      <if test="update_time != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-    	<if test="team_number != null">
-	        #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="received != null">
-	        #{received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="received_time != null">
-	        #{received_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="type != null">
-	        #{type,jdbcType=VARCHAR},
-	      </if>
-    	<if test="confirm_time != null">
-	        #{confirm_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="status != null">
-	        #{status,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sum_received != null">
-	        #{sum_received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="allot_received != null">
-	        #{allot_received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="related_pk != null">
-	        #{related_pk,jdbcType=VARCHAR},
-	      </if>
-    	<if test="card_pk != null">
-	        #{card_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="card_account != null">
-	        #{card_account,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="create_time != null">
-        #{create_time,jdbcType=VARCHAR},
-      </if>
-       <if test="update_time != null">
-        #{update_time,jdbcType=VARCHAR},
-      </if>
-    </trim>		
-  </insert>
-  
+<mapper namespace="com.xinchi.bean.mapper.ClientReceivedDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientReceivedDetailBean">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="received" property="received" jdbcType="DECIMAL" />
+		<result column="received_time" property="received_time" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="sum_received" property="sum_received" jdbcType="DECIMAL" />
+		<result column="allot_received" property="allot_received" jdbcType="DECIMAL" />
+		<result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+		<result column="card_pk" property="card_pk" jdbcType="CHAR" />
+		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+	</resultMap>
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientReceivedDetailBean" >
-    update client_received_detail
-    <set >
-    	<if test="team_number != null">
-	        team_number = #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="received != null">
-	        received = #{received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="received_time != null">
-	        received_time = #{received_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="type != null">
-	        type = #{type,jdbcType=VARCHAR},
-	      </if>
-    	<if test="confirm_time != null">
-	        confirm_time = #{confirm_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="status != null">
-	        status = #{status,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        comment = #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sum_received != null">
-	        sum_received = #{sum_received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="allot_received != null">
-	        allot_received = #{allot_received,jdbcType=DECIMAL},
-	      </if>
-    	<if test="related_pk != null">
-	        related_pk = #{related_pk,jdbcType=VARCHAR},
-	      </if>
-    	<if test="card_pk != null">
-	        card_pk = #{card_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="card_account != null">
-	        card_account = #{card_account,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        create_user = #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        update_user = #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="update_time != null">
-        update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where pk = #{pk,jdbcType=CHAR}
-  </update>
- <select id="selectByParam" parameterType="com.xinchi.bean.ClientReceivedDetailBean" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from client_received_detail
-   </select>
-   
-    <select id="searchReceivableDetailsByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from client_received_detail
-    
-    <where>
-    	team_number = #{team_number,jdbcType=CHAR}
-    </where>
-   </select>
-   
-   <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-   select 
-    	A.team_number, 
-    	A.received, 
-    	A.received_time, 
-    	A.type, 
-    	A.confirm_time, 
-    	A.status, 
-    	A.comment, 
-    	A.sum_received, 
-    	A.allot_received,
-    	A.related_pk, 
-    	A.card_pk, 
-    	A.card_account, 
-    	A.create_user, 
-    	A.update_user, 
-    	A.pk,
-    	C.user_name AS user_name,
-    	A.create_user,
-    	A.create_time,
-    	A.update_time,
-    	B.client_employee_name,
-    	B.client_employee_pk
-    from received_detail A left join budget_order B on A.team_number=B.team_number
-    LEFT JOIN user_base C ON A.create_user=C.user_number
-     <where>
-         <if test="params.bo.status != null and params.bo.status !=''">
-            <!--TODO:修改为foreach 形式  -->
-	        and A.status in (${params.bo.status})
-	      </if>
-	      <if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and A.create_user  = #{params.bo.create_user,jdbcType=VARCHAR}
-	      </if>
-	      <if test="params.bo.month != null and params.bo.month !=''">
-	         and LEFT(A.received_time,7)  = #{params.bo.month,jdbcType=VARCHAR}
-	      </if>
-	      <if test="params.bo.date_from != null and params.bo.date_from !=''">
-	         and LEFT(A.received_time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
-	      </if>
-	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
-	         and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
-	      </if>
-	       <if test="params.bo.card_account != null and params.bo.card_account !=''">
-	         and A.card_account  = #{params.bo.card_account,jdbcType=VARCHAR}
-	      </if>
-	      ORDER BY A.received_time
-    </where> 
-   </select>
+	<sql id="Base_Column_List">
+
+		team_number,
+		received,
+		received_time,
+		type,
+		confirm_time,
+		status,
+		comment,
+		sum_received,
+		allot_received,
+		related_pk,
+		card_pk,
+		card_account,
+		create_user,
+		update_user,
+		pk,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from client_received_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByRelatedPks" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.team_number,
+		A.received,
+		A.received_time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_received,
+		A.allot_received,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		C.name AS client_employee_name,
+		B.client_employee_pk
+		from client_received_detail A left join budget_order B on A.team_number=B.team_number
+		LEFT JOIN client_employee C ON B.client_employee_pk = C.pk
+		where A.related_pk = #{related_pks,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from client_received_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ClientReceivedDetailBean">
+
+		insert into client_received_detail
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="received != null">
+				received,
+			</if>
+			<if test="received_time != null">
+				received_time,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="confirm_time != null">
+				confirm_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="sum_received != null">
+				sum_received,
+			</if>
+			<if test="allot_received != null">
+				allot_received,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="card_pk != null">
+				card_pk,
+			</if>
+			<if test="card_account != null">
+				card_account,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="received != null">
+				#{received,jdbcType=DECIMAL},
+			</if>
+			<if test="received_time != null">
+				#{received_time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				#{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="sum_received != null">
+				#{sum_received,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_received != null">
+				#{allot_received,jdbcType=DECIMAL},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="card_pk != null">
+				#{card_pk,jdbcType=CHAR},
+			</if>
+			<if test="card_account != null">
+				#{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientReceivedDetailBean">
+		update client_received_detail
+		<set>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="received != null">
+				received = #{received,jdbcType=DECIMAL},
+			</if>
+			<if test="received_time != null">
+				received_time = #{received_time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				confirm_time = #{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="sum_received != null">
+				sum_received = #{sum_received,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_received != null">
+				allot_received = #{allot_received,jdbcType=DECIMAL},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="card_pk != null">
+				card_pk = #{card_pk,jdbcType=CHAR},
+			</if>
+			<if test="card_account != null">
+				card_account = #{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientReceivedDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_received_detail
+	</select>
+
+	<select id="searchReceivableDetailsByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_received_detail
+
+		<where>
+			team_number = #{team_number,jdbcType=CHAR}
+		</where>
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.received,
+		A.received_time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_received,
+		A.allot_received,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		C.user_name AS user_name,
+		A.create_user,
+		A.create_time,
+		A.update_time,
+		B.client_employee_name,
+		B.client_employee_pk
+		from received_detail A left join budget_order B on A.team_number=B.team_number
+		LEFT JOIN user_base C ON A.create_user=C.user_number
+		<where>
+			<if test="params.bo.status != null and params.bo.status !=''">
+				<!--TODO:修改为foreach 形式 -->
+				and A.status in (${params.bo.status})
+			</if>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.month != null and params.bo.month !=''">
+				and LEFT(A.received_time,7) = #{params.bo.month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and LEFT(A.received_time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.card_account != null and params.bo.card_account !=''">
+				and A.card_account = #{params.bo.card_account,jdbcType=VARCHAR}
+			</if>
+			ORDER BY A.received_time
+		</where>
+	</select>
+
+	<select id="selectReceivedDetailByRelatedPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.received,
+		A.received_time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_received,
+		A.allot_received,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		C.user_name AS user_name,
+		A.create_user,
+		A.create_time,
+		A.update_time,
+		B.client_employee_name,
+		B.client_employee_pk
+		from received_detail A left join budget_order B on A.team_number=B.team_number
+		LEFT JOIN user_base C ON A.create_user=C.user_number
+		where A.related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
 </mapper>

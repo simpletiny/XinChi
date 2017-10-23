@@ -53,22 +53,39 @@ public class ResourcesConstants {
 	public static String TEAM_STATUS_RETURN = "已回团";
 	public static String TEAM_STATUS_NOT_RETURN = "未回团";
 
-	// 收入种类
+	// ************************* 收入种类 ********************************
+	// 抹零
 	public static String RECEIVED_TYPE_TAIL = "TAIL";
+	// 代收
+	public static String RECEIVED_TYPE_COLLECT = "COLLECT";
+	// 合账
 	public static String RECEIVED_TYPE_SUM = "SUM";
-	public static String RECEIVED_TYPE_STRIKE = "STRIKE";
+	// 冲账出
+	public static String RECEIVED_TYPE_STRIKE_OUT = "STRIKEOUT";
+	// 冲账入
+	public static String RECEIVED_TYPE_STRIKE_IN = "STRIKEIN";
+	// 收入
 	public static String RECEIVED_TYPE_RECEIVED = "RECEIVED";
+	// 多付返款支出
+	public static String RECEIVED_TYPE_PAY = "PAY";
 
-	// 供应商往来账种类
+	// ************************* 供应商往来账种类 *************************
 	// 返款收入
 	public static String PAID_TYPE_BACK = "BACK";
 	// 支付
 	public static String PAID_TYPE_PAID = "PAID";
 	// 冲账
 	public static String PAID_TYPE_STRIKE = "STRIKE";
+
+	// 冲账出
+	public static String PAID_TYPE_STRIKE_OUT = "STRIKEOUT";
+	// 冲账入
+	public static String PAID_TYPE_STRIKE_IN = "STRIKEIN";
+
 	// 扣款
 	public static String PAID_TYPE_DEDUCT = "DEDUCT";
-	// 支出状态
+
+	// ************************* 支出状态 *********************************
 	// 待确认
 	public static String PAID_STATUS_ING = "I";
 	// 被驳回
@@ -154,9 +171,7 @@ public class ResourcesConstants {
 	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
 	public static String COUNT_TYPE_PRODUCT_ORDER = "PRODUCT_NUMBER";
 
-	/**
-	 * 支付种类
-	 */
+	// ************************* 支付种类 *************************
 	// 地接款
 	public static String PAY_TYPE_DIJIE = "D";
 	// 销售费用
@@ -173,6 +188,8 @@ public class ResourcesConstants {
 	public static String PAY_TYPE_GONGZI = "G";
 	// 其他费用
 	public static String PAY_TYPE_QITA = "Q";
+	// 多付退还
+	public static String PAY_TYPE_MORE_BACK = "M";
 
 	public static String PAY_STATUS_ING = "I";
 	public static String PAY_STATUS_YES = "Y";
@@ -182,4 +199,16 @@ public class ResourcesConstants {
 	public static String PRODUCT_AIR_TICKET_CHARGE_PRODUCT = "PRODUCT";
 	public static String PRODUCT_AIR_TICKET_CHARGE_SALE = "SALE";
 	public static String PRODUCT_AIR_TICKET_CHARGE_NONE = "NONE";
+
+	// 供应商种类
+	// 地接
+	public static String SUPPLIER_TYPE_DIJIE = "D";
+	// 机票供应商
+	public static String SUPPLIER_TYPE_AIR_TICKET = "A";
+
+	// 客户财务主体更换销售日志记录种类
+	// 合并
+	public static String CLIENT_CHANGE_SALE_TYPE_COMBINE = "COMBINE";
+	// 转移
+	public static String CLIENT_CHANGE_SALE_TYPE_TRANSFER = "TRANSFER";
 }

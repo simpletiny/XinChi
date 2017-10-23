@@ -9,10 +9,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.AccountingService;
+import com.xinchi.backend.client.dao.ClientDAO;
+import com.xinchi.backend.client.dao.EmployeeDAO;
+import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
+import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
 import com.xinchi.backend.payable.dao.PayableDAO;
+import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketPaidDetailBean;
+import com.xinchi.bean.AirTicketPayableBean;
+import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
@@ -20,6 +30,7 @@ import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -48,6 +59,7 @@ public class AccountingServiceImpl implements AccountingService {
 		for (SupplierPaidDetailBean paid : paids) {
 			paid.setStatus(status);
 			paid.setApprove_user(approve_user);
+			paid.setConfirm_time(DateUtil.getTimeMillis());
 			paidDao.update(paid);
 		}
 
@@ -71,6 +83,59 @@ public class AccountingServiceImpl implements AccountingService {
 			accPaidService.insert(waiting);
 		}
 		return "success";
+	}
+
+	@Override
+	public String agreeAirTicketPayApply(String related_pk) {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String approve_user = sessionBean.getUser_number();
+
+		List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+
+		for (AirTicketPaidDetailBean paid : paids) {
+			paid.setConfirm_time(DateUtil.getTimeMillis());
+			paid.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			paid.setApprove_user(approve_user);
+			airTicketPaidDetailDao.update(paid);
+		}
+
+		// 生成待支付数据
+		AirTicketPaidDetailBean detail = airTicketPaidDetailDao.selectGroupDetailByRelatedPk(related_pk);
+
+		WaitingForPaidBean waiting = new WaitingForPaidBean();
+		String pay_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER, ResourcesConstants.PAY_TYPE_PIAOWU,
+				DateUtil.getDateStr(DateUtil.YYYYMMDD));
+		waiting.setPay_number(pay_number);
+
+		waiting.setItem(ResourcesConstants.PAY_TYPE_PIAOWU);
+		waiting.setReceiver(detail.getFinancial_body_name());
+		waiting.setMoney(detail.getAllot_money());
+		waiting.setLimit_time(detail.getLimit_time());
+		waiting.setApply_user(detail.getCreate_user());
+		waiting.setApproval_user(approve_user);
+		waiting.setRelated_pk(detail.getRelated_pk());
+		waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
+
+		accPaidService.insert(waiting);
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String rejectAirTicketPayApply(String related_pk) {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String approve_user = sessionBean.getUser_number();
+
+		List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+
+		for (AirTicketPaidDetailBean paid : paids) {
+			paid.setStatus(ResourcesConstants.PAID_STATUS_NO);
+			paid.setApprove_user(approve_user);
+			paid.setConfirm_time(DateUtil.getTimeMillis());
+			airTicketPaidDetailDao.update(paid);
+		}
+
+		return SUCCESS;
 	}
 
 	@Override
@@ -100,7 +165,7 @@ public class AccountingServiceImpl implements AccountingService {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ReimbursementBean bean = reimDao.selectByPk(reimbursement_pk);
 		bean.setApproval_user(sessionBean.getUser_number());
-		bean.setApproval_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm:ss"));
+		bean.setApproval_time(DateUtil.getTimeMillis());
 		bean.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		reimDao.update(bean);
 
@@ -123,12 +188,59 @@ public class AccountingServiceImpl implements AccountingService {
 		return "success";
 	}
 
+	@Autowired
+	private ReceivedDAO receivedDao;
+
+	@Autowired
+	private EmployeeDAO clientEmployeeDao;
+	@Autowired
+	private ClientDAO clientDao;
+
+	@Override
+	public String agreeMoreBack(String back_pk) {
+		ClientReceivedDetailBean bean = receivedDao.selectByPk(back_pk);
+
+		bean.setConfirm_time(DateUtil.getTimeMillis());
+		bean.setStatus(ResourcesConstants.PAID_STATUS_YES);
+		receivedDao.update(bean);
+
+		WaitingForPaidBean waiting = new WaitingForPaidBean();
+
+		String pay_number = numberService
+				.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER, "M", DateUtil.getDateStr(DateUtil.YYYYMMDD));
+		waiting.setPay_number(pay_number);
+
+		waiting.setItem("M");
+		ClientEmployeeBean employee = clientEmployeeDao.selectByPrimaryKey(bean.getClient_employee_pk());
+		ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
+
+		waiting.setReceiver(client.getClient_short_name());
+		waiting.setRelated_pk(bean.getPk());
+		waiting.setMoney(bean.getReceived().negate());
+		waiting.setApply_user(bean.getCreate_user());
+		waiting.setApproval_user(SimpletinyUser.getUser_number());
+		waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
+		accPaidService.insert(waiting);
+
+		return "success";
+	}
+
+	@Override
+	public String rejectMoreBack(String back_pk) {
+		ClientReceivedDetailBean bean = receivedDao.selectByPk(back_pk);
+
+		bean.setConfirm_time(DateUtil.getTimeMillis());
+		bean.setStatus(ResourcesConstants.PAID_STATUS_NO);
+		receivedDao.update(bean);
+		return "success";
+	}
+
 	@Override
 	public String rejectPayApply(String reimbursement_pk) {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ReimbursementBean bean = reimDao.selectByPk(reimbursement_pk);
 		bean.setApproval_user(sessionBean.getUser_number());
-		bean.setApproval_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm:ss"));
+		bean.setApproval_time(DateUtil.getTimeMillis());
 		bean.setStatus(ResourcesConstants.PAID_STATUS_NO);
 		reimDao.update(bean);
 
@@ -167,9 +279,41 @@ public class AccountingServiceImpl implements AccountingService {
 		return "success";
 	}
 
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDao;
+
+	@Autowired
+	private AirTicketPayableDAO airTicketPayableDao;
+
+	@Override
+	public String rollBackAirTicketPayApply(String related_pk) {
+
+		List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+
+		for (AirTicketPaidDetailBean paid : paids) {
+
+			String base_pk = paid.getBase_pk();
+
+			AirTicketPayableBean payable = airTicketPayableDao.selectByPrimaryKey(base_pk);
+
+			payable.setPaid(payable.getPaid().subtract(paid.getMoney()));
+			payable.setBudget_balance(payable.getBudget_balance().add(paid.getMoney()));
+			if (payable.getFinal_flg().equals("Y")) {
+				payable.setFinal_balance(payable.getFinal_balance().add(paid.getMoney()));
+			}
+
+			airTicketPayableDao.update(payable);
+
+			airTicketPaidDetailDao.delete(paid.getPk());
+		}
+
+		return SUCCESS;
+	}
+
 	@Override
 	public String rollBackPayApply(String pk) {
 		reimDao.deleteByPk(pk);
 		return "success";
 	}
+
 }

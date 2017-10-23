@@ -27,10 +27,17 @@
 	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 0px;
+	right: 20px;
 	top: 200px;
 	margin-left: 10px;
 	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
 }
 </style>
 </head>
@@ -107,6 +114,17 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
 						</div>
 					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">尾款为0</label>
+							<div class="col-md-2">
+								<input type="checkbox" value="Y" name="payable.zero_flg" data-bind="event:{click:zeroBalance}" />
+							</div>
+						</div>
+						<div style="padding-top: 3px; float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
+						</div>
+					</div>
 				</form>
 				<div class="list-result">
 					<table class="table table-striped table-hover">
@@ -163,7 +181,7 @@
 								<th>总款项</th>
 								<th>已付款</th>
 								<th>应付款</th>
-				
+
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
@@ -171,7 +189,7 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: payables">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.back_days"></td>
@@ -257,15 +275,9 @@
 
 				<div class="fixed">
 					<div style="margin-top: 5px">
-						<button type="submit" disabled="disabled" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">返款收入</button>
-					</div>
-					<div style="margin-top: 5px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deduct() }">扣款申请</button>
-					</div>
-					<div style="margin-top: 5px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { strike() }">冲账申请</button>
-					</div>
-					<div style="margin-top: 5px">
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">收入</button>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pay()}">支付申请</button>
 					</div>
 				</div>
@@ -329,7 +341,7 @@
 					<label class="l" style="width: 100%">分配金额</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenPayables -->
+			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="back_allot">
 				<div class="col-md-3">
 					<div class="ip">
@@ -429,7 +441,8 @@
 					<label class="l" style="width: 100%">支付金额</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenPayables -->
+
+			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="pay_allot">
 				<div class="col-md-3">
 					<div class="ip">
@@ -482,46 +495,75 @@
 	</div>
 
 	<!-- 冲账申请 -->
-	<div id="strike" style="display: none; width: 800px; padding-top: 30px;">
+	<div id="strike" style="display: none; width: 900px; padding-top: 30px;">
 		<form id="form-strike">
-			<input type="hidden" name="detail.supplier_employee_name" data-bind="value:chosenPayable().supplier_employee_name" /> <input type="hidden" name="detail.supplier_employee_pk"
-				data-bind="value:chosenPayable().supplier_employee_pk" /> <input type="hidden" name="detail.team_number" data-bind="value:chosenPayable().team_number" />
 			<div class="input-row clearfloat">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<label class="l" style="width: 30%">供应商</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:chosenPayable().supplier_employee_name"></p>
+						<p class="ip-default" data-bind="text:supplier_employee_name()"></p>
+						<input type="hidden"  name="detail.supplier_employee_pk" data-bind="value:supplier_employee_pk()" />
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<label class="l" style="width: 30%">团号</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:chosenPayable().team_number"></p>
+						<p class="ip-default" data-bind="text:team_number()"></p>
+						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">冲账总金额</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:max_strike_money()"></p>
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
-				<div class="col-md-6">
-					<label class="l" style="width: 30%">出团日期</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:chosenPayable().departure_date"></p>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">团号</label>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">供应商</label>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">尾款</label>
+				</div>
+				<div class="col-md-3 required">
+					<label class="l" style="width: 100%">分配金额</label>
+				</div>
+			</div>
+			<!-- ko foreach:positivePayables -->
+			<div class="input-row clearfloat" st="strike-allot">
+				<div class="col-md-3">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.team_number"></p>
+						<input type="hidden" data-bind="value:$data.team_number" st="strike-team_number" />
 					</div>
 				</div>
-				<div class="col-md-6">
-					<label class="l" style="width: 30%">应付款</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default rmb" data-bind="text:totalPay()"></p>
+				<div class="col-md-3">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+						<input type="hidden" st="supplier-employee-pk"  data-bind="value:$data.supplier_employee_pk" />
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="ip">
+						<!-- ko if:$data.final_flg=="Y" -->
+						<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
+						<!-- /ko -->
+						<!-- ko if:$data.final_flg=="N" -->
+						<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
+						<!-- /ko -->
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="ip">
+						<input type="number" class="form-control" st="strike-paid" required="required" />
 					</div>
 				</div>
 			</div>
-			<div class="input-row clearfloat">
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">冲账金额</label>
-					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.money" data-bind="value:totalPay()" class="ip-" required="required" />
-					</div>
-				</div>
-			</div>
+			<!-- /ko -->
 			<div class="input-row clearfloat">
 				<div class="col-md-12 required">
 					<label class="l" style="width: 10%">说明</label>
@@ -582,7 +624,7 @@
 					<label class="l" style="width: 100%">扣款分配</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenPayables -->
+			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="deduct_allot">
 				<div class="col-md-3">
 					<div class="ip">

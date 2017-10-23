@@ -42,6 +42,9 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 	private String back_level;
 	private String market_level;
 
+	private String last_client_visit_target;
+	private String last_accurate_sale_summary;
+
 	public String getClient_employee_name() {
 		return client_employee_name;
 	}
@@ -200,6 +203,22 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	public void setAccurate_count(int accurate_count) {
 		this.accurate_count = accurate_count;
+	}
+
+	public String getLast_client_visit_target() {
+		return last_client_visit_target;
+	}
+
+	public void setLast_client_visit_target(String last_client_visit_target) {
+		this.last_client_visit_target = last_client_visit_target;
+	}
+
+	public String getLast_accurate_sale_summary() {
+		return last_accurate_sale_summary;
+	}
+
+	public void setLast_accurate_sale_summary(String last_accurate_sale_summary) {
+		this.last_accurate_sale_summary = last_accurate_sale_summary;
 	}
 
 }

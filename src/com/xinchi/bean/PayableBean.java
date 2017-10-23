@@ -57,6 +57,7 @@ public class PayableBean extends SupperBO implements Serializable {
 	private String departure_from;
 	private String departure_to;
 	private String return_to;
+	private String zero_flg;
 
 	public String getTeam_number() {
 		return team_number;
@@ -280,6 +281,14 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setReturn_to(String return_to) {
 		this.return_to = return_to;
+	}
+
+	public String getZero_flg() {
+		return zero_flg;
+	}
+
+	public void setZero_flg(String zero_flg) {
+		this.zero_flg = zero_flg;
 	}
 
 }

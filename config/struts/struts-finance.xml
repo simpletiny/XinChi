@@ -17,6 +17,15 @@
 		<action name="getAccountBalance" class="cardAction" method="getAccountBalance">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="signCardPurpose" class="cardAction" method="signCardPurpose">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchCardsByPurpose" class="cardAction" method="searchCardsByPurpose">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="createDetail" class="paymentDetailAction" method="createDetail">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -41,7 +50,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+		<action name="searchReceivedDetailByPaymentDetailPk" class="paymentDetailAction" method="searchReceivedDetailByPaymentDetailPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 		<!-- 搜索内转详情 -->
 		<action name="searchInnerTransferByPage" class="innerTransferAction" method="searchInnerTransferByPage">
 			<result name="success" type="json">
@@ -55,11 +70,11 @@
 		<action name="matchReceived" class="paymentDetailAction" method="matchReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="matchOtherReceived" class="paymentDetailAction" method="matchOtherReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="cancelMatchReceived" class="paymentDetailAction" method="cancelMatchReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>

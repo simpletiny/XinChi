@@ -28,6 +28,8 @@ public class CardBean extends SupperBO implements Serializable {
 	private String update_user;
 	private String bank_nickname;
 
+	private String purpose;
+
 	public String getNumber() {
 		return number;
 	}
@@ -122,6 +124,14 @@ public class CardBean extends SupperBO implements Serializable {
 
 	public void setBank_nickname(String bank_nickname) {
 		this.bank_nickname = bank_nickname;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
 	}
 
 }

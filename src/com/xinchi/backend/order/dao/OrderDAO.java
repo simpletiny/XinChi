@@ -12,4 +12,6 @@ public interface OrderDAO {
 	public List<OrderDto> selectCByPage(Page<OrderDto> page);
 
 	public OrderDto selectByTeamNumber(String team_number);
+
+	public List<OrderDto> selectFByPage(Page<OrderDto> page);
 }

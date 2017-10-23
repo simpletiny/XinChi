@@ -1,5 +1,6 @@
 package com.xinchi.backend.order.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,18 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
+import com.xinchi.backend.order.service.FinalNonStandardOrderService;
+import com.xinchi.backend.order.service.FinalStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.FinalNonStandardOrderBean;
+import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
@@ -97,6 +105,28 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 搜索已决算订单
+	 * 
+	 * @return
+	 */
+	public String searchFOrdersByPage() {
+		if (null == option)
+			option = new OrderDto();
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			option.setCreate_user(sessionBean.getUser_number());
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", option);
+		page.setParams(params);
+
+		tbcOrders = service.selectFByPage(page);
+		return SUCCESS;
+	}
+
 	private String order_pk;
 	private String standard_flg;
 
@@ -123,6 +153,53 @@ public class OrderAction extends BaseAction {
 	 */
 	public String updateBudgetStandardOrder() {
 		resultStr = bsoService.update(bsOrder);
+		return SUCCESS;
+	}
+
+	/**
+	 * 更新已确认标准预算订单
+	 * 
+	 * @return
+	 */
+	public String updateConfirmedStandardOrder() {
+		resultStr = bsoService.updateConfirmedStandardOrder(bsOrder);
+		return SUCCESS;
+	}
+
+	private FinalStandardOrderBean fsOrder;
+
+	@Autowired
+	private FinalStandardOrderService finalStandardOrderService;
+
+	@Autowired
+	private ReceivableService receivableService;
+
+	/**
+	 * 决算标准订单
+	 * 
+	 * @return
+	 */
+	public String finalBudgetStandardOrder() {
+		bsOrder = bsoService.selectByPrimaryKey(fsOrder.getPk());
+		bsOrder.setConfirm_flg("F");
+		bsoService.updateComment(bsOrder);
+
+		fsOrder.setPk(null);
+		fsOrder.setTeam_number(bsOrder.getTeam_number());
+		fsOrder.setAir_ticket_cost(bsOrder.getAir_ticket_cost());
+		fsOrder.setProduct_cost(bsOrder.getProduct_cost());
+		fsOrder.setOperate_flg(bsOrder.getOperate_flg());
+		finalStandardOrderService.insert(fsOrder);
+
+		// 更新应收款
+		ReceivableBean receivable = receivableService.selectByTeamNumber(bsOrder.getTeam_number());
+		receivable.setFinal_flg("Y");
+		receivable.setFinal_receivable(fsOrder.getReceivable());
+		receivable.setFinal_balance(receivable.getFinal_receivable().subtract(receivable.getReceived()));
+
+		receivableService.update(receivable);
+
+		resultStr = SUCCESS;
 		return SUCCESS;
 	}
 
@@ -162,6 +239,89 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String updateConfirmedNonStandardOrder() {
+		resultStr = bnsoService.updateConfirmedNonStandardOrder(bnsOrder);
+		return SUCCESS;
+	}
+
+	private FinalNonStandardOrderBean fnsOrder;
+
+	@Autowired
+	private FinalNonStandardOrderService finalNonStandardOrderService;
+
+	/**
+	 * 决算非标准订单
+	 * 
+	 * @return
+	 */
+	public String finalBudgetNonStandardOrder() {
+		bnsOrder = bnsoService.selectByPrimaryKey(fnsOrder.getPk());
+		bnsOrder.setConfirm_flg("F");
+		bnsoService.updateComment(bnsOrder);
+
+		fnsOrder.setPk(null);
+		fnsOrder.setProduct_manager(bnsOrder.getProduct_name());
+		fnsOrder.setTeam_number(bnsOrder.getTeam_number());
+		fnsOrder.setAir_ticket_cost(bnsOrder.getAir_ticket_cost());
+		fnsOrder.setProduct_cost(bnsOrder.getProduct_cost());
+		fnsOrder.setOperate_flg(bnsOrder.getOperate_flg());
+		finalNonStandardOrderService.insert(fnsOrder);
+
+		// 更新应收款
+		ReceivableBean receivable = receivableService.selectByTeamNumber(bnsOrder.getTeam_number());
+		receivable.setFinal_flg("Y");
+		receivable.setFinal_receivable(fnsOrder.getReceivable());
+		receivable.setFinal_balance(receivable.getFinal_receivable().subtract(receivable.getReceived()));
+
+		receivableService.update(receivable);
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	/**
+	 * 决算订单打回重报
+	 * 
+	 * @return
+	 */
+	public String rollBackFinalOrder() {
+		if (standard_flg.equals("N")) {
+			fnsOrder = finalNonStandardOrderService.selectByPrimaryKey(order_pk);
+
+			// 搜索预算订单,更新预算订单状态
+			bnsOrder = bnsoService.selectByTeamNumber(fnsOrder.getTeam_number());
+			bnsOrder.setConfirm_flg("Y");
+			bnsoService.updateComment(bnsOrder);
+
+			ReceivableBean receivable = receivableService.selectByTeamNumber(fnsOrder.getTeam_number());
+			receivable.setFinal_flg("N");
+			receivable.setFinal_receivable(BigDecimal.ZERO);
+			receivable.setFinal_balance(BigDecimal.ZERO);
+			receivableService.update(receivable);
+
+			finalNonStandardOrderService.delete(order_pk);
+
+		} else if (standard_flg.equals("Y")) {
+			fsOrder = finalStandardOrderService.selectByPrimaryKey(order_pk);
+
+			// 更新预算订单状态
+			bsOrder = bsoService.selectByTeamNumber(fsOrder.getTeam_number());
+			bsOrder.setConfirm_flg("Y");
+			bsoService.updateComment(bsOrder);
+
+			ReceivableBean receivable = receivableService.selectByTeamNumber(fsOrder.getTeam_number());
+			receivable.setFinal_flg("N");
+			receivable.setFinal_receivable(BigDecimal.ZERO);
+			receivable.setFinal_balance(BigDecimal.ZERO);
+			receivableService.update(receivable);
+
+			finalStandardOrderService.delete(order_pk);
+		}
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	/**
 	 * 查询非标准预算单
 	 * 
@@ -169,6 +329,17 @@ public class OrderAction extends BaseAction {
 	 */
 	public String searchTbcBnsOrderByPk() {
 		bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
+		return SUCCESS;
+	}
+
+	private List<SaleOrderNameListBean> passengers;
+	private String team_number;
+
+	@Autowired
+	private OrderNameListService orderNameListService;
+
+	public String selectSaleOrderNameListByTeamNumber() {
+		passengers = orderNameListService.selectByTeamNumber(team_number);
 		return SUCCESS;
 	}
 
@@ -218,5 +389,37 @@ public class OrderAction extends BaseAction {
 
 	public void setStandard_flg(String standard_flg) {
 		this.standard_flg = standard_flg;
+	}
+
+	public List<SaleOrderNameListBean> getPassengers() {
+		return passengers;
+	}
+
+	public void setPassengers(List<SaleOrderNameListBean> passengers) {
+		this.passengers = passengers;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
+	}
+
+	public FinalStandardOrderBean getFsOrder() {
+		return fsOrder;
+	}
+
+	public void setFsOrder(FinalStandardOrderBean fsOrder) {
+		this.fsOrder = fsOrder;
+	}
+
+	public FinalNonStandardOrderBean getFnsOrder() {
+		return fnsOrder;
+	}
+
+	public void setFnsOrder(FinalNonStandardOrderBean fnsOrder) {
+		this.fnsOrder = fnsOrder;
 	}
 }

@@ -38,6 +38,8 @@ public class TravelAgencyBean extends SupperBO implements Serializable {
 
 	private String is_cancel;
 
+	private Integer agency_client_count;
+
 	public String getAgency_name() {
 		return agency_name;
 	}
@@ -164,6 +166,14 @@ public class TravelAgencyBean extends SupperBO implements Serializable {
 
 	public void setIs_cancel(String is_cancel) {
 		this.is_cancel = is_cancel;
+	}
+
+	public Integer getAgency_client_count() {
+		return agency_client_count;
+	}
+
+	public void setAgency_client_count(Integer agency_client_count) {
+		this.agency_client_count = agency_client_count;
 	}
 
 }

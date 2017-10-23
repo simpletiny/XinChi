@@ -60,7 +60,7 @@
 		select
 		A.team_number,
 		A.final_flg,
-		A.client_employee_name,
+		B.name AS client_employee_name,
 		A.client_employee_pk,
 		A.departure_date,
 		A.return_date,
@@ -355,6 +355,9 @@
 			</if>
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 				and D.client_name LIKE CONCAT('%', #{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number LIKE CONCAT('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and A.sales = #{params.bo.sales,jdbcType=VARCHAR}

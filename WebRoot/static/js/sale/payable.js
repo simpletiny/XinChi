@@ -12,6 +12,7 @@ var OrderContext = function() {
 	self.paysum = ko.observable({});
 	self.chosenSales = ko.observable();
 	self.sortTypes = [ '倒序', '正序' ];
+
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchPayableSummary', {
@@ -53,8 +54,6 @@ var OrderContext = function() {
 	}
 	self.titleMonth.push("更早");
 
-	// 执行方法
-	// 抹零申请
 	self.tailMoney = ko.observable();
 	self.team_number = ko.observable();
 	self.client_employee_name = ko.observable();
@@ -67,19 +66,10 @@ var OrderContext = function() {
 			fail_msg("请选择订单");
 			return;
 		} else {
-			self.chosenPayables.removeAll();
 			var supplier_employee_pks = new Array();
-			$(self.store()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenPayables.push(data1);
-						return false;
-					}
-				});
-			});
 			var totalBack = 0;
 			var check_result = true;
-			$(self.chosenPayables()).each(function(idx, data) {
+			$(self.chosenOrders()).each(function(idx, data) {
 				supplier_employee_pks.push(data.supplier_employee_pk);
 
 				if (data.final_flg == "Y") {
@@ -114,7 +104,7 @@ var OrderContext = function() {
 						self.totalBack(totalBack * -1);
 						receiveLayer = $.layer({
 							type : 1,
-							title : [ '返款收入', '' ],
+							title : [ '收入', '' ],
 							maxmin : false,
 							closeBtn : [ 1, true ],
 							shadeClose : false,
@@ -184,30 +174,22 @@ var OrderContext = function() {
 			}
 		});
 	};
+
 	self.totalPay = ko.observable();
 	self.today = ko.observable();
 	self.today((new Date()).Format("yyyy-MM-dd"));
+
 	// 支付申请
 	self.pay = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
 		} else {
-			self.chosenPayables.removeAll();
 			var supplier_employee_pks = new Array();
-			$(self.store()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenPayables.push(data1);
-						return false;
-					}
-				});
-			});
 			var totalPay = 0;
 			var check_result = true;
-			$(self.chosenPayables()).each(function(idx, data) {
+			$(self.chosenOrders()).each(function(idx, data) {
 				supplier_employee_pks.push(data.supplier_employee_pk);
-
 				if (data.final_flg == "Y") {
 					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已清");
@@ -225,6 +207,7 @@ var OrderContext = function() {
 					}
 				}
 			});
+
 			if (!check_result)
 				return;
 			$(".rmb").formatCurrency();
@@ -311,52 +294,102 @@ var OrderContext = function() {
 		});
 	};
 	self.chosenPayable = ko.observable({});
+	self.positivePayables = ko.observableArray([]);
+	self.supplier_employee_name = ko.observable();
+	self.max_strike_money = ko.observable();
+	self.supplier_employee_pk = ko.observable();
 	// 冲账申请
 	self.strike = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("冲账申请只能选择一个订单");
-			return;
 		} else if (self.chosenOrders().length == 1) {
-			$(self.payables()).each(function(idx, data1) {
-				if (self.chosenOrders()[0] == data1.pk) {
-					self.chosenPayable(data1);
-					return false;
+			fail_msg("请选择两个及以上订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+
+			self.positivePayables.removeAll();
+			self.max_strike_money("");
+			var supplier_employee_pks = new Array();
+
+			var check_result = true;
+			var negative_cnt = 0;
+			var positive_cnt = 0;
+
+			$(self.chosenOrders()).each(function(idx, data) {
+				supplier_employee_pks.push(data.supplier_employee_pk);
+				if (data.final_flg == "Y") {
+					if (data.final_balance == 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					} else if (data.final_balance < 0) {
+						negative_cnt++;
+						self.team_number(data.team_number);
+						self.supplier_employee_name(data.supplier_employee_name);
+						self.supplier_employee_pk(data.supplier_employee_pk);
+						self.max_strike_money(data.final_balance * -1);
+					} else {
+						positive_cnt++;
+						self.positivePayables.push(data);
+					}
+				} else {
+					if (data.budget_balance == 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					} else if (data.budget_balance < 0) {
+						fail_msg("请选择已经决算的负尾款订单！");
+						check_result = false;
+					} else {
+						positive_cnt++;
+						self.positivePayables.push(data);
+					}
 				}
 			});
-			if (self.chosenPayable().final_flg == "Y") {
 
-				if (self.chosenPayable().final_balance <= 0) {
-					fail_msg("尾款已结清");
-					return;
-				}
-				self.totalPay(self.chosenPayable().final_balance);
-			} else {
+			if (!check_result)
+				return;
 
-				if (self.chosenPayable().budget_balance <= 0) {
-					fail_msg("尾款已结清");
-					return;
-				}
-				self.totalPay(self.chosenPayable().budget_balance);
+			if (negative_cnt == 0) {
+				fail_msg("请选择一单尾款为负的订单（即需要冲账的多付款订单！）");
+				return;
+			} else if (negative_cnt > 1) {
+				fail_msg("只能选择一单尾款为负的订单！");
+				return;
 			}
-			console.log(self.chosenPayable());
+
+			if (positive_cnt == 0) {
+				fail_msg("请选择至少一单尾款为正的订单！");
+				return;
+			}
+
+			startLoadingSimpleIndicator("检测中");
 			$(".rmb").formatCurrency();
-			strikeLayer = $.layer({
-				type : 1,
-				title : [ '冲账申请', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '820px', '780px' ],
-				offset : [ '150px', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#strike'
-				},
-				end : function() {
-					console.log("Done");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/isSameFinancialBody2',
+				data : "supplier_employee_pks=" + supplier_employee_pks,
+				success : function(data) {
+					if (data.isSame == "NOT") {
+						fail_msg("供应商不属于同一财务主体");
+					} else {
+						strikeLayer = $.layer({
+							type : 1,
+							title : [ '冲账申请', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '920px', '780px' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#strike'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					}
+					endLoadingIndicator();
 				}
 			});
 		}
@@ -365,54 +398,74 @@ var OrderContext = function() {
 	self.applyStrike = function() {
 		if (!$("#form-strike").valid())
 			return;
+
 		var data = $("#form-strike").serialize();
 		layer.close(strikeLayer);
 		startLoadingSimpleIndicator("保存中");
+
+		var sumAllot = 0;
+		$("[st='strike-paid']").each(function(idx, data) {
+			sumAllot += $(data).val() - 0;
+		});
+		if (sumAllot > self.max_strike_money() - 0) {
+			fail_msg("分配金额合计大于冲账金额");
+			return;
+		}
+
+		var allot_json = '[';
+		var allot = $("[st='strike-allot']");
+		for ( var i = 0; i < allot.length; i++) {
+			var current = allot[i];
+			var n = $(current).find("[st='strike-team_number']").val();
+			var r = $(current).find("[st='strike-paid']").val();
+			var supplier_employee_pk = $(current).find("[st='supplier-employee-pk']").val();
+
+			allot_json += '{"team_number":"' + n + '",' + '"paid":"' + r + '","supplier_employee_pk":"' + supplier_employee_pk;
+			if (i == allot.length - 1) {
+				allot_json += '"}';
+			} else {
+				allot_json += '"},';
+			}
+		}
+		allot_json += ']';
+		data += "&allot_json=" + allot_json;
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/applyStrike',
 			data : data,
 			success : function(str) {
-				if (str != "OK") {
+				endLoadingIndicator();
+				if (str == "success") {
+					self.search();
+				} else {
 					fail_msg("申请失败，请联系管理员");
 				}
-
-				self.search();
-				endLoadingIndicator();
 			}
 		});
 	};
+
 	// 扣款申请
 	self.deduct = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
 		} else {
-			self.chosenPayables.removeAll();
 			var supplier_employee_pks = new Array();
-			$(self.store()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenPayables.push(data1);
-						return false;
-					}
-				});
-			});
-
 			var totalPay = 0;
 			var check_result = true;
-			$(self.chosenPayables()).each(function(idx, data) {
+			$(self.chosenOrders()).each(function(idx, data) {
 				supplier_employee_pks.push(data.supplier_employee_pk);
 				if (data.final_flg != "Y") {
 					fail_msg(data.team_number + "还未决算");
 					check_result = false;
-
 				} else {
 					totalPay += (data.final_balance - 0);
 				}
 			});
+
 			if (!check_result)
 				return;
+
 			self.totalPay(totalPay);
 			$(".rmb").formatCurrency();
 			startLoadingSimpleIndicator("检测中");
@@ -425,7 +478,6 @@ var OrderContext = function() {
 						fail_msg("供应商不属于同一财务主体");
 					} else {
 						self.supplier_name(data.supplier.supplier_short_name);
-
 						deductLayer = $.layer({
 							type : 1,
 							title : [ '扣款申请', '' ],
@@ -448,7 +500,7 @@ var OrderContext = function() {
 			});
 		}
 	};
-	// 执行支付申请
+	// 执行扣款申请
 	self.applyDeduct = function() {
 		if (!$("#form-deduct").valid())
 			return;
@@ -497,9 +549,13 @@ var OrderContext = function() {
 			}
 		});
 	};
-	
-	self.chosenAll = function(obj){
+
+	self.chosenAll = function(obj) {
 		console.log(obj);
+	};
+	self.zeroBalance = function() {
+		self.refresh();
+		return true;
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -514,7 +570,6 @@ var OrderContext = function() {
 	self.totalBalance = ko.observable(0);
 	self.totalFinalBalance = ko.observable(0);
 
-	
 	var pages = new Array();
 	self.refresh = function() {
 		var totalPeople = 0;
@@ -604,9 +659,7 @@ var OrderContext = function() {
 
 	});
 	self.search = function() {
-		pages=new Array();
 		self.chosenOrders.removeAll();
-		self.store.removeAll();
 		self.refresh();
 	};
 

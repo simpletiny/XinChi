@@ -66,12 +66,35 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
 						</div>
 					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">客户</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">乘机人</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
+							</div>
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						</div>
+					</div>
 				</form>
 				<div class="list-result" id="div-table">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th><input type="checkbox" onclick="checkAll(this)"/>全选</th>
+								<th><input type="checkbox" onclick="checkAll(this)" />全选</th>
 								<th>客户</th>
 								<th>团号</th>
 								<th>首段日期</th>
@@ -81,7 +104,8 @@
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
-							<tr style="overflow: hidden" onclick="showDetail(this)">
+							<tr style="overflow: hidden">
+								<!--  onclick="showDetail(this)" -->
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+':'+$data.name}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.team_number"></td>
@@ -125,8 +149,54 @@
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pickTicketSource() }">确认</button>
 		</div>
 	</div>
+
+	<div id="supplier-pick" style="display: none;">
+		<div class="main-container">
+			<div class="main-box" style="width: 600px">
+				<div class="form-group">
+					<div class="span8">
+						<label class="col-md-2 control-label">姓名</label>
+						<div class="col-md-6">
+							<input type="text" id="supplier_name" class="form-control" placeholder="姓名" />
+						</div>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>姓名</th>
+								<th>财务主体</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: supplierEmployees">
+							<tr data-bind="event: {click: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
+								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.financial_body_name"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPage1, enable: currentPage1() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNums1 -->
+						<!-- ko if: $data == $root.currentPage1() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPage1() -->
+						<a data-bind="text: $data, click: $root.turnPage1"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<form id="data-form" method="post" action="<%=basePath%>ticket/operatePassengers" style="display: none">
-		<input name="json" id="json-data"/>
+		<input name="json" id="json-data" />
 	</form>
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");

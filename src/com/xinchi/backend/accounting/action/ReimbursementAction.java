@@ -19,10 +19,11 @@ public class ReimbursementAction extends BaseAction {
 	@Autowired
 	private ReimbursementService service;
 	private ReimbursementBean reimbursement;
-
+	
 	public String saveReimbursement() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		reimbursement.setApply_user(sessionBean.getUser_number());
+
 		resultStr = service.save(reimbursement);
 		return SUCCESS;
 	}

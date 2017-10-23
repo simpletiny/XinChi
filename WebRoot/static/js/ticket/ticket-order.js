@@ -138,7 +138,8 @@ var OrderContext = function() {
 	});
 
 	self.refresh = function() {
-		var param = "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderByPage', param, function(data) {
 			self.orders(data.airTicketOrders);
 

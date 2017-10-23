@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="payable" extends="default" namespace="/payable">
+
+		<!-- 搜搜机票应付款 -->
+		<action name="searchAirTicketPayableByPage" class="airTicketPayableAction" method="searchAirTicketPayableByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!-- 机票应付款支付申请 -->
+		<action name="applyAirTicketPay" class="airTicketPayableAction" method="applyAirTicketPay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 根据payable_pks搜索 airTiketpayable -->
+		<action name="searchAirTicketPayablesByPks" class="airTicketPayableAction" method="searchAirTicketPayablesByPks">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchAirTicketPaidDetailByPage" class="airTicketPaidDetailAction" method="searchAirTicketPaidDetailByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 支付机票款 -->
+		<action name="payAirTicket" class="airTicketPayableAction" method="payAirTicket">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	</package>
+</struts>

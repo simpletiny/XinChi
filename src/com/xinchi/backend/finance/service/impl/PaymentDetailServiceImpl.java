@@ -95,7 +95,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			}
 			sourceFile.delete();
 		}
-		detail.setFinance_flg("Y");
 		dao.insert(detail);
 		return "success";
 	}

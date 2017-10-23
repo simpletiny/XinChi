@@ -27,4 +27,10 @@ public interface CardService {
 
 	@LogDescription(ignore = true)
 	public String checkAccount(String account);
+
+	public CardBean selectByPk(String pk);
+
+	public void update(CardBean current);
+
+	public List<CardBean> selectByPurpose(String purpose);
 }

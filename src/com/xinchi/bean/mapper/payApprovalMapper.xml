@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PayApprovalMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PayApprovalBean">
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="item" property="item" jdbcType="CHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="apply_time" property="apply_time" jdbcType="VARCHAR" />
+		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+		<result column="back_pk" property="back_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="approval_user" property="approval_user" jdbcType="CHAR" />
+		<result column="approval_time" property="approval_time" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		receiver,
+		money,
+		item,
+		status,
+		related_pk,
+		apply_user,
+		apply_time,
+		limit_time,
+		back_pk,
+		pk,
+		create_user,
+		update_user,
+		comment,
+		approval_user,
+		approval_time,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from pay_approval
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByBackPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from pay_approval
+		where back_pk = #{back_pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from pay_approval
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.PayApprovalBean">
+
+		insert into pay_approval
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="item != null">
+				item,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="apply_user != null">
+				apply_user,
+			</if>
+			<if test="apply_time != null">
+				apply_time,
+			</if>
+			<if test="limit_time != null">
+				limit_time,
+			</if>
+			<if test="back_pk != null">
+				back_pk,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="approval_user != null">
+				approval_user,
+			</if>
+			<if test="approval_time != null">
+				approval_time,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="item != null">
+				#{item,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_user != null">
+				#{apply_user,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_time != null">
+				#{apply_time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				#{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="back_pk != null">
+				#{back_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="approval_user != null">
+				#{approval_user,jdbcType=CHAR},
+			</if>
+			<if test="approval_time != null">
+				#{approval_time,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PayApprovalBean">
+		update pay_approval
+		<set>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="item != null">
+				item = #{item,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_user != null">
+				apply_user = #{apply_user,jdbcType=VARCHAR},
+			</if>
+			<if test="apply_time != null">
+				apply_time = #{apply_time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				limit_time = #{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="back_pk != null">
+				back_pk = #{back_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="approval_user != null">
+				approval_user = #{approval_user,jdbcType=CHAR},
+			</if>
+			<if test="approval_time != null">
+				approval_time = #{approval_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.PayApprovalBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from pay_approval
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.receiver,
+		A.money,
+		A.item,
+		A.status,
+		A.related_pk,
+		B.user_name AS apply_user,
+		A.apply_time,
+		LEFT(A.limit_time,10) AS limit_time,
+		A.back_pk,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.comment,
+		A.approval_user,
+		A.approval_time,
+		A.create_time,
+		A.update_time
+		from pay_approval A LEFT JOIN user_base B ON A.apply_user =
+		B.user_number
+		<where>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.apply_user != null and params.bo.apply_user !=''">
+				and B.user_name like concat('%', #{params.bo.apply_user,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

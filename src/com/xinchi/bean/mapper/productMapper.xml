@@ -19,7 +19,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="air_ticket_charge" property="air_ticket_charge" jdbcType="VARCHAR" />
 		
-		<result column="product_value" property="product_value" jdbcType="INTEGER" />
+		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
 		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
@@ -187,7 +187,7 @@
 				#{gross_profit_rate,jdbcType=FLOAT},
 			</if>
 			<if test="product_value != null">
-				#{product_value,jdbcType=FLOAT},
+				#{product_value,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>
@@ -252,7 +252,7 @@
 				gross_profit_rate = #{gross_profit_rate,jdbcType=FLOAT},
 			</if>
 			<if test="product_value != null">
-				product_value = #{product_value,jdbcType=FLOAT},
+				product_value = #{product_value,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

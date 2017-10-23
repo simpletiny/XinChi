@@ -63,13 +63,13 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">产品编号</label>
 							<div class="col-md-2">
-								<input class="form-control" name="order_option.product_number"></input>
+								<input class="form-control" name="order_option.product_number" placeholder="产品编号"></input>
 							</div>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">产品名称</label>
 							<div class="col-md-2">
-								<input class="form-control" name="order_option.product_name"></input>
+								<input class="form-control" name="order_option.product_name" placeholder="产品名称"></input>
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -83,6 +83,12 @@
 						</s:if>
 					</div>
 					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input class="form-control" name="order_option.team_number" placeholder="团号"></input>
+							</div>
+						</div>
 						<div align="left">
 							<label class="col-md-1 control-label">出团日期</label>
 							<div class="col-md-2" style="float: left">

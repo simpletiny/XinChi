@@ -41,22 +41,43 @@ public class CardAction extends BaseAction {
 	}
 
 	private String account;
-	
+
 	@JSON(serialize = false)
 	public String getAccountBalance() {
-//		try {
-//			account = new String(account.getBytes("ISO-8859-1"), "UTF-8");
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//			return ERROR;
-//		}
+		// try {
+		// account = new String(account.getBytes("ISO-8859-1"), "UTF-8");
+		// } catch (UnsupportedEncodingException e) {
+		// e.printStackTrace();
+		// return ERROR;
+		// }
 		resultStr = cardService.getAccountBalance(account);
 		return SUCCESS;
 	}
-	public String checkAccount(){
+
+	private String card_pks;
+	private String purpose;
+
+	public String signCardPurpose() {
+		String[] pks = card_pks.split(",");
+		for (String pk : pks) {
+			CardBean current = cardService.selectByPk(pk);
+			current.setPurpose(purpose);
+			cardService.update(current);
+		}
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	public String searchCardsByPurpose() {
+		cards = cardService.selectByPurpose(purpose);
+		return SUCCESS;
+	}
+
+	public String checkAccount() {
 		resultStr = cardService.checkAccount(account);
 		return SUCCESS;
 	}
+
 	public CardBean getCard() {
 		return card;
 	}
@@ -80,13 +101,29 @@ public class CardAction extends BaseAction {
 	public void setAccounts(List<String> accounts) {
 		this.accounts = accounts;
 	}
-	
+
 	public String getAccount() {
 		return account;
 	}
 
 	public void setAccount(String account) {
 		this.account = account;
+	}
+
+	public String getCard_pks() {
+		return card_pks;
+	}
+
+	public void setCard_pks(String card_pks) {
+		this.card_pks = card_pks;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
 	}
 
 }

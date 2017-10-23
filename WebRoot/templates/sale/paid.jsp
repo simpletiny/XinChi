@@ -39,14 +39,14 @@
 						<div style="width: 30%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button>
+								<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button> -->
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" /><label data-bind="text: $root.statusMapping[$data]"></label>
+								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="detail.statuses"/><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -81,21 +81,26 @@
 								<th></th>
 								<th>金额</th>
 								<th>类型</th>
-								<th>收款方</th>
+								<th>供应商</th>
 								<th>申请日期</th>
 								<th>入账日期</th>
 								<th>状态</th>
-								<th>产品经理</th>
+								<th>填报人</th>
 							</tr>
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status+';'+$data.item+';'+$data.related_pk}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenPaids" /></td>
+								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type!='STRIKEIN' & $data.type!='STRIKEOUT' -->
+								<td data-bind="text: $data.allot_money" class="rmb"></td>
+								<!-- /ko -->
 								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
-								<td data-bind="text: $data.receiver"></td>
-								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
-								<td data-bind="text: $data.pay_time"></td>
+								<td data-bind="text: $data.supplier_employee_name"></td>
+								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+								<td data-bind="text: $data.time"></td>
 								<!-- ko if:$data.status=='I' -->
 									<td  data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
@@ -109,7 +114,7 @@
 									<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								
-								<td data-bind="text: $data.apply_user"></td>
+								<td data-bind="text: $data.create_user"></td>
 							</tr>
 						</tbody>
 					</table>

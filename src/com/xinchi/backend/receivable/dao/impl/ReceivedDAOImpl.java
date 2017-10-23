@@ -60,4 +60,10 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.updateByPrimaryKey", detail);
 	}
 
+	@Override
+	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk) {
+
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectReceivedDetailByRelatedPk", related_pk);
+	}
+
 }

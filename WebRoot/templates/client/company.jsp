@@ -35,15 +35,12 @@
 
 					<div class="form-group">
 						<div style="width: 30%; float: right">
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
-							</div>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
+							<s:if test="#session.user.user_roles.contains('ADMIN')">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: changeSales">调整销售</button>
+							</s:if>
 						</div>
 					</div>
 					<div class="form-group">
@@ -61,7 +58,7 @@
 						</div>
 						<div class="span6">
 							<div data-bind="foreach: status">
-								<em class="small-box " > <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label data-bind="text: $data"></label>
+								<em class="small-box "> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label data-bind="text: $data"></label>
 								</em>
 							</div>
 						</div>
@@ -75,12 +72,12 @@
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
-						<div class="span6">
-							<label class="col-md-1 control-label">销售</label>
-							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部'" name="client.sales_name"></select>
+							<div class="span6">
+								<label class="col-md-1 control-label">销售</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--'" name="client.sales"></select>
+								</div>
 							</div>
-						</div>
 						</s:if>
 						<div class="span6" style="float: right">
 							<div style="padding-top: 3px;">
@@ -98,10 +95,13 @@
 								<th>地区</th>
 								<th>状态</th>
 								<th>类型</th>
-								<th>关联</th>
-								<th>全称</th>
 								<th>负责人</th>
-								<th>手机号</th>
+								<th>关联</th>
+								<th>地址</th>
+								<th>客户数量</th>
+								<th>应收总计</th>
+								<th>年度订单</th>
+								<th>最近订单</th>
 								<th>所属销售</th>
 							</tr>
 						</thead>
@@ -117,19 +117,23 @@
 								<!-- ko if:$data.delete_flg =='N' -->
 								<td style="color: green">正常</td>
 								<!-- /ko -->
-								
+
 								<td data-bind="text: $data.client_type"></td>
+								<td data-bind="text: $data.body_name"></td>
 								<!-- ko if:$data.relate_flg =='N' -->
 								<td style="color: red">未关联</td>
 								<!-- /ko -->
 
 								<!-- ko if:$data.relate_flg =='Y' -->
-								<td style="color: blue"><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td> 
+								<td style="color: blue"><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
 								<!-- /ko -->
+
+								<td data-bind="text: $data.address"></td>
+								<td data-bind="text: $data.client_employee_count"></td>
+								<td class="rmb" data-bind="text: $data.sum_balance"></td>
+								<td data-bind="text: $data.client_year_order_count"></td>
+								<td data-bind="text: $data.last_order_date"></td>
 								
-								<td data-bind="text: $data.client_name"></td>
-								<td data-bind="text: $data.body_name"></td>
-								<td data-bind="text: $data.body_cellphone"></td>
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->
@@ -153,6 +157,27 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="edit-sale" style="display: none">
+		<input type="hidden" id="current-pk" />
+		<div class="input-row clearfloat">
+			<!-- <div class="col-md-12">
+				说明：改变客户财务主体销售，会一并将此财务主体下的客户员工移至新分配销售下。如果新销售下存在同名财务主体，那么只会将客户员工移至新销售，此财务主体停用，并以新销售下已存在的同名财务主体为准，将涉及客户员工所属财务主体改为此财务主体。
+			</div> -->
+			<div class="col-md-12 required">
+				<label class="l">选择销售</label>
+				<div class="ip">
+					<div data-bind="foreach: sales" style="padding-top: 4px;">
+						<em class="small-box"> <input type="radio" name="choosenUser" data-bind="attr: {'value': $data.pk}, checked: $root.chosenUser" /> <!-- ko if: $data.user_name =='公开' --> <label
+							style="color: red" data-bind="text: $data.user_name"></label> <!-- /ko --> <!-- ko if: $data.user_name !='公开' --> <label data-bind="text: $data.user_name"></label> <!-- /ko -->
+						</em>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: doChangeSale">保存</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
 		</div>
 	</div>
 	<script>

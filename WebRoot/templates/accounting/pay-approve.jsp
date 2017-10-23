@@ -12,6 +12,15 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<style>
+.form-group {
+	margin-bottom: 5px;
+}
+
+.form-control {
+	height: 30px;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -23,19 +32,12 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-					<style>
-.form-group {
-	margin-bottom: 5px;
-}
 
-.form-control {
-	height: 30px;
-}
-</style>
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" /><label data-bind="text: $root.statusMapping[$data]"></label>
+								<em class="small-box"> <input name="option.statuses" type="checkbox" data-bind="value:$data, checked: $root.chosenStatus,click:function(){$root.refresh();return true;}" /><label
+									data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -44,18 +46,18 @@
 						<div align="left">
 							<label class="col-md-1 control-label">申请日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="detail.date_from" />
+								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="option.date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="detail.date_to" />
+								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="option.date_to" />
 							</div>
 						</div>
-						<div  align="left">
+						<div align="left">
 							<label class="col-md-1 control-label">申请人</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control" name="detail.create_user" />
+								<input type="text" class="form-control" name="option.apply_user" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -85,32 +87,32 @@
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
 								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
-								
-								<!-- ko if: moment().isAfter($data.limit_time+' 23:59') -->
-									<td style="color: red"  data-bind="text: $data.limit_time"></td>
+
+								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time+' 23:59') -->
+								<td style="color: red" data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
-								<!-- ko if: moment().isBefore($data.limit_time+' 23:59') -->
-									<td data-bind="text: $data.limit_time"></td>
+								<!-- ko if:$data.limit_time!=null && moment().isBefore($data.limit_time+' 23:59') -->
+								<td data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.limit_time==null -->
-									<td data-bind="text: $data.limit_time"></td>
+								<td data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
-								
+
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.apply_user"></td>
-								
+
 								<!-- ko if:$data.status=='I' -->
-								<td>
-									<a href="javascript:void(0)" data-bind="event:{click:function(){$root.agree($data)}}">同意</a>
-									<a href="javascript:void(0)" data-bind="event:{click:function(){$root.reject($data)}}">驳回</a>
+								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.agree($data)}}">同意</a> <a href="javascript:void(0)" data-bind="event:{click:function(){$root.reject($data)}}">驳回</a>
 								</td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='Y' -->
-									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
-								
 								<!-- ko if:$data.status=='N' -->
-									<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='P' -->
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 							</tr>
 						</tbody>

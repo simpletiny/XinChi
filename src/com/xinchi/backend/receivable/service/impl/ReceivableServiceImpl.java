@@ -330,4 +330,9 @@ public class ReceivableServiceImpl implements ReceivableService {
 		// e.printStackTrace();
 		// }
 	}
+
+	@Override
+	public ReceivableBean selectByTeamNumber(String team_number) {
+		return dao.selectReceivableByTeamNumber(team_number);
+	}
 }

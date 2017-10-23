@@ -34,7 +34,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">产品经理</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'" name="report_option.product_manager_number"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'" name="report_option.product_manager_number"></select>
 							</div>
 						</div>
 						</s:if>

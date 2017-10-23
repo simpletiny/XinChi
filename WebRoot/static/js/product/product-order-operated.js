@@ -1,4 +1,5 @@
 var operateLayer;
+var finalLayser;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -46,7 +47,7 @@ var OrderContext = function() {
 
 			self.totalPeopleCount(total_people_count);
 			self.totalSupplierCost(total_supplier_cost);
-
+			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -54,32 +55,115 @@ var OrderContext = function() {
 
 	self.productSuppliers = ko.observableArray([]);
 
-	self.confirmOperate = function() {
+	self.finalOperate = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
-		} else if (self.chosenOperations().length > 0) {
-
-			startLoadingIndicator("确认中...");
-			var data = "operate_pks=" + self.chosenOperations();
-			
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'product/confirmOperation',
-				data : data
-			}).success(function(str) {
-				endLoadingIndicator();
-				if (str == "success") {
-					self.refresh();
-					self.chosenOperations.removeAll();
-				} else {
-					fail_msg(str);
+		}else if(self.chosenOperations().length >1){
+			fail_msg("只能选择一个！");
+			return;
+		}else if (self.chosenOperations().length ==1) {
+			finalLayser = $.layer({
+				type : 1,
+				title : [ '决算', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '200px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#order-final'
+				},
+				end : function() {
 				}
 			});
 		}
 	};
+	
+	// 确认决算
+	self.doFinal = function() {
+		var cost = $("#final-supplier-cost").val();
+		if (cost.trim() == "") {
+			fail_msg("请填写决算总成本！");
+			return
+		}
+		var current = self.chosenOperations()[0].split(";");
+		var operate_pk = current[0];
+		
+		var data = "final_supplier_cost=" + cost + "&operate_pk=" + operate_pk;
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确认要决算吗?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("保存中...");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'product/finalOperation',
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						layer.close(finalLayser);
+						if (str == "success") {
+							self.chosenOperations.removeAll();
+							self.refresh();
+						} else {
+							fail_msg(str);
+							self.chosenOperations.removeAll();
+						}
+					});
+				}
+			}
+		});
+	};
+	// 删除订单操作
+	self.deleteOperation = function() {
+		if (self.chosenOperations().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else if (self.chosenOperations().length > 0) {
+			var team_numbers = "";
+			for ( var i = 0; i < self.chosenOperations().length; i++) {
+				var current = self.chosenOperations()[i].split(";");
+				team_numbers += current[1] + ",";
+			}
 
+			team_numbers = team_numbers.substr(0, team_numbers.length - 1);
 
+			var data = "team_numbers=" + team_numbers;
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '删除会将关联的操作订单一并删除，并将产品订单设置为未操作状态！',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中...");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'product/deleteOperation',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenOperations.removeAll();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
+	};
 	self.productSuppliers = ko.observableArray([]);
 
 	// start pagination

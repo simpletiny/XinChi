@@ -3,6 +3,9 @@ var sumLayer;
 var strikeLayer;
 var receiveLayer;
 
+var payLayer;
+var sumPayLayer;
+
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -28,8 +31,6 @@ var OrderContext = function() {
 		items : []
 	});
 
-	self.store = ko.observableArray([]);
-
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
@@ -41,7 +42,6 @@ var OrderContext = function() {
 		fail_msg(reason.responseText);
 	});
 
-	// 执行方法
 	// 抹零申请
 	self.tailMoney = ko.observable();
 	self.team_number = ko.observable();
@@ -55,28 +55,23 @@ var OrderContext = function() {
 			fail_msg("抹零申请只能选中一个订单");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			var re = null;
-			$(self.receivables()).each(function(idx, data) {
-				if (data.pk == self.chosenOrders()[0]) {
-					re = data;
-					return false;
-				}
-			});
-			if (re.final_flg == "N") {
-				fail_msg("订单未决算，不能抹零申请");
+			var current = self.chosenOrders()[0];
+			if (current.final_flg == "N") {
+				fail_msg("订单未决算，不能抹零申请！");
 				return;
 			}
-			if (re.final_balance <= 0) {
-				fail_msg("尾款已结清");
+			if (current.final_balance <= 0) {
+				fail_msg("尾款必须为正！");
 				return;
 			}
-			if (re.final_balance >= 100) {
-				fail_msg("尾款多余100元，不能抹零申请");
+			if (current.final_balance >= 100) {
+				fail_msg("尾款多余100元，不能抹零申请！");
 				return;
 			}
-			self.tailMoney(re.final_balance);
-			self.team_number(re.team_number);
-			self.client_employee_name(re.client_employee_name);
+
+			self.tailMoney(current.final_balance);
+			self.team_number(current.team_number);
+			self.client_employee_name(current.client_employee_name);
 
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
@@ -117,156 +112,215 @@ var OrderContext = function() {
 			}
 		});
 	};
-	self.chosenReceivables = ko.observableArray([]);
 
-	// 合账申请
-	self.sumOrder = function() {
+	// 代收
+	self.collect = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
-		} else if (self.chosenOrders().length == 1) {
-			fail_msg("合账申请请选择多个订单");
-			return;
 		} else if (self.chosenOrders().length > 1) {
-			self.chosenReceivables.removeAll();
-			var client_employee_pks = new Array();
-			$(self.receivables()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenReceivables.push(data1);
-						return false;
-					}
-				});
-			});
+			fail_msg("代收申请只能选中一个订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var current = self.chosenOrders()[0];
 			var check_result = true;
-			$(self.chosenReceivables()).each(function(idx, data) {
-				client_employee_pks.push(data.client_employee_pk);
-				if (data.final_flg == "Y") {
-					if (data.final_balance == 0) {
-						fail_msg(data.team_number + "尾款已结清");
-						check_result = false;
-					}
+			if (current.final_flg == "Y") {
+				if (current.final_balance <= 0) {
+					fail_msg(current.team_number + "尾款必须为正");
+					check_result = false;
 				} else {
-					if (data.budget_balance == 0) {
-						fail_msg(data.team_number + "尾款已结清");
-						check_result = false;
-					}
+					self.tailMoney(current.final_balance);
 				}
-			});
+			} else {
+				if (current.budget_balance == 0) {
+					fail_msg(current.team_number + "尾款必须为正");
+					check_result = false;
+				} else {
+					self.tailMoney(current.budget_balance);
+				}
+			}
+
 			if (!check_result)
 				return;
+
+			self.team_number(current.team_number);
+			self.client_employee_name(current.client_employee_name);
+
 			$(".rmb").formatCurrency();
-			startLoadingSimpleIndicator("检测中");
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/isSameFinancialBody',
-				data : "client_employee_pks=" + client_employee_pks,
-				success : function(str) {
-					if (str == "NOT") {
-						fail_msg("客户不属于同一财务主体");
-					} else {
-						sumLayer = $.layer({
-							type : 1,
-							title : [ '合账申请', '' ],
-							maxmin : false,
-							closeBtn : [ 1, true ],
-							shadeClose : false,
-							area : [ '820px', '700px' ],
-							offset : [ '150px', '' ],
-							scrollbar : true,
-							page : {
-								dom : '#sum_submit'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					}
-					endLoadingIndicator();
+			tailLayer = $.layer({
+				type : 1,
+				title : [ '代收申请', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '1120px', '300px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#collect-submit'
+				},
+				end : function() {
+					console.log("Done");
 				}
 			});
 		}
 	};
-	// 执行合账申请
-	self.applySum = function() {
-		if (!$("#form-sum").valid())
+
+	self.applyCollect = function() {
+		if (!$("#form-collect").valid())
 			return;
-		var sumAllot = 0;
-		$("[st='received']").each(function(idx, data) {
-			sumAllot += $(data).val() - 0;
-		});
-		if (sumAllot != $(".amountRangeEnd").val() - 0) {
-			fail_msg("分配金额合计和我组金额不匹配");
+		if ($("#collect-money").val() > self.tailMoney()) {
+			fail_msg("代收金额大于尾款！");
 			return;
 		}
-
-		var data = $("#form-sum").serialize();
-
-		var allot_json = '[';
-		var allot = $("[st='allot']");
-		for ( var i = 0; i < allot.length; i++) {
-			var current = allot[i];
-			var n = $(current).find("[st='team_number']").val();
-			var r = $(current).find("[st='received']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
-			if (i == allot.length - 1) {
-				allot_json += '"}';
-			} else {
-				allot_json += '"},';
-			}
-		}
-		allot_json += ']';
 		startLoadingSimpleIndicator("保存中");
+		var data = $("#form-collect").serialize();
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'sale/applySum',
-			data : data + "&allot_json=" + allot_json,
+			url : self.apiurl + 'sale/applyCollect',
+			data : data,
 			success : function(str) {
-				if (str != "OK") {
+				endLoadingIndicator();
+				layer.close(tailLayer);
+				if (str == "success") {
+					self.search();
+				} else {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(sumLayer);
-				self.search();
-				endLoadingIndicator();
 			}
 		});
-
 	};
 
+	self.chosenReceivables = ko.observableArray([]);
+	self.more_money = ko.observable();
+	// 支出申请
+	self.pay = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var current = self.chosenOrders()[0];
+			if (current.final_flg == "N") {
+				fail_msg("订单未决算，不能支出申请！");
+				return;
+			}
+			if (current.final_balance >= 0) {
+				fail_msg("尾款必须为负（即客户多汇了团款）！");
+				return;
+			}
+			self.team_number(current.team_number);
+			self.client_employee_name(current.client_employee_name);
+			self.more_money(current.final_balance * -1);
+			$(".rmb").formatCurrency();
+			payLayer = $.layer({
+				type : 1,
+				title : [ '支出申请', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '920px', '500px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#pay-sumbit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
+	};
+	// 执行支出申请
+	self.applyPay = function() {
+		if (!$("#form-pay").valid())
+			return;
+
+		var data = $("#form-pay").serialize();
+
+		startLoadingSimpleIndicator("保存中");
+		layer.close(payLayer);
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyIfMorePay',
+			data : data,
+			success : function(str) {
+				endLoadingIndicator();
+				if (str == "success") {
+					self.chosenOrders.removeAll();
+					self.search();
+				} else {
+					fail_msg("申请失败，请联系管理员");
+				}
+			}
+		});
+	};
+	self.positiveReceivables = ko.observableArray([]);
+	self.max_strike_money = ko.observable();
 	// 冲账申请
 	self.strike = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
+		} else if (self.chosenOrders().length == 1) {
+			fail_msg("请选择两个及以上订单");
+			return;
 		} else if (self.chosenOrders().length >= 1) {
-			self.chosenReceivables.removeAll();
+			self.positiveReceivables.removeAll();
+			self.max_strike_money("");
 			var client_employee_pks = new Array();
-			$(self.receivables()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenReceivables.push(data1);
-						return false;
-					}
-				});
-			});
+
 			var check_result = true;
-			$(self.chosenReceivables()).each(function(idx, data) {
+			var negative_cnt = 0;
+			var positive_cnt = 0;
+
+			$(self.chosenOrders()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
 					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
+					} else if (data.final_balance < 0) {
+						negative_cnt++;
+						self.team_number(data.team_number);
+						self.client_employee_name(data.client_employee_name);
+						self.max_strike_money(data.final_balance * -1);
+					} else {
+						positive_cnt++;
+						self.positiveReceivables.push(data);
 					}
 				} else {
 					if (data.budget_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
+					} else if (data.budget_balance < 0) {
+						fail_msg("请选择已经决算的负尾款订单！");
+						check_result = false;
+					} else {
+						positive_cnt++;
+						self.positiveReceivables.push(data);
 					}
 				}
 			});
 
 			if (!check_result)
 				return;
+
+			if (negative_cnt == 0) {
+				fail_msg("请选择一单尾款为负的订单（即需要冲账的多付款订单！）");
+				return;
+			} else if (negative_cnt > 1) {
+				fail_msg("只能选择一单尾款为负的订单！");
+				return;
+			}
+
+			if (positive_cnt == 0) {
+				fail_msg("请选择至少一单尾款为正的订单！");
+				return;
+			}
+
 			$(".rmb").formatCurrency();
 			startLoadingSimpleIndicator("检测中");
 			$.ajax({
@@ -283,11 +337,11 @@ var OrderContext = function() {
 							maxmin : false,
 							closeBtn : [ 1, true ],
 							shadeClose : false,
-							area : [ '820px', '780px' ],
+							area : [ '900px', '780px' ],
 							offset : [ '150px', '' ],
 							scrollbar : true,
 							page : {
-								dom : '#strike_submit'
+								dom : '#strike-submit'
 							},
 							end : function() {
 								console.log("Done");
@@ -303,12 +357,13 @@ var OrderContext = function() {
 	self.applyStrike = function() {
 		if (!$("#form-strike").valid())
 			return;
+
 		var sumAllot = 0;
 		$("[st='strike-received']").each(function(idx, data) {
 			sumAllot += $(data).val() - 0;
 		});
-		if (sumAllot != $("#strike-money").val() - 0) {
-			fail_msg("分配金额合计和冲账金额不匹配");
+		if (sumAllot > self.max_strike_money() - 0) {
+			fail_msg("分配金额合计大于冲账金额");
 			return;
 		}
 
@@ -327,49 +382,45 @@ var OrderContext = function() {
 			}
 		}
 		allot_json += ']';
-
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/applyReceiveStrike',
 			data : data + "&allot_json=" + allot_json,
 			success : function(str) {
-				if (str != "OK") {
+				endLoadingIndicator();
+				if (str == "success") {
+					layer.close(strikeLayer);
+					self.search();
+				} else {
 					fail_msg("申请失败，请联系管理员");
 				}
-				layer.close(strikeLayer);
-				self.search();
-				endLoadingIndicator();
 			}
 		});
 	};
+
 	// 收入
 	self.receive = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			var re = null;
-			$(self.receivables()).each(function(idx, data) {
-				if (data.pk == self.chosenOrders()[0]) {
-					re = data;
-					return false;
-				}
-			});
-			if (re.final_flg == "Y") {
-				if (re.final_balance == 0) {
-					fail_msg("尾款已结清");
+			var current = self.chosenOrders()[0];
+
+			if (current.final_flg == "Y") {
+				if (current.final_balance <= 0) {
+					fail_msg("尾款必须为正！");
 					return;
 				}
 			} else {
-				if (re.budget_balance == 0) {
-					fail_msg("尾款已结清");
+				if (current.budget_balance == 0) {
+					fail_msg("尾款必须为正！");
 					return;
 				}
 			}
 
-			self.team_number(re.team_number);
-			self.client_employee_name(re.client_employee_name);
+			self.team_number(current.team_number);
+			self.client_employee_name(current.client_employee_name);
 
 			receiveLayer = $.layer({
 				type : 1,
@@ -388,33 +439,25 @@ var OrderContext = function() {
 				}
 			});
 		} else {
-			self.chosenReceivables.removeAll();
 			var client_employee_pks = new Array();
-			$(self.store()).each(function(idx, data1) {
-				$(self.chosenOrders()).each(function(idx, data2) {
-					if (data1.pk == data2) {
-						self.chosenReceivables.push(data1);
-						return false;
-					}
-				});
-			});
 			var check_result = true;
-			$(self.chosenReceivables()).each(function(idx, data) {
+			$(self.chosenOrders()).each(function(idx, data) {
 				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
-					if (data.final_balance == 0) {
-						fail_msg(data.team_number + "尾款已结清");
+					if (data.final_balance <= 0) {
+						fail_msg(data.team_number + "尾款必须为正");
 						check_result = false;
 					}
 				} else {
 					if (data.budget_balance == 0) {
-						fail_msg(data.team_number + "尾款已结清");
+						fail_msg(data.team_number + "尾款必须为正");
 						check_result = false;
 					}
 				}
 			});
 			if (!check_result)
 				return;
+
 			$(".rmb").formatCurrency();
 			startLoadingSimpleIndicator("检测中");
 			$.ajax({
@@ -463,12 +506,14 @@ var OrderContext = function() {
 				url : self.apiurl + 'sale/applyReceive',
 				data : data,
 				success : function(str) {
+					endLoadingIndicator();
 					if (str != "OK") {
 						fail_msg("申请失败，请联系管理员");
+					} else {
+						self.chosenOrders.removeAll();
+						self.search();
 					}
 
-					self.search();
-					endLoadingIndicator();
 				}
 			});
 		} else {
@@ -478,8 +523,6 @@ var OrderContext = function() {
 			$("[st='receive_received']").each(function(idx, data) {
 				sumAllot += $(data).val() - 0;
 			});
-			console.log(sumAllot);
-			console.log($(".amountRangeStart1").val() - 0);
 			if (sumAllot != $(".amountRangeStart1").val() - 0) {
 				fail_msg("分配金额合计和总金额不匹配");
 				return;
@@ -503,22 +546,22 @@ var OrderContext = function() {
 			}
 			allot_json += ']';
 			startLoadingSimpleIndicator("保存中");
-			console.log(data);
 			$.ajax({
 				type : "POST",
 				url : self.apiurl + 'sale/applySum',
 				data : data + "&allot_json=" + allot_json,
 				success : function(str) {
+					endLoadingIndicator();
+					layer.close(receiveLayer);
 					if (str != "OK") {
 						fail_msg("申请失败，请联系管理员");
+					} else {
+						self.search();
+						self.chosenOrders.removeAll();
 					}
-					layer.close(receiveLayer);
-					self.search();
-					endLoadingIndicator();
 				}
 			});
 		}
-
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -532,7 +575,7 @@ var OrderContext = function() {
 	self.totalBudgetBalance = ko.observable(0);
 	self.totalBalance = ko.observable(0);
 	self.totalFinalBalance = ko.observable(0);
-	var pages = new Array();
+
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalBudgetReceivable = 0;
@@ -547,10 +590,6 @@ var OrderContext = function() {
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
 			self.receivables(data.receivables);
-			if (!pages.contains(self.currentPage())) {
-				self.store(self.store().concat(self.receivables()));
-				pages.push(self.currentPage());
-			}
 
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
@@ -626,9 +665,6 @@ var OrderContext = function() {
 
 	});
 	self.search = function() {
-		pages = new Array();
-		self.chosenOrders.removeAll();
-		self.store.removeAll();
 		self.refresh();
 	};
 

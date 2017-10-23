@@ -34,4 +34,9 @@ public class OrderServiceImpl implements OrderService {
 		return dao.selectByTeamNumber(team_number);
 	}
 
+	@Override
+	public List<OrderDto> selectFByPage(Page page) {
+		return dao.selectFByPage(page);
+	}
+
 }

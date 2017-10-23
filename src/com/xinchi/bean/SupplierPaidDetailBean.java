@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class SupplierPaidDetailBean extends SupperBO implements Serializable {
@@ -43,6 +45,9 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 	private String limit_time;
 
 	private String approve_user;
+
+	// options
+	private List<String> statuses;
 
 	public String getTeam_number() {
 		return team_number;
@@ -194,6 +199,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setApprove_user(String approve_user) {
 		this.approve_user = approve_user;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
 	}
 
 }

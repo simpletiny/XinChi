@@ -12,6 +12,8 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
 #table-supplier th,#table-supplier td {
 	text-align: center;
@@ -31,6 +33,14 @@
 	color: red;
 	font-weight: bold;
 }
+
+tr td {
+	text-overflow: ellipsis; /* for IE */
+	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left
+}
 </style>
 </head>
 <body>
@@ -47,7 +57,51 @@
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">确认件批量下载</button>
-								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperate() }">决算</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { finalOperate() }">决算</button>
+								<button type="submit" class="btn btn-green " data-bind="click: function() { deleteOperation() }">打回重新操作</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">产品名称</label>
+							<div class="col-md-2">
+								<input class="form-control" name="operate_option.supplier_product_name" placeholder="产品名称"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input class="form-control" name="operate_option.team_number" placeholder="团号"></input>
+							</div>
+						</div>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+							<div class="span6">
+								<label class="col-md-1 control-label">产品经理</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
+										name="operate_option.create_user"></select>
+								</div>
+							</div>
+						</s:if>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">供应商</label>
+							<div class="col-md-2">
+								<input class="form-control" name="operate_option.supplier_employee_name" placeholder="供应商"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">供应商主体</label>
+							<div class="col-md-2">
+								<input class="form-control" name="operate_option.supplier_name" placeholder="供应商主体"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">接团月份</label>
+							<div class="col-md-2">
+								<input class="form-control month-picker-st" name="operate_option.pick_month" placeholder="接团月份"></input>
 							</div>
 						</div>
 					</div>
@@ -66,6 +120,7 @@
 								<th></th>
 								<th>操作单号</th>
 								<th>供应商</th>
+								<th>主体</th>
 								<th>总成本</th>
 								<th>产品名称</th>
 								<th>人数</th>
@@ -82,14 +137,15 @@
 						</thead>
 						<tbody data-bind="foreach: operations">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOperations" /></td>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.team_number}, checked: $root.chosenOperations" /></td>
 								<td data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count"></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
+								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.supplier_cost"></td>
 								<td data-bind="text: $data.supplier_product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
-								<td data-bind="text: $data.pick_type"></td>
+								<td class="detail" data-bind="text: $data.pick_type"></td>
 								<td data-bind="text: $data.picker_cellphone"></td>
 								<td data-bind="text: $data.send_date"></td>
 								<td data-bind="text: $data.send_type"></td>
@@ -200,7 +256,17 @@
 		</div>
 
 	</div>
-
+	<div id="order-final" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<label class="col-md-2 control-label" style="color: red">决算总成本</label>
+			<div class="col-md-4">
+				<input type="number" class="form-control" placeholder="决算总成本" id="final-supplier-cost" />
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFinal() }">确认</button>
+		</div>
+	</div>
 	<div id="supplier-pick" style="display: none;">
 		<div class="main-container">
 			<div class="main-box" style="width: 600px">
@@ -249,7 +315,9 @@
 	<script>
 		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-order-operated.js"></script>
 </body>

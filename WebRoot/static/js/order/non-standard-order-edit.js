@@ -143,15 +143,21 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
+		var url = "";
+		if ($("#team-number").val() == "") {
+			url = self.apiurl + 'order/updateBudgetNonStandardOrder';
+		} else {
+			url = self.apiurl + 'order/updateConfirmedNonStandardOrder';
+		}
 		var data = $("form").serialize();
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'order/updateBudgetNonStandardOrder',
+			url : url,
 			data : data
 		}).success(function(str) {
 			if (str == "success") {
-				window.location.href = self.apiurl + "templates/order/tbc-order.jsp";
+				window.history.go(-1);
 			}
 		});
 	};

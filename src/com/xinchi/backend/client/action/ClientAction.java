@@ -28,7 +28,7 @@ public class ClientAction extends BaseAction {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		client.setSales(sessionBean.getPk());
 		client.setSales_name(sessionBean.getUser_name());
-		if(!SimpletinyString.isEmpty(client.getAgency_pk())){
+		if (!SimpletinyString.isEmpty(client.getAgency_pk())) {
 			client.setRelate_flg("Y");
 		}
 		resultStr = clientService.createCompany(client);
@@ -36,9 +36,9 @@ public class ClientAction extends BaseAction {
 	}
 
 	public String updateCompany() {
-		if(SimpletinyString.isEmpty(client.getAgency_pk())){
+		if (SimpletinyString.isEmpty(client.getAgency_pk())) {
 			client.setRelate_flg("N");
-		}else{
+		} else {
 			client.setRelate_flg("Y");
 		}
 		resultStr = clientService.updateCompany(client);
@@ -72,7 +72,7 @@ public class ClientAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
 		}
-		
+
 		if (!SimpletinyString.isEmpty(relate_status)) {
 			String[] statuses = relate_status.split(",");
 			if (statuses.length == 1) {
@@ -121,6 +121,14 @@ public class ClientAction extends BaseAction {
 		return resultStr;
 	}
 
+	private String sale_pk;
+
+	public String changeClientSales() {
+
+		resultStr = clientService.changeClientSales(company_pks, sale_pk);
+		return SUCCESS;
+	}
+
 	public ClientBean getClient() {
 		return client;
 	}
@@ -167,6 +175,14 @@ public class ClientAction extends BaseAction {
 
 	public void setRelate_status(String relate_status) {
 		this.relate_status = relate_status;
+	}
+
+	public String getSale_pk() {
+		return sale_pk;
+	}
+
+	public void setSale_pk(String sale_pk) {
+		this.sale_pk = sale_pk;
 	}
 
 }

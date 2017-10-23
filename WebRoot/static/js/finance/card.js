@@ -1,10 +1,27 @@
+var purposeLayer;
 var CardContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCards = ko.observableArray([]);
 	self.createCard = function() {
-		window.location.href = self.apiurl
-				+ "templates/finance/card-creation.jsp";
+		window.location.href = self.apiurl + "templates/finance/card-creation.jsp";
+	};
+
+	self.cardPurposes = [ {
+		data_key : 'NONE',
+		data_value : '无'
+	}, {
+		data_key : 'TICKET',
+		data_value : '票务'
+	}, {
+		data_key : 'OTHER',
+		data_value : '其他'
+	} ];
+
+	self.cardPurposeMapping = {
+		'NONE' : '无',
+		'TICKET' : '票务',
+		'OTHER' : '其他'
 	};
 
 	self.cards = ko.observable({
@@ -25,6 +42,58 @@ var CardContext = function() {
 
 	};
 
+	// 指定银行卡用途
+	self.signPurpose = function() {
+		if (self.chosenCards().length == 0) {
+			fail_msg("请选择账户");
+			return;
+		} else if (self.chosenCards().length > 0) {
+			purposeLayer = $.layer({
+				type : 1,
+				title : [ '指定用途', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '900px', '200px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#card-purpose'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
+	};
+	// 执行指定用途
+	self.doSign = function() {
+		var purpose = $("#purpose").val();
+
+		var card_pks = "";
+		for ( var i = 0; i < self.chosenCards().length; i++) {
+			var data = self.chosenCards()[i];
+			card_pks += data.pk + ",";
+		}
+		card_pks = card_pks.RTrim(",");
+		startLoadingSimpleIndicator("保存中...");
+		var data = "card_pks=" + card_pks + "&purpose=" + purpose;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'finance/signCardPurpose',
+			data : data
+		}).success(function(str) {
+			layer.close(purposeLayer);
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refresh();
+			} else {
+				fail_msg("发生错误，请联系管理员！");
+			}
+		});
+
+	};
+
 	self.editCard = function() {
 		if (self.chosenCards().length == 0) {
 			fail_msg("请选择账户");
@@ -33,7 +102,7 @@ var CardContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCards().length == 1) {
-			window.location.href = self.apiurl +"templates/client/Card-edit.jsp?key="+self.chosenCards()[0];
+			window.location.href = self.apiurl + "templates/client/Card-edit.jsp?key=" + self.chosenCards()[0];
 		}
 	};
 

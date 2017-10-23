@@ -86,15 +86,21 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
+		var url = "";
+		if ($("#team-number").val() == "") {
+			url = self.apiurl + 'order/updateBudgetStandardOrder';
+		} else {
+			url = self.apiurl + 'order/updateConfirmedStandardOrder';
+		}
 		var data = $("form").serialize();
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'order/updateBudgetStandardOrder',
+			url : url,
 			data : data
 		}).success(function(str) {
 			if (str == "success") {
-				window.location.href = self.apiurl + "templates/order/tbc-order.jsp";
+				window.history.go(-1);
 			}
 		});
 	};

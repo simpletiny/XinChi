@@ -10,6 +10,8 @@ var AgencyContext = function() {
 			var current = all[i];
 
 			var ticket_source = $(current).find("input[st^='ticket-source']").val();
+			var ticket_source_pk = $(current).find("input[st^='ticket-source-pk']").val();
+
 			var ticket_cost = $(current).find("input[st^='ticket-cost']").val();
 			var ticket_PNR = $(current).find("input[st^='ticket-PNR']").val();
 
@@ -19,7 +21,7 @@ var AgencyContext = function() {
 				return;
 			}
 
-			json += '{"ticket_source":+"' + ticket_source + '","ticket_cost":"' + ticket_cost + '","ticket_PNR":"' + ticket_PNR + '","ticket_info":[';
+			json += '{"ticket_source":+"' + ticket_source + '","ticket_source_pk":"' + ticket_source_pk + '","ticket_cost":"' + ticket_cost + '","ticket_PNR":"' + ticket_PNR + '","ticket_info":[';
 			var trs = $(current).find(".table-ticket tbody tr");
 			for ( var j = 0; j < trs.length; j++) {
 				var tr = trs[j];

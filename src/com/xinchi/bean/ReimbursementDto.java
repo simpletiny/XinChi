@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class ReimbursementDto extends SupperBO implements Serializable {
@@ -23,6 +25,11 @@ public class ReimbursementDto extends SupperBO implements Serializable {
 	private String apply_user;
 
 	private String pk;
+
+	private String date_from;
+	private String date_to;
+
+	private List<String> statuses;
 
 	public String getItem() {
 		return item;
@@ -102,5 +109,29 @@ public class ReimbursementDto extends SupperBO implements Serializable {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getDate_from() {
+		return date_from;
+	}
+
+	public void setDate_from(String date_from) {
+		this.date_from = date_from;
+	}
+
+	public String getDate_to() {
+		return date_to;
+	}
+
+	public void setDate_to(String date_to) {
+		this.date_to = date_to;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
 	}
 }

@@ -42,18 +42,20 @@ public class SupplierBean extends SupperBO implements Serializable {
 	private String comment;
 
 	private String pk;
-	
+
 	private String credit_code;
-	
+
 	private String payment_type;
-	
+
 	private String is_cooperate;
-	
+
 	private String corporate_name;
-	
+
 	private String corporate_sex;
-	
+
 	private String corporate_id;
+
+	private String type;
 
 	public String getSupplier_name() {
 		return supplier_name;
@@ -253,6 +255,14 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	public void setCorporate_id(String corporate_id) {
 		this.corporate_id = corporate_id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

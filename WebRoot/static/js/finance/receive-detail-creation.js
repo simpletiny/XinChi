@@ -31,7 +31,7 @@ var DetailContext = function() {
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'finance/createDetail',
-						data : $("form").serialize() + "&detail.type=收入"
+						data : $("form").serialize() + "&detail.type=收入&detail.finance_flg=Y"
 					}).success(function(str) {
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";

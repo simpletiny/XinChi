@@ -3,11 +3,12 @@ package com.xinchi.backend.payable.service;
 import java.util.List;
 
 import com.xinchi.bean.SupplierPaidDetailBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "支出申请")
-public interface PaidService {
+public interface PaidService extends BaseService {
 
 	@LogDescription(des = "支出申请")
 	public void insertWithPk(SupplierPaidDetailBean detail);
@@ -24,4 +25,5 @@ public interface PaidService {
 	@LogDescription(ignore = true)
 	public List<SupplierPaidDetailBean> selectByRelatedPk(String related_pk);
 
+	public String rollBackPayApply(String related_pk);
 }

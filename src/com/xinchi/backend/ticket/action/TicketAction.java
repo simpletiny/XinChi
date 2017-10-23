@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
+import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
@@ -26,6 +27,7 @@ import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
+import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.PassengerTicketInfoBean;
@@ -229,7 +231,6 @@ public class TicketAction extends BaseAction {
 		params.put("bo", passenger);
 
 		page.setParams(params);
-		airTicketOrders = airTicketOrderService.selectByPage(page);
 		airTicketNameList = airTicketNameListService.selectByPage(page);
 		return SUCCESS;
 	}
@@ -247,7 +248,9 @@ public class TicketAction extends BaseAction {
 
 			TicketAllotDto ta = new TicketAllotDto();
 			String ticket_source = obj.getString("sourceName");
+			String ticket_source_pk = obj.getString("sourcePk");
 			ta.setTicket_source(ticket_source);
+			ta.setTicket_source_pk(ticket_source_pk);
 
 			String passengerPks = obj.getString("passengerPks");
 			String pks[] = passengerPks.split(",");
@@ -263,17 +266,33 @@ public class TicketAction extends BaseAction {
 	@Autowired
 	private PassengerTicketInfoService passengerTicketInfoService;
 
+	@Autowired
+	private AirTicketPayableService airTicketPayableService;
+
 	public String allotTicket() {
 		JSONArray arr = JSONArray.fromObject(json);
 		List<PassengerTicketInfoBean> ptis = new ArrayList<PassengerTicketInfoBean>();
 
 		for (int i = 0; i < arr.size(); i++) {
+
 			JSONObject obj = arr.getJSONObject(i);
 			String ticket_source = obj.getString("ticket_source");
+			String ticket_source_pk = obj.getString("ticket_source_pk");
+
 			String ticket_cost = obj.getString("ticket_cost");
 			String ticket_PNR = obj.getString("ticket_PNR");
 			String passenger_pks = obj.getString("passenger_pks");
 			String pkkk[] = passenger_pks.split(",");
+
+			// 保存机票供应商应付款
+			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
+			airTicketPayable.setSupplier_employee_pk(ticket_source_pk);
+			airTicketPayable.setBudget_payable(null != ticket_cost ? new BigDecimal(ticket_cost) : BigDecimal.ZERO);
+			airTicketPayable.setPNR(ticket_PNR);
+			airTicketPayable.setBudget_balance(null != ticket_cost ? new BigDecimal(ticket_cost) : BigDecimal.ZERO);
+			airTicketPayable.setPaid(BigDecimal.ZERO);
+
+			airTicketPayableService.insert(airTicketPayable);
 
 			BigDecimal cost = new BigDecimal(ticket_cost);
 			JSONArray ticket_info = obj.getJSONArray("ticket_info");
@@ -295,6 +314,7 @@ public class TicketAction extends BaseAction {
 
 					pti.setTicket_cost(cost);
 					pti.setTicket_source(ticket_source);
+					pti.setTicket_source_pk(ticket_source_pk);
 					pti.setPNR(ticket_PNR);
 					pti.setTicket_index(ticket_index);
 					pti.setTicket_date(ticket_date);
@@ -305,6 +325,7 @@ public class TicketAction extends BaseAction {
 					pti.setTo_airport(to_airport);
 					pti.setTerminal(terminal);
 					pti.setPassenger_pk(pk);
+					pti.setBase_pk(airTicketPayable.getPk());
 					ptis.add(pti);
 				}
 

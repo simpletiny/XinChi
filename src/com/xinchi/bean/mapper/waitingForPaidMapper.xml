@@ -57,14 +57,14 @@
 		B.money as money,
 		C.user_name as pay_user,
 		D.user_name as apply_user,
-		B.create_time as apply_date,
+		B.apply_time as apply_date,
 		E.user_name as approval_user,
-		B.update_time as approval_date
+		B.confirm_time as approval_date
 		from waiting_for_paid A
-		LEFT JOIN paid_detail B ON A.related_pk=B.related_pk
+		LEFT JOIN view_all_paid_detail B ON A.related_pk=B.related_pk
 		LEFT JOIN user_base C ON A.pay_user = C.user_number
-		LEFT JOIN user_base D ON B.create_user = D.user_number
-		LEFT JOIN user_base E ON B.approve_user = E.user_number
+		LEFT JOIN user_base D ON B.apply_user = D.user_number
+		LEFT JOIN user_base E ON B.approval_user = E.user_number
 		where A.pay_number = #{voucher_number,jdbcType=VARCHAR}
 	</select>
 

@@ -15,8 +15,11 @@ import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
@@ -56,9 +59,16 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	@Autowired
 	private OrderNameListDAO nameListDao;
 
+	@Autowired
+	private AirTicketOrderDAO airTicketOrderDao;
+
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
 	@Override
 	public String update(BudgetNonStandardOrderBean bean) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
+		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
 				deleteFile(old);
@@ -69,7 +79,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		}
 
 		if (bean.getConfirm_flg().equals("Y")) {
-			bean.setTeam_number(numberService.generateTeamNumber());
+			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
+				bean.setTeam_number(numberService.generateTeamNumber());
+			}
 			// 保存名单
 			String[] names = bean.getName_list().split(";");
 			if (names.length != 0) {
@@ -79,8 +91,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 						continue;
 
 					SaleOrderNameListBean name = new SaleOrderNameListBean();
-					name.setName(people[0]);
-					name.setId(people[1]);
+					name.setName(people[0].trim());
+					name.setId(people[1].trim());
 					name.setTeam_number(bean.getTeam_number());
 					nameListDao.insert(name);
 				}
@@ -130,14 +142,114 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			receivable.setCreate_user(old.getCreate_user());
 
 			receivableDao.insert(receivable);
+
+			// 更新票务信息团号
+			AirTicketOrderBean airTicketOrder = airTicketOrderDao.selectBySaleOrderPk(bean.getPk());
+
+			if (null != airTicketOrder) {
+				airTicketOrder.setTeam_number(bean.getTeam_number());
+				airTicketOrderDao.update(airTicketOrder);
+				AirTicketNameListBean airTicketNameListOption = new AirTicketNameListBean();
+				airTicketNameListOption.setTicket_order_pk(airTicketOrder.getPk());
+				List<AirTicketNameListBean> airTicketNameList = airTicketNameListDao.selectByParam(airTicketNameListOption);
+
+				if (null != airTicketNameList && airTicketNameList.size() > 0) {
+					for (AirTicketNameListBean passenger : airTicketNameList) {
+						passenger.setTeam_number(bean.getTeam_number());
+						airTicketNameListDao.update(passenger);
+					}
+				}
+			}
 		}
 		dao.update(bean);
 		return SUCCESS;
 	}
 
+	@Override
+	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bean) {
+		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
+		bean.setCreate_user(old.getCreate_user());
+		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
+			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
+				deleteFile(old);
+				saveFile(bean);
+			}
+		} else {
+			deleteFile(old);
+		}
+
+		// 更新名单
+		// 删除之前的名单
+		nameListDao.deleteByTeamNumber(bean.getTeam_number());
+		String[] names = bean.getName_list().split(";");
+		if (names.length != 0) {
+			for (String str : names) {
+				String people[] = str.split(":");
+				if (people.length != 2)
+					continue;
+
+				SaleOrderNameListBean name = new SaleOrderNameListBean();
+				name.setName(people[0].trim());
+				name.setId(people[1].trim());
+				name.setTeam_number(bean.getTeam_number());
+				nameListDao.insert(name);
+			}
+		}
+
+		// 更新预算单
+		BudgetOrderBean budgetOrder = budgetOrderDao.selectBudgetOrderByTeamNumber(bean.getTeam_number());
+		budgetOrder.setProduct(bean.getProduct_name());
+		budgetOrder.setDeparture_date(bean.getDeparture_date());
+		String departureDate = bean.getDeparture_date();
+		int days = bean.getDays();
+		String returnDate = DateUtil.addDate(departureDate, days - 1);
+		budgetOrder.setDays(days);
+		budgetOrder.setReturn_date(returnDate);
+		budgetOrder.setComment(bean.getComment());
+		budgetOrder.setReceivable(bean.getReceivable());
+		budgetOrder.setConfirm_date(bean.getConfirm_date());
+		budgetOrder
+				.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
+						: bean.getFy())));
+
+		String other_cost_comment = "";
+		if (bean.getFy() != null) {
+			other_cost_comment += bean.getOther_cost_comment() + "fy:" + bean.getFy();
+		}
+
+		budgetOrder.setPayment_comment(other_cost_comment);
+		budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+		budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
+		budgetOrderDao.updateBudgetOrder(budgetOrder);
+
+		// 更新应收款
+		ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
+		receivable.setClient_employee_pk(bean.getClient_employee_pk());
+
+		receivable.setDeparture_date(bean.getDeparture_date());
+		receivable.setReturn_date(returnDate);
+		receivable.setProduct(bean.getProduct_name());
+		receivable.setPeople_count(budgetOrder.getPeople_count());
+		receivable.setBudget_receivable(bean.getReceivable());
+
+		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivable.setSales(old.getCreate_user());
+
+		receivableDao.update(receivable);
+
+		dao.update(bean);
+		return SUCCESS;
+	}
+
 	private void saveFile(BudgetNonStandardOrderBean bean) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String user_number = sessionBean.getUser_number();
+		String user_number = "";
+		if (null == bean.getCreate_user()) {
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			user_number = sessionBean.getUser_number();
+		} else {
+			user_number = bean.getCreate_user();
+		}
+
 		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
 		File sourceFile = new File(tempFolder + File.separator + bean.getConfirm_file());
@@ -151,8 +263,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	}
 
 	private void deleteFile(BudgetNonStandardOrderBean old) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String user_number = sessionBean.getUser_number();
+		String user_number = old.getCreate_user();
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
 		File oldFile = new File(fileFolder + File.separator + user_number + File.separator + old.getConfirm_file());
 		oldFile.delete();
@@ -161,6 +272,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	@Override
 	public String delete(String id) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(id);
+		AirTicketOrderBean ticketOrder = airTicketOrderService.selectBySaleOrderPk(id);
+		if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
+			return "air_ticket_lock";
 		deleteFile(old);
 		dao.delete(id);
 		return SUCCESS;
@@ -187,6 +301,11 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	public String updateComment(BudgetNonStandardOrderBean bean) {
 		dao.update(bean);
 		return SUCCESS;
+	}
+
+	@Override
+	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number) {
+		return dao.selectByTeamNumber(team_number);
 	}
 
 }

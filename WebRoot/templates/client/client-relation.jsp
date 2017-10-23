@@ -22,7 +22,13 @@
 .form-control {
 	height: 30px;
 }
-
+tr td {
+	text-overflow: ellipsis; /* for IE */
+	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left
+}
 .fixed {
 	font-size: 12px;
 	display: block;
@@ -121,13 +127,13 @@
 								<td data-bind="text: $data.level"></td>
 								<td style="border-right:solid 1px #ff0000;" data-bind="text: $data.client_count"></td>
 								<td>-</td>
+								<td data-bind="text: $data.month_order_count"></td>
 								<td data-bind="text: $data.month_visit_count"></td>
-								<td data-bind="text: $data.month_visit_count"></td>
-								<td style="border-right:solid 1px #ff0000;" data-bind="text: $data.month_visit_count"></td>
+								<td style="border-right:solid 1px #ff0000;" data-bind="text: $data.month_accurate_sale_count"></td>
 								<td>-</td>
-								<td data-bind="text: $data.month_visit_count"></td>
-								<td data-bind="text: $data.month_visit_count"></td>
+								<td data-bind="text: $data.week_order_count"></td>
 								<td data-bind="text: $data.week_visit_count"></td>
+								<td data-bind="text: $data.week_accurate_sale_count"></td>
 							</tr>
 							</tbody>
 				
@@ -168,8 +174,8 @@
 								<!-- <td data-bind="text: $data.year_order_count"></td> -->
 								<td data-bind="text: $data.month_order_count"></td>
 								<td data-bind="text: $data.last_order_period"></td>
-								<td data-bind="text: $data.visit_count"></td>
-								<td data-bind="text: $data.accurate_count"></td>
+								<td data-bind="text: $data.last_visit_target"></td>
+								<td  data-bind="text: $data.last_accurate_sale_summary"></td>
 								<!-- <td data-bind="text: $data.last_visit_period"></td> -->
 								<!-- <td data-bind="text: $data.chat_count"></td>
 								<td data-bind="text: $data.last_chat_period"></td> -->

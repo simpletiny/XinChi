@@ -3,11 +3,12 @@ package com.xinchi.backend.client.service;
 import java.util.List;
 
 import com.xinchi.bean.ClientBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "客户财务主体")
-public interface ClientService {
+public interface ClientService extends BaseService {
 
 	/**
 	 * 新增
@@ -63,4 +64,6 @@ public interface ClientService {
 
 	@LogDescription(des = "恢复财务主体")
 	public String recoveryClientEmployee(List<String> company_pks);
+
+	public String changeClientSales(List<String> company_pks, String sale_pk);
 }

@@ -21,6 +21,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,22 +49,22 @@
 		from air_ticket_order
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectBySaleOrderPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_order
 		where sale_order_pk = #{sale_order_pk,jdbcType=CHAR}
 	</select>
-	
-	<select id="selectByPks" resultMap="BaseResultMap" >
+
+	<select id="selectByPks" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_order
 		<where>
 			and pk in
 			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-			#{item}
+				#{item}
 			</foreach>
 		</where>
 	</select>
@@ -251,7 +252,8 @@
 		B.user_name AS client_name,
 		A.ticket_cost,
 		A.first_ticket_date,
-		CONCAT(A.first_start_city,'--',A.first_end_city) AS first_from_to,
+		CONCAT(A.first_start_city,'--',A.first_end_city) AS
+		first_from_to,
 		A.first_start_city,
 		A.first_end_city,
 		A.people_count,
@@ -265,17 +267,24 @@
 		A.create_user,
 		A.update_user,
 		A.create_time,
-		A.update_time
+		A.update_time,
+		substring_index(C.name_list,':',1) AS passenger
 		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
-		<!-- <where>
-			<if test="params.bo.status != null and params.bo.status !=''">
-				and A.confirm_flg in
-				<foreach item="item" index="index" collection="params.bo.status" open="(" separator="," close=")">
-					#{params.bo.status[${index}]}
+		LEFT JOIN budget_order_view C ON A.sale_order_pk = C.pk
+		<where>
+			<if test="params.bo.lock_flgs != null and params.bo.lock_flgs !=''">
+				and A.lock_flg in
+				<foreach item="item" index="index" collection="params.bo.lock_flgs" open="(" separator="," close=")">
+					#{params.bo.lock_flgs[${index}]}
 				</foreach>
 			</if>
-			and A.air_ticket_cost IS NULL
-		</where> -->
+			<if test="params.bo.client_name != null and params.bo.client_name !=''">
+				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
 		order by A.first_ticket_date
 	</select>
 </mapper>

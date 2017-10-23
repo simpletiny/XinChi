@@ -37,6 +37,7 @@
 					<div class="form-group">
 						<div style="float: right">
 							<div>
+							    <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('normal-receive') }">收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('receive') }">财务收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('pay') }">财务支出</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('inner') }">内转</button>

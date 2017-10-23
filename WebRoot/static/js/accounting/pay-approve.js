@@ -37,7 +37,8 @@ var PaidContext = function() {
 	self.statusMapping = {
 		'I' : '待审批',
 		'Y' : '已同意',
-		'N' : '已驳回'
+		'N' : '已驳回',
+		'P' : '已入账'
 	};
 	self.itemMapping = {
 		'D' : '地接款',
@@ -47,7 +48,8 @@ var PaidContext = function() {
 		'P' : '票务费用',
 		'J' : '交通垫付',
 		'G' : '工资费用',
-		'Q' : '其他支出'
+		'Q' : '其他支出',
+		'M' : '多付返款'
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -63,11 +65,11 @@ var PaidContext = function() {
 		var totalProfit = 0;
 		var totalPerProfit = 0;
 
-		var param = $("form").serialize() + "&detail.status=" + self.chosenStatus();
+		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'sale/searchPaidByPage', param, function(data) {
-			self.paids(data.paids);
+		$.getJSON(self.apiurl + 'accounting/searchPaidApplyByPage', param, function(data) {
+			self.paids(data.payApprovals);
 			// 计算合计
 			$(self.paids()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -91,7 +93,7 @@ var PaidContext = function() {
 
 	self.agree = function(paid) {
 		var data;
-		if (paid.item == 'D') {
+		if (paid.item == 'D' || paid.item == 'P') {
 			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
 		} else {
 			data = "item=" + paid.item + "&pk=" + paid.pk;

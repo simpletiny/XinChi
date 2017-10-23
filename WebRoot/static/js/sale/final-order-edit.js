@@ -37,12 +37,11 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 
 	self.refreshClient = function() {
-		var param = "employee.name="+$("#client_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
+		var param = "employee.name=" + $("#client_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -54,12 +53,11 @@ var OrderContext = function() {
 	};
 
 	self.refreshSupplier = function() {
-		var param = "employee.name="+$("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
+		var param = "employee.name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
 			self.supplierEmployees(data.employees);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -70,21 +68,11 @@ var OrderContext = function() {
 	};
 
 	self.addSupplier = function(data, event) {
-		$(event.toElement)
-				.parent()
-				.parent()
-				.prev()
-				.after(
-						' <div class="input-row clearfloat" st="supplier">'
-								+ '<div class="col-md-6">'
-								+ '<label class="l">供应商</label>'
-								+ '<div class="ip"><input type="text" class="ip-" onclick="choseSupplierEmployee(this,event)" placeholder="供应商" st="supplierEmployeeName"/></div>'
-								+ '<input type="text" class="ip-" st="supplierEmployeePk" style="display:none" />'
-								+ '</div>'
-								+ '<div class="col-md-6">'
-								+ '<label class="l">应付款</label>'
-								+ '<div class="ip"><input type="number" st="payable" class="ip-" placeholder="应付款" /></div>'
-								+ '</div>' + '</div>');
+		$(event.toElement).parent().parent().prev().after(
+				' <div class="input-row clearfloat" st="supplier">' + '<div class="col-md-6">' + '<label class="l">供应商</label>'
+						+ '<div class="ip"><input type="text" class="ip-" onclick="choseSupplierEmployee(this,event)" placeholder="供应商" st="supplierEmployeeName"/></div>'
+						+ '<input type="text" class="ip-" st="supplierEmployeePk" style="display:none" />' + '</div>' + '<div class="col-md-6">' + '<label class="l">应付款</label>'
+						+ '<div class="ip"><input type="number" st="payable" class="ip-" placeholder="应付款" /></div>' + '</div>' + '</div>');
 	};
 
 	self.recordNameList = function() {
@@ -148,25 +136,20 @@ var OrderContext = function() {
 		}
 		startLoadingSimpleIndicator("保存中");
 		var nameList = $("#txt-name-list").val();
-		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(
-				new RegExp("：", "gm"), ":"));
+		nameList = $.trim(nameList.replace(new RegExp("；", "gm"), ";").replace(new RegExp("：", "gm"), ":"));
 		var supplierArr = new Array();
 		var allSupplierEmployees = $("[st='supplier']");
 		var supplierJson = '[';
 		for ( var i = 0; i < allSupplierEmployees.length; i++) {
 			var current = allSupplierEmployees[i];
-			var supplierEmployeeName = $(current).find(
-					"[st='supplierEmployeeName']").val();
-			var supplierEmployeePk = $(current).find(
-					"[st='supplierEmployeePk']").val();
+			var supplierEmployeeName = $(current).find("[st='supplierEmployeeName']").val();
+			var supplierEmployeePk = $(current).find("[st='supplierEmployeePk']").val();
 			var payable = $(current).find("[st='payable']").val();
 
 			if (supplierEmployeePk == "" || supplierEmployeeName == "")
 				continue;
 			supplierArr.push(supplierEmployeePk);
-			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName
-					+ '",' + '"supplierEmployeePk":"' + supplierEmployeePk
-					+ '",' + '"payable":"' + payable;
+			supplierJson += '{"supplierEmployeeName":"' + supplierEmployeeName + '",' + '"supplierEmployeePk":"' + supplierEmployeePk + '",' + '"payable":"' + payable;
 			if (i == allSupplierEmployees.length - 1) {
 				supplierJson += '"}';
 			} else {
@@ -178,21 +161,18 @@ var OrderContext = function() {
 			fail_msg("不能有重复的供应商！");
 			return;
 		}
-		var data = $("form").serialize() + "&nameList=" + nameList
-				+ "&supplierJson=" + supplierJson;
+		var data = $("form").serialize() + "&nameList=" + nameList + "&supplierJson=" + supplierJson;
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/updateOrder',
 			data : data
-		}).success(
-				function(str) {
-					if (str == "OK") {
-						window.location.href = self.apiurl
-								+ "templates/sale/order.jsp";
-					}
-				});
+		}).success(function(str) {
+			if (str == "OK") {
+				window.location.href = self.apiurl + "templates/sale/order.jsp";
+			}
+		});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -201,7 +181,7 @@ var OrderContext = function() {
 	self.startIndex = ko.computed(function() {
 		return (self.currentPage() - 1) * self.perPage;
 	});
-	
+
 	self.resetPage = function() {
 		self.currentPage(1);
 	};
@@ -227,8 +207,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -237,9 +216,9 @@ var OrderContext = function() {
 	};
 
 	self.refreshPage = function() {
-		if(currentType=="supplier"){
+		if (currentType == "supplier") {
 			self.searchSupplierEmployee();
-		}else{
+		} else {
 			self.searchClientEmployee();
 		}
 

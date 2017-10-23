@@ -288,6 +288,22 @@ String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
 };
 
+String.prototype.LTrim = function(str) {
+	var pattern = new RegExp("(^\s*)", 'g');
+	if (arguments.length != 0) {
+		pattern = new RegExp("(^" + str + "*)", 'g');
+	}
+	return this.replace(pattern, "");
+};
+
+String.prototype.RTrim = function(str) {
+	var pattern = new RegExp("(\s*$)", 'g');
+	if (arguments.length != 0) {
+		pattern = new RegExp("(" + str + "*$)", 'g');
+	}
+	return this.replace(pattern, "");
+};
+
 Array.prototype.isRepeat = function() {
 	var hash = {};
 	for ( var i in this) {
@@ -323,7 +339,10 @@ jQuery.fn.extend({
 		this.focus(function() {
 			this.blur();
 		});
+	},
+	showDetail : function() {
+		this.click(function() {
+			msg($(this).html());
+		});
 	}
 });
-
-

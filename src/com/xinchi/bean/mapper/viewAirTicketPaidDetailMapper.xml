@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ViewAirTicketPaidDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketPaidDto">
+		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
+		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="allot_money" property="allot_money" jdbcType="DECIMAL" />
+		<result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+		<result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
+		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		supplier_employee_pk,
+		money,
+		allot_money,
+		sum_money,
+		status,
+		type,
+		time,
+		limit_time,
+		confirm_time,
+		approve_user,
+		related_pk,
+		comment,
+		pk,
+		create_user,
+		update_user,
+		base_pk,
+		PNR,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		B.financial_body_pk,
+		C.supplier_name AS financial_body_name,
+		A.money,
+		A.allot_money,
+		A.sum_money,
+		A.status,
+		A.type,
+		A.time,
+		A.limit_time,
+		A.confirm_time,
+		A.approve_user,
+		A.related_pk,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.base_pk,
+		A.PNR,
+		A.create_time,
+		A.update_time
+		from
+		view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		<where>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

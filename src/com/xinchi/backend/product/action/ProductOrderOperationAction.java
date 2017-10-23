@@ -200,11 +200,110 @@ public class ProductOrderOperationAction extends BaseAction {
 		for (String operate_pk : o_pks) {
 			ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
 			operation.setStatus("Y");
-
 			service.update(operation);
 		}
 
 		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	private String team_numbers;
+
+	/**
+	 * 删除操作订单
+	 * 
+	 * @return
+	 */
+	public String deleteOperation() {
+		String[] t_ns = team_numbers.split(",");
+		for (String t_n : t_ns) {
+			operations = service.selectByTeamNumber(t_n);
+			OrderDto order = orderService.selectByTeamNumber(t_n);
+
+			String standard_flg = order.getStandard_flg();
+			String order_pk = order.getPk();
+
+			if (standard_flg.equals("Y")) {
+				BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order_pk);
+				bsOrder.setProduct_cost(BigDecimal.ZERO);
+				bsOrder.setOperate_flg("N");
+				bsoService.updateComment(bsOrder);
+			} else {
+				BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
+				bnsOrder.setProduct_cost(BigDecimal.ZERO);
+				bnsOrder.setOperate_flg("N");
+				bnsoService.updateComment(bnsOrder);
+			}
+
+			service.deleteByTeamNumber(t_n);
+
+			// 删除应付款
+			payableService.deletePayableByTeamNumber(t_n);
+
+		}
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	private String operate_pk;
+
+	private BigDecimal final_supplier_cost;
+
+	/**
+	 * 决算操作订单
+	 * 
+	 * @return
+	 */
+	public String finalOperation() {
+		ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
+		operation.setStatus("F");
+		operation.setFinal_supplier_cost(final_supplier_cost);
+
+		service.update(operation);
+
+		// 更新应付款
+		PayableBean payable_option = new PayableBean();
+		payable_option.setTeam_number(operation.getTeam_number());
+		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+		List<PayableBean> payables = payableService.selectByParam(payable_option);
+		if (null != payables && payables.size() > 0) {
+			PayableBean payable = payables.get(0);
+			payable.setFinal_flg("Y");
+			payable.setFinal_payable(final_supplier_cost);
+			payable.setFinal_balance(final_supplier_cost.subtract(payable.getPaid()));
+			payableService.update(payable);
+		}
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	/**
+	 * 打回订单操作至未决算状态
+	 * 
+	 * @return
+	 */
+	public String rollBackOperation() {
+		ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
+		operation.setStatus("Y");
+		operation.setFinal_supplier_cost(BigDecimal.ZERO);
+
+		service.update(operation);
+
+		// 更新应付款
+		PayableBean payable_option = new PayableBean();
+		payable_option.setTeam_number(operation.getTeam_number());
+		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+		List<PayableBean> payables = payableService.selectByParam(payable_option);
+		if (null != payables && payables.size() > 0) {
+			PayableBean payable = payables.get(0);
+			payable.setFinal_flg("N");
+			payable.setFinal_payable(BigDecimal.ZERO);
+			payable.setFinal_balance(BigDecimal.ZERO);
+			payableService.update(payable);
+		}
+		resultStr = SUCCESS;
+
 		return SUCCESS;
 	}
 
@@ -384,5 +483,29 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setProductSuppliers(List<ProductSupplierBean> productSuppliers) {
 		this.productSuppliers = productSuppliers;
+	}
+
+	public String getOperate_pk() {
+		return operate_pk;
+	}
+
+	public void setOperate_pk(String operate_pk) {
+		this.operate_pk = operate_pk;
+	}
+
+	public BigDecimal getFinal_supplier_cost() {
+		return final_supplier_cost;
+	}
+
+	public void setFinal_supplier_cost(BigDecimal final_supplier_cost) {
+		this.final_supplier_cost = final_supplier_cost;
+	}
+
+	public String getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(String team_numbers) {
+		this.team_numbers = team_numbers;
 	}
 }

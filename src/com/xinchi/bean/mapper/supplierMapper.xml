@@ -29,6 +29,7 @@
 		<result column="corporate_name" property="corporate_name" jdbcType="VARCHAR" />
 		<result column="corporate_sex" property="corporate_sex" jdbcType="CHAR" />
 		<result column="corporate_id" property="corporate_id" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="CHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -58,7 +59,8 @@
 		is_cooperate,
 		corporate_name,
 		corporate_sex,
-		corporate_id
+		corporate_id,
+		type
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -167,6 +169,9 @@
 			<if test="corporate_id != null">
 				corporate_id,
 			</if>
+			<if test="type != null">
+				type,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_name != null">
@@ -249,6 +254,9 @@
 			</if>
 			<if test="corporate_id != null">
 				#{corporate_id,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -335,6 +343,9 @@
 			<if test="corporate_id != null">
 				corporate_id = #{corporate_id,jdbcType=VARCHAR},
 			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=CHAR},
+			</if>
 
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
@@ -361,6 +372,12 @@
 			</if>
 			<if test="params.bo.supplier_city != null and params.bo.supplier_city !=''">
 				and supplier_city = #{params.bo.supplier_city,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and type = #{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.type == null or params.bo.type ==''">
+				and type = 'D'
 			</if>
 		</where>
 	</select>

@@ -1,347 +1,359 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.SupplierPaidDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierPaidDetailBean" >
-	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
-	    <result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
-	    <result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
-	    <result column="money" property="money" jdbcType="DECIMAL" />
-	    <result column="time" property="time" jdbcType="VARCHAR" />
-	    <result column="type" property="type" jdbcType="VARCHAR" />
-	    <result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
-	    <result column="status" property="status" jdbcType="CHAR" />
-	    <result column="comment" property="comment" jdbcType="VARCHAR" />
-	    <result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
-	    <result column="allot_money" property="allot_money" jdbcType="DECIMAL" />
-	    <result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
-	    <result column="card_pk" property="card_pk" jdbcType="CHAR" />
-	    <result column="card_account" property="card_account" jdbcType="VARCHAR" />
-	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
-	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
- 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
- 	    <result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
- 	    <result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
-  </resultMap>
-   <resultMap id="ReimbursementMap" type="com.xinchi.bean.ReimbursementDto" >
-	    <result column="item" property="item" jdbcType="CHAR" />
-	    <result column="money" property="money" jdbcType="DECIMAL" />
-	    <result column="comment" property="comment" jdbcType="VARCHAR" />
-	    <result column="status" property="status" jdbcType="CHAR" />
-	    <result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
-	    <result column="pk" property="pk" jdbcType="CHAR" />
-	    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
-	    <result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
-	    <result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
-	    <result column="apply_time" property="apply_time" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-  		
-    	team_number, 
-    	supplier_employee_name, 
-    	supplier_employee_pk, 
-    	money, 
-    	time, 
-    	type, 
-    	confirm_time, 
-    	status, 
-    	comment, 
-    	sum_money, 
-    	allot_money, 
-    	related_pk, 
-    	card_pk, 
-    	card_account, 
-    	create_user, 
-    	update_user, 
-    	pk, 
-    	create_time,
-    	update_time,
-    	limit_time,
-    	approve_user
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from supplier_paid_detail
-    where pk = #{pk,jdbcType=CHAR}
-  </select>
-  
-  <select id="selectSupplierPaidDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from supplier_paid_detail
-    where related_pk = #{related_pk,jdbcType=CHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from supplier_paid_detail
-    where pk = #{pk,jdbcType=CHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.xinchi.bean.SupplierPaidDetailBean" >
-  	
-    insert into supplier_paid_detail
-    
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-	 	<if test="team_number != null">
-	        team_number,
-	      </if>
-	 	<if test="supplier_employee_name != null">
-	        supplier_employee_name,
-	      </if>
-	 	<if test="supplier_employee_pk != null">
-	        supplier_employee_pk,
-	      </if>
-	 	<if test="money != null">
-	        money,
-	      </if>
-	 	<if test="time != null">
-	        time,
-	      </if>
-	 	<if test="type != null">
-	        type,
-	      </if>
-	 	<if test="confirm_time != null">
-	        confirm_time,
-	      </if>
-	 	<if test="status != null">
-	        status,
-	      </if>
-	 	<if test="comment != null">
-	        comment,
-	      </if>
-	 	<if test="sum_money != null">
-	        sum_money,
-	      </if>
-	 	<if test="allot_money != null">
-	        allot_money,
-	      </if>
-	 	<if test="related_pk != null">
-	        related_pk,
-	      </if>
-	 	<if test="card_pk != null">
-	        card_pk,
-	      </if>
-	 	<if test="card_account != null">
-	        card_account,
-	      </if>
-	 	<if test="create_user != null">
-	        create_user,
-	      </if>
-	 	<if test="update_user != null">
-	        update_user,
-	      </if>
-	 	<if test="pk != null">
-	        pk,
-	      </if>
-      <if test="create_time != null">
-        create_time,
-      </if>
-      <if test="update_time != null">
-        update_time,
-      </if>
-      <if test="limit_time != null">
-        limit_time,
-      </if>
-      <if test="approve_user != null">
-        approve_user,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-    	<if test="team_number != null">
-	        #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_employee_name != null">
-	        #{supplier_employee_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_employee_pk != null">
-	        #{supplier_employee_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="money != null">
-	        #{money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="time != null">
-	        #{time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="type != null">
-	        #{type,jdbcType=VARCHAR},
-	      </if>
-    	<if test="confirm_time != null">
-	        #{confirm_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="status != null">
-	        #{status,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sum_money != null">
-	        #{sum_money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="allot_money != null">
-	        #{allot_money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="related_pk != null">
-	        #{related_pk,jdbcType=VARCHAR},
-	      </if>
-    	<if test="card_pk != null">
-	        #{card_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="card_account != null">
-	        #{card_account,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="create_time != null">
-        #{create_time,jdbcType=VARCHAR},
-      </if>
-       <if test="update_time != null">
-        #{update_time,jdbcType=VARCHAR},
-      </if>
-       <if test="limit_time != null">
-        #{limit_time,jdbcType=VARCHAR},
-      </if>
-       <if test="approve_user != null">
-        #{approve_user,jdbcType=VARCHAR},
-      </if>
-    </trim>		
-  </insert>
-  
+<mapper namespace="com.xinchi.bean.mapper.SupplierPaidDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierPaidDetailBean">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
+		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
+		<result column="allot_money" property="allot_money" jdbcType="DECIMAL" />
+		<result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+		<result column="card_pk" property="card_pk" jdbcType="CHAR" />
+		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
+		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
 
-  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierPaidDetailBean" >
-    update supplier_paid_detail
-    <set >
-    	<if test="team_number != null">
-	        team_number = #{team_number,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_employee_name != null">
-	        supplier_employee_name = #{supplier_employee_name,jdbcType=VARCHAR},
-	      </if>
-    	<if test="supplier_employee_pk != null">
-	        supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="money != null">
-	        money = #{money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="time != null">
-	        time = #{time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="type != null">
-	        type = #{type,jdbcType=VARCHAR},
-	      </if>
-    	<if test="confirm_time != null">
-	        confirm_time = #{confirm_time,jdbcType=VARCHAR},
-	      </if>
-    	<if test="status != null">
-	        status = #{status,jdbcType=CHAR},
-	      </if>
-    	<if test="comment != null">
-	        comment = #{comment,jdbcType=VARCHAR},
-	      </if>
-    	<if test="sum_money != null">
-	        sum_money = #{sum_money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="allot_money != null">
-	        allot_money = #{allot_money,jdbcType=DECIMAL},
-	      </if>
-    	<if test="related_pk != null">
-	        related_pk = #{related_pk,jdbcType=VARCHAR},
-	      </if>
-    	<if test="card_pk != null">
-	        card_pk = #{card_pk,jdbcType=CHAR},
-	      </if>
-    	<if test="card_account != null">
-	        card_account = #{card_account,jdbcType=VARCHAR},
-	      </if>
-    	<if test="create_user != null">
-	        create_user = #{create_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="update_user != null">
-	        update_user = #{update_user,jdbcType=VARCHAR},
-	      </if>
-    	<if test="pk != null">
-	        pk = #{pk,jdbcType=CHAR},
-	      </if>
-      <if test="update_time != null">
-        update_time = #{update_time,jdbcType=VARCHAR},
-      </if>
-      <if test="limit_time != null">
-        limit_time = #{limit_time,jdbcType=VARCHAR},
-      </if>
-      <if test="approve_user != null">
-        approve_user = #{approve_user,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where pk = #{pk,jdbcType=CHAR}
-  </update>
-  
- <select id="selectByParam" parameterType="com.xinchi.bean.SupplierPaidDetailBean" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from supplier_paid_detail
-    
-    <where>
-         <if test="related_pk != null and related_pk !=''">
-	        and related_pk  = #{related_pk,jdbcType=VARCHAR}
-	     </if>
-	      <if test="pk != null and pk !=''">
-	        and pk  = #{pk,jdbcType=CHAR}
-	     </if>
-    </where> 
- </select>
- 
- <select id="selectByRelatedPk" parameterType="java.lang.String" resultMap="BaseResultMap">
-     select 
-  		A.team_number, 
-    	B.financial_body_name as supplier_employee_name, 
-    	B.financial_body_pk as supplier_employee_pk, 
-    	A.money, 
-    	LEFT(A.time,10) AS time, 
-    	A.type, 
-    	A.confirm_time, 
-    	A.status, 
-    	A.comment, 
-    	A.sum_money, 
-    	A.allot_money, 
-    	A.related_pk, 
-    	A.card_pk, 
-    	A.card_account, 
-    	A.create_user, 
-    	A.update_user, 
-    	A.pk, 
-    	A.create_time,
-    	A.update_time,
-    	A.limit_time
-    from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
-     
-    where A.related_pk = #{related_pk,jdbcType=VARCHAR}
- </select>
-   
-    <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="ReimbursementMap">
-   select 
-    	* from approval_all
-     <where>
-    	  <if test="params.bo.status != null and params.bo.status !=''">
-            <!-- TODO:修改为foreach 形式  -->
-	        and status in (${params.bo.status})
-	      </if>
-	      <if test="params.bo.create_user != null and params.bo.create_user !=''">
-	         and apply_user  like concat('%', #{params.bo.create_user,jdbcType=VARCHAR},'%')
-	      </if>
-	       <if test="params.bo.date_from != null and params.bo.date_from !=''">
-	         and from_unixtime((apply_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
-	      </if>
-	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
-	         and from_unixtime((apply_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
-	      </if>
-    </where>
-   </select>
+		team_number,
+		supplier_employee_name,
+		supplier_employee_pk,
+		money,
+		time,
+		type,
+		confirm_time,
+		status,
+		comment,
+		sum_money,
+		allot_money,
+		related_pk,
+		card_pk,
+		card_account,
+		create_user,
+		update_user,
+		pk,
+		create_time,
+		update_time,
+		limit_time,
+		approve_user
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_paid_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectSupplierPaidDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_paid_detail
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from supplier_paid_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.SupplierPaidDetailBean">
+
+		insert into supplier_paid_detail
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="supplier_employee_name != null">
+				supplier_employee_name,
+			</if>
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="confirm_time != null">
+				confirm_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="sum_money != null">
+				sum_money,
+			</if>
+			<if test="allot_money != null">
+				allot_money,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="card_pk != null">
+				card_pk,
+			</if>
+			<if test="card_account != null">
+				card_account,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="limit_time != null">
+				limit_time,
+			</if>
+			<if test="approve_user != null">
+				approve_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_employee_name != null">
+				#{supplier_employee_name,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_employee_pk != null">
+				#{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				#{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="sum_money != null">
+				#{sum_money,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_money != null">
+				#{allot_money,jdbcType=DECIMAL},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="card_pk != null">
+				#{card_pk,jdbcType=CHAR},
+			</if>
+			<if test="card_account != null">
+				#{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				#{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="approve_user != null">
+				#{approve_user,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierPaidDetailBean">
+		update supplier_paid_detail
+		<set>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_employee_name != null">
+				supplier_employee_name = #{supplier_employee_name,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_employee_pk != null">
+				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				confirm_time = #{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="sum_money != null">
+				sum_money = #{sum_money,jdbcType=DECIMAL},
+			</if>
+			<if test="allot_money != null">
+				allot_money = #{allot_money,jdbcType=DECIMAL},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="card_pk != null">
+				card_pk = #{card_pk,jdbcType=CHAR},
+			</if>
+			<if test="card_account != null">
+				card_account = #{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="limit_time != null">
+				limit_time = #{limit_time,jdbcType=VARCHAR},
+			</if>
+			<if test="approve_user != null">
+				approve_user = #{approve_user,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.SupplierPaidDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_paid_detail
+
+		<where>
+			<if test="related_pk != null and related_pk !=''">
+				and related_pk = #{related_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="pk != null and pk !=''">
+				and pk = #{pk,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByRelatedPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		B.financial_body_name as supplier_employee_name,
+		B.financial_body_pk as supplier_employee_pk,
+		A.money,
+		LEFT(A.time,10) AS time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_money,
+		A.allot_money,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.limit_time
+		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+
+		where A.related_pk = #{related_pk,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		B.financial_body_name as supplier_employee_name,
+		B.financial_body_pk as supplier_employee_pk,
+		A.money,
+		LEFT(A.time,10) AS time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_money,
+		A.allot_money,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		C.user_name AS create_user,
+		A.update_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.limit_time
+		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+		LEFT JOIN user_base C ON A.create_user = C.user_number
+
+		<where>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and A.create_user like concat('%', #{params.bo.create_user,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>

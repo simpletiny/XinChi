@@ -35,13 +35,16 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String pk;
-	
+
 	private BigDecimal allot_received;
-	
+
 	private String client_employee_pk;
 	private String client_employee_name;
-	
+
 	private String month;
+
+	private String limit_time;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -192,6 +195,14 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setMonth(String month) {
 		this.month = month;
+	}
+
+	public String getLimit_time() {
+		return limit_time;
+	}
+
+	public void setLimit_time(String limit_time) {
+		this.limit_time = limit_time;
 	}
 
 }

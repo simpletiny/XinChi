@@ -41,6 +41,9 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 	private String employee_provice;
 	private String employee_city;
 
+	// 供应商财务主体种类
+	private String type;
+
 	public String getName() {
 		return name;
 	}
@@ -191,6 +194,14 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 
 	public void setEmployee_city(String employee_city) {
 		this.employee_city = employee_city;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
