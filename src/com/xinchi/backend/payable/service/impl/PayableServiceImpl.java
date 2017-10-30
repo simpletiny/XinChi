@@ -1,21 +1,15 @@
 package com.xinchi.backend.payable.service.impl;
 
 import static com.xinchi.common.SimpletinyString.isEmpty;
-import static com.xinchi.common.SimpletinyString.str2Decimal;
-import static com.xinchi.common.SimpletinyString.str2Int;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -34,7 +28,6 @@ import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
-import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -68,10 +61,14 @@ public class PayableServiceImpl implements PayableService {
 	@Override
 	@Async
 	public void updateByTeamNumber(String team_number) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
 
 		List<BudgetOrderSupplierBean> budgets = saleOrderService.searchBudgetSupplier(team_number);
 		BudgetOrderBean bob = saleOrderService.searchBudgetOrderByTeamNumber(team_number);
+		PayableBean old_option = new PayableBean();
+		old_option.setTeam_number(team_number);
+		List<PayableBean> oldPayables = dao.selectByParam(old_option);
+		if (null == oldPayables)
+			oldPayables = new ArrayList<PayableBean>();
 
 		if (null != budgets) {
 			for (BudgetOrderSupplierBean budget : budgets) {
@@ -80,7 +77,13 @@ public class PayableServiceImpl implements PayableService {
 				bo.setTeam_number(team_number);
 				bo.setSupplier_employee_pk(budget.getSupplier_employee_pk());
 
-				SupplierEmployeeBean sb = supplierEmployeeDAO.selectByPrimaryKey(budget.getSupplier_employee_pk());
+				// 去除原来和现在都存在的应付款
+				for (int i = oldPayables.size() - 1; i >= 0; i--) {
+					if (oldPayables.get(i).getSupplier_employee_pk().equals(budget.getSupplier_employee_pk())) {
+						oldPayables.remove(i);
+						break;
+					}
+				}
 
 				List<PayableBean> payables = dao.selectByParam(bo);
 				PayableBean payable = null;
@@ -145,20 +148,12 @@ public class PayableServiceImpl implements PayableService {
 					update(payable);
 				}
 
-				// payable.setSupplier_name(sb.getFinancial_body_name());
-				// payable.setSupplier_pk(sb.getFinancial_body_pk());
-				//
-				// SolrInputDocument document = castP2D(payable);
-				//
-				// try {
-				// solrClient.add(document);
-				// solrClient.commit();
-				// } catch (SolrServerException e) {
-				// e.printStackTrace();
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-
+			}
+		}
+		// 删除已经不存在的应付款
+		if (oldPayables.size() > 0) {
+			for (PayableBean p : oldPayables) {
+				dao.deleteByPk(p.getPk());
 			}
 		}
 	}

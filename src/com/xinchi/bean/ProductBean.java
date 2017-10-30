@@ -42,6 +42,8 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private BigDecimal product_value;
 
+	private List<String> statuses;
+
 	public String getName() {
 		return name;
 	}
@@ -192,6 +194,14 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setProduct_value(BigDecimal product_value) {
 		this.product_value = product_value;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
 	}
 
 }

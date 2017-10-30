@@ -55,6 +55,16 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { bindingTicket() }">机票</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">废弃</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-6">
+							<div data-bind="foreach: status" style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="product.statuses" /><label
+									data-bind="text: $root.saleMapping[$data]"></label>
+								</em>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -126,6 +136,9 @@
 								<!-- /ko -->
 								<!-- ko if: $data.sale_flg =='Y' -->
 								<td style="color: green" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
+								<!-- /ko -->
+								<!-- ko if: $data.sale_flg =='D' -->
+								<td style="color: red" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.location"></td>
 								<td data-bind="text: $data.name"></td>

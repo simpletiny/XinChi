@@ -16,10 +16,16 @@ var ProductContext = function() {
 		'SALE' : '销售包票',
 		'NONE' : '无机票'
 	};
+	self.status = [ 'N', 'Y', 'D' ];
 	self.saleMapping = {
 		'N' : "未上架",
-		'Y' : "已上架"
+		'Y' : "已上架",
+		'D' : "已废弃"
 	};
+	self.chosenStatuses = ko.observableArray([]);
+	self.chosenStatuses.push("N");
+	self.chosenStatuses.push("Y");
+
 	// 新建产品
 	self.create = function() {
 		window.location.href = self.apiurl + "templates/product/product-creation.jsp";
@@ -84,6 +90,48 @@ var ProductContext = function() {
 					}
 				}
 			});
+		}
+	};
+
+	/**
+	 * 废弃产品
+	 */
+	self.abandon = function() {
+		if (self.chosenProducts().length == 0) {
+			fail_msg("请选择产品！");
+			return;
+		} else if (self.chosenProducts().length > 1) {
+			fail_msg("只能选择一个产品！");
+			return;
+		} else if (self.chosenProducts().length == 1) {
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要废弃此产品吗？',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("保存中！");
+						var data = "sale_flg=D" + "&product_pks=" + self.chosenProducts();
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'product/onSaleProduct',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenProducts.removeAll();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+
 		}
 	};
 	self.product = ko.observable({});
@@ -169,7 +217,7 @@ var ProductContext = function() {
 	self.refresh = function() {
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		
+
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param, function(data) {
 			self.products(data.products);
 

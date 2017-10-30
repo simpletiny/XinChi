@@ -11,12 +11,23 @@ var CompanyContext = function() {
 		total : 0,
 		items : []
 	});
-	self.status = [ '正常', '已停用' ];
-	self.chosenStatus = ko.observableArray([]);
-	self.chosenStatus.push("正常");
+	self.status = [ 'N', 'Y' ];
+	self.statusMapping = {
+		'N' : '正常',
+		'Y' : '已停用'
+	};
 
-	self.relates = [ '未关联', '已关联' ];
+	self.chosenStatus = ko.observableArray([]);
+	self.chosenStatus.push("N");
+
+	self.relates = [ 'N', 'Y' ];
+	self.relatesMapping = {
+		'N' : '未关联',
+		'Y' : '已关联'
+	};
+
 	self.chosenRelates = ko.observableArray([]);
+	self.totalCompanies = ko.observable();
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
@@ -31,12 +42,14 @@ var CompanyContext = function() {
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
-		var param = $("form").serialize() + "&company_status=" + self.chosenStatus() + "&relate_status=" + self.chosenRelates();
+		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
 			$(".rmb").formatCurrency();
+
+			self.totalCompanies(data.page.total);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 			endLoadingIndicator();

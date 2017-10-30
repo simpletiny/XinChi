@@ -53,12 +53,13 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">地区</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" data-bind="options: clientArea, optionsCaption: '-- 请选择 --'" name="client.client_area"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: clientArea, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.client_area"></select>
 							</div>
 						</div>
 						<div class="span6">
 							<div data-bind="foreach: status">
-								<em class="small-box "> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label data-bind="text: $data"></label>
+								<em class="small-box "> <input name="client.statuses" type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label
+									data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -67,7 +68,8 @@
 						<div class="span6 col-md-3">
 							<label class="col-md-1 control-label">&nbsp;</label>
 							<div data-bind="foreach: relates">
-								<em class="small-box "> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label data-bind="text: $data"></label>
+								<em class="small-box "> <input type="checkbox" name="client.relate_flgs" data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
+									data-bind="text: $root.relatesMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -75,7 +77,8 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--'" name="client.sales"></select>
+									<select class="form-control" style="height: 34px" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:refresh}"
+										name="client.sales"></select>
 								</div>
 							</div>
 						</s:if>
@@ -86,6 +89,23 @@
 						</div>
 					</div>
 				</form>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<td width="11.11%">总数</td>
+								<td width="11.11%" data-bind="text:totalCompanies()"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+								<td width="11.11%"></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
 				<div class="list-result">
 					<table class="table table-striped table-hover">
 						<thead>
@@ -133,7 +153,7 @@
 								<td class="rmb" data-bind="text: $data.sum_balance"></td>
 								<td data-bind="text: $data.client_year_order_count"></td>
 								<td data-bind="text: $data.last_order_date"></td>
-								
+
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->

@@ -316,6 +316,12 @@
 					#{params.bo.locations[${index}]}
 				</foreach>
 			</if>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.sale_flg in 
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
 			<if test="params.bo.sale_flg != null and params.bo.sale_flg !=''">
 				and A.sale_flg = #{params.bo.sale_flg,jdbcType=VARCHAR}
 			</if>

@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -58,6 +59,11 @@ public class ClientBean extends SupperBO implements Serializable {
 	private BigDecimal sum_balance;
 	private Integer client_year_order_count;
 	private String last_order_date;
+
+	// search options
+
+	private List<String> statuses;
+	private List<String> relate_flgs;
 
 	public String getClient_name() {
 		return client_name;
@@ -297,6 +303,22 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setLast_order_date(String last_order_date) {
 		this.last_order_date = last_order_date;
+	}
+
+	public List<String> getRelate_flgs() {
+		return relate_flgs;
+	}
+
+	public void setRelate_flgs(List<String> relate_flgs) {
+		this.relate_flgs = relate_flgs;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
 	}
 
 }

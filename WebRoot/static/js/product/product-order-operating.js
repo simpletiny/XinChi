@@ -1,4 +1,5 @@
 var operateLayer;
+var passengerCheckLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -46,7 +47,7 @@ var OrderContext = function() {
 
 			self.totalPeopleCount(total_people_count);
 			self.totalSupplierCost(total_supplier_cost);
-			
+
 			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -234,7 +235,35 @@ var OrderContext = function() {
 	self.cancelEdit = function() {
 		layer.close(operateLayer);
 	};
+	self.passengers = ko.observableArray([]);
+	// 查看乘客信息
+	self.checkPassengers = function(data, event) {
+		self.passengers.removeAll();
 
+		var team_number = data.team_number;
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.passengers(data.passengers);
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : [ '游客信息', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '500px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
 	self.productSuppliers = ko.observableArray([]);
 
 	// start pagination

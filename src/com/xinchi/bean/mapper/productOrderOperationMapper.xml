@@ -26,6 +26,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 		<result column="supplier_pk" property="supplier_pk" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -307,10 +308,12 @@
 		A.land_day,
 		A.off_day,
 		C.supplier_short_name AS supplier_name,
-		C.pk AS supplier_pk
+		C.pk AS supplier_pk,
+		substring_index(D.name_list,':',1) AS passenger
 		from product_order_operation A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN budget_order_view D ON A.team_number = D.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
@@ -334,7 +337,7 @@
 				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY team_number,operate_index,pick_date DESC
+		ORDER BY A.pick_date,A.team_number,A.operate_index DESC
 	</select>
 
 

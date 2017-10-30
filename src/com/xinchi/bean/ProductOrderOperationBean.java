@@ -53,7 +53,8 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 	private String supplier_pk;
 	
 	private String pick_month;
-
+	
+	private String passenger;
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -244,6 +245,14 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setPick_month(String pick_month) {
 		this.pick_month = pick_month;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
 	}
 
 }

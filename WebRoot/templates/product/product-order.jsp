@@ -133,7 +133,7 @@
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
-								<td></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td></td>
@@ -192,8 +192,8 @@
 					<tbody data-bind="foreach:productSuppliers">
 						<tr>
 							<td st="index" data-bind="text:$data.supplier_index"></td>
-							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name" onclick="choseSupplierEmployee(event)" /> <input type="text"
-								class="need" data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
+							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name" onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
+								data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
 							<td><input class="need" st="supplier-product-name" maxlength="10" data-bind="value:$data.supplier_product_name" type="text" /></td>
 							<td><input class="need" st="supplier-cost" data-bind="value:$data.sum_cost" type="number" /></td>
 							<td><input class="need" st="land-day" data-bind="value:$data.land_day" type="number" /></td>
@@ -279,6 +279,29 @@
 						<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 查看乘客信息 -->
+	<div id="passengers-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:passengers">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>

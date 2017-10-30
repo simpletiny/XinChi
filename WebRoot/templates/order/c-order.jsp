@@ -124,15 +124,16 @@ tr td {
 								<th>团号</th>
 								<th>客户</th>
 								<th>出团日期</th>
+								<th>天数</th>
 								<th>产品名称</th>
 								<th>人数</th>
 								<th>游客信息</th>
 								<th>回团天数</th>
-								<th>天数</th>
 								<th>总团款</th>
-								<th>产品经理</th>
+								<th>尾款</th>
 								<th>确认件</th>
 								<th>备注</th>
+								<th>产品经理</th>
 								<th>文件下载</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
@@ -146,13 +147,15 @@ tr td {
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.departure_date"></td>
+								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td data-bind="text: $data.back_days"></td>
-								<td data-bind="text: $data.days"></td>
+								
 								<td data-bind="text: $data.receivable"></td>
-								<td data-bind="text: $data.product_manager"></td>
+								<td data-bind="text: $data.balance"></td>
+							
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
@@ -160,6 +163,7 @@ tr td {
 								<!-- ko if: $data.comment!=null && $data.comment!=''-->
 								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
 								<!-- /ko -->
+								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>

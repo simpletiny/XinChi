@@ -61,9 +61,6 @@ public class ClientAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private String company_status;
-	private String relate_status;
-
 	public String searchCompanyByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
@@ -72,28 +69,6 @@ public class ClientAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
 		}
-
-		if (!SimpletinyString.isEmpty(relate_status)) {
-			String[] statuses = relate_status.split(",");
-			if (statuses.length == 1) {
-				if (statuses[0].equals(ResourcesConstants.RELATE_STATUS_YES)) {
-					client.setRelate_flg("Y");
-				} else {
-					client.setRelate_flg("N");
-				}
-			}
-		}
-		if (!SimpletinyString.isEmpty(company_status)) {
-			String[] statuses = company_status.split(",");
-			if (statuses.length == 1) {
-				if (statuses[0].equals(ResourcesConstants.STOP_STATUS_NORMAL)) {
-					client.setDelete_flg("N");
-				} else {
-					client.setDelete_flg("Y");
-				}
-			}
-		}
-
 		params.put("bo", client);
 
 		page.setParams(params);
@@ -159,22 +134,6 @@ public class ClientAction extends BaseAction {
 
 	public void setCompany_pks(List<String> company_pks) {
 		this.company_pks = company_pks;
-	}
-
-	public String getCompany_status() {
-		return company_status;
-	}
-
-	public void setCompany_status(String company_status) {
-		this.company_status = company_status;
-	}
-
-	public String getRelate_status() {
-		return relate_status;
-	}
-
-	public void setRelate_status(String relate_status) {
-		this.relate_status = relate_status;
 	}
 
 	public String getSale_pk() {

@@ -150,12 +150,13 @@ tr td {
 								<td data-bind="text: $data.send_date"></td>
 								<td data-bind="text: $data.send_type"></td>
 								<td></td>
-								<td></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td></td>
 								<td></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
+							<td></td>
 							<td></td>
 							<td></td>
 							<td>汇总</td>
@@ -309,6 +310,29 @@ tr td {
 						<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 查看乘客信息 -->
+	<div id="passengers-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:passengers">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>

@@ -206,6 +206,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-users fa-lg fa-fw"></i>系统相关</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>系统使用手册</a></li>
+					<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
 				</ol></li>
 
 		</ul>

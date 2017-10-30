@@ -1,5 +1,6 @@
 var operateLayer;
 var finalLayser;
+var passengerCheckLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -94,6 +95,35 @@ var OrderContext = function() {
 				}
 			});
 		}
+	};
+	self.passengers = ko.observableArray([]);
+	// 查看乘客信息
+	self.checkPassengers = function(data, event) {
+		self.passengers.removeAll();
+
+		var team_number = data.team_number;
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.passengers(data.passengers);
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : [ '游客信息', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '500px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);

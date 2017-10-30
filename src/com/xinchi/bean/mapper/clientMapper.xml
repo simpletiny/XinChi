@@ -420,7 +420,7 @@
 		LEFT JOIN view_client_last_order F ON A.pk = F.client_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} or A.public_flg ='Y')
+				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR})
 			</if>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and A.client_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -434,14 +434,17 @@
 			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
 				and A.sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
-				and A.delete_flg = #{params.bo.delete_flg,jdbcType=VARCHAR}
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.delete_flg in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
 			</if>
-			<if test="params.bo.delete_flg == null or params.bo.delete_flg ==''">
-				and A.delete_flg = 'N'
-			</if>
-			<if test="params.bo.relate_flg != null and params.bo.relate_flg !=''">
-				and A.relate_flg = #{params.bo.relate_flg,jdbcType=VARCHAR}
+			<if test="params.bo.relate_flgs != null and params.bo.relate_flgs !=''">
+				and A.relate_flg in
+				<foreach item="item" index="index" collection="params.bo.relate_flgs" open="(" separator="," close=")">
+					#{params.bo.relate_flgs[${index}]}
+				</foreach>
 			</if>
 		</where>
 		ORDER BY address DESC

@@ -16,6 +16,7 @@
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -35,7 +36,8 @@
 		C.user_name AS product_manager,
 		B.pk AS product_pk,
 		B.product_number AS product_number,
-		A.pk AS pk
+		A.pk AS pk,
+		substring_index(A.name_list,':',1) AS passenger
 			from budget_order_view A 
 			LEFT JOIN product B ON A.product_pk=B.pk
 			LEFT JOIN user_base C ON A.product_manager_number = C.user_number

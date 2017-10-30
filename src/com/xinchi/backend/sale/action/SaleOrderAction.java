@@ -220,8 +220,8 @@ public class SaleOrderAction extends BaseAction {
 
 		saleOrderService.saveOrderSupplier(arrSupplier);
 
-		// 删除之前的应付款
-		payableService.deletePayableByTeamNumber(order.getTeam_number());
+		// 删除之前的应付款我他妈的也不知道为什么会加这一行
+		// payableService.deletePayableByTeamNumber(order.getTeam_number());
 
 		if (null != order.getOther_payment()) {
 			sum = sum.add(order.getOther_payment());

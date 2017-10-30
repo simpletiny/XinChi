@@ -33,6 +33,8 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 	private String operate_flg;
 
 	private List<String> operate_flgs;
+	
+	private String passenger;
 
 	public String getProduct_number() {
 		return product_number;
@@ -160,6 +162,14 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 
 	public void setProduct_pk(String product_pk) {
 		this.product_pk = product_pk;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
 	}
 
 }
