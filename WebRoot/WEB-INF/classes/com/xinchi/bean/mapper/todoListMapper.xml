@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.TodoListMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.TodoListBean" >
+	    <result column="content" property="content" jdbcType="VARCHAR" />
+	    <result column="limit_time" property="limit_time" jdbcType="CHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="done_flg" property="done_flg" jdbcType="CHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+	    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+	    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+	    <result column="ext4" property="ext4" jdbcType="VARCHAR" />
+	    <result column="ext5" property="ext5" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	content, 
+    	limit_time, 
+    	pk, 
+    	create_user, 
+    	update_user, 
+    	done_flg, 
+    	type, 
+    	ext1, 
+    	ext2, 
+    	ext3, 
+    	ext4, 
+    	ext5, 
+    	create_time,
+    	update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from todo_list
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from todo_list
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.TodoListBean" >
+  	
+    insert into todo_list
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="content != null">
+	        content,
+	      </if>
+	 	<if test="limit_time != null">
+	        limit_time,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="done_flg != null">
+	        done_flg,
+	      </if>
+	 	<if test="type != null">
+	        type,
+	      </if>
+	 	<if test="ext1 != null">
+	        ext1,
+	      </if>
+	 	<if test="ext2 != null">
+	        ext2,
+	      </if>
+	 	<if test="ext3 != null">
+	        ext3,
+	      </if>
+	 	<if test="ext4 != null">
+	        ext4,
+	      </if>
+	 	<if test="ext5 != null">
+	        ext5,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="content != null">
+	        #{content,jdbcType=VARCHAR},
+	      </if>
+    	<if test="limit_time != null">
+	        #{limit_time,jdbcType=CHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="done_flg != null">
+	        #{done_flg,jdbcType=CHAR},
+	      </if>
+    	<if test="type != null">
+	        #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext1 != null">
+	        #{ext1,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext2 != null">
+	        #{ext2,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext3 != null">
+	        #{ext3,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext4 != null">
+	        #{ext4,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext5 != null">
+	        #{ext5,jdbcType=VARCHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.TodoListBean" >
+    update todo_list
+    <set >
+    	<if test="content != null">
+	        content = #{content,jdbcType=VARCHAR},
+	      </if>
+    	<if test="limit_time != null">
+	        limit_time = #{limit_time,jdbcType=CHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="done_flg != null">
+	        done_flg = #{done_flg,jdbcType=CHAR},
+	      </if>
+    	<if test="type != null">
+	        type = #{type,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext1 != null">
+	        ext1 = #{ext1,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext2 != null">
+	        ext2 = #{ext2,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext3 != null">
+	        ext3 = #{ext3,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext4 != null">
+	        ext4 = #{ext4,jdbcType=VARCHAR},
+	      </if>
+    	<if test="ext5 != null">
+	        ext5 = #{ext5,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.TodoListBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from todo_list
+   </select>
+</mapper>

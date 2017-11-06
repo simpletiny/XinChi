@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PaymentDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PaymentDetailBean">
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="account_pk" property="account_pk" jdbcType="CHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="balance" property="balance" jdbcType="DECIMAL" />
+		<result column="record_time" property="record_time" jdbcType="VARCHAR" />
+		<result column="record_user" property="record_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="inner_flg" property="inner_flg" jdbcType="CHAR" />
+		<result column="inner_pk" property="inner_pk" jdbcType="CHAR" />
+		<result column="voucher_number" property="voucher_number" jdbcType="CHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="voucher_file_name" property="voucher_file_name" jdbcType="VARCHAR" />
+		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
+		<result column="exchange_flg" property="exchange_flg" jdbcType="CHAR" />
+		<result column="finance_flg" property="finance_flg" jdbcType="CHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		account,
+		time,
+		type,
+		money,
+		balance,
+		record_time,
+		record_user,
+		update_user,
+		create_user,
+		pk,
+		create_time,
+		update_time,
+		comment,
+		inner_flg,
+		inner_pk,
+		voucher_number,
+		receiver,
+		voucher_file_name,
+		match_flg,
+		exchange_flg,
+		finance_flg
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByVoucherNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.account,
+		B.pk as account_pk,
+		A.time,
+		A.type,
+		A.money,
+		A.balance,
+		A.record_time,
+		A.record_user,
+		A.update_user,
+		A.create_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.comment,
+		A.inner_flg,
+		A.inner_pk,
+		A.voucher_number,
+		A.receiver,
+		A.voucher_file_name,
+		A.match_flg,
+		A.exchange_flg,
+		A.finance_flg
+		from payment_detail A
+		LEFT JOIN card B ON A.account = B.account
+		where voucher_number =
+		#{voucher_number,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from payment_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.PaymentDetailBean">
+
+		insert into payment_detail
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="account != null">
+				account,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="balance != null">
+				balance,
+			</if>
+			<if test="record_time != null">
+				record_time,
+			</if>
+			<if test="record_user != null">
+				record_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="inner_flg != null">
+				inner_flg,
+			</if>
+			<if test="inner_pk != null">
+				inner_pk,
+			</if>
+			<if test="voucher_number != null">
+				voucher_number,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="voucher_file_name != null">
+				voucher_file_name,
+			</if>
+			<if test="match_flg != null">
+				match_flg,
+			</if>
+			<if test="exchange_flg != null">
+				exchange_flg,
+			</if>
+			<if test="finance_flg != null">
+				finance_flg,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="account != null">
+				#{account,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="balance != null">
+				#{balance,jdbcType=DECIMAL},
+			</if>
+			<if test="record_time != null">
+				#{record_time,jdbcType=VARCHAR},
+			</if>
+			<if test="record_user != null">
+				#{record_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="inner_flg != null">
+				#{inner_flg,jdbcType=CHAR},
+			</if>
+			<if test="inner_pk != null">
+				#{inner_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_number != null">
+				#{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file_name != null">
+				#{voucher_file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="match_flg != null">
+				#{match_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="exchange_flg != null">
+				#{exchange_flg,jdbcType=CHAR},
+			</if>
+			<if test="finance_flg != null">
+				#{finance_flg,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PaymentDetailBean">
+		update payment_detail
+		<set>
+			<if test="account != null">
+				account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="balance != null">
+				balance = #{balance,jdbcType=DECIMAL},
+			</if>
+			<if test="record_time != null">
+				record_time = #{record_time,jdbcType=VARCHAR},
+			</if>
+			<if test="record_user != null">
+				record_user = #{record_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="inner_flg != null">
+				inner_flg = #{inner_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="inner_pk != null">
+				inner_pk = #{inner_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_number != null">
+				voucher_number = #{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file_name != null">
+				voucher_file_name = #{voucher_file_name,jdbcType=VARCHAR},
+			</if>
+			<if test="match_flg != null">
+				match_flg = #{match_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="finance_flg != null">
+				finance_flg = #{finance_flg,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+		<where>
+			<if test="time != null and time !=''">
+				and time=#{time,jdbcType=VARCHAR}
+			</if>
+			<if test="account != null and account !=''">
+				and account = #{account,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by time
+	</select>
+	<select id="selectAfterByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+		<where>
+			<if test="account != null and account !=''">
+				and account=#{account,jdbcType=VARCHAR}
+			</if>
+			<if test="time != null and time !=''">
+				and time>#{time,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectPreDetail" parameterType="com.xinchi.bean.PaymentDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+		<where>
+			<if test="account != null and account !=''">
+				and account=#{account,jdbcType=VARCHAR}
+			</if>
+			<if test="time != null and time !=''">
+				and time &lt;= #{time,jdbcType=VARCHAR}
+			</if>
+			<if test="pk != null and pk !=''">
+				and pk != #{pk,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by time desc limit 1
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+
+		<where>
+			<if test="params.bo.account != null and params.bo.account !=''">
+				and account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and type = #{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.match_flg != null and params.bo.match_flg =="N"'>
+				and match_flg = 'N'
+			</if>
+			<if test='params.bo.match_flg != null and params.bo.match_flg =="Y"'>
+				and (match_flg = 'Y' OR match_flg='O')
+			</if>
+			<if test="params.bo.time != null and params.bo.time !=''">
+				and left(time,10) = #{params.bo.time,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.month != null and params.bo.month !=''">
+				and left(time,7) = #{params.bo.month,jdbcType=VARCHAR}
+			</if>
+			<!-- 内转搜索条件 -->
+			<if test="params.bo.inner_flg != null and params.bo.inner_flg !=''">
+				and inner_flg = #{params.bo.inner_flg,jdbcType=VARCHAR}
+			</if>
+
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+		</where>
+		ORDER BY time desc
+	</select>
+</mapper>

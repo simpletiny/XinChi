@@ -1,6 +1,9 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class WaitingForPaidBean extends SupperBO implements Serializable {
@@ -32,6 +35,13 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 	private String related_pk;
 
 	private String pay_user;
+
+	// search options
+	private BigDecimal money_from;
+	private BigDecimal money_to;
+	private String apply_date_from;
+	private String apply_date_to;
+	private List<String> statuses;
 
 	public String getPay_number() {
 		return pay_number;
@@ -135,6 +145,46 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 
 	public void setPay_user(String pay_user) {
 		this.pay_user = pay_user;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
+	}
+
+	public String getApply_date_from() {
+		return apply_date_from;
+	}
+
+	public void setApply_date_from(String apply_date_from) {
+		this.apply_date_from = apply_date_from;
+	}
+
+	public String getApply_date_to() {
+		return apply_date_to;
+	}
+
+	public void setApply_date_to(String apply_date_to) {
+		this.apply_date_to = apply_date_to;
 	}
 
 }

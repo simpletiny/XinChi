@@ -47,6 +47,12 @@ public class PaidServiceImpl implements PaidService {
 		return dao.selectSupplierPaidDetailByRelatedPk(related_pk);
 	}
 
+	@Override
+	public SupplierPaidDetailBean selectPaidDetailByRelatedPk(String related_pk) {
+
+		return dao.selectByRelatedPk(related_pk);
+	}
+
 	@Autowired
 	private PayableDAO payableDao;
 

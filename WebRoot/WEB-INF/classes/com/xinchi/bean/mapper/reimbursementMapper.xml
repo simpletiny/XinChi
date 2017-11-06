@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ReimbursementMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.ReimbursementBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="item" property="item" jdbcType="CHAR" />
+	    <result column="date" property="date" jdbcType="VARCHAR" />
+	    <result column="money" property="money" jdbcType="DECIMAL" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="CHAR" />
+	    <result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+	    <result column="approval_user" property="approval_user" jdbcType="VARCHAR" />
+	    <result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+	    <result column="approval_time" property="approval_time" jdbcType="VARCHAR" />
+	    <result column="pay_time" property="pay_time" jdbcType="VARCHAR" />
+	    <result column="pay_number" property="pay_number" jdbcType="CHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	item, 
+    	date, 
+    	money, 
+    	comment, 
+    	status, 
+    	apply_user, 
+    	approval_user, 
+    	pay_user, 
+    	approval_time, 
+    	pay_time, 
+    	pay_number, 
+    	update_user, 
+    	pk, 
+    	create_user, 
+    	create_time,
+    	update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from reimbursement
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from reimbursement
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.ReimbursementBean" >
+  	
+    insert into reimbursement
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="item != null">
+	        item,
+	      </if>
+	 	<if test="date != null">
+	        date,
+	      </if>
+	 	<if test="money != null">
+	        money,
+	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+	 	<if test="status != null">
+	        status,
+	      </if>
+	 	<if test="apply_user != null">
+	        apply_user,
+	      </if>
+	 	<if test="approval_user != null">
+	        approval_user,
+	      </if>
+	 	<if test="pay_user != null">
+	        pay_user,
+	      </if>
+	 	<if test="approval_time != null">
+	        approval_time,
+	      </if>
+	 	<if test="pay_time != null">
+	        pay_time,
+	      </if>
+	 	<if test="pay_number != null">
+	        pay_number,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="item != null">
+	        #{item,jdbcType=CHAR},
+	      </if>
+    	<if test="date != null">
+	        #{date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="money != null">
+	        #{money,jdbcType=DECIMAL},
+	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="status != null">
+	        #{status,jdbcType=CHAR},
+	      </if>
+    	<if test="apply_user != null">
+	        #{apply_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approval_user != null">
+	        #{approval_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_user != null">
+	        #{pay_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approval_time != null">
+	        #{approval_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_time != null">
+	        #{pay_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_number != null">
+	        #{pay_number,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ReimbursementBean" >
+    update reimbursement
+    <set >
+    	<if test="item != null">
+	        item = #{item,jdbcType=CHAR},
+	      </if>
+    	<if test="date != null">
+	        date = #{date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="money != null">
+	        money = #{money,jdbcType=DECIMAL},
+	      </if>
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="status != null">
+	        status = #{status,jdbcType=CHAR},
+	      </if>
+    	<if test="apply_user != null">
+	        apply_user = #{apply_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approval_user != null">
+	        approval_user = #{approval_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_user != null">
+	        pay_user = #{pay_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="approval_time != null">
+	        approval_time = #{approval_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_time != null">
+	        pay_time = #{pay_time,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pay_number != null">
+	        pay_number = #{pay_number,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.ReimbursementBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from reimbursement
+   </select>
+</mapper>

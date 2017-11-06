@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.OrderMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderDto">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+		<result column="special_cost" property="special_cost" jdbcType="DECIMAL" />
+		<result column="fy" property="fy" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="other_cost_comment" property="other_cost_comment" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
+		<result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="create_user_number" property="create_user_number" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="back_days" property="back_days" jdbcType="INTEGER" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+		<result column="balance" property="balance" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from budget_order_view
+		where team_number =	#{team_number,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select * from budget_order_view
+		<where>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and departure_date &lt;=#{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
+			and confirm_flg='N'
+		</where>
+		ORDER BY departure_date DESC
+	</select>
+
+	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.product_name,
+		A.product_pk,
+		A.client_employee_pk,
+		A.client_employee_name,
+		A.independent_flg,
+		A.comment,
+		A.other_cost_comment,
+		A.other_cost,
+		A.fy,
+		A.special_cost,
+		A.special_count,
+		A.adult_cost,
+		A.adult_count,
+		A.receivable,
+		A.days,
+		A.departure_date,
+		A.pk,
+		A.update_user,
+		A.create_user_number,
+		A.create_user,
+		A.confirm_flg,
+		A.create_time,
+		A.update_time,
+		A.confirm_date,
+		A.confirm_file,
+		A.standard_flg,
+		A.air_ticket_cost,
+		A.product_cost,
+		IF(ISNULL(A.adult_count),0,A.adult_count)+
+		IF(ISNULL(A.special_count),0,A.special_count) AS people_count,
+		case when A.departure_date>now() then '未出团'
+		when now()>=A.departure_date and
+		DATE_ADD(A.departure_date,interval days-1 day) > now() then '出团中'
+		when now()>=DATE_ADD(A.departure_date,interval days-1 day) then '已回团'
+		end
+		AS status,
+		TIMESTAMPDIFF(day,A.departure_date,now())-days+2 AS back_days,
+		A.product_manager_number,
+		A.product_manager,
+		substring_index(A.name_list,':',1) AS passenger,
+		B.budget_balance AS balance
+		from budget_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
+		<where>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and A.client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and A.departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and A.departure_date &lt;=#{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_from != null and params.bo.confirm_date_from !=''">
+				and A.confirm_date >=#{params.bo.confirm_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
+				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
+			</if>
+			and confirm_flg='Y'
+		</where>
+		ORDER BY A.departure_date DESC
+	</select>
+	<select id="selectFByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.product_name,
+		A.product_pk,
+		A.client_employee_pk,
+		A.client_employee_name,
+		A.independent_flg,
+		A.comment,
+		A.other_cost_comment,
+		A.other_cost,
+		A.fy,
+		A.special_cost,
+		A.special_count,
+		A.adult_cost,
+		A.adult_count,
+		A.receivable,
+		A.days,
+		A.departure_date,
+		A.pk,
+		A.update_user,
+		A.create_user_number,
+		A.create_user,
+		A.create_time,
+		A.update_time,
+		A.confirm_date,
+		A.confirm_file,
+		A.standard_flg,
+		A.air_ticket_cost,
+		A.product_cost,
+		IF(ISNULL(A.adult_count),0,A.adult_count)+
+		IF(ISNULL(A.special_count),0,A.special_count) AS people_count,
+		case when A.departure_date>now() then '未出团'
+		when now()>=A.departure_date and
+		DATE_ADD(A.departure_date,interval days-1 day) > now() then '出团中'
+		when now()>=DATE_ADD(A.departure_date,interval days-1 day) then '已回团'
+		end
+		AS status,
+		TIMESTAMPDIFF(day,A.departure_date,now())-days+2 AS back_days,
+		A.product_manager_number,
+		A.product_manager,
+		substring_index(A.name_list,':',1) AS passenger,
+		B.final_balance AS balance
+		from final_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
+		<where>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and A.client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
+				and A.departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
+				and A.departure_date &lt;=#{params.bo.departure_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_from != null and params.bo.confirm_date_from !=''">
+				and A.confirm_date >=#{params.bo.confirm_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
+				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY A.departure_date DESC
+	</select>
+</mapper>

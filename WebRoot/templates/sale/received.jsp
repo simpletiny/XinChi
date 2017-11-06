@@ -45,7 +45,7 @@
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" /><label data-bind="text: $root.statusMapping[$data]"></label>
+								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" name="detail.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>

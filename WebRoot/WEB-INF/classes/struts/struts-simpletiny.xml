@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="simpletiny" extends="default" namespace="/simpletiny">
+		<action name="changeAllPasswordToMD5" class="simpletinyAction" method="changeAllPasswordToMD5">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="autoGenReceivable" class="simpletinyAction" method="autoGenReceivable">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="autoGenPayable" class="simpletinyAction" method="autoGenPayable">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="autoGenPayable2th" class="simpletinyAction" method="autoGenPayable2th">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="autoGenReceivable2th" class="simpletinyAction" method="autoGenReceivable2th">
+			<result name="success" type="redirect">/</result>
+		</action>
+		
+		<action name="currentDate" class="STDateAction" method="currentDate">
+			<result name="success" type="json"></result>
+		</action>
+		
+		<action name="autoFixBalance" class="simpletinyAction" method="autoFixBalance">
+		<result name="success" type="redirect">/</result>
+		</action>
+			<action name="autoGenTicketOrder" class="simpletinyAction" method="autoGenTicketOrder">
+		<result name="success" type="redirect">/</result>
+		</action>
+	</package>
+</struts>

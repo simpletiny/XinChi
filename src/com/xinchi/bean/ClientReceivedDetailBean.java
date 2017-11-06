@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -44,6 +45,8 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private String month;
 
 	private String limit_time;
+
+	private List<String> statuses;
 
 	public String getTeam_number() {
 		return team_number;
@@ -203,6 +206,14 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setLimit_time(String limit_time) {
 		this.limit_time = limit_time;
+	}
+
+	public List<String> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<String> statuses) {
+		this.statuses = statuses;
 	}
 
 }

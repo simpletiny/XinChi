@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -12,7 +11,7 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
-					<style>
+<style>
 .form-group {
 	margin-bottom: 5px;
 }
@@ -46,7 +45,9 @@
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="detail.statuses"/><label data-bind="text: $root.statusMapping[$data]"></label>
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="detail.statuses" /><label
+									data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -55,20 +56,30 @@
 						<div align="left">
 							<label class="col-md-1 control-label">申请日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="detail.date_from" />
+								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from"
+									name="detail.date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="detail.date_to" />
+								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to"
+									name="detail.date_to" />
 							</div>
 						</div>
-						<div  align="left">
+						<div align="left">
+							<label class="col-md-1 control-label">供应商</label>
+							<div class="col-md-1" style="float: left">
+								<input type="text" class="form-control" name="detail.supplier_name" />
+							</div>
+						</div>
+						<s:if test="#session.user.user_roles.contains('ADMIN')">
+						<div align="left">
 							<label class="col-md-1 control-label">产品经理</label>
-							<div class="col-md-2" style="float: left">
+							<div class="col-md-1" style="float: left">
 								<input type="text" class="form-control" name="detail.create_user" />
 							</div>
 						</div>
+						</s:if>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
@@ -102,18 +113,18 @@
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
 								<td data-bind="text: $data.time"></td>
 								<!-- ko if:$data.status=='I' -->
-									<td  data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='Y' -->
-									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='P' -->
-									<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-									<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
-								
+
 								<td data-bind="text: $data.create_user"></td>
 							</tr>
 						</tbody>
@@ -242,7 +253,8 @@
 	</div>
 
 	<script>
-		$(".product").addClass("current").children("ol").css("display", "block");
+		$(".product").addClass("current").children("ol")
+				.css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

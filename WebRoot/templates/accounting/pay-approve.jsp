@@ -44,17 +44,6 @@
 					</div>
 					<div class="form-group">
 						<div align="left">
-							<label class="col-md-1 control-label">申请日期</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="option.date_from" />
-							</div>
-						</div>
-						<div align="left">
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="option.date_to" />
-							</div>
-						</div>
-						<div align="left">
 							<label class="col-md-1 control-label">申请人</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control" name="option.apply_user" />
@@ -94,7 +83,7 @@
 								<!-- ko if:$data.limit_time!=null && moment().isBefore($data.limit_time+' 23:59') -->
 								<td data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
-								<!-- ko if:$data.limit_time==null -->
+								<!-- ko if:$data.limit_time==null || $data.limit_time=="" -->
 								<td data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
 

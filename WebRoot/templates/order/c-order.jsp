@@ -44,10 +44,11 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="width: 20%; float: right">
+						<div style="width: 30%; float: right">
 							<div>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { rollBackOrder() }">打回</button>
 								</s:if>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finalOrder() }">决算</button>
 							</div>

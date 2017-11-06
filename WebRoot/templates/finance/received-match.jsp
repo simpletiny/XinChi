@@ -56,7 +56,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">收入日期</label>
 							<div class="col-md-2">
-								<input type="text" data-bind="value:today" class="form-control date-picker" placeholder="收入日期" name="detail.time" />
+								<input type="text" class="form-control date-picker" placeholder="收入日期" name="detail.time" />
 							</div>
 						</div>
 						<div class="span6">
@@ -71,7 +71,24 @@
 								<input type="text" class="form-control month-picker-st" placeholder="出团月份" name="detail.month" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="大于等于" name="detail.money_from" />
+							</div>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="小于等于" name="detail.money_to" />
+							</div>
+						</div>
+						<div align="left">
+							<label class="col-md-1 control-label">精确金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
+							</div>
+						</div>
+						<div style="padding-top: 3px;float:right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>

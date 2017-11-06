@@ -47,4 +47,6 @@ public interface BudgetNonStandardOrderService extends BaseService {
 	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number);
 
 	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bnsOrder);
+
+	public String rollBackCOrder(String order_pk);
 }

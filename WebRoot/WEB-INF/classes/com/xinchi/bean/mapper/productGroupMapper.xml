@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductGroupMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductGroupBean">
+		<result column="group_name" property="group_name" jdbcType="VARCHAR" />
+		<result column="group_leader" property="group_leader" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		group_name,
+		group_leader,
+		comment,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_group
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_group
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductGroupBean">
+
+		insert into product_group
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="group_name != null">
+				group_name,
+			</if>
+			<if test="group_leader != null">
+				group_leader,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="group_name != null">
+				#{group_name,jdbcType=VARCHAR},
+			</if>
+			<if test="group_leader != null">
+				#{group_leader,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductGroupBean">
+		update product_group
+		<set>
+			<if test="group_name != null">
+				group_name = #{group_name,jdbcType=VARCHAR},
+			</if>
+			<if test="group_leader != null">
+				group_leader = #{group_leader,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductGroupBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_group
+		<where>
+			<if test="group_name != null and group_name !=''">
+				and group_name=#{group_name,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.group_name,
+		B.user_name as group_leader,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time
+		from product_group A 
+		LEFT JOIN user_base B on A.group_leader = B.user_number
+
+		<!-- <where> <if test="params.bo.account != null and params.bo.account !=''"> and account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%') 
+			</if> </where> -->
+	</select>
+</mapper>

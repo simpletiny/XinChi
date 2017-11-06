@@ -41,14 +41,17 @@ var ReceivedContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
+			+ 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
+			+ (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
+	self.chosenStatus.push("I");
 	self.allStatus = [ 'I', 'N', 'E' ];
 
 	self.statusMapping = {
@@ -82,10 +85,12 @@ var ReceivedContext = function() {
 		var totalProfit = 0;
 		var totalPerProfit = 0;
 
-		var param = $("form").serialize() + "&detail.status=" + self.chosenStatus();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
+				data) {
 			self.receiveds(data.receiveds);
 			// 计算合计
 			$(self.receiveds()).each(function(idx, data) {
@@ -173,27 +178,28 @@ var ReceivedContext = function() {
 		} else {
 			var param = "team_number=" + detail.team_number;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
-				self.order(data.order);
-				self.comment(detail.comment);
-				endLoadingIndicator();
-				viewCommentLayer = $.layer({
-					type : 1,
-					title : [ '摘要详情', '' ],
-					maxmin : false,
-					closeBtn : [ 1, true ],
-					shadeClose : false,
-					area : [ '700px', 'auto' ],
-					offset : [ '150px', '' ],
-					scrollbar : true,
-					page : {
-						dom : '#comment'
-					},
-					end : function() {
-						console.log("Done");
-					}
-				});
-			});
+			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param,
+					function(data) {
+						self.order(data.order);
+						self.comment(detail.comment);
+						endLoadingIndicator();
+						viewCommentLayer = $.layer({
+							type : 1,
+							title : [ '摘要详情', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '700px', 'auto' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#comment'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					});
 		}
 	};
 	self.sumDetail = ko.observable({
@@ -205,30 +211,31 @@ var ReceivedContext = function() {
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
+				function(data) {
 
-			self.sumDetails(data.receiveds);
-			self.sumDetail(self.sumDetails()[0]);
-			$(".rmb").formatCurrency();
-			endLoadingIndicator();
+					self.sumDetails(data.receiveds);
+					self.sumDetail(self.sumDetails()[0]);
+					$(".rmb").formatCurrency();
+					endLoadingIndicator();
 
-			viewDetailLayer = $.layer({
-				type : 1,
-				title : [ '合账详情', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '800px', 'auto' ],
-				offset : [ '150px', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#sum_detail'
-				},
-				end : function() {
-					console.log("Done");
-				}
-			});
-		});
+					viewDetailLayer = $.layer({
+						type : 1,
+						title : [ '合账详情', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '800px', 'auto' ],
+						offset : [ '150px', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#sum_detail'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
 
 	};
 	// start pagination
@@ -265,9 +272,10 @@ var ReceivedContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

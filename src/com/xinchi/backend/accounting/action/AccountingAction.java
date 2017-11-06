@@ -41,7 +41,7 @@ public class AccountingAction extends BaseAction {
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.agreeAirTicketPayApply(pa.getBack_pk());
 		} else {
-			resultStr = service.agreePayApply(pk);
+			resultStr = service.agreePayApply(pa.getBack_pk());
 		}
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class AccountingAction extends BaseAction {
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.rejectAirTicketPayApply(related_pk);
 		} else {
-			resultStr = service.rejectPayApply(pk);
+			resultStr = service.rejectPayApply(pa.getBack_pk());
 		}
 		return SUCCESS;
 	}

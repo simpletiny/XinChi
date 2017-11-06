@@ -367,13 +367,17 @@
 			<if test="params.bo.inner_flg != null and params.bo.inner_flg !=''">
 				and inner_flg = #{params.bo.inner_flg,jdbcType=VARCHAR}
 			</if>
-			<!-- <if test="params.bo.from_account != null and params.bo.from_account !='' and params.bo.to_account != null and params.bo.to_account !=''">
-				and ((account like CONCAT('%',#{params.bo.from_account,jdbcType=VARCHAR},'%') and type='支出') OR (account like
-				CONCAT('%',#{params.bo.to_account,jdbcType=VARCHAR},'%') and type='收入'))
-			</if>
-			<elseif test="params.bo.from_account ! null and params.bo.from_account ! =''">
 
-			</elseif> -->
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
 		</where>
 		ORDER BY time desc
 	</select>

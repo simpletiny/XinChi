@@ -26,9 +26,13 @@ var ProductBoxContext = function() {
 			var order_pk = data[0];
 			var standard_flg = data[1];
 			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-final-create.jsp?key=" + order_pk;
+				window.location.href = self.apiurl
+						+ "templates/order/standard-order-final-create.jsp?key="
+						+ order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-final-create.jsp?key=" + order_pk;
+				window.location.href = self.apiurl
+						+ "templates/order/non-standard-order-final-create.jsp?key="
+						+ order_pk;
 			}
 		}
 	};
@@ -46,32 +50,59 @@ var ProductBoxContext = function() {
 			var order_pk = data[0];
 			var standard_flg = data[1];
 			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
+				window.location.href = self.apiurl
+						+ "templates/order/standard-order-edit.jsp?key="
+						+ order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
+				window.location.href = self.apiurl
+						+ "templates/order/non-standard-order-edit.jsp?key="
+						+ order_pk;
 			}
 		}
 	};
-
-	// 确认订单
-	self.confirmOrder = function() {
+	// 打回订单到未确认状态
+	self.rollBackOrder = function() {
 		if (self.chosenOrders().length == 0) {
-			fail_msg("请选择产品！");
+			fail_msg("请选择订单！");
 			return;
 		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个产品！");
+			fail_msg("只能选择一个订单！");
 			return;
 		} else if (self.chosenOrders().length == 1) {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
 			var standard_flg = data[1];
-			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-confirm.jsp?key=" + order_pk;
-			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-confirm.jsp?key=" + order_pk;
-			}
+
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要打回此订单吗？',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("打回中！");
+						var data = "order_pk=" + order_pk + "&standard_flg="
+								+ standard_flg;
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'order/rollBackCOrder',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenOrders.removeAll();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
 		}
-	};
+	}
 
 	self.order = ko.observable({});
 	// 添加/修改备注
@@ -161,7 +192,8 @@ var ProductBoxContext = function() {
 			param = "bnsOrder";
 		}
 
-		data = param + ".pk=" + order_pk + "&" + param + ".comment=" + comment + "&standard_flg=" + standard_flg;
+		data = param + ".pk=" + order_pk + "&" + param + ".comment=" + comment
+				+ "&standard_flg=" + standard_flg;
 		startLoadingIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -184,8 +216,10 @@ var ProductBoxContext = function() {
 	self.refresh = function() {
 
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'order/searchCOrdersByPage', param, function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'order/searchCOrdersByPage', param, function(
+				data) {
 			self.orders(data.tbcOrders);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -212,12 +246,19 @@ var ProductBoxContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+						+ "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
 	};
 	// 新标签页显示大图片
-	$("#img-pic").on('click', function() {
-		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
-	});
+	$("#img-pic").on(
+			'click',
+			function() {
+				window.open(self.apiurl
+						+ "templates/common/check-picture-big.jsp?src="
+						+ encodeURIComponent($(this).attr("src")));
+			});
 
 	// 下载相关文件
 	self.downloadFile = function(data, event) {
@@ -279,9 +320,10 @@ var ProductBoxContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

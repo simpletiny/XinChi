@@ -9,6 +9,7 @@ import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.ReimbursementService;
 import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
@@ -37,6 +38,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		pa.setComment(reimbursement.getComment());
 		pa.setApply_user(reimbursement.getApply_user());
 		pa.setBack_pk(reimbursement.getPk());
+		pa.setApply_time(DateUtil.getTimeMillis());
 		payApprovalDao.insert(pa);
 		
 		return SUCCESS;

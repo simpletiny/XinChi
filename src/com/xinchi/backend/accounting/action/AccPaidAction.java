@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -19,10 +16,12 @@ import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
@@ -31,6 +30,9 @@ import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -48,7 +50,6 @@ public class AccPaidAction extends BaseAction {
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("bo", wfp);
-		wfp.setStatus(SimpletinyString.addSingleQuote(wfp.getStatus()));
 		page.setParams(params);
 
 		wfps = service.selectByPage(page);
@@ -57,8 +58,17 @@ public class AccPaidAction extends BaseAction {
 
 	private String wfp_pk;
 
+	private SupplierBean supplier;
+
+	@Autowired
+	private SupplierService supplierService;
+
 	public String searchOneWFP() {
 		wfp = service.selectByPk(wfp_pk);
+		SupplierPaidDetailBean paidDetail = paidService.selectPaidDetailByRelatedPk(wfp.getRelated_pk());
+		if (null != paidDetail) {
+			supplier = supplierService.selectByPrimaryKey(paidDetail.getSupplier_employee_pk());
+		}
 		return SUCCESS;
 	}
 
@@ -107,7 +117,8 @@ public class AccPaidAction extends BaseAction {
 		// 更新待支付状态
 		wfp = service.selectByPayNumber(voucher_number);
 		wfp.setStatus(ResourcesConstants.PAY_STATUS_YES);
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		wfp.setPay_user(sessionBean.getUser_number());
 		service.update(wfp);
 
@@ -204,5 +215,13 @@ public class AccPaidAction extends BaseAction {
 
 	public void setPs(PaidDetailSummary ps) {
 		this.ps = ps;
+	}
+
+	public SupplierBean getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SupplierBean supplier) {
+		this.supplier = supplier;
 	}
 }

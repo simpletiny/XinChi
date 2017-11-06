@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<properties>
+		<property name="dialect" value="MySQL" />
+		<property name="pageSqlId" value=".*ByPage$" />
+	</properties>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<plugins>
+		<plugin interceptor="com.xinchi.mybatis.interceptor.PaginationInterceptor" />
+		<plugin interceptor="com.xinchi.mybatis.interceptor.MapResultInterceptor" />
+	</plugins>
+	<mappers>
+		<!-- 配置sql语句文件 -->
+
+		<!-- Mapper注册 -->
+		<mapper resource="com/xinchi/bean/mapper/userBaseMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userInfoMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userCommonMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientEmployeeMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/cardMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/paymentDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierEmployeeMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/saleOrderNameListMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetOrderSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalOrderSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientReceivedDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/taskMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/teamNumberMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/receivableMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/receivableSummaryMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierFileMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/payableMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/payableSummaryMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/supplierPaidDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userGroupMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userGroupRelatedMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/worldViewMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/valueViewMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/ruleViewMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/academyViewMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/agencyFileMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/travelAgencyMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientVisitMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientRelationSummaryMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/todoListMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/systemGuideMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productViewMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/everyoneCountMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/waitingForPaidMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/reimbursementMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/receivedMatchMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/accurateSaleMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/userLogMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productGroupMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productGroupSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/budgetNonStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/orderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productReportMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/saleWorkReportMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/orderReportMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productAirTicketMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketNeedMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketNameListMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/passengerTicketInfoMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/innerTransferMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productSupplierMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productOrderOperationMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketPayableMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/airTicketPaidDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientChangeSaleLogMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/payApprovalMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/finalNonStandardOrderMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/viewAirTicketPaidDetailMapper.xml" />
+		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
+	</mappers>
+</configuration>  

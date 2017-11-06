@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -32,30 +31,54 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-					<div class="form-group" >
-						<div style="float:right">
+					<div class="form-group">
+<!-- 						<div class="span6">
+							<div class="col-md-6">
+								<div data-bind="foreach: allStatus" style="padding-top: 4px;">
+									<em class="small-box"> <input type="checkbox" checked
+										data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;},checked:$root.chosenStatus" name="wfp.statuses" /><label
+										data-bind="text: $root.statusMapping[$data]"></label>
+									</em>
+								</div>
+							</div>
+						</div> -->
+						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: pay">支付</button>
 						</div>
 					</div>
-
 					<div class="form-group">
-						<!-- <div align="left">
-							<label class="col-md-1 control-label">申请日期</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="detail.date_from" />
+						<div align="left">
+							<label class="col-md-1 control-label">金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="大于等于" name="wfp.money_from" />
+							</div>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="小于等于" name="wfp.money_to" />
 							</div>
 						</div>
-						<div align="left">
+						<div>
+							<label class="col-md-1 control-label">收款方</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="detail.date_to" />
+								<input type="text" class="form-control" name="wfp.receiver" />
 							</div>
 						</div>
-						<div align="left">
-							<label class="col-md-1 control-label">申请人</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control" name="detail.create_user" />
+
+					</div>
+					<div class="form-group">
+						<div>
+							<label class="col-md-1 control-label">项目</label>
+							<div class="col-md-2">
+								<select class="form-control"
+									data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="wfp.item" required="required"></select>
 							</div>
-						</div> -->
+						</div>
+						<div>
+							<label class="col-md-1 control-label">支付单号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="支付单号" name="wfp.pay_number" />
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
@@ -110,7 +133,8 @@
 	</div>
 
 	<script>
-		$(".finance").addClass("current").children("ol").css("display", "block");
+		$(".finance").addClass("current").children("ol")
+				.css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

@@ -96,8 +96,8 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部',value:chosenSales,event:{change:function(){fetchSummary();search()}}"
-										name="receivable.sales_name"></select>
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:$root.chosenSales,event:{change:function(){fetchSummary();search()}}"
+										name="receivable.sales"></select>
 								</div>
 							</div>
 						</s:if>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ClientChangeSaleLogMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientChangeSaleLogBean">
+		<result column="pre_sale_pk" property="pre_sale_pk" jdbcType="CHAR" />
+		<result column="client_pk" property="client_pk" jdbcType="CHAR" />
+		<result column="change_user" property="change_user" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="combine_client_pk" property="combine_client_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pre_sale_pk,
+		client_pk,
+		change_user,
+		type,
+		combine_client_pk,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from client_change_sale_log
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from client_change_sale_log
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ClientChangeSaleLogBean">
+
+		insert into client_change_sale_log
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pre_sale_pk != null">
+				pre_sale_pk,
+			</if>
+			<if test="client_pk != null">
+				client_pk,
+			</if>
+			<if test="change_user != null">
+				change_user,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="combine_client_pk != null">
+				combine_client_pk,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pre_sale_pk != null">
+				#{pre_sale_pk,jdbcType=CHAR},
+			</if>
+			<if test="client_pk != null">
+				#{client_pk,jdbcType=CHAR},
+			</if>
+			<if test="change_user != null">
+				#{change_user,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="combine_client_pk != null">
+				#{combine_client_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientChangeSaleLogBean">
+		update client_change_sale_log
+		<set>
+			<if test="pre_sale_pk != null">
+				pre_sale_pk = #{pre_sale_pk,jdbcType=CHAR},
+			</if>
+			<if test="client_pk != null">
+				client_pk = #{client_pk,jdbcType=CHAR},
+			</if>
+			<if test="change_user != null">
+				change_user = #{change_user,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="combine_client_pk != null">
+				combine_client_pk = #{combine_client_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientChangeSaleLogBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_change_sale_log
+	</select>
+</mapper>

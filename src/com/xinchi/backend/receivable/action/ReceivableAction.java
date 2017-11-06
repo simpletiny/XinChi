@@ -14,7 +14,6 @@ import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
-import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -33,15 +32,9 @@ public class ReceivableAction extends BaseAction {
 	private ReceivableService receivableService;
 	@Autowired
 	private UserDAO userDao;
-	private String sales_name;
+	private String user_number;
 
 	public String searchReceivableSummary() {
-		String user_number = "";
-		if (!SimpletinyString.isEmpty(sales_name)) {
-			UserBaseBean user = userDao.selectUserByName(sales_name);
-			user_number = user.getUser_number();
-		}
-
 		summary = receivableService.searchReceivableSummary(user_number);
 		if (null == summary)
 			summary = new ReceivableSummaryBean();
@@ -52,7 +45,8 @@ public class ReceivableAction extends BaseAction {
 	private List<ReceivableBean> receivables;
 
 	public String searchReceivableByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			receivable.setSales(sessionBean.getUser_number());
@@ -127,19 +121,19 @@ public class ReceivableAction extends BaseAction {
 		this.receivables = receivables;
 	}
 
-	public String getSales_name() {
-		return sales_name;
-	}
-
-	public void setSales_name(String sales_name) {
-		this.sales_name = sales_name;
-	}
-
 	public String getClient_employee_pks() {
 		return client_employee_pks;
 	}
 
 	public void setClient_employee_pks(String client_employee_pks) {
 		this.client_employee_pks = client_employee_pks;
+	}
+
+	public String getUser_number() {
+		return user_number;
+	}
+
+	public void setUser_number(String user_number) {
+		this.user_number = user_number;
 	}
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirTicketNeedMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketNeedBean">
+		<result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
+		<result column="ticket_client_number" property="ticket_client_number" jdbcType="VARCHAR" />
+		<result column="ticket_client_name" property="ticket_client_name" jdbcType="VARCHAR" />
+		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
+		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
+		<result column="people_count" property="people_count" jdbcType="BIGINT" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="VARCHAR" />
+		<result column="sale_order_pk" property="sale_order_pk" jdbcType="VARCHAR" />
+		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
+		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		confirm_flg,
+		ticket_client_number,
+		first_ticket_date,
+		first_from_to,
+		people_count,
+		team_number,
+		product_pk,
+		sale_order_pk,
+		air_ticket_cost,
+		standard_flg,
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_need
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirTicketNeedBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_need
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.confirm_flg,
+		A.ticket_client_number,
+		B.user_name AS
+		ticket_client_name,
+		A.first_ticket_date,
+		A.first_from_to,
+		A.people_count,
+		A.team_number,
+		A.product_pk,
+		A.sale_order_pk,
+		A.air_ticket_cost,
+		A.standard_flg,
+		substring_index(A.passengers,':',1) AS passenger
+		from air_ticket_need A LEFT JOIN
+		user_base B ON A.ticket_client_number = B.user_number
+		<where>
+			<if test="params.bo.status != null and params.bo.status !=''">
+				and A.confirm_flg in 
+				<foreach item="item" index="index" collection="params.bo.status" open="(" separator="," close=")">
+					#{params.bo.status[${index}]}
+				</foreach>
+			</if>
+				and A.air_ticket_cost IS NULL
+		</where>
+	</select>
+<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.confirm_flg,
+		A.ticket_client_number,
+		B.user_name AS
+		ticket_client_name,
+		A.first_ticket_date,
+		A.air_ticket_cost,
+		A.first_from_to,
+		A.people_count,
+		A.team_number,
+		A.product_pk,
+		A.sale_order_pk,
+		A.air_ticket_cost,
+		A.standard_flg
+		from air_ticket_need A LEFT JOIN
+		user_base B ON A.ticket_client_number = B.user_number
+		where A.air_ticket_cost is not null
+	</select>
+</mapper>

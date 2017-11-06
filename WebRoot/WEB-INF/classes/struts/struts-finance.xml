@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="finance" extends="default" namespace="/finance">
+		<action name="createCard" class="cardAction" method="createCard">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchCard" class="cardAction" method="searchCard">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchAllAccounts" class="cardAction" method="searchAllAccounts">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="checkAccount" class="cardAction" method="checkAccount">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="getAccountBalance" class="cardAction" method="getAccountBalance">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="signCardPurpose" class="cardAction" method="signCardPurpose">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchCardsByPurpose" class="cardAction" method="searchCardsByPurpose">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="createDetail" class="paymentDetailAction" method="createDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="createInnerDetail" class="paymentDetailAction" method="createInnerDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteDetail" class="paymentDetailAction" method="deleteDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchDetailByPk" class="paymentDetailAction" method="searchDetailByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateDetail" class="paymentDetailAction" method="updateDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchDetail" class="paymentDetailAction" method="searchDetail">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchDetailByPage" class="paymentDetailAction" method="searchDetailByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchReceivedDetailByPaymentDetailPk" class="paymentDetailAction" method="searchReceivedDetailByPaymentDetailPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!-- 搜索内转详情 -->
+		<action name="searchInnerTransferByPage" class="innerTransferAction" method="searchInnerTransferByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="importDetailExcel" class="paymentDetailAction" method="importDetailExcel">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="matchReceived" class="paymentDetailAction" method="matchReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<action name="matchOtherReceived" class="paymentDetailAction" method="matchOtherReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<action name="cancelMatchReceived" class="paymentDetailAction" method="cancelMatchReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	</package>
+
+</struts>

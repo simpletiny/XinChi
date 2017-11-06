@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="sale" extends="default" namespace="/sale">
+		<action name="createOrder" class="saleOrderAction" method="createOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchOrder" class="saleOrderAction" method="searchOrder">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchOrderByPage" class="saleOrderAction" method="searchOrderByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneOrder" class="saleOrderAction" method="searchOneOrder">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchOrderByTeamNumber" class="saleOrderAction" method="searchOrderByTeamNumber">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchOrderSupplier" class="saleOrderAction" method="searchOrderSupplier">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateOrder" class="saleOrderAction" method="updateOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="saveReceivableDetail" class="saleOrderAction" method="saveReceivableDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchReceivableDetails" class="saleOrderAction" method="searchReceivableDetails">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="deleteReceivableDetail" class="saleOrderAction" method="deleteReceivableDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="createFinalOrder" class="finalOrderAction" method="createFinalOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchFinalOrders" class="finalOrderAction" method="searchFinalOrders">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchFinalOrdersByPage" class="finalOrderAction" method="searchFinalOrdersByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneFinalOrder" class="finalOrderAction" method="searchOneFinalOrder">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchFinalOrderSupplier" class="finalOrderAction" method="searchFinalOrderSupplier">
+			<result name="success" type="json"></result>
+		</action>
+
+		<action name="rollBackFinalOrder" class="finalOrderAction" method="rollBackFinalOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<action name="searchReceivableSummary" class="receivableAction" method="searchReceivableSummary">
+			<result name="success" type="json"></result>
+		</action>
+
+		<action name="isSameFinancialBody" class="receivableAction" method="isSameFinancialBody">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<action name="searchReceivableByPage" class="receivableAction" method="searchReceivableByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="applyRidTail" class="receivedAction" method="applyRidTail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 单笔多付返还支出申请 -->
+		<action name="applyIfMorePay" class="receivedAction" method="applyIfMorePay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 代收申请 -->
+		<action name="applyCollect" class="receivedAction" method="applyCollect">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applySum" class="receivedAction" method="applySum">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyReceive" class="receivedAction" method="applyReceive">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyReceiveStrike" class="receivedAction" method="applyStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="rollBackReceived" class="receivedAction" method="rollBackReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchReceivedByPage" class="receivedAction" method="searchReceivedByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchByRelatedPks" class="receivedAction" method="searchByRelatedPks">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- payable action start -->
+		<action name="searchPayableByPage" class="payableAction" method="searchPayableByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPayableSummary" class="payableAction" method="searchPayableSummary">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="isSameFinancialBody2" class="payableAction" method="isSameFinancialBody2">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- payable action end -->
+
+		<!-- paid action start -->
+		<action name="applyBackRecive" class="paidAction" method="applyBackRecive">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyPay" class="paidAction" method="applyPay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyStrike" class="paidAction" method="applyStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="applyDeduct" class="paidAction" method="applyDeduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchPaidByPage" class="paidAction" method="searchPaidByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="rollBackPayApply" class="paidAction" method="rollBackPayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- paid action end -->
+		<!-- 销售工作报表 -->
+		<action name="searchSwrByPage" class="saleWorkReportAction" method="searchSwrByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

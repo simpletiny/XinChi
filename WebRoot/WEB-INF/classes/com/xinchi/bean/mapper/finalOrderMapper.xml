@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.FinalOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.FinalOrderBean" >
+	    <result column="team_number" property="team_number" jdbcType="VARCHAR" />
+	    <result column="product" property="product" jdbcType="VARCHAR" />
+	    <result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+	    <result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+	    <result column="return_date" property="return_date" jdbcType="VARCHAR" />
+	    <result column="days" property="days" jdbcType="INTEGER" />
+	    <result column="people_count" property="people_count" jdbcType="INTEGER" />
+	    <result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+	    <result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+	    <result column="receivable" property="receivable" jdbcType="DECIMAL" />
+	    <result column="payable" property="payable" jdbcType="DECIMAL" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="create_user_name" property="create_user_name" jdbcType="VARCHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="CHAR" />
+	    <result column="comment" property="comment" jdbcType="VARCHAR" />
+	    <result column="payment_comment" property="payment_comment" jdbcType="VARCHAR" />
+	    <result column="other_payment" property="other_payment" jdbcType="DECIMAL" />
+	    <result column="profit" property="profit" jdbcType="DECIMAL" />
+	    <result column="per_profit" property="per_profit" jdbcType="DECIMAL" />
+	    <result column="traffic_payment" property="traffic_payment" jdbcType="DECIMAL" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	team_number, 
+    	product, 
+    	departure_date, 
+    	confirm_date,
+    	return_date, 
+    	days, 
+    	people_count, 
+    	client_employee_pk, 
+    	client_employee_name, 
+    	receivable, 
+    	payable, 
+    	create_user, 
+    	update_user, 
+    	pk, 
+    	comment, 
+    	other_payment, 
+    	traffic_payment,
+    	payment_comment,
+    	create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from final_order
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  <select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from final_order
+    where team_number = #{team_number,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from final_order
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.FinalOrderBean" >
+  	
+    insert into final_order
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="team_number != null">
+	        team_number,
+	      </if>
+	 	<if test="product != null">
+	        product,
+	      </if>
+	 	<if test="departure_date != null">
+	        departure_date,
+	      </if>
+	 	<if test="confirm_date != null">
+	        confirm_date,
+	      </if>
+	 	<if test="return_date != null">
+	        return_date,
+	      </if>
+	 	<if test="days != null">
+	        days,
+	      </if>
+	 	<if test="people_count != null">
+	        people_count,
+	      </if>
+	 	<if test="client_employee_pk != null">
+	        client_employee_pk,
+	      </if>
+	 	<if test="client_employee_name != null">
+	        client_employee_name,
+	      </if>
+	 	<if test="receivable != null">
+	        receivable,
+	      </if>
+	 	<if test="payable != null">
+	        payable,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+	 	<if test="comment != null">
+	        comment,
+	      </if>
+	 	<if test="payment_comment != null">
+	        payment_comment,
+	      </if>
+	 	<if test="other_payment != null">
+	        other_payment,
+	      </if>
+	 	<if test="traffic_payment != null">
+	        traffic_payment,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="team_number != null">
+	        #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        #{product,jdbcType=VARCHAR},
+	      </if>
+    	<if test="departure_date != null">
+	        #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="confirm_date != null">
+	        #{confirm_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="return_date != null">
+	        #{return_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="days != null">
+	        #{days,jdbcType=INTEGER},
+	      </if>
+    	<if test="people_count != null">
+	        #{people_count,jdbcType=INTEGER},
+	      </if>
+    	<if test="client_employee_pk != null">
+	        #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="receivable != null">
+	        #{receivable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="payable != null">
+	        #{payable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="comment != null">
+	        #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        #{payment_comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="other_payment != null">
+	        #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="traffic_payment != null">
+	        #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=VARCHAR},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.FinalOrderBean" >
+    update final_order
+    <set >
+    	<if test="team_number != null">
+	        team_number = #{team_number,jdbcType=VARCHAR},
+	      </if>
+    	<if test="product != null">
+	        product = #{product,jdbcType=VARCHAR},
+	      </if>
+    	<if test="departure_date != null">
+	        departure_date = #{departure_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="confirm_date != null">
+	        confirm_date = #{confirm_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="return_date != null">
+	        return_date = #{return_date,jdbcType=VARCHAR},
+	      </if>
+    	<if test="days != null">
+	        days = #{days,jdbcType=INTEGER},
+	      </if>
+    	<if test="people_count != null">
+	        people_count = #{people_count,jdbcType=INTEGER},
+	      </if>
+    	<if test="client_employee_pk != null">
+	        client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="client_employee_name != null">
+	        client_employee_name = #{client_employee_name,jdbcType=VARCHAR},
+	      </if>
+    	<if test="receivable != null">
+	        receivable = #{receivable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="payable != null">
+	        payable = #{payable,jdbcType=DECIMAL},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=CHAR},
+	      </if>
+    	<if test="comment != null">
+	        comment = #{comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="payment_comment != null">
+	        payment_comment = #{payment_comment,jdbcType=VARCHAR},
+	      </if>
+    	<if test="other_payment != null">
+	        other_payment = #{other_payment,jdbcType=DECIMAL},
+	      </if>
+    	<if test="traffic_payment != null">
+	        traffic_payment = #{traffic_payment,jdbcType=DECIMAL},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.FinalOrderBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from final_order
+    <where>
+    	<if test="create_user != null">
+      		and   create_user = #{create_user,jdbcType=VARCHAR}
+        </if>
+    	<if test="team_number != null">
+      		and   team_number = #{team_number,jdbcType=VARCHAR}
+        </if>
+    </where>
+   </select>
+   
+   <select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+    select 
+   		A.team_number, 
+    	A.product, 
+    	A.departure_date, 
+    	A.confirm_date,
+    	A.return_date, 
+    	A.days, 
+    	A.traffic_payment, 
+    	A.people_count, 
+    	A.client_employee_pk, 
+    	C.name AS client_employee_name, 
+    	A.receivable, 
+    	A.payable, 
+    	A.other_payment, 
+    	(A.receivable - A.payable) as profit,
+    	CONVERT((A.receivable - A.payable)/A.people_count,decimal(12,2)) as per_profit,
+    	A.create_user,
+    	B.user_name as create_user_name,
+    	A.update_user, 
+    	A.pk, 
+    	A.comment,
+    	A.payment_comment,
+    	A.create_time,
+    	A.update_time
+    
+    from final_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+    LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+        <where>
+    	<if test="params.bo.create_user != null and params.bo.create_user !=''">
+	         and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+	      </if>
+	      	<if test="params.bo.team_number != null and params.bo.team_number !=''">
+	         and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+	      </if>
+	      	<if test="params.bo.product != null and params.bo.product !=''">
+	         and A.product like CONCAT('%', #{params.bo.product,jdbcType=VARCHAR},'%')
+	      </if>
+	      <if test="params.bo.create_user_name != null and params.bo.create_user_name !=''">
+	         and B.user_name = #{params.bo.create_user_name,jdbcType=VARCHAR}
+	      </if>
+	      <if test="params.bo.date_from != null and params.bo.date_from !=''">
+	         and A.confirm_date  &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+	      </if>
+	      <if test="params.bo.date_to != null and params.bo.date_to !=''">
+	         and A.confirm_date  &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+	      </if>
+    </where> 
+    ORDER BY A.departure_date
+    </select>
+</mapper>

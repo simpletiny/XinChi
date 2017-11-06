@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PayableSummaryMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PayableSummaryBean">
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="all_count" property="all_count" jdbcType="BIGINT" />
+		<result column="all_budget_balance" property="all_budget_balance" jdbcType="DECIMAL" />
+		<result column="all_final_balance" property="all_final_balance" jdbcType="DECIMAL" />
+		<result column="all_balance" property="all_balance" jdbcType="DECIMAL" />
+		<result column="current_month_count" property="current_month_count" jdbcType="BIGINT" />
+		<result column="current_month_budget_balance" property="current_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="current_month_final_balance" property="current_month_final_balance" jdbcType="DECIMAL" />
+		<result column="current_month_balance" property="current_month_balance" jdbcType="DECIMAL" />
+		<result column="one_month_count" property="one_month_count" jdbcType="BIGINT" />
+		<result column="one_month_budget_balance" property="one_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="one_month_final_balance" property="one_month_final_balance" jdbcType="DECIMAL" />
+		<result column="one_month_balance" property="one_month_balance" jdbcType="DECIMAL" />
+		<result column="two_month_count" property="two_month_count" jdbcType="BIGINT" />
+		<result column="two_month_budget_balance" property="two_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="two_month_final_balance" property="two_month_final_balance" jdbcType="DECIMAL" />
+		<result column="two_month_balance" property="two_month_balance" jdbcType="DECIMAL" />
+		<result column="three_month_count" property="three_month_count" jdbcType="BIGINT" />
+		<result column="three_month_budget_balance" property="three_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="three_month_final_balance" property="three_month_final_balance" jdbcType="DECIMAL" />
+		<result column="three_month_balance" property="three_month_balance" jdbcType="DECIMAL" />
+		<result column="earlier_month_count" property="earlier_month_count" jdbcType="BIGINT" />
+		<result column="earlier_month_budget_balance" property="earlier_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="earlier_month_final_balance" property="earlier_month_final_balance" jdbcType="DECIMAL" />
+		<result column="earlier_month_balance" property="earlier_month_balance" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		user_number,
+		user_name,
+		all_count,
+		all_budget_balance,
+		all_final_balance,
+		all_balance,
+		current_month_count,
+		current_month_budget_balance,
+		current_month_final_balance,
+		current_month_balance,
+		one_month_count,
+		one_month_budget_balance,
+		one_month_final_balance,
+		one_month_balance,
+		two_month_count,
+		two_month_budget_balance,
+		two_month_final_balance,
+		two_month_balance,
+		three_month_count,
+		three_month_budget_balance,
+		three_month_final_balance,
+		three_month_balance,
+		earlier_month_count,
+		earlier_month_budget_balance,
+		earlier_month_final_balance,
+		earlier_month_balance
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from payable_summary
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.PayableSummaryBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payable_summary
+	</select>
+
+	<select id="selectPayableSummary" parameterType="com.xinchi.bean.PayableSummaryBean" resultMap="BaseResultMap">
+		select
+		sum(all_count) AS all_count,
+		sum(all_budget_balance) AS all_budget_balance,
+		sum(all_final_balance) AS all_final_balance,
+		sum(all_balance) AS all_balance,
+		sum(current_month_count)
+		AS current_month_count,
+		sum(current_month_budget_balance) AS current_month_budget_balance,
+		sum(current_month_final_balance) AS
+		current_month_final_balance,
+		sum(current_month_balance) AS current_month_balance,
+		sum(one_month_count) AS one_month_count,
+		sum(one_month_budget_balance) AS one_month_budget_balance,
+		sum(one_month_final_balance) AS one_month_final_balance,
+		sum(one_month_balance) AS
+		one_month_balance,
+		sum(two_month_count) AS two_month_count,
+		sum(two_month_budget_balance) AS two_month_budget_balance,
+		sum(two_month_final_balance) AS
+		two_month_final_balance,
+		sum(two_month_balance) AS two_month_balance,
+		sum(three_month_count) AS three_month_count,
+		sum(three_month_budget_balance) AS
+		three_month_budget_balance,
+		sum(three_month_final_balance) AS three_month_final_balance,
+		sum(three_month_balance) AS three_month_balance,
+		sum(earlier_month_count) AS earlier_month_count,
+		sum(earlier_month_budget_balance) AS earlier_month_budget_balance,
+		sum(earlier_month_final_balance)
+		AS earlier_month_final_balance,
+		sum(earlier_month_balance) AS earlier_month_balance
+		from payable_summary
+	</select>
+
+	<select id="selectByUserNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from payable_summary
+		where user_number = #{user_number,jdbcType=VARCHAR}
+
+	</select>
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="product" extends="default" namespace="/product">
+		<action name="searchGroupsByPage" class="productGroupAction" method="searchGroupsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchGroupByPk" class="productGroupAction" method="searchByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchSuppliersByGroupPk" class="productGroupAction" method="searchSuppliersByGroupPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="createGroup" class="productGroupAction" method="createGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateGroup" class="productGroupAction" method="updateGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteGroup" class="productGroupAction" method="deleteGroup">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 产品管理 -->
+		<action name="searchProductsByPage" class="productAction" method="searchProductsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 产品架产品搜索 -->
+		<action name="searchOnSaleProducts" class="productAction" method="searchOnSaleProducts">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProduct" class="productAction" method="createProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateProduct" class="productAction" method="updateProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="onSaleProduct" class="productAction" method="onSaleProduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchProductByPk" class="productAction" method="searchProductByPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchProductAirTicketInfoByProductPk" class="productAction" method="searchProductAirTicketInfoByProductPk">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="searchProductAirTicketInfoByTeamNumber" class="productAction" method="searchProductAirTicketInfoByTeamNumber">
+			<result name="success" type="json"></result>
+		</action>
+		<!-- 保存产品机票信息 -->
+		<action name="saveAirTicket" class="productAction" method="saveAirTicket">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 产品报表 -->
+		<action name="searchProductReportByPage" class="productAction" method="searchProductReportByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 产品订单 -->
+		<action name="searchProductOrderByPage" class="productAction" method="searchProductOrderByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!-- 产品订单操作 start -->
+
+		<!-- 搜索产品供应商信息 -->
+		<action name="searchProductSuppliersByPk" class="productOrderOperationAction" method="searchProductSuppliersByPk">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 生成产品订单 -->
+		<action name="createOrderOperation" class="productOrderOperationAction" method="createOrderOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 确认产品订单 -->
+		<action name="confirmOperation" class="productOrderOperationAction" method="confirmOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 决算产品订单 -->
+		<action name="finalOperation" class="productOrderOperationAction" method="finalOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 搜索操作订单 -->
+		<action name="searchProductOrderOperationByPage" class="productOrderOperationAction" method="searchProductOrderOperationByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 通过团号搜索操作订单 -->
+		<action name="searchOperationByTeamNumber" class="productOrderOperationAction" method="searchOperationByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 通过团号搜索操作订单 -->
+		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 删除产品订单操作 -->
+		<action name="deleteOperation" class="productOrderOperationAction" method="deleteOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 打回订单操作至未决算状态 -->
+		<action name="rollBackOperation" class="productOrderOperationAction" method="rollBackOperation">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 产品订单操作 end -->
+	</package>
+</struts>

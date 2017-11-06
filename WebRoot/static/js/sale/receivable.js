@@ -19,7 +19,7 @@ var OrderContext = function() {
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
-			sales_name : self.chosenSales()
+			user_number : self.chosenSales()
 		}, function(data) {
 			self.recsum(data.summary);
 			$(".rmb").formatCurrency();
@@ -370,7 +370,7 @@ var OrderContext = function() {
 		var data = $("#form-strike").serialize();
 		var allot_json = '[';
 		var allot = $("[st='strike-allot']");
-		for ( var i = 0; i < allot.length; i++) {
+		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
 			var n = $(current).find("[st='strike-team_number']").val();
 			var r = $(current).find("[st='strike-received']").val();
@@ -532,12 +532,13 @@ var OrderContext = function() {
 			data += "&detail.allot_received=" + $(".amountRangeStart1").val();
 			var allot_json = '[';
 			var allot = $("[st='receive_allot']");
-			for ( var i = 0; i < allot.length; i++) {
+			for (var i = 0; i < allot.length; i++) {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
 				console.log(n);
 				var r = $(current).find("[st='receive_received']").val();
-				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+				allot_json += '{"team_number":"' + n + '",' + '"received":"'
+						+ r;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -587,9 +588,12 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
+				data) {
 			self.receivables(data.receivables);
+			console.log(data.receivables);
 
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {
@@ -654,15 +658,8 @@ var OrderContext = function() {
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
-	self.sales_name = ko.observableArray([]);
-	self.sales_number = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
-		$(self.sales()).each(function(idx, data) {
-			self.sales_name.push(data.user_name);
-			self.sales_number.push(data.user_number);
-		});
-
 	});
 	self.search = function() {
 		self.refresh();
@@ -680,13 +677,16 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
+			window.location.href = self.apiurl
+					+ "templates/sale/order-edit.jsp?key="
+					+ self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl
+				+ "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -723,9 +723,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.UserGroupRelatedMapper" >
+  <resultMap id="BaseResultMap" type="com.xinchi.bean.UserGroupRelatedBean" >
+    	<id column="id" property="id" jdbcType="CHAR" />
+	    <result column="user_pk" property="user_pk" jdbcType="CHAR" />
+	    <result column="group_pk" property="group_pk" jdbcType="CHAR" />
+	    <result column="update_user" property="update_user" jdbcType="VARCHAR" />
+	    <result column="create_user" property="create_user" jdbcType="VARCHAR" />
+	    <result column="pk" property="pk" jdbcType="VARCHAR" />
+	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+ 	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+  		
+    	user_pk, 
+    	group_pk, 
+    	update_user, 
+    	create_user, 
+    	pk, 
+    	create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_group_related
+    where pk = #{pk,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_group_related
+    where pk = #{pk,jdbcType=CHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.xinchi.bean.UserGroupRelatedBean" >
+  	
+    insert into user_group_related
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+	 	<if test="user_pk != null">
+	        user_pk,
+	      </if>
+	 	<if test="group_pk != null">
+	        group_pk,
+	      </if>
+	 	<if test="update_user != null">
+	        update_user,
+	      </if>
+	 	<if test="create_user != null">
+	        create_user,
+	      </if>
+	 	<if test="pk != null">
+	        pk,
+	      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	<if test="user_pk != null">
+	        #{user_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="group_pk != null">
+	        #{group_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        #{pk,jdbcType=VARCHAR},
+	      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=VARCHAR},
+      </if>
+       <if test="update_time != null">
+        #{update_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>		
+  </insert>
+  
+
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.UserGroupRelatedBean" >
+    update user_group_related
+    <set >
+    	<if test="user_pk != null">
+	        user_pk = #{user_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="group_pk != null">
+	        group_pk = #{group_pk,jdbcType=CHAR},
+	      </if>
+    	<if test="update_user != null">
+	        update_user = #{update_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="create_user != null">
+	        create_user = #{create_user,jdbcType=VARCHAR},
+	      </if>
+    	<if test="pk != null">
+	        pk = #{pk,jdbcType=VARCHAR},
+	      </if>
+      <if test="update_time != null">
+        update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk = #{pk,jdbcType=CHAR}
+  </update>
+ <select id="selectByParam" parameterType="com.xinchi.bean.UserGroupRelatedBean" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from user_group_related
+   </select>
+</mapper>

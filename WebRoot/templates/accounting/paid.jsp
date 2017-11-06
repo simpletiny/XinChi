@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -60,7 +59,8 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				支付<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				支付<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -70,31 +70,73 @@
 					<h3>支付信息</h3>
 					<div class="input-row clearfloat">
 
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<label class="l">支付单号</label>
-							<div class="ip">
+							<div class="ip" style="width: 55%">
 								<p class="ip-default" data-bind="text: wfp().pay_number"></p>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<label class="l">项目</label>
-							<div class="ip">
+							<div class="ip" style="width: 55%">
 								<p class="ip-default" data-bind="text: itemMapping[wfp().item]"></p>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<label class="l">收款方</label>
-							<div class="ip">
+							<div class="ip" style="width: 55%">
 								<p class="ip-default" data-bind="text: wfp().receiver"></p>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<label class="l">总金额</label>
-							<div class="ip">
+							<div class="ip" style="width: 55%">
 								<p class="ip-default" data-bind="text: wfp().money"></p>
 							</div>
 						</div>
 					</div>
+					<!-- ko ifnot: supplier() == null -->
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">公账账户名</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_name"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_number"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_bank"></p>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">私账账户名</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_name"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_number"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_bank"></p>
+							</div>
+						</div>
+					</div>
+					<!-- /ko -->
 				</div>
 				<form class="form-box info-form">
 					<input type="hidden" id="wfp_pk" value="<%=key%>" />
@@ -104,13 +146,14 @@
 							<div class="col-md-6 required">
 								<label class="l">支出账户</label>
 								<div class="ip">
-									<select class="form-control" name="account1" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" required="required"></select>
+									<select class="form-control" name="account1"
+										data-bind="options: accounts, optionsCaption: '-- 请选择 --',value: chosenAccount" required="required"></select>
 								</div>
 							</div>
 							<div class="col-md-6 required">
 								<label class="l">支出时间</label>
 								<div class="ip">
-									<input type="text" name="time1" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
+									<input type="text" name="time1" data-bind="value:current_min" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
 								</div>
 							</div>
 						</div>
@@ -119,19 +162,21 @@
 							<div class="col-md-6 required">
 								<label class="l">收款方账户名</label>
 								<div class="ip">
-									<input type="text" name="receiver1" class="ip-" placeholder="收款方账户名" required="required" />
+									<input type="text" name="receiver1" data-bind="value:supplier().personal_account_name" class="ip-" placeholder="收款方账户名" required="required" />
 								</div>
 							</div>
 							<div class="col-md-6 required">
 								<label class="l">支付金额</label>
 								<div class="ip">
-									<input type="number" data-bind="value: defaultMoney()" name="money1" class="ip-" placeholder="支付金额" required="required" />
+									<input type="number" data-bind="value: defaultMoney()" name="money1" class="ip-" placeholder="支付金额"
+										required="required" />
 								</div>
 							</div>
 						</div>
 						<div class="input-row clearfloat">
 							<div class="col-md-6">
-								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file1" /></a> <input type="hidden" name="voucherFile1" />
+								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file1" /></a> <input
+									type="hidden" name="voucherFile1" />
 							</div>
 							<div class="col-md-6"></div>
 						</div>
@@ -158,7 +203,8 @@
 				<div class="col-md-6 required">
 					<label class="l">支出账户</label>
 					<div class="ip">
-						<select class="form-control" name="account" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" required="required"></select>
+						<select class="form-control" name="account"
+							data-bind="options: accounts, optionsCaption: '-- 请选择 --'" required="required"></select>
 					</div>
 				</div>
 				<div class="col-md-6 required">
@@ -185,7 +231,8 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input type="hidden" name="voucherFile" />
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+						type="hidden" name="voucherFile" />
 				</div>
 				<div class="col-md-6"></div>
 			</div>
@@ -195,7 +242,8 @@
 	</div>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script>
-		$(".finance").addClass("current").children("ol").css("display", "block");
+		$(".finance").addClass("current").children("ol")
+				.css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

@@ -39,7 +39,7 @@ var ReceivedContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "detail.date_from=" + self.dateFrom() + "&detail.date_to=" + self.dateTo() + "&detail.status=I";
+		var param = "detail.date_from=" + self.dateFrom() + "&detail.date_to=" + self.dateTo() + "&detail.statuses=I";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {

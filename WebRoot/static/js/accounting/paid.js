@@ -3,6 +3,7 @@ var AgencyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.wfpPk = $("#wfp_pk").val();
 	self.wfp = ko.observable({});
+	self.supplier = ko.observable({});
 	self.genders = [];
 
 	// 项目映射
@@ -16,12 +17,16 @@ var AgencyContext = function() {
 		'G' : '工资费用',
 		'Q' : '其他支出'
 	};
-
+	var now = new Date();
+	self.current_min = now.Format("yyyy-MM-dd hh:mm");
+	self.chosenAccount = ko.observable();
 	// 获取所有账户
 	self.accounts = ko.observableArray([]);
+
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
 			self.accounts(data.accounts);
+			self.chosenAccount("交行倒账9363");
 		} else {
 			fail_msg("不存在账户，无法建立明细账！");
 		}
@@ -35,6 +40,7 @@ var AgencyContext = function() {
 	}, function(data) {
 		if (data.wfp) {
 			self.wfp(data.wfp);
+			self.supplier(data.supplier);
 			self.defaultMoney(self.wfp().money);
 		} else {
 			fail_msg("待支付信息不存在！");
@@ -58,12 +64,16 @@ var AgencyContext = function() {
 		}
 		var prev = $("#div_add").prev();
 		$(prev).find("[name='account']").attr("name", "account" + self.count);
+		$(prev).find("[name^='account']").val("交行倒账9363");
 		$(prev).find("[name='time']").attr("name", "time" + self.count);
+		$(prev).find("[name^='time']").val(self.current_min);
 		$(prev).find("[name='receiver']").attr("name", "receiver" + self.count);
+		$(prev).find("[name^='receiver']").val(
+				self.supplier().personal_account_name);
 		$(prev).find("[name='money']").attr("name", "money" + self.count);
 		$(prev).find("[name='file']").attr("name", "file" + self.count);
-		$(prev).find("[name='voucherFile']").attr("name", "voucherFile" + self.count);
-
+		$(prev).find("[name='voucherFile']").attr("name",
+				"voucherFile" + self.count);
 		$(':file').change(function() {
 			changeFile(this);
 		});
@@ -81,14 +91,20 @@ var AgencyContext = function() {
 		var paidJson = '[';
 		var allAccount = $("form").find("select[name^='account']");
 
-		for ( var i = 0; i < allAccount.length; i++) {
+		for (var i = 0; i < allAccount.length; i++) {
 			var current = $(allAccount[i]).parent().parent().parent().parent();
 			var account = $(allAccount[i]).val();
 			var time = $(current).find("[name^='time']").val();
 			var receiver = $(current).find("[name^='receiver']").val();
 			var money = $(current).find("[name^='money']").val();
 			var voucherFile = $(current).find("[name^='voucherFile']").val();
-			paidJson += '{"account":+"' + account + '","time":"' + time + '","receiver":"' + receiver + '","money":"' + money + '","voucherFile":"' + voucherFile + '"';
+			if (voucherFile == "") {
+				fail_msg("请上传凭证");
+				return;
+			}
+			paidJson += '{"account":+"' + account + '","time":"' + time
+					+ '","receiver":"' + receiver + '","money":"' + money
+					+ '","voucherFile":"' + voucherFile + '"';
 
 			if (i == allAccount.length - 1) {
 				paidJson += '}';
@@ -100,24 +116,28 @@ var AgencyContext = function() {
 		paidJson += ']';
 
 		startLoadingSimpleIndicator("保存中");
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/pay',
-			data : "json=" + paidJson + "&voucher_number=" + self.wfp().pay_number
-		}).success(function(str) {
-			if (str == "success") {
-				window.location.href = self.apiurl + "templates/accounting/waiting-for-paid.jsp";
-			} else if (str == "time") {
-				fail_msg("同一账户在同一时间下已存在支出！");
-				endLoadingIndicator();
-			}
-		});
+		$.ajax(
+				{
+					type : "POST",
+					url : self.apiurl + 'accounting/pay',
+					data : "json=" + paidJson + "&voucher_number="
+							+ self.wfp().pay_number
+				}).success(
+				function(str) {
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/accounting/waiting-for-paid.jsp";
+					} else if (str == "time") {
+						fail_msg("同一账户在同一时间下已存在支出！");
+						endLoadingIndicator();
+					}
+				});
 	};
 
 	self.caculateSum = function() {
 		var allMoney = $("form").find("[name^='money']");
 		var sum = 0;
-		for ( var i = 0; i < allMoney.length; i++) {
+		for (var i = 0; i < allMoney.length; i++) {
 			sum += ($(allMoney[i]).val() - 0);
 		}
 		if (sum == self.wfp().money) {
@@ -171,7 +191,8 @@ function changeFile(thisx) {
 	};
 	xhr.onload = function() {
 		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
+			var fileName = this.getResponseHeader("Content-Disposition").split(
+					";")[1].split("=")[1];
 			var blob = this.response;
 			var deleteButton = $("<div class='delete'>删除</div>");
 
@@ -191,11 +212,14 @@ function changeFile(thisx) {
 					img.width = initWidth;
 				}
 
-				$(img).mouseenter(function() {
-					deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
-					deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
-					deleteButton.show();
-				});
+				$(img).mouseenter(
+						function() {
+							deleteButton.css("top", $(img).offset().top
+									+ img.height / 2 - 25);
+							deleteButton.css("left", $(img).offset().left
+									+ img.width / 2 - 50);
+							deleteButton.show();
+						});
 				$(img).mouseout(function() {
 					deleteButton.hide();
 				});

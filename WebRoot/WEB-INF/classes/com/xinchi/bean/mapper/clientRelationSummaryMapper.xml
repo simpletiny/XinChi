@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ClientRelationSummaryMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientRelationSummaryBean">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="sales" property="sales" jdbcType="VARCHAR" />
+		<result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
+		<result column="year_order_count" property="year_order_count" jdbcType="BIGINT" />
+		<result column="month_order_count" property="month_order_count" jdbcType="BIGINT" />
+		<result column="week_order_count" property="week_order_count" jdbcType="BIGINT" />
+		<result column="last_confirm_date" property="last_confirm_date" jdbcType="VARCHAR" />
+		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
+		<result column="visit_count" property="visit_count" jdbcType="BIGINT" />
+		<result column="accurate_count" property="accurate_count" jdbcType="BIGINT" />
+		<result column="last_visit_period" property="last_visit_period" jdbcType="INTEGER" />
+		<result column="chat_count" property="chat_count" jdbcType="BIGINT" />
+		<result column="last_chat_period" property="last_chat_period" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="last_receivable_period" property="last_receivable_period" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="relation_level" property="relation_level" jdbcType="VARCHAR" />
+		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
+		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
+		<result column="last_client_visit_target" property="last_client_visit_target" jdbcType="VARCHAR" />
+		<result column="last_accurate_sale_summary" property="last_accurate_sale_summary" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ClientSummaryMap" type="com.xinchi.bean.ClientSummaryDto">
+		<result column="level" property="level" jdbcType="VARCHAR" />
+		<result column="client_count" property="client_count" jdbcType="INTEGER" />
+		<result column="month_order_count" property="month_order_count" jdbcType="INTEGER" />
+		<result column="month_visit_count" property="month_visit_count" jdbcType="INTEGER" />
+		<result column="week_order_count" property="week_order_count" jdbcType="INTEGER" />
+		<result column="week_visit_count" property="week_visit_count" jdbcType="INTEGER" />
+		<result column="month_accurate_sale_count" property="month_accurate_sale_count" jdbcType="INTEGER" />
+		<result column="week_accurate_sale_count" property="week_accurate_sale_count" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		client_employee_name,
+		client_employee_pk,
+		sales,
+		sales_name,
+		delete_flg,
+		relation_level,
+		back_level,
+		market_level,
+		month_order_count,
+		last_confirm_date,
+		last_order_period,
+		receivable,
+		last_receivable_period,
+		last_client_visit_target,
+		last_accurate_sale_summary
+	</sql>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientRelationSummaryBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_relation_summary
+	</select>
+
+	<select id="selectMarketLevelSummary" parameterType="java.lang.String" resultMap="ClientSummaryMap">
+		SELECT 
+		    COUNT(distinct A.pk) as client_count,
+		    SUM(IF(LEFT(C.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        C.order_count,
+		        0)) as month_order_count,
+		    SUM(IF(C.order_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and C.order_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        C.order_count,
+		        0)) AS week_order_count,
+		    SUM(IF(LEFT(B.visit_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        B.visit_count,
+		        0)) as month_visit_count,
+		    SUM(IF(B.visit_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and B.visit_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        B.visit_count,
+		        0)) AS week_visit_count,
+		    SUM(IF(LEFT(D.accurate_sale_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        D.accurate_sale_count,
+		        0)) as month_accurate_sale_count,
+		    SUM(IF(D.accurate_sale_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and D.accurate_sale_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        D.accurate_sale_count,
+		        0)) AS week_accurate_sale_count,
+		    A.market_level as level
+		from
+		    client_employee A
+		        LEFT JOIN
+		    view_visit_count B ON A.pk = B.client_employee_pk
+		        LEFT JOIN
+		    view_order_count C ON A.pk = C.client_employee_pk
+		        LEFT JOIN
+		    view_accurate_sale_count D ON A.pk = D.client_employee_pk
+		        LEFT JOIN
+		    user_base E ON A.sales = E.pk
+		<where>
+			<if test="_parameter != null and _parameter !=''">
+				and (A.sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
+			</if>
+			and A.delete_flg='N'
+		</where>
+		GROUP BY A.market_level
+		HAVING level is not null AND level!=''
+		ORDER BY field(level,'未知','主导级','引领级','左右级','普通级','跟随级','玩闹级')
+	</select>
+
+	<select id="selectBackLevelSummary" parameterType="java.lang.String" resultMap="ClientSummaryMap">
+		SELECT 
+		    COUNT(distinct A.pk) as client_count,
+		    SUM(IF(LEFT(C.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        C.order_count,
+		        0)) as month_order_count,
+		    SUM(IF(C.order_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and C.order_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        C.order_count,
+		        0)) AS week_order_count,
+		    SUM(IF(LEFT(B.visit_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        B.visit_count,
+		        0)) as month_visit_count,
+		    SUM(IF(B.visit_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and B.visit_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        B.visit_count,
+		        0)) AS week_visit_count,
+		    SUM(IF(LEFT(D.accurate_sale_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        D.accurate_sale_count,
+		        0)) as month_accurate_sale_count,
+		    SUM(IF(D.accurate_sale_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and D.accurate_sale_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        D.accurate_sale_count,
+		        0)) AS week_accurate_sale_count,
+		    A.back_level as level
+		from
+		    client_employee A
+		        LEFT JOIN
+		    view_visit_count B ON A.pk = B.client_employee_pk
+		        LEFT JOIN
+		    view_order_count C ON A.pk = C.client_employee_pk
+		        LEFT JOIN
+		    view_accurate_sale_count D ON A.pk = D.client_employee_pk
+		        LEFT JOIN
+		    user_base E ON A.sales = E.pk
+
+		<where>
+			<if test="_parameter != null and _parameter !=''">
+				and (A.sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
+			</if>
+			and A.delete_flg='N'
+		</where>
+		GROUP BY A.back_level
+		HAVING level is not null AND level!=''
+		ORDER BY field(level,'未知','提前','及时','定期','拖拉','费劲','垃圾')
+	</select>
+
+	<select id="selectRelationLevelSummary" parameterType="java.lang.String" resultMap="ClientSummaryMap">
+		SELECT 
+		    COUNT(distinct A.pk) as client_count,
+		    SUM(IF(LEFT(C.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        C.order_count,
+		        0)) as month_order_count,
+		    SUM(IF(C.order_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and C.order_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        C.order_count,
+		        0)) AS week_order_count,
+		    SUM(IF(LEFT(B.visit_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        B.visit_count,
+		        0)) as month_visit_count,
+		    SUM(IF(B.visit_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and B.visit_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        B.visit_count,
+		        0)) AS week_visit_count,
+		    SUM(IF(LEFT(D.accurate_sale_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        D.accurate_sale_count,
+		        0)) as month_accurate_sale_count,
+		    SUM(IF(D.accurate_sale_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and D.accurate_sale_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        D.accurate_sale_count,
+		        0)) AS week_accurate_sale_count,
+		    A.relation_level as level
+		from
+		    client_employee A
+		        LEFT JOIN
+		    view_visit_count B ON A.pk = B.client_employee_pk
+		        LEFT JOIN
+		    view_order_count C ON A.pk = C.client_employee_pk
+		        LEFT JOIN
+		    view_accurate_sale_count D ON A.pk = D.client_employee_pk
+		        LEFT JOIN
+		    user_base E ON A.sales = E.pk
+		<where>
+			<if test="_parameter != null and _parameter !=''">
+				and (A.sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
+			</if>
+			and A.delete_flg='N'
+		</where>
+		GROUP BY A.relation_level
+		HAVING level is not null AND level!=''
+		ORDER BY field(level,'朋友级','商务级','市场级','新增级','排斥级')
+	</select>
+
+	<select id="selectSummary" parameterType="java.lang.String" resultMap="ClientSummaryMap">
+		SELECT 
+		    COUNT(distinct A.pk) as client_count,
+		    SUM(IF(LEFT(C.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        C.order_count,
+		        0)) as month_order_count,
+		    SUM(IF(C.order_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and C.order_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        C.order_count,
+		        0)) AS week_order_count,
+		    SUM(IF(LEFT(B.visit_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        B.visit_count,
+		        0)) as month_visit_count,
+		    SUM(IF(B.visit_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and B.visit_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        B.visit_count,
+		        0)) AS week_visit_count,
+		
+		    SUM(IF(LEFT(D.accurate_sale_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+		        D.accurate_sale_count,
+		        0)) as month_accurate_sale_count,
+		    SUM(IF(D.accurate_sale_date >= DATE_SUB(CURDATE(),
+		            INTERVAL WEEKDAY(CURDATE()) DAY)
+		            and D.accurate_sale_date &lt;= DATE_SUB(curdate(),
+		            INTERVAL WEEKDAY(curdate()) - 6 DAY),
+		        D.accurate_sale_count,
+		        0)) AS week_accurate_sale_count,
+		    '全部' as level
+		    from
+		    client_employee A
+		        LEFT JOIN
+		    view_visit_count B ON A.pk = B.client_employee_pk
+		        LEFT JOIN
+		    view_order_count C ON A.pk = C.client_employee_pk
+		        LEFT JOIN
+		    view_accurate_sale_count D ON A.pk = D.client_employee_pk
+		        LEFT JOIN
+		    user_base E ON A.sales = E.pk
+		<where>
+			<if test="_parameter != null and _parameter !=''">
+				and (A.sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
+			</if>
+			and A.delete_flg='N'
+		</where>
+		HAVING level is not null
+	</select>
+
+	<select id="selectClientCount" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(*) from client_employee
+		<where>
+			<if test="_parameter != null and _parameter !=''">
+				and (sales_name like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
+			</if>
+			and delete_flg='N'
+		</where>
+	</select>
+	<select id="selectWeekOrder" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from budget_order A left JOIN user_base B on A.create_user = B.user_number
+		<where>
+			and A.confirm_date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
+			and A.confirm_date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) -
+			6 DAY)
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMonthOrder" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from budget_order A left JOIN user_base B on A.create_user = B.user_number
+		<where>
+			and LEFT(A.confirm_date,7)=DATE_FORMAT(NOW(),'%Y-%m')
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectYesterdayVisit" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and A.date = DATE_SUB(current_date, INTERVAL 1 DAY)
+			and A.type='VISIT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectWeekVisit" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and A.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
+			and A.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY)
+			and
+			A.type='VISIT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectMonthVisit" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and LEFT(A.date,7)=DATE_FORMAT(NOW(),'%Y-%m')
+			and A.type='VISIT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectYesterdayChat" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and A.date = DATE_SUB(current_date, INTERVAL 1 DAY)
+			and A.type='CHAT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectWeekChat" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and A.date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
+			and A.date &lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) - 6 DAY)
+			and
+			A.type='CHAT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectMonthChat" parameterType="java.lang.String" resultType="java.lang.String">
+		select count(A.pk) from client_visit A LEFT JOIN user_base B on A.create_user= B.user_number
+		<where>
+			and LEFT(A.date,7)=DATE_FORMAT(NOW(),'%Y-%m')
+			and A.type='CHAT'
+			<if test="_parameter != null and _parameter !=''">
+				and B.user_name = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_relation_summary
+		<where>
+			<if test="params.bo.sales != null and params.bo.sales !=''">
+				and (sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
+				and (sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and (client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%'))
+			</if>
+			and delete_flg='N'
+		</where>
+		ORDER BY last_receivable_period DESC,last_order_period DESC
+	</select>
+</mapper>

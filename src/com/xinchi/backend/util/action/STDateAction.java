@@ -16,7 +16,7 @@ public class STDateAction extends BaseAction {
 	private String current_date;
 
 	public String currentDate() {
-		current_date = DateUtil.getDateStr("yyyy-MM-dd");
+		current_date = DateUtil.getDateStr("yyyy-MM-dd HH:mm:ss");
 		return SUCCESS;
 	}
 

@@ -22,6 +22,7 @@ import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
+import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ProductBean;
@@ -121,9 +122,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			budgetOrder.setComment(bean.getComment());
 			budgetOrder.setReceivable(bean.getReceivable());
 			budgetOrder.setConfirm_date(bean.getConfirm_date());
-			budgetOrder
-					.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
-							: bean.getFy())));
+			budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost())
+					.add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
 
 			String other_cost_comment = "";
 			if (bean.getFy() != null) {
@@ -131,7 +131,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			}
 
 			budgetOrder.setPayment_comment(other_cost_comment);
-			budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+			budgetOrder.setPeople_count(
+					bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
 			budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
 			budgetOrderDao.insert(budgetOrder);
 
@@ -162,7 +163,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				airTicketOrderDao.update(airTicketOrder);
 				AirTicketNameListBean airTicketNameListOption = new AirTicketNameListBean();
 				airTicketNameListOption.setTicket_order_pk(airTicketOrder.getPk());
-				List<AirTicketNameListBean> airTicketNameList = airTicketNameListDao.selectByParam(airTicketNameListOption);
+				List<AirTicketNameListBean> airTicketNameList = airTicketNameListDao
+						.selectByParam(airTicketNameListOption);
 
 				if (null != airTicketNameList && airTicketNameList.size() > 0) {
 					for (AirTicketNameListBean passenger : airTicketNameList) {
@@ -191,7 +193,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 		// 更新名单
 		// 删除之前保存的名单
-		nameListDao.selectByTeamNumber(bean.getTeam_number());
+		nameListDao.deleteByTeamNumber(bean.getTeam_number());
 		String[] names = bean.getName_list().split(";");
 		if (names.length != 0) {
 			for (String str : names) {
@@ -220,9 +222,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		budgetOrder.setComment(bean.getComment());
 		budgetOrder.setReceivable(bean.getReceivable());
 		budgetOrder.setConfirm_date(bean.getConfirm_date());
-		budgetOrder
-				.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
-						: bean.getFy())));
+		budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost())
+				.add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
 
 		String other_cost_comment = "";
 		if (bean.getFy() != null) {
@@ -230,7 +231,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		}
 
 		budgetOrder.setPayment_comment(other_cost_comment);
-		budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+		budgetOrder.setPeople_count(
+				bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
 		budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
 		budgetOrderDao.updateBudgetOrder(budgetOrder);
 
@@ -243,7 +245,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		receivable.setProduct(product.getName());
 		receivable.setPeople_count(budgetOrder.getPeople_count());
 		receivable.setBudget_receivable(bean.getReceivable());
-		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivable.setBudget_balance(bean.getReceivable()
+				.subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
 		receivableDao.update(receivable);
 
 		dao.update(bean);
@@ -253,7 +256,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	private void saveFile(BudgetStandardOrderBean bean) {
 		String user_number = "";
 		if (null == bean.getCreate_user()) {
-			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 			user_number = sessionBean.getUser_number();
 		} else {
 			user_number = bean.getCreate_user();
@@ -316,6 +320,18 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	@Override
 	public BudgetStandardOrderBean selectByTeamNumber(String team_number) {
 		return dao.selectByTeamNumber(team_number);
+	}
+
+	@Override
+	public String rollBackCOrder(String order_pk) {
+		BudgetStandardOrderBean order = dao.selectByPrimaryKey(order_pk);
+		// 删除之前的名单
+		nameListDao.deleteByTeamNumber(order.getTeam_number());
+		order.setTeam_number("");
+		order.setConfirm_flg("N");
+		dao.update(order);
+
+		return SUCCESS;
 	}
 
 }

@@ -187,7 +187,48 @@
 							</div>
 						</div>
 					</div>
-
+					<hr noshade color="#0066cc" />
+					<h3>账户信息</h3>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">公账账户名</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_name" maxlength="100" placeholder="公账账户名" name="supplier.corporate_account_name" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_number" maxlength="100" placeholder="账户账号" name="supplier.corporate_account_number" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_bank" maxlength="100" placeholder="开户行" name="supplier.corporate_account_bank" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">私账账户名</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_name" maxlength="100" placeholder="私账账户名" name="supplier.personal_account_name" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_number" maxlength="100" placeholder="账户账号" name="supplier.personal_account_number" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width:65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_bank" maxlength="100" placeholder="开户行" name="supplier.personal_account_bank" />
+							</div>
+						</div>
+					</div>
 					<hr noshade color="#0066cc" />
 					<h3>相关文件</h3>
 					<h4>营业执照</h4>

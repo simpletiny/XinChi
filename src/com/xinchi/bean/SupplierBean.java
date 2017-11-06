@@ -57,6 +57,14 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	private String type;
 
+	// 供应商账户信息
+	private String corporate_account_name;
+	private String corporate_account_number;
+	private String corporate_account_bank;
+	private String personal_account_name;
+	private String personal_account_number;
+	private String personal_account_bank;
+
 	public String getSupplier_name() {
 		return supplier_name;
 	}
@@ -263,6 +271,54 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getCorporate_account_name() {
+		return corporate_account_name;
+	}
+
+	public void setCorporate_account_name(String corporate_account_name) {
+		this.corporate_account_name = corporate_account_name;
+	}
+
+	public String getCorporate_account_number() {
+		return corporate_account_number;
+	}
+
+	public void setCorporate_account_number(String corporate_account_number) {
+		this.corporate_account_number = corporate_account_number;
+	}
+
+	public String getCorporate_account_bank() {
+		return corporate_account_bank;
+	}
+
+	public void setCorporate_account_bank(String corporate_account_bank) {
+		this.corporate_account_bank = corporate_account_bank;
+	}
+
+	public String getPersonal_account_name() {
+		return personal_account_name;
+	}
+
+	public void setPersonal_account_name(String personal_account_name) {
+		this.personal_account_name = personal_account_name;
+	}
+
+	public String getPersonal_account_number() {
+		return personal_account_number;
+	}
+
+	public void setPersonal_account_number(String personal_account_number) {
+		this.personal_account_number = personal_account_number;
+	}
+
+	public String getPersonal_account_bank() {
+		return personal_account_bank;
+	}
+
+	public void setPersonal_account_bank(String personal_account_bank) {
+		this.personal_account_bank = personal_account_bank;
 	}
 
 }

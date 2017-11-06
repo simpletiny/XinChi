@@ -322,11 +322,10 @@ Array.prototype.contains = function(obj) {
 	}
 	return false;
 };
-var getServerDate = function() {
+var st_server_time;
+var getServerTime = function() {
 	$.getJSON($("#hidden_apiurl").val() + 'simpletiny/currentDate', {}, function(data) {
-		var x = new Date(data.current_date);
-		x.setMonth(x.getMonth() + 1);
-		console.log(x.Format("yyyy-MM-dd"));
+		st_server_time = new Date(data.current_date);
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});

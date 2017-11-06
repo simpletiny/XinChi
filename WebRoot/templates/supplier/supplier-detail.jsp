@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -20,7 +19,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				查看财务主体信息<a href="<%=basePath%>/templates/supplier/supplier.jsp" class="cancel-create">返回</a>
+				查看财务主体信息<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create">返回</a>
 			</h2>
 		</div>
 
@@ -152,9 +151,52 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
-							<label class="ll">出生年</label>
+							<label class="l">出生年</label>
 							<div class="ip">
 								<p class="ip-" data-bind="text: supplier().body_birth_year"></p>
+							</div>
+						</div>
+					</div>
+
+					<hr />
+					<h3>账户信息</h3>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">公账账户名</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_name"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_number"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().corporate_account_bank"></p>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">私账账户名</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_name"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_number"></p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<p class="ip-" data-bind="text: supplier().personal_account_bank"></p>
 							</div>
 						</div>
 					</div>
@@ -162,34 +204,35 @@
 					<h3>相关文件</h3>
 					<h4>营业执照</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" type="hidden" id="txt-licence"/>
+						<input st="st-file-name" type="hidden" id="txt-licence" />
 					</div>
 					<h4>经营许可证</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" type="hidden" id="txt-permit"/>
+						<input st="st-file-name" type="hidden" id="txt-permit" />
 					</div>
 					<h4>责任险</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" type="hidden" id="txt-insurance"/>
+						<input st="st-file-name" type="hidden" id="txt-insurance" />
 					</div>
 					<h4>法人身份证</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" type="hidden" id="txt-corporate"/>
+						<input st="st-file-name" type="hidden" id="txt-corporate" />
 					</div>
 					<h4>负责人身份证</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" type="hidden" id="txt-chief"/>
+						<input st="st-file-name" type="hidden" id="txt-chief" />
 					</div>
 					<h4>其他文件</h4>
 					<div class="input-row clearfloat">
-						 <input st="st-file-name" name="file6" type="hidden" id="txt-other"/>
+						<input st="st-file-name" name="file6" type="hidden" id="txt-other" />
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<script>
-		$(".supplier").addClass("current").children("ol").css("display", "block");
+		$(".supplier").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/js/supplier/supplier-detail.js"></script>
 </body>

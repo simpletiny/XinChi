@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -45,7 +44,8 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				供应商编辑<a href="<%=basePath%>/templates/supplier/supplier.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				供应商编辑<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -58,14 +58,15 @@
 						<div class="col-md-6 required">
 							<label class="l">主体全称</label>
 							<div class="ip">
-								<input type="text" id="name" class="ip-default" data-bind="value: supplier().supplier_name" placeholder="主体名称" name="supplier.supplier_name" required="required" />
+								<input type="text" id="name" class="ip-default" data-bind="value: supplier().supplier_name" placeholder="主体名称"
+									name="supplier.supplier_name" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">主体简称</label>
 							<div class="ip">
-								<input type="text" id="name" maxlength="8" class="ip-default" data-bind="value: supplier().supplier_short_name" placeholder="主体简称（8个字以内）" name="supplier.supplier_short_name"
-									required="required" />
+								<input type="text" id="name" maxlength="8" class="ip-default" data-bind="value: supplier().supplier_short_name"
+									placeholder="主体简称（8个字以内）" name="supplier.supplier_short_name" required="required" />
 							</div>
 						</div>
 					</div>
@@ -73,13 +74,16 @@
 						<div class="col-md-6">
 							<label class="l">信用代码</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: supplier().credit_code" placeholder="信用代码" name="supplier.credit_code" />
+								<input type="text" class="ip-" data-bind="value: supplier().credit_code" placeholder="信用代码"
+									name="supplier.credit_code" />
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">地区</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: supplier().supplier_provice,event:{change:ter}" name="supplier.supplier_provice" required="required"></select>
+								<select class="form-control"
+									data-bind="options: provices, optionsCaption: '-- 省份--',value: supplier().supplier_provice,event:{change:ter}"
+									name="supplier.supplier_provice" required="required"></select>
 							</div>
 							<div class="ip" style="width: 35%">
 								<select class="form-control" id="city" name="supplier.supplier_city" required="required">
@@ -101,7 +105,8 @@
 						<div class="col-md-6 required">
 							<label class="l">结款方式</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: paymentTypes,value: supplier().payment_type" name="supplier.payment_type" required="required"></select>
+								<select class="form-control" data-bind="options: paymentTypes,value: supplier().payment_type"
+									name="supplier.payment_type" required="required"></select>
 							</div>
 
 
@@ -119,7 +124,8 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" data-bind="value: supplier().comment" name="supplier.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="15" data-bind="value: supplier().comment" name="supplier.comment"
+									placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
 					</div>
@@ -129,13 +135,16 @@
 						<div class="col-md-6">
 							<label class="l">法人姓名</label>
 							<div class="ip">
-								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_name" maxlength="10" placeholder="法人姓名" name="supplier.corporate_name" />
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_name" maxlength="10"
+									placeholder="法人姓名" name="supplier.corporate_name" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">性别</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: genders,optionsCaption: '-- 性别--',value: supplier().corporate_sex" name="supplier.corporate_sex"></select>
+								<select class="form-control"
+									data-bind="options: genders,optionsCaption: '-- 性别--',value: supplier().corporate_sex"
+									name="supplier.corporate_sex"></select>
 							</div>
 						</div>
 					</div>
@@ -143,7 +152,8 @@
 						<div class="col-md-6">
 							<label class="l">身份证号</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: supplier().corporate_id" placeholder="身份证号" name="supplier.corporate_id" />
+								<input type="text" class="ip-" data-bind="value: supplier().corporate_id" placeholder="身份证号"
+									name="supplier.corporate_id" />
 							</div>
 						</div>
 					</div>
@@ -153,13 +163,15 @@
 						<div class="col-md-6 required">
 							<label class="l">姓名</label>
 							<div class="ip">
-								<input type="text" class="ip- date-picker" data-bind="value: supplier().body_name" placeholder="姓名" name="supplier.body_name" required="required" />
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().body_name" placeholder="姓名"
+									name="supplier.body_name" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">性别</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: genders,value: supplier().body_sex" name="supplier.body_sex" required="required"></select>
+								<select class="form-control" data-bind="options: genders,value: supplier().body_sex" name="supplier.body_sex"
+									required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -173,7 +185,8 @@
 						<div class="col-md-6">
 							<label class="l">微信</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: supplier().body_wechat" placeholder="微信" name="supplier.body_wechat" />
+								<input type="text" class="ip-" data-bind="value: supplier().body_wechat" placeholder="微信"
+									name="supplier.body_wechat" />
 							</div>
 						</div>
 					</div>
@@ -181,23 +194,73 @@
 						<div class="col-md-6 required">
 							<label class="l">手机号</label>
 							<div class="ip">
-								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: supplier().body_cellphone" placeholder="手机号" name="supplier.body_cellphone" required="required" />
+								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: supplier().body_cellphone"
+									placeholder="手机号" name="supplier.body_cellphone" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">出生年</label>
 							<div class="ip">
-								<input type="text" class="ip- date_year" maxlength="4" data-bind="value: supplier().body_birth_year" placeholder="出生年" name="supplier.body_birth_year" />
+								<input type="text" class="ip- date_year" maxlength="4" data-bind="value: supplier().body_birth_year"
+									placeholder="出生年" name="supplier.body_birth_year" />
 							</div>
 						</div>
 					</div>
-
+					<hr noshade color="#0066cc" />
+					<h3>账户信息</h3>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">公账账户名</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_name" maxlength="100"
+									placeholder="公账账户名" name="supplier.corporate_account_name" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_number"
+									maxlength="100" placeholder="账户账号" name="supplier.corporate_account_number" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().corporate_account_bank" maxlength="100"
+									placeholder="开户行" name="supplier.corporate_account_bank" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">私账账户名</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_name" maxlength="100"
+									placeholder="私账账户名" name="supplier.personal_account_name" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">账户账号</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_number" maxlength="100"
+									placeholder="账户账号" name="supplier.personal_account_number" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">开户行</label>
+							<div class="ip" style="width: 65%">
+								<input type="text" class="ip- date-picker" data-bind="value: supplier().personal_account_bank" maxlength="100"
+									placeholder="开户行" name="supplier.personal_account_bank" />
+							</div>
+						</div>
+					</div>
 					<hr noshade color="#0066cc" />
 					<h3>相关文件</h3>
 					<h4>营业执照</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传营业执照<input type="file" name="file1" /></a> <input st="st-file-name" type="hidden" id="txt-licence" name="supplierFile.licence_name" />
+							<a href="javascript:;" class="a-upload">上传营业执照<input type="file" name="file1" /></a> <input st="st-file-name"
+								type="hidden" id="txt-licence" name="supplierFile.licence_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -206,7 +269,8 @@
 					<h4>经营许可</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传经营许可<input type="file" name="file2" /></a> <input st="st-file-name" type="hidden" id="txt-permit" name="supplierFile.permit_name" />
+							<a href="javascript:;" class="a-upload">上传经营许可<input type="file" name="file2" /></a> <input st="st-file-name"
+								type="hidden" id="txt-permit" name="supplierFile.permit_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -215,7 +279,8 @@
 					<h4>责任险</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传责任险<input type="file" name="file3" /></a> <input st="st-file-name" type="hidden" id="txt-insurance" name="supplierFile.liability_insurance_name" />
+							<a href="javascript:;" class="a-upload">上传责任险<input type="file" name="file3" /></a> <input st="st-file-name"
+								type="hidden" id="txt-insurance" name="supplierFile.liability_insurance_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -224,7 +289,8 @@
 					<h4>法人身份证</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传法人身份证<input type="file" name="file4" /></a> <input st="st-file-name" type="hidden" id="txt-corporate" name="supplierFile.corporate_name" />
+							<a href="javascript:;" class="a-upload">上传法人身份证<input type="file" name="file4" /></a> <input st="st-file-name"
+								type="hidden" id="txt-corporate" name="supplierFile.corporate_name" />
 
 						</div>
 						<div class="col-md-6"></div>
@@ -234,7 +300,8 @@
 					<h4>负责人身份证</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传负责人身份证<input type="file" name="file5" /></a> <input st="st-file-name" type="hidden" id="txt-chief" name="supplierFile.chief_name" />
+							<a href="javascript:;" class="a-upload">上传负责人身份证<input type="file" name="file5" /></a> <input st="st-file-name"
+								type="hidden" id="txt-chief" name="supplierFile.chief_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -243,7 +310,8 @@
 					<h4>其他</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传其他文件<input type="file" name="file6" /></a> <input st="st-file-name" type="hidden" id="txt-other" name="supplierFile.other_name" />
+							<a href="javascript:;" class="a-upload">上传其他文件<input type="file" name="file6" /></a> <input st="st-file-name"
+								type="hidden" id="txt-other" name="supplierFile.other_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -257,7 +325,8 @@
 		</div>
 	</div>
 	<script>
-		$(".supplier").addClass("current").children("ol").css("display", "block");
+		$(".supplier").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

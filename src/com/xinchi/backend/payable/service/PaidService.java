@@ -26,4 +26,6 @@ public interface PaidService extends BaseService {
 	public List<SupplierPaidDetailBean> selectByRelatedPk(String related_pk);
 
 	public String rollBackPayApply(String related_pk);
+
+	public SupplierPaidDetailBean selectPaidDetailByRelatedPk(String related_pk);
 }

@@ -69,7 +69,8 @@ public class OrderAction extends BaseAction {
 	public String searchTbcOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -91,7 +92,8 @@ public class OrderAction extends BaseAction {
 	public String searchCOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -113,7 +115,8 @@ public class OrderAction extends BaseAction {
 	public String searchFOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -140,6 +143,22 @@ public class OrderAction extends BaseAction {
 			resultStr = bnsoService.delete(order_pk);
 		} else if (standard_flg.equals("Y")) {
 			resultStr = bsoService.delete(order_pk);
+		} else {
+			resultStr = "lol";
+		}
+		return SUCCESS;
+	}
+
+	/**
+	 * 打回已确认订单
+	 * 
+	 * @return
+	 */
+	public String rollBackCOrder() {
+		if (standard_flg.equals("N")) {
+			resultStr = bnsoService.rollBackCOrder(order_pk);
+		} else if (standard_flg.equals("Y")) {
+			resultStr = bsoService.rollBackCOrder(order_pk);
 		} else {
 			resultStr = "lol";
 		}

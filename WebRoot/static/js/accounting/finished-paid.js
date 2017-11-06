@@ -23,17 +23,17 @@ var PaidContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
+			+ 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
+			+ (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
-	self.chosenStatus = ko.observableArray(['Y']);
-	self.allStatus = [ 'I', 'N', 'Y' ];
-	self.chosenStatus.push('I');
-
+	self.chosenStatus = ko.observableArray([ 'Y' ]);
+	self.items = ko.observableArray([ 'D', 'X', 'B', 'C', 'P', 'J', 'G', 'Q' ]);
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
@@ -45,11 +45,6 @@ var PaidContext = function() {
 		'Q' : '其他支出'
 	};
 
-	self.statusMapping = {
-		'I' : '待支付',
-		'Y' : '已支付',
-		'N' : '已驳回'
-	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 	self.totalReceivable = ko.observable(0);
@@ -64,30 +59,37 @@ var PaidContext = function() {
 		var totalProfit = 0;
 		var totalPerProfit = 0;
 
-		var param = $("form").serialize() + "&wfp.status=" + self.chosenStatus();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		var param = $("form").serialize() + "&wfp.statuses="
+				+ self.chosenStatus();
+		console.log(param);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage', param, function(data) {
-			self.paids(data.wfps);
-			// 计算合计
-			$(self.paids()).each(function(idx, data) {
-				totalPeople += data.people_count;
-				totalReceivable += data.receivable;
-				totalPayable += data.payable;
-				totalProfit += data.gross_profit;
-			});
+		$
+				.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage',
+						param, function(data) {
+							self.paids(data.wfps);
+							// 计算合计
+							$(self.paids()).each(function(idx, data) {
+								totalPeople += data.people_count;
+								totalReceivable += data.receivable;
+								totalPayable += data.payable;
+								totalProfit += data.gross_profit;
+							});
 
-			self.totalPeople(totalPeople);
-			self.totalReceivable(totalReceivable);
-			self.totalPayable(totalPayable);
-			self.totalProfit(totalProfit);
-			self.totalPerProfit((totalProfit / totalPeople).toFixed(2));
+							self.totalPeople(totalPeople);
+							self.totalReceivable(totalReceivable);
+							self.totalPayable(totalPayable);
+							self.totalProfit(totalProfit);
+							self.totalPerProfit((totalProfit / totalPeople)
+									.toFixed(2));
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
+							self.totalCount(Math.ceil(data.page.total
+									/ self.perPage));
+							self.setPageNums(self.currentPage());
 
-			$(".rmb").formatCurrency();
-		});
+							$(".rmb").formatCurrency();
+						});
 	};
 
 	self.pay = function() {
@@ -98,7 +100,9 @@ var PaidContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenPaids().length == 1) {
-			window.location.href = self.apiurl + "templates/accounting/paid.jsp?key="+self.chosenPaids()[0];
+			window.location.href = self.apiurl
+					+ "templates/accounting/paid.jsp?key="
+					+ self.chosenPaids()[0];
 		}
 	};
 	// start pagination
@@ -135,9 +139,10 @@ var PaidContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

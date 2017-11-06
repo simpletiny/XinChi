@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.common.SupperBO;
@@ -16,9 +17,9 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	private String type;
 
-	private java.math.BigDecimal money;
+	private BigDecimal money;
 
-	private java.math.BigDecimal balance;
+	private BigDecimal balance;
 
 	private String record_time;
 
@@ -32,7 +33,7 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String comment;
 	private String inner_flg;
 	private String inner_pk;
-	
+
 	private String finance_flg;
 	private String month;
 	// 凭证号
@@ -43,7 +44,7 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String voucher_file_name;
 	// 收入匹配状态
 	private String match_flg;
-	//汇兑标签
+	// 汇兑标签
 	private String exchange_flg;
 
 	// 内转搜索条件
@@ -54,6 +55,9 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String to_account;
 	private String from_month;
 	private String to_month;
+
+	private BigDecimal money_from;
+	private BigDecimal money_to;
 
 	public String getAccount() {
 		return account;
@@ -79,19 +83,19 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 		this.type = type;
 	}
 
-	public java.math.BigDecimal getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
 
-	public void setMoney(java.math.BigDecimal money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 
-	public java.math.BigDecimal getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
 
-	public void setBalance(java.math.BigDecimal balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
 
@@ -277,6 +281,22 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setFinance_flg(String finance_flg) {
 		this.finance_flg = finance_flg;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
 	}
 
 }

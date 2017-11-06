@@ -222,7 +222,6 @@ public class ReceivedAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			detail.setCreate_user(sessionBean.getUser_number());
 		}
-		detail.setStatus(SimpletinyString.addSingleQuote(detail.getStatus()));
 		params.put("bo", detail);
 
 		page.setParams(params);

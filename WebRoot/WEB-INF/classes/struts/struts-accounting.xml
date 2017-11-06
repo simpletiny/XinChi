@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="accounting" extends="default" namespace="/accounting">
+		<action name="searchPaidApplyByPage" class="payApprovalAction" method="searchPaidApplyByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="agreePayApply" class="accountingAction" method="agreePayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="rejectPayApply" class="accountingAction" method="rejectPayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 支出详表页面 -->
+		
+		<action name="rollBackPayApply" class="accountingAction" method="rollBackPayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 待支付页面 -->
+		<action name="searchWaitingForPaidByPage" class="accPaidAction" method="searchWaitingForPaidByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneWFP" class="accPaidAction" method="searchOneWFP">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="pay" class="accPaidAction" method="pay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 已支付页面 -->
+		
+		<action name="searchPaidDetailByPayNumber" class="accPaidAction" method="searchPaidDetailByPayNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<!-- 费用报销 -->
+		<action name="saveReimbursement" class="reimbursementAction" method="saveReimbursement">
+			<result name="success" type="str">resultStr</result>
+		</action>
+	</package>
+
+</struts>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.InnerTransferMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.InnerTransferBean">
+		<result column="inner_pk" property="inner_pk" jdbcType="CHAR" />
+		<result column="from_account" property="from_account" jdbcType="VARCHAR" />
+		<result column="from_time" property="from_time" jdbcType="VARCHAR" />
+		<result column="from_money" property="from_money" jdbcType="DECIMAL" />
+		<result column="to_account" property="to_account" jdbcType="VARCHAR" />
+		<result column="to_time" property="to_time" jdbcType="VARCHAR" />
+		<result column="to_money" property="to_money" jdbcType="DECIMAL" />
+		<result column="exchange_account" property="exchange_account" jdbcType="VARCHAR" />
+		<result column="exchange_money" property="exchange_money" jdbcType="DECIMAL" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="exchange_type" property="exchange_type" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		inner_pk,
+		from_account,
+		from_time,
+		from_money,
+		to_account,
+		to_time,
+		to_money,
+		exchange_account,
+		exchange_money,
+		comment,
+		exchange_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from inner_transfer
+		where inner_pk = #{inner_pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.InnerTransferBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from inner_transfer
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from inner_transfer
+
+		<where>
+			<if test="params.bo.from_account != null and params.bo.from_account !=''">
+				and from_account like CONCAT('%',#{params.bo.from_account,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.to_account != null and params.bo.to_account !=''">
+				and to_account like CONCAT('%',#{params.bo.to_account,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.from_date != null and params.bo.from_date !=''">
+				and left(from_time,10) = #{params.bo.from_date,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.to_date != null and params.bo.to_date !=''">
+				and left(to_time,10) = #{params.bo.to_date,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.from_month != null and params.bo.from_month !=''">
+				and left(from_time,7) = #{params.bo.from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.to_month != null and params.bo.to_month !=''">
+				and left(to_time,7) = #{params.bo.to_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.exchange_types != null">
+				and exchange_type in
+				<foreach item="item" index="index" collection="params.bo.exchange_types" open="(" separator="," close=")">
+					#{params.bo.exchange_types[${index}]}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY from_time desc
+	</select>
+</mapper>
