@@ -44,7 +44,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Override
 	@Transactional
 	public String insert(PaymentDetailBean detail) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		detail.setRecord_user(sessionBean.getUser_number());
 		detail.setRecord_time(DateUtil.getTimeMillis());
 
@@ -55,7 +56,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 		List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(time);
 
-		if (null != sameDetail && sameDetail.size() > 0 && (null == detail.getInner_flg() || detail.getInner_flg().equals("N"))) {
+		if (null != sameDetail && sameDetail.size() > 0
+				&& (null == detail.getInner_flg() || detail.getInner_flg().equals("N"))) {
 			return "time";
 		}
 
@@ -87,7 +89,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
 			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
 			File sourceFile = new File(tempFolder + File.separator + detail.getVoucher_file_name());
-			File destfile = new File(fileFolder + File.separator + card.getPk() + File.separator + detail.getVoucher_file_name());
+			File destfile = new File(
+					fileFolder + File.separator + card.getPk() + File.separator + detail.getVoucher_file_name());
 			try {
 				FileUtils.copyFile(sourceFile, destfile);
 			} catch (IOException e) {
@@ -113,7 +116,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Override
 	@Transactional
 	public void saveInnerDetail(InnerTransferBean innerTransfer) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		String inner_pk = DBCommonUtil.genPk();
 
@@ -177,8 +181,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Transactional
 	public String deleteDetail(String detailId) {
 		PaymentDetailBean detail = dao.selectById(detailId);
-		if (detail.getFinance_flg().equals("N"))
-			return "forbidden";
+		/*if (detail.getFinance_flg().equals("N"))
+			return "forbidden";*/
 
 		List<PaymentDetailBean> afterDetails = dao.selectAfterByParam(detail);
 		BigDecimal wrong = detail.getMoney();
@@ -342,7 +346,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	// 中行
 	private List<PaymentDetailBean> readBOC(HSSFSheet sheet, CardBean card) {
 		List<PaymentDetailBean> details = new ArrayList<PaymentDetailBean>();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String record_user = sessionBean.getUser_number();
 		String record_time = DateUtil.getTimeMillis();
 		for (int i = 9; i < sheet.getLastRowNum(); i++) {
@@ -394,7 +399,8 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	// 建行
 	private List<PaymentDetailBean> readCCB(HSSFSheet sheet, CardBean card) {
 		List<PaymentDetailBean> details = new ArrayList<PaymentDetailBean>();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String record_user = sessionBean.getUser_number();
 		String record_time = DateUtil.getTimeMillis();
 		for (int i = 6; i < sheet.getLastRowNum() - 1; i++) {
@@ -459,5 +465,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	public String update(PaymentDetailBean detail) {
 		dao.updateDetail(detail);
 		return SUCCESS;
+	}
+
+	@Override
+	public List<PaymentDetailBean> selectByInnerPk(String inner_pk) {
+
+		return dao.selectByInnerPk(inner_pk);
 	}
 }

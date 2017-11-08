@@ -95,7 +95,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- ko ifnot: supplier() == null -->
+					<!-- ko if: wfp().item == "D" -->
 					<div class="input-row clearfloat">
 						<div class="col-md-4">
 							<label class="l">公账账户名</label>

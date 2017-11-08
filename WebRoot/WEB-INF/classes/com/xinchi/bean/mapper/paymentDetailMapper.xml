@@ -56,6 +56,14 @@
 		from payment_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectByInnerPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from payment_detail
+		where inner_pk = #{inner_pk,jdbcType=CHAR}
+	</select>
+	
 	<select id="selectByVoucherNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		A.account,
@@ -348,8 +356,11 @@
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.type != null and params.bo.type !=''">
+			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type !="内转"'>
 				and type = #{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type =="内转"'>
+				and inner_flg = 'Y'
 			</if>
 			<if test='params.bo.match_flg != null and params.bo.match_flg =="N"'>
 				and match_flg = 'N'

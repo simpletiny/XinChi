@@ -40,7 +40,11 @@ var AgencyContext = function() {
 	}, function(data) {
 		if (data.wfp) {
 			self.wfp(data.wfp);
-			self.supplier(data.supplier);
+			if (data.supplier != null) {
+				self.supplier(data.supplier);
+			} else {
+				self.supplier(new Object());
+			}
 			self.defaultMoney(self.wfp().money);
 		} else {
 			fail_msg("待支付信息不存在！");

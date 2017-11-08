@@ -15,7 +15,7 @@ var OrderContext = function() {
 	self.chosenTypes = ko.observableArray([]);
 	self.recsum = ko.observable({});
 	self.chosenSales = ko.observable();
-	self.sortTypes = [ '倒序', '正序' ];
+	self.sortTypes = [ '正序', '倒序' ];
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
@@ -535,7 +535,6 @@ var OrderContext = function() {
 			for (var i = 0; i < allot.length; i++) {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
-				console.log(n);
 				var r = $(current).find("[st='receive_received']").val();
 				allot_json += '{"team_number":"' + n + '",' + '"received":"'
 						+ r;
@@ -593,7 +592,6 @@ var OrderContext = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
 				data) {
 			self.receivables(data.receivables);
-			console.log(data.receivables);
 
 			// 计算合计
 			$(self.receivables()).each(function(idx, data) {

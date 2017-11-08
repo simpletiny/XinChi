@@ -39,4 +39,6 @@ public interface PaymentDetailService extends BaseService {
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number);
 
 	public String update(PaymentDetailBean thisDetail);
+
+	public List<PaymentDetailBean> selectByInnerPk(String inner_pk);
 }

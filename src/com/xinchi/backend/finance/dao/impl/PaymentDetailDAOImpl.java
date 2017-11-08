@@ -41,7 +41,8 @@ public class PaymentDetailDAOImpl extends SqlSessionDaoSupport implements Paymen
 
 	@Override
 	public PaymentDetailBean selectById(String pk) {
-		return (PaymentDetailBean) daoUtil.selectByPK("com.xinchi.bean.mapper.PaymentDetailMapper.selectByPrimaryKey", pk);
+		return (PaymentDetailBean) daoUtil.selectByPK("com.xinchi.bean.mapper.PaymentDetailMapper.selectByPrimaryKey",
+				pk);
 	}
 
 	@Override
@@ -76,6 +77,13 @@ public class PaymentDetailDAOImpl extends SqlSessionDaoSupport implements Paymen
 
 	@Override
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.PaymentDetailMapper.selectByVoucherNumber", voucher_number);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PaymentDetailMapper.selectByVoucherNumber",
+				voucher_number);
+	}
+
+	@Override
+	public List<PaymentDetailBean> selectByInnerPk(String inner_pk) {
+
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PaymentDetailMapper.selectByInnerPk", inner_pk);
 	}
 }

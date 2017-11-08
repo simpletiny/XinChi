@@ -48,6 +48,11 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	private List<String> statuses;
 
+	// search options
+	private BigDecimal money_from;
+	private BigDecimal money_to;
+	private BigDecimal money;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -214,6 +219,30 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setStatuses(List<String> statuses) {
 		this.statuses = statuses;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
+	}
+
+	public BigDecimal getMoney() {
+		return money;
+	}
+
+	public void setMoney(BigDecimal money) {
+		this.money = money;
 	}
 
 }

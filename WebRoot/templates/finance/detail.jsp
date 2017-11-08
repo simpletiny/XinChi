@@ -41,8 +41,10 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('receive') }">财务收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('pay') }">财务支出</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('inner') }">内转</button>
+								<s:if test="#session.user.user_roles.contains('ADMIN')">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify() }">修改</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail() }">删除</button>
+								</s:if>
 							</div>
 						</div>
 					</div>

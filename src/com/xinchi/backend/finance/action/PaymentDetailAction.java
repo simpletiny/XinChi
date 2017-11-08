@@ -75,7 +75,23 @@ public class PaymentDetailAction extends BaseAction {
 	private String detailId;
 
 	public String deleteDetail() {
-		resultStr = pds.deleteDetail(detailId);
+		PaymentDetailBean detail = pds.selectByPk(detailId);
+		if (null != detail) {
+			String inner_flg = detail.getInner_flg();
+			if (inner_flg.equals("Y")) {
+				List<PaymentDetailBean> details = pds.selectByInnerPk(detail.getInner_pk());
+				if (null != details && details.size() > 0) {
+					for (PaymentDetailBean d : details) {
+						resultStr = pds.deleteDetail(d.getPk());
+					}
+				}
+			} else if (inner_flg.equals("N")) {
+				resultStr = pds.deleteDetail(detailId);
+			}
+
+		} else {
+			resultStr = "no exists";
+		}
 		return SUCCESS;
 	}
 

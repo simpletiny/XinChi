@@ -1,7 +1,7 @@
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.type = [ '收入', '支出' ];
+	self.type = [ '收入', '支出','内转' ];
 	self.chosenDetails = ko.observableArray([]);
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {

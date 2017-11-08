@@ -63,18 +63,32 @@
 								<input type="text" class="form-control month-picker-st" onblur="baseMonth(this)" placeholder="出团月份" name="detail.month" />
 							</div>
 						</div>
-					</div>
-
-					<div class="form-group">
-						<div align="left">
+							<div align="left">
 							<label class="col-md-1 control-label">收入日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from" name="detail.date_from" />
+								<input type="text" class="form-control date-picker" placeholder="from" name="detail.date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to" name="detail.date_to" />
+								<input type="text" class="form-control date-picker" placeholder="to" name="detail.date_to" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="大于等于" name="detail.money_from" />
+							</div>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="小于等于" name="detail.money_to" />
+							</div>
+						</div>
+						<div align="left">
+							<label class="col-md-1 control-label">精确金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -86,7 +100,7 @@
 								</div>
 							</div>
 						</s:if>
-						<div style="padding-top: 3px;">
+						<div style="padding-top: 3px;float:right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>

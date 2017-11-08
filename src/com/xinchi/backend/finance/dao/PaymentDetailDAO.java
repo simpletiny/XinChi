@@ -27,4 +27,6 @@ public interface PaymentDetailDAO {
 	public void insertDetails(List<PaymentDetailBean> details);
 
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number);
+
+	public List<PaymentDetailBean> selectByInnerPk(String inner_pk);
 }

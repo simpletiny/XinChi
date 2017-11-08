@@ -288,10 +288,12 @@
 		A.update_time,
 		D.name AS client_employee_name,
 		B.client_employee_pk
-		from received_detail A left join
+		from received_detail A
+		left join
 		budget_order B on A.team_number=B.team_number
 		LEFT JOIN user_base C ON A.create_user=C.user_number
-		LEFT JOIN client_employee D ON B.client_employee_pk = D.pk
+		LEFT JOIN
+		client_employee D ON B.client_employee_pk = D.pk
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in
@@ -313,6 +315,18 @@
 			</if>
 			<if test="params.bo.card_account != null and params.bo.card_account !=''">
 				and A.card_account = #{params.bo.card_account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and if(A.type='SUM', A.allot_received >= #{params.bo.money_from,jdbcType=DECIMAL},A.received >=
+				#{params.bo.money_from,jdbcType=DECIMAL})
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and if(A.type='SUM', A.allot_received &lt;= #{params.bo.money_to,jdbcType=DECIMAL},A.received &lt;=
+				#{params.bo.money_to,jdbcType=DECIMAL})
+			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and if(A.type='SUM', A.allot_received = #{params.bo.money,jdbcType=DECIMAL},A.received =
+				#{params.bo.money,jdbcType=DECIMAL})
 			</if>
 			ORDER BY A.received_time
 		</where>
