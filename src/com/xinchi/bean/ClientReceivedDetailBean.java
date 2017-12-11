@@ -40,6 +40,7 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private BigDecimal allot_received;
 
 	private String client_employee_pk;
+	private String client_pk;
 	private String client_employee_name;
 
 	private String month;
@@ -243,6 +244,14 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setMoney(BigDecimal money) {
 		this.money = money;
+	}
+
+	public String getClient_pk() {
+		return client_pk;
+	}
+
+	public void setClient_pk(String client_pk) {
+		this.client_pk = client_pk;
 	}
 
 }

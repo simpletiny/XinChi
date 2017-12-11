@@ -203,7 +203,7 @@ public class AccountingServiceImpl implements AccountingService {
 		bean.setConfirm_time(DateUtil.getTimeMillis());
 		bean.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		receivedDao.update(bean);
-
+		SimpletinyUser su = new SimpletinyUser();
 		WaitingForPaidBean waiting = new WaitingForPaidBean();
 
 		String pay_number = numberService
@@ -218,7 +218,7 @@ public class AccountingServiceImpl implements AccountingService {
 		waiting.setRelated_pk(bean.getPk());
 		waiting.setMoney(bean.getReceived().negate());
 		waiting.setApply_user(bean.getCreate_user());
-		waiting.setApproval_user(SimpletinyUser.getUser_number());
+		waiting.setApproval_user(su.getUser().getUser_number());
 		waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
 		accPaidService.insert(waiting);
 

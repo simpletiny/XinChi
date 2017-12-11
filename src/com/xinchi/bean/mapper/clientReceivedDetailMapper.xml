@@ -20,6 +20,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_pk" property="client_pk" jdbcType="CHAR" />
 		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
 	</resultMap>
@@ -42,13 +43,35 @@
 		update_user,
 		pk,
 		create_time,
-		update_time
+		update_time,
+		client_employee_pk,
+		client_pk
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from client_received_detail
-		where pk = #{pk,jdbcType=CHAR}
+		A.team_number,
+		A.received,
+		A.received_time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_received,
+		A.allot_received,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		C.name AS client_employee_name,
+		B.client_employee_pk
+		from client_received_detail A left join budget_order B on A.team_number=B.team_number
+		LEFT JOIN
+		client_employee C ON B.client_employee_pk = C.pk
+		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
 	<select id="selectByRelatedPks" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -138,6 +161,12 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk,
+			</if>
+			<if test="client_pk != null">
+				client_pk,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -190,6 +219,12 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				#{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="client_pk != null">
+				#{client_pk,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -245,6 +280,12 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="client_pk != null">
+				client_pk = #{client_pk,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

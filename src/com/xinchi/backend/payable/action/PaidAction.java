@@ -121,7 +121,7 @@ public class PaidAction extends BaseAction {
 			paidService.insert(detail);
 			payableService.updatePayablePaid(detail);
 		}
-
+		SimpletinyUser su = new SimpletinyUser();
 		// 生成支出审批数据
 		PayApprovalBean pa = new PayApprovalBean();
 		SupplierEmployeeBean supplierEmployee = supplierEmployeeService.selectByPrimaryKey(supplier_employee_pk);
@@ -131,7 +131,7 @@ public class PaidAction extends BaseAction {
 		pa.setItem(ResourcesConstants.PAY_TYPE_DIJIE);
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
 		pa.setRelated_pk(related_pk);
-		pa.setApply_user(SimpletinyUser.getUser_number());
+		pa.setApply_user(su.getUser().getUser_number());
 		pa.setApply_time(DateUtil.getTimeMillis());
 		pa.setLimit_time(detail.getLimit_time());
 		pa.setBack_pk(related_pk);

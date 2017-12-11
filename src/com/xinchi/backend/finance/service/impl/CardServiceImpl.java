@@ -62,4 +62,9 @@ public class CardServiceImpl implements CardService {
 		return dao.selectByPurpose(purpose);
 	}
 
+	@Override
+	public CardBean selectByAccount(String account) {
+		return dao.getCardByAccount(account);
+	}
+
 }

@@ -1058,4 +1058,14 @@
 			<comment>ALTER TABLE supplier</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE client_received_detail 
+				ADD COLUMN client_employee_pk CHAR(22) NULL AFTER pk,
+				ADD COLUMN client_pk CHAR(22) NULL AFTER client_employee_pk;
+             ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

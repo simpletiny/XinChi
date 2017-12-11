@@ -22,6 +22,8 @@ public interface CardService {
 	@LogDescription(ignore = true)
 	public List<String> getAllAccounts();
 
+	public CardBean selectByAccount(String account);
+
 	@LogDescription(ignore = true)
 	public String getAccountBalance(String account);
 

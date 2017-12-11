@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -30,6 +27,9 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.SimpletinyUser;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -82,7 +82,7 @@ public class AirTicketPayableAction extends BaseAction {
 
 	// 支付机票款
 	public String payAirTicket() {
-
+		SimpletinyUser su = new SimpletinyUser();
 		// 生成申请信息，并更新应付款“已付款”内容
 		JSONArray payableArray = JSONArray.fromObject(payableJson);
 
@@ -116,7 +116,7 @@ public class AirTicketPayableAction extends BaseAction {
 			currentDetail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
 			currentDetail.setMoney(sumPaid);
 			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
-			currentDetail.setApprove_user(SimpletinyUser.getUser_number());
+			currentDetail.setApprove_user(su.getUser().getUser_number());
 			airTicketPaidDetailService.insert(currentDetail);
 
 			airTicketPayable.setPaid(airTicketPayable.getPaid().add(sumPaid));
@@ -138,8 +138,8 @@ public class AirTicketPayableAction extends BaseAction {
 			BigDecimal money = new BigDecimal(obj.getString("money"));
 			String voucher_file_name = obj.getString("voucherFile");
 
-			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER, ResourcesConstants.PAY_TYPE_PIAOWU,
-					DateUtil.getDateStr(DateUtil.YYYYMMDD));
+			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+					ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
 
 			PaymentDetailBean detail = new PaymentDetailBean();
 			detail.setVoucher_number(voucher_number);
@@ -164,11 +164,11 @@ public class AirTicketPayableAction extends BaseAction {
 			waiting.setItem(ResourcesConstants.PAY_TYPE_PIAOWU);
 			waiting.setReceiver(receiver);
 			waiting.setMoney(money);
-			waiting.setApply_user(SimpletinyUser.getUser_number());
-			waiting.setApproval_user(SimpletinyUser.getUser_number());
+			waiting.setApply_user(su.getUser().getUser_number());
+			waiting.setApproval_user(su.getUser().getUser_number());
 			waiting.setRelated_pk(related_pk);
 			waiting.setStatus(ResourcesConstants.PAY_STATUS_YES);
-			waiting.setPay_user(SimpletinyUser.getUser_number());
+			waiting.setPay_user(su.getUser().getUser_number());
 
 			accPaidService.insert(waiting);
 		}

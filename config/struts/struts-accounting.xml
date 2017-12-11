@@ -15,7 +15,7 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 支出详表页面 -->
-		
+
 		<action name="rollBackPayApply" class="accountingAction" method="rollBackPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -34,14 +34,17 @@
 		</action>
 
 		<!-- 已支付页面 -->
-		
+
 		<action name="searchPaidDetailByPayNumber" class="accPaidAction" method="searchPaidDetailByPayNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+		<action name="rollBackPay" class="accPaidAction" method="rollBackPay">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 		<!-- 费用报销 -->
 		<action name="saveReimbursement" class="reimbursementAction" method="saveReimbursement">
 			<result name="success" type="str">resultStr</result>

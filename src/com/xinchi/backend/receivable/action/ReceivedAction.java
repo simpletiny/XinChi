@@ -129,7 +129,7 @@ public class ReceivedAction extends BaseAction {
 		detail.setReceived(detail.getReceived().negate());
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
-
+		SimpletinyUser su = new SimpletinyUser();
 		// 生成支付审批数据
 		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		PayApprovalBean pa = new PayApprovalBean();
@@ -139,7 +139,7 @@ public class ReceivedAction extends BaseAction {
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
 		pa.setRelated_pk(related_pk);
 		pa.setComment(detail.getComment());
-		pa.setApply_user(SimpletinyUser.getUser_number());
+		pa.setApply_user(su.getUser().getUser_number());
 		pa.setBack_pk(detail.getPk());
 		pa.setApply_time(DateUtil.getTimeMillis());
 		pa.setLimit_time(detail.getLimit_time());

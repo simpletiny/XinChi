@@ -92,7 +92,7 @@ var PaidContext = function() {
 						});
 	};
 
-	self.pay = function() {
+	self.rollBackPay = function() {
 		if (self.chosenPaids().length == 0) {
 			fail_msg("请选择");
 			return;
@@ -100,9 +100,33 @@ var PaidContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenPaids().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/accounting/paid.jsp?key="
-					+ self.chosenPaids()[0];
+			var current = self.chosenPaids()[0];
+			var voucher_number = current.pay_number;
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要打回此支付到待支付状态吗？',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("打回中");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'accounting/rollBackPay',
+							data : "voucher_number=" + voucher_number
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
 		}
 	};
 	// start pagination

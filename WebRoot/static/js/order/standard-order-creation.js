@@ -24,8 +24,10 @@ var OrderContext = function() {
 
 	self.refreshClient = function() {
 		var param = "employee.name=" + $("#client_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
+				data) {
 			self.clientEmployees(data.employees);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -67,19 +69,45 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-		var data = $("form").serialize() + "&bsOrder.independent_flg=" + self.independent_flg();
+		var data = $("form").serialize() + "&bsOrder.independent_flg="
+				+ self.independent_flg();
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/createBudgetStandardOrder',
 			data : data
-		}).success(function(str) {
-			if (str == "success") {
-				window.location.href = self.apiurl + "templates/product/product-box.jsp";
-			}
-		});
+		}).success(
+				function(str) {
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/product/product-box.jsp";
+					}
+				});
 	};
 
+	self.addName = function() {
+		var tbody = $("#name-table").find("tbody");
+		var count = $(tbody).children().length;
+		var html = '<tr>'
+				+ '<td><input type="radio" name="team_chairman" /></td>'
+				+ '<td>'
+				+ (count + 1)
+				+ '</td>'
+				+ '<td><input type="text" style="width: 90%" st="name" /></td>'
+				+ '<td><input type="text" style="width: 90%" st="sex" /></td>'
+				+ '<td><input type="text" style="width: 90%" st="age" /></td>'
+				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
+				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
+				+ '<td><input type="text" style="width: 90%" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
+				+ '<td><input type="button" style="width: 50px" alt="删除名单" value="-" /></td>'
+				+ '</tr>';
+		tbody.append(html);
+	};
+
+	self.removeName = function() {
+		console.log(data);
+	};
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -114,9 +142,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -151,15 +180,15 @@ function formatNameList(txt) {
 		return;
 	}
 
-	for ( var i = 0; i < names.length; i++) {
+	for (var i = 0; i < names.length; i++) {
 		var name = names[i];
 		nameList = nameList.replace(name, ";" + name + ":");
 	}
-	nameList = nameList.replace(";","")+";";
-	
+	nameList = nameList.replace(";", "") + ";";
+
 	var names = nameList.split(";");
 	var newNameList = "";
-	for ( var i = 0; i < names.length; i++) {
+	for (var i = 0; i < names.length; i++) {
 		if (names[i] == "")
 			continue;
 		if (i % 2 == 1) {

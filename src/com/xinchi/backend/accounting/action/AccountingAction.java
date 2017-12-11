@@ -28,8 +28,9 @@ public class AccountingAction extends BaseAction {
 	private PayApprovalService payApprovalService;
 
 	public String agreePayApply() {
+		SimpletinyUser su = new SimpletinyUser();
 		PayApprovalBean pa = payApprovalService.selectByPrimaryKey(pk);
-		pa.setApproval_user(SimpletinyUser.getUser_number());
+		pa.setApproval_user(su.getUser().getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		payApprovalService.update(pa);
@@ -47,8 +48,9 @@ public class AccountingAction extends BaseAction {
 	}
 
 	public String rejectPayApply() {
+		SimpletinyUser su = new SimpletinyUser();
 		PayApprovalBean pa = payApprovalService.selectByPrimaryKey(pk);
-		pa.setApproval_user(SimpletinyUser.getUser_number());
+		pa.setApproval_user(su.getUser().getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_NO);
 		payApprovalService.update(pa);

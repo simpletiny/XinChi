@@ -90,7 +90,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 				<li class="order"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>预决算管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>预算单管理</a></li>
@@ -124,7 +124,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/product/product-order-final.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 				<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 					<li class="supplier"><a href="<%=basePath%>templates/supplier/supplier.jsp"><i class="fa fa-users fa-lg fa-fw"></i>供应商管理</a>
 				</s:if>

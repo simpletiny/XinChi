@@ -32,6 +32,9 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
+						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: rollBackPay">打回</button>
+					</div>
+					<div class="form-group">
 						<div align="left">
 							<label class="col-md-1 control-label">支出日期</label>
 							<div class="col-md-2" style="float: left">
@@ -62,7 +65,9 @@
 						<div>
 							<label class="col-md-1 control-label">项目</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}" name="wfp.item" required="required"></select>
+								<select class="form-control"
+									data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="wfp.item" required="required"></select>
 							</div>
 						</div>
 						<div>
@@ -71,7 +76,7 @@
 								<input type="text" class="form-control" placeholder="支付单号" name="wfp.pay_number" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;float:right">
+						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
@@ -92,7 +97,7 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox" data-bind=" checkedValue:$data, checked: $root.chosenPaids" /></td>
 
 								<td data-bind="text: $data.pay_number"></td>
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
