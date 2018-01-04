@@ -52,6 +52,18 @@
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">待支付总额</label>
+							<div class="col-md-2">
+								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">总余额</label>
+							<div class="col-md-2">
+								<p class="ip-default rmb" data-bind="text:sumCardBalance()"></p>
+							</div>
+						</div>
 					</div>
 				</form>
 				<div class="list-result">
@@ -62,6 +74,7 @@
 								<th>金额</th>
 								<th>项目</th>
 								<th>收款方</th>
+								<th>备注</th>
 								<th>申请日期</th>
 								<th>支付时限</th>
 								<th>状态</th>
@@ -75,6 +88,7 @@
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
+								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
 
 								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time+' 23:59') -->

@@ -41,8 +41,11 @@ public class OrderAction extends BaseAction {
 	@Autowired
 	private OrderNameListService orderNameService;
 
+	private String json;
+
 	public String createBudgetStandardOrder() {
-		resultStr = bsoService.insert(bsOrder);
+		// 保存订单和名单
+		resultStr = bsoService.createOrder(bsOrder, json);
 		return SUCCESS;
 	}
 
@@ -52,7 +55,7 @@ public class OrderAction extends BaseAction {
 	private BudgetNonStandardOrderBean bnsOrder;
 
 	public String createBudgetNonStandardOrder() {
-		resultStr = bnsoService.insert(bnsOrder);
+		resultStr = bnsoService.insert(bnsOrder, json);
 		return SUCCESS;
 	}
 
@@ -171,7 +174,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String updateBudgetStandardOrder() {
-		resultStr = bsoService.update(bsOrder);
+		resultStr = bsoService.update(bsOrder,json);
 		return SUCCESS;
 	}
 
@@ -245,6 +248,7 @@ public class OrderAction extends BaseAction {
 	 */
 	public String searchTbcBsOrderByPk() {
 		bsOrder = bsoService.selectByPrimaryKey(order_pk);
+		passengers = orderNameListService.selectByOrderPk(order_pk);
 		return SUCCESS;
 	}
 
@@ -254,7 +258,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String updateBudgetNonStandardOrder() {
-		resultStr = bnsoService.update(bnsOrder);
+		resultStr = bnsoService.update(bnsOrder,json);
 		return SUCCESS;
 	}
 
@@ -348,6 +352,7 @@ public class OrderAction extends BaseAction {
 	 */
 	public String searchTbcBnsOrderByPk() {
 		bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
+		passengers = orderNameListService.selectByOrderPk(order_pk);
 		return SUCCESS;
 	}
 
@@ -440,5 +445,13 @@ public class OrderAction extends BaseAction {
 
 	public void setFnsOrder(FinalNonStandardOrderBean fnsOrder) {
 		this.fnsOrder = fnsOrder;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
 	}
 }

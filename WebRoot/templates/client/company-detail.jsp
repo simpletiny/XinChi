@@ -53,6 +53,20 @@ String key = request.getParameter("key");
                     </div>
                 </div>
                 <div class="input-row clearfloat">
+                    <div class="col-md-4">
+                        <label class="l">门店</label>
+                        <div class="ip" style="width:60%"><p class="ip-default" data-bind="text: company().store_type"></p></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="l">主营</label>
+                        <div class="ip" style="width:60%"><p class="ip-" data-bind="text: company().main_business"></p></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="l">回款誉</label>
+                        <div class="ip" style="width:60%"><p class="ip-" data-bind="text: company().back_level"></p></div>
+                    </div>
+                </div>
+                <div class="input-row clearfloat">
                     <div class="col-md-6">
                         <label class="l">电话</label>
                         <div class="ip"><p class="ip- date-picker" data-bind="text: company().telephone"></p></div>

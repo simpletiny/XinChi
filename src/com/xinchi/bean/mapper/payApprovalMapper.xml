@@ -53,6 +53,9 @@
 		from pay_approval
 		where back_pk = #{back_pk,jdbcType=CHAR}
 	</select>
+	<select id="selectSumBalance" resultType="java.math.BigDecimal">
+		select sum(money) from pay_approval where status = 'I'
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from pay_approval

@@ -25,7 +25,8 @@ public class ClientAction extends BaseAction {
 	private ClientService clientService;
 
 	public String createCompany() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		client.setSales(sessionBean.getPk());
 		client.setSales_name(sessionBean.getUser_name());
 		if (!SimpletinyString.isEmpty(client.getAgency_pk())) {
@@ -48,7 +49,8 @@ public class ClientAction extends BaseAction {
 	private List<ClientBean> clients;
 
 	public String searchCompany() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		ClientBean cb = null;
 
@@ -62,13 +64,24 @@ public class ClientAction extends BaseAction {
 	}
 
 	public String searchCompanyByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
 		}
+		if (client.getPublic_flg() != null && client.getPublic_flg().equals("Y")) {
+			client.setPublic_flg("1");
+		} else if (client.getPublic_flg() != null && client.getPublic_flg().equals("N")
+				&& roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			client.setPublic_flg("2");
+		} else if (client.getPublic_flg() == null
+				|| (client.getPublic_flg() != null && !roles.contains(ResourcesConstants.USER_ROLE_ADMIN))) {
+			client.setPublic_flg("1");
+		}
+
 		params.put("bo", client);
 
 		page.setParams(params);
@@ -87,13 +100,18 @@ public class ClientAction extends BaseAction {
 	private List<String> company_pks;
 
 	public String deleteCompany() {
-		resultStr = clientService.deleteClientEmployee(company_pks);
-		return resultStr;
+		resultStr = clientService.deleteClient(company_pks);
+		return SUCCESS;
+	}
+
+	public String deleteCompanyReally() {
+		resultStr = clientService.deleteClientReally(client_pk);
+		return SUCCESS;
 	}
 
 	public String recoveryCompany() {
 		resultStr = clientService.recoveryClientEmployee(company_pks);
-		return resultStr;
+		return SUCCESS;
 	}
 
 	private String sale_pk;

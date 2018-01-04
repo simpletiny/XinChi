@@ -2,7 +2,8 @@ var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenEmployees = ko.observableArray([]);
-	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化',
+			'呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -15,9 +16,13 @@ var CompanyContext = function() {
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
-	self.status = [ '正常', '已停用' ];
+	self.status = [ 'N', 'Y' ];
+	self.deleteMapping = {
+		'N' : "正常",
+		'Y' : "已停用"
+	}
 	self.chosenStatus = ko.observableArray([]);
-	self.chosenStatus.push("正常");
+	self.chosenStatus.push("N");
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 		var pub = new Object();
@@ -26,30 +31,34 @@ var CompanyContext = function() {
 		self.sales.push(pub);
 	});
 	self.createClientEmployee = function() {
-		window.location.href = self.apiurl + "templates/client/employee-creation.jsp";
+		window.location.href = self.apiurl
+				+ "templates/client/employee-creation.jsp";
 	};
 
 	self.employees = ko.observable({
 		total : 0,
 		items : []
 	});
-	
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
-		var param = $("form").serialize()+"&employee_status="+self.chosenStatus();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
+
+		var param = $("form").serialize();
+		if (!$("#txt-public-flg").is(':checked'))
+			param += "&employee.public_flg=N"
+
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		console.log(param);
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
+				data) {
 			self.employees(data.employees);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 			endLoadingIndicator();
 		});
 	};
-	self.changeStatus = function(){
-		self.refresh();
-		return true;
-	};
+
 	self.search = function() {
 
 	};
@@ -66,7 +75,9 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenEmployees().length == 1) {
-			window.location.href = self.apiurl + "templates/client/employee-edit.jsp?key=" + self.chosenEmployees()[0];
+			window.location.href = self.apiurl
+					+ "templates/client/employee-edit.jsp?key="
+					+ self.chosenEmployees()[0];
 		}
 	};
 
@@ -74,10 +85,10 @@ var CompanyContext = function() {
 		if (self.chosenEmployees().length == 0) {
 			fail_msg("请选择员工");
 			return;
-		}else if(self.chosenEmployees().length > 1){
+		} else if (self.chosenEmployees().length > 1) {
 			fail_msg("只能选择一个员工");
 			return;
-		}else {
+		} else {
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
@@ -104,7 +115,6 @@ var CompanyContext = function() {
 					}
 				}
 			});
-			
 
 		}
 
@@ -136,9 +146,10 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

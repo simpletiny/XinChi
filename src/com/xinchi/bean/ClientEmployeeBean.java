@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class ClientEmployeeBean extends SupperBO implements Serializable {
@@ -41,11 +43,11 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String birth_year;
 
 	private String public_flg;
-	
+	private List<String> delete_flgs;
 	private String relation_level;
 	private String back_level;
 	private String market_level;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -244,6 +246,14 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setMarket_level(String market_level) {
 		this.market_level = market_level;
+	}
+
+	public List<String> getDelete_flgs() {
+		return delete_flgs;
+	}
+
+	public void setDelete_flgs(List<String> delete_flgs) {
+		this.delete_flgs = delete_flgs;
 	}
 
 }

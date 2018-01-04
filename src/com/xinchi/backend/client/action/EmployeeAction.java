@@ -25,7 +25,8 @@ public class EmployeeAction extends BaseAction {
 	private EmployeeService employeeService;
 
 	public String createEmployee() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		employee.setSales_name(sessionBean.getUser_name());
 		employee.setSales(sessionBean.getPk());
 		resultStr = employeeService.createEmployee(employee);
@@ -53,23 +54,24 @@ public class EmployeeAction extends BaseAction {
 
 	@SuppressWarnings("unchecked")
 	public String searchEmployeeByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 		// employee = new ClientEmployeeBean();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			employee.setSales(sessionBean.getPk());
 		}
-		if (!SimpletinyString.isEmpty(employee_status)) {
-			String[] statuses = employee_status.split(",");
-			if (statuses.length == 1) {
-				if (statuses[0].equals(ResourcesConstants.STOP_STATUS_NORMAL)) {
-					employee.setDelete_flg("N");
-				} else {
-					employee.setDelete_flg("Y");
-				}
-			}
+		if (employee.getPublic_flg() != null && employee.getPublic_flg().equals("Y")) {
+			employee.setPublic_flg("1");
+		} else if (employee.getPublic_flg() != null && employee.getPublic_flg().equals("N")
+				&& roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			employee.setPublic_flg("2");
+		} else if (employee.getPublic_flg() == null
+				|| (employee.getPublic_flg() != null && !roles.contains(ResourcesConstants.USER_ROLE_ADMIN))) {
+			employee.setPublic_flg("1");
 		}
+
 		params.put("bo", employee);
 		page.setParams(params);
 		employees = employeeService.getAllClientEmployeeByPage(page);
@@ -78,7 +80,8 @@ public class EmployeeAction extends BaseAction {
 	}
 
 	public String searchEmployee() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {

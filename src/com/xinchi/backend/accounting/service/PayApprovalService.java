@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.PayApprovalBean;
@@ -44,4 +45,6 @@ public interface PayApprovalService extends BaseService {
 	public List<PayApprovalBean> selectByParam(PayApprovalBean bean);
 
 	public List<PayApprovalBean> selectByPage(Page<PayApprovalBean> page);
+
+	public BigDecimal selectSumBalance();
 }

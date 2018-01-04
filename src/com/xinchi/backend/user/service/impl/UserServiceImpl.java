@@ -47,6 +47,8 @@ public class UserServiceImpl implements UserService {
 
 				if (user.getDelete_flg().equals("Y"))
 					return "stop";
+				if (user.getUser_status().equals("A"))
+					return "noright";
 				UserSessionBean sessionBean = new UserSessionBean();
 				try {
 					PropertyUtils.copyProperties(sessionBean, ubb);
@@ -88,7 +90,8 @@ public class UserServiceImpl implements UserService {
 	public String approveUser(String user_pk, String user_roles) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ubb.setApprove_time(DateUtil.getTimeMillis());
 		ubb.setApprove_user(sessionBean.getUser_number());
 		ubb.setUser_status(ResourcesConstants.USER_STATUS_NORMAL);
@@ -104,7 +107,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String rejectUser(String user_pk) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		ubb.setApprove_time(DateUtil.getTimeMillis());
 		ubb.setApprove_user(sessionBean.getUser_number());
 		ubb.setUser_status(ResourcesConstants.USER_STATUS_REJECT);

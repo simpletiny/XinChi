@@ -272,6 +272,9 @@
     	<if test="create_user != null">
     	 	and create_user = #{create_user,jdbcType=VARCHAR}
     	</if>
+    	<if test="client_employee_pk != null">
+    	 	and client_employee_pk = #{client_employee_pk,jdbcType=VARCHAR}
+    	</if>
     </where>
    </select>
    

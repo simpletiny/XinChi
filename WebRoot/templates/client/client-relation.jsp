@@ -22,6 +22,9 @@
 .form-control {
 	height: 30px;
 }
+.detail{
+	color:blue;
+}
 tr td {
 	text-overflow: ellipsis; /* for IE */
 	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
@@ -174,8 +177,8 @@ tr td {
 								<!-- <td data-bind="text: $data.year_order_count"></td> -->
 								<td data-bind="text: $data.month_order_count"></td>
 								<td data-bind="text: $data.last_order_period"></td>
-								<td data-bind="text: $data.last_visit_target"></td>
-								<td  data-bind="text: $data.last_accurate_sale_summary"></td>
+								<td data-bind="text: $data.last_client_visit_target" class="detail"></td>
+								<td data-bind="text: $data.last_accurate_sale_summary" class="detail"></td>
 								<!-- <td data-bind="text: $data.last_visit_period"></td> -->
 								<!-- <td data-bind="text: $data.chat_count"></td>
 								<td data-bind="text: $data.last_chat_period"></td> -->

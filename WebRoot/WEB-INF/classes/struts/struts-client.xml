@@ -11,6 +11,9 @@
 		<action name="deleteCompany" class="clientAction" method="deleteCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="deleteCompanyReally" class="clientAction" method="deleteCompanyReally">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="recoveryCompany" class="clientAction" method="recoveryCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>

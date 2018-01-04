@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.CardBean;
@@ -27,4 +28,6 @@ public interface CardDAO {
 	public CardBean selectByPk(String pk);
 
 	public List<CardBean> selectByPurpose(String purpose);
+
+	public BigDecimal selectSumBalance();
 }

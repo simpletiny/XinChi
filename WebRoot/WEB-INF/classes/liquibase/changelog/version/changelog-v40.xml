@@ -1068,4 +1068,41 @@
 			<comment>ALTER TABLE client_received_detail</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+           ALTER TABLE client 
+			ADD COLUMN main_business VARCHAR(50) NULL DEFAULT '未知' AFTER relate_flg,
+			ADD COLUMN store_type VARCHAR(50) NULL DEFAULT '未知' AFTER main_business,
+			ADD COLUMN back_level VARCHAR(50) NULL DEFAULT '未知' AFTER store_type;
+             ]]>
+			<comment>ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+          ALTER TABLE sale_order_name_list 
+				CHANGE COLUMN team_number team_number VARCHAR(30) NULL ,
+				ADD COLUMN sex CHAR(1) NULL AFTER create_user,
+				ADD COLUMN cellphone_A VARCHAR(20) NULL AFTER sex,
+				ADD COLUMN cellphone_B VARCHAR(20) NULL AFTER cellphone_A,
+				ADD COLUMN id_file VARCHAR(60) NULL AFTER cellphone_B,
+				ADD COLUMN passport_file VARCHAR(60) NULL AFTER id_file,
+				ADD COLUMN name_index INT NULL AFTER passport_file,
+				ADD COLUMN chairman CHAR(1) NULL DEFAULT 'N' AFTER name_index,
+				ADD COLUMN order_pk CHAR(22) NULL AFTER chairman;
+             ]]>
+			<comment>ALTER TABLE sale_order_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+          ALTER TABLE card 
+			ADD COLUMN sort_index INT NULL DEFAULT 999 AFTER purpose;
+             ]]>
+			<comment> ALTER TABLE card</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

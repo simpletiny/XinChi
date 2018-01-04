@@ -22,7 +22,6 @@ import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ProductBean;
@@ -35,6 +34,9 @@ import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.PropertiesUtil;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 @Service
 @Transactional
 public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderService {
@@ -46,13 +48,35 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	private SaleOrderDAO budgetOrderDao;
 
 	@Override
-	public String insert(BudgetStandardOrderBean bean) {
+	public String createOrder(BudgetStandardOrderBean bean, String json) {
 		// 保存确认文件
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			saveFile(bean);
 		}
-
 		dao.insert(bean);
+		JSONArray nameList = JSONArray.fromObject(json);
+		for (int i = 0; i < nameList.size(); i++) {
+			JSONObject obj = JSONObject.fromObject(nameList.get(i));
+			String chairman = obj.getString("chairman");
+			int name_index = obj.getInt("index");
+			String name = obj.getString("name");
+			String sex = obj.getString("sex");
+			String cellphone_A = obj.getString("cellphone_A");
+			String cellphone_B = obj.getString("cellphone_B");
+			String id = obj.getString("id");
+
+			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
+			passenger.setName(name);
+			passenger.setChairman(chairman);
+			passenger.setName_index(name_index);
+			passenger.setSex(sex);
+			passenger.setCellphone_A(cellphone_A);
+			passenger.setCellphone_B(cellphone_B);
+			passenger.setId(id);
+			passenger.setOrder_pk(bean.getPk());
+
+			nameListDao.insert(passenger);
+		}
 		return SUCCESS;
 	}
 
@@ -75,7 +99,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	private AirTicketNameListDAO airTicketNameListDao;
 
 	@Override
-	public String update(BudgetStandardOrderBean bean) {
+	public String update(BudgetStandardOrderBean bean, String json) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
@@ -87,25 +111,44 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			deleteFile(old);
 		}
 
+		// 修改名单
+		// 删除之前的名单
+		nameListDao.deleteByOrderPk(bean.getPk());
+		// 保存现在的名单
+		JSONArray nameList = JSONArray.fromObject(json);
+		for (int i = 0; i < nameList.size(); i++) {
+			JSONObject obj = JSONObject.fromObject(nameList.get(i));
+			String chairman = obj.getString("chairman");
+			int name_index = obj.getInt("index");
+			String name = obj.getString("name");
+			String sex = obj.getString("sex");
+			String cellphone_A = obj.getString("cellphone_A");
+			String cellphone_B = obj.getString("cellphone_B");
+			String id = obj.getString("id");
+
+			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
+			passenger.setName(name);
+			passenger.setChairman(chairman);
+			passenger.setName_index(name_index);
+			passenger.setSex(sex);
+			passenger.setCellphone_A(cellphone_A);
+			passenger.setCellphone_B(cellphone_B);
+			passenger.setId(id);
+			passenger.setOrder_pk(bean.getPk());
+
+			nameListDao.insert(passenger);
+		}
+
 		if (bean.getConfirm_flg().equals("Y")) {
 			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
 				bean.setTeam_number(numberService.generateTeamNumber());
 			}
 
-			// 保存名单
-			String[] names = bean.getName_list().split(";");
-			if (names.length != 0) {
-				for (String str : names) {
-					String people[] = str.split(":");
-					if (people.length != 2)
-						continue;
-
-					SaleOrderNameListBean name = new SaleOrderNameListBean();
-					name.setName(people[0].trim());
-					name.setId(people[1].trim());
-					name.setTeam_number(bean.getTeam_number());
-					nameListDao.insert(name);
-				}
+			// 更新名单的team_number
+			List<SaleOrderNameListBean> names = nameListDao.selectByOrderPk(bean.getPk());
+			for (SaleOrderNameListBean name : names) {
+				name.setTeam_number(bean.getTeam_number());
+				nameListDao.update(name);
 			}
 
 			// 生成预算单

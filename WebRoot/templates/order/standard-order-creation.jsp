@@ -141,10 +141,10 @@
 						<div class="col-md-12">
 							<label class="l">名单录入</label>
 							<div class="ip">
-								<textarea type="text" onblur="formatNameList(this)" class="ip-default" rows="10"
-									data-bind="value: order().name_list" name="bsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
+								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" data-bind="value: order().name_list" name="bsOrder.name_list"
+									placeholder="姓名+身份证号。"></textarea>
 							</div>
-							<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrder">写入</a>
+							<a type="submit" class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
 						</div>
 					</div>
 					<div id="air-ticket-check">
@@ -153,30 +153,40 @@
 								<table style="width: 100%" id="name-table" class="table table-striped table-hover">
 									<thead>
 										<tr>
-											<th style="width: 5%">团长</th>
-											<th style="width: 5%">序号</th>
+											<th style="width: 4%">团长</th>
+											<th style="width: 4%">序号</th>
 											<th style="width: 10%">姓名</th>
-											<th style="width: 10%">性别</th>
-											<th style="width: 10%">年龄</th>
-											<th style="width: 15%">手机号A</th>
-											<th style="width: 15%">手机号B</th>
+											<th style="width: 7%">性别</th>
+											<th style="width: 5%" title="只按年份计算">年龄</th>
+											<th style="width: 10%">手机号A</th>
+											<th style="width: 10%">手机号B</th>
 											<th style="width: 15%">证件号码</th>
 											<th style="width: 10%">分房组</th>
+											<th style="width: 10%"></th>
+											<th style="width: 10%"></th>
 											<th style="width: 5%"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td><input type="radio" checked="checked" name="team_chairman" /></td>
-											<td>1</td>
+											<td st="name-index">1</td>
 											<td><input type="text" style="width: 90%" st="name" /></td>
-											<td><input type="text" style="width: 90%" st="sex" /></td>
+											<td><select class="form-control" style="height: 34px" st="sex">
+												<option value="">选择</option>
+												<option value="M">男</option>
+												<option value="F">女</option>
+											</select></td>
 											<td><input type="text" style="width: 90%" st="age" /></td>
 											<td><input type="text" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" style="width: 90%" st="cellphone_B" /></td>
 											<td><input type="text" style="width: 90%" st="id" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
-											<td><input type="button" style="width: 50px" data-bind="click:removeName" title="删除名单" value="-" /></td>
+											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
+												type="hidden" /></td>
+											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
+												type="hidden" /></td>
+											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
 										</tr>
 									</tbody>
 								</table>

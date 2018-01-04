@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,11 @@ public class PayApprovalServiceImpl implements PayApprovalService {
 	@Override
 	public List<PayApprovalBean> selectByPage(Page<PayApprovalBean> page) {
 		return dao.selectByPage(page);
+	}
+
+	@Override
+	public BigDecimal selectSumBalance() {
+		return dao.selectSumBalance();
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -42,7 +43,8 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 
 	@Override
 	public String getAccountBalance(String account) {
-		String balance = daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectBalanceByAccount"), account);
+		String balance = daoUtil.selectOneValueByParam(("com.xinchi.bean.mapper.CardMapper.selectBalanceByAccount"),
+				account);
 		return balance;
 	}
 
@@ -70,5 +72,10 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 	@Override
 	public List<CardBean> selectByPurpose(String purpose) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.CardMapper.selectByPurpose", purpose);
+	}
+
+	@Override
+	public BigDecimal selectSumBalance() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.CardMapper.selectSumBalance");
 	}
 }

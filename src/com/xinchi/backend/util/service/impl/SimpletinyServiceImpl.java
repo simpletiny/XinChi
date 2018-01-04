@@ -23,10 +23,12 @@ public class SimpletinyServiceImpl implements SimpletinyService {
 	private PaymentDetailDAO paymentDetailDAO;
 
 	@Override
-	public void autoFixBalance() {
+	public void autoFixBalance(String account_name) {
 		// 取得所有账户
+		CardBean cardOption = new CardBean();
+		cardOption.setAccount(account_name);
+		List<CardBean> cards = cardDao.getAllByParam(cardOption);
 
-		List<CardBean> cards = cardDao.getAllByParam(null);
 		PaymentDetailBean detail = new PaymentDetailBean();
 		for (CardBean card : cards) {
 			detail.setAccount(card.getAccount());

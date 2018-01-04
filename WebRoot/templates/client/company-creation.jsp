@@ -50,6 +50,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip"><select class="form-control" data-bind="options: clientArea, optionsCaption: '-- 请选择 --', value: client().client_area" name="client.client_area" required="required"></select></div>
                     </div>
                 </div>
+                <div class="input-row clearfloat">
+                     <div class="col-md-4 required">
+                        <label class="l">门店</label>
+                        <div class="ip" style="width:60%"><select class="form-control" data-bind="options: storeTypes, optionsCaption: '-- 请选择 --', value: client().store_type" name="client.store_type" required="required"></select></div>
+                    </div>
+                    <div class="col-md-4 required">
+                        <label class="l">主营</label>
+                        <div class="ip" style="width:60%"><select class="form-control" data-bind="options: mainBusinesses, optionsCaption: '-- 请选择 --', value: client().main_business" name="client.main_business" required="required"></select></div>
+                    </div>
+                    <div class="col-md-4 required">
+                        <label class="l">回款誉</label>
+                        <div class="ip" style="width:60%"><select class="form-control" data-bind="options: backLevels, optionsCaption: '-- 请选择 --', value: client().back_level" name="client.back_level" required="required"></select></div>
+                    </div>
+                </div>
                  <div class="input-row clearfloat">
                     <div class="col-md-12 required">
                         <label class="l">地址</label>

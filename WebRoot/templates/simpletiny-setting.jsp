@@ -12,14 +12,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
   <div class="main-body">
     <div class="subtitle">
-        
+        <form action="<%=basePath%>simpletiny/autoFixBalance">	
+        	<input type="text" name="account_name"></input>
+        	<input type="submit" value="修正银行流水"></input>
+        </form>
       <%--  <a href="<%=basePath%>simpletiny/changeAllPasswordToMD5" >test</a> --%>
   <%--      <a href="<%=basePath%>simpletiny/autoGenReceivable" >生成应收款表</a>
         <a href="<%=basePath%>simpletiny/autoGenPayable" >生成应付款表</a>
         <a href="<%=basePath%>simpletiny/autoGenPayable2th" >生成应付款表2</a>
         <a href="<%=basePath%>simpletiny/autoGenReceivable2th" >生成应收款表2</a> --%>
-        <%-- <a href="<%=basePath%>simpletiny/autoFixBalance" >修正银行流水</a> --%>
-        <a href="<%=basePath%>simpletiny/autoGenTicketOrder" >生成机票订单</a> 
+      
+       <%--  <a href="<%=basePath%>simpletiny/autoGenTicketOrder" >生成机票订单</a>  --%>
     </div>
 
     <div class="main-container">

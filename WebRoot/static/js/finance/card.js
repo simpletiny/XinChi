@@ -28,9 +28,13 @@ var CardContext = function() {
 		total : 0,
 		items : []
 	});
+	
+	self.sumBalance = ko.observable();
+
 	self.refresh = function() {
 		$.getJSON(self.apiurl + 'finance/searchCard', {}, function(data) {
 			self.cards(data.cards);
+			self.sumBalance(data.sum_balance);
 			$(".rmb").formatCurrency();
 		});
 	};

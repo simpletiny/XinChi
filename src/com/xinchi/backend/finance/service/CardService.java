@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.CardBean;
@@ -35,4 +36,6 @@ public interface CardService {
 	public void update(CardBean current);
 
 	public List<CardBean> selectByPurpose(String purpose);
+
+	public BigDecimal selectSumBalance();
 }

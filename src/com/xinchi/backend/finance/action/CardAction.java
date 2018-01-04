@@ -1,6 +1,7 @@
 package com.xinchi.backend.finance.action;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
@@ -27,9 +28,11 @@ public class CardAction extends BaseAction {
 	}
 
 	private List<CardBean> cards;
-
+	private BigDecimal sum_balance;
+	
 	public String searchCard() {
 		cards = cardService.getAllCardsByParam(null);
+		sum_balance = cardService.selectSumBalance();
 		return SUCCESS;
 	}
 
@@ -124,6 +127,14 @@ public class CardAction extends BaseAction {
 
 	public void setPurpose(String purpose) {
 		this.purpose = purpose;
+	}
+
+	public BigDecimal getSum_balance() {
+		return sum_balance;
+	}
+
+	public void setSum_balance(BigDecimal sum_balance) {
+		this.sum_balance = sum_balance;
 	}
 
 }

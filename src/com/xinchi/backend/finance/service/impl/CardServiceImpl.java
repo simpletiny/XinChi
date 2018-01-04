@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,11 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public CardBean selectByAccount(String account) {
 		return dao.getCardByAccount(account);
+	}
+
+	@Override
+	public BigDecimal selectSumBalance() {
+		return dao.selectSumBalance();
 	}
 
 }

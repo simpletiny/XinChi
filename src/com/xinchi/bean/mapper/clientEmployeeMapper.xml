@@ -361,7 +361,8 @@
 		A.name,
 		A.nick_name,
 		A.sex,
-		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year END as age,
+		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
+		END as age,
 		A.wechat,
 		A.qq,
 		A.type,
@@ -387,11 +388,9 @@
 		A.back_level,
 		A.market_level
 		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN user_base C ON A.sales = C.pk
+		LEFT JOIN user_base C ON A.sales
+		= C.pk
 		<where>
-			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') or A.public_flg ='Y')
-			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
 			</if>
@@ -401,18 +400,21 @@
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.sales_name != null and params.bo.sales_name !=''">
-				and A.sales_name like CONCAT('%',#{params.bo.sales_name,jdbcType=VARCHAR},'%')
-			</if>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and A.sales = #{params.bo.sales,jdbcType=VARCHAR}
+				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
 			</if>
-			<if test="params.bo.delete_flg != null and params.bo.delete_flg !=''">
-				and A.delete_flg =#{params.bo.delete_flg,jdbcType=VARCHAR}
+			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
+				and A.delete_flg in
+				<foreach item="item" index="index" collection="params.bo.delete_flgs" open="(" separator="," close=")">
+					#{params.bo.delete_flgs[${index}]}
+				</foreach>
 			</if>
-			 <if test="params.bo.delete_flg == null or params.bo.delete_flg ==''">
-	         and A.delete_flg = 'N'
-	      </if>
+			<if test='params.bo.public_flg != null and params.bo.public_flg =="1"'>
+				and A.public_flg in ('Y','N')
+			</if>
+			<if test='params.bo.public_flg != null and params.bo.public_flg =="2"'>
+				and A.public_flg ='N'
+			</if>
 		</where>
 	</select>
 </mapper>

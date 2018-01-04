@@ -4,13 +4,18 @@ var CompanyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCompanies = ko.observableArray([]);
 	self.createCompany = function() {
-		window.location.href = self.apiurl + "templates/client/company-creation.jsp";
+		window.location.href = self.apiurl
+				+ "templates/client/company-creation.jsp";
 	};
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clients = ko.observable({
 		total : 0,
 		items : []
 	});
+	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
+	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
+	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 	self.status = [ 'N', 'Y' ];
 	self.statusMapping = {
 		'N' : '正常',
@@ -43,9 +48,13 @@ var CompanyContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		if (!$("#txt-public-flg").is(':checked'))
+			param += "&client.public_flg=N"
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
+				data) {
 			self.clients(data.clients);
 			$(".rmb").formatCurrency();
 
@@ -95,6 +104,44 @@ var CompanyContext = function() {
 								endLoadingIndicator();
 							} else {
 								fail_msg("停用失败，请联系管理员！");
+							}
+						});
+					}
+				}
+			});
+		}
+	};
+	self.deleteCompany = function() {
+		if (self.chosenCompanies().length == 0) {
+			fail_msg("请选择财务主体");
+			return;
+		} else if (self.chosenCompanies().length > 1) {
+			fail_msg("只能选择一个财务主体");
+			return;
+		} else {
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '注意：删除财务主体，会将此财务主体下的客户一并删除。如果你知道自己在做什么，请点确认?',
+					btns : 2,
+					type : 7,
+					btn : [ '确认', '不了' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中...");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'client/deleteCompanyReally',
+							data : "client_pk=" + self.chosenCompanies()
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenCompanies.removeAll();
+							} else if (str == "has_order") {
+								fail_msg("此财务主体下存在订单，不能删除，请选择停用。");
+							} else {
+								fail_msg("删除失败，请联系管理员");
 							}
 						});
 					}
@@ -193,7 +240,9 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCompanies().length == 1) {
-			window.location.href = self.apiurl + "templates/client/company-edit.jsp?key=" + self.chosenCompanies()[0];
+			window.location.href = self.apiurl
+					+ "templates/client/company-edit.jsp?key="
+					+ self.chosenCompanies()[0];
 		}
 	};
 	// start pagination
@@ -230,9 +279,10 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

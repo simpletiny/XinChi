@@ -32,6 +32,12 @@
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">总余额</label>
+							<div class="col-md-2">
+								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
+							</div>
+						</div>
 						<div style="width: 20%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCard() }">新建</button>

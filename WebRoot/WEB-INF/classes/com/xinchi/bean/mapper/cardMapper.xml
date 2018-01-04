@@ -17,6 +17,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="bank_nickname" property="bank_nickname" jdbcType="VARCHAR" />
+		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		account,
@@ -33,7 +34,8 @@
 		create_time,
 		update_time,
 		bank_nickname,
-		purpose
+		purpose,
+		sort_index
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -52,6 +54,11 @@
 		<include refid="Base_Column_List" />
 		from card
 		where purpose = #{purpose,jdbcType=CHAR}
+	</select>
+
+	<select id="selectSumBalance" resultType="java.math.BigDecimal">
+		select sum(balance) from card where account in
+		('公帐辅助9426','公帐主帐户0880','交行倒账9363','中行原卡','建行金卡7265','交行倒账363','公司主账户0880','微信9544','邮储哈市5906','农行哈市6919','中行哈市8471','建行哈市9028','交行哈市9999','工行哈市7479','支付宝9544')
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -106,6 +113,9 @@
 			<if test="purpose != null">
 				purpose,
 			</if>
+			<if test="sort_index != null">
+				sort_index,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="account != null">
@@ -150,6 +160,9 @@
 			<if test="purpose != null">
 				#{purpose,jdbcType=VARCHAR},
 			</if>
+			<if test="sort_index != null">
+				#{sort_index,jdbcType=INTEGER},
+			</if>
 		</trim>
 	</insert>
 
@@ -193,6 +206,9 @@
 			<if test="purpose != null">
 				purpose = #{purpose,jdbcType=VARCHAR},
 			</if>
+			<if test="sort_index != null">
+				sort_index = #{sort_index,jdbcType=INTEGER},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -200,9 +216,16 @@
 		select
 		<include refid="Base_Column_List" />
 		from card
+		<where>
+			<if test="account !=null and account !=''">
+				account= #{account,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY sort_index
 	</select>
 	<select id="selectAllAccounts" resultType="String">
 		select account from card
+		ORDER BY sort_index
 	</select>
 
 	<select id="selectBalanceByAccount" parameterType="String" resultType="java.lang.String">

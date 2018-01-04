@@ -60,10 +60,12 @@ public interface ClientService extends BaseService {
 	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page);
 
 	@LogDescription(des = "删除财务主体")
-	public String deleteClientEmployee(List<String> company_pks);
+	public String deleteClient(List<String> company_pks);
 
 	@LogDescription(des = "恢复财务主体")
 	public String recoveryClientEmployee(List<String> company_pks);
 
 	public String changeClientSales(List<String> company_pks, String sale_pk);
+
+	public String deleteClientReally(String client_pk);
 }

@@ -60,6 +60,9 @@ public class ClientBean extends SupperBO implements Serializable {
 	private Integer client_year_order_count;
 	private String last_order_date;
 
+	private String main_business;
+	private String store_type;
+	private String back_level;
 	// search options
 
 	private List<String> statuses;
@@ -319,6 +322,30 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setStatuses(List<String> statuses) {
 		this.statuses = statuses;
+	}
+
+	public String getMain_business() {
+		return main_business;
+	}
+
+	public void setMain_business(String main_business) {
+		this.main_business = main_business;
+	}
+
+	public String getStore_type() {
+		return store_type;
+	}
+
+	public void setStore_type(String store_type) {
+		this.store_type = store_type;
+	}
+
+	public String getBack_level() {
+		return back_level;
+	}
+
+	public void setBack_level(String back_level) {
+		this.back_level = back_level;
 	}
 
 }

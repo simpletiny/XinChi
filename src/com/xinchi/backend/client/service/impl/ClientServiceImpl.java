@@ -10,7 +10,9 @@ import com.xinchi.backend.client.dao.ClientChangeSaleLogDAO;
 import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.ClientService;
+import com.xinchi.backend.sale.dao.SaleOrderDAO;
 import com.xinchi.backend.user.dao.UserDAO;
+import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientChangeSaleLogBean;
 import com.xinchi.bean.ClientEmployeeBean;
@@ -20,6 +22,7 @@ import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 
 @Service
+@Transactional
 public class ClientServiceImpl implements ClientService {
 
 	@Autowired
@@ -28,7 +31,6 @@ public class ClientServiceImpl implements ClientService {
 	private UserDAO userDao;
 
 	@Override
-	@Transactional
 	public String createCompany(ClientBean client) {
 		ClientBean options = new ClientBean();
 		options.setSales(client.getSales());
@@ -48,7 +50,6 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	@Transactional
 	public void update(ClientBean client) {
 		dao.update(client);
 	}
@@ -95,7 +96,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public String deleteClientEmployee(List<String> company_pks) {
+	public String deleteClient(List<String> company_pks) {
 		dao.deleteCompanyByPks(company_pks);
 		return "success";
 	}
@@ -114,7 +115,8 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	public String changeClientSales(List<String> company_pks, String sale_pk) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String current_user = sessionBean.getUser_number();
 
 		for (String company_pk : company_pks) {
@@ -174,6 +176,36 @@ public class ClientServiceImpl implements ClientService {
 			dao.update(client);
 			clientChangeSaleLogDao.insert(changeLog);
 		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private SaleOrderDAO saleOrderDao;
+
+	@Override
+	public String deleteClientReally(String client_pk) {
+		ClientEmployeeBean employeeOption = new ClientEmployeeBean();
+		employeeOption.setFinancial_body_pk(client_pk);
+
+		List<ClientEmployeeBean> employees = employeeDao.getAllByParam(employeeOption);
+		BudgetOrderBean orderOption = new BudgetOrderBean();
+
+		// 查询每个客户下是否存在订单
+		for (ClientEmployeeBean employee : employees) {
+			orderOption.setClient_employee_pk(employee.getPk());
+			List<BudgetOrderBean> orders = saleOrderDao.selectAllByParam(orderOption);
+
+			if (null != orders && orders.size() > 0) {
+				return "has_order";
+			}
+		}
+		// 删除当前财务主体下的客户
+		for (ClientEmployeeBean employee : employees) {
+			employeeDao.delete(employee.getPk());
+		}
+
+		// 删除财务主体
+		dao.delete(client_pk);
 		return SUCCESS;
 	}
 }

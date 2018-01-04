@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -34,12 +33,13 @@
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 30%; float: right">
+						<div style="width: 40%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: changeSales">调整销售</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); deleteCompany() }">删除</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: changeSales">调整销售</button>
 							</s:if>
 						</div>
 					</div>
@@ -53,35 +53,69 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">地区</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" data-bind="options: clientArea, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.client_area"></select>
+								<select class="form-control" style="height: 34px"
+									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.client_area"></select>
 							</div>
 						</div>
 						<div class="span6">
-							<div data-bind="foreach: status">
-								<em class="small-box "> <input name="client.statuses" type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label
-									data-bind="text: $root.statusMapping[$data]"></label>
-								</em>
+							<label class="col-md-1 control-label">门店</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: storeTypes, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.store_type"></select>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">主营</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: mainBusinesses, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.main_business"></select>
+							</div>
+						</div>
+
+						
 					</div>
 					<div class="form-group">
 						<div class="span6 col-md-3">
 							<label class="col-md-1 control-label">&nbsp;</label>
 							<div data-bind="foreach: relates">
-								<em class="small-box "> <input type="checkbox" name="client.relate_flgs" data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
+								<em class="small-box "> <input type="checkbox" name="client.relate_flgs"
+									data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
 									data-bind="text: $root.relatesMapping[$data]"></label>
 								</em>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">回款誉</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: backLevels, optionsCaption: '-- 请选择 --',event:{change:refresh}" name="client.back_level"></select>
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:refresh}"
+									<select class="form-control" style="height: 34px"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:refresh}"
 										name="client.sales"></select>
 								</div>
 							</div>
+							<div class="span6">
+								<div class="col-md-2">
+									<em class="small-box "> <input type="checkbox" value="Y" id="txt-public-flg" name="client.public_flg"
+										data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+									</em>
+								</div>
+							</div>
 						</s:if>
+						<div class="span6">
+							<div data-bind="foreach: status" class="col-md-2">
+								<em class="small-box "> <input name="client.statuses" type="checkbox"
+									data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label
+									data-bind="text: $root.statusMapping[$data]"></label>
+								</em>
+							</div>
+						</div>
 						<div class="span6" style="float: right">
 							<div style="padding-top: 3px;">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
@@ -112,6 +146,9 @@
 							<tr role="row">
 								<th></th>
 								<th>简称</th>
+								<th>门店</th>
+								<th>主营</th>
+								<th>回款誉</th>
 								<th>地区</th>
 								<th>状态</th>
 								<th>类型</th>
@@ -128,7 +165,11 @@
 						<tbody data-bind="foreach: clients">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenCompanies" /></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
+								<td data-bind="text: $data.store_type"></td>
+								<td data-bind="text: $data.main_business"></td>
+								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.client_area"></td>
 								<!-- ko if:$data.delete_flg =='Y' -->
 								<td style="color: red">停用</td>
@@ -145,7 +186,8 @@
 								<!-- /ko -->
 
 								<!-- ko if:$data.relate_flg =='Y' -->
-								<td style="color: blue"><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
+								<td style="color: blue"><a href="javascript:void(0)"
+									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
 								<!-- /ko -->
 
 								<td data-bind="text: $data.address"></td>
@@ -189,15 +231,18 @@
 				<label class="l">选择销售</label>
 				<div class="ip">
 					<div data-bind="foreach: sales" style="padding-top: 4px;">
-						<em class="small-box"> <input type="radio" name="choosenUser" data-bind="attr: {'value': $data.pk}, checked: $root.chosenUser" /> <!-- ko if: $data.user_name =='公开' --> <label
-							style="color: red" data-bind="text: $data.user_name"></label> <!-- /ko --> <!-- ko if: $data.user_name !='公开' --> <label data-bind="text: $data.user_name"></label> <!-- /ko -->
+						<em class="small-box"> <input type="radio" name="choosenUser"
+							data-bind="attr: {'value': $data.pk}, checked: $root.chosenUser" /> <!-- ko if: $data.user_name =='公开' --> <label
+							style="color: red" data-bind="text: $data.user_name"></label> <!-- /ko --> <!-- ko if: $data.user_name !='公开' -->
+							<label data-bind="text: $data.user_name"></label> <!-- /ko -->
 						</em>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="float: right">
-			<a type="submit" class="btn btn-green btn-r" data-bind="click: doChangeSale">保存</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: doChangeSale">保存</a> <a type="submit"
+				class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
 		</div>
 	</div>
 	<script>

@@ -12,14 +12,15 @@ public interface BudgetNonStandardOrderService extends BaseService {
 	 * 
 	 * @param bean
 	 */
-	public String insert(BudgetNonStandardOrderBean bean);
+	public String insert(BudgetNonStandardOrderBean bean, String json);
 
 	/**
 	 * 修改
 	 * 
 	 * @param bean
+	 * @param json 
 	 */
-	public String update(BudgetNonStandardOrderBean bean);
+	public String update(BudgetNonStandardOrderBean bean, String json);
 
 	/**
 	 * 删除

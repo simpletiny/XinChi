@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -66,7 +65,9 @@
 						</div>
 						<div class="span6">
 							<div data-bind="foreach: status">
-								<em class="small-box "> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label data-bind="text: $data"></label>
+								<em class="small-box "> <input name="employee.delete_flgs" type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenStatus, event:{click:function(){$root.refresh();return true}}" /><label
+									data-bind="text: $root.deleteMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -75,10 +76,20 @@
 					<div class="form-group">
 
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--'" name="employee.sales"></select>
+									<select class="form-control" style="height: 34px"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:$root.refresh}"
+										name="employee.sales"></select>
+								</div>
+							</div>
+							<div class="span6">
+								<div class="col-md-2">
+									<em class="small-box "> <input type="checkbox" value="Y" id="txt-public-flg" name="employee.public_flg"
+										data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+									</em>
 								</div>
 							</div>
 						</s:if>
@@ -110,7 +121,8 @@
 						<tbody data-bind="foreach: employees">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees" /></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.nick_name"></td>
 								<td data-bind="text: $data.sex"></td>
 								<!-- ko if:$data.delete_flg =='Y' -->

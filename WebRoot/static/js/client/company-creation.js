@@ -4,8 +4,12 @@ var CompanyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.client = ko.observable({});
 	self.genders = [ '男', '女' ];
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clientType = [ '总公司', '分公司', '营业部', '包桌', '经纪人', '其他' ];
+	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
+	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
+	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 
 	self.createCompany = function() {
 		if (!$("form").valid()) {
@@ -15,13 +19,15 @@ var CompanyContext = function() {
 			type : "POST",
 			url : self.apiurl + 'client/createCompany',
 			data : $("form").serialize()
-		}).success(function(str) {
-			if (str == "success") {
-				window.location.href = self.apiurl + "templates/client/company.jsp";
-			} else if (str = "exist") {
-				fail_msg("存在同名财务主体！");
-			}
-		});
+		}).success(
+				function(str) {
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/client/company.jsp";
+					} else if (str = "exist") {
+						fail_msg("存在同名财务主体！");
+					}
+				});
 	};
 
 	// 关联旅游公司相关
@@ -51,9 +57,11 @@ var CompanyContext = function() {
 
 	self.refresh = function() {
 		var param = "agency.agency_name=" + $("#agency_full_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchAgencyByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'client/searchAgencyByPage', param, function(
+				data) {
 			self.agencies(data.agencys);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -103,9 +111,10 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

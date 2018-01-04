@@ -43,6 +43,9 @@ $(document).ready(function() {
 	}else if(login_result=="stop"){
 		layer.msg("用户已停用，请联系管理员！", 2, 8);
 		$("#login_result").val("");
+	}else if(login_result=="noright"){
+		layer.msg("请等待管理员审批",2,8);
+		$("#login_result").val("");
 	}
 	
 	$("form").submit(function(e) {

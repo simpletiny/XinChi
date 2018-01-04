@@ -11,4 +11,10 @@ public interface OrderNameListDAO {
 	public List<SaleOrderNameListBean> selectByTeamNumber(String team_number);
 
 	public void deleteByTeamNumber(String team_number);
+
+	public List<SaleOrderNameListBean> selectByOrderPk(String order_pk);
+
+	public void deleteByOrderPk(String pk);
+
+	public void update(SaleOrderNameListBean name);
 }

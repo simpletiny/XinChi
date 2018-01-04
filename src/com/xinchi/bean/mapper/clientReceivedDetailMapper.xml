@@ -369,7 +369,7 @@
 				and if(A.type='SUM', A.allot_received = #{params.bo.money,jdbcType=DECIMAL},A.received =
 				#{params.bo.money,jdbcType=DECIMAL})
 			</if>
-			ORDER BY A.received_time
+			ORDER BY A.create_time DESC, A.received_time
 		</where>
 	</select>
 

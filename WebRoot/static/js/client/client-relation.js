@@ -32,6 +32,7 @@ var ClientContext = function() {
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 			$(".rmb").formatCurrency();
+			$(".detail").showDetail();
 		});
 	};
 

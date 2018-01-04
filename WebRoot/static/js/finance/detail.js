@@ -55,7 +55,7 @@ var DetailContext = function() {
 						if (detail.type == "收入") {
 							window.location.href = self.apiurl + "templates/finance/normal-receive-detail-edit.jsp?key=" + self.chosenDetails()[0];
 						} else {
-							fail_msg("只能修改财务支出！");
+							window.location.href = self.apiurl + "templates/finance/pay-detail-edit.jsp?key=" + self.chosenDetails()[0];
 						}
 					}
 				} else {

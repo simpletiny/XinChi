@@ -22,7 +22,6 @@ import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.Utils;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -53,8 +52,8 @@ public class UserAction extends BaseAction {
 		} else {
 			request.setAttribute("login_result", result);
 		}
-//		SimpletinyUser su = new SimpletinyUser();
-//		System.out.println(su.getUser().getUser_number());
+		// SimpletinyUser su = new SimpletinyUser();
+		// System.out.println(su.getUser().getUser_number());
 		return result;
 	}
 
@@ -163,14 +162,16 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	public String checkPassword(){
+	public String checkPassword() {
 		resultStr = userService.checkPassword(ucb);
 		return SUCCESS;
 	}
-	public String changePassword(){
+
+	public String changePassword() {
 		resultStr = userService.changePassword(ucb);
 		return SUCCESS;
 	}
+
 	@JSON(serialize = false)
 	public UserBaseBean getUbb() {
 		return ubb;

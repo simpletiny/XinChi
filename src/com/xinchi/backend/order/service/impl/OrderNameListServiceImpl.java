@@ -30,4 +30,9 @@ public class OrderNameListServiceImpl implements OrderNameListService {
 		return dao.selectByTeamNumber(team_number);
 	}
 
+	@Override
+	public List<SaleOrderNameListBean> selectByOrderPk(String order_pk) {
+		return dao.selectByOrderPk(order_pk);
+	}
+
 }

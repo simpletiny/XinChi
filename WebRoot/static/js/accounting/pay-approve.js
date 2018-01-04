@@ -57,7 +57,10 @@ var PaidContext = function() {
 	self.totalPayable = ko.observable(0);
 	self.totalProfit = ko.observable(0);
 	self.totalPerProfit = ko.observable(0);
-
+	
+	self.sumBalance = ko.observable();
+	self.sumCardBalance = ko.observable();
+	
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalReceivable = 0;
@@ -70,6 +73,8 @@ var PaidContext = function() {
 
 		$.getJSON(self.apiurl + 'accounting/searchPaidApplyByPage', param, function(data) {
 			self.paids(data.payApprovals);
+			self.sumBalance(data.sum_balance);
+			self.sumCardBalance(data.sum_card_balance);
 			// 计算合计
 			$(self.paids()).each(function(idx, data) {
 				totalPeople += data.people_count;

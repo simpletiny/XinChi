@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -58,6 +59,11 @@ public class PayApprovalDAOImpl extends SqlSessionDaoSupport implements PayAppro
 	@Override
 	public PayApprovalBean selectByBackPk(String back_pk) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayApprovalMapper.selectByBackPk", back_pk);
+	}
+
+	@Override
+	public BigDecimal selectSumBalance() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.PayApprovalMapper.selectSumBalance");
 	}
 
 }

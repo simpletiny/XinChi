@@ -30,6 +30,8 @@ public class CardBean extends SupperBO implements Serializable {
 
 	private String purpose;
 
+	private Integer sort_index;
+
 	public String getNumber() {
 		return number;
 	}
@@ -132,6 +134,14 @@ public class CardBean extends SupperBO implements Serializable {
 
 	public void setPurpose(String purpose) {
 		this.purpose = purpose;
+	}
+
+	public Integer getSort_index() {
+		return sort_index;
+	}
+
+	public void setSort_index(Integer sort_index) {
+		this.sort_index = sort_index;
 	}
 
 }

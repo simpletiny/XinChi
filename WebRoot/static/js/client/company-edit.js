@@ -8,7 +8,9 @@ var CompanyContext = function() {
 	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
 			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clientType = [ '总公司', '分公司', '营业部','包桌', '经纪人', '其他' ];
-
+	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
+	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
+	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'client/searchOneCompany', {
 		client_pk : self.companyPk

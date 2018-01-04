@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.PayApprovalBean;
@@ -45,4 +46,6 @@ public interface PayApprovalDAO {
 	public List<PayApprovalBean> selectByPage(Page<PayApprovalBean> page);
 
 	public PayApprovalBean selectByBackPk(String pk);
+
+	public BigDecimal selectSumBalance();
 }

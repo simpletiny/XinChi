@@ -38,4 +38,20 @@ public class OrderNameListDAOImpl extends SqlSessionDaoSupport implements OrderN
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.SaleOrderNameListMapper.deleteByTeamNumber", team_number);
 	}
 
+	@Override
+	public List<SaleOrderNameListBean> selectByOrderPk(String order_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SaleOrderNameListMapper.selectByOrderPk", order_pk);
+	}
+
+	@Override
+	public void deleteByOrderPk(String order_pk) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.SaleOrderNameListMapper.deleteByOrderPk", order_pk);
+	}
+
+	@Override
+	public void update(SaleOrderNameListBean bean) {
+		daoUtil.updateByBOParam("com.xinchi.bean.mapper.SaleOrderNameListMapper.updateByPrimaryKey", bean);
+
+	}
+
 }

@@ -8,6 +8,14 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="CHAR" />
+		<result column="cellphone_A" property="cellphone_A" jdbcType="VARCHAR" />
+		<result column="cellphone_B" property="cellphone_B" jdbcType="VARCHAR" />
+		<result column="id_file" property="id_file" jdbcType="VARCHAR" />
+		<result column="passport_file" property="passport_file" jdbcType="VARCHAR" />
+		<result column="name_index" property="name_index" jdbcType="INTEGER" />
+		<result column="chairman" property="chairman" jdbcType="CHAR" />
+		<result column="order_pk" property="order_pk" jdbcType="CHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 	</resultMap>
@@ -20,7 +28,16 @@
 		update_user,
 		pk,
 		create_user,
-		create_time,update_time
+		sex,
+		cellphone_A,
+		cellphone_B,
+		id_file,
+		passport_file,
+		name_index,
+		chairman,
+		order_pk,
+		create_time,
+		update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -35,15 +52,27 @@
 		from sale_order_name_list
 		where team_number = #{team_number,jdbcType=CHAR}
 	</select>
+	<select id="selectByOrderPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sale_order_name_list
+		where order_pk = #{order_pk,jdbcType=CHAR}
+		ORDER BY name_index
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from sale_order_name_list
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByOrderPk" parameterType="java.lang.String">
+		delete from sale_order_name_list
+		where order_pk = #{order_pk,jdbcType=CHAR}
+	</delete>
 
 	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
 		delete from sale_order_name_list
-		where team_number = #{team_number,jdbcType=CHAR}
+		where team_number =
+		#{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.SaleOrderNameListBean">
@@ -68,6 +97,30 @@
 			</if>
 			<if test="create_user != null">
 				create_user,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="cellphone_A != null">
+				cellphone_A,
+			</if>
+			<if test="cellphone_B != null">
+				cellphone_B,
+			</if>
+			<if test="id_file != null">
+				id_file,
+			</if>
+			<if test="passport_file != null">
+				passport_file,
+			</if>
+			<if test="name_index != null">
+				name_index,
+			</if>
+			<if test="chairman != null">
+				chairman,
+			</if>
+			<if test="order_pk != null">
+				order_pk,
 			</if>
 			<if test="create_time != null">
 				create_time,
@@ -95,11 +148,35 @@
 			<if test="create_user != null">
 				#{create_user,jdbcType=VARCHAR},
 			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=CHAR},
+			</if>
+			<if test="cellphone_A != null">
+				#{cellphone_A,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone_B != null">
+				#{cellphone_B,jdbcType=VARCHAR},
+			</if>
+			<if test="id_file != null">
+				#{id_file,jdbcType=VARCHAR},
+			</if>
+			<if test="passport_file != null">
+				#{passport_file,jdbcType=VARCHAR},
+			</if>
+			<if test="name_index != null">
+				#{name_index,jdbcType=INTEGER},
+			</if>
+			<if test="chairman != null">
+				#{chairman,jdbcType=CHAR},
+			</if>
+			<if test="order_pk != null">
+				#{order_pk,jdbcType=CHAR},
+			</if>
 			<if test="create_time != null">
 				#{create_time,jdbcType=VARCHAR},
 			</if>
 			<if test="update_time != null">
-				#{update_time,jdbcType=TIMESTAMP},
+				#{update_time,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -126,7 +203,31 @@
 			<if test="create_user != null">
 				create_user = #{create_user,jdbcType=VARCHAR},
 			</if>
-			<if test="modify_time != null">
+			<if test="sex != null">
+				sex = #{sex,jdbcType=CHAR},
+			</if>
+			<if test="cellphone_A != null">
+				cellphone_A = #{cellphone_A,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone_B != null">
+				cellphone_B = #{cellphone_B,jdbcType=VARCHAR},
+			</if>
+			<if test="id_file != null">
+				id_file = #{id_file,jdbcType=VARCHAR},
+			</if>
+			<if test="passport_file != null">
+				passport_file = #{passport_file,jdbcType=VARCHAR},
+			</if>
+			<if test="name_index != null">
+				name_index = #{name_index,jdbcType=INTEGER},
+			</if>
+			<if test="chairman != null">
+				chairman = #{chairman,jdbcType=CHAR},
+			</if>
+			<if test="order_pk != null">
+				order_pk = #{order_pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
 		</set>

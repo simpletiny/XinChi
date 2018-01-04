@@ -2,47 +2,46 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
 	"http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
-	
+
 	<constant name="struts.objectFactory" value="spring" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
-	 <!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
-    <constant name="struts.configuration.xml.reload" value="true"/>
-    <!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
-    <constant name="struts.devMode" value="false" />
-	 <!-- 更改struts2请求Action的后缀名，默认为action。若想去掉后缀，设为","即可 -->
-    <constant name="struts.action.extension" value=","></constant>
-    
-     <!-- 限定上传文件最大大小4M,struts2默认maxSize为2M -->  
-    <constant name="struts.multipart.maxSize" value="4194304"></constant>
-    <!-- 指定上传文件时临时文件的存放路径,设为"/tempUpload"将在 项目所在盘下创建文件夹tempUpload-->  
-     <constant name="struts.multipart.saveDir" value="D:/home/upload/tempUpload"></constant> 
-     <!-- <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant>  -->
-  		<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest"
-  		name="simpletinyRequestParse" class="com.xinchi.struts.parse.SimpletinyRequestParser"
-  		scope="default" optional="true" />
-  		
-    <constant name="struts.multipart.handler" value="simpletinyRequestParse" />
+	<!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<constant name="struts.devMode" value="false" />
+	<!-- 更改struts2请求Action的后缀名，默认为action。若想去掉后缀，设为","即可 -->
+	<constant name="struts.action.extension" value=","></constant>
+
+	<!-- 限定上传文件最大大小4M,struts2默认maxSize为2M -->
+	<constant name="struts.multipart.maxSize" value="4194304"></constant>
+	<!-- 指定上传文件时临时文件的存放路径,设为"/tempUpload"将在 项目所在盘下创建文件夹tempUpload -->
+	<constant name="struts.multipart.saveDir" value="D:/home/upload/tempUpload"></constant>
+	<!-- <constant name="struts.multipart.saveDir" value="/home/upload/tempUpload"></constant> -->
+	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="simpletinyRequestParse"
+		class="com.xinchi.struts.parse.SimpletinyRequestParser" scope="default" optional="true" />
+
+	<constant name="struts.multipart.handler" value="simpletinyRequestParse" />
 
 
-    <package name="default" extends="struts-default,json-default" namespace="/">
-    
-         <result-types>
+	<package name="default" extends="struts-default,json-default" namespace="/">
+
+		<result-types>
 			<!-- 返回字符串 -->
-		<result-type name="str" class="stringResult" />
-		</result-types>	
+			<result-type name="str" class="stringResult" />
+		</result-types>
 
-    	 <!--注册拦截器-->
+		<!--注册拦截器 -->
 		<interceptors>
-			<interceptor name="businessInterceptor" class="com.xinchi.struts.interceptor.BusinessInterceptor"/>
+			<interceptor name="businessInterceptor" class="com.xinchi.struts.interceptor.BusinessInterceptor" />
 			<interceptor-stack name="mystack">
-				<interceptor-ref name="defaultStack"/>			
-				<interceptor-ref name="businessInterceptor"/>
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="businessInterceptor" />
 			</interceptor-stack>
 		</interceptors>
 
 		<!-- 设置默认拦截器栈 -->
-		<default-interceptor-ref name="mystack"/>
-    	<default-action-ref name="defaultAction"/>
+		<default-interceptor-ref name="mystack" />
+		<default-action-ref name="defaultAction" />
 
 		<!-- 全局跳转页面 -->
 		<global-results>
@@ -50,18 +49,16 @@
 			<result name="ERROR">/error2.jsp</result>
 			<result name="login">/login.jsp</result>
 			<result name="invalid.token">/error2.jsp</result>
-<!-- 			<result type="json">     
-				 <param name="excludeNullProperties" >true</param>
-		   		 <param name="ignoreHierarchy">false</param>     
-			</result>  -->
+			<!-- <result type="json"> <param name="excludeNullProperties" >true</param> <param name="ignoreHierarchy">false</param> 
+				</result> -->
 		</global-results>
-		
+
 		<!-- 全局异常 -->
 		<global-exception-mappings>
-			<exception-mapping result="ERROR" exception="java.lang.Exception"/>
+			<exception-mapping result="ERROR" exception="java.lang.Exception" />
 		</global-exception-mappings>
-		<action name="defaultAction" class="com.xinchi.common.DefaultAction"></action>	
-    </package>
-	<!--  添加struts配置-->
-	 <include file="struts/*.xml" /> 
+		<action name="defaultAction" class="com.xinchi.common.DefaultAction"></action>
+	</package>
+	<!-- 添加struts配置 -->
+	<include file="struts/*.xml" />
 </struts>   

@@ -252,10 +252,11 @@ public class SimpletinyAction extends BaseAction {
 
 	@Autowired
 	private SimpletinyService service;
-
+	
+	private String account_name;
 	// 自动修正流水账余额
 	public String autoFixBalance() {
-		service.autoFixBalance();
+		service.autoFixBalance(account_name);
 		return SUCCESS;
 	}
 
@@ -426,5 +427,13 @@ public class SimpletinyAction extends BaseAction {
 
 	public void setReceivables(List<ReceivableBean> receivables) {
 		this.receivables = receivables;
+	}
+
+	public String getAccount_name() {
+		return account_name;
+	}
+
+	public void setAccount_name(String account_name) {
+		this.account_name = account_name;
 	}
 }
