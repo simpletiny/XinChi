@@ -153,16 +153,48 @@ public class DateUtil {
 
 		return sdf1.format(cal.getTime());
 	}
-	
-	public static String addOneMin(String source){
-		Date d = castStr2Date(source,YYYY_MM_DD_HH_MM);
+
+	public static String addOneMin(String source) {
+		Date d = castStr2Date(source, YYYY_MM_DD_HH_MM);
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
 		c.add(Calendar.MINUTE, 1);
-		
+
 		return sdf3.format(c.getTime());
 	}
+
+	public static String getThisWeekFirstDay() {
+		Calendar cal = Calendar.getInstance();
+
+		int d = 0;
+		if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+			d = -6;
+		} else {
+			d = 2 - cal.get(Calendar.DAY_OF_WEEK);
+		}
+		cal.add(Calendar.DAY_OF_WEEK, d);
+		// 所在周开始日期
+		return sdf1.format(cal.getTime());
+	}
+
+	public static String getThisWeekLastDay() {
+		Calendar cal = Calendar.getInstance();
+
+		int d = 0;
+		if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+			d = -6;
+		} else {
+			d = 2 - cal.get(Calendar.DAY_OF_WEEK);
+		}
+
+		cal.add(Calendar.DAY_OF_WEEK, d+6);
+		// 所在周结束日期
+		return sdf1.format(cal.getTime());
+
+	}
+
 	public static void main(String[] args) {
-		System.out.println(addOneMin("2016-11-05 23:59"));
+		System.out.println(addDate(getThisWeekFirstDay(),-7));
+		System.out.println(addDate(getThisWeekFirstDay(),-1));
 	}
 }

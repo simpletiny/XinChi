@@ -135,6 +135,32 @@ var ProductBoxContext = function() {
 	$("#img-pic").on('click', function() {
 		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
 	});
+	// 下载相关文件
+	self.downloadFile = function(data, event) {
+		$('.download-panel').remove();
+		var label = event.target;
+		var X = $(label).offset().top;
+		var Y = $(label).offset().left;
+		var div = $('<div></div>');
+		var departure_notice = $('<a href="#" style="cursor:pointer;margin-right:10px">出团通知</a>');
+		var supplier_confirm = $('<a href="#" style="cursor:pointer">地接确认</a>');
+
+		$(div).append(departure_notice);
+		$(div).append(supplier_confirm);
+
+		$(div).addClass("download-panel");
+		$(div).css({
+			'top' : X + 20,
+			'left' : Y - 70
+		});
+		$('body').append(div);
+
+		$(departure_notice).click({
+			label : data
+		}, function(label) {
+
+		});
+	};
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -187,4 +213,10 @@ var ctx = new ProductBoxContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+	$('body').click(function(event) {
+		var target = event.target;
+		if (!$(target).hasClass("download")) {
+			$('.download-panel').remove();
+		}
+	});
 });

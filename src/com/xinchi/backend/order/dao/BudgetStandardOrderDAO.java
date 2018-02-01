@@ -38,4 +38,6 @@ public interface BudgetStandardOrderDAO{
 	public List<BudgetStandardOrderBean> selectByParam(BudgetStandardOrderBean bean);
 
 	public BudgetStandardOrderBean selectByTeamNumber(String team_number);
+	
+	public void insertWithPk(BudgetStandardOrderBean bean);
 }

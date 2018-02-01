@@ -140,7 +140,7 @@ tr td {
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
-								<td data-bind="text: $data.status"></td>
+								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.departure_date"></td>

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,11 +53,11 @@ public class ToolsUtil {
 	 * @return
 	 */
 	/*
-	 * public static Object getBean(String beanName){ HttpServletRequest request
-	 * = ServletActionContext.getRequest(); ServletContext
+	 * public static Object getBean(String beanName){ HttpServletRequest request =
+	 * ServletActionContext.getRequest(); ServletContext
 	 * sc=request.getSession().getServletContext(); ApplicationContext ac =
-	 * WebApplicationContextUtils.getRequiredWebApplicationContext(sc); Object
-	 * obj = ac.getBean(beanName); return obj; }
+	 * WebApplicationContextUtils.getRequiredWebApplicationContext(sc); Object obj =
+	 * ac.getBean(beanName); return obj; }
 	 */
 	/**
 	 * 根据名称获取bean(通过BeanFactory获得)
@@ -99,17 +100,13 @@ public class ToolsUtil {
 		if (ctx == null) {
 			if (actionContext == null) {
 				// 从接口过来，没有request
-				ctx = ctx == null ? new ClassPathXmlApplicationContext(
-						springConfigPath) : ctx;
+				ctx = ctx == null ? new ClassPathXmlApplicationContext(springConfigPath) : ctx;
 			} else {
 				// 从action过来，有request
 				if (ctx == null) {
-					HttpServletRequest request = ServletActionContext
-							.getRequest();
-					ServletContext sc = request.getSession()
-							.getServletContext();
-					ctx = WebApplicationContextUtils
-							.getRequiredWebApplicationContext(sc);
+					HttpServletRequest request = ServletActionContext.getRequest();
+					ServletContext sc = request.getSession().getServletContext();
+					ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
 				}
 			}
 		}
@@ -174,8 +171,7 @@ public class ToolsUtil {
 	 * @return:true:数据相等 false:数据不相等
 	 * @throws Exception
 	 */
-	public static boolean compare(String confData, Object dbData,
-			String query_type) throws Exception {
+	public static boolean compare(String confData, Object dbData, String query_type) throws Exception {
 		confData = confData.trim();
 		// 匹配数据类型
 		compareDataType(confData, dbData);
@@ -184,8 +180,7 @@ public class ToolsUtil {
 			if (dbData != null && !"".equals(dbData)) {
 				confData = confData.substring(4, confData.length() - 1);
 				// dbData中本身就是Integer类型，如果先转成String类型再转为Integer类型会报异常
-				return int_compare(Integer.parseInt(confData),
-						(Integer) dbData, query_type);
+				return int_compare(Integer.parseInt(confData), (Integer) dbData, query_type);
 			} else {
 				// 数据库中取出的数据为空，如果正确答案也是空字符串则判断正确
 				if (confData == null || "".equals(confData)) {
@@ -198,8 +193,7 @@ public class ToolsUtil {
 			// 数据库中数据不为空，则调用方法正常比较
 			if (dbData != null && !"".equals(dbData)) {
 				confData = confData.substring(4, confData.length() - 1);
-				return cur_compare(new BigDecimal(confData),
-						(BigDecimal) dbData, query_type);
+				return cur_compare(new BigDecimal(confData), (BigDecimal) dbData, query_type);
 			} else {
 				// 数据库中取出的数据为空，如果正确答案也是空字符串则判断正确
 				if (confData == null || "".equals(confData)) {
@@ -212,8 +206,7 @@ public class ToolsUtil {
 			// 数据库中数据不为空，则调用方法正常比较
 			if (dbData != null && !"".equals(dbData)) {
 				confData = confData.substring(4, confData.length() - 1);
-				return num_compare(new BigDecimal(confData),
-						(BigDecimal) dbData, query_type);
+				return num_compare(new BigDecimal(confData), (BigDecimal) dbData, query_type);
 			} else {
 				// 数据库中取出的数据为空，如果正确答案也是空字符串则判断正确
 				if (confData == null || "".equals(confData)) {
@@ -245,8 +238,7 @@ public class ToolsUtil {
 	 *            ：1 等于、2大于、3小于、4大于等于、5小于等于、6不等于、7like、8like and、9like or
 	 * @return:true:数据相等 false:数据不相等
 	 */
-	public static boolean str_compare(String confData, String dbData,
-			String query_type) {
+	public static boolean str_compare(String confData, String dbData, String query_type) {
 
 		if (query_type.equals("1")) {
 			if (dbData.equals(confData)) {
@@ -297,8 +289,7 @@ public class ToolsUtil {
 	 *            ：1 等于、2大于、3小于、4大于等于、5小于等于、6不等于、7like
 	 * @return:true:数据相等 false:数据不相等
 	 */
-	public static boolean num_compare(BigDecimal confData, BigDecimal dbData,
-			String query_type) {
+	public static boolean num_compare(BigDecimal confData, BigDecimal dbData, String query_type) {
 
 		// 判断相等
 		if (query_type.equals("1")) {
@@ -351,8 +342,7 @@ public class ToolsUtil {
 	 *            ：1 等于、2大于、3小于、4大于等于、5小于等于、6不等于、7like
 	 * @return:true:数据相等 false:数据不相等
 	 */
-	public static boolean cur_compare(BigDecimal confData, BigDecimal dbData,
-			String query_type) {
+	public static boolean cur_compare(BigDecimal confData, BigDecimal dbData, String query_type) {
 		// 判断相等
 		if (query_type.equals("1")) {
 			if (dbData.compareTo(confData) == 0) {
@@ -403,8 +393,7 @@ public class ToolsUtil {
 	 *            ：1 等于、2大于、3小于、4大于等于、5小于等于、6不等于、7like
 	 * @return:true:数据相等 false:数据不相等
 	 */
-	public static boolean int_compare(Integer confData, Integer dbData,
-			String query_type) {
+	public static boolean int_compare(Integer confData, Integer dbData, String query_type) {
 
 		if (query_type.equals("1")) {
 			if (dbData.compareTo(confData) == 0) {
@@ -452,35 +441,27 @@ public class ToolsUtil {
 	 * @author wy 数据库中数据的数据类型与评分脚本中正确答案的数据类型匹配
 	 * @throws Exception
 	 */
-	public static void compareDataType(String confData, Object dbData)
-			throws Exception {
+	public static void compareDataType(String confData, Object dbData) throws Exception {
 		confData = confData.trim();
 		if (confData.toLowerCase().indexOf("int") != -1) {// 整型
 			if (!(dbData instanceof Integer || dbData == null)) {
 				throw new RuntimeException(
-						"Data type mismatch,script data type: int--" + confData
-								+ "db data type not int--" + dbData);
+						"Data type mismatch,script data type: int--" + confData + "db data type not int--" + dbData);
 			}
 		} else if (confData.toLowerCase().indexOf("cur") != -1) {// 货币
 			if (!(dbData instanceof BigDecimal || dbData == null)) {
-				throw new RuntimeException(
-						"Data type mismatch,script data type: BigDecimal--"
-								+ confData + "db data type not Decimal--"
-								+ dbData);
+				throw new RuntimeException("Data type mismatch,script data type: BigDecimal--" + confData
+						+ "db data type not Decimal--" + dbData);
 			}
 		} else if (confData.toLowerCase().indexOf("num") != -1) {// 数字
 			if (!(dbData instanceof BigDecimal || dbData == null)) {
-				throw new RuntimeException(
-						"Data type mismatch,script data type: BigDecimal--"
-								+ confData + "db data type not Decimal--"
-								+ dbData);
+				throw new RuntimeException("Data type mismatch,script data type: BigDecimal--" + confData
+						+ "db data type not Decimal--" + dbData);
 			}
 		} else {
 			if (!(dbData instanceof String || dbData == null)) {
-				throw new RuntimeException(
-						"Data type mismatch,script data type: String:"
-								+ confData + "db data type not String:"
-								+ dbData);
+				throw new RuntimeException("Data type mismatch,script data type: String:" + confData
+						+ "db data type not String:" + dbData);
 			}
 		}
 	}
@@ -503,8 +484,7 @@ public class ToolsUtil {
 	 *            ：属性名
 	 */
 	public static String getExamProperty(String key) {
-		InputStream is = ToolsUtil.class.getClassLoader().getResourceAsStream(
-				"exam/exam_sys.properties");
+		InputStream is = ToolsUtil.class.getClassLoader().getResourceAsStream("exam/exam_sys.properties");
 		Properties properties = new Properties();
 		try {
 			properties.load(is);
@@ -527,8 +507,7 @@ public class ToolsUtil {
 	/**
 	 * 根据value获取key
 	 */
-	public static String getKeyByValue(Map<String, String> schoolMap,
-			String value) {
+	public static String getKeyByValue(Map<String, String> schoolMap, String value) {
 		Iterator itor = schoolMap.entrySet().iterator();
 		while (itor.hasNext()) {
 			Map.Entry entry = (Map.Entry) itor.next();
@@ -640,5 +619,13 @@ public class ToolsUtil {
 	public static void main(String[] args) {
 		String str = "49349055@QQ.com";
 		System.out.println(ToDBC(str));
+	}
+
+	public static int sumArray(List<Integer> source) {
+		int result = 0;
+		for (int i : source) {
+			result += i;
+		}
+		return result;
 	}
 }

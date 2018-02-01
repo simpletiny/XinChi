@@ -54,4 +54,9 @@ public class BudgetStandardOrderDAOImpl extends SqlSessionDaoSupport implements 
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetStandardOrderMapper.selectByTeamNumber", team_number);
 	}
 
+	@Override
+	public void insertWithPk(BudgetStandardOrderBean bean) {
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.BudgetStandardOrderMapper.insert", bean);
+	}
+
 }

@@ -1,4 +1,5 @@
 var clientEmployeeLayer;
+var passengerBatLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -24,7 +25,7 @@ var OrderContext = function() {
 			passenger.age(year_now - birthYear);
 		});
 		self.passengers(data.passengers);
-		
+
 		if (self.order().name_list_lock == '1')
 			$("#txt-name-list").disabled();
 
@@ -37,7 +38,7 @@ var OrderContext = function() {
 		}, function(data) {
 			self.product(data.product);
 		});
-
+		caculate_fly_time();
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
 			employee_pk : self.order().client_employee_pk
 		}, function(data) {
@@ -125,11 +126,13 @@ var OrderContext = function() {
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			var id = $(tr).find("[st='id']").val();
+			var price = $(tr).find("[st='price']").val();
 
 			json += '{"chairman":"' + teamChairman + '","index":"' + index
 					+ '","name":"' + name + '","sex":"' + sex
 					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"'
-					+ cellphone_B + '","id":"' + id + '"}';
+					+ cellphone_B + '","id":"' + id + '","price":"' + price
+					+ '"}';
 		}
 		json += ']';
 		data += "&json=" + json;
@@ -213,6 +216,25 @@ var OrderContext = function() {
 		xhr.send(formData);
 	};
 
+	// 批量导入
+	self.batName = function() {
+		passengerBatLayer = $.layer({
+			type : 1,
+			title : [ '批量导入名单', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '300px' ],
+			offset : [ '', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#bat-passenger'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
 	self.addName = function() {
 		var tbody = $("#name-table").find("tbody");
 		var count = $(tbody).children().length;
@@ -230,7 +252,10 @@ var OrderContext = function() {
 				+ '<td><input type="text" style="width: 90%" st="age" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
-				+ '<td><input type="text" style="width: 90%" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" value="'
+				+ self.product().business_price
+				+ '" st="price" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
 				+ '<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input'
 				+ 'type="hidden"/></td>'
@@ -239,6 +264,7 @@ var OrderContext = function() {
 				+ '<td><input type="button" style="width: 50px" onclick= "removeName(this)" alt="删除名单" value="-" /></td>'
 				+ '</tr>';
 		tbody.append(html);
+		bindFix();
 	};
 
 	// start pagination
@@ -296,7 +322,80 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	// 绑定事件
+	$("[name='bsOrder.auto_sum']").click(function() {
+		changeAutoType($(this).val());
+	});
+	changeAutoType("Y");
 });
+function changeAutoType(v) {
+	if (v == "Y") {
+		$(".auto-2").attr("disabled", "disabled")
+		$(".auto-1").attr("disabled", false)
+	} else if (v == "N") {
+		$(".auto-1").attr("disabled", "disabled")
+		$(".auto-2").attr("disabled", false)
+	}
+}
+function cancelBat() {
+	layer.close(passengerBatLayer);
+}
+function autoCaculate() {
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	var audultCnt = 0;
+	var childrenCnt = 0;
+	var sumMoney = 0;
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var td_id = $(tr).find("[st='id']");
+		var td_price = $(tr).find("[st='price']");
+		var id = $(td_id).val();
+		var price = $(td_price).val() - 0;
+		if (id.length < 18)
+			continue;
+
+		sumMoney += price;
+		var birthday = id.substring(6, 14);
+		if (isChild(birthday)) {
+			childrenCnt++;
+		} else {
+			audultCnt++;
+		}
+	}
+	if (sumMoney != 0) {
+		$("#txt-auto-sum-money").text(sumMoney);
+		$("#auto-sum-money").val(sumMoney);
+	}
+
+	if (audultCnt != 0) {
+
+		$("#txt-auto-adult-count").text(audultCnt);
+		$("#auto-adult-count").val(audultCnt);
+	}
+
+	if (childrenCnt != 0) {
+		$("#txt-auto-children-count").text(childrenCnt);
+		$("#auto-children-count").val(childrenCnt);
+	}
+}
+function bindFix() {
+	var tbody = $("#name-table").find("tbody");
+	var prices = tbody.find("[st='price']");
+	if ($("#chk-bind").is(":checked")) {
+		prices.keyup(function(e) {
+			fixAllPrice(e);
+		});
+	} else {
+		prices.unbind("keyup");
+	}
+}
+function fixAllPrice(e) {
+	var current = e.target;
+	var tbody = $("#name-table").find("tbody");
+	var prices = tbody.find("[st='price']");
+	$(prices).val($(current).val());
+}
 function formatNameList() {
 	nameList = $("#txt-name-list").val();
 	if (nameList.trim() == "")
@@ -372,6 +471,8 @@ function formatNameList() {
 	}
 
 	$("#txt-name-list").val(newNameList);
+	layer.close(passengerBatLayer);
+	autoCaculate();
 }
 // 判断是否已经存在重复的id乘客
 var isRepeatId = function(id) {
@@ -409,4 +510,33 @@ var refreshNameIndex = function() {
 		var td_index = $(tr).find("[st='name-index']");
 		$(td_index).html(i + 1);
 	}
+}
+var nextDay = function() {
+	if ($("#chk-next-day").is(":checked")) {
+		$("#txt-next-day").attr("disabled", false);
+	} else {
+		$("#txt-next-day").attr("disabled", true);
+	}
+	caculate_fly_time();
+}
+
+var caculate_fly_time = function() {
+	var off_time = $("#txt-off-time").val();
+	var land_time = $("#txt-land-time").val();
+	var next_day = $("#txt-next-day").val() - 0;
+	if (off_time == "" || land_time == "" || off_time.length != 5
+			|| land_time.length != 5)
+		return;
+	var off_time = "1988-03-22 " + off_time + ":00";
+	var land_time = "1988-03-22 " + land_time + ":00";
+	var date1 = new Date(off_time);
+	var date2 = new Date(land_time);
+	if (date2.getTime() <= date1.getTime()) {
+		$("#chk-next-day").prop("checked", true);
+		$("#txt-next-day").attr("disabled", false);
+	}
+	if ($("#chk-next-day").is(":checked")) {
+		date2 = date2.addDate(next_day);
+	}
+	$("#txt-fly-time").text(dateDiff(date1, date2));
 }

@@ -1,6 +1,8 @@
 package com.xinchi.backend.order.action;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,9 @@ import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.ToolsUtil;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -101,6 +105,20 @@ public class OrderAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
 		}
+		String period = option.getConfirm_period();
+		String today = DateUtil.getDateStr("yyyy-MM-dd");
+		if (period != null) {
+			if (period.equals("today")) {
+				option.setConfirm_date_from(today);
+				option.setConfirm_date_to(today);
+			} else if (period.equals("thisweek")) {
+				option.setConfirm_date_from(DateUtil.getThisWeekFirstDay());
+				option.setConfirm_date_to(DateUtil.getThisWeekLastDay());
+			} else if (period.equals("lastweek")) {
+				option.setConfirm_date_from(DateUtil.addDate(DateUtil.getThisWeekFirstDay(), -7));
+				option.setConfirm_date_to(DateUtil.addDate(DateUtil.getThisWeekFirstDay(), -1));
+			}
+		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", option);
@@ -174,7 +192,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String updateBudgetStandardOrder() {
-		resultStr = bsoService.update(bsOrder,json);
+		resultStr = bsoService.update(bsOrder, json);
 		return SUCCESS;
 	}
 
@@ -184,7 +202,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String updateConfirmedStandardOrder() {
-		resultStr = bsoService.updateConfirmedStandardOrder(bsOrder);
+		resultStr = bsoService.updateConfirmedStandardOrder(bsOrder, json);
 		return SUCCESS;
 	}
 
@@ -258,7 +276,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String updateBudgetNonStandardOrder() {
-		resultStr = bnsoService.update(bnsOrder,json);
+		resultStr = bnsoService.update(bnsOrder, json);
 		return SUCCESS;
 	}
 
@@ -283,7 +301,7 @@ public class OrderAction extends BaseAction {
 		bnsoService.updateComment(bnsOrder);
 
 		fnsOrder.setPk(null);
-		fnsOrder.setProduct_manager(bnsOrder.getProduct_name());
+		fnsOrder.setProduct_manager(bnsOrder.getProduct_manager());
 		fnsOrder.setTeam_number(bnsOrder.getTeam_number());
 		fnsOrder.setAir_ticket_cost(bnsOrder.getAir_ticket_cost());
 		fnsOrder.setProduct_cost(bnsOrder.getProduct_cost());

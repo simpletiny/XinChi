@@ -468,6 +468,9 @@
 			<if test="params.bo.client_short_name != null and params.bo.client_short_name !=''">
 				and A.client_short_name like CONCAT('%',#{params.bo.client_short_name,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.address != null and params.bo.address !=''">
+				and A.address like CONCAT('%',#{params.bo.address,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.client_area != null and params.bo.client_area !=''">
 				and A.client_area = #{params.bo.client_area,jdbcType=VARCHAR}
 			</if>

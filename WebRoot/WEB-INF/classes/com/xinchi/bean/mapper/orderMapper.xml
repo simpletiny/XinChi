@@ -39,11 +39,24 @@
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
 		<result column="balance" property="balance" jdbcType="DECIMAL" />
+		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
+		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
+		<result column="start_airport" property="start_airport" jdbcType="VARCHAR" />
+		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
+		<result column="end_airport" property="end_airport" jdbcType="VARCHAR" />
+		<result column="off_time" property="off_time" jdbcType="VARCHAR" />
+		<result column="land_time" property="land_time" jdbcType="VARCHAR" />
+		<result column="next_day" property="next_day" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
-		where team_number =	#{team_number,jdbcType=VARCHAR}
+		where
+		team_number = #{team_number,jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -102,18 +115,16 @@
 		A.product_cost,
 		IF(ISNULL(A.adult_count),0,A.adult_count)+
 		IF(ISNULL(A.special_count),0,A.special_count) AS people_count,
-		case when A.departure_date>now() then '未出团'
-		when now()>=A.departure_date and
-		DATE_ADD(A.departure_date,interval days-1 day) > now() then '出团中'
-		when now()>=DATE_ADD(A.departure_date,interval days-1 day) then '已回团'
-		end
-		AS status,
+		A.status,
 		TIMESTAMPDIFF(day,A.departure_date,now())-days+2 AS back_days,
 		A.product_manager_number,
 		A.product_manager,
-		substring_index(A.name_list,':',1) AS passenger,
+		A.passenger_captain,
+		A.treat_comment,
+		A.receivable_comment,
 		B.budget_balance AS balance
-		from budget_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
+		from budget_order_view A LEFT JOIN
+		receivable B ON A.team_number = B.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
@@ -127,6 +138,9 @@
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
 				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
+				and A.product_manager like CONCAT('%',#{params.bo.product_manager,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
 				and A.departure_date >=#{params.bo.departure_date_from,jdbcType=VARCHAR}
 			</if>
@@ -139,9 +153,17 @@
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
 				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.order_statuses != null">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.order_statuses" open="(" separator="," close=")">
+					#{params.bo.order_statuses[${index}]}
+				</foreach>
+			</if>
 			and confirm_flg='Y'
 		</where>
+
 		ORDER BY A.departure_date DESC
+
 	</select>
 	<select id="selectFByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -175,16 +197,10 @@
 		A.product_cost,
 		IF(ISNULL(A.adult_count),0,A.adult_count)+
 		IF(ISNULL(A.special_count),0,A.special_count) AS people_count,
-		case when A.departure_date>now() then '未出团'
-		when now()>=A.departure_date and
-		DATE_ADD(A.departure_date,interval days-1 day) > now() then '出团中'
-		when now()>=DATE_ADD(A.departure_date,interval days-1 day) then '已回团'
-		end
-		AS status,
+		A.status,
 		TIMESTAMPDIFF(day,A.departure_date,now())-days+2 AS back_days,
 		A.product_manager_number,
 		A.product_manager,
-		substring_index(A.name_list,':',1) AS passenger,
 		B.final_balance AS balance
 		from final_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
 		<where>
@@ -212,7 +228,15 @@
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
 				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.order_statuses != null">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.order_statuses" open="(" separator="," close=")">
+					#{params.bo.order_statuses[${index}]}
+				</foreach>
+			</if>
 		</where>
 		ORDER BY A.departure_date DESC
+
+
 	</select>
 </mapper>

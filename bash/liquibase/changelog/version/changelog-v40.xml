@@ -1105,4 +1105,23 @@
 			<comment> ALTER TABLE card</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+         ALTER TABLE sale_order_name_list 
+			ADD COLUMN price DECIMAL(12,2) NULL AFTER order_pk;
+             ]]>
+			<comment>ALTER TABLE sale_order_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+      ALTER TABLE budget_standard_order 
+		ADD COLUMN treat_comment VARCHAR(200) NULL AFTER product_cost,
+		ADD COLUMN receivable_comment VARCHAR(200) NULL AFTER treat_comment;
+             ]]>
+			<comment> ALTER TABLE budget_standard_order </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>

@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class SaleOrderNameListBean extends SupperBO implements Serializable {
@@ -34,6 +36,8 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 	private String chairman;
 
 	private String order_pk;
+
+	private BigDecimal price;
 
 	public String getTeam_number() {
 		return team_number;
@@ -145,6 +149,14 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	public void setOrder_pk(String order_pk) {
 		this.order_pk = order_pk;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 }

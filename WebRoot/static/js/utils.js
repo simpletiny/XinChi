@@ -284,9 +284,24 @@ Date.prototype.addDate = function(days) {
 	x = new Date(x);
 	return x;
 };
+var dateDiff = function(date1,date2){
+	var date3 =Math.abs(date2.getTime()-date1.getTime());
+	var days=Math.floor(date3/(24*3600*1000));
+	
+	var leave1=date3%(24*3600*1000);   
+	var hours=Math.floor(leave1/(3600*1000));
+
+	var leave2=leave1%(3600*1000);        
+	var minutes=Math.floor(leave2/(60*1000));
+
+	var leave3=leave2%(60*1000); 
+	var seconds=Math.round(leave3/1000);
+	
+	return (days==0?"":days+"天")+(hours==0?"":hours+"小时")+(minutes==0?"":minutes+"分钟 ")+(seconds==0?"":seconds+"秒 ");
+};
 String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
-};
+  };
 
 String.prototype.LTrim = function(str) {
 	var pattern = new RegExp("(^\s*)", 'g');
@@ -330,7 +345,23 @@ var getServerTime = function() {
 		fail_msg(reason.responseText);
 	});
 };
-
+var isChild = function(birthday){
+	birthday = birthday.replace(/\-/gm,"");
+	var birthYear = birthday.substring(0,4)-0;
+	var birthMonth = birthday.substring(4,6)-0;
+	var birthDate = birthday.substring(6,9)-0;
+	var year12Date = new Date();
+	year12Date.setYear(birthYear+12);
+	year12Date.setMonth(birthMonth-1);
+	year12Date.setDate(birthDate);
+	var year12 = year12Date.Format("yyyyMMdd")-0;
+	var x = new Date();
+	var now = x.Format("yyyyMMdd")-0;
+	if(year12>now){
+		return true;
+	}
+	return false;
+}
 // jq 扩展
 jQuery.fn.extend({
 	disabled : function() {
@@ -338,6 +369,10 @@ jQuery.fn.extend({
 		this.focus(function() {
 			this.blur();
 		});
+	},
+	enable:function(){
+		this.removeClass("disabled");
+		this.unbind("focus");
 	},
 	showDetail : function() {
 		this.click(function() {

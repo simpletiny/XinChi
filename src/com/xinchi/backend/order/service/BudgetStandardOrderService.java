@@ -46,7 +46,7 @@ public interface BudgetStandardOrderService extends BaseService {
 
 	public BudgetStandardOrderBean selectByTeamNumber(String team_number);
 
-	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bsOrder);
+	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bsOrder,String json);
 
 	public String rollBackCOrder(String order_pk);
 }

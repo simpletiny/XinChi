@@ -27,6 +27,8 @@
 	    <result column="final_flg" property="final_flg" jdbcType="CHAR" />
 	 	<result column="create_time" property="create_time" jdbcType="VARCHAR" />
  	    <result column="update_time" property="update_time" jdbcType="VARCHAR" />
+ 	    <result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+ 	    <result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -50,7 +52,9 @@
     	comment,
     	payment_comment,
     	final_flg,
-    	create_time,update_time
+    	create_time,update_time,
+    	treat_comment,
+    	receivable_comment
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -132,6 +136,12 @@
       <if test="update_time != null">
         update_time,
       </if>
+      <if test="treat_comment != null">
+        treat_comment,
+      </if>
+      <if test="receivable_comment != null">
+        receivable_comment,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
     	<if test="team_number != null">
@@ -197,6 +207,12 @@
        <if test="update_time != null">
         #{update_time,jdbcType=VARCHAR},
       </if>
+       <if test="treat_comment != null">
+        #{treat_comment,jdbcType=VARCHAR},
+      </if>
+       <if test="receivable_comment != null">
+        #{receivable_comment,jdbcType=VARCHAR},
+      </if>
     </trim>		
   </insert>
   
@@ -260,6 +276,12 @@
 	      </if>
       <if test="update_time != null">
         update_time = #{update_time,jdbcType=VARCHAR},
+      </if>
+      <if test="treat_comment != null">
+        treat_comment = #{treat_comment,jdbcType=VARCHAR},
+      </if>
+      <if test="receivable_comment != null">
+        receivable_comment = #{receivable_comment,jdbcType=VARCHAR},
       </if>
     </set>
     where pk = #{pk,jdbcType=CHAR}

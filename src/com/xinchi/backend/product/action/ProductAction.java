@@ -40,7 +40,8 @@ public class ProductAction extends BaseAction {
 	private List<ProductBean> products;
 
 	public String searchProductsByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == product)
 			product = new ProductBean();
@@ -76,7 +77,8 @@ public class ProductAction extends BaseAction {
 	private String json;
 
 	public String createProduct() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		product.setProduct_manager(sessionBean.getUser_number());
 		resultStr = service.insert(product);
 
@@ -165,8 +167,8 @@ public class ProductAction extends BaseAction {
 		productSuppliers = productSupplierService.selectByProductPk(product_pk);
 		return SUCCESS;
 	}
-	
-	
+
+
 	private String product_pks;
 	private String sale_flg;
 
@@ -188,7 +190,8 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String searchProductReportByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == report_option)
 			report_option = new ProductReportDto();
@@ -219,7 +222,8 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String searchProductOrderByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == order_option)
 			order_option = new ProductOrderDto();

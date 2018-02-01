@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -12,6 +11,18 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+
+<style>
+.download-panel {
+	position: absolute;
+	background: #FFEC8B;
+	border: solid 1px red;
+	z-index: 200;
+	width: 150px;
+	height: 50px;
+	text-align: center;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -53,12 +64,14 @@
 						<div align="left">
 							<label class="col-md-1 control-label">出团日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
+									name="option.departure_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
+									name="option.departure_date_to" />
 							</div>
 						</div>
 					</div>
@@ -67,7 +80,9 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"  name="option.create_user"></select>
+									<select class="form-control" style="height: 34px" id="select-sales"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+										name="option.create_user"></select>
 								</div>
 							</div>
 						</s:if>
@@ -84,39 +99,51 @@
 							<tr role="row">
 								<th></th>
 								<th>客户</th>
+								<th>财务主体</th>
 								<th>产品名称</th>
+								<th>天数</th>
 								<th>成人</th>
 								<th>特殊</th>
 								<th>出团日期</th>
-								<th>天数</th>
+								<th>首段城市对</th>
 								<th>总团款</th>
-								<th>团款说明</th>
 								<th>确认件</th>
+								<th>订单备注</th>
+								<th>产品经理</th>
+								<th>下载文件</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<th>销售</th>
+									<th>销售</th>
 								</s:if>
+								<th>编辑日期</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.standard_flg}, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.client_employee_name"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.product_name"></td>
+								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td data-bind="text: $data.departure_date"></td>
-								<td data-bind="text: $data.days"></td>
+								<td data-bind="text: $data.start_city +'-'+ $data.end_city"></td>
 								<td data-bind="text: $data.receivable"></td>
-								<td data-bind="text: $data.comment"></td>
 								<!-- ko if:$data.confirm_file!=null && $data.confirm_file != '' -->
-								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.confirm_file==null || $data.confirm_file == '' -->
 								<td></td>
 								<!-- /ko -->
+								<td data-bind="text: $data.comment"></td>
+								<td data-bind="text: $data.product_manager"></td>
+								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<td data-bind="text: $data.create_user"></td>
+									<td data-bind="text: $data.create_user"></td>
 								</s:if>
+								<td>--</td>
 							</tr>
 						</tbody>
 					</table>
@@ -140,7 +167,8 @@
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display", "block");
+		$(".order-box").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

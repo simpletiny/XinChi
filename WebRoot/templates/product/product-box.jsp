@@ -28,9 +28,9 @@
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
 							</div>
-							<div>
+							<!-- <div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
-							</div>
+							</div> -->
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
 							</div>

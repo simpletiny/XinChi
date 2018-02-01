@@ -1,5 +1,7 @@
 package com.xinchi.backend.util.action;
 
+import static com.xinchi.common.SimpletinyString.isEmpty;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -251,9 +253,39 @@ public class SimpletinyAction extends BaseAction {
 	}
 
 	@Autowired
+	private BudgetStandardOrderService budgetStandardOrderService;
+	@Autowired
+	private OrderNameListService orderNameListService;
+
+	public String fixPassenger() {
+		List<BudgetStandardOrderBean> orders = budgetStandardOrderService.selectByParam(null);
+		for (BudgetStandardOrderBean order : orders) {
+			if (isEmpty(order.getTeam_number()))
+				continue;
+			List<SaleOrderNameListBean> names = orderNameListService.selectByTeamNumber(order.getTeam_number());
+			String passenger_captain = "";
+			for (SaleOrderNameListBean name : names) {
+				if (name.getChairman().equals("Y")) {
+					passenger_captain = name.getName();
+					if (passenger_captain.length() > 10) {
+						passenger_captain = passenger_captain.substring(0, 5);
+					}
+					break;
+				}
+			}
+			order.setPassenger_captain(passenger_captain);
+
+			budgetStandardOrderService.updateComment(order);
+
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
 	private SimpletinyService service;
-	
+
 	private String account_name;
+
 	// 自动修正流水账余额
 	public String autoFixBalance() {
 		service.autoFixBalance(account_name);
@@ -273,15 +305,19 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("return_date", DateUtil.castStr2Date(payable.getReturn_date()));
 		document.addField("product", payable.getProduct());
 		document.addField("people_count", payable.getPeople_count());
-		document.addField("budget_payable", (null == payable.getBudget_payable() ? 0 : payable.getBudget_payable().doubleValue()));
+		document.addField("budget_payable",
+				(null == payable.getBudget_payable() ? 0 : payable.getBudget_payable().doubleValue()));
 
-		document.addField("final_payable", (null == payable.getFinal_payable() ? 0 : payable.getFinal_payable().doubleValue()));
+		document.addField("final_payable",
+				(null == payable.getFinal_payable() ? 0 : payable.getFinal_payable().doubleValue()));
 
 		document.addField("paid", (null == payable.getPaid() ? 0 : payable.getPaid().doubleValue()));
 
-		document.addField("budget_balance", (null == payable.getBudget_balance() ? 0 : payable.getBudget_balance().doubleValue()));
+		document.addField("budget_balance",
+				(null == payable.getBudget_balance() ? 0 : payable.getBudget_balance().doubleValue()));
 
-		document.addField("final_balance", (null == payable.getFinal_balance() ? 0 : payable.getFinal_balance().doubleValue()));
+		document.addField("final_balance",
+				(null == payable.getFinal_balance() ? 0 : payable.getFinal_balance().doubleValue()));
 
 		document.addField("sales", payable.getSales());
 		document.addField("sales_name", payable.getSales_name());
@@ -300,15 +336,19 @@ public class SimpletinyAction extends BaseAction {
 		document.addField("return_date", DateUtil.castStr2Date(receivable.getReturn_date()));
 		document.addField("product", receivable.getProduct());
 		document.addField("people_count", receivable.getPeople_count());
-		document.addField("budget_receivable", (null == receivable.getBudget_receivable() ? 0 : receivable.getBudget_receivable().doubleValue()));
+		document.addField("budget_receivable",
+				(null == receivable.getBudget_receivable() ? 0 : receivable.getBudget_receivable().doubleValue()));
 
-		document.addField("final_receivable", (null == receivable.getFinal_receivable() ? 0 : receivable.getFinal_receivable().doubleValue()));
+		document.addField("final_receivable",
+				(null == receivable.getFinal_receivable() ? 0 : receivable.getFinal_receivable().doubleValue()));
 
 		document.addField("received", (null == receivable.getReceived() ? 0 : receivable.getReceived().doubleValue()));
 
-		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
+		document.addField("budget_balance",
+				(null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
 
-		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
+		document.addField("final_balance",
+				(null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
 		document.addField("financial_body_name", receivable.getFinancial_body_name());
 		document.addField("financial_body_pk", receivable.getFinancial_body_pk());
 		document.addField("sales", receivable.getSales());
@@ -384,7 +424,8 @@ public class SimpletinyAction extends BaseAction {
 					continue;
 
 				// 产品机票信息
-				List<ProductAirTicketBean> productAirTickets = productAirTicketService.selectByProductPk(saleProduct.getPk());
+				List<ProductAirTicketBean> productAirTickets = productAirTicketService
+						.selectByProductPk(saleProduct.getPk());
 				ProductAirTicketBean firstTicketInfo = productAirTickets.get(0);
 
 				airTicketOrder.setClient_number(need.getTicket_client_number());
@@ -397,7 +438,7 @@ public class SimpletinyAction extends BaseAction {
 				airTicketOrder.setTeam_number(need.getTeam_number());
 				airTicketOrder.setTour_product_pk(saleProduct.getPk());
 				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
-				
+
 			} else {
 				airTicketOrder.setClient_number(need.getTicket_client_number());
 				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());

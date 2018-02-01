@@ -63,10 +63,37 @@
 		market_level
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from client_employee
-		where pk = #{pk,jdbcType=CHAR}
+	select
+		A.name,
+		A.nick_name,
+		A.sex,
+		A.wechat,
+		A.qq,
+		A.type,
+		A.cellphone,
+		A.telephone,
+		A.fax,
+		A.id,
+		A.financial_body_pk,
+		B.client_short_name AS financial_body_name,
+		A.area,
+		A.sales,
+		A.sales_name,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.comment,
+		A.public_flg,
+		A.birth_year,
+		A.create_time,
+		A.update_time,
+		A.delete_flg,
+		A.relation_level,
+		A.back_level,
+		A.market_level
+		
+		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
+		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -371,7 +398,7 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		A.financial_body_name,
+		B.client_short_name AS financial_body_name,
 		B.client_area as area,
 		A.sales,
 		IF(ISNULL(C.user_name),'公开',C.user_name) AS sales_name,

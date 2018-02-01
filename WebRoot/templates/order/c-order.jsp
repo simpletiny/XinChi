@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -30,6 +29,14 @@ tr td {
 	height: 50px;
 	text-align: center;
 }
+
+.fix-width1 {
+	width: 6.5% !important;
+}
+
+.fix-width2 {
+	width: 10% !important;
+}
 </style>
 </head>
 <body>
@@ -47,50 +54,88 @@ tr td {
 						<div style="width: 30%; float: right">
 							<div>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { rollBackOrder() }">打回</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { writeFirstAir() }">写入首航段</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">微调</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">变更</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { rollBackOrder() }">取消</button>
 								</s:if>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finalOrder() }">决算</button>
+								<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finalOrder() }">决算</button> -->
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-md-1 fix-width1 control-label"><input name="option.order_statuses" checked="checked" data-bind="click:function(){refresh();return true;}" value="no" type="checkbox" />未出团</label>
 						<div class="span6">
-							<label class="col-md-1 control-label">客户</label>
-							<div class="col-md-2">
+							<label class="col-md-1 fix-width1 control-label">客户</label>
+							<div class="col-md-1">
 								<input class="form-control" placeholder="客户" name="option.client_employee_name"></input>
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">产品</label>
+							<label class="col-md-1 fix-width1 control-label">产品名称</label>
 							<div class="col-md-2">
-								<input class="form-control" placeholder="产品" name="option.product_name"></input>
+								<input class="form-control" placeholder="产品名称" name="option.product_name"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 fix-width1 control-label">游客姓名</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="暂不可用" name="option.passenger_name"></input>
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked name="radio-date" />出团日期</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" />
+							<label class="col-md-1 fix-width1 control-label"><input type="radio" value="1" onclick="check(this)"
+								checked name="radio_date" />出团日期</label>
+							<div class="col-md-2 fix-width2" style="float: left">
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
+									name="option.departure_date_from" />
 							</div>
 						</div>
 						<div align="left">
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" />
+							<div class="col-md-2 fix-width2" style="float: left">
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
+									name="option.departure_date_to" />
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-md-1 fix-width1 control-label"><input name="option.order_statuses" checked="checked" data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />出团中</label>
 						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
-							<div class="col-md-2">
+							<label class="col-md-1 fix-width1 control-label">团号</label>
+							<div class="col-md-1">
 								<input class="form-control" placeholder="团号" name="option.team_number"></input>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 fix-width1 control-label">产品经理</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品经理" name="option.product_manager"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 fix-width1 control-label">游客手机</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="暂不可用" name="option.passenger_cellphone"></input>
+							</div>
+						</div>
+						<div align="left">
+							<label class="col-md-1 fix-width1 control-label"><input type="radio" value="2" onclick="check(this)"
+								name="radio_date" />确认日期</label>
+							<div class="col-md-2">
+								<select class="form-control" disabled="disabled" st="st-date-2" style="height: 34px" id="select-sales"
+									data-bind="options: confirmDates,  optionsText: 'cn', optionsValue: 'en'" name="option.confirm_period"></select>
+							</div>
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label class="col-md-1 fix-width1 control-label"><input name="option.order_statuses" checked="checked" data-bind="click:function(){refresh();return true;}" value="back" type="checkbox" />待决算</label>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
-								<label class="col-md-1 control-label">销售</label>
+								<label class="col-md-1 fix-width1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px" id="select-sales"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',event:{change:$root.refresh}, optionsCaption: '--全部--'"
 										name="option.create_user"></select>
 								</div>
 							</div>
@@ -98,17 +143,6 @@ tr td {
 						<s:else>
 							<div class="col-md-3">&nbsp;</div>
 						</s:else>
-						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" name="radio-date" />确认日期</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from" name="option.confirm_date_from" />
-							</div>
-						</div>
-						<div align="left">
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="to" name="option.confirm_date_to" />
-							</div>
-						</div>
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
@@ -143,26 +177,30 @@ tr td {
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.standard_flg}, checked: $root.chosenOrders" /></td>
-								<td data-bind="text: $data.status"></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg}, checked: $root.chosenOrders" /></td>
+								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td data-bind="text: $data.back_days"></td>
-								
+
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.balance"></td>
-							
-								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
+
+								<td><a href="javascript:void(0)"
+									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- ko if: $data.comment==null || $data.comment==''-->
-								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.comment!=null && $data.comment!=''-->
-								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
@@ -216,23 +254,86 @@ tr td {
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
+	<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" />
+	<input type="hidden" data-bind="value:order().standard_flg" id="txt-standard-flg" />
 	<div id="comment-edit" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div>
-				<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" /> <input type="hidden" data-bind="value:order().standard_flg" id="txt-standard-flg" /> <label class="l">备注</label>
+				<label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment" data-bind="value: order().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment"
+						data-bind="value: order().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
+		</div>
+	</div>
+	<div id="first-air" style="display: none; width: 1300px">
+		<div class="col-md-12">
+			<table style="width: 100%" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th style="width: 7.5%"></th>
+						<th style="width: 7.5%">航班号</th>
+						<th style="width: 12.5%">起飞城市</th>
+						<th style="width: 12.5%">机场</th>
+						<th style="width: 12.5%">抵达城市</th>
+						<th style="width: 12.5%">机场</th>
+						<th style="width: 7.5%">起飞时间</th>
+						<th style="width: 7.5%">抵达时间</th>
+						<!-- ko if:order().next_day!=0 -->
+						<th style="width: 10%">隔天达&nbsp;<input type="checkbox" checked="checked" id="chk-next-day"
+							onclick="nextDay()" /></th>
+						<!-- /ko -->
+						<!-- ko if:order().next_day==0 -->
+						<th style="width: 10%">隔天达&nbsp;<input type="checkbox" id="chk-next-day" onclick="nextDay()" /></th>
+						<!-- /ko -->
+						<th style="width: 10%">飞行时间</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>首航段：</td>
+						<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().ticket_number"
+							id="txt-ticket-number" /></td>
+						<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_city" id="txt-start-city" /></td>
+						<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_airport"
+							id="txt-start-airport" /></td>
+						<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_city" id="txt-end-city" /></td>
+						<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_airport"
+							id="txt-end-airport" /></td>
+						<td><input type="text" style="width: 90%" class="isTime" id="txt-off-time" data-bind="value:order().off_time"
+							maxlength="5" onkeyup="caculate_fly_time()" /></td>
+						<td><input type="text" style="width: 90%" class="isTime" data-bind="value:order().land_time"
+							id="txt-land-time" maxlength="5" onkeyup="caculate_fly_time()" /></td>
+						<!-- ko if:order().next_day==0 -->
+						<td><input type="number" style="width: 90%" maxlength="2" min="1" id="txt-next-day" value="1"
+							onkeyup="caculate_fly_time()" disabled="disabled" /></td>
+						<!-- /ko -->
+						<!-- ko if:order().next_day!=0 -->
+						<td><input type="number" style="width: 90%" data-bind="value:order().next_day" maxlength="2" min="1"
+							id="txt-next-day" onkeyup="caculate_fly_time()" /></td>
+						<!-- /ko -->
+						<td id="txt-fly-time"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelWrite">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: confirmWrite">保存</a>
 			</div>
 		</div>
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display", "block");
+		$(".order-box").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

@@ -27,6 +27,7 @@ import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -53,7 +54,10 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			saveFile(bean);
 		}
-		dao.insert(bean);
+		String order_pk = DBCommonUtil.genPk();
+		String passenger_captain = "";
+		bean.setPk(order_pk);
+
 		JSONArray nameList = JSONArray.fromObject(json);
 		for (int i = 0; i < nameList.size(); i++) {
 			JSONObject obj = JSONObject.fromObject(nameList.get(i));
@@ -64,19 +68,27 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
+					: new BigDecimal(obj.getString("price"));
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
-			passenger.setOrder_pk(bean.getPk());
+			passenger.setOrder_pk(order_pk);
+			passenger.setPrice(price);
 
 			nameListDao.insert(passenger);
 		}
+		bean.setPassenger_captain(passenger_captain);
+		dao.insertWithPk(bean);
 		return SUCCESS;
 	}
 
@@ -110,7 +122,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		} else {
 			deleteFile(old);
 		}
-
+		String passenger_captain = "";
 		// 修改名单
 		// 删除之前的名单
 		nameListDao.deleteByOrderPk(bean.getPk());
@@ -125,16 +137,22 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
+					: new BigDecimal(obj.getString("price"));
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
+			passenger.setPrice(price);
 
 			nameListDao.insert(passenger);
 		}
@@ -217,12 +235,13 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				}
 			}
 		}
+		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;
 	}
 
 	@Override
-	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bean) {
+	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bean,String json) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
@@ -233,23 +252,40 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		} else {
 			deleteFile(old);
 		}
+		String passenger_captain = "";
+		// 修改名单
+		// 删除之前的名单
+		nameListDao.deleteByOrderPk(bean.getPk());
+		// 保存现在的名单
+		JSONArray nameList = JSONArray.fromObject(json);
+		for (int i = 0; i < nameList.size(); i++) {
+			JSONObject obj = JSONObject.fromObject(nameList.get(i));
+			String chairman = obj.getString("chairman");
+			int name_index = obj.getInt("index");
+			String name = obj.getString("name");
+			String sex = obj.getString("sex");
+			String cellphone_A = obj.getString("cellphone_A");
+			String cellphone_B = obj.getString("cellphone_B");
+			String id = obj.getString("id");
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
+					: new BigDecimal(obj.getString("price"));
 
-		// 更新名单
-		// 删除之前保存的名单
-		nameListDao.deleteByTeamNumber(bean.getTeam_number());
-		String[] names = bean.getName_list().split(";");
-		if (names.length != 0) {
-			for (String str : names) {
-				String people[] = str.split(":");
-				if (people.length != 2)
-					continue;
-
-				SaleOrderNameListBean name = new SaleOrderNameListBean();
-				name.setName(people[0].trim());
-				name.setId(people[1].trim());
-				name.setTeam_number(bean.getTeam_number());
-				nameListDao.insert(name);
+			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
+			passenger.setName(name);
+			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
 			}
+			passenger.setName_index(name_index);
+			passenger.setSex(sex);
+			passenger.setCellphone_A(cellphone_A);
+			passenger.setCellphone_B(cellphone_B);
+			passenger.setId(id);
+			passenger.setOrder_pk(bean.getPk());
+			passenger.setPrice(price);
+			passenger.setTeam_number(bean.getTeam_number());
+
+			nameListDao.insert(passenger);
 		}
 
 		// 更新预算单
@@ -291,7 +327,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		receivable.setBudget_balance(bean.getReceivable()
 				.subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
 		receivableDao.update(receivable);
-
+		
+		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;
 	}

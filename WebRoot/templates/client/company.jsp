@@ -108,7 +108,15 @@
 								</div>
 							</div>
 						</s:if>
-						<div class="span6">
+						
+						
+					</div>
+					<div class="form-group">
+					<label class="col-md-1 control-label">地址</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" placeholder="地址" name="client.address" />
+							</div>
+					<div class="span6">
 							<div data-bind="foreach: status" class="col-md-2">
 								<em class="small-box "> <input name="client.statuses" type="checkbox"
 									data-bind="attr: {'value': $data}, checked: $root.chosenStatus,event:{click:$root.changeStatus}" /><label
@@ -116,7 +124,7 @@
 								</em>
 							</div>
 						</div>
-						<div class="span6" style="float: right">
+					<div class="span6" style="float: right">
 							<div style="padding-top: 3px;">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 							</div>

@@ -7,7 +7,11 @@ var ProductBoxContext = function() {
 
 	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 	self.chosenOrders = ko.observableArray([]);
-
+	self.statusMapping = {
+			"no" : "未出团",
+			"yes" : "出团中",
+			"back" : "已回团"
+		}
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {

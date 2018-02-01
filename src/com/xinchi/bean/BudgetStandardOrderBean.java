@@ -53,11 +53,23 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private BigDecimal product_cost;
 
+	private String passenger_captain;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
 	private String operate_flg;
+	private String treat_comment;
+	private String receivable_comment;
 
+	private String ticket_number;
+	private String start_city;
+	private String start_airport;
+	private String end_city;
+	private String end_airport;
+	private String off_time;
+	private String land_time;
+	private int next_day;
+	
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -264,6 +276,94 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setProduct_cost(BigDecimal product_cost) {
 		this.product_cost = product_cost;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
+	}
+
+	public String getReceivable_comment() {
+		return receivable_comment;
+	}
+
+	public void setReceivable_comment(String receivable_comment) {
+		this.receivable_comment = receivable_comment;
+	}
+
+	public String getPassenger_captain() {
+		return passenger_captain;
+	}
+
+	public void setPassenger_captain(String passenger_captain) {
+		this.passenger_captain = passenger_captain;
+	}
+
+	public String getTicket_number() {
+		return ticket_number;
+	}
+
+	public void setTicket_number(String ticket_number) {
+		this.ticket_number = ticket_number;
+	}
+
+	public String getStart_city() {
+		return start_city;
+	}
+
+	public void setStart_city(String start_city) {
+		this.start_city = start_city;
+	}
+
+	public String getStart_airport() {
+		return start_airport;
+	}
+
+	public void setStart_airport(String start_airport) {
+		this.start_airport = start_airport;
+	}
+
+	public String getEnd_city() {
+		return end_city;
+	}
+
+	public void setEnd_city(String end_city) {
+		this.end_city = end_city;
+	}
+
+	public String getEnd_airport() {
+		return end_airport;
+	}
+
+	public void setEnd_airport(String end_airport) {
+		this.end_airport = end_airport;
+	}
+
+	public String getOff_time() {
+		return off_time;
+	}
+
+	public void setOff_time(String off_time) {
+		this.off_time = off_time;
+	}
+
+	public String getLand_time() {
+		return land_time;
+	}
+
+	public void setLand_time(String land_time) {
+		this.land_time = land_time;
+	}
+
+	public int getNext_day() {
+		return next_day;
+	}
+
+	public void setNext_day(int next_day) {
+		this.next_day = next_day;
 	}
 
 }

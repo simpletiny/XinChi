@@ -17,16 +17,19 @@
 		<action name="autoGenReceivable2th" class="simpletinyAction" method="autoGenReceivable2th">
 			<result name="success" type="redirect">/</result>
 		</action>
-		
+
 		<action name="currentDate" class="STDateAction" method="currentDate">
 			<result name="success" type="json"></result>
 		</action>
-		
+
 		<action name="autoFixBalance" class="simpletinyAction" method="autoFixBalance">
-		<result name="success" type="redirect">/</result>
+			<result name="success" type="redirect">/</result>
 		</action>
-			<action name="autoGenTicketOrder" class="simpletinyAction" method="autoGenTicketOrder">
-		<result name="success" type="redirect">/</result>
+		<action name="autoGenTicketOrder" class="simpletinyAction" method="autoGenTicketOrder">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="fixPassenger" class="simpletinyAction" method="fixPassenger">
+			<result name="success" type="redirect">/</result>
 		</action>
 	</package>
 </struts>
