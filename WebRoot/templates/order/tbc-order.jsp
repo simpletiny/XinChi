@@ -114,7 +114,7 @@
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
-								<th>编辑日期</th>
+								<th title="订单将在编辑日期三天后自动删除！">编辑日期</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -143,7 +143,12 @@
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.create_user"></td>
 								</s:if>
-								<td>--</td>
+								<!-- ko if:$data.update_time==null -->
+								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.update_time!=null -->
+								<td data-bind="text: moment($data.update_time-0).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>

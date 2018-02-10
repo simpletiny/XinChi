@@ -43,4 +43,9 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectByTeamNumber", team_number);
 	}
 
+	@Override
+	public List<OrderDto> selectTbcByParam(OrderDto option) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectTbcByParam", option);
+	}
+
 }

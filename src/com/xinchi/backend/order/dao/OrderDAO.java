@@ -14,4 +14,6 @@ public interface OrderDAO {
 	public OrderDto selectByTeamNumber(String team_number);
 
 	public List<OrderDto> selectFByPage(Page<OrderDto> page);
+
+	public List<OrderDto> selectTbcByParam(OrderDto option);
 }

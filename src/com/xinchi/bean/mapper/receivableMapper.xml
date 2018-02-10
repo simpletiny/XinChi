@@ -60,7 +60,8 @@
 		select
 		A.team_number,
 		A.final_flg,
-		B.name AS client_employee_name,
+		B.name AS
+		client_employee_name,
 		A.client_employee_pk,
 		A.departure_date,
 		A.return_date,
@@ -89,6 +90,10 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from receivable
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
+		delete from receivable
+		where team_number = #{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ReceivableBean">

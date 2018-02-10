@@ -39,6 +39,9 @@ public class PayApprovalBean extends SupperBO implements Serializable {
 
 	private String approval_time;
 
+	private String receiver_card_number;
+	private String receiver_bank;
+
 	// options
 	private List<String> statuses;
 	private String date_from;
@@ -186,6 +189,22 @@ public class PayApprovalBean extends SupperBO implements Serializable {
 
 	public void setDate_to(String date_to) {
 		this.date_to = date_to;
+	}
+
+	public String getReceiver_card_number() {
+		return receiver_card_number;
+	}
+
+	public void setReceiver_card_number(String receiver_card_number) {
+		this.receiver_card_number = receiver_card_number;
+	}
+
+	public String getReceiver_bank() {
+		return receiver_bank;
+	}
+
+	public void setReceiver_bank(String receiver_bank) {
+		this.receiver_bank = receiver_bank;
 	}
 
 }

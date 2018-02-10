@@ -1,12 +1,10 @@
 package com.xinchi.backend.receivable.service.impl;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,19 +314,6 @@ public class ReceivableServiceImpl implements ReceivableService {
 		}
 
 		dao.update(receivable);
-
-		// SolrClient solrClient =
-		// solr.getSolr(PropertiesUtil.getProperty("solr.receivableUrl"));
-		//
-		// SolrInputDocument document = castR2D(receivable);
-		// try {
-		// solrClient.add(document);
-		// solrClient.commit();
-		// } catch (SolrServerException e) {
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	@Override

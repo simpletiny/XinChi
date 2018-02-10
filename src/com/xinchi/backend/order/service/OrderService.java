@@ -14,5 +14,6 @@ public interface OrderService extends BaseService {
 	public OrderDto selectByTeamNumber(String teamNumber);
 
 	public List<OrderDto> selectFByPage(Page page);
+	public List<OrderDto> selectTbcByParam(OrderDto option);
 	
 }

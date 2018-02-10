@@ -71,4 +71,9 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	public List<ReceivableBean> selectByPage(Page<ReceivableBean> page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ReceivableMapper.selectByPage", page);
 	}
+
+	@Override
+	public void deleteByTeamNumber(String team_number) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.ReceivableMapper.deleteByTeamNumber", team_number);
+	}
 }

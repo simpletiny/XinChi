@@ -56,7 +56,8 @@
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
 		where
-		team_number = #{team_number,jdbcType=VARCHAR}
+		team_number =
+		#{team_number,jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -80,6 +81,13 @@
 			and confirm_flg='N'
 		</where>
 		ORDER BY departure_date DESC
+	</select>
+
+	<select id="selectTbcByParam" parameterType="com.xinchi.bean.OrderDto" resultMap="BaseResultMap">
+		select * from budget_order_view
+		<where>
+			and confirm_flg='N'
+		</where>
 	</select>
 
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -197,12 +205,19 @@
 		A.product_cost,
 		IF(ISNULL(A.adult_count),0,A.adult_count)+
 		IF(ISNULL(A.special_count),0,A.special_count) AS people_count,
-		A.status,
+		case when A.departure_date>now() then '未出团'
+		when now()>=A.departure_date and
+		DATE_ADD(A.departure_date,interval days-1 day) > now() then '出团中'
+		when now()>=DATE_ADD(A.departure_date,interval
+		days-1 day) then '已回团'
+		end
+		AS status,
 		TIMESTAMPDIFF(day,A.departure_date,now())-days+2 AS back_days,
 		A.product_manager_number,
 		A.product_manager,
 		B.final_balance AS balance
-		from final_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
+		from
+		final_order_view A LEFT JOIN receivable B ON A.team_number = B.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
@@ -228,12 +243,7 @@
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
 				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
 			</if>
-			<if test="params.bo.order_statuses != null">
-				and A.status in
-				<foreach item="item" index="index" collection="params.bo.order_statuses" open="(" separator="," close=")">
-					#{params.bo.order_statuses[${index}]}
-				</foreach>
-			</if>
+
 		</where>
 		ORDER BY A.departure_date DESC
 

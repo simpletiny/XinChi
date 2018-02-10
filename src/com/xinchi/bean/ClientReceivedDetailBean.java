@@ -46,8 +46,15 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private String month;
 
 	private String limit_time;
-
 	private List<String> statuses;
+
+	private String voucher_file;
+	private String collecter;
+
+	// more back DTO data
+	private String receiver;
+	private String receiver_card_number;
+	private String receiver_bank;
 
 	// search options
 	private BigDecimal money_from;
@@ -252,6 +259,46 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setClient_pk(String client_pk) {
 		this.client_pk = client_pk;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
+	}
+
+	public String getCollecter() {
+		return collecter;
+	}
+
+	public void setCollecter(String collecter) {
+		this.collecter = collecter;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
+	}
+
+	public String getReceiver_card_number() {
+		return receiver_card_number;
+	}
+
+	public void setReceiver_card_number(String receiver_card_number) {
+		this.receiver_card_number = receiver_card_number;
+	}
+
+	public String getReceiver_bank() {
+		return receiver_bank;
+	}
+
+	public void setReceiver_bank(String receiver_bank) {
+		this.receiver_bank = receiver_bank;
 	}
 
 }

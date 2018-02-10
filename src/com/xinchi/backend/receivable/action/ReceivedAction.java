@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.action;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,10 @@ import com.xinchi.bean.ReceivableBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.FileFolder;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
-import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -53,8 +55,10 @@ public class ReceivedAction extends BaseAction {
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 		detail.setReceived_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
 		detail.setClient_employee_pk(receivable.getClient_employee_pk());
+
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
+
 		resultStr = OK;
 		return SUCCESS;
 	}
@@ -68,11 +72,34 @@ public class ReceivedAction extends BaseAction {
 		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_COLLECT);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setReceived_time(DateUtil.getMinStr());
+
 		detail.setClient_employee_pk(receivable.getClient_employee_pk());
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
+
+		// 保存收入凭证
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
+
 		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	// 收入申请
+	public String applyReceive() {
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
+		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+		String pk = DBCommonUtil.genPk();
+		detail.setPk(pk);
+		detail.setRelated_pk(pk);
+
+		receivedService.insertWithPk(detail);
+		// 保存收入凭证
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
+		receivableService.updateReceivableReceived(detail);
+
+		resultStr = OK;
 		return SUCCESS;
 	}
 
@@ -106,6 +133,9 @@ public class ReceivedAction extends BaseAction {
 			receivedService.insertWithPk(detail);
 			receivableService.updateReceivableReceived(detail);
 		}
+		// 保存收入凭证
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 
 		resultStr = OK;
 		return SUCCESS;
@@ -123,24 +153,44 @@ public class ReceivedAction extends BaseAction {
 
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_PAY);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+
+		JSONArray array = JSONArray.fromObject(allot_json);
+
+		String[] pks = DBCommonUtil.genPks(array.size());
 		String related_pk = DBCommonUtil.genPk();
 		detail.setRelated_pk(related_pk);
+
 		detail.setReceived_time(DateUtil.getMinStr());
-		detail.setReceived(detail.getReceived().negate());
-		receivedService.insert(detail);
-		receivableService.updateReceivableReceived(detail);
-		SimpletinyUser su = new SimpletinyUser();
+		detail.setAllot_received(detail.getAllot_received().negate());
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = JSONObject.fromObject(array.get(i));
+			String t = obj.getString("team_number");
+			String r = obj.getString("received");
+			detail.setTeam_number(t);
+			detail.setPk(pks[i]);
+
+			if (!SimpletinyString.isEmpty(r)) {
+				detail.setReceived(new BigDecimal(r).negate());
+			}
+
+			receivedService.insertWithPk(detail);
+			receivableService.updateReceivableReceived(detail);
+		}
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
 		// 生成支付审批数据
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		PayApprovalBean pa = new PayApprovalBean();
-		pa.setReceiver(receivable.getClient_employee_name());
-		pa.setMoney(detail.getReceived().negate());
+		pa.setReceiver(detail.getReceiver());
+		pa.setMoney(detail.getAllot_received().negate());
 		pa.setItem(ResourcesConstants.PAY_TYPE_MORE_BACK);
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+
 		pa.setRelated_pk(related_pk);
+
 		pa.setComment(detail.getComment());
-		pa.setApply_user(su.getUser().getUser_number());
-		pa.setBack_pk(detail.getPk());
+		pa.setApply_user(sessionBean.getUser_number());
+		pa.setBack_pk(related_pk);
 		pa.setApply_time(DateUtil.getTimeMillis());
 		pa.setLimit_time(detail.getLimit_time());
 
@@ -193,21 +243,6 @@ public class ReceivedAction extends BaseAction {
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
 		resultStr = SUCCESS;
-		return SUCCESS;
-	}
-
-	// 收入申请
-	public String applyReceive() {
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		String pk = DBCommonUtil.genPk();
-		detail.setPk(pk);
-		detail.setRelated_pk(pk);
-
-		receivedService.insertWithPk(detail);
-		receivableService.updateReceivableReceived(detail);
-
-		resultStr = OK;
 		return SUCCESS;
 	}
 

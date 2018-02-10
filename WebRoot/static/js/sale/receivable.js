@@ -7,6 +7,9 @@ var payLayer;
 var sumPayLayer;
 
 var OrderContext = function() {
+	var today = new Date();
+	var tomorrow = today.addDate(1);
+
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenOrders = ko.observableArray([]);
@@ -46,6 +49,7 @@ var OrderContext = function() {
 	self.tailMoney = ko.observable();
 	self.team_number = ko.observable();
 	self.client_employee_name = ko.observable();
+	self.financial_body_name = ko.observable();
 
 	self.ridTail = function() {
 		if (self.chosenOrders().length == 0) {
@@ -145,7 +149,7 @@ var OrderContext = function() {
 
 			self.team_number(current.team_number);
 			self.client_employee_name(current.client_employee_name);
-
+			self.financial_body_name(current.financial_body_name);
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
@@ -153,7 +157,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
-				area : [ '1120px', '300px' ],
+				area : [ '1120px', '750px' ],
 				offset : [ '150px', '' ],
 				scrollbar : true,
 				page : {
@@ -193,35 +197,39 @@ var OrderContext = function() {
 
 	self.chosenReceivables = ko.observableArray([]);
 	self.more_money = ko.observable();
-	// 支出申请
+	self.nextDay = ko.observable();
+	// 退反申请
 	self.pay = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
 			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个");
-			return;
-		} else if (self.chosenOrders().length == 1) {
-			var current = self.chosenOrders()[0];
-			if (current.final_flg == "N") {
-				fail_msg("订单未决算，不能支出申请！");
+		} else {
+			var check_result = true;
+			$(self.chosenOrders()).each(function(idx, data) {
+				if (data.final_flg == "Y") {
+					if (data.final_balance >= 0) {
+						fail_msg(data.team_number + "尾款必须为负");
+						check_result = false;
+					}
+				} else {
+					if (data.budget_balance >= 0) {
+						fail_msg(data.team_number + "尾款必须为负");
+						check_result = false;
+					}
+				}
+			});
+			if (!check_result)
 				return;
-			}
-			if (current.final_balance >= 0) {
-				fail_msg("尾款必须为负（即客户多汇了团款）！");
-				return;
-			}
-			self.team_number(current.team_number);
-			self.client_employee_name(current.client_employee_name);
-			self.more_money(current.final_balance * -1);
+			self.nextDay(tomorrow.Format("yyyy-MM-dd") + " 23:59");
 			$(".rmb").formatCurrency();
+			caculateSumBack();
 			payLayer = $.layer({
 				type : 1,
-				title : [ '支出申请', '' ],
+				title : [ '退反申请', '' ],
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
-				area : [ '920px', '500px' ],
+				area : [ '920px', '800px' ],
 				offset : [ '150px', '' ],
 				scrollbar : true,
 				page : {
@@ -233,14 +241,32 @@ var OrderContext = function() {
 			});
 		}
 	};
-	// 执行支出申请
+	// 执行退反申请
 	self.applyPay = function() {
 		if (!$("#form-pay").valid())
 			return;
 
 		var data = $("#form-pay").serialize();
 
-		startLoadingSimpleIndicator("保存中");
+		var allot_json = '[';
+		var allot = $("[st='more-back-allot']");
+
+		for ( var i = 0; i < allot.length; i++) {
+			var current = allot[i];
+			var n = $(current).find("[st='team-number']").val();
+			var r = $(current).find("[st='more-back-money']").val();
+			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+			if (i == allot.length - 1) {
+				allot_json += '"}';
+			} else {
+				allot_json += '"},';
+			}
+		}
+		allot_json += ']';
+
+		data += "&allot_json=" + allot_json;
+
+		startLoadingSimpleIndicator("申请中...");
 		layer.close(payLayer);
 		$.ajax({
 			type : "POST",
@@ -258,6 +284,8 @@ var OrderContext = function() {
 		});
 	};
 	self.positiveReceivables = ko.observableArray([]);
+	self.negativeReceivables = ko.observableArray([]);
+	
 	self.max_strike_money = ko.observable();
 	// 冲账申请
 	self.strike = function() {
@@ -322,36 +350,25 @@ var OrderContext = function() {
 			}
 
 			$(".rmb").formatCurrency();
-			startLoadingSimpleIndicator("检测中");
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/isSameFinancialBody',
-				data : "client_employee_pks=" + client_employee_pks,
-				success : function(str) {
-					if (str == "NOT") {
-						fail_msg("客户不属于同一财务主体");
-					} else {
-						strikeLayer = $.layer({
-							type : 1,
-							title : [ '冲账申请', '' ],
-							maxmin : false,
-							closeBtn : [ 1, true ],
-							shadeClose : false,
-							area : [ '900px', '780px' ],
-							offset : [ '150px', '' ],
-							scrollbar : true,
-							page : {
-								dom : '#strike-submit'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					}
-					endLoadingIndicator();
+
+			strikeLayer = $.layer({
+				type : 1,
+				title : [ '冲账申请', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '900px', '780px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#strike-submit'
+				},
+				end : function() {
+					console.log("Done");
 				}
 			});
 		}
+
 	};
 
 	self.applyStrike = function() {
@@ -370,7 +387,7 @@ var OrderContext = function() {
 		var data = $("#form-strike").serialize();
 		var allot_json = '[';
 		var allot = $("[st='strike-allot']");
-		for (var i = 0; i < allot.length; i++) {
+		for ( var i = 0; i < allot.length; i++) {
 			var current = allot[i];
 			var n = $(current).find("[st='strike-team_number']").val();
 			var r = $(current).find("[st='strike-received']").val();
@@ -412,15 +429,18 @@ var OrderContext = function() {
 					fail_msg("尾款必须为正！");
 					return;
 				}
+				self.tailMoney(current.final_balance);
 			} else {
 				if (current.budget_balance == 0) {
 					fail_msg("尾款必须为正！");
 					return;
 				}
+				self.tailMoney(current.budget_balance);
 			}
 
 			self.team_number(current.team_number);
 			self.client_employee_name(current.client_employee_name);
+			self.financial_body_name(current.financial_body_name);
 
 			receiveLayer = $.layer({
 				type : 1,
@@ -428,7 +448,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
-				area : [ '820px', '400px' ],
+				area : [ '1000px', '700px' ],
 				offset : [ '150px', '' ],
 				scrollbar : true,
 				page : {
@@ -439,56 +459,45 @@ var OrderContext = function() {
 				}
 			});
 		} else {
-			var client_employee_pks = new Array();
 			var check_result = true;
+			var money = 0;
 			$(self.chosenOrders()).each(function(idx, data) {
-				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
 					if (data.final_balance <= 0) {
 						fail_msg(data.team_number + "尾款必须为正");
 						check_result = false;
 					}
+					money += data.final_balance;
 				} else {
-					if (data.budget_balance == 0) {
+					if (data.budget_balance <= 0) {
 						fail_msg(data.team_number + "尾款必须为正");
 						check_result = false;
 					}
+					money += data.budget_balance;
 				}
 			});
 			if (!check_result)
 				return;
-
+			self.tailMoney(money);
 			$(".rmb").formatCurrency();
-			startLoadingSimpleIndicator("检测中");
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/isSameFinancialBody',
-				data : "client_employee_pks=" + client_employee_pks,
-				success : function(str) {
-					if (str == "NOT") {
-						fail_msg("客户不属于同一财务主体");
-					} else {
-						receiveLayer = $.layer({
-							type : 1,
-							title : [ '收入', '' ],
-							maxmin : false,
-							closeBtn : [ 1, true ],
-							shadeClose : false,
-							area : [ '820px', '800px' ],
-							offset : [ '150px', '' ],
-							scrollbar : true,
-							page : {
-								dom : '#receive_sum_submit'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-						$("receive_sum_submit").attr("overflow", "yes");
-					}
-					endLoadingIndicator();
+
+			receiveLayer = $.layer({
+				type : 1,
+				title : [ '收入', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '1200px', '800px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#receive_sum_submit'
+				},
+				end : function() {
+					console.log("Done");
 				}
 			});
+			$("receive_sum_submit").attr("overflow", "yes");
 		}
 	};
 
@@ -532,12 +541,11 @@ var OrderContext = function() {
 			data += "&detail.allot_received=" + $(".amountRangeStart1").val();
 			var allot_json = '[';
 			var allot = $("[st='receive_allot']");
-			for (var i = 0; i < allot.length; i++) {
+			for ( var i = 0; i < allot.length; i++) {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
 				var r = $(current).find("[st='receive_received']").val();
-				allot_json += '{"team_number":"' + n + '",' + '"received":"'
-						+ r;
+				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -587,10 +595,8 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
 			self.receivables(data.receivables);
 
 			// 计算合计
@@ -675,16 +681,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/sale/order-edit.jsp?key="
-					+ self.chosenOrders()[0];
+			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl
-				+ "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -721,10 +724,9 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for (var i = startPage; i <= endPage; i++) {
+		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -742,5 +744,25 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.search();
 	ctx.fetchSummary();
+	$("#sum-more-back").disabled();
+	$(':file').change(function() {
+		changeFile({
+			input : this,
+			size : 400,
+			width : 400,
+			required : "yes"
+		});
+	});
 
 });
+
+var caculateSumBack = function() {
+	var allot = $("[st='more-back-allot']");
+	var sum = 0;
+	for ( var i = 0; i < allot.length; i++) {
+		var current = allot[i];
+		var money = $(current).find("[st='more-back-money']").val() - 0;
+		sum += money;
+	}
+	$("#sum-more-back").val(sum);
+};

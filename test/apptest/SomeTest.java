@@ -1,5 +1,7 @@
 package apptest;
 
+import java.util.Calendar;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -18,11 +20,7 @@ public class SomeTest {
 	// }
 
 	public static void main(String[] args) throws Exception {
-		String[] bsdw = {"支付宝9544","工行哈市7479","交行哈市9999","建行哈市9028","中行哈市8471","农行哈市6919","邮储哈市5906","微信9544","公司主账户0880","交行倒账363","建行金卡7265","中行原卡"};
-		
-		for(int i = bsdw.length-1;i>=0;i--) {
-			System.out.print("'"+bsdw[i]+"',");
-		}
-		
+		String x = "2015-09-09";
+		System.out.println(x.substring(0, 4) + ":" + x.substring(5, 7));
 	}
 }

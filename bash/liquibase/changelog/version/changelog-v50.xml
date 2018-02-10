@@ -384,6 +384,30 @@
 			<comment>ALTER VIEW budget_order_view </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE client_received_detail ADD COLUMN voucher_file VARCHAR(30) NULL COMMENT '收入凭证文件名'  AFTER client_pk ;
+             ]]>
+			<comment>ALTER VIEW client_received_detail </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE client_received_detail ADD COLUMN collecter VARCHAR(10) NULL COMMENT '代收方'  AFTER voucher_file ;
+             ]]>
+			<comment>ALTER VIEW client_received_detail </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE pay_approval ADD COLUMN receiver_card_number VARCHAR(30) NULL COMMENT '收款方卡号'  AFTER approval_time , ADD COLUMN receiver_bank VARCHAR(30) NULL COMMENT '收款方开户行'  AFTER receiver_card_number ;
+             ]]>
+			<comment>ALTER TABLE pay_approval </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

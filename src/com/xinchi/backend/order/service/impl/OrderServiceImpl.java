@@ -39,4 +39,9 @@ public class OrderServiceImpl implements OrderService {
 		return dao.selectFByPage(page);
 	}
 
+	@Override
+	public List<OrderDto> selectTbcByParam(OrderDto option) {
+		return dao.selectTbcByParam(option);
+	}
+
 }

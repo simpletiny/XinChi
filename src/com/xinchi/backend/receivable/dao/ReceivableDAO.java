@@ -20,4 +20,6 @@ public interface ReceivableDAO {
 
 	public List<ReceivableBean> selectByPage(Page<ReceivableBean> page);
 
+	public void deleteByTeamNumber(String team_number);
+
 }

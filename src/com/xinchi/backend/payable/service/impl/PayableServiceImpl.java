@@ -2,14 +2,10 @@ package com.xinchi.backend.payable.service.impl;
 
 import static com.xinchi.common.SimpletinyString.isEmpty;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -33,7 +29,6 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.solr.service.SimpletinySolr;
 import com.xinchi.tools.Page;
-import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -336,9 +331,9 @@ public class PayableServiceImpl implements PayableService {
 		return Joiner.on(separator).join(queryParts);
 	}
 
-	private String safeGet(SolrDocument doc, String key) {
-		return doc.get(key) != null ? doc.get(key).toString() : null;
-	}
+	// private String safeGet(SolrDocument doc, String key) {
+	// return doc.get(key) != null ? doc.get(key).toString() : null;
+	// }
 
 	@Override
 	public PayableSummaryBean searchPayableSummary(String user_number) {
@@ -383,22 +378,23 @@ public class PayableServiceImpl implements PayableService {
 
 	@Override
 	public void deletePayableByTeamNumber(String team_number) {
-		SolrClient solrClient = solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
-		PayableBean options = new PayableBean();
-		options.setTeam_number(team_number);
-		List<PayableBean> payables = dao.selectByParam(options);
-		List<String> ids = new ArrayList<String>();
-		for (PayableBean payable : payables) {
-			ids.add(payable.getPk());
-		}
-		try {
-			if (ids.size() > 0) {
-				solrClient.deleteById(ids);
-				solrClient.commit();
-			}
-		} catch (SolrServerException | IOException e) {
-			e.printStackTrace();
-		}
+		// SolrClient solrClient =
+		// solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
+		// PayableBean options = new PayableBean();
+		// options.setTeam_number(team_number);
+		// List<PayableBean> payables = dao.selectByParam(options);
+		// List<String> ids = new ArrayList<String>();
+		// for (PayableBean payable : payables) {
+		// ids.add(payable.getPk());
+		// }
+		// try {
+		// if (ids.size() > 0) {
+		// solrClient.deleteById(ids);
+		// solrClient.commit();
+		// }
+		// } catch (SolrServerException | IOException e) {
+		// e.printStackTrace();
+		// }
 		dao.deleteByTeamNumber(team_number);
 	}
 

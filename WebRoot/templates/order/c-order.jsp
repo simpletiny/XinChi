@@ -53,8 +53,8 @@ tr td {
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { writeFirstAir() }">写入首航段</button>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { writeFirstAir() }">写入首航段</button>
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">微调</button>
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">变更</button>
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { rollBackOrder() }">取消</button>
