@@ -53,7 +53,7 @@ var DetailContext = function() {
 		} else if (self.chosenDetails().length == 1) {
 			var key = self.chosenDetails()[0];
 			self.chosenDetails.removeAll();
-			window.open(self.apiurl + "templates/finance/do-match.jsp?key=" + key, '_blank');
+			window.location=self.apiurl + "templates/finance/do-match.jsp?key=" + key;
 		}
 	};
 	// 匹配其他收入

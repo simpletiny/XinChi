@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -30,6 +27,9 @@ import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -78,7 +78,8 @@ public class ReceivedAction extends BaseAction {
 		receivableService.updateReceivableReceived(detail);
 
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
+				+ detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 
 		resultStr = SUCCESS;
@@ -95,7 +96,8 @@ public class ReceivedAction extends BaseAction {
 
 		receivedService.insertWithPk(detail);
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
+				+ detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 		receivableService.updateReceivableReceived(detail);
 
@@ -134,7 +136,8 @@ public class ReceivedAction extends BaseAction {
 			receivableService.updateReceivableReceived(detail);
 		}
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
+				+ detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 
 		resultStr = OK;
@@ -177,7 +180,8 @@ public class ReceivedAction extends BaseAction {
 			receivedService.insertWithPk(detail);
 			receivableService.updateReceivableReceived(detail);
 		}
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		// 生成支付审批数据
 		PayApprovalBean pa = new PayApprovalBean();
@@ -185,6 +189,8 @@ public class ReceivedAction extends BaseAction {
 		pa.setMoney(detail.getAllot_received().negate());
 		pa.setItem(ResourcesConstants.PAY_TYPE_MORE_BACK);
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+		pa.setReceiver_card_number(detail.getReceiver_card_number());
+		pa.setReceiver_bank(detail.getReceiver_bank());
 
 		pa.setRelated_pk(related_pk);
 
@@ -200,48 +206,102 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String strike_out_json;
+	private String strike_in_json;
+
 	/**
 	 * 冲账申请
 	 * 
 	 * @return
 	 */
 	public String applyStrike() {
-
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setReceived_time(DateUtil.getMinStr());
-
-		BigDecimal out_money = BigDecimal.ZERO;
-
-		JSONArray array = JSONArray.fromObject(allot_json);
+		JSONArray out_array = JSONArray.fromObject(strike_out_json);
 
 		String related_pk = DBCommonUtil.genPk();
-		detail.setRelated_pk(related_pk);
 
-		for (int i = 0; i < array.size(); i++) {
+		for (int i = 0; i < out_array.size(); i++) {
+			ClientReceivedDetailBean current = new ClientReceivedDetailBean();
+			current.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT);
+			current.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			current.setReceived_time(DateUtil.getMinStr());
+			current.setRelated_pk(related_pk);
+
+			JSONObject obj = JSONObject.fromObject(out_array.get(i));
+			String t = obj.getString("team_number");
+			String r = obj.getString("received");
+			current.setTeam_number(t);
+
+			if (!SimpletinyString.isEmpty(r)) {
+				current.setReceived(new BigDecimal(r).negate());
+			}
+			current.setComment(detail.getComment());
+			receivedService.insert(current);
+			receivableService.updateReceivableReceived(current);
+		}
+		JSONArray in_array = JSONArray.fromObject(strike_in_json);
+
+		for (int i = 0; i < in_array.size(); i++) {
 			ClientReceivedDetailBean current = new ClientReceivedDetailBean();
 			current.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN);
 			current.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 			current.setReceived_time(DateUtil.getMinStr());
 			current.setRelated_pk(related_pk);
 
-			JSONObject obj = JSONObject.fromObject(array.get(i));
+			JSONObject obj = JSONObject.fromObject(in_array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
 			current.setTeam_number(t);
 
 			if (!SimpletinyString.isEmpty(r)) {
 				current.setReceived(new BigDecimal(r));
-				out_money = out_money.add(new BigDecimal(r));
 			}
+
+			current.setComment(detail.getComment());
 
 			receivedService.insert(current);
 			receivableService.updateReceivableReceived(current);
 		}
 
-		detail.setReceived(out_money.negate());
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	// 返佣申请
+	public String applyFly() {
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_FLY);
+		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+
+		String related_pk = DBCommonUtil.genPk();
+		detail.setRelated_pk(related_pk);
+
+		detail.setReceived_time(DateUtil.getMinStr());
+		detail.setReceived(detail.getReceived().negate());
+
 		receivedService.insert(detail);
 		receivableService.updateReceivableReceived(detail);
+
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		// 生成支付审批数据
+		PayApprovalBean pa = new PayApprovalBean();
+		pa.setReceiver(detail.getReceiver());
+		pa.setMoney(detail.getReceived().negate());
+		pa.setItem(ResourcesConstants.PAY_TYPE_FLY);
+		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+		pa.setReceiver_card_number(detail.getReceiver_card_number());
+		pa.setReceiver_bank(detail.getReceiver_bank());
+
+		pa.setRelated_pk(related_pk);
+
+		pa.setComment(detail.getTeam_number()+"订单fly");
+		pa.setApply_user(sessionBean.getUser_number());
+		pa.setBack_pk(related_pk);
+		pa.setApply_time(DateUtil.getTimeMillis());
+		pa.setLimit_time(detail.getLimit_time());
+
+		payApprovalService.insert(pa);
+
 		resultStr = SUCCESS;
 		return SUCCESS;
 	}
@@ -250,7 +310,8 @@ public class ReceivedAction extends BaseAction {
 
 	public String searchReceivedByPage() {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -318,6 +379,22 @@ public class ReceivedAction extends BaseAction {
 
 	public void setRelated_pks(String related_pks) {
 		this.related_pks = related_pks;
+	}
+
+	public String getStrike_out_json() {
+		return strike_out_json;
+	}
+
+	public void setStrike_out_json(String strike_out_json) {
+		this.strike_out_json = strike_out_json;
+	}
+
+	public String getStrike_in_json() {
+		return strike_in_json;
+	}
+
+	public void setStrike_in_json(String strike_in_json) {
+		this.strike_in_json = strike_in_json;
 	}
 
 }

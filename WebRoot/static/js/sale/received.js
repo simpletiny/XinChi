@@ -68,7 +68,8 @@ var ReceivedContext = function() {
 		'PAY' : '支出',
 		'STRIKEOUT' : '冲账/出',
 		'STRIKEIN' : '冲账/入',
-		'COLLECT' : '代收'
+		'COLLECT' : '代收',
+		'FLY' : 'FLY'
 	};
 
 	// 计算合计

@@ -5,6 +5,7 @@ var receiveLayer;
 
 var payLayer;
 var sumPayLayer;
+var flyLayer;
 
 var OrderContext = function() {
 	var today = new Date();
@@ -173,10 +174,10 @@ var OrderContext = function() {
 	self.applyCollect = function() {
 		if (!$("#form-collect").valid())
 			return;
-		if ($("#collect-money").val() > self.tailMoney()) {
-			fail_msg("代收金额大于尾款！");
-			return;
-		}
+		// if ($("#collect-money").val() > self.tailMoney()) {
+		// fail_msg("代收金额大于尾款！");
+		// return;
+		// }
 		startLoadingSimpleIndicator("保存中");
 		var data = $("#form-collect").serialize();
 		$.ajax({
@@ -251,7 +252,7 @@ var OrderContext = function() {
 		var allot_json = '[';
 		var allot = $("[st='more-back-allot']");
 
-		for ( var i = 0; i < allot.length; i++) {
+		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
 			var n = $(current).find("[st='team-number']").val();
 			var r = $(current).find("[st='more-back-money']").val();
@@ -285,7 +286,7 @@ var OrderContext = function() {
 	};
 	self.positiveReceivables = ko.observableArray([]);
 	self.negativeReceivables = ko.observableArray([]);
-	
+
 	self.max_strike_money = ko.observable();
 	// 冲账申请
 	self.strike = function() {
@@ -297,24 +298,20 @@ var OrderContext = function() {
 			return;
 		} else if (self.chosenOrders().length >= 1) {
 			self.positiveReceivables.removeAll();
-			self.max_strike_money("");
-			var client_employee_pks = new Array();
+			self.negativeReceivables.removeAll();
 
 			var check_result = true;
 			var negative_cnt = 0;
 			var positive_cnt = 0;
 
 			$(self.chosenOrders()).each(function(idx, data) {
-				client_employee_pks.push(data.client_employee_pk);
 				if (data.final_flg == "Y") {
 					if (data.final_balance == 0) {
 						fail_msg(data.team_number + "尾款已结清");
 						check_result = false;
 					} else if (data.final_balance < 0) {
 						negative_cnt++;
-						self.team_number(data.team_number);
-						self.client_employee_name(data.client_employee_name);
-						self.max_strike_money(data.final_balance * -1);
+						self.negativeReceivables.push(data);
 					} else {
 						positive_cnt++;
 						self.positiveReceivables.push(data);
@@ -338,9 +335,6 @@ var OrderContext = function() {
 
 			if (negative_cnt == 0) {
 				fail_msg("请选择一单尾款为负的订单（即需要冲账的多付款订单！）");
-				return;
-			} else if (negative_cnt > 1) {
-				fail_msg("只能选择一单尾款为负的订单！");
 				return;
 			}
 
@@ -370,40 +364,65 @@ var OrderContext = function() {
 		}
 
 	};
-
+	// 执行冲账申请
 	self.applyStrike = function() {
 		if (!$("#form-strike").valid())
 			return;
+		var strike_outs = $("#strike-submit").find("[st='strike-out-money']");
+		var strike_ins = $("#strike-submit").find("[st='strike-in-money']");
+		var strike_out = 0;
+		var strike_in = 0;
+		for (var i = 0; i < strike_outs.length; i++) {
+			strike_out += $(strike_outs[i]).val() - 0;
+		}
+		for (var i = 0; i < strike_ins.length; i++) {
+			strike_in += $(strike_ins[i]).val() - 0;
+		}
 
-		var sumAllot = 0;
-		$("[st='strike-received']").each(function(idx, data) {
-			sumAllot += $(data).val() - 0;
-		});
-		if (sumAllot > self.max_strike_money() - 0) {
-			fail_msg("分配金额合计大于冲账金额");
+		if (strike_out != strike_in) {
+			fail_msg("冲出冲入金额不符！");
 			return;
 		}
 
 		var data = $("#form-strike").serialize();
-		var allot_json = '[';
-		var allot = $("[st='strike-allot']");
-		for ( var i = 0; i < allot.length; i++) {
-			var current = allot[i];
-			var n = $(current).find("[st='strike-team_number']").val();
-			var r = $(current).find("[st='strike-received']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
-			if (i == allot.length - 1) {
-				allot_json += '"}';
+		var strike_out_json = '[';
+		var strike_out = $("[st='strike-out']");
+		for (var i = 0; i < strike_out.length; i++) {
+			var current = strike_out[i];
+			var n = $(current).find("[st='strike-team-number']").val();
+			var r = $(current).find("[st='strike-out-money']").val();
+			strike_out_json += '{"team_number":"' + n + '",' + '"received":"'
+					+ r;
+			if (i == strike_out.length - 1) {
+				strike_out_json += '"}';
 			} else {
-				allot_json += '"},';
+				strike_out_json += '"},';
 			}
 		}
-		allot_json += ']';
+		strike_out_json += ']';
+
+		var strike_in_json = '[';
+		var strike_in = $("[st='strike-in']");
+		for (var i = 0; i < strike_in.length; i++) {
+			var current = strike_in[i];
+			var n = $(current).find("[st='strike-team-number']").val();
+			var r = $(current).find("[st='strike-in-money']").val();
+			strike_in_json += '{"team_number":"' + n + '",' + '"received":"'
+					+ r;
+			if (i == strike_in.length - 1) {
+				strike_in_json += '"}';
+			} else {
+				strike_in_json += '"},';
+			}
+		}
+		strike_in_json += ']';
+
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/applyReceiveStrike',
-			data : data + "&allot_json=" + allot_json,
+			data : data + "&strike_out_json=" + strike_out_json
+					+ "&strike_in_json=" + strike_in_json,
 			success : function(str) {
 				endLoadingIndicator();
 				if (str == "success") {
@@ -541,11 +560,12 @@ var OrderContext = function() {
 			data += "&detail.allot_received=" + $(".amountRangeStart1").val();
 			var allot_json = '[';
 			var allot = $("[st='receive_allot']");
-			for ( var i = 0; i < allot.length; i++) {
+			for (var i = 0; i < allot.length; i++) {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
 				var r = $(current).find("[st='receive_received']").val();
-				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+				allot_json += '{"team_number":"' + n + '",' + '"received":"'
+						+ r;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -571,6 +591,96 @@ var OrderContext = function() {
 			});
 		}
 	};
+	self.order = ko.observable();
+	self.flyMoney = ko.observable();
+	// fly申请
+	self.fly = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个");
+			return;
+		} else {
+			var current = self.chosenOrders()[0];
+			var team_number = current.team_number;
+
+			$
+					.getJSON(
+							self.apiurl + 'order/selectOrderByTeamNumber',
+							{
+								team_number : team_number
+							},
+							function(data) {
+								if (data.option) {
+									self.order(data.option);
+									if (data.option.fy == null
+											|| data.option.fy == 0) {
+										fail_msg("不存在fly信息，不能申请！	");
+										return;
+									} else {
+										self.nextDay(tomorrow
+												.Format("yyyy-MM-dd")
+												+ " 23:59");
+										self.team_number(current.team_number);
+										self
+												.client_employee_name(current.client_employee_name);
+										self
+												.financial_body_name(current.financial_body_name);
+										self.flyMoney(data.option.fy);
+										$(".rmb").formatCurrency();
+										flyLayer = $.layer({
+											type : 1,
+											title : [ 'fly申请', '' ],
+											maxmin : false,
+											closeBtn : [ 1, true ],
+											shadeClose : false,
+											area : [ '920px', '400px' ],
+											offset : [ '', '' ],
+											scrollbar : true,
+											page : {
+												dom : '#fly-submit'
+											},
+											end : function() {
+												console.log("Done");
+											}
+										});
+									}
+
+								} else {
+									fail_msg("不存在相关订单，请联系管理员！");
+								}
+							}).fail(function(reason) {
+						fail_msg(reason.responseText);
+					});
+
+		}
+	};
+
+	self.applyFly = function() {
+
+		if (!$("#form-fly").valid()) {
+			return;
+		}
+		var data = $("#form-fly").serialize();
+		layer.close(flyLayer);
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyFly',
+			data : data,
+			success : function(str) {
+				endLoadingIndicator();
+				if (str != "success") {
+					fail_msg("申请失败，请联系管理员");
+				} else {
+					self.chosenOrders.removeAll();
+					self.search();
+				}
+			}
+		});
+	}
+
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 
@@ -595,8 +705,10 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
+				data) {
 			self.receivables(data.receivables);
 
 			// 计算合计
@@ -681,13 +793,16 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
+			window.location.href = self.apiurl
+					+ "templates/sale/order-edit.jsp?key="
+					+ self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl
+				+ "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -724,9 +839,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -759,10 +875,27 @@ $(document).ready(function() {
 var caculateSumBack = function() {
 	var allot = $("[st='more-back-allot']");
 	var sum = 0;
-	for ( var i = 0; i < allot.length; i++) {
+	for (var i = 0; i < allot.length; i++) {
 		var current = allot[i];
 		var money = $(current).find("[st='more-back-money']").val() - 0;
 		sum += money;
 	}
 	$("#sum-more-back").val(sum);
+};
+// 计算冲出冲入合计
+var caculateStrike = function() {
+	var strike_outs = $("#strike-submit").find("[st='strike-out-money']");
+	var strike_ins = $("#strike-submit").find("[st='strike-in-money']");
+	var strike_out = 0;
+	var strike_in = 0;
+	for (var i = 0; i < strike_outs.length; i++) {
+		strike_out += $(strike_outs[i]).val() - 0;
+	}
+	for (var i = 0; i < strike_ins.length; i++) {
+		strike_in += $(strike_ins[i]).val() - 0;
+	}
+	$("#p-strike-out").text(strike_out);
+	$("#p-strike-in").text(strike_in);
+	$("#p-strike-out").formatCurrency();
+	$("#p-strike-in").formatCurrency();
 };

@@ -110,9 +110,6 @@
 								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sortTypes" name="payable.sort_type"></select>
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
-						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">

@@ -385,6 +385,11 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String selectOrderByTeamNumber() {
+		option = service.selectByTeamNumber(team_number);
+		return SUCCESS;
+	}
+
 	public BudgetStandardOrderBean getBsOrder() {
 		return bsOrder;
 	}

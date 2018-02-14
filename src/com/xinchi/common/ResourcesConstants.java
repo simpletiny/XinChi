@@ -68,6 +68,8 @@ public class ResourcesConstants {
 	public static String RECEIVED_TYPE_RECEIVED = "RECEIVED";
 	// 多付返款支出
 	public static String RECEIVED_TYPE_PAY = "PAY";
+	//返佣
+	public static String RECEIVED_TYPE_FLY = "FLY";
 
 	// ************************* 供应商往来账种类 *************************
 	// 返款收入
@@ -190,6 +192,8 @@ public class ResourcesConstants {
 	public static String PAY_TYPE_QITA = "Q";
 	// 多付退还
 	public static String PAY_TYPE_MORE_BACK = "M";
+	// FLY
+	public static String PAY_TYPE_FLY = "F";
 
 	public static String PAY_STATUS_ING = "I";
 	public static String PAY_STATUS_YES = "Y";

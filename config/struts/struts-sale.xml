@@ -92,6 +92,9 @@
 		<action name="applyReceiveStrike" class="receivedAction" method="applyStrike">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="applyFly" class="receivedAction" method="applyFly">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="rollBackReceived" class="receivedAction" method="rollBackReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>
