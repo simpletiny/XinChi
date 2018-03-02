@@ -12,11 +12,12 @@ var ClientContext = function() {
 	self.level = [ '关系度', '回款誉', '市场力' ];
 	// 关系度
 	self.relationLevel = [ '朋友级', '商务级', '市场级', '新增级', '排斥级' ];
-	// 回款誉
-	self.marketLevel = [ '未知','主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+
 	// 市场力
-	self.backLevel = [ '未知','提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
-	self.chosenLevel = ko.observableArray(['关系度']);
+	self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+	// 回款誉
+	self.backLevel = [ '未知', '提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
+	self.chosenLevel = ko.observableArray([ '关系度' ]);
 
 	self.chosenRelationLevel = ko.observableArray([]);
 	self.chosenBackLevel = ko.observableArray([]);
@@ -62,7 +63,7 @@ var ClientContext = function() {
 			window.location.href = self.apiurl + "templates/client/visit-creation.jsp?key=" + self.chosenEmployee();
 		}
 	};
-	//新增精推
+	// 新增精推
 	self.createAccurateSale = function() {
 		if (self.chosenEmployee().length == 0) {
 			fail_msg("请选择客户");
@@ -138,7 +139,7 @@ var ClientContext = function() {
 
 		if (self.chosenMarketLevel() != null) {
 			param += "&employee.market_level=" + self.chosenMarketLevel();
-		}else{
+		} else {
 			param += "&employee.market_level=";
 		}
 

@@ -24,7 +24,7 @@ var DetailContext = function() {
 			fail_msg("转出账户和转入账户不能相同！");
 			return;
 		}
-		
+
 		console.log($("form").serialize());
 		$.layer({
 			area : [ 'auto', 'auto' ],
@@ -34,11 +34,13 @@ var DetailContext = function() {
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
+					startLoadingSimpleIndicator("保存中");
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'finance/createInnerDetail',
 						data : $("form").serialize()
 					}).success(function(str) {
+						endLoadingIndicator();
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";
 						}

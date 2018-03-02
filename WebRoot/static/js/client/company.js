@@ -1,14 +1,13 @@
 var salesLayer;
+var levelLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCompanies = ko.observableArray([]);
 	self.createCompany = function() {
-		window.location.href = self.apiurl
-				+ "templates/client/company-creation.jsp";
+		window.location.href = self.apiurl + "templates/client/company-creation.jsp";
 	};
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
-			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.clients = ko.observable({
 		total : 0,
 		items : []
@@ -16,12 +15,24 @@ var CompanyContext = function() {
 	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
 	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
 	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
+	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	self.status = [ 'N', 'Y' ];
+	self.talkLevels = [ '强', '中', '弱', '未知' ];
+	self.chosenTalkLevels = ko.observableArray([]);
+	self.chosenTalkLevels.push("强");
+	self.chosenTalkLevels.push("中");
+	self.chosenTalkLevels.push("弱");
+	self.chosenTalkLevels.push("未知");
 	self.statusMapping = {
 		'N' : '正常',
 		'Y' : '已停用'
 	};
 
+	self.chosenMainBusinesses = ko.observableArray([]);
+	self.chosenMainBusinesses.push("综合");
+	self.chosenMainBusinesses.push("组团");
+	self.chosenMainBusinesses.push("未知");
+	
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("N");
 
@@ -47,14 +58,12 @@ var CompanyContext = function() {
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
-		var param = $("form").serialize();
+		var param = $("#form-search").serialize();
 		if (!$("#txt-public-flg").is(':checked'))
-			param += "&client.public_flg=N"
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+			param += "&client.public_flg=N";
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
 			$(".rmb").formatCurrency();
 
@@ -73,6 +82,70 @@ var CompanyContext = function() {
 	self.changeRelate = function() {
 		self.refresh();
 		return true;
+	};
+
+	self.client = ko.observable({});
+
+	// 客户评级
+	self.setClientLevel = function() {
+
+		if (self.chosenCompanies().length == 0) {
+			fail_msg("请选择客户财务主体");
+			return;
+		} else if (self.chosenCompanies().length > 1) {
+			fail_msg("只能选中一个");
+			return;
+		} else if (self.chosenCompanies().length == 1) {
+			$.getJSON(self.apiurl + 'client/searchOneCompany', {
+				client_pk : self.chosenCompanies()[0]
+			}, function(data) {
+				if (data.client) {
+					self.client(data.client);
+				} else {
+					fail_msg("财务主体不存在！");
+				}
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
+			});
+
+			levelLayer = $.layer({
+				type : 1,
+				title : [ '客户评级', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '800px', '150px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#client-level'
+				},
+				end : function() {
+
+				}
+			});
+		}
+	};
+
+	self.doSetClientLevel = function() {
+		var param = $("#form-level").serialize();
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'client/pureUpdateCompany',
+			data : param
+		}).success(function(str) {
+			layer.close(levelLayer);
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refresh();
+			} else {
+				fail_msg(str);
+			}
+		});
+	};
+	self.cancelSetClientLevel = function() {
+		layer.close(levelLayer);
 	};
 
 	self.stopCompany = function() {
@@ -240,9 +313,7 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCompanies().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/company-edit.jsp?key="
-					+ self.chosenCompanies()[0];
+			window.location.href = self.apiurl + "templates/client/company-edit.jsp?key=" + self.chosenCompanies()[0];
 		}
 	};
 	// start pagination
@@ -279,10 +350,9 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for (var i = startPage; i <= endPage; i++) {
+		for ( var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

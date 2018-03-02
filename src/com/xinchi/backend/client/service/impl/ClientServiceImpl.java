@@ -115,8 +115,7 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	public String changeClientSales(List<String> company_pks, String sale_pk) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String current_user = sessionBean.getUser_number();
 
 		for (String company_pk : company_pks) {
@@ -206,6 +205,12 @@ public class ClientServiceImpl implements ClientService {
 
 		// 删除财务主体
 		dao.delete(client_pk);
+		return SUCCESS;
+	}
+
+	@Override
+	public String pureUpdate(ClientBean client) {
+		dao.update(client);
 		return SUCCESS;
 	}
 }

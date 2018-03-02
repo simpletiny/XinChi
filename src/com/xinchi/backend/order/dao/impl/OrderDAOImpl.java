@@ -33,6 +33,7 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	public List<OrderDto> selectCByPage(Page<OrderDto> page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectCByPage", page);
 	}
+
 	@Override
 	public List<OrderDto> selectFByPage(Page<OrderDto> page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectFByPage", page);
@@ -46,6 +47,11 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	@Override
 	public List<OrderDto> selectTbcByParam(OrderDto option) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectTbcByParam", option);
+	}
+
+	@Override
+	public OrderDto searchCOrderByPk(String order_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.searchCOrderByPk", order_pk);
 	}
 
 }

@@ -10,6 +10,8 @@ var CompanyContext = function() {
 	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
 	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
 	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
+	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+	self.talkLevels = [ '未知', '强', '中', '弱'];
 
 	self.createCompany = function() {
 		if (!$("form").valid()) {

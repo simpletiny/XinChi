@@ -1,9 +1,9 @@
 package com.xinchi.common;
 
 public enum FileFolder {
-	USER_ID("userIdFileFolder"), SUPPLIER_FILE("supplierFileFolder"),
-	AGENCY_FILE("agencyFileFolder"),SYSTEM_GUIDE_FILE("systemGuideFolder"),
-	VOUCHER("voucherFileFolder"),CLIENT_CONFIRM("clientConfirmFileFolder"),CLIENT_RECEIVED_VOUCHER("clientReceivedVoucherFolder");
+	USER_ID("userIdFileFolder"), SUPPLIER_FILE("supplierFileFolder"), AGENCY_FILE("agencyFileFolder"), SYSTEM_GUIDE_FILE("systemGuideFolder"), VOUCHER(
+			"voucherFileFolder"), CLIENT_CONFIRM("clientConfirmFileFolder"), CLIENT_RECEIVED_VOUCHER("clientReceivedVoucherFolder"), CLIENT_FINAL(
+			"clientFinalFileFolder"), CLIENT_FINAL_VOUCHER("clientFinalVoucherFileFolder");
 	private String value;
 
 	public String value() {
@@ -14,7 +14,7 @@ public enum FileFolder {
 		this.value = value;
 	}
 
-	// public static void main(String s[]){
-	// System.out.println(FileFolder.valueOf("USER_ID").value);
-	// }
+	public static void main(String s[]) {
+		System.out.println(FileFolder.CLIENT_FINAL.value());
+	}
 }

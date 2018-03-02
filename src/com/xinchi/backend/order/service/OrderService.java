@@ -15,5 +15,9 @@ public interface OrderService extends BaseService {
 
 	public List<OrderDto> selectFByPage(Page page);
 	public List<OrderDto> selectTbcByParam(OrderDto option);
+	public OrderDto searchCOrderByPk(String order_pk);
+	public String finalOrder(OrderDto order);
+	public String rollBackFinalOrder(String order_pk,String standard_flg);
+	public String cancelOrder(OrderDto order);
 	
 }

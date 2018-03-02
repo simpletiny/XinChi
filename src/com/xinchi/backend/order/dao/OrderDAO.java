@@ -16,4 +16,6 @@ public interface OrderDAO {
 	public List<OrderDto> selectFByPage(Page<OrderDto> page);
 
 	public List<OrderDto> selectTbcByParam(OrderDto option);
+
+	public OrderDto searchCOrderByPk(String order_pk);
 }

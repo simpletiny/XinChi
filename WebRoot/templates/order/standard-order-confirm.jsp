@@ -97,7 +97,7 @@
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip- auto-1" id="other-cost" data-bind="value: order().other_cost" placeholder="其他费用"
+								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoCaculate()" data-bind="value: order().other_cost" placeholder="其他费用"
 									name="bsOrder.other_cost" />
 							</div>
 						</div>

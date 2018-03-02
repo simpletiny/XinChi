@@ -68,4 +68,6 @@ public interface ClientService extends BaseService {
 	public String changeClientSales(List<String> company_pks, String sale_pk);
 
 	public String deleteClientReally(String client_pk);
+
+	public String pureUpdate(ClientBean client);
 }

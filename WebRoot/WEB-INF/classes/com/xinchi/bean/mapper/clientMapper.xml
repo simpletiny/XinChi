@@ -37,6 +37,8 @@
 		<result column="main_business" property="main_business" jdbcType="VARCHAR" />
 		<result column="store_type" property="store_type" jdbcType="VARCHAR" />
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
+		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
+		<result column="talk_level" property="talk_level" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -71,7 +73,9 @@
 		relate_flg,
 		main_business,
 		store_type,
-		back_level
+		back_level,
+		market_level,
+		talk_level
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -197,6 +201,12 @@
 			<if test="back_level != null">
 				back_level,
 			</if>
+			<if test="market_level != null">
+				market_level,
+			</if>
+			<if test="talk_level != null">
+				talk_level,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="client_name != null">
@@ -292,6 +302,12 @@
 			</if>
 			<if test="back_level != null">
 				#{back_level,jdbcType=VARCHAR},
+			</if>
+			<if test="market_level != null">
+				#{market_level,jdbcType=VARCHAR},
+			</if>
+			<if test="talk_level != null">
+				#{talk_level,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -390,6 +406,12 @@
 			<if test="back_level != null">
 				back_level=#{back_level,jdbcType=VARCHAR},
 			</if>
+			<if test="market_level != null">
+				market_level=#{market_level,jdbcType=VARCHAR},
+			</if>
+			<if test="talk_level != null">
+				talk_level=#{talk_level,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -445,6 +467,8 @@
 		A.main_business,
 		A.store_type,
 		A.back_level,
+		A.market_level,
+		A.talk_level,
 		C.client_employee_count,
 		D.sum_balance,
 		E.client_year_order_count,
@@ -457,7 +481,8 @@
 		LEFT JOIN
 		view_client_year_order_count E ON A.pk = E.client_pk
 		LEFT JOIN
-		view_client_last_order F ON A.pk = F.client_pk
+		view_client_last_order F ON A.pk
+		= F.client_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
@@ -476,9 +501,6 @@
 			</if>
 			<if test="params.bo.store_type != null and params.bo.store_type !=''">
 				and A.store_type=#{params.bo.store_type,jdbcType=VARCHAR}
-			</if>
-			<if test="params.bo.main_business != null and params.bo.main_business !=''">
-				and A.main_business=#{params.bo.main_business,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.back_level != null and params.bo.back_level !=''">
 				and A.back_level=#{params.bo.back_level,jdbcType=VARCHAR}
@@ -500,6 +522,18 @@
 			</if>
 			<if test='params.bo.public_flg != null and params.bo.public_flg =="2"'>
 				and A.public_flg ='N'
+			</if>
+			<if test="params.bo.talk_levels != null and params.bo.talk_levels !=''">
+				and A.talk_level in
+				<foreach item="item" index="index" collection="params.bo.talk_levels" open="(" separator="," close=")">
+					#{params.bo.talk_levels[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.main_businesses != null and params.bo.main_businesses !=''">
+				and A.main_business in
+				<foreach item="item" index="index" collection="params.bo.main_businesses" open="(" separator="," close=")">
+					#{params.bo.main_businesses[${index}]}
+				</foreach>
 			</if>
 		</where>
 		ORDER BY address DESC

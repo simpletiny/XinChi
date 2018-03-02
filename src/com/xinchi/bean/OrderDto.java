@@ -80,12 +80,28 @@ public class OrderDto extends SupperBO implements Serializable {
 	private Integer next_day;
 	private BigDecimal balance;
 
+	// about final order
+	private String final_type;
+	private BigDecimal raise_money;
+	private String raise_comment;
+	private BigDecimal reduce_money;
+	private String reduce_comment;
+	private BigDecimal complain_money;
+	private String complain_reason;
+	private String complain_solution;
+	private String voucher_file;
 	// search option
 	private String passenger_name;
 	private String passenger_cellphone;
 	private String radio_date;
 	private String confirm_period;
 	private List<String> order_statuses;
+
+	private String sale_number;
+	private String sale_name;
+
+	private BigDecimal budget_receivable;
+	private BigDecimal final_receivable;
 
 	public String getTeam_number() {
 		return team_number;
@@ -517,6 +533,110 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setOrder_statuses(List<String> order_statuses) {
 		this.order_statuses = order_statuses;
+	}
+
+	public String getFinal_type() {
+		return final_type;
+	}
+
+	public void setFinal_type(String final_type) {
+		this.final_type = final_type;
+	}
+
+	public BigDecimal getRaise_money() {
+		return raise_money;
+	}
+
+	public void setRaise_money(BigDecimal raise_money) {
+		this.raise_money = raise_money;
+	}
+
+	public String getRaise_comment() {
+		return raise_comment;
+	}
+
+	public void setRaise_comment(String raise_comment) {
+		this.raise_comment = raise_comment;
+	}
+
+	public BigDecimal getReduce_money() {
+		return reduce_money;
+	}
+
+	public void setReduce_money(BigDecimal reduce_money) {
+		this.reduce_money = reduce_money;
+	}
+
+	public String getReduce_comment() {
+		return reduce_comment;
+	}
+
+	public void setReduce_comment(String reduce_comment) {
+		this.reduce_comment = reduce_comment;
+	}
+
+	public BigDecimal getComplain_money() {
+		return complain_money;
+	}
+
+	public void setComplain_money(BigDecimal complain_money) {
+		this.complain_money = complain_money;
+	}
+
+	public String getComplain_reason() {
+		return complain_reason;
+	}
+
+	public void setComplain_reason(String complain_reason) {
+		this.complain_reason = complain_reason;
+	}
+
+	public String getComplain_solution() {
+		return complain_solution;
+	}
+
+	public void setComplain_solution(String complain_solution) {
+		this.complain_solution = complain_solution;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
+	}
+
+	public String getSale_number() {
+		return sale_number;
+	}
+
+	public void setSale_number(String sale_number) {
+		this.sale_number = sale_number;
+	}
+
+	public String getSale_name() {
+		return sale_name;
+	}
+
+	public void setSale_name(String sale_name) {
+		this.sale_name = sale_name;
+	}
+
+	public BigDecimal getBudget_receivable() {
+		return budget_receivable;
+	}
+
+	public void setBudget_receivable(BigDecimal budget_receivable) {
+		this.budget_receivable = budget_receivable;
+	}
+
+	public BigDecimal getFinal_receivable() {
+		return final_receivable;
+	}
+
+	public void setFinal_receivable(BigDecimal final_receivable) {
+		this.final_receivable = final_receivable;
 	}
 
 }

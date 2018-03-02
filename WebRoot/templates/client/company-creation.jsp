@@ -64,6 +64,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ip" style="width:60%"><select class="form-control" data-bind="options: backLevels, optionsCaption: '-- 请选择 --', value: client().back_level" name="client.back_level" required="required"></select></div>
                     </div>
                 </div>
+                <div class="input-row clearfloat">
+                    <div class="col-md-4 required">
+                        <label class="l">市场力</label>
+                        <div class="ip" style="width:60%"><select class="form-control" data-bind="options: marketLevels, optionsCaption: '-- 请选择 --', value: client().market_level" name="client.market_level" required="required"></select></div>
+                    </div>
+                    <div class="col-md-4 required">
+                        <label class="l">沟通力</label>
+                        <div class="ip" style="width:60%"><select class="form-control" data-bind="options: talkLevels, optionsCaption: '-- 请选择 --', value: client().talk_level" name="client.talk_level" required="required"></select></div>
+                    </div>
+                </div>
                  <div class="input-row clearfloat">
                     <div class="col-md-12 required">
                         <label class="l">地址</label>

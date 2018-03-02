@@ -346,6 +346,7 @@ function autoCaculate() {
 	var audultCnt = 0;
 	var childrenCnt = 0;
 	var sumMoney = 0;
+	var otherCost = $("#other-cost").val()-0;
 	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		var td_id = $(tr).find("[st='id']");
@@ -363,6 +364,7 @@ function autoCaculate() {
 			audultCnt++;
 		}
 	}
+	sumMoney +=otherCost;
 	if (sumMoney != 0) {
 		$("#txt-auto-sum-money").text(sumMoney);
 		$("#auto-sum-money").val(sumMoney);

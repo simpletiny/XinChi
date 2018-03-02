@@ -61,6 +61,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String treat_comment;
 	private String receivable_comment;
 
+	//航段信息
 	private String ticket_number;
 	private String start_city;
 	private String start_airport;
@@ -69,7 +70,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String off_time;
 	private String land_time;
 	private int next_day;
-	
+
 	public String getTeam_number() {
 		return team_number;
 	}

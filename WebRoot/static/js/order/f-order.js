@@ -1,6 +1,7 @@
 var confirmCheckLayer;
 var commentLayer;
 var passengerCheckLayer;
+var finalCheckLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -8,10 +9,13 @@ var ProductBoxContext = function() {
 	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 	self.chosenOrders = ko.observableArray([]);
 	self.statusMapping = {
-			"no" : "未出团",
-			"yes" : "出团中",
-			"back" : "已回团"
-		}
+		"I" : "决算中",
+		"N" : "被驳回",
+		"Y" : "正常",
+		"C" : "取消",
+		"O" : "投诉",
+		"H" : "变更"
+	};
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
@@ -130,11 +134,13 @@ var ProductBoxContext = function() {
 
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		startLoadingSimpleIndicator("加载中...");
 		$.getJSON(self.apiurl + 'order/searchFOrdersByPage', param, function(data) {
 			self.orders(data.tbcOrders);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			endLoadingIndicator();
 		});
 	};
 	/**
@@ -148,7 +154,7 @@ var ProductBoxContext = function() {
 			fail_msg("只能选择一个订单！");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-		
+
 			var current = self.chosenOrders()[0];
 			var order_pk = current.pk;
 			var standard_flg = current.standard_flg;
@@ -180,12 +186,12 @@ var ProductBoxContext = function() {
 		}
 	};
 
-	// 查看确认件
-	self.checkIdPic = function(fileName, user_number) {
+	// 查看决算单
+	self.checkConfirmPic = function(fileName, team_number) {
 		$("#img-pic").attr("src", "");
 		confirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看确认件', '' ],
+			title : [ '查看决算单', '' ],
 			maxmin : false,
 			closeBtn : [ 1, true ],
 			shadeClose : false,
@@ -200,13 +206,86 @@ var ProductBoxContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_FINAL&subFolder=" + team_number);
 	};
+	// 查看凭证
+	self.checkVoucherPic = function(fileName, team_number) {
+		$("#img-pic").attr("src", "");
+		confirmCheckLayer = $.layer({
+			type : 1,
+			title : [ '查看凭证', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '650px' ],
+			offset : [ '50px', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_FINAL_VOUCHER&subFolder=" + team_number);
+	};
+
 	// 新标签页显示大图片
 	$("#img-pic").on('click', function() {
 		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
 	});
-
+	self.detailMsg = ko.observable();
+	// 查看决算详情
+	self.checkFinalDetail = function(data) {
+		self.order(data);
+		switch (data.final_type) {
+		case "1":
+			self.detailMsg("无变化");
+			$("#div-1").show();
+			$("#div-2").hide();
+			$("#div-3").hide();
+			break;
+		case "2":
+			$("#div-1").hide();
+			$("#div-2").show();
+			$("#div-3").hide();
+			break;
+		case "3":
+			$("#div-1").hide();
+			$("#div-2").hide();
+			$("#div-3").show();
+			break;
+		case "4":
+			self.detailMsg("订单取消");
+			$("#div-1").show();
+			$("#div-2").hide();
+			$("#div-3").hide();
+			break;
+		default:
+			self.detailMsg("更新前数据");
+			$("#div-1").show();
+			$("#div-2").hide();
+			$("#div-3").hide();
+			break;
+		}
+		finalCheckLayer = $.layer({
+			type : 1,
+			title : [ '查看决算详情', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '450px' ],
+			offset : [ '50px', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#final-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
 	// 下载相关文件
 	self.downloadFile = function(data, event) {
 		$('.download-panel').remove();

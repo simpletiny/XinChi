@@ -26,6 +26,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 按pk搜索已确认订单 -->
+		<action name="searchCOrderByPk" class="orderAction" method="searchCOrderByPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 搜索已决算订单 -->
 		<action name="searchFOrdersByPage" class="orderAction" method="searchFOrdersByPage">
 			<result name="success" type="json">
@@ -50,14 +57,22 @@
 		<action name="updateConfirmedStandardOrder" class="orderAction" method="updateConfirmedStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 决算预算单 -->
+		<action name="finalOrder" class="orderAction" method="finalOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 取消已确认订单 -->
+		<action name="cancelCOrder" class="orderAction" method="cancelCOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 决算标准预算单 -->
-		<action name="finalBudgetStandardOrder" class="orderAction" method="finalBudgetStandardOrder">
+		<!-- <action name="finalBudgetStandardOrder" class="orderAction" method="finalBudgetStandardOrder">
 			<result name="success" type="str">resultStr</result>
-		</action>
+		</action> -->
 		<!-- 决算非标准预算单 -->
-		<action name="finalBudgetNonStandardOrder" class="orderAction" method="finalBudgetNonStandardOrder">
+	<!-- 	<action name="finalBudgetNonStandardOrder" class="orderAction" method="finalBudgetNonStandardOrder">
 			<result name="success" type="str">resultStr</result>
-		</action>
+		</action> -->
 
 		<!-- 决算订单打回重报 -->
 		<action name="rollBackFinalOrder" class="orderAction" method="rollBackFinalOrder">

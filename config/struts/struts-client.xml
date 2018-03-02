@@ -8,6 +8,9 @@
 		<action name="updateCompany" class="clientAction" method="updateCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="pureUpdateCompany" class="clientAction" method="pureUpdateCompany">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="deleteCompany" class="clientAction" method="deleteCompany">
 			<result name="success" type="str">resultStr</result>
 		</action>

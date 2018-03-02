@@ -408,6 +408,212 @@
 			<comment>ALTER TABLE pay_approval </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE client ADD COLUMN market_level VARCHAR(50) NULL DEFAULT '未知'  AFTER back_level , ADD COLUMN talk_level VARCHAR(50) NULL DEFAULT '未知'  AFTER market_level ;
+             ]]>
+			<comment>ALTER TABLE client </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE final_standard_order ADD COLUMN receivable_comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER product_cost , ADD COLUMN next_day TINYINT(4) NULL DEFAULT '0'  AFTER receivable_comment , ADD COLUMN land_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER next_day , ADD COLUMN off_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER land_time , ADD COLUMN end_airport VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER off_time , ADD COLUMN end_city VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER end_airport , ADD COLUMN start_airport VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER end_city , ADD COLUMN start_city VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER start_airport , ADD COLUMN ticket_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER start_city , ADD COLUMN passenger_captain VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '队长名称'  AFTER ticket_number , ADD COLUMN treat_comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER passenger_captain , ADD COLUMN final_type CHAR(1) NULL DEFAULT 0  AFTER treat_comment , ADD COLUMN raise_money DECIMAL(12,2) NULL DEFAULT 0  AFTER final_type , ADD COLUMN raise_comment VARCHAR(200) NULL  AFTER raise_money , ADD COLUMN reduce_money DECIMAL(12,2) NULL DEFAULT 0  AFTER raise_comment , ADD COLUMN reduce_comment VARCHAR(200) NULL  AFTER reduce_money , ADD COLUMN complain_money DECIMAL(12,2) NULL DEFAULT 0  AFTER reduce_comment , ADD COLUMN complain_reason VARCHAR(200) NULL  AFTER complain_money , ADD COLUMN complain_solution VARCHAR(200) NULL  AFTER complain_reason , ADD COLUMN status CHAR(1) NULL DEFAULT 'I'  AFTER complain_solution ,ADD COLUMN voucher_file VARCHAR(30) NULL  AFTER status ,ADD COLUMN sale CHAR(22) NULL  AFTER voucher_file;
+             ]]>
+			<comment>ALTER TABLE final_standard_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE final_non_standard_order ADD COLUMN receivable_comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER product_cost , ADD COLUMN next_day TINYINT(4) NULL DEFAULT '0'  AFTER receivable_comment , ADD COLUMN land_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER next_day , ADD COLUMN off_time VARCHAR(5) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER land_time , ADD COLUMN end_airport VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER off_time , ADD COLUMN end_city VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER end_airport , ADD COLUMN start_airport VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER end_city , ADD COLUMN start_city VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT ''  AFTER start_airport , ADD COLUMN ticket_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER start_city , ADD COLUMN passenger_captain VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '队长名称'  AFTER ticket_number , ADD COLUMN treat_comment VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL  AFTER passenger_captain , ADD COLUMN final_type CHAR(1) NULL DEFAULT 0  AFTER treat_comment , ADD COLUMN raise_money DECIMAL(12,2) NULL DEFAULT 0  AFTER final_type , ADD COLUMN raise_comment VARCHAR(200) NULL  AFTER raise_money , ADD COLUMN reduce_money DECIMAL(12,2) NULL DEFAULT 0  AFTER raise_comment , ADD COLUMN reduce_comment VARCHAR(200) NULL  AFTER reduce_money , ADD COLUMN complain_money DECIMAL(12,2) NULL DEFAULT 0  AFTER reduce_comment , ADD COLUMN complain_reason VARCHAR(200) NULL  AFTER complain_money , ADD COLUMN complain_solution VARCHAR(200) NULL  AFTER complain_reason , ADD COLUMN status CHAR(1) NULL DEFAULT 'I'  AFTER complain_solution ,ADD COLUMN voucher_file VARCHAR(30) NULL  AFTER status ,ADD COLUMN sale CHAR(22) NULL  AFTER voucher_file;
+             ]]>
+			<comment>ALTER TABLE final_non_standard_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	update final_standard_order set sale = create_user;
+				update final_non_standard_order set sale = create_user;
+				update final_standard_order A,
+				    (select
+				       team_number,name
+				    from
+				        sale_order_name_list 
+				where team_number is not null
+				group by team_number) B 
+				set 
+				    A.passenger_captain = LEFT(B.name,10)
+				where
+				    A.team_number = B.team_number;
+				    
+				update final_non_standard_order A,
+				    (select
+				       team_number,name
+				    from
+				        sale_order_name_list 
+				where team_number is not null
+				group by team_number) B 
+				set 
+				    A.passenger_captain = LEFT(B.name,10)
+				where
+				    A.team_number = B.team_number;
+				
+             ]]>
+			<comment>update final_standard_order and final_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP VIEW IF EXISTS final_order_view;
+            CREATE VIEW final_order_view AS
+			select 
+			    A.team_number,
+			    A.product_name,
+			    '' as product_pk,
+			    A.client_employee_pk,
+			    C.name AS client_employee_name,
+			    E.client_short_name AS client_name,
+			    A.independent_flg,
+			    A.comment,
+			    A.other_cost_comment,
+			    A.other_cost,
+			    A.fy,
+			    A.special_cost,
+			    A.special_count,
+			    A.adult_cost,
+			    A.adult_count,
+			    A.receivable AS final_receivable,
+				F.receivable AS budget_receivable,
+				A.days,
+			    A.departure_date,
+			    A.pk,
+			    A.update_user,
+			    A.create_user,
+			    A.create_time,
+			    A.update_time,
+			    A.confirm_date,
+			    A.confirm_file,
+			    'N' AS standard_flg,
+			    A.product_manager AS product_manager_number,
+			    D.user_name AS product_manager,
+			    A.air_ticket_cost,
+			    A.product_cost,
+			    A.operate_flg,
+			    A.name_list,
+			    A.receivable_comment,
+			    A.next_day,
+			    A.land_time,
+			    A.off_time,
+			    A.end_airport,
+			    A.end_city,
+			    A.start_airport,
+			    A.start_city,
+			    A.ticket_number,
+			    A.passenger_captain,
+			    A.treat_comment,
+			    A.final_type,
+			    A.raise_money,
+			    A.raise_comment,
+			    A.reduce_money,
+			    A.reduce_comment,
+			    A.complain_money,
+			    A.complain_reason,
+			    A.complain_solution,
+			    A.status,
+			    A.voucher_file,
+			    A.sale AS sale_number,
+			    B.user_name AS sale_name
+			from
+			    final_non_standard_order A
+			        LEFT JOIN
+			    user_base B ON A.sale = B.user_number
+			        LEFT JOIN
+			    client_employee C ON A.client_employee_pk = C.pk
+			        LEFT JOIN
+			    user_base D ON A.product_manager = D.user_number
+			        LEFT JOIN
+			    client E ON E.pk = C.financial_body_pk 
+					LEFT JOIN
+				budget_non_standard_order F ON A.team_number = F.team_number
+			union all select 
+			    A.team_number,
+			    C.name AS product_name,
+			    A.product_pk,
+			    A.client_employee_pk,
+			    D.name AS client_employee_name,
+			    F.client_short_name AS client_name,
+			    A.independent_flg,
+			    A.comment,
+			    A.other_cost_comment,
+			    A.other_cost,
+			    A.fy,
+			    A.special_cost,
+			    A.special_count,
+			    A.adult_cost,
+			    A.adult_count,
+			    A.receivable AS final_receivable,
+				G.receivable AS budget_receivable,
+			    A.days,
+			    A.departure_date,
+			    A.pk,
+			    A.update_user,
+			    A.create_user,
+			    A.create_time,
+			    A.update_time,
+			    A.confirm_date,
+			    A.confirm_file,
+			    'Y' AS standard_flg,
+			    C.product_manager AS product_manager_number,
+			    E.user_name AS product_manager,
+			    A.air_ticket_cost,
+			    A.product_cost,
+			    A.operate_flg,
+			    A.name_list,
+			    A.receivable_comment,
+			    A.next_day,
+			    A.land_time,
+			    A.off_time,
+			    A.end_airport,
+			    A.end_city,
+			    A.start_airport,
+			    A.start_city,
+			    A.ticket_number,
+			    A.passenger_captain,
+			    A.treat_comment,
+			    A.final_type,
+			    A.raise_money,
+			    A.raise_comment,
+			    A.reduce_money,
+			    A.reduce_comment,
+			    A.complain_money,
+			    A.complain_reason,
+			    A.complain_solution,
+			    A.status,
+			    A.voucher_file,
+			    A.sale AS sale_number,
+			    B.user_name AS sale_name
+			from
+			    final_standard_order A
+			        LEFT JOIN
+			    user_base B ON A.sale = B.user_number
+			        LEFT JOIN
+			    product C ON A.product_pk = C.pk
+			        LEFT JOIN
+			    client_employee D ON A.client_employee_pk = D.pk
+			        LEFT JOIN
+			    user_base E ON C.product_manager = E.user_number
+			        LEFT JOIN
+			    client F ON D.financial_body_pk = F.pk
+					LEFT JOIN
+				budget_standard_order G ON A.team_number = G.team_number
+             ]]>
+			<comment>ALTER VIEW final_order_view</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

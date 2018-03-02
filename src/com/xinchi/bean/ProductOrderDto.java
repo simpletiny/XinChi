@@ -26,6 +26,8 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 	private String sale_name;
 	private String product_manager;
 	private String product_manager_number;
+	private String treat_comment;
+	private String air_info;
 
 	private String date_from;
 	private String date_to;
@@ -33,7 +35,7 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 	private String operate_flg;
 
 	private List<String> operate_flgs;
-	
+
 	private String passenger;
 
 	public String getProduct_number() {
@@ -170,6 +172,22 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 
 	public void setPassenger(String passenger) {
 		this.passenger = passenger;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
+	}
+
+	public String getAir_info() {
+		return air_info;
+	}
+
+	public void setAir_info(String air_info) {
+		this.air_info = air_info;
 	}
 
 }

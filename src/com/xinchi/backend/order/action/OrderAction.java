@@ -1,8 +1,5 @@
 package com.xinchi.backend.order.action;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +26,6 @@ import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.ToolsUtil;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -76,8 +72,7 @@ public class OrderAction extends BaseAction {
 	public String searchTbcOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -99,8 +94,7 @@ public class OrderAction extends BaseAction {
 	public String searchCOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -128,6 +122,17 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private OrderDto order;
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String searchCOrderByPk() {
+		order = service.searchCOrderByPk(order_pk);
+		return SUCCESS;
+	}
+
 	/**
 	 * 搜索已决算订单
 	 * 
@@ -136,11 +141,10 @@ public class OrderAction extends BaseAction {
 	public String searchFOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			option.setCreate_user(sessionBean.getUser_number());
+			option.setSale_number(sessionBean.getUser_number());
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -321,45 +325,32 @@ public class OrderAction extends BaseAction {
 	}
 
 	/**
+	 * 决算订单
+	 * 
+	 * @return
+	 */
+	public String finalOrder() {
+		resultStr = service.finalOrder(order);
+		return SUCCESS;
+	}
+
+	/**
+	 * 取消已确认订单
+	 * 
+	 * @return
+	 */
+	public String cancelCOrder() {
+		resultStr = service.cancelOrder(order);
+		return SUCCESS;
+	}
+
+	/**
 	 * 决算订单打回重报
 	 * 
 	 * @return
 	 */
 	public String rollBackFinalOrder() {
-		if (standard_flg.equals("N")) {
-			fnsOrder = finalNonStandardOrderService.selectByPrimaryKey(order_pk);
-
-			// 搜索预算订单,更新预算订单状态
-			bnsOrder = bnsoService.selectByTeamNumber(fnsOrder.getTeam_number());
-			bnsOrder.setConfirm_flg("Y");
-			bnsoService.updateComment(bnsOrder);
-
-			ReceivableBean receivable = receivableService.selectByTeamNumber(fnsOrder.getTeam_number());
-			receivable.setFinal_flg("N");
-			receivable.setFinal_receivable(BigDecimal.ZERO);
-			receivable.setFinal_balance(BigDecimal.ZERO);
-			receivableService.update(receivable);
-
-			finalNonStandardOrderService.delete(order_pk);
-
-		} else if (standard_flg.equals("Y")) {
-			fsOrder = finalStandardOrderService.selectByPrimaryKey(order_pk);
-
-			// 更新预算订单状态
-			bsOrder = bsoService.selectByTeamNumber(fsOrder.getTeam_number());
-			bsOrder.setConfirm_flg("Y");
-			bsoService.updateComment(bsOrder);
-
-			ReceivableBean receivable = receivableService.selectByTeamNumber(fsOrder.getTeam_number());
-			receivable.setFinal_flg("N");
-			receivable.setFinal_receivable(BigDecimal.ZERO);
-			receivable.setFinal_balance(BigDecimal.ZERO);
-			receivableService.update(receivable);
-
-			finalStandardOrderService.delete(order_pk);
-		}
-
-		resultStr = SUCCESS;
+		resultStr = service.rollBackFinalOrder(order_pk, standard_flg);
 		return SUCCESS;
 	}
 
@@ -476,5 +467,13 @@ public class OrderAction extends BaseAction {
 
 	public void setJson(String json) {
 		this.json = json;
+	}
+
+	public OrderDto getOrder() {
+		return order;
+	}
+
+	public void setOrder(OrderDto order) {
+		this.order = order;
 	}
 }

@@ -22,4 +22,11 @@ public class FileUtil {
 		}
 		sourceFile.delete();
 	}
+
+	public static void deleteFile(String fileName, String destFolderStr, String subFolder) {
+		String fileFolder = PropertiesUtil.getProperty(destFolderStr);
+		File destfile = new File(fileFolder + File.separator + subFolder + File.separator + fileName);
+		if (destfile.exists())
+			destfile.delete();
+	}
 }

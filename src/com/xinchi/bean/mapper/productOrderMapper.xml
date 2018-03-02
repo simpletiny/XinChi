@@ -17,16 +17,18 @@
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="air_info" property="air_info" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-	select 
+		select
 		IF(ISNULL(B.product_number),'非标',B.product_number) AS product_number,
 		A.product_name,
-		CASE WHEN A.confirm_flg ='Y' THEN '已确认' 
-			WHEN A.confirm_flg = 'N' THEN '待确认'
+		CASE WHEN A.confirm_flg ='Y' THEN '已确认'
+		WHEN A.confirm_flg = 'N' THEN '待确认'
 		end AS status,
-        A.team_number,
+		A.team_number,
 		A.departure_date,
 		A.adult_count,
 		A.special_count,
@@ -37,10 +39,17 @@
 		B.pk AS product_pk,
 		B.product_number AS product_number,
 		A.pk AS pk,
-		substring_index(A.name_list,':',1) AS passenger
-			from budget_order_view A 
-			LEFT JOIN product B ON A.product_pk=B.pk
-			LEFT JOIN user_base C ON A.product_manager_number = C.user_number
+		CASE WHEN A.standard_flg='N' THEN
+		substring_index(A.name_list,':',1)
+		ELSE
+		A.passenger_captain
+		END AS passenger,
+		A.treat_comment,
+		CONCAT(A.start_city,'-',A.end_city) AS air_info
+		
+		from budget_order_view A
+		LEFT JOIN product B ON A.product_pk=B.pk
+		LEFT JOIN user_base C ON A.product_manager_number = C.user_number
 		<where>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
@@ -67,6 +76,6 @@
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 		</where>
-			ORDER BY departure_date DESC
+		ORDER BY departure_date DESC
 	</select>
 </mapper>

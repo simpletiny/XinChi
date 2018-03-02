@@ -17,19 +17,19 @@ var ProductBoxContext = function() {
 	}, {
 		"en" : "lastweek",
 		"cn" : "上周"
-	} ])
+	} ]);
 
 	self.statusMapping = {
 		"no" : "未出团",
 		"yes" : "出团中",
 		"back" : "已回团"
-	}
+	};
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 	});
-	// 删除订单
+	// 订单决算
 	self.finalOrder = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单！");
@@ -40,12 +40,32 @@ var ProductBoxContext = function() {
 		} else if (self.chosenOrders().length == 1) {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
-			var standard_flg = data[1];
-			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-final-create.jsp?key=" + order_pk;
-			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-final-create.jsp?key=" + order_pk;
+			// var standard_flg = data[1];
+			var status = data[2];
+
+			if (status != "back") {
+				fail_msg("订单未回团，不能决算！");
+				return;
 			}
+
+			window.location.href = self.apiurl + "templates/order/final-order-create.jsp?key=" + order_pk;
+
+		}
+	};
+	// 取消订单
+	self.cancelOrder = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单！");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个订单！");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var data = self.chosenOrders()[0].split(";");
+			var order_pk = data[0];
+
+			window.location.href = self.apiurl + "templates/order/c-order-cancel.jsp?key=" + order_pk;
+
 		}
 	};
 	// 编辑订单

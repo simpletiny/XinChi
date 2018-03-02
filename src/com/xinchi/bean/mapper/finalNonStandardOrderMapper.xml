@@ -27,8 +27,30 @@
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
 		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
+		<result column="next_day" property="next_day" jdbcType="INTEGER" />
+		<result column="land_time" property="land_time" jdbcType="VARCHAR" />
+		<result column="off_time" property="off_time" jdbcType="VARCHAR" />
+		<result column="end_airport" property="end_airport" jdbcType="VARCHAR" />
+		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
+		<result column="start_airport" property="start_airport" jdbcType="VARCHAR" />
+		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="final_type" property="final_type" jdbcType="CHAR" />
+		<result column="raise_money" property="raise_money" jdbcType="DECIMAL" />
+		<result column="raise_comment" property="raise_comment" jdbcType="VARCHAR" />
+		<result column="reduce_money" property="reduce_money" jdbcType="DECIMAL" />
+		<result column="reduce_comment" property="reduce_comment" jdbcType="VARCHAR" />
+		<result column="complain_money" property="complain_money" jdbcType="DECIMAL" />
+		<result column="complain_reason" property="complain_reason" jdbcType="VARCHAR" />
+		<result column="complain_solution" property="complain_solution" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
+		<result column="sale" property="sale" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -58,8 +80,30 @@
 		air_ticket_cost,
 		operate_flg,
 		product_cost,
+		receivable_comment,
+		next_day,
+		land_time,
+		off_time,
+		end_airport,
+		end_city,
+		start_airport,
+		start_city,
+		ticket_number,
+		passenger_captain,
+		treat_comment,
+		final_type,
+		raise_money,
+		raise_comment,
+		reduce_money,
+		reduce_comment,
+		complain_money,
+		complain_reason,
+		complain_solution,
+		status,
 		create_time,
-		update_time
+		update_time,
+		voucher_file,
+		sale
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -153,11 +197,77 @@
 			<if test="product_cost != null">
 				product_cost,
 			</if>
+			<if test="receivable_comment != null">
+				receivable_comment,
+			</if>
+			<if test="next_day != null">
+				next_day,
+			</if>
+			<if test="land_time != null">
+				land_time,
+			</if>
+			<if test="off_time != null">
+				off_time,
+			</if>
+			<if test="end_airport != null">
+				end_airport,
+			</if>
+			<if test="end_city != null">
+				end_city,
+			</if>
+			<if test="start_airport != null">
+				start_airport,
+			</if>
+			<if test="start_city != null">
+				start_city,
+			</if>
+			<if test="ticket_number != null">
+				ticket_number,
+			</if>
+			<if test="passenger_captain != null">
+				passenger_captain,
+			</if>
+			<if test="treat_comment != null">
+				treat_comment,
+			</if>
+			<if test="final_type != null">
+				final_type,
+			</if>
+			<if test="raise_money != null">
+				raise_money,
+			</if>
+			<if test="raise_comment != null">
+				raise_comment,
+			</if>
+			<if test="reduce_money != null">
+				reduce_money,
+			</if>
+			<if test="reduce_comment != null">
+				reduce_comment,
+			</if>
+			<if test="complain_money != null">
+				complain_money,
+			</if>
+			<if test="complain_reason != null">
+				complain_reason,
+			</if>
+			<if test="complain_solution != null">
+				complain_solution,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
 			<if test="create_time != null">
 				create_time,
 			</if>
 			<if test="update_time != null">
 				update_time,
+			</if>
+			<if test="voucher_file != null">
+				voucher_file,
+			</if>
+			<if test="sale != null">
+				sale,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -236,11 +346,77 @@
 			<if test="product_cost != null">
 				#{product_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="receivable_comment != null">
+				#{receivable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="next_day != null">
+				#{next_day,jdbcType=INTEGER},
+			</if>
+			<if test="land_time != null">
+				#{land_time,jdbcType=VARCHAR},
+			</if>
+			<if test="off_time != null">
+				#{off_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_airport != null">
+				#{end_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="end_city != null">
+				#{end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="start_airport != null">
+				#{start_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="start_city != null">
+				#{start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_number != null">
+				#{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_captain != null">
+				#{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				#{treat_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="final_type != null">
+				#{final_type,jdbcType=CHAR},
+			</if>
+			<if test="raise_money != null">
+				#{raise_money,jdbcType=DECIMAL},
+			</if>
+			<if test="raise_comment != null">
+				#{raise_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="reduce_money != null">
+				#{reduce_money,jdbcType=DECIMAL},
+			</if>
+			<if test="reduce_comment != null">
+				#{reduce_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="complain_money != null">
+				#{complain_money,jdbcType=DECIMAL},
+			</if>
+			<if test="complain_reason != null">
+				#{complain_reason,jdbcType=VARCHAR},
+			</if>
+			<if test="complain_solution != null">
+				#{complain_solution,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
 			<if test="create_time != null">
 				#{create_time,jdbcType=VARCHAR},
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file != null">
+				#{voucher_file,jdbcType=VARCHAR},
+			</if>
+			<if test="sale != null">
+				#{sale,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -324,8 +500,74 @@
 			<if test="product_cost != null">
 				product_cost = #{product_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="receivable_comment != null">
+				receivable_comment = #{receivable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="next_day != null">
+				next_day = #{next_day,jdbcType=INTEGER},
+			</if>
+			<if test="land_time != null">
+				land_time = #{land_time,jdbcType=VARCHAR},
+			</if>
+			<if test="off_time != null">
+				off_time = #{off_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_airport != null">
+				end_airport = #{end_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="end_city != null">
+				end_city = #{end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="start_airport != null">
+				start_airport = #{start_airport,jdbcType=VARCHAR},
+			</if>
+			<if test="start_city != null">
+				start_city = #{start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_number != null">
+				ticket_number = #{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_captain != null">
+				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				treat_comment = #{treat_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="final_type != null">
+				final_type = #{final_type,jdbcType=CHAR},
+			</if>
+			<if test="raise_money != null">
+				raise_money = #{raise_money,jdbcType=DECIMAL},
+			</if>
+			<if test="raise_comment != null">
+				raise_comment = #{raise_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="reduce_money != null">
+				reduce_money = #{reduce_money,jdbcType=DECIMAL},
+			</if>
+			<if test="reduce_comment != null">
+				reduce_comment = #{reduce_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="complain_money != null">
+				complain_money = #{complain_money,jdbcType=DECIMAL},
+			</if>
+			<if test="complain_reason != null">
+				complain_reason = #{complain_reason,jdbcType=VARCHAR},
+			</if>
+			<if test="complain_solution != null">
+				complain_solution = #{complain_solution,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file != null">
+				voucher_file = #{voucher_file,jdbcType=VARCHAR},
+			</if>
+			<if test="sale != null">
+				sale = #{sale,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

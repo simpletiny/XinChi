@@ -1,0 +1,162 @@
+var clientEmployeeLayer;
+var passengerBatLayer;
+var OrderContext = function() {
+	var self = this;
+	self.apiurl = $("#hidden_apiurl").val();
+	self.order = ko.observable({});
+
+	self.order_pk = $("#key").val();
+	self.employee = ko.observable({});
+
+	self.types = ko.observableArray([ {
+		name : "无变化",
+		value : "1"
+	}, {
+		name : "有变更",
+		value : "2"
+	}, {
+		name : "有投诉",
+		value : "3"
+	} ]);
+
+	self.chosenType = ko.observable();
+	self.chosenType("1");
+
+	$.getJSON(self.apiurl + 'order/searchCOrderByPk', {
+		order_pk : self.order_pk
+	}, function(data) {
+		self.order(data.order);
+		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+			employee_pk : self.order().client_employee_pk
+		}, function(data) {
+			if (data.employee) {
+				self.employee(data.employee);
+			} else {
+				fail_msg("员工不存在！");
+			}
+		}).fail(function(reason) {
+			fail_msg(reason.responseText);
+		});
+
+	});
+
+	self.finalOrder = function() {
+		if (!$("form").valid()) {
+			return;
+		}
+		var data = $("form").serialize();
+		startLoadingSimpleIndicator("申请中...");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'order/finalOrder',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/order/c-order.jsp";
+			} else {
+				fail_msg(str);
+			}
+		});
+
+	};
+
+};
+
+var ctx = new OrderContext();
+$(document).ready(function() {
+	ko.applyBindings(ctx);
+	$(':file').change(function() {
+		changeFile(this);
+	});
+});
+var changeType = function(rad) {
+	switch ($(rad).val() - 0) {
+	case 1:
+		$("#div-2").hide();
+		$("#div-3").hide();
+		break;
+	case 2:
+		$("#div-2").show();
+		$("#div-3").hide();
+		break;
+	case 3:
+		$("#div-2").hide();
+		$("#div-3").show();
+		break;
+	}
+};
+
+var inputRaise = function(txt) {
+	var money = $(txt).val() - 0;
+	var budget_receivable = ctx.order().receivable;
+	if (money > 0) {
+		if (!$("#l-raise").hasClass("required")) {
+			$("#l-raise").addClass("required");
+			$("#txt-raise").attr("required", "required");
+		}
+		var final_receivable = budget_receivable + money;
+		$("#p-final-receivable").text(final_receivable);
+		$("#txt-final-receivable").val(final_receivable);
+	} else {
+		if ($("#l-raise").hasClass("required")) {
+			$("#l-raise").removeClass("required");
+			$("#txt-raise").attr("required", false);
+			$("#txt-raise-error").remove();
+		}
+		$("#p-final-receivable").text(budget_receivable);
+		$("#txt-final-receivable").val(budget_receivable);
+	}
+};
+var inputReduce = function(txt) {
+	var money = $(txt).val() - 0;
+	var budget_receivable = ctx.order().receivable;
+	if (money > 0) {
+		if (!$("#l-reduce").hasClass("required")) {
+			$("#l-reduce").addClass("required");
+			$("#txt-reduce").attr("required", "required");
+		}
+		var final_receivable = budget_receivable - money;
+		$("#p-final-receivable").text(final_receivable);
+		$("#txt-final-receivable").val(final_receivable);
+	} else {
+		if ($("#l-reduce").hasClass("required")) {
+			$("#l-reduce").removeClass("required");
+			$("#txt-reduce").attr("required", false);
+			$("#txt-reduce-error").remove();
+		}
+		$("#p-final-receivable").text(budget_receivable);
+		$("#txt-final-receivable").val(budget_receivable);
+	}
+};
+var inputComplain = function(txt) {
+	var money = $(txt).val() - 0;
+	var budget_receivable = ctx.order().receivable;
+
+	if (money > 0) {
+		if (!$("#l-complain-reason").hasClass("required")) {
+			$("#l-complain-reason").addClass("required");
+			$("#txt-complain-reason").attr("required", "required");
+		}
+		if (!$("#l-complain-solution").hasClass("required")) {
+			$("#l-complain-solution").addClass("required");
+			$("#txt-complain-solution").attr("required", "required");
+		}
+		var final_receivable = budget_receivable - money;
+		$("#p-final-receivable").text(final_receivable);
+		$("#txt-final-receivable").val(final_receivable);
+	} else {
+		if ($("#l-complain-reason").hasClass("required")) {
+			$("#l-complain-reason").removeClass("required");
+			$("#txt-complain-reason").attr("required", false);
+			$("#txt-complain-reason-error").remove();
+		}
+		if ($("#l-complain-solution").hasClass("required")) {
+			$("#l-complain-solution").removeClass("required");
+			$("#txt-complain-solution").attr("required", false);
+			$("#txt-complain-solution-error").remove();
+		}
+		$("#p-final-receivable").text(budget_receivable);
+		$("#txt-final-receivable").val(budget_receivable);
+	}
+};

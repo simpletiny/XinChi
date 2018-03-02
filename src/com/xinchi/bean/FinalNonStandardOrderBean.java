@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class FinalNonStandardOrderBean extends SupperBO implements Serializable {
@@ -55,6 +57,33 @@ public class FinalNonStandardOrderBean extends SupperBO implements Serializable 
 	private String operate_flg;
 
 	private java.math.BigDecimal product_cost;
+
+	private String passenger_captain;
+
+	private String treat_comment;
+	private String receivable_comment;
+	private String status;
+	private String voucher_file;
+	private String sale;
+	// 航段信息
+	private String ticket_number;
+	private String start_city;
+	private String start_airport;
+	private String end_city;
+	private String end_airport;
+	private String off_time;
+	private String land_time;
+	private int next_day;
+
+	// 变更信息
+	private String final_type;
+	private BigDecimal raise_money;
+	private String raise_comment;
+	private BigDecimal reduce_money;
+	private String reduce_comment;
+	private BigDecimal complain_money;
+	private String complain_reason;
+	private String complain_solution;
 
 	public String getTeam_number() {
 		return team_number;
@@ -254,6 +283,182 @@ public class FinalNonStandardOrderBean extends SupperBO implements Serializable 
 
 	public void setProduct_cost(java.math.BigDecimal product_cost) {
 		this.product_cost = product_cost;
+	}
+
+	public String getPassenger_captain() {
+		return passenger_captain;
+	}
+
+	public void setPassenger_captain(String passenger_captain) {
+		this.passenger_captain = passenger_captain;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
+	}
+
+	public String getReceivable_comment() {
+		return receivable_comment;
+	}
+
+	public void setReceivable_comment(String receivable_comment) {
+		this.receivable_comment = receivable_comment;
+	}
+
+	public String getTicket_number() {
+		return ticket_number;
+	}
+
+	public void setTicket_number(String ticket_number) {
+		this.ticket_number = ticket_number;
+	}
+
+	public String getStart_city() {
+		return start_city;
+	}
+
+	public void setStart_city(String start_city) {
+		this.start_city = start_city;
+	}
+
+	public String getStart_airport() {
+		return start_airport;
+	}
+
+	public void setStart_airport(String start_airport) {
+		this.start_airport = start_airport;
+	}
+
+	public String getEnd_city() {
+		return end_city;
+	}
+
+	public void setEnd_city(String end_city) {
+		this.end_city = end_city;
+	}
+
+	public String getEnd_airport() {
+		return end_airport;
+	}
+
+	public void setEnd_airport(String end_airport) {
+		this.end_airport = end_airport;
+	}
+
+	public String getOff_time() {
+		return off_time;
+	}
+
+	public void setOff_time(String off_time) {
+		this.off_time = off_time;
+	}
+
+	public String getLand_time() {
+		return land_time;
+	}
+
+	public void setLand_time(String land_time) {
+		this.land_time = land_time;
+	}
+
+	public int getNext_day() {
+		return next_day;
+	}
+
+	public void setNext_day(int next_day) {
+		this.next_day = next_day;
+	}
+
+	public String getFinal_type() {
+		return final_type;
+	}
+
+	public void setFinal_type(String final_type) {
+		this.final_type = final_type;
+	}
+
+	public BigDecimal getRaise_money() {
+		return raise_money;
+	}
+
+	public void setRaise_money(BigDecimal raise_money) {
+		this.raise_money = raise_money;
+	}
+
+	public String getRaise_comment() {
+		return raise_comment;
+	}
+
+	public void setRaise_comment(String raise_comment) {
+		this.raise_comment = raise_comment;
+	}
+
+	public BigDecimal getReduce_money() {
+		return reduce_money;
+	}
+
+	public void setReduce_money(BigDecimal reduce_money) {
+		this.reduce_money = reduce_money;
+	}
+
+	public String getReduce_comment() {
+		return reduce_comment;
+	}
+
+	public void setReduce_comment(String reduce_comment) {
+		this.reduce_comment = reduce_comment;
+	}
+
+	public BigDecimal getComplain_money() {
+		return complain_money;
+	}
+
+	public void setComplain_money(BigDecimal complain_money) {
+		this.complain_money = complain_money;
+	}
+
+	public String getComplain_reason() {
+		return complain_reason;
+	}
+
+	public void setComplain_reason(String complain_reason) {
+		this.complain_reason = complain_reason;
+	}
+
+	public String getComplain_solution() {
+		return complain_solution;
+	}
+
+	public void setComplain_solution(String complain_solution) {
+		this.complain_solution = complain_solution;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
 	}
 
 }

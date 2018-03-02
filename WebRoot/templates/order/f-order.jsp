@@ -86,8 +86,8 @@ tr td {
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="option.create_user"></select>
+									<select class="form-control" style="height: 34px" id="select-sales"
+										data-bind="event:{change:refresh()},options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'" name="option.sale_number"></select>
 								</div>
 							</div>
 						</s:if>
@@ -120,17 +120,16 @@ tr td {
 								<th>状态</th>
 								<th>团号</th>
 								<th>客户</th>
-								<th>出团日期</th>
-								<th>天数</th>
+								<th>财务主体</th>
 								<th>产品名称</th>
-								<th>人数</th>
+								<th>出团日期</th>
 								<th>游客信息</th>
-								<th>回团天数</th>
-								<th>总团款</th>
-								<th>尾款</th>
-								<th>确认件</th>
-								<th>备注</th>
+								<th>预算团款</th>
+								<th>决算团款</th>
+								<th>决算单</th>
 								<th>产品经理</th>
+								<th>决算详情</th>
+								<th>凭证</th>
 								<th>文件下载</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
@@ -143,25 +142,19 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
-								<td data-bind="text: $data.departure_date"></td>
-								<td data-bind="text: $data.days"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.product_name"></td>
-								<td data-bind="text: $data.people_count"></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
-								<td data-bind="text: $data.back_days"></td>
-								<td data-bind="text: $data.receivable"></td>
-								<td data-bind="text: $data.balance"></td>
-								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
-								<!-- ko if: $data.comment==null || $data.comment==''-->
-								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
-								<!-- /ko -->
-								<!-- ko if: $data.comment!=null && $data.comment!=''-->
-								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
-								<!-- /ko -->
+								<td data-bind="text: $data.departure_date"></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
+								<td class="rmb" data-bind="text: $data.budget_receivable"></td>
+								<td class="rmb" data-bind="text: $data.final_receivable"></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkConfirmPic($data.confirm_file,$data.team_number)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkFinalDetail($data)} ">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text:$data.create_user"></td>
+									<td data-bind="text:$data.sale_name"></td>
 								</s:if>
 							</tr>
 						</tbody>
@@ -206,7 +199,65 @@ tr td {
 			</div>
 		</div>
 	</div>
-
+	<div id="final-check" style="display: none; width: 800px">
+		<div style="display: none" id="div-1">
+			<h1 data-bind="text:detailMsg()"></h1>
+		</div>
+		<div style="display: none" id="div-2">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">增加款项</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().raise_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">减少款项</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().reduce_money"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">增加款项说明</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().raise_comment"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">减少款项说明</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().reduce_comment"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="display: none" id="div-3">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">投诉扣款</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().complain_money"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">投诉原因</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().complain_reason"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">解决方案</label>
+					<div class="ip">
+						<p class="ip-default" data-bind="text:order().complain_solution"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>

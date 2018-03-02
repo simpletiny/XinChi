@@ -68,7 +68,7 @@ public class ResourcesConstants {
 	public static String RECEIVED_TYPE_RECEIVED = "RECEIVED";
 	// 多付返款支出
 	public static String RECEIVED_TYPE_PAY = "PAY";
-	//返佣
+	// 返佣
 	public static String RECEIVED_TYPE_FLY = "FLY";
 
 	// ************************* 供应商往来账种类 *************************
@@ -215,4 +215,18 @@ public class ResourcesConstants {
 	public static String CLIENT_CHANGE_SALE_TYPE_COMBINE = "COMBINE";
 	// 转移
 	public static String CLIENT_CHANGE_SALE_TYPE_TRANSFER = "TRANSFER";
+
+	// ************************* 决算订单状态 *********************************
+	// 决算中
+	public static String FINAL_ORDER_STATUS_ING = "I";
+	// 被驳回
+	public static String FINAL_ORDER_STATUS_REJECT = "N";
+	// 正常
+	public static String FINAL_ORDER_STATUS_NORMAL = "Y";
+	// 取消
+	public static String FINAL_ORDER_STATUS_CANCEL = "C";
+	// 投诉
+	public static String FINAL_ORDER_STATUS_COMPLAIN = "O";
+	// 变更
+	public static String FINAL_ORDER_STATUS_CHANGE = "H";
 }

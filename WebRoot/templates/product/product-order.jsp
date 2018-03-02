@@ -134,9 +134,9 @@
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
-								<td></td>
+								<td data-bind="text: $data.air_info"></td>
 								<td data-bind="text: $data.sale_name"></td>
-								<td></td>
+								<td data-bind="text: $data.treat_comment"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">

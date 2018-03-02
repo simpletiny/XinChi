@@ -63,10 +63,15 @@ public class ClientBean extends SupperBO implements Serializable {
 	private String main_business;
 	private String store_type;
 	private String back_level;
+
+	private String market_level;
+	private String talk_level;
 	// search options
 
 	private List<String> statuses;
 	private List<String> relate_flgs;
+	private List<String> talk_levels;
+	private List<String> main_businesses;
 
 	public String getClient_name() {
 		return client_name;
@@ -346,6 +351,38 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setBack_level(String back_level) {
 		this.back_level = back_level;
+	}
+
+	public String getMarket_level() {
+		return market_level;
+	}
+
+	public void setMarket_level(String market_level) {
+		this.market_level = market_level;
+	}
+
+	public String getTalk_level() {
+		return talk_level;
+	}
+
+	public void setTalk_level(String talk_level) {
+		this.talk_level = talk_level;
+	}
+
+	public List<String> getTalk_levels() {
+		return talk_levels;
+	}
+
+	public void setTalk_levels(List<String> talk_levels) {
+		this.talk_levels = talk_levels;
+	}
+
+	public List<String> getMain_businesses() {
+		return main_businesses;
+	}
+
+	public void setMain_businesses(List<String> main_businesses) {
+		this.main_businesses = main_businesses;
 	}
 
 }
