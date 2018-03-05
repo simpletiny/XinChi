@@ -152,6 +152,7 @@ tr td {
 								<th>状态</th>
 								<th>团号</th>
 								<th>客户</th>
+								<th>确认月</th>
 								<th>出团日期</th>
 								<th>天数</th>
 								<th>产品名称</th>
@@ -175,6 +176,7 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
+								<td data-bind="text: moment($data.confirm_date).format('YYYY-MM')"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.product_name"></td>
