@@ -70,69 +70,59 @@ $(document).ready(function() {
 		changeFile(this);
 	});
 });
+var final_type = "0";
 var changeType = function(rad) {
+	final_type = $(rad).val();
 	switch ($(rad).val() - 0) {
 	case 1:
 		$("#div-2").hide();
-		$("#div-3").hide();
 		break;
 	case 2:
 		$("#div-2").show();
-		$("#div-3").hide();
+		$(".type-3").hide();
 		break;
 	case 3:
-		$("#div-2").hide();
-		$("#div-3").show();
+		$("#div-2").show();
+		$(".type-3").show();
 		break;
 	}
+	caculateFinalReceivable();
 };
 
 var inputRaise = function(txt) {
 	var money = $(txt).val() - 0;
-	var budget_receivable = ctx.order().receivable;
 	if (money > 0) {
 		if (!$("#l-raise").hasClass("required")) {
 			$("#l-raise").addClass("required");
 			$("#txt-raise").attr("required", "required");
 		}
-		var final_receivable = budget_receivable + money;
-		$("#p-final-receivable").text(final_receivable);
-		$("#txt-final-receivable").val(final_receivable);
 	} else {
 		if ($("#l-raise").hasClass("required")) {
 			$("#l-raise").removeClass("required");
 			$("#txt-raise").attr("required", false);
 			$("#txt-raise-error").remove();
 		}
-		$("#p-final-receivable").text(budget_receivable);
-		$("#txt-final-receivable").val(budget_receivable);
 	}
+	caculateFinalReceivable();
 };
 var inputReduce = function(txt) {
 	var money = $(txt).val() - 0;
-	var budget_receivable = ctx.order().receivable;
 	if (money > 0) {
 		if (!$("#l-reduce").hasClass("required")) {
 			$("#l-reduce").addClass("required");
 			$("#txt-reduce").attr("required", "required");
 		}
-		var final_receivable = budget_receivable - money;
-		$("#p-final-receivable").text(final_receivable);
-		$("#txt-final-receivable").val(final_receivable);
 	} else {
 		if ($("#l-reduce").hasClass("required")) {
 			$("#l-reduce").removeClass("required");
 			$("#txt-reduce").attr("required", false);
 			$("#txt-reduce-error").remove();
 		}
-		$("#p-final-receivable").text(budget_receivable);
-		$("#txt-final-receivable").val(budget_receivable);
 	}
+	caculateFinalReceivable();
 };
 var inputComplain = function(txt) {
 	var money = $(txt).val() - 0;
-	var budget_receivable = ctx.order().receivable;
-
 	if (money > 0) {
 		if (!$("#l-complain-reason").hasClass("required")) {
 			$("#l-complain-reason").addClass("required");
@@ -142,9 +132,6 @@ var inputComplain = function(txt) {
 			$("#l-complain-solution").addClass("required");
 			$("#txt-complain-solution").attr("required", "required");
 		}
-		var final_receivable = budget_receivable - money;
-		$("#p-final-receivable").text(final_receivable);
-		$("#txt-final-receivable").val(final_receivable);
 	} else {
 		if ($("#l-complain-reason").hasClass("required")) {
 			$("#l-complain-reason").removeClass("required");
@@ -156,7 +143,23 @@ var inputComplain = function(txt) {
 			$("#txt-complain-solution").attr("required", false);
 			$("#txt-complain-solution-error").remove();
 		}
-		$("#p-final-receivable").text(budget_receivable);
-		$("#txt-final-receivable").val(budget_receivable);
 	}
+	caculateFinalReceivable();
+};
+var caculateFinalReceivable = function() {
+	var budget_receivable = ctx.order().receivable;
+	var final_receivable = budget_receivable;
+	var raise_money = $("#txt-raise-money").val() - 0;
+	var reduce_money = $("#txt-reduce-money").val() - 0;
+	var complain_money = $("#txt-complain-money").val() - 0;
+	if (final_type != "1") {
+		final_receivable += raise_money;
+		final_receivable -= reduce_money;
+	}
+	if (final_type == "3") {
+		final_receivable -= complain_money;
+	}
+
+	$("#p-final-receivable").text(final_receivable);
+	$("#txt-final-receivable").val(final_receivable);
 };

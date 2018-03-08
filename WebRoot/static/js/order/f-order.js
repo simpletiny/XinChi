@@ -253,7 +253,7 @@ var ProductBoxContext = function() {
 			break;
 		case "3":
 			$("#div-1").hide();
-			$("#div-2").hide();
+			$("#div-2").show();
 			$("#div-3").show();
 			break;
 		case "4":

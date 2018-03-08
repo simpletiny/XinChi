@@ -87,51 +87,49 @@
 					<hr />
 					<div style="display: none" id="div-2">
 						<div class="input-row clearfloat">
-							<div class="col-md-6 required">
+							<div class="col-md-4 required">
 								<label class="l">增加款项</label>
 								<div class="ip">
-									<input type="number" required="required" min=0 onkeyup="inputRaise(this)" name="order.raise_money" class="ip-" placeholder="增加款项" value="0" />
+									<input type="number" id="txt-raise-money" required="required" min=0 onkeyup="inputRaise(this)" name="order.raise_money" class="ip-" placeholder="增加款项" value="0" />
 								</div>
 							</div>
-							<div class="col-md-6 required">
+							<div class="col-md-4 required">
 								<label class="l">减少款项</label>
 								<div class="ip">
-									<input type="number" required="required" min=0 onkeyup="inputReduce(this)" name="order.reduce_money" class="ip-" placeholder="减少款项" value="0" />
+									<input type="number" id="txt-reduce-money" required="required" min=0 onkeyup="inputReduce(this)" name="order.reduce_money" class="ip-" placeholder="减少款项" value="0" />
+								</div>
+							</div>
+							<div class="col-md-4 required type-3">
+								<label class="l">投诉扣款</label>
+								<div class="ip">
+									<input type="number" required="required" id="txt-complain-money" min=0 onkeyup="inputComplain(this)" name="order.complain_money" class="ip-" placeholder="增加款项" value="0" />
 								</div>
 							</div>
 						</div>
 						<div class="input-row clearfloat">
-							<div class="col-md-6" id="l-raise">
+							<div class="col-md-4" id="l-raise">
 								<label class="l">增加款项说明</label>
 								<div class="ip">
 									<textarea id="txt-raise" type="text" class="ip-default" rows="10" maxlength="200" placeholder="增加款项说明" name="order.raise_comment"></textarea>
 								</div>
 							</div>
-							<div class="col-md-6" id="l-reduce">
+							<div class="col-md-4" id="l-reduce">
 								<label class="l">减少款项说明</label>
 								<div class="ip">
 									<textarea id="txt-reduce" type="text" class="ip-default" rows="10" maxlength="200" name="order.reduce_comment" placeholder="减少款项说明"></textarea>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div style="display: none" id="div-3">
-						<div class="input-row clearfloat">
-							<div class="col-md-6 required">
-								<label class="l">投诉扣款</label>
-								<div class="ip">
-									<input type="number" required="required" min=0 onkeyup="inputComplain(this)" name="order.complain_money" class="ip-" placeholder="增加款项" value="0" />
-								</div>
-							</div>
-						</div>
-						<div class="input-row clearfloat">
-							<div class="col-md-6" id="l-complain-reason">
+							<div class="col-md-4 type-3" id="l-complain-reason">
 								<label class="l">投诉原因</label>
 								<div class="ip">
 									<textarea id="txt-complain-reason" type="text" class="ip-default" rows="10" maxlength="200" placeholder="投诉原因" name="order.complain_reason"></textarea>
 								</div>
 							</div>
-							<div class="col-md-6" id="l-complain-solution">
+						</div>
+						<div class="input-row clearfloat type-3">
+							<div class="col-md-4"></div>
+							<div class="col-md-4"></div>
+							<div class="col-md-4" id="l-complain-solution">
 								<label class="l">解决方案</label>
 								<div class="ip">
 									<textarea id="txt-complain-solution" type="text" class="ip-default" rows="10" maxlength="200" name="order.complain_solution" placeholder="解决方案"></textarea>
