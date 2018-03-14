@@ -12,7 +12,7 @@ public interface WorldViewService {
 	public void insert(WorldViewBean view);
 
 	@LogDescription(des = "搜索欣驰故事")
-	public List<WorldViewBean> getAllViewsByPage(Page page);
+	public List<WorldViewBean> getAllViewsByPage(Page<WorldViewBean> page);
 
 	@LogDescription(des = "阅读欣驰故事")
 	public WorldViewBean selectViewByPk(String view_pk);

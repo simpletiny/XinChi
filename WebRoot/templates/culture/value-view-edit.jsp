@@ -13,11 +13,13 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<jsp:include page="../layout.jsp" />
+<script src="<%=basePath%>static/vendor/kindeditor/kindeditor.js"></script>
+<script src="<%=basePath%>static/js/culture/common-editor.js"></script>
 </head>
 <body>
 	<input type="hidden" id="view_key" value="<%=key%>" />
 	<div class="main-body">
-		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
 				修改价值观文档<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
@@ -59,7 +61,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/vendor/kindeditor/kindeditor.js"></script>
 	<script src="<%=basePath%>static/vendor/kindeditor/lang/zh_CN.js"></script>
 	
 	<script src="<%=basePath%>static/js/culture/value-view-edit.js"></script>

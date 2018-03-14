@@ -30,7 +30,7 @@ public class RuleViewDAOImpl extends SqlSessionDaoSupport implements RuleViewDAO
 	}
 
 	@Override
-	public List<RuleViewBean> getAllViewsByPage(Page page) {
+	public List<RuleViewBean> getAllViewsByPage(Page<RuleViewBean> page) {
 		List<RuleViewBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.RuleViewMapper.selectByPage", page);
 		return list;
 	}

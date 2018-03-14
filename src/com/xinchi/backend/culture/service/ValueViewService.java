@@ -12,7 +12,7 @@ public interface ValueViewService {
 	public void insert(ValueViewBean view);
 
 	@LogDescription(des = "搜索欣驰价值观")
-	public List<ValueViewBean> getAllViewsByPage(Page page);
+	public List<ValueViewBean> getAllViewsByPage(Page<ValueViewBean> page);
 
 	@LogDescription(des = "阅读欣驰价值观")
 	public ValueViewBean selectViewByPk(String view_pk);

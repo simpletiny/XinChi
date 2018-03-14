@@ -188,8 +188,11 @@
 			</if>
 			and confirm_flg='Y'
 		</where>
-
-		ORDER BY A.departure_date DESC
+		 ORDER BY 
+		 IF(TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) in (-1,-2,-3),A.departure_date,'2999-01-01'),
+		 IF(A.departure_date&lt;=DATE_FORMAT(NOW(), '%Y-%m-%d') and date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(day,A.departure_date,now())-days,-99999) DESC,
+		 IF(date_add(A.departure_date,INTERVAL A.days-1 DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) - days + 2,0) DESC,
+         A.departure_date
 
 	</select>
 	<select id="selectFByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

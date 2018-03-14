@@ -22,7 +22,7 @@ var ProductBoxContext = function() {
 	self.statusMapping = {
 		"no" : "未出团",
 		"yes" : "出团中",
-		"back" : "已回团"
+		"back" : "待决算"
 	};
 	// 销售信息
 	self.sales = ko.observableArray([]);

@@ -9,7 +9,7 @@ public interface WorldViewDAO {
 
 	public void insert(WorldViewBean view);
 
-	public List<WorldViewBean> getAllViewsByPage(Page page);
+	public List<WorldViewBean> getAllViewsByPage(Page<WorldViewBean> page);
 
 	public WorldViewBean selectByPk(String view_pk);
 

@@ -126,6 +126,15 @@
 							</div>
 						</div>
 					</div>
+					<div class="input-row clearfloat required">
+						<div class="col-md-6">
+							<label class="l">确认日期</label>
+							<div class="ip">
+								<input type="text" required="required" data-bind="value:order().confirm_date" name="bsOrder.confirm_date"
+									class="ip- date-picker" placeholder="确认日期" />
+							</div>
+						</div>
+					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-4">
 							<label class="l">团款备注</label>

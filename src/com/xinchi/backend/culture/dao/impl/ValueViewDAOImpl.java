@@ -30,7 +30,7 @@ public class ValueViewDAOImpl extends SqlSessionDaoSupport implements ValueViewD
 	}
 
 	@Override
-	public List<ValueViewBean> getAllViewsByPage(Page page) {
+	public List<ValueViewBean> getAllViewsByPage(Page<ValueViewBean> page) {
 		List<ValueViewBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ValueViewMapper.selectByPage", page);
 		return list;
 	}

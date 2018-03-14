@@ -9,7 +9,7 @@ public interface ValueViewDAO {
 
 	public void insert(ValueViewBean view);
 
-	public List<ValueViewBean> getAllViewsByPage(Page page);
+	public List<ValueViewBean> getAllViewsByPage(Page<ValueViewBean> page);
 
 	public ValueViewBean selectByPk(String view_pk);
 

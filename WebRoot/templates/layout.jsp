@@ -54,18 +54,29 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					class="fa fa-users fa-lg fa-fw"></i>企业文化</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
-				</ol>
-				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
-				</ol>
-				<ol style="display: none;">
-					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>规章制度</a></li>
-				</ol>
-				<ol style="display: none;">
-					<li><a href="<%=basePath%>templates/culture/academy-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售学院</a></li>
-				</ol>
-				<ol style="display: none;">
-					<li><a href="<%=basePath%>templates/culture/product-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
+					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
+						<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
+					<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+					<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务制度</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
+					<li><a href="<%=basePath%>templates/culture/sale-academy-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售学院</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
+					<li><a href="<%=basePath%>templates/culture/product-academy-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')">
+					<li><a href="<%=basePath%>templates/culture/top-academy-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>高层学院</a></li>
+					</s:if>
+					<s:else>
+					<li><a href="<%=basePath%>templates/501.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>高层学院</a></li>
+					</s:else>
 				</ol></li>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
@@ -144,7 +155,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<s:elseif test="#session.user.user_roles.contains('PRODUCT')">
 				<li class="supplier"><a href="<%=basePath%>templates/supplier/supplier-employee.jsp"><i
 						class="fa fa-users fa-lg fa-fw"></i>供应商管理</a>
-			</s:elseif >
+			</s:elseif>
 			<ol style="display: none;">
 				<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 					<li><a href="<%=basePath%>templates/supplier/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>

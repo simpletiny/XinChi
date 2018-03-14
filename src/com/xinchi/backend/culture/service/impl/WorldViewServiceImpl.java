@@ -24,7 +24,7 @@ public class WorldViewServiceImpl implements WorldViewService {
 	}
 
 	@Override
-	public List<WorldViewBean> getAllViewsByPage(Page page) {
+	public List<WorldViewBean> getAllViewsByPage(Page<WorldViewBean> page) {
 		return dao.getAllViewsByPage(page);
 	}
 

@@ -12,7 +12,7 @@ public interface RuleViewService {
 	public void insert(RuleViewBean view);
 
 	@LogDescription(des = "搜索规章制度")
-	public List<RuleViewBean> getAllViewsByPage(Page page);
+	public List<RuleViewBean> getAllViewsByPage(Page<RuleViewBean> page);
 
 	@LogDescription(des = "阅读规章制度")
 	public RuleViewBean selectViewByPk(String view_pk);

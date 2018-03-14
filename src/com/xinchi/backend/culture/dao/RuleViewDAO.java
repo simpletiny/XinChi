@@ -9,7 +9,7 @@ public interface RuleViewDAO {
 
 	public void insert(RuleViewBean view);
 
-	public List<RuleViewBean> getAllViewsByPage(Page page);
+	public List<RuleViewBean> getAllViewsByPage(Page<RuleViewBean> page);
 
 	public RuleViewBean selectByPk(String view_pk);
 

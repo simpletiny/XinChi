@@ -24,7 +24,7 @@ public class RuleViewServiceImpl implements RuleViewService {
 	}
 
 	@Override
-	public List<RuleViewBean> getAllViewsByPage(Page page) {
+	public List<RuleViewBean> getAllViewsByPage(Page<RuleViewBean> page) {
 		return dao.getAllViewsByPage(page);
 	}
 

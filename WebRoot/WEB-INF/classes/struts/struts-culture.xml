@@ -2,6 +2,7 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 	<package name="culture" extends="default" namespace="/culture">
+		<!-- 世界观 -->
 		<action name="createWorldView" class="worldViewAction" method="createWorldView">
 			<result name="success" type="str">resultStr
 			</result>
@@ -23,6 +24,7 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 
+		<!-- 价值观 -->
 		<action name="createValueView" class="valueViewAction" method="createValueView">
 			<result name="success" type="str">resultStr
 			</result>
@@ -43,8 +45,8 @@
 		<action name="deleteValueView" class="valueViewAction" method="deleteValueView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
-		<!-- 规章制度 -->
+
+		<!-- 通用制度 -->
 		<action name="createRuleView" class="ruleViewAction" method="createRuleView">
 			<result name="success" type="str">resultStr
 			</result>
@@ -65,48 +67,137 @@
 		<action name="deleteRuleView" class="ruleViewAction" method="deleteRuleView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
+		<!-- 产品制度 -->
+		<action name="createProductRuleView" class="productRuleViewAction" method="createProductRuleView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchProductRuleViewByPage" class="productRuleViewAction" method="searchProductRuleViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneProductRuleView" class="productRuleViewAction" method="searchOneProductRuleView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateProductRuleView" class="productRuleViewAction" method="updateProductRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteProductRuleView" class="productRuleViewAction" method="deleteProductRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 销售制度 -->
+		<action name="createSaleRuleView" class="saleRuleViewAction" method="createSaleRuleView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchSaleRuleViewByPage" class="saleRuleViewAction" method="searchSaleRuleViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneSaleRuleView" class="saleRuleViewAction" method="searchOneSaleRuleView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateSaleRuleView" class="saleRuleViewAction" method="updateSaleRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteSaleRuleView" class="saleRuleViewAction" method="deleteSaleRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 票务制度 -->
+		<action name="createTicketRuleView" class="ticketRuleViewAction" method="createTicketRuleView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchTicketRuleViewByPage" class="ticketRuleViewAction" method="searchTicketRuleViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneTicketRuleView" class="ticketRuleViewAction" method="searchOneTicketRuleView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateTicketRuleView" class="ticketRuleViewAction" method="updateTicketRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteTicketRuleView" class="ticketRuleViewAction" method="deleteTicketRuleView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+
 		<!-- 销售学院 -->
-		<action name="createAcademyView" class="academyViewAction" method="createAcademyView">
+		<action name="createSaleAcademyView" class="saleAcademyViewAction" method="createSaleAcademyView">
 			<result name="success" type="str">resultStr
 			</result>
 		</action>
-		<action name="searchAcademyViewByPage" class="academyViewAction" method="searchAcademyViewByPage">
+		<action name="searchSaleAcademyViewByPage" class="saleAcademyViewAction" method="searchSaleAcademyViewByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 
 			</result>
 		</action>
-		<action name="searchOneAcademyView" class="academyViewAction" method="searchOneAcademyView">
+		<action name="searchOneSaleAcademyView" class="saleAcademyViewAction" method="searchOneSaleAcademyView">
 			<result name="success" type="json"></result>
 		</action>
-		<action name="updateAcademyView" class="academyViewAction" method="updateAcademyView">
+		<action name="updateSaleAcademyView" class="saleAcademyViewAction" method="updateSaleAcademyView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<action name="deleteAcademyView" class="academyViewAction" method="deleteAcademyView">
+		<action name="deleteSaleAcademyView" class="saleAcademyViewAction" method="deleteSaleAcademyView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 产品学院 -->
-		<action name="createProductView" class="productViewAction" method="createProductView">
+		<action name="createProductAcademyView" class="productAcademyViewAction" method="createProductAcademyView">
 			<result name="success" type="str">resultStr
 			</result>
 		</action>
-		<action name="searchProductViewByPage" class="productViewAction" method="searchProductViewByPage">
+		<action name="searchProductAcademyViewByPage" class="productAcademyViewAction" method="searchProductAcademyViewByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 
 			</result>
 		</action>
-		<action name="searchOneProductView" class="productViewAction" method="searchOneProductView">
+		<action name="searchOneProductAcademyView" class="productAcademyViewAction" method="searchOneProductAcademyView">
 			<result name="success" type="json"></result>
 		</action>
-		<action name="updateProductView" class="productViewAction" method="updateProductView">
+		<action name="updateProductAcademyView" class="productAcademyViewAction" method="updateProductAcademyView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<action name="deleteProductView" class="productViewAction" method="deleteProductView">
+		<action name="deleteProductAcademyView" class="productAcademyViewAction" method="deleteProductAcademyView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 高层学院 -->
+		<action name="createTopAcademyView" class="topAcademyViewAction" method="createTopAcademyView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchTopAcademyViewByPage" class="topAcademyViewAction" method="searchTopAcademyViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneTopAcademyView" class="topAcademyViewAction" method="searchOneTopAcademyView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateTopAcademyView" class="topAcademyViewAction" method="updateTopAcademyView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteTopAcademyView" class="topAcademyViewAction" method="deleteTopAcademyView">
 			<result name="success" type="str">resultStr</result>
 		</action>
 	</package>

@@ -30,7 +30,7 @@ public class WorldViewDAOImpl extends SqlSessionDaoSupport implements WorldViewD
 	}
 
 	@Override
-	public List<WorldViewBean> getAllViewsByPage(Page page) {
+	public List<WorldViewBean> getAllViewsByPage(Page<WorldViewBean> page) {
 		List<WorldViewBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.WorldViewMapper.selectByPage", page);
 		return list;
 	}

@@ -24,7 +24,7 @@ public class ValueViewServiceImpl implements ValueViewService {
 	}
 
 	@Override
-	public List<ValueViewBean> getAllViewsByPage(Page page) {
+	public List<ValueViewBean> getAllViewsByPage(Page<ValueViewBean> page) {
 		return dao.getAllViewsByPage(page);
 	}
 
