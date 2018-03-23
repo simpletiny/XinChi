@@ -20,6 +20,7 @@ public interface ProductDAO{
 	 */
 	public void update(ProductBean bean);
 	
+	public void sysUpdate(ProductBean bean);
 	/**
 	 * 删除
 	 * @param id

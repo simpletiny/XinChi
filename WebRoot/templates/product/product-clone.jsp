@@ -55,15 +55,15 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				产品更新<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+				新建产品<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
 					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
+			<input type="hidden" id="key" value="<%=key%>" name="product.pk"></input>
 				<form class="form-box info-form" id="form_container">
-					<input type="hidden" id="key" value="<%=key%>" name="product.pk"></input>
 					<div class="input-row clearfloat">
 						<label class="l"><input type="checkbox" id="chk-strict" value="Y" name="product.strict_price_flg" />严格执行定价</label>
 					</div>
@@ -126,14 +126,14 @@
 										<label class="l">直客报价</label>
 										<div class="ip fix-width">
 											<input type="number" class="ip-" id="adult-price" onkeyup="caculateGrossProfit()"
-												data-bind="value: product().adult_price" placeholder="成人报价" name="delay.adult_price" required="required" />
+												data-bind="value: product().adult_price" placeholder="成人报价" name="product.adult_price" required="required" />
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="ip fix-width">
 										<input type="number" class="ip-" data-bind="value: product().child_price" placeholder="儿童报价"
-											name="delay.child_price" />
+											name="product.child_price" />
 									</div>
 								</td>
 								<td>
@@ -142,7 +142,7 @@
 										<div class="ip fix-width">
 											<input type="number" class="ip-" id="business-profit-substract" onkeyup="caculateGrossProfit()"
 												data-bind="value: product().business_profit_substract" placeholder="同业返利"
-												name="delay.business_profit_substract" required="required" />
+												name="product.business_profit_substract" required="required" />
 										</div>
 									</div>
 								</td>
@@ -152,7 +152,7 @@
 										<div class="ip fix-width">
 											<input type="number" class="ip-" required="required" id="max-profit-substract"
 												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
-												name="delay.max_profit_substract" />
+												name="product.max_profit_substract" />
 										</div>
 									</div>
 								</td>
@@ -231,8 +231,8 @@
 								<td style="width: 24%"><label class="l">毛利</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="gross-profit" data-bind="text: product().gross_profit"></p>
-										<input type="hidden" id="txt-gross-profit" data-bind="value: product().gross_profit"
-											name="delay.gross_profit" />
+										<input type="hidden" id="txt-gross-profit" data-bind="text: product().gross_profit"
+											name="product.gross_profit" />
 									</div></td>
 								<td style="width: 24%">&nbsp;</td>
 							</tr>
@@ -241,8 +241,8 @@
 								<td style="width: 24%"><label class="l">毛利率</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"></p>
-										<input type="hidden" id="txt-gross-profit-rate" data-bind="value: product().gross_profit_rate"
-											name="delay.gross_profit_rate" />
+										<input type="hidden" id="txt-gross-profit-rate" data-bind="text: product().gross_profit_rate"
+											name="product.gross_profit_rate" />
 									</div></td>
 								<td style="width: 24%">&nbsp;</td>
 							</tr>
@@ -251,7 +251,7 @@
 								<td style="width: 24%"><label class="l">现金流</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="cash-flow" data-bind="text: product().cash_flow"></p>
-										<input type="hidden" id="txt-cash-flow" data-bind="value: product().cash_flow" name="delay.cash_flow" />
+										<input type="hidden" id="txt-cash-flow" data-bind="text: product().cash_flow" name="product.cash_flow" />
 									</div></td>
 								<td style="width: 24%">&nbsp;</td>
 								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
@@ -265,7 +265,7 @@
 								<td style="width: 24%"><label class="l">现付资金</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="spot-cash" data-bind="text: product().spot_cash"></p>
-										<input type="hidden" id="txt-spot-cash" data-bind="value: product().spot_cash" name="delay.spot_cash" />
+										<input type="hidden" id="txt-spot-cash" data-bind="text: product().spot_cash" name="product.spot_cash" />
 									</div></td>
 								<td style="width: 24%">&nbsp;</td>
 							</tr>
@@ -276,14 +276,14 @@
 										<label class="l">产品分值</label>
 										<div class="ip fix-width">
 											<input type="number" class="ip-" required="required" step="1" min="0" max="20"
-												data-bind="value: product().product_value" placeholder="0-20整数" name="delay.product_value" />
+												data-bind="value: product().product_value" placeholder="0-20整数" name="product.product_value" />
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="ip fix-width">
 										<input type="number" class="ip-" step="1" min="0" max="20" data-bind="value: product().product_child_value"
-											placeholder="0-20整数" name="delay.product_child_value" required="required" />
+											placeholder="0-20整数" name="product.product_child_value" required="required" />
 									</div>
 								</td>
 							</tr>
@@ -362,7 +362,7 @@
 				</form>
 
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: updateProductConfirm">更新</a> <a type="submit"
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: saveProduct">保存</a> <a type="submit"
 						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
@@ -422,6 +422,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 
-	<script src="<%=basePath%>static/js/product/product-edit.js"></script>
+	<script src="<%=basePath%>static/js/product/product-clone.js"></script>
 </body>
 </html>

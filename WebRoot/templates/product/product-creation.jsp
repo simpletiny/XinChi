@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -13,7 +12,7 @@
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
-#table-supplier th,#table-supplier td {
+#table-supplier th, #table-supplier td {
 	text-align: center;
 }
 
@@ -26,10 +25,27 @@
 	border-spacing: 0px 10px;
 }
 
+#table-product {
+	border-collapse: separate;
+	border-spacing: 0px 10px;
+}
+
 .required th[class="r"]:after {
 	content: " *";
 	color: red;
 	font-weight: bold;
+}
+
+.fix-width {
+	width: 45% !important;
+}
+
+.col-md-3 {
+	width: 24% !important;
+}
+
+.col-md-1 {
+	width: 4% !important;
 }
 </style>
 </head>
@@ -38,7 +54,8 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				新建产品<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				新建产品<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -46,72 +63,224 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
-							<label class="l">产品名称</label>
-							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8" name="product.name" required="required" />
-							</div>
-						</div>
-						<div class="col-md-6 required">
+						<label class="l"><input type="checkbox" checked="checked" value="Y" name="product.strict_price_flg"/>严格执行定价</label>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-1">&nbsp;</div>
+						<div class="col-md-3 required">
+
 							<label class="l">产品线</label>
-							<div class="ip">
-								<select class="form-control" style="height: 34px" data-bind="options: locations,value:product().location, optionsCaption: '--请选择--'" name="product.location" required="required"></select>
+							<div class="ip fix-width">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: locations,value:product().location, optionsCaption: '--请选择--'" name="product.location"
+									required="required"></select>
 							</div>
 						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-3 required">
+							<label class="l">产品名称</label>
+							<div class="ip fix-width">
+								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8"
+									name="product.name" required="required" />
+							</div>
+						</div>
+						<div class="col-md-3 required">
+							<label class="l">型号</label>
+							<div class="ip fix-width">
+								<input type="text" class="ip-" maxlength="6" data-bind="value: product().product_model" placeholder="6字以内"
+									name="product.product_model" required="required" />
+							</div>
+						</div>
+						<div class="col-md-3 required">
 							<label class="l">天数</label>
-							<div class="ip">
-								<input type="number" class="ip-" data-bind="value: product().days" placeholder="天数" name="product.days" required="required" />
-							</div>
-						</div>
-						<div class="col-md-6 required">
-							<label class="l">同业价格</label>
-							<div class="ip">
-								<input type="number" class="ip-" id="business-price" onkeyup="caculateGrossProfit()" data-bind="value: product().business_price" placeholder="同业价格" name="product.business_price" required="required" />
+							<div class="ip fix-width">
+								<input type="number" class="ip-" data-bind="value: product().days" placeholder="天数" name="product.days"
+									required="required" />
 							</div>
 						</div>
 					</div>
+
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
-							<label class="l">产品分值</label>
-							<div class="ip">
-								<input type="number" class="ip-" max="5" value="1" min="0" required ="required" value="1" data-bind="value: product().product_value" placeholder="产品分值" name="product.product_value" />
-							</div>
-						</div>
-						<div class="col-md-6 required">
-							<label class="l">最大让利</label>
-							<div class="ip">
-								<input type="number" class="ip-" required ="required" id="max-profit-substract" onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利" name="product.max_profit_substract" />
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
-							<label class="l">机票成本</label>
-							<div class="ip">
-								<input type="number" class="ip-" required ="required" id="air-ticket-cost" onkeyup="caculateGrossProfit()" data-bind="value: product().air_ticket_cost" placeholder="机票成本" name="product.air_ticket_cost" />
-							</div>
-						</div>
-						<div class="col-md-6 required">
-							<label class="l">其它成本</label>
-							<div class="ip">
-								<input type="number" class="ip-" required ="required" data-bind="value: product().other_cost" id="other-cost" placeholder="自动汇总" name="product.other_cost" />
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
-							<label class="l">产品毛利</label>
-							<div class="ip">
-								<input type="number" class="ip-" id="gross-profit" required ="required" data-bind="value: product().gross_profit" placeholder="产品毛利" name="product.gross_profit" />
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label class="l">毛利率</label>
-							 <div class="ip"><p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"  name="product.gross_profit_rate" ></p></div>
-						</div>
+						<table style="width: 100%" id="table-product">
+							<tr>
+								<td style="width: 4%"></td>
+								<td style="width: 24%"><label class="l">&nbsp;</label>
+									<div class="ip fix-width required">
+										<label class="l" style="text-align: center">成人</label>
+									</div></td>
+								<td style="width: 24%">
+									<div class="ip fix-width">
+										<label class="l" style="text-align: center">儿童</label>
+									</div>
+								</td>
+								<td style="width: 24%"></td>
+								<td style="width: 24%"></td>
+							</tr>
+
+
+							<tr>
+								<td>现付</td>
+								<td>
+									<div class="required">
+										<label class="l">直客报价</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" id="adult-price" onkeyup="caculateGrossProfit()"
+												data-bind="value: product().adult_price" placeholder="成人报价" name="product.adult_price" required="required" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" data-bind="value: product().child_price" placeholder="儿童报价"
+											name="product.child_price" />
+									</div>
+								</td>
+								<td>
+									<div class=" required">
+										<label class="l">同业返利</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" id="business-profit-substract" onkeyup="caculateGrossProfit()"
+												data-bind="value: product().business_profit_substract" placeholder="同业返利"
+												name="product.business_profit_substract" required="required" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class=" required">
+										<label class="l">最大让利</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" required="required" id="max-profit-substract"
+												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
+												name="product.max_profit_substract" />
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" checked="checked" value="Y" id="chk-air-ticket" onclick="caculateGrossProfit()" name="product.cash_flow_air_flg"/></td>
+								<td>
+									<div class="required">
+										<label class="l">机票成本</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" required="required" id="air-ticket-cost" onkeyup="caculateGrossProfit()"
+												data-bind="value: product().air_ticket_cost" placeholder="成人机票" name="product.air_ticket_cost" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" data-bind="value: product().air_ticket_child_cost" placeholder="儿童机票"
+											name="product.air_ticket_child_cost" />
+									</div>
+								</td>
+								<td><label class="l">首段出港</label>
+									<div class="ip fix-width">
+										<input type="text" class="ip-" data-bind="value: product().first_air_start" maxlength="10" placeholder="首段出港"
+											name="product.first_air_start" />
+									</div></td>
+								<td><label class="l">首段目的</label>
+									<div class="ip fix-width">
+										<input type="text" class="ip-" maxlength="10" data-bind="value: product().first_air_end" placeholder="首段目的"
+											name="product.first_air_end" />
+									</div></td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" value="Y" id="chk-local" onclick="caculateGrossProfit()" name="product.cash_flow_local_flg"/></td>
+								<td>
+									<div class="required">
+										<label class="l">地接成本</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" id="local-adult-cost" onkeyup="caculateGrossProfit()" required="required"
+												data-bind="value: product().local_adult_cost" placeholder="成人" name="product.local_adult_cost" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" data-bind="value: product().local_child_cost" placeholder="儿童"
+											name="product.local_child_cost" />
+									</div>
+								</td>
+								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
+									<div class="ip">
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_attention"
+											name="product.sale_attention" placeholder="技术交底"></textarea>
+									</div></td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" checked="checked" id="chk-other" value="Y" onclick="caculateGrossProfit()" name="product.cash_flow_other_flg"/></td>
+								<td><label class="l">其他成本</label>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().other_cost" placeholder="成人" name="product.other_cost" />
+									</div></td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" data-bind="value: product().other_child_cost" placeholder="儿童"
+											name="product.other_child_cost" />
+									</div>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 4%">&nbsp;</td>
+								<td style="width: 24%"><label class="l">毛利</label>
+									<div class="ip fix-width">
+										<p class="ip-default" id="gross-profit" data-bind="text: product().gross_profit"></p>
+										<input type="hidden" id="txt-gross-profit" data-bind="text: product().gross_profit" name="product.gross_profit" />
+									</div></td>
+								<td style="width: 24%">&nbsp;</td>
+							</tr>
+							<tr>
+								<td style="width: 4%">&nbsp;</td>
+								<td style="width: 24%"><label class="l">毛利率</label>
+									<div class="ip fix-width">
+										<p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"></p>
+										<input type="hidden" id="txt-gross-profit-rate" data-bind="text: product().gross_profit_rate" name="product.gross_profit_rate" />
+									</div></td>
+								<td style="width: 24%">&nbsp;</td>
+							</tr>
+							<tr>
+								<td style="width: 4%">&nbsp;</td>
+								<td style="width: 24%"><label class="l">现金流</label>
+									<div class="ip fix-width">
+										<p class="ip-default" id="cash-flow" data-bind="text: product().cash_flow"></p>
+										<input type="hidden" id="txt-cash-flow" data-bind="text: product().cash_flow" name="product.cash_flow" />
+									</div></td>
+								<td style="width: 24%">&nbsp;</td>
+								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
+									<div class="ip">
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy"
+											name="product.sale_strategy" placeholder="收客建议"></textarea>
+									</div></td>
+							</tr>
+							<tr>
+								<td style="width: 4%">&nbsp;</td>
+								<td style="width: 24%"><label class="l">现付资金</label>
+									<div class="ip fix-width">
+										<p class="ip-default" id="spot-cash" data-bind="text: product().spot_cash"></p>
+										<input type="hidden" id="txt-spot-cash" data-bind="text: product().spot_cash" name="product.spot_cash" />
+									</div></td>
+								<td style="width: 24%">&nbsp;</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<div class="required">
+										<label class="l">产品分值</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" required="required" step="1" min="0" max="20"
+												data-bind="value: product().product_value" placeholder="0-20整数" name="product.product_value" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" step="1" min="0" max="20" data-bind="value: product().product_child_value"
+											placeholder="0-20整数" name="product.product_child_value" required="required" />
+									</div>
+								</td>
+							</tr>
+						</table>
 					</div>
 					<hr />
 					<h3>供应商信息</h3>
@@ -145,8 +314,8 @@
 							<tbody>
 								<tr>
 									<td st="index">1</td>
-									<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" />
-									<input type="text" class="need" st="supplier-pk" style="display: none" /></td>
+									<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"
+										class="need" st="supplier-pk" style="display: none" /></td>
 									<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
 									<td><input class="need" onkeyup="caculateOtherCost()" st="supplier-cost" type="number" /></td>
 									<td><input class="need" st="land-day" type="number" /></td>
@@ -167,14 +336,16 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" data-bind="value: product().comment" name="product.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: product().comment"
+									name="product.comment" placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
 					</div>
 				</form>
 
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: createProduct">保存</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: createProduct">保存</a> <a type="submit"
+						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
 		</div>
@@ -225,7 +396,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

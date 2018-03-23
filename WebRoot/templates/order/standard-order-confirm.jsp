@@ -59,7 +59,8 @@
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
 								<p class="ip-default" data-bind="text:product().name"></p>
-								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" />
+								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" /> <input
+									type="hidden" data-bind="value: product().product_value" name="bsOrder.product_value" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -97,8 +98,8 @@
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoCaculate()" data-bind="value: order().other_cost" placeholder="其他费用"
-									name="bsOrder.other_cost" />
+								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoCaculate()"
+									data-bind="value: order().other_cost" placeholder="其他费用" name="bsOrder.other_cost" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -185,7 +186,7 @@
 										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().ticket_number"
 											name="bsOrder.ticket_number" /></td>
 										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_city"
-											name="bsOrder.start_city"/></td>
+											name="bsOrder.start_city" /></td>
 										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_airport"
 											name="bsOrder.start_airport" /></td>
 										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_city"

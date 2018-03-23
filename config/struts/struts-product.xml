@@ -44,6 +44,12 @@
 		<action name="updateProduct" class="productAction" method="updateProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="updateProductDirectly" class="productAction" method="updateProductDirectly">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateProductValue" class="productAction" method="updateProductValue">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="onSaleProduct" class="productAction" method="onSaleProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>

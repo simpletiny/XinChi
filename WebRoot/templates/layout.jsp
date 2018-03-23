@@ -90,7 +90,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
 						</s:if>
-						<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
+						<s:if test="#session.user.user_roles.contains('ADMIN')">
+						<li><a href="<%=basePath%>templates/sale/sale-score.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
+						</s:if>
+						<s:else>
+							<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
+						</s:else>
 					</ol></li>
 
 			</s:if>
@@ -131,6 +136,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users fa-lg fa-fw"></i>产品管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品管理</a></li>
+						<li><a href="<%=basePath%>templates/product/product-analysis.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品分析</a></li>
 						<li><a href="<%=basePath%>templates/product/product-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品报表</a></li>
 						<li><a href="<%=basePath%>templates/order/order-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>单团核算单</a></li>
 					</ol></li>

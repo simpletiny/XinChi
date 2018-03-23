@@ -37,7 +37,8 @@ public class DaoUtil {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setCreate_user(ub.getUser_number());
 		}
@@ -47,7 +48,8 @@ public class DaoUtil {
 
 	public String insertBOWithPk(String mapper, SupperBO supperBO) {
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setCreate_user(ub.getUser_number());
 		}
@@ -68,7 +70,8 @@ public class DaoUtil {
 		String[] rtnPks = new String[bOList.size()];
 		String date = DateUtil.getTimeMillis();
 		String[] pks = DBCommonUtil.genPks(bOList.size());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		for (int i = 0; i < bOList.size(); i++) {
 			rtnPks[i] = pks[i];
 			bOList.get(i).setPk(pks[i]);
@@ -97,6 +100,15 @@ public class DaoUtil {
 	 * @return
 	 */
 	public void deleteBySql(String sql) {
+		sqlSession.delete("commonMapper.executeBySql", sql);
+	}
+
+	/**
+	 * 执行sql
+	 * 
+	 * @param sql
+	 */
+	public void executeBySql(String sql) {
 		sqlSession.delete("commonMapper.executeBySql", sql);
 	}
 
@@ -183,8 +195,7 @@ public class DaoUtil {
 	 */
 	/*
 	 * public List<SupperBO> selectByParam(String mapper,Object param){
-	 * List<SupperBO> listBo = sqlSession.selectList(mapper,param); return
-	 * listBo; }
+	 * List<SupperBO> listBo = sqlSession.selectList(mapper,param); return listBo; }
 	 */
 	public <T extends SupperBO> List<T> selectByParam(String mapper, Object param) {
 		List<T> listBo = sqlSession.selectList(mapper, param);
@@ -251,7 +262,8 @@ public class DaoUtil {
 	 */
 	public int updateByPK(String mapper, SupperBO supperBO) {
 		supperBO.setUpdate_time(DateUtil.getTimeMillis());
-		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
+		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
 			supperBO.setUpdate_user(ub.getUser_number());
 		}

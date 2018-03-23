@@ -79,6 +79,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String land_time;
 	private Integer next_day;
 	private BigDecimal balance;
+	private BigDecimal product_value;
 
 	// about final order
 	private String final_type;
@@ -637,6 +638,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setFinal_receivable(BigDecimal final_receivable) {
 		this.final_receivable = final_receivable;
+	}
+
+	public BigDecimal getProduct_value() {
+		return product_value;
+	}
+
+	public void setProduct_value(BigDecimal product_value) {
+		this.product_value = product_value;
 	}
 
 }

@@ -3,9 +3,11 @@ package com.xinchi.backend.product.service;
 import java.util.List;
 
 import com.xinchi.bean.ProductBean;
+import com.xinchi.bean.ProductDelayBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
-public interface ProductService {
+public interface ProductService extends BaseService {
 
 	/**
 	 * 新增
@@ -19,7 +21,7 @@ public interface ProductService {
 	 * 
 	 * @param bean
 	 */
-	public String update(ProductBean bean);
+	public String update(ProductBean bean, ProductDelayBean delay);
 
 	/**
 	 * 删除
@@ -44,7 +46,11 @@ public interface ProductService {
 
 	public List<ProductBean> selectByPage(Page<ProductBean> page);
 
-	public String onSale(String product_pks, String sale_flg);
+	public String onSale(String product_pks, String sale_flg, String force_flg);
 
 	public void updateStraight(ProductBean product);
+
+	public String updateProductDirectly(ProductBean product);
+
+	public String updateProductValue(ProductBean product, ProductDelayBean delay);
 }

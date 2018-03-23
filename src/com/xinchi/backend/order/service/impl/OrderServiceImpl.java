@@ -20,6 +20,7 @@ import com.xinchi.bean.FinalNonStandardOrderBean;
 import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -65,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<OrderDto> selectFByPage(Page page) {
+	public List<OrderDto> selectFByPage(Page<OrderDto> page) {
 		return dao.selectFByPage(page);
 	}
 
@@ -499,5 +500,10 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		return SUCCESS;
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page) {
+		return dao.searchSaleScore(page);
 	}
 }

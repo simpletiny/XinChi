@@ -20,7 +20,6 @@ jQuery.validator.addMethod("date_year", function(value, element) {
 	return this.optional(element) || mobile.test(value);
 }, "请正确填写出生年");
 
-
 jQuery.validator.addMethod("isTime", function(value, element) {
 	var length = value.length;
 	var time = /^(([0-2][0-3])|([0-1][0-9])):[0-5][0-9]$/;
@@ -28,6 +27,17 @@ jQuery.validator.addMethod("isTime", function(value, element) {
 		return this.optional(element) || false;
 	return this.optional(element) || time.test(value);
 }, "请正确填写时间");
+
+jQuery.validator.addMethod("isStep", function(value, element) {
+	var s = $(element).attr("step");
+	if (s == null || isNaN(s))
+		return this.optional(element) || true
+	var v = value - 0;
+	var x = s - 0;
+	if (v % x != 0)
+		return this.optional(element) || false;
+	return this.optional(element) || true;
+}, "请填写符合要求的数字");
 
 // jQuery.validator.addMethod("isDifferent", function(value,element) {
 // var allNeed = $(".different");
@@ -130,5 +140,11 @@ $("#c_password").each(function() {
 	$(this).rules("add", {
 		required : true,
 		equalTo : "#password"
+	});
+});
+
+$("input[type='number']").each(function() {
+	$(this).rules("add", {
+		isStep : true
 	});
 });

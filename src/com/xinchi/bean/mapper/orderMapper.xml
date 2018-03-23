@@ -64,8 +64,15 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="budget_receivable" property="budget_receivable" jdbcType="DECIMAL" />
 		<result column="final_receivable" property="final_receivable" jdbcType="DECIMAL" />
+		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 	</resultMap>
-
+	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
+		<result column="score" property="score" jdbcType="DECIMAL" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="sum_people" property="sum_people" jdbcType="INTEGER" />
+		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
+	</resultMap>
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
 		where
@@ -78,7 +85,25 @@
 		pk =
 		#{order_pk,jdbcType=CHAR}
 	</select>
-
+	
+	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
+		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+		LEFT(A.confirm_date,7) as confirm_month,
+		A.create_user AS sale_number,
+		B.user_name AS sale_name, 
+		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people 
+		FROM budget_standard_order A
+			LEFT JOIN user_base B on A.create_user = B.user_number
+			<where>
+				<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
+					and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
+				</if>
+				and A.confirm_flg !='N'
+			</where>
+			GROUP by LEFT(confirm_date,7),create_user 
+			ORDER by score DESC
+	</select>
+	
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select * from budget_order_view
 		<where>
@@ -149,7 +174,8 @@
 		A.passenger_captain,
 		A.treat_comment,
 		A.receivable_comment,
-		B.budget_balance AS balance
+		B.budget_balance AS balance,
+		A.product_value
 		from budget_order_view A LEFT JOIN
 		receivable B ON A.team_number = B.team_number
 		<where>

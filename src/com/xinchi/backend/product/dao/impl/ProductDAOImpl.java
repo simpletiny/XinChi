@@ -34,6 +34,13 @@ public class ProductDAOImpl extends SqlSessionDaoSupport implements ProductDAO {
 	public void update(ProductBean bean) {
 		daoUtil.updateByPK("com.xinchi.bean.mapper.ProductMapper.updateByPrimaryKey", bean);
 	}
+	
+	@Override
+	public void sysUpdate(ProductBean bean) {
+		daoUtil.sysUpdateByPK("com.xinchi.bean.mapper.ProductMapper.updateByPrimaryKey", bean);
+	}
+	
+	
 
 	@Override
 	public void delete(String id) {

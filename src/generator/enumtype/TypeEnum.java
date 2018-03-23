@@ -6,7 +6,7 @@ public enum TypeEnum {
 			"String", "char", "char"), VARCHAR("String", "varchar", "varchar"), TINYINT("Integer", "integer", "tinyint"), TIMESTAMP("java.sql.Timestamp",
 			"timestamp", "timestamp"), INT("Integer", "integer", "int"), DATE("java.sql.Date", "date", "date"), DATETIME("java.sql.Timestamp",
 			"timestamp", "timestamp"), DECIMAL("java.math.BigDecimal", "decimal", "decimal"), BIGINT("int", "bigint", "bigint"), MEDIUMTEXT("String",
-			"mediumtext", "mediumtext");
+			"mediumtext", "mediumtext"),FLOAT("float","float","float");
 	private String columnType;
 
 	private String type;

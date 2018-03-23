@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +17,7 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
+import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductOrderDto;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
@@ -27,6 +25,9 @@ import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -117,8 +118,20 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private ProductDelayBean delay;
+
+	public String updateProductDirectly() {
+		resultStr = service.updateProductDirectly(product);
+		return SUCCESS;
+	}
+
+	public String updateProductValue() {
+		resultStr = service.updateProductValue(product, delay);
+		return SUCCESS;
+	}
+
 	public String updateProduct() {
-		resultStr = service.update(product);
+		resultStr = service.update(product, delay);
 
 		// 删除之前的供应商联系
 		productSupplierService.deleteByProductPk(product.getPk());
@@ -168,13 +181,13 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
-
 	private String product_pks;
 	private String sale_flg;
+	private String force_flg;
 
 	// 上下架产品
 	public String onSaleProduct() {
-		resultStr = service.onSale(product_pks, sale_flg);
+		resultStr = service.onSale(product_pks, sale_flg, force_flg);
 		return SUCCESS;
 	}
 
@@ -417,5 +430,21 @@ public class ProductAction extends BaseAction {
 
 	public void setProductSuppliers(List<ProductSupplierBean> productSuppliers) {
 		this.productSuppliers = productSuppliers;
+	}
+
+	public String getForce_flg() {
+		return force_flg;
+	}
+
+	public void setForce_flg(String force_flg) {
+		this.force_flg = force_flg;
+	}
+
+	public ProductDelayBean getDelay() {
+		return delay;
+	}
+
+	public void setDelay(ProductDelayBean delay) {
+		this.delay = delay;
 	}
 }

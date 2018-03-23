@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -11,7 +10,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
-
+<style>
+tr td {
+	text-overflow: ellipsis; /* for IE */
+	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -40,11 +47,12 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">产品线</label>
 							<div class="col-md-6">
-		                       <div data-bind="foreach: locations" style="padding-top: 4px;">
-		                           <em class="small-box">
-		                                 <input type="checkbox" data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="product.locations"/><label data-bind="text: $data"></label>
-		                            </em>
-		                        </div>
+								<div data-bind="foreach: locations" style="padding-top: 4px;">
+									<em class="small-box"> <input type="checkbox"
+										data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="product.locations" /><label
+										data-bind="text: $data"></label>
+									</em>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -75,16 +83,19 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>产品编号</th>
+								<th title="成人/儿童">分值</th>
 								<th>产品线</th>
 								<th>产品名称</th>
+								<th>型号</th>
 								<th>天数</th>
-								<th>同业报价</th>
-								<th>产品分值</th>
+								<th>首段城市对</th>
+								<th>直客报价</th>
+								<th>儿童报价</th>
+								<th>同业返利</th>
 								<th>最大让利</th>
-								<th>现结立减</th>
-								<th>产品活动</th>
-								<th>注意事项</th>
-								<th>产品编号</th>
+								<th>销售注意</th>
+								<th>儿童策略</th>
 								<th>机票信息</th>
 								<th>产品经理</th>
 							</tr>
@@ -92,16 +103,20 @@
 						<tbody data-bind="foreach: products">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenProducts" /></td>
+								<td data-bind="text: $data.product_number"></td>
+								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
 								<td data-bind="text: $data.location"></td>
 								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.product_model"></td>
 								<td data-bind="text: $data.days"></td>
-								<td data-bind="text: $data.business_price"></td>
-								<td data-bind="text: $data.product_value"></td>
+								<td
+									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
+								<td data-bind="text: $data.adult_price"></td>
+								<td data-bind="text: $data.child_price"></td>
+								<td data-bind="text: $data.business_profit_substract"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td data-bind="text: $data.product_number"></td>
+								<td data-bind="text: $data.sale_attention"></td>
+								<td data-bind="text: $data.sale_strategy"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
@@ -126,8 +141,9 @@
 	<div id="air-ticket-check" style="display: none; width: 800px">
 		<div class="input-row clearfloat">
 			<div style="width: 100%">
-				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label> <label class="l" data-bind="text:product().product_number"></label> <label
-					class="l" data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
+				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label>
+				<label class="l" data-bind="text:product().product_number"></label> <label class="l"
+					data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
 			</div>
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -157,7 +173,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product-box").addClass("current").children("ol").css("display", "block");
+		$(".product-box").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-box.js"></script>
 </body>

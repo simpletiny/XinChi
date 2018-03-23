@@ -15,7 +15,6 @@ import org.springframework.web.context.WebApplicationContext;
 import com.xinchi.bean.TaskBean;
 import com.xinchi.sys.xinchitask.dao.XinChiTaskDAO;
 
-
 /**
  * 定时执行的任务
  * 

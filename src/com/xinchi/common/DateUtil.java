@@ -1,5 +1,7 @@
 package com.xinchi.common;
 
+import static com.xinchi.common.SimpletinyString.isEmpty;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,6 +64,12 @@ public class DateUtil {
 
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(c.getTime());
+	}
+
+	public static String today() {
+		Calendar c = Calendar.getInstance();
+
+		return sdf1.format(c.getTime());
 	}
 
 	public static String getMinStr() {
@@ -187,14 +195,48 @@ public class DateUtil {
 			d = 2 - cal.get(Calendar.DAY_OF_WEEK);
 		}
 
-		cal.add(Calendar.DAY_OF_WEEK, d+6);
+		cal.add(Calendar.DAY_OF_WEEK, d + 6);
 		// 所在周结束日期
 		return sdf1.format(cal.getTime());
 
 	}
 
+	/**
+	 * 
+	 * @param date1
+	 * @param date2
+	 *            为空时为今天
+	 * @return 0 date1 = date2,1 date1>date2, 2 date1<date2
+	 */
+	public static int compare(String date1, String... date2) {
+		if (isEmpty(date1))
+			return 0;
+
+		try {
+			Date d1 = sdf1.parse(date1);
+			Date d2 = null;
+			if (date2.length > 0) {
+				d2 = sdf1.parse(date2[0]);
+			} else {
+				d2 = sdf1.parse(today());
+			}
+			if (d1.equals(d2)) {
+				return 0;
+			} else if (d1.after(d2)) {
+				return 1;
+			} else if (d1.before(d2)) {
+				return 2;
+			}
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	public static void main(String[] args) {
-		System.out.println(addDate(getThisWeekFirstDay(),-7));
-		System.out.println(addDate(getThisWeekFirstDay(),-1));
+		String d1 = "2018-03-22";
+		String d2 = "2018-03-21";
+		System.out.println(compare(d1,d2));
 	}
 }

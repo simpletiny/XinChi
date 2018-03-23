@@ -18,9 +18,9 @@ var ProductContext = function() {
 	};
 	self.status = [ 'N', 'Y', 'D' ];
 	self.saleMapping = {
-		'N' : "未上架",
-		'Y' : "已上架",
-		'D' : "已废弃"
+		'N' : "架下",
+		'Y' : "架上",
+		'D' : "废弃"
 	};
 	self.chosenStatuses = ko.observableArray([]);
 	self.chosenStatuses.push("N");
@@ -28,7 +28,8 @@ var ProductContext = function() {
 
 	// 新建产品
 	self.create = function() {
-		window.location.href = self.apiurl + "templates/product/product-creation.jsp";
+		window.location.href = self.apiurl
+				+ "templates/product/product-creation.jsp";
 	};
 	self.chosenProducts = ko.observableArray([]);
 	// 编辑产品
@@ -40,7 +41,24 @@ var ProductContext = function() {
 			fail_msg("维护只能选择一个产品！");
 			return;
 		} else if (self.chosenProducts().length == 1) {
-			window.location.href = self.apiurl + "templates/product/product-edit.jsp?key=" + self.chosenProducts();
+			window.location.href = self.apiurl
+					+ "templates/product/product-edit.jsp?key="
+					+ self.chosenProducts();
+		}
+	};
+
+	// 克隆产品
+	self.clone = function() {
+		if (self.chosenProducts().length == 0) {
+			fail_msg("请选择产品！");
+			return;
+		} else if (self.chosenProducts().length > 1) {
+			fail_msg("维护只能选择一个产品！");
+			return;
+		} else if (self.chosenProducts().length == 1) {
+			window.location.href = self.apiurl
+					+ "templates/product/product-clone.jsp?key="
+					+ self.chosenProducts();
 		}
 	};
 	self.onSale = function(sale_flg) {
@@ -63,6 +81,9 @@ var ProductContext = function() {
 			}
 			msg += "产品吗？";
 
+			if (sale_flg == "N") {
+				msg += "下架当日不能重新上架！";
+			}
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
@@ -73,7 +94,8 @@ var ProductContext = function() {
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("保存中！");
-						var data = "sale_flg=" + sale_flg + "&product_pks=" + self.chosenProducts();
+						var data = "sale_flg=" + sale_flg + "&product_pks="
+								+ self.chosenProducts();
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'product/onSaleProduct',
@@ -83,6 +105,8 @@ var ProductContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenProducts.removeAll();
+							} else if (str.split("&&")[0] == "second") {
+								self.secondOff(str.split("&&")[1], data);
 							} else {
 								fail_msg(str);
 							}
@@ -92,6 +116,36 @@ var ProductContext = function() {
 			});
 		}
 	};
+	self.secondOff = function(msg, data) {
+		msg += "强制下架会将待确认订单一并删除！！是否要强制下架？";
+		data += "&force_flg=Y"
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : msg,
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("保存中！");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'product/onSaleProduct',
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.refresh();
+							self.chosenProducts.removeAll();
+						} else {
+							fail_msg(str);
+						}
+					});
+				}
+			}
+		});
+	}
 
 	/**
 	 * 废弃产品
@@ -104,32 +158,42 @@ var ProductContext = function() {
 			fail_msg("只能选择一个产品！");
 			return;
 		} else if (self.chosenProducts().length == 1) {
-			$.layer({
-				area : [ 'auto', 'auto' ],
-				dialog : {
-					msg : '确认要废弃此产品吗？',
-					btns : 2,
-					type : 4,
-					btn : [ '确认', '取消' ],
-					yes : function(index) {
-						layer.close(index);
-						startLoadingIndicator("保存中！");
-						var data = "sale_flg=D" + "&product_pks=" + self.chosenProducts();
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'product/onSaleProduct',
-							data : data
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.refresh();
-								self.chosenProducts.removeAll();
-							} else {
-								fail_msg(str);
-							}
-						});
-					}
+			$.getJSON(self.apiurl
+					+ 'product/searchProductAirTicketInfoByProductPk', {
+				product_pk : self.chosenProducts()[0]
+			}, function(data) {
+				if (data.product.sale_flg == "Y") {
+					fail_msg("请选择未上架产品！");
+					return;
 				}
+				$.layer({
+					area : [ 'auto', 'auto' ],
+					dialog : {
+						msg : '确认要废弃此产品吗？',
+						btns : 2,
+						type : 4,
+						btn : [ '确认', '取消' ],
+						yes : function(index) {
+							layer.close(index);
+							startLoadingIndicator("保存中！");
+							var data = "sale_flg=D" + "&product_pks="
+									+ self.chosenProducts();
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'product/onSaleProduct',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+									self.chosenProducts.removeAll();
+								} else {
+									fail_msg(str);
+								}
+							});
+						}
+					}
+				});
 			});
 
 		}
@@ -146,7 +210,8 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 
-			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
+			$.getJSON(self.apiurl
+					+ 'product/searchProductAirTicketInfoByProductPk', {
 				product_pk : self.chosenProducts()[0]
 			}, function(data) {
 				self.product(data.product);
@@ -186,28 +251,30 @@ var ProductContext = function() {
 
 	self.checkAirTicket = function(product_pk) {
 
-		$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-			product_pk : product_pk
-		}, function(data) {
-			self.product(data.product);
+		$.getJSON(
+				self.apiurl + 'product/searchProductAirTicketInfoByProductPk',
+				{
+					product_pk : product_pk
+				}, function(data) {
+					self.product(data.product);
 
-			self.airTickets(data.air_tickets);
-			airTicketCheckLayer = $.layer({
-				type : 1,
-				title : [ '机票信息', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#air-ticket-check'
-				},
-				end : function() {
-				}
-			});
-		});
+					self.airTickets(data.air_tickets);
+					airTicketCheckLayer = $.layer({
+						type : 1,
+						title : [ '机票信息', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '800px', '500px' ],
+						offset : [ '', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#air-ticket-check'
+						},
+						end : function() {
+						}
+					});
+				});
 	};
 
 	self.products = ko.observable({
@@ -216,14 +283,16 @@ var ProductContext = function() {
 	});
 	self.refresh = function() {
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'product/searchProductsByPage', param, function(data) {
-			self.products(data.products);
+		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
+				function(data) {
+					self.products(data.products);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
@@ -259,9 +328,10 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -315,7 +385,7 @@ function saveTicket() {
 		var ticketJson = '[';
 		var tbody = $("#table-ticket tbody");
 		var allTickets = tbody.children();
-		for ( var i = 0; i < allTickets.length; i++) {
+		for (var i = 0; i < allTickets.length; i++) {
 			var current = allTickets[i];
 			var index = i + 1;
 			var start_day = $(current).find("[st='start-day']").val();
@@ -324,13 +394,16 @@ function saveTicket() {
 			var end_city = $(current).find("[st='end-city']").val();
 			var ticket_number = $(current).find("[st='ticket-number']").val();
 
-			if (start_day.trim() == "" || start_city.trim() == "" || end_day.trim() == "" || end_city.trim() == "") {
+			if (start_day.trim() == "" || start_city.trim() == ""
+					|| end_day.trim() == "" || end_city.trim() == "") {
 				fail_msg("请填写第" + index + "行非空项目！");
 				return;
 			}
 
-			ticketJson += '{"index":"' + index + '","start_day":"' + start_day + '","start_city":"' + start_city + '","end_day":"' + end_day + '","end_city":"' + end_city + '","ticket_number":"'
-					+ ticket_number + '"';
+			ticketJson += '{"index":"' + index + '","start_day":"' + start_day
+					+ '","start_city":"' + start_city + '","end_day":"'
+					+ end_day + '","end_city":"' + end_city
+					+ '","ticket_number":"' + ticket_number + '"';
 
 			if (i == allTickets.length - 1) {
 				ticketJson += '}';
@@ -364,7 +437,8 @@ function sameEnd(txt) {
 	var end = $(tr).find("input[st='end-day']");
 	var start_day = $(txt).val();
 	var end_day = $(end).val();
-	if (start_day.substring(0, start_day.length - 1) == end_day || end_day.trim() == "") {
+	if (start_day.substring(0, start_day.length - 1) == end_day
+			|| end_day.trim() == "") {
 		$(end).val(start_day);
 	}
 }

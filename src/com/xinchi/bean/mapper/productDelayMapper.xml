@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductDelayMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductDelayBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="adult_price" property="adult_price" jdbcType="DECIMAL" />
+		<result column="business_profit_substract" property="business_profit_substract" jdbcType="DECIMAL" />
+		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
+		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
+		<result column="product_child_value" property="product_child_value" jdbcType="DECIMAL" />
+		<result column="child_price" property="child_price" jdbcType="DECIMAL" />
+		<result column="update_cnt" property="update_cnt" jdbcType="INTEGER" />
+		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
+		<result column="gross_profit_rate" property="gross_profit_rate" jdbcType="FLOAT" />
+		<result column="cash_flow" property="cash_flow" jdbcType="DECIMAL" />
+		<result column="spot_cash" property="spot_cash" jdbcType="DECIMAL" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pk,
+		product_pk,
+		adult_price,
+		business_profit_substract,
+		max_profit_substract,
+		product_value,
+		product_child_value,
+		child_price,
+		update_cnt,
+		gross_profit,
+		gross_profit_rate,
+		cash_flow,
+		spot_cash,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_delay
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_delay
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<select id="selectByProductPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_delay
+		where product_pk = #{product_pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByProductPk" parameterType="java.lang.String">
+		delete from product_delay
+		where product_pk = #{product_pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductDelayBean">
+
+		insert into product_delay
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="product_pk != null">
+				product_pk,
+			</if>
+			<if test="adult_price != null">
+				adult_price,
+			</if>
+			<if test="business_profit_substract != null">
+				business_profit_substract,
+			</if>
+			<if test="max_profit_substract != null">
+				max_profit_substract,
+			</if>
+			<if test="product_value != null">
+				product_value,
+			</if>
+			<if test="product_child_value != null">
+				product_child_value,
+			</if>
+			<if test="child_price != null">
+				child_price,
+			</if>
+			<if test="update_cnt != null">
+				update_cnt,
+			</if>
+			<if test="gross_profit != null">
+				gross_profit,
+			</if>
+			<if test="gross_profit_rate != null">
+				gross_profit_rate,
+			</if>
+			<if test="cash_flow != null">
+				cash_flow,
+			</if>
+			<if test="spot_cash != null">
+				spot_cash,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="product_pk != null">
+				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="adult_price != null">
+				#{adult_price,jdbcType=DECIMAL},
+			</if>
+			<if test="business_profit_substract != null">
+				#{business_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="max_profit_substract != null">
+				#{max_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="product_value != null">
+				#{product_value,jdbcType=DECIMAL},
+			</if>
+			<if test="product_child_value != null">
+				#{product_child_value,jdbcType=DECIMAL},
+			</if>
+			<if test="child_price != null">
+				#{child_price,jdbcType=DECIMAL},
+			</if>
+			<if test="update_cnt != null">
+				#{update_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="gross_profit != null">
+				#{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit_rate != null">
+				#{gross_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="cash_flow != null">
+				#{cash_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_cash != null">
+				#{spot_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductDelayBean">
+		update product_delay
+		<set>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="product_pk != null">
+				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="adult_price != null">
+				adult_price = #{adult_price,jdbcType=DECIMAL},
+			</if>
+			<if test="business_profit_substract != null">
+				business_profit_substract = #{business_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="max_profit_substract != null">
+				max_profit_substract = #{max_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="product_value != null">
+				product_value = #{product_value,jdbcType=DECIMAL},
+			</if>
+			<if test="product_child_value != null">
+				product_child_value = #{product_child_value,jdbcType=DECIMAL},
+			</if>
+			<if test="child_price != null">
+				child_price = #{child_price,jdbcType=DECIMAL},
+			</if>
+			<if test="update_cnt != null">
+				update_cnt = #{update_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="gross_profit != null">
+				gross_profit = #{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_profit_rate != null">
+				gross_profit_rate = #{gross_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="cash_flow != null">
+				cash_flow = #{cash_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_cash != null">
+				spot_cash = #{spot_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductDelayBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_delay
+	</select>
+</mapper>

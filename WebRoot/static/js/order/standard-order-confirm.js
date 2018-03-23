@@ -249,7 +249,7 @@ var OrderContext = function() {
 				+ '<td><select class="form-control" style="height: 34px" st="sex">' + '<option value="">选择</option>' + '<option value="M">男</option>' + '<option value="F">女</option>'
 				+ '</select></td>' + '<td><input type="text" style="width: 90%" st="age" /></td>' + '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>' + '<td><input type="text" style="width: 90%" onblur="autoCaculate()" st="id" /></td>'
-				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" value="' + self.product().business_price + '" st="price" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" value="' + self.product().adult_price + '" st="price" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>' + '<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input'
 				+ 'type="hidden"/></td>' + '<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input' + 'type="hidden"/></td>'
 				+ '<td><input type="button" style="width: 50px" onclick= "removeName(this)" alt="删除名单" value="-" /></td>' + '</tr>';
@@ -334,25 +334,30 @@ function autoCaculate() {
 	var audultCnt = 0;
 	var childrenCnt = 0;
 	var sumMoney = 0;
-	var otherCost = $("#other-cost").val() - 0;
-	for ( var i = 0; i < trs.length; i++) {
+	var otherCost = $("#other-cost").val()-0;
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		var td_id = $(tr).find("[st='id']");
 		var td_price = $(tr).find("[st='price']");
 		var id = $(td_id).val();
-		var price = $(td_price).val() - 0;
+		
 		if (id.length < 18)
 			continue;
-
-		sumMoney += price;
+		
+	
 		var birthday = id.substring(6, 14);
 		if (isChild(birthday)) {
+			$(td_price).val(ctx.product().child_price);
 			childrenCnt++;
-		} else {
+		}else{
+			$(td_price).val(ctx.product().adult_price);
 			audultCnt++;
 		}
+		
+		var price = $(td_price).val() - 0;
+		sumMoney += price;
 	}
-	sumMoney += otherCost;
+	sumMoney +=otherCost;
 	if (sumMoney != 0) {
 		$("#txt-auto-sum-money").text(sumMoney);
 		$("#auto-sum-money").val(sumMoney);

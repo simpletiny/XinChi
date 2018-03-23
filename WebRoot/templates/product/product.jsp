@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -12,7 +11,7 @@
 <head>
 <title>欣驰国际</title>
 <style>
-#table-ticket th,#table-ticket td {
+#table-ticket th, #table-ticket td {
 	text-align: center;
 }
 
@@ -36,6 +35,14 @@
 	color: red;
 	font-weight: bold;
 }
+
+tr td {
+	text-overflow: ellipsis; /* for IE */
+	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left
+}
 </style>
 </head>
 <body>
@@ -51,18 +58,20 @@
 					<div class="form-group">
 						<div style="width: 50%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { create() }">新建</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { clone() }">克隆</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { bindingTicket() }">机票</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">废弃</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">删除</button>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-md-6">
 							<div data-bind="foreach: status" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="product.statuses" /><label
-									data-bind="text: $root.saleMapping[$data]"></label>
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
+									name="product.statuses" /><label data-bind="text: $root.saleMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -83,7 +92,9 @@
 						<div align="left">
 							<label class="col-md-1 control-label">产品线</label>
 							<div class="col-md-2" style="float: left">
-								<select class="form-control" style="height: 34px" data-bind="options: locations,value:product().location, optionsCaption: '--请选择--',event:{change:refresh}" name="product.location"></select>
+								<select class="form-control" style="height: 34px"
+									data-bind="options: locations,value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
+									name="product.location"></select>
 							</div>
 						</div>
 					</div>
@@ -92,7 +103,8 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px" id="select-sales"
+										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
 										name="product.product_manager"></select>
 								</div>
 							</div>
@@ -109,19 +121,20 @@
 						<thead>
 							<tr role="row">
 								<th></th>
-								<th>产品编号</th>
+								<th>序</th>
 								<th>状态</th>
-								<th>线路</th>
+								<th>产品编号</th>
 								<th>名称</th>
+								<th>型号</th>
 								<th>天数</th>
-								<th>同业价格</th>
-								<th>产品分值</th>
+								<th>直客报价</th>
+								<th>同业返利</th>
 								<th>最大让利</th>
-								<th>机票信息</th>
-								<th>机票成本</th>
-								<th>其它成本</th>
-								<th>毛利</th>
-								<th>毛利率</th>
+								<th title="成人/儿童">销售分值</th>
+								<th>首段城市对</th>
+								<th>销售注意</th>
+								<th>儿童策略</th>
+								<th>机票</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>产品经理</th>
 								</s:if>
@@ -130,9 +143,12 @@
 						<tbody data-bind="foreach: products">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenProducts" /></td>
-								<td data-bind="text: $data.product_number"></td>
-								<!-- ko if: $data.sale_flg =='N' -->
-								<td data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
+								<td data-bind="text:$index()+1"></td>
+								<!-- ko if: $data.sale_flg =='N' && $data.product_number ==null -->
+								<td>新建</td>
+								<!-- /ko -->
+								<!-- ko if: $data.sale_flg =='N' && $data.product_number !=null -->
+								<td style="color: grey" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sale_flg =='Y' -->
 								<td style="color: green" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
@@ -140,22 +156,26 @@
 								<!-- ko if: $data.sale_flg =='D' -->
 								<td style="color: red" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
 								<!-- /ko -->
-								<td data-bind="text: $data.location"></td>
+								<td data-bind="text: $data.product_number"></td>
 								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.product_model"></td>
 								<td data-bind="text: $data.days"></td>
-								<td data-bind="text: $data.business_price"></td>
-								<td data-bind="text: $data.product_value"></td>
+								<td data-bind="text: $data.adult_price"></td>
+								<td data-bind="text: $data.business_profit_substract"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
+
+								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+								<td
+									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
+								<td data-bind="text: $data.sale_attention"></td>
+								<td data-bind="text: $data.sale_strategy"></td>
+
 								<!-- ko if: $data.air_ticket_charge=='NO' -->
 								<td>未绑定</td>
 								<!-- /ko -->
 								<!-- ko if: $data.air_ticket_charge!='NO' -->
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
 								<!-- /ko -->
-								<td data-bind="text: $data.air_ticket_cost"></td>
-								<td data-bind="text: $data.other_cost"></td>
-								<td data-bind="text: $data.gross_profit"></td>
-								<td data-bind="text: $data.gross_profit_rate+'%'"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
@@ -182,10 +202,12 @@
 		<div class="input-row clearfloat">
 			<form id="form-ticket">
 				<div style="width: 100%">
-					<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <input type="hidden" data-bind="value:product().pk" name="product_pk" /> <label class="l">产品编号</label> <label
-						class="l" data-bind="text:product().product_number"></label>
+					<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <input type="hidden"
+						data-bind="value:product().pk" name="product_pk" /> <label class="l">产品编号</label> <label class="l"
+						data-bind="text:product().product_number"></label>
 					<div data-bind="foreach: allCharges" style="padding-top: 4px;">
-						<em class="small-box"> <input type="radio" value="PRODUCT" name="ticket_charge" data-bind="attr: {'value': $data}, checked: $root.chosenCharge" onclick="changeCharge($(this).val())" /><label
+						<em class="small-box"> <input type="radio" value="PRODUCT" name="ticket_charge"
+							data-bind="attr: {'value': $data}, checked: $root.chosenCharge" onclick="changeCharge($(this).val())" /><label
 							data-bind="text:$root.chargeMapping[$data]"></label>
 						</em>
 					</div>
@@ -244,8 +266,9 @@
 	<div id="air-ticket-check" style="display: none; width: 800px">
 		<div class="input-row clearfloat">
 			<div style="width: 100%">
-				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label> <label class="l" data-bind="text:product().product_number"></label> <label
-					class="l" data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
+				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label>
+				<label class="l" data-bind="text:product().product_number"></label> <label class="l"
+					data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
 			</div>
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -274,7 +297,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product.js"></script>
 </body>

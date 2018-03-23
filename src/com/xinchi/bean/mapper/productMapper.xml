@@ -6,7 +6,6 @@
 		<result column="product_number" property="product_number" jdbcType="VARCHAR" />
 		<result column="location" property="location" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
-	
 		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
 		<result column="business_price" property="business_price" jdbcType="DECIMAL" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
@@ -15,19 +14,37 @@
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
-		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
-		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="air_ticket_charge" property="air_ticket_charge" jdbcType="VARCHAR" />
-		
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
 		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
 		<result column="gross_profit_rate" property="gross_profit_rate" jdbcType="FLOAT" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
+		<result column="adult_price" property="adult_price" jdbcType="DECIMAL" />
+		<result column="child_price" property="child_price" jdbcType="DECIMAL" />
+		<result column="business_profit_substract" property="business_profit_substract" jdbcType="DECIMAL" />
+		<result column="air_ticket_child_cost" property="air_ticket_child_cost" jdbcType="DECIMAL" />
+		<result column="local_adult_cost" property="local_adult_cost" jdbcType="DECIMAL" />
+		<result column="local_child_cost" property="local_child_cost" jdbcType="DECIMAL" />
+		<result column="other_child_cost" property="other_child_cost" jdbcType="DECIMAL" />
+		<result column="product_child_value" property="product_child_value" jdbcType="DECIMAL" />
+		<result column="cash_flow" property="cash_flow" jdbcType="DECIMAL" />
+		<result column="spot_cash" property="spot_cash" jdbcType="DECIMAL" />
+		<result column="first_air_start" property="first_air_start" jdbcType="VARCHAR" />
+		<result column="first_air_end" property="first_air_end" jdbcType="VARCHAR" />
+		<result column="sale_attention" property="sale_attention" jdbcType="VARCHAR" />
+		<result column="sale_strategy" property="sale_strategy" jdbcType="VARCHAR" />
+		<result column="strict_price_flg" property="strict_price_flg" jdbcType="CHAR" />
+		<result column="cash_flow_air_flg" property="cash_flow_air_flg" jdbcType="CHAR" />
+		<result column="cash_flow_local_flg" property="cash_flow_local_flg" jdbcType="CHAR" />
+		<result column="cash_flow_other_flg" property="cash_flow_other_flg" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="off_shelves_date" property="off_shelves_date" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-
 		name,
 		product_number,
 		location,
@@ -40,14 +57,34 @@
 		pk,
 		create_user,
 		update_user,
-		create_time,
-		update_time,
 		air_ticket_charge,
+		product_value,
 		air_ticket_cost,
 		other_cost,
 		gross_profit,
 		gross_profit_rate,
-		product_value
+		product_model,
+		adult_price,
+		child_price,
+		business_profit_substract,
+		air_ticket_child_cost,
+		local_adult_cost,
+		local_child_cost,
+		other_child_cost,
+		product_child_value,
+		cash_flow,
+		spot_cash,
+		first_air_start,
+		first_air_end,
+		sale_attention,
+		sale_strategy,
+		strict_price_flg,
+		cash_flow_air_flg,
+		cash_flow_local_flg,
+		cash_flow_other_flg,
+		create_time,
+		update_time,
+		off_shelves_date
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -102,14 +139,11 @@
 			<if test="update_user != null">
 				update_user,
 			</if>
-			<if test="create_time != null">
-				create_time,
-			</if>
-			<if test="update_time != null">
-				update_time,
-			</if>
 			<if test="air_ticket_charge != null">
 				air_ticket_charge,
+			</if>
+			<if test="product_value != null">
+				product_value,
 			</if>
 			<if test="air_ticket_cost != null">
 				air_ticket_cost,
@@ -123,8 +157,71 @@
 			<if test="gross_profit_rate != null">
 				gross_profit_rate,
 			</if>
-			<if test="product_value != null">
-				product_value,
+			<if test="product_model != null">
+				product_model,
+			</if>
+			<if test="adult_price != null">
+				adult_price,
+			</if>
+			<if test="child_price != null">
+				child_price,
+			</if>
+			<if test="business_profit_substract != null">
+				business_profit_substract,
+			</if>
+			<if test="air_ticket_child_cost != null">
+				air_ticket_child_cost,
+			</if>
+			<if test="local_adult_cost != null">
+				local_adult_cost,
+			</if>
+			<if test="local_child_cost != null">
+				local_child_cost,
+			</if>
+			<if test="other_child_cost != null">
+				other_child_cost,
+			</if>
+			<if test="product_child_value != null">
+				product_child_value,
+			</if>
+			<if test="cash_flow != null">
+				cash_flow,
+			</if>
+			<if test="spot_cash != null">
+				spot_cash,
+			</if>
+			<if test="first_air_start != null">
+				first_air_start,
+			</if>
+			<if test="first_air_end != null">
+				first_air_end,
+			</if>
+			<if test="sale_attention != null">
+				sale_attention,
+			</if>
+			<if test="sale_strategy != null">
+				sale_strategy,
+			</if>
+			<if test="strict_price_flg != null">
+				strict_price_flg,
+			</if>
+			<if test="cash_flow_air_flg != null">
+				cash_flow_air_flg,
+			</if>
+			<if test="cash_flow_local_flg != null">
+				cash_flow_local_flg,
+			</if>
+			<if test="cash_flow_other_flg != null">
+				cash_flow_other_flg,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="off_shelves_date != null">
+				off_shelves_date,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -164,16 +261,12 @@
 			<if test="update_user != null">
 				#{update_user,jdbcType=VARCHAR},
 			</if>
-			<if test="create_time != null">
-				#{create_time,jdbcType=VARCHAR},
-			</if>
-			<if test="update_time != null">
-				#{update_time,jdbcType=VARCHAR},
-			</if>
 			<if test="air_ticket_charge != null">
 				#{air_ticket_charge,jdbcType=VARCHAR},
 			</if>
-			
+			<if test="product_value != null">
+				#{product_value,jdbcType=DECIMAL},
+			</if>
 			<if test="air_ticket_cost != null">
 				#{air_ticket_cost,jdbcType=DECIMAL},
 			</if>
@@ -186,8 +279,71 @@
 			<if test="gross_profit_rate != null">
 				#{gross_profit_rate,jdbcType=FLOAT},
 			</if>
-			<if test="product_value != null">
-				#{product_value,jdbcType=DECIMAL},
+			<if test="product_model != null">
+				#{product_model,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_price != null">
+				#{adult_price,jdbcType=DECIMAL},
+			</if>
+			<if test="child_price != null">
+				#{child_price,jdbcType=DECIMAL},
+			</if>
+			<if test="business_profit_substract != null">
+				#{business_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="air_ticket_child_cost != null">
+				#{air_ticket_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="local_adult_cost != null">
+				#{local_adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="local_child_cost != null">
+				#{local_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_child_cost != null">
+				#{other_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="product_child_value != null">
+				#{product_child_value,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_flow != null">
+				#{cash_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_cash != null">
+				#{spot_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="first_air_start != null">
+				#{first_air_start,jdbcType=VARCHAR},
+			</if>
+			<if test="first_air_end != null">
+				#{first_air_end,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_attention != null">
+				#{sale_attention,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_strategy != null">
+				#{sale_strategy,jdbcType=VARCHAR},
+			</if>
+			<if test="strict_price_flg != null">
+				#{strict_price_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_air_flg != null">
+				#{cash_flow_air_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_local_flg != null">
+				#{cash_flow_local_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_other_flg != null">
+				#{cash_flow_other_flg,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="off_shelves_date != null">
+				#{off_shelves_date,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -232,13 +388,12 @@
 			<if test="update_user != null">
 				update_user = #{update_user,jdbcType=VARCHAR},
 			</if>
-			<if test="update_time != null">
-				update_time = #{update_time,jdbcType=VARCHAR},
-			</if>
 			<if test="air_ticket_charge != null">
 				air_ticket_charge = #{air_ticket_charge,jdbcType=VARCHAR},
 			</if>
-			
+			<if test="product_value != null">
+				product_value = #{product_value,jdbcType=DECIMAL},
+			</if>
 			<if test="air_ticket_cost != null">
 				air_ticket_cost = #{air_ticket_cost,jdbcType=DECIMAL},
 			</if>
@@ -246,13 +401,73 @@
 				other_cost = #{other_cost,jdbcType=DECIMAL},
 			</if>
 			<if test="gross_profit != null">
-				gross_profit =#{gross_profit,jdbcType=DECIMAL},
+				gross_profit = #{gross_profit,jdbcType=DECIMAL},
 			</if>
 			<if test="gross_profit_rate != null">
 				gross_profit_rate = #{gross_profit_rate,jdbcType=FLOAT},
 			</if>
-			<if test="product_value != null">
-				product_value = #{product_value,jdbcType=DECIMAL},
+			<if test="product_model != null">
+				product_model = #{product_model,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_price != null">
+				adult_price = #{adult_price,jdbcType=DECIMAL},
+			</if>
+			<if test="child_price != null">
+				child_price = #{child_price,jdbcType=DECIMAL},
+			</if>
+			<if test="business_profit_substract != null">
+				business_profit_substract = #{business_profit_substract,jdbcType=DECIMAL},
+			</if>
+			<if test="air_ticket_child_cost != null">
+				air_ticket_child_cost = #{air_ticket_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="local_adult_cost != null">
+				local_adult_cost = #{local_adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="local_child_cost != null">
+				local_child_cost = #{local_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="other_child_cost != null">
+				other_child_cost = #{other_child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="product_child_value != null">
+				product_child_value = #{product_child_value,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_flow != null">
+				cash_flow = #{cash_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_cash != null">
+				spot_cash = #{spot_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="first_air_start != null">
+				first_air_start = #{first_air_start,jdbcType=VARCHAR},
+			</if>
+			<if test="first_air_end != null">
+				first_air_end = #{first_air_end,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_attention != null">
+				sale_attention = #{sale_attention,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_strategy != null">
+				sale_strategy = #{sale_strategy,jdbcType=VARCHAR},
+			</if>
+			<if test="strict_price_flg != null">
+				strict_price_flg = #{strict_price_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_air_flg != null">
+				cash_flow_air_flg = #{cash_flow_air_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_local_flg != null">
+				cash_flow_local_flg = #{cash_flow_local_flg,jdbcType=CHAR},
+			</if>
+			<if test="cash_flow_other_flg != null">
+				cash_flow_other_flg = #{cash_flow_other_flg,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="off_shelves_date != null">
+				off_shelves_date = #{off_shelves_date,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
@@ -264,6 +479,9 @@
 		<where>
 			<if test="name !=null and name !='' ">
 				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="product_model !=null and product_model !='' ">
+				and product_model = #{product_model,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -284,21 +502,43 @@
 		A.days,
 		A.max_profit_substract,
 		A.business_price,
-		B.user_name AS product_manager,
+		B.user_name AS
+		product_manager,
 		A.sale_flg,
 		A.comment,
 		A.pk,
 		A.create_user,
 		A.update_user,
-		A.create_time,
-		A.update_time,
 		A.air_ticket_charge,
+		A.product_value,
 		A.air_ticket_cost,
 		A.other_cost,
 		A.gross_profit,
 		A.gross_profit_rate,
-		A.product_value
-		from product A
+		A.product_model,
+		A.adult_price,
+		A.child_price,
+		A.business_profit_substract,
+		A.air_ticket_child_cost,
+		A.local_adult_cost,
+		A.local_child_cost,
+		A.other_child_cost,
+		A.product_child_value,
+		A.cash_flow,
+		A.spot_cash,
+		A.first_air_start,
+		A.first_air_end,
+		A.sale_attention,
+		A.sale_strategy,
+		A.strict_price_flg,
+		A.cash_flow_air_flg,
+		A.cash_flow_local_flg,
+		A.cash_flow_other_flg,
+		A.create_time,
+		A.update_time,
+		A.off_shelves_date
+		from
+		product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number
 		<where>
 			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
@@ -311,13 +551,13 @@
 				and A.name like concat('%', #{params.bo.name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.locations != null and params.bo.locations !=''">
-				and A.location in 
+				and A.location in
 				<foreach item="item" index="index" collection="params.bo.locations" open="(" separator="," close=")">
 					#{params.bo.locations[${index}]}
 				</foreach>
 			</if>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
-				and A.sale_flg in 
+				and A.sale_flg in
 				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
 					#{params.bo.statuses[${index}]}
 				</foreach>

@@ -1,7 +1,9 @@
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.product = ko.observable({});
+	self.product = ko.observable({
+		first_air_start : "哈尔滨"
+	});
 	self.supplierEmployees = ko.observable({});
 
 	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
@@ -11,7 +13,7 @@ var ProductContext = function() {
 		}
 
 		var allNeeds = $('.need');
-		for ( var i = 0; i < allNeeds.length; i++) {
+		for (var i = 0; i < allNeeds.length; i++) {
 			var current = allNeeds[i];
 			if ($(current).val().trim() == "") {
 				fail_msg("请填写必填项目！");
@@ -24,7 +26,7 @@ var ProductContext = function() {
 		var json = '[';
 		var tbody = $("#table-supplier tbody");
 		var trs = $(tbody).children();
-		for ( var i = 0; i < trs.length; i++) {
+		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			var index = i + 1;
 			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
@@ -32,7 +34,8 @@ var ProductContext = function() {
 			if (supplierEmployeePk == '')
 				continue;
 
-			var supplierProductName = $(tr).find("[st='supplier-product-name']").val();
+			var supplierProductName = $(tr)
+					.find("[st='supplier-product-name']").val();
 			var supplierCost = $(tr).find("[st='supplier-cost']").val();
 
 			var landDay = $(tr).find("[st='land-day']").val();
@@ -42,9 +45,14 @@ var ProductContext = function() {
 			var offDay = $(tr).find("[st='off-day']").val();
 			var sendType = $(tr).find("[st='send-type']").val();
 
-			var current = '{"supplier_index":"' + index + '","supplier_employee_pk":"' + supplierEmployeePk + '","supplier_product_name":"' + supplierProductName + '","supplier_cost":"'
-					+ supplierCost + '","land_day":"' + landDay + '","pick_type":"' + pickType + '","picker":"' + picker + '","picker_cellphone":"' + pickerCellphone + '","off_day":"' + offDay
-					+ '","send_type":"' + sendType + '"}';
+			var current = '{"supplier_index":"' + index
+					+ '","supplier_employee_pk":"' + supplierEmployeePk
+					+ '","supplier_product_name":"' + supplierProductName
+					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
+					+ landDay + '","pick_type":"' + pickType + '","picker":"'
+					+ picker + '","picker_cellphone":"' + pickerCellphone
+					+ '","off_day":"' + offDay + '","send_type":"' + sendType
+					+ '"}';
 			if (i == trs.length - 1) {
 				json += current + ']';
 			} else {
@@ -52,34 +60,36 @@ var ProductContext = function() {
 			}
 		}
 
-		;
-		
-		var data = $("form").serialize()+"&product.gross_profit_rate="+gross_profit_rate;
+		var data = $("form").serialize();
 		data += "&json=" + json;
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/createProduct',
 			data : data
-		}).success(function(str) {
-			endLoadingIndicator();
-			if (str == "success") {
-				window.location.href = self.apiurl + "templates/product/product.jsp";
-			} else if (str == "exists") {
-				fail_msg("产品库中存在同名产品！");
-				endLoadingIndicator();
-			}
-		});
+		}).success(
+				function(str) {
+					endLoadingIndicator();
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/product/product.jsp";
+					} else if (str == "exists") {
+						fail_msg("产品库中存在同名产品！");
+						endLoadingIndicator();
+					}
+				});
 
 	};
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -125,9 +135,10 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -142,8 +153,7 @@ var ProductContext = function() {
 var ctx = new ProductContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
-	$("#other-cost").disabled();
-	$("#gross-profit").disabled();
+	$("#local-adult-cost").disabled();
 });
 var currentSupplier;
 var supplierEmployeeLayer;
@@ -189,7 +199,7 @@ function deleteRow(btn) {
 function refreshIndex() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		$(tr).find("td[st='index']").html(i + 1);
 	}
@@ -202,39 +212,59 @@ function caculateOtherCost() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
 	var sum = 0;
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		var supplierCost = $(tr).find("[st='supplier-cost']").val();
 		sum += supplierCost - 0;
 	}
 
-	$("#other-cost").val(sum);
+	$("#local-adult-cost").val(sum);
 	caculateGrossProfit();
 }
-var gross_profit_rate = 0;
+
 function caculateGrossProfit() {
-	var business_price = $("#business-price").val();
-	var air_ticket_cost = $("#air-ticket-cost").val();
-	var other_cost = $("#other-cost").val();
-	var max_profit_substract = $("#max-profit-substract").val();
+	var adult_price = $("#adult-price").val() - 0;
+	var business_profit_substract = $("#business-profit-substract").val() - 0;
+	var max_profit_substract = $("#max-profit-substract").val() - 0;
+	// 产品价格
+	var product_price = adult_price - business_profit_substract
+			- max_profit_substract;
 
-	var gross_profit = 0;
-	if (business_price != "" && air_ticket_cost != "" && other_cost != "" && max_profit_substract != "") {
-		gross_profit = (business_price - 0) - (air_ticket_cost - 0) - (other_cost - 0) - (max_profit_substract - 0);
-		$("#gross-profit").val(gross_profit);
+	var local_adult_cost = $("#local-adult-cost").val() - 0;
+	var air_ticket_cost = $("#air-ticket-cost").val() - 0;
+	var other_cost = $("#other-cost").val() - 0;
 
-		var denominator = (air_ticket_cost - 0) - (other_cost - 0);
-		var numerator = gross_profit;
+	// 毛利
+	var gross_profit = product_price - local_adult_cost - air_ticket_cost
+			- other_cost;
+	$("#gross-profit").text(gross_profit);
+	$("#txt-gross-profit").val(gross_profit);
 
-		if (denominator != 0) {
-			gross_profit_rate = (100 * Math.floor(numerator) / Math.floor(denominator)).toFixed(0);
-		} else {
-			gross_profit_rate = 0;
-		}
-
-		$("#gross-profit-rate").text(gross_profit_rate + "%");
-	} else {
-		$("#gross-profit").val("");
-		$("#gross-profit-rate").text("");
+	// 毛利率
+	var gross_profit_rate = 0;
+	if (adult_price - business_profit_substract != 0) {
+		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract))
+				.toFixed(2));
+		gross_profit_rate = Math.ceil(gross_profit_rate * 100);
 	}
+	$("#gross-profit-rate").text(gross_profit_rate + "%");
+	$("#txt-gross-profit-rate").val(gross_profit_rate);
+
+	// 现付资金
+	var spot_cash = 0;
+	if ($("#chk-air-ticket").is(":checked"))
+		spot_cash += air_ticket_cost;
+	if ($("#chk-local").is(":checked"))
+		spot_cash += local_adult_cost;
+	if ($("#chk-other").is(":checked"))
+		spot_cash += other_cost;
+
+	$("#spot-cash").text(spot_cash)
+	$("#txt-spot-cash").val(spot_cash);
+
+	// 现金流
+	var cash_flow = product_price - spot_cash;
+	$("#cash-flow").text(cash_flow);
+	$("#txt-cash-flow").val(cash_flow);
+
 }

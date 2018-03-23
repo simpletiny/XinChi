@@ -54,6 +54,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private BigDecimal product_cost;
 
 	private String passenger_captain;
+	private BigDecimal product_value;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
@@ -365,6 +366,14 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setNext_day(int next_day) {
 		this.next_day = next_day;
+	}
+
+	public BigDecimal getProduct_value() {
+		return product_value;
+	}
+
+	public void setProduct_value(BigDecimal product_value) {
+		this.product_value = product_value;
 	}
 
 }

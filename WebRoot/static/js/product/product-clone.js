@@ -26,28 +26,7 @@ var ProductContext = function() {
 		caculateOtherCost();
 	});
 
-	self.updateProductConfirm = function() {
-		var sale_flg = self.product().sale_flg;
-		if (sale_flg == 'Y') {
-			$.layer({
-				area : [ 'auto', 'auto' ],
-				dialog : {
-					msg : '架上产品更新，价格信息将于次日凌晨生效！',
-					btns : 2,
-					type : 4,
-					btn : [ '确认', '取消' ],
-					yes : function(index) {
-						layer.close(index);
-						self.updateProduct();
-					}
-				}
-			});
-		} else {
-			self.updateProduct();
-		}
-	}
-
-	self.updateProduct = function() {
+	self.saveProduct = function() {
 		if (!$("form").valid()) {
 			return;
 		}
@@ -99,22 +78,10 @@ var ProductContext = function() {
 		}
 
 		var data = $("form").serialize();
-		if (!$("#chk-strict").is(":checked"))
-			data += "&product.strict_price_flg=N";
-
-		if (!$("#chk-air-ticket").is(":checked"))
-			data += "&product.cash_flow_air_flg=N";
-
-		if (!$("#chk-local").is(":checked"))
-			data += "&product.cash_flow_local_flg=N";
-
-		if (!$("#chk-other").is(":checked"))
-			data += "&product.cash_flow_other_flg=N";
-
 		data += "&json=" + json;
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'product/updateProduct',
+			url : self.apiurl + 'product/createProduct',
 			data : data
 		}).success(
 				function(str) {
@@ -124,8 +91,7 @@ var ProductContext = function() {
 								+ "templates/product/product.jsp";
 					} else if (str == "exists") {
 						fail_msg("产品库中存在同名产品！");
-					} else if (str == "more_update") {
-						fail_msg("架上产品一天最多更新三次！");
+						endLoadingIndicator();
 					}
 				});
 

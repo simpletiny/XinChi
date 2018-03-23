@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -52,6 +53,11 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	@Override
 	public OrderDto searchCOrderByPk(String order_pk) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.searchCOrderByPk", order_pk);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScore", page);
 	}
 
 }

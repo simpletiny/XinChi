@@ -7,7 +7,7 @@ import java.util.List;
 import com.xinchi.common.SupperBO;
 
 public class ProductBean extends SupperBO implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4179083864639813045L;
 
 	private String name;
 
@@ -15,16 +15,15 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private String location;
 
-	private List<String> locations;
-
 	private Integer days;
 
-	private BigDecimal max_profit_substract;
+	private java.math.BigDecimal max_profit_substract;
 
-	private BigDecimal business_price;
-	private String sale_flg;
+	private java.math.BigDecimal business_price;
 
 	private String product_manager;
+
+	private String sale_flg;
 
 	private String comment;
 
@@ -33,15 +32,61 @@ public class ProductBean extends SupperBO implements Serializable {
 	private String create_user;
 
 	private String update_user;
+
 	private String air_ticket_charge;
 
-	private BigDecimal air_ticket_cost;
-	private BigDecimal other_cost;
-	private BigDecimal gross_profit;
+	private java.math.BigDecimal product_value;
+
+	private java.math.BigDecimal air_ticket_cost;
+
+	private java.math.BigDecimal other_cost;
+
+	private java.math.BigDecimal gross_profit;
+
 	private float gross_profit_rate;
 
-	private BigDecimal product_value;
+	private String product_model;
 
+	private java.math.BigDecimal adult_price;
+
+	private java.math.BigDecimal child_price;
+
+	private java.math.BigDecimal business_profit_substract;
+
+	private java.math.BigDecimal air_ticket_child_cost;
+
+	private java.math.BigDecimal local_adult_cost;
+
+	private java.math.BigDecimal local_child_cost;
+
+	private java.math.BigDecimal other_child_cost;
+
+	private java.math.BigDecimal product_child_value;
+
+	private java.math.BigDecimal cash_flow;
+
+	private java.math.BigDecimal spot_cash;
+
+	private String first_air_start;
+
+	private String first_air_end;
+
+	private String sale_attention;
+
+	private String sale_strategy;
+
+	private String strict_price_flg;
+
+	private String cash_flow_air_flg;
+
+	private String cash_flow_local_flg;
+
+	private String cash_flow_other_flg;
+
+	private String off_shelves_date;
+
+	// search options
+	private List<String> locations;
 	private List<String> statuses;
 
 	public String getName() {
@@ -202,6 +247,166 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setStatuses(List<String> statuses) {
 		this.statuses = statuses;
+	}
+
+	public String getProduct_model() {
+		return product_model;
+	}
+
+	public java.math.BigDecimal getAdult_price() {
+		return adult_price;
+	}
+
+	public java.math.BigDecimal getChild_price() {
+		return child_price;
+	}
+
+	public java.math.BigDecimal getBusiness_profit_substract() {
+		return business_profit_substract;
+	}
+
+	public java.math.BigDecimal getAir_ticket_child_cost() {
+		return air_ticket_child_cost;
+	}
+
+	public java.math.BigDecimal getLocal_adult_cost() {
+		return local_adult_cost;
+	}
+
+	public java.math.BigDecimal getLocal_child_cost() {
+		return local_child_cost;
+	}
+
+	public java.math.BigDecimal getOther_child_cost() {
+		return other_child_cost;
+	}
+
+	public java.math.BigDecimal getProduct_child_value() {
+		return product_child_value;
+	}
+
+	public java.math.BigDecimal getCash_flow() {
+		return cash_flow;
+	}
+
+	public java.math.BigDecimal getSpot_cash() {
+		return spot_cash;
+	}
+
+	public String getFirst_air_start() {
+		return first_air_start;
+	}
+
+	public String getFirst_air_end() {
+		return first_air_end;
+	}
+
+	public String getSale_attention() {
+		return sale_attention;
+	}
+
+	public String getSale_strategy() {
+		return sale_strategy;
+	}
+
+	public String getStrict_price_flg() {
+		return strict_price_flg;
+	}
+
+	public String getCash_flow_air_flg() {
+		return cash_flow_air_flg;
+	}
+
+	public String getCash_flow_local_flg() {
+		return cash_flow_local_flg;
+	}
+
+	public String getCash_flow_other_flg() {
+		return cash_flow_other_flg;
+	}
+
+	public void setProduct_model(String product_model) {
+		this.product_model = product_model;
+	}
+
+	public void setAdult_price(java.math.BigDecimal adult_price) {
+		this.adult_price = adult_price;
+	}
+
+	public void setChild_price(java.math.BigDecimal child_price) {
+		this.child_price = child_price;
+	}
+
+	public void setBusiness_profit_substract(java.math.BigDecimal business_profit_substract) {
+		this.business_profit_substract = business_profit_substract;
+	}
+
+	public void setAir_ticket_child_cost(java.math.BigDecimal air_ticket_child_cost) {
+		this.air_ticket_child_cost = air_ticket_child_cost;
+	}
+
+	public void setLocal_adult_cost(java.math.BigDecimal local_adult_cost) {
+		this.local_adult_cost = local_adult_cost;
+	}
+
+	public void setLocal_child_cost(java.math.BigDecimal local_child_cost) {
+		this.local_child_cost = local_child_cost;
+	}
+
+	public void setOther_child_cost(java.math.BigDecimal other_child_cost) {
+		this.other_child_cost = other_child_cost;
+	}
+
+	public void setProduct_child_value(java.math.BigDecimal product_child_value) {
+		this.product_child_value = product_child_value;
+	}
+
+	public void setCash_flow(java.math.BigDecimal cash_flow) {
+		this.cash_flow = cash_flow;
+	}
+
+	public void setSpot_cash(java.math.BigDecimal spot_cash) {
+		this.spot_cash = spot_cash;
+	}
+
+	public void setFirst_air_start(String first_air_start) {
+		this.first_air_start = first_air_start;
+	}
+
+	public void setFirst_air_end(String first_air_end) {
+		this.first_air_end = first_air_end;
+	}
+
+	public void setSale_attention(String sale_attention) {
+		this.sale_attention = sale_attention;
+	}
+
+	public void setSale_strategy(String sale_strategy) {
+		this.sale_strategy = sale_strategy;
+	}
+
+	public void setStrict_price_flg(String strict_price_flg) {
+		this.strict_price_flg = strict_price_flg;
+	}
+
+	public void setCash_flow_air_flg(String cash_flow_air_flg) {
+		this.cash_flow_air_flg = cash_flow_air_flg;
+	}
+
+	public void setCash_flow_local_flg(String cash_flow_local_flg) {
+		this.cash_flow_local_flg = cash_flow_local_flg;
+	}
+
+	public void setCash_flow_other_flg(String cash_flow_other_flg) {
+		this.cash_flow_other_flg = cash_flow_other_flg;
+	}
+
+	public String getOff_shelves_date() {
+		return off_shelves_date;
+	}
+
+	public void setOff_shelves_date(String off_shelves_date) {
+		this.off_shelves_date = off_shelves_date;
 	}
 
 }
