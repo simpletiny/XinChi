@@ -89,7 +89,7 @@
 							</div>
 						</div>
 						<div style="padding-top: 3px;float:right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
 				</form>

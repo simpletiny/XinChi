@@ -10,9 +10,9 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -35,6 +35,10 @@ public class EmployeeAction extends BaseAction {
 
 	public String updateEmployee() {
 		resultStr = employeeService.updateEmployee(employee);
+		return SUCCESS;
+	}
+	public String swapDimission() {
+		resultStr = employeeService.update(employee);
 		return SUCCESS;
 	}
 
@@ -79,6 +83,21 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private RelationLevelDto rld;
+
+	public String searchSumCntData() {
+		String sales_pk = "";
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			sales_pk = sessionBean.getPk();
+		}
+
+		rld = employeeService.selectRelationCntBySales(sales_pk);
+		return SUCCESS;
+	}
+
 	public String searchEmployee() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -97,12 +116,47 @@ public class EmployeeAction extends BaseAction {
 
 	public String deleteClientEmployee() {
 		resultStr = employeeService.deleteClientEmployee(employee_pks);
-		return resultStr;
+		return SUCCESS;
+	}
+
+	/**
+	 * 删除客户员工（物理删除）
+	 * 
+	 * @return
+	 */
+	public String deleteClientEmployeeReally() {
+		resultStr = employeeService.deleteClientEmployeeReally(employee_pk);
+		return SUCCESS;
+	}
+
+	/**
+	 * 合并客户员工资料
+	 * 
+	 * @return
+	 */
+	public String combineClientEmployee() {
+		resultStr = employeeService.combineClientEmployee(employee_pks);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 跳槽
+	 * 
+	 * @return
+	 */
+	public String jobHopping() {
+		resultStr = employeeService.jobHopping(employee);
+		return SUCCESS;
+	}
+
+	public String publicClientEmployee() {
+		resultStr = employeeService.publicClientEmployee(employee_pks);
+		return SUCCESS;
 	}
 
 	public String recoveryClientEmployee() {
 		resultStr = employeeService.recoveryClientEmployee(employee_pks);
-		return resultStr;
+		return SUCCESS;
 	}
 
 	private String employee_pk;
@@ -150,6 +204,14 @@ public class EmployeeAction extends BaseAction {
 
 	public void setEmployee_status(String employee_status) {
 		this.employee_status = employee_status;
+	}
+
+	public RelationLevelDto getRld() {
+		return rld;
+	}
+
+	public void setRld(RelationLevelDto rld) {
+		this.rld = rld;
 	}
 
 }

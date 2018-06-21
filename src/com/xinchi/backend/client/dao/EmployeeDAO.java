@@ -3,6 +3,7 @@ package com.xinchi.backend.client.dao;
 import java.util.List;
 
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.tools.Page;
 
 public interface EmployeeDAO {
@@ -50,4 +51,8 @@ public interface EmployeeDAO {
 	public void deleteClientEmployeeByPks(List<String> employee_pks);
 	
 	public void recoveryClientEmployeeByPks(List<String> employee_pks);
+	
+	public RelationLevelDto selectRelationCntBySales(String sales);
+
+	public void publicClientEmployee(List<String> employee_pks);
 }

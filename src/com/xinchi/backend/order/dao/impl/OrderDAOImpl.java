@@ -60,4 +60,14 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScore", page);
 	}
 
+	@Override
+	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScoreByParam", ssd);
+	}
+
+	@Override
+	public List<OrderDto> selectByParam(OrderDto order) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectByParam", order);
+	}
+
 }

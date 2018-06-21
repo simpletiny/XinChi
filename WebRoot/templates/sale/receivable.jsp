@@ -121,7 +121,7 @@
 							</div>
 						</div>
 						<div style="padding-top: 3px; float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
+							<button st="btn-search" type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
 						</div>
 					</div>
 				</form>
@@ -333,7 +333,7 @@
 		</form>
 	</div>
 	<!-- 代收申请 -->
-	<div id="collect-submit" style="display: none; width: 1100px; padding-top: 30px;">
+	<div id="collect-submit" style="display: none; width: 1100px;height:700px; padding-top: 30px;overflow: auto">
 		<form id="form-collect">
 			<div class="input-row clearfloat">
 				<div class="col-md-3">
@@ -654,7 +654,7 @@
 	</div>
 
 	<!-- 收入申请 -->
-	<div id="receive_submit" style="display: none; width: 1000px; padding-top: 30px;">
+	<div id="receive_submit" style="display: none; width: 1000px;height:650px; padding-top: 30px;overflow: auto">
 		<form id="form-receive">
 			<div class="input-row clearfloat">
 				<div class="col-md-4">

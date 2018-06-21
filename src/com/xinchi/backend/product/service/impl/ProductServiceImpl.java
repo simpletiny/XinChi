@@ -245,4 +245,10 @@ public class ProductServiceImpl implements ProductService {
 		dao.update(product);
 		return SUCCESS;
 	}
+
+	@Override
+	public void sysUpdate(ProductBean product) {
+		dao.sysUpdate(product);
+
+	}
 }

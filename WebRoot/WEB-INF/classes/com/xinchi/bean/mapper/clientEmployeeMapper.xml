@@ -31,6 +31,16 @@
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="RelationLevelMap" type="com.xinchi.bean.RelationLevelDto">
+		<result column="sales" property="sales" jdbcType="VARCHAR" />
+		<result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
+		<result column="sum_cnt" property="sum_cnt" jdbcType="INTEGER" />
+		<result column="strong_cnt" property="strong_cnt" jdbcType="INTEGER" />
+		<result column="middle_cnt" property="middle_cnt" jdbcType="INTEGER" />
+		<result column="weak_cnt" property="weak_cnt" jdbcType="INTEGER" />
+		<result column="bad_cnt" property="bad_cnt" jdbcType="INTEGER" />
+		<result column="unknow_cnt" property="unknow_cnt" jdbcType="INTEGER" />
+	</resultMap>
 
 	<sql id="Base_Column_List">
 
@@ -63,7 +73,7 @@
 		market_level
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-	select
+		select
 		A.name,
 		A.nick_name,
 		A.sex,
@@ -75,7 +85,8 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		B.client_short_name AS financial_body_name,
+		B.client_short_name AS
+		financial_body_name,
 		A.area,
 		A.sales,
 		A.sales_name,
@@ -91,8 +102,9 @@
 		A.relation_level,
 		A.back_level,
 		A.market_level
-		
-		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
+
+		from client_employee A LEFT JOIN
+		client B ON A.financial_body_pk = B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
 
@@ -340,6 +352,9 @@
 			<if test="market_level != null">
 				market_level = #{market_level,jdbcType=VARCHAR},
 			</if>
+			<if test="dimission_flg != null">
+				dimission_flg = #{dimission_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -358,6 +373,22 @@
 			<if test="financial_body_pk != null">
 				and financial_body_pk = #{financial_body_pk,jdbcType=VARCHAR}
 			</if>
+		</where>
+	</select>
+
+	<select id="selectRelationCntBySales" parameterType="java.lang.String" resultMap="RelationLevelMap">
+		select
+		sales,
+		sales_name,
+		SUM(sum_cnt) AS sum_cnt,
+		SUM(strong_cnt) AS strong_cnt,
+		SUM(middle_cnt) AS middle_cnt,
+		SUM(weak_cnt) AS weak_cnt,
+		SUM(bad_cnt) AS bad_cnt,
+		SUM(unknow_cnt) AS unknow_cnt
+		from view_relation_level
+		<where>
+			and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
 		</where>
 	</select>
 
@@ -381,7 +412,12 @@
 			#{item}
 		</foreach>
 	</update>
-
+	<update id="publicClientEmployee">
+		update client_employee set public_flg='Y',sales='public' where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -398,7 +434,8 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		B.client_short_name AS financial_body_name,
+		B.client_short_name AS
+		financial_body_name,
 		B.client_area as area,
 		A.sales,
 		IF(ISNULL(C.user_name),'公开',C.user_name) AS sales_name,
@@ -413,7 +450,8 @@
 		A.update_time,
 		A.relation_level,
 		A.back_level,
-		A.market_level
+		A.market_level,
+		A.dimission_flg
 		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN user_base C ON A.sales
 		= C.pk

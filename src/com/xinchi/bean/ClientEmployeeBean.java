@@ -47,7 +47,12 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String relation_level;
 	private String back_level;
 	private String market_level;
+	private String dimission_flg;
 
+	//
+	private String new_client_pk;
+	private String hopping_date;
+	
 	public String getName() {
 		return name;
 	}
@@ -254,6 +259,30 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setDelete_flgs(List<String> delete_flgs) {
 		this.delete_flgs = delete_flgs;
+	}
+
+	public String getNew_client_pk() {
+		return new_client_pk;
+	}
+
+	public void setNew_client_pk(String new_client_pk) {
+		this.new_client_pk = new_client_pk;
+	}
+
+	public String getHopping_date() {
+		return hopping_date;
+	}
+
+	public void setHopping_date(String hopping_date) {
+		this.hopping_date = hopping_date;
+	}
+
+	public String getDimission_flg() {
+		return dimission_flg;
+	}
+
+	public void setDimission_flg(String dimission_flg) {
+		this.dimission_flg = dimission_flg;
 	}
 
 }

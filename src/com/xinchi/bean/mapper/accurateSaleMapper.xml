@@ -163,6 +163,9 @@
 			<if test="date != null and date !=''">
 				and date = #{date,jdbcType=VARCHAR}
 			</if>
+			<if test="create_user != null and create_user !=''">
+				and create_user = #{create_user,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 

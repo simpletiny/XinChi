@@ -1,8 +1,9 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
- <%@taglib uri="/struts-tags" prefix="s" %>
+<%@taglib uri="/struts-tags" prefix="s"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -10,27 +11,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 <body>
 
-  <div class="main-body">
-    <div class="subtitle">
-        <%-- <form action="<%=basePath%>simpletiny/autoFixBalance">	
+	<div class="main-body">
+		<div class="subtitle">
+			<%-- <form action="<%=basePath%>simpletiny/autoFixBalance">	
         	<input type="text" name="account_name"></input>
         	<input type="submit" value="修正银行流水"></input>
         </form> --%>
-        <form action="<%=basePath%>simpletiny/fixPassenger">	
-        	<input type="submit" value="修正游客信息"></input>
-        </form>
-      <%--  <a href="<%=basePath%>simpletiny/changeAllPasswordToMD5" >test</a> --%>
-  <%--      <a href="<%=basePath%>simpletiny/autoGenReceivable" >生成应收款表</a>
+        <a href="<%=basePath%>simpletiny/insertIntoClientUser" >生成客户销售对应表</a>
+			<%-- <form action="<%=basePath%>simpletiny/updateProductDetail">
+				<input type="submit" value="修正产品信息"></input>
+			</form> --%>
+			<%--  <a href="<%=basePath%>simpletiny/changeAllPasswordToMD5" >test</a> --%>
+			<%--      <a href="<%=basePath%>simpletiny/autoGenReceivable" >生成应收款表</a>
         <a href="<%=basePath%>simpletiny/autoGenPayable" >生成应付款表</a>
         <a href="<%=basePath%>simpletiny/autoGenPayable2th" >生成应付款表2</a>
         <a href="<%=basePath%>simpletiny/autoGenReceivable2th" >生成应收款表2</a> --%>
-      
-       <%--  <a href="<%=basePath%>simpletiny/autoGenTicketOrder" >生成机票订单</a>  --%>
-    </div>
 
-    <div class="main-container">
-        <canvas id="userChart" width="1000" height="400"></canvas>
-    </div>
-  </div>
- </body>
+			<%--  <a href="<%=basePath%>simpletiny/autoGenTicketOrder" >生成机票订单</a>  --%>
+		</div>
+
+		<div class="main-container">
+			<canvas id="userChart" width="1000" height="400"></canvas>
+		</div>
+	</div>
+</body>
 </html>

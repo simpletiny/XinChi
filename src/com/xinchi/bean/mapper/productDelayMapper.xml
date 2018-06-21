@@ -19,6 +19,10 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="gross_child_profit" property="gross_child_profit" jdbcType="DECIMAL" />
+		<result column="gross_child_profit_rate" property="gross_child_profit_rate" jdbcType="FLOAT" />
+		<result column="cash_child_flow" property="cash_child_flow" jdbcType="DECIMAL" />
+		<result column="spot_child_cash" property="spot_child_cash" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -39,7 +43,11 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		gross_child_profit,
+		cash_child_flow,
+		spot_child_cash,
+		gross_child_profit_rate
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -62,7 +70,8 @@
 
 	<delete id="deleteByProductPk" parameterType="java.lang.String">
 		delete from product_delay
-		where product_pk = #{product_pk,jdbcType=CHAR}
+		where product_pk =
+		#{product_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductDelayBean">
@@ -121,6 +130,18 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="gross_child_profit != null">
+				gross_child_profit,
+			</if>
+			<if test="cash_child_flow != null">
+				cash_child_flow,
+			</if>
+			<if test="spot_child_cash != null">
+				spot_child_cash,
+			</if>
+			<if test="gross_child_profit_rate != null">
+				gross_child_profit_rate,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="pk != null">
@@ -173,6 +194,18 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="gross_child_profit != null">
+				#{gross_child_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_child_flow != null">
+				#{cash_child_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_child_cash != null">
+				#{spot_child_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_child_profit_rate != null">
+				#{gross_child_profit_rate,jdbcType=FLOAT},
 			</if>
 		</trim>
 	</insert>
@@ -228,6 +261,18 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="gross_child_profit != null">
+				gross_child_profit = #{gross_child_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_child_flow != null">
+				cash_child_flow = #{cash_child_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_child_cash != null">
+				spot_child_cash = #{spot_child_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_child_profit_rate != null">
+				gross_child_profit_rate = #{gross_child_profit_rate,jdbcType=FLOAT},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

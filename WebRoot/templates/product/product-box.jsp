@@ -69,11 +69,12 @@ tr td {
 								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
+						<label class="col-md-1 fix-width1 control-label"><input name="product.high_value_flg" checked="checked" data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />只看高分</label>
 					</div>
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
+								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 							</div>
 						</div>
 					</div>
@@ -115,8 +116,8 @@ tr td {
 								<td data-bind="text: $data.child_price"></td>
 								<td data-bind="text: $data.business_profit_substract"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
-								<td data-bind="text: $data.sale_attention"></td>
-								<td data-bind="text: $data.sale_strategy"></td>
+								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}" ></a></td>
+								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}" ></a></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>

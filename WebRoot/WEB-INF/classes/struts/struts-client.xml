@@ -23,9 +23,6 @@
 		<action name="changeClientSales" class="clientAction" method="changeClientSales">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<action name="searchCompany" class="clientAction" method="searchCompany">
-			<result name="success" type="json"></result>
-		</action>
 		<action name="searchCompanyByPage" class="clientAction" method="searchCompanyByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -47,6 +44,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchSumCntData" class="employeeAction" method="searchSumCntData">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOneEmployee" class="employeeAction" method="searchOneEmployee">
 			<result name="success" type="json"></result>
 		</action>
@@ -57,6 +60,21 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="deleteClientEmployee" class="employeeAction" method="deleteClientEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteClientEmployeeReally" class="employeeAction" method="deleteClientEmployeeReally">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="combineClientEmployee" class="employeeAction" method="combineClientEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="jobHopping" class="employeeAction" method="jobHopping">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="swapDimission" class="employeeAction" method="swapDimission">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="publicClientEmployee" class="employeeAction" method="publicClientEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="recoveryClientEmployee" class="employeeAction" method="recoveryClientEmployee">

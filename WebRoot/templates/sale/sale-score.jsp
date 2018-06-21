@@ -55,7 +55,7 @@
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" class="btn btn-green col-md-1" st="btn-search" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
 				</form>

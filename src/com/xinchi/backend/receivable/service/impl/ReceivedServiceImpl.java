@@ -51,15 +51,20 @@ public class ReceivedServiceImpl implements ReceivedService {
 		String[] pks = received_pks.split(",");
 		for (String pk : pks) {
 			ClientReceivedDetailBean detail = dao.selectByPk(pk);
-			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM) || detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
+			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM)
+					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
 					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN)) {
 				String[] related_pks = detail.getRelated_pk().split(",");
 				for (String related : related_pks) {
-					ClientReceivedDetailBean related_detail = dao.selectByPk(related);
-					doRollBack(related_detail);
+					List<ClientReceivedDetailBean> related_detail = dao.selectByRelatedPks(related);
+					if (related_detail != null && related_detail.size() > 0) {
+						for (ClientReceivedDetailBean d : related_detail) {
+							doRollBack(d);
+						}
+					}
 				}
 			} else if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
-				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getPk());
+				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getRelated_pk());
 				payApprovalDao.delete(pa.getPk());
 				doRollBack(detail);
 			} else {

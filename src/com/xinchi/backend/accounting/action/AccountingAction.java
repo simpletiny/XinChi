@@ -12,6 +12,8 @@ import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyUser;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -28,19 +30,41 @@ public class AccountingAction extends BaseAction {
 	private PayApprovalService payApprovalService;
 
 	public String agreePayApply() {
-		SimpletinyUser su = new SimpletinyUser();
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		PayApprovalBean pa = payApprovalService.selectByPrimaryKey(pk);
-		pa.setApproval_user(su.getUser().getUser_number());
+		pa.setApproval_user(sessionBean.getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		payApprovalService.update(pa);
+		// 'D' : '地接款',
 
+		// 'X' : '销售费用',
+		// 'B' : '办公费用',
+		// 'C' : '产品费用',
+		// 'J' : '交通垫付',
+		// 'G' : '工资费用',
+		// 'Q' : '其他支出',
+
+		// 'P' : '票务费用',
+
+		// 'M' : '多付返款',
+		// 'F' : 'FLY'
+		// 地接款
 		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
 			resultStr = service.updateRelatedPaid(related_pk, ResourcesConstants.PAID_STATUS_YES);
-		} else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
+		}
+		// 多退返款
+		else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
 			resultStr = service.agreeMoreBack(pa.getBack_pk());
-		} else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+		}
+		// 票务费用
+		else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.agreeAirTicketPayApply(pa.getBack_pk());
+		}
+		// 返佣支出
+		else if (item.equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			resultStr = service.agreeFlyApply(pa.getBack_pk());
 		} else {
 			resultStr = service.agreePayApply(pa.getBack_pk());
 		}
@@ -61,6 +85,8 @@ public class AccountingAction extends BaseAction {
 			resultStr = service.rejectMoreBack(pa.getBack_pk());
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.rejectAirTicketPayApply(related_pk);
+		} else if (item.equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			resultStr = service.rejectFlyApply(pa.getBack_pk());
 		} else {
 			resultStr = service.rejectPayApply(pa.getBack_pk());
 		}

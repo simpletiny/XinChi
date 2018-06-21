@@ -22,7 +22,7 @@ public class AutoDeleteTbcOrder {
 	@Autowired
 	private BudgetStandardOrderService bsOrderService;
 
-	public void delete3DaysAgoTbcOrder(String[] param) {
+	public void delete5DaysAgoTbcOrder(String[] param) {
 
 		List<OrderDto> orders = service.selectTbcByParam(null);
 
@@ -36,7 +36,7 @@ public class AutoDeleteTbcOrder {
 			}
 
 			int days = DateUtil.dateDiff(today, DateUtil.sdf1.format(c.getTime()));
-			if (days >= 3) {
+			if (days >= 5) {
 				if (order.getStandard_flg().equals("Y")) {
 					bsOrderService.delete(order.getPk());
 				} else {

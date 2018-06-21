@@ -33,4 +33,10 @@ public interface AccountingService extends BaseService {
 
 	public String rejectMoreBack(String back_pk);
 
+	// 同意返佣支出
+	public String agreeFlyApply(String back_pk);
+
+	// 拒绝返佣支出
+	public String rejectFlyApply(String back_pk);
+
 }

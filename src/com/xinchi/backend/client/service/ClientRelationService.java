@@ -28,5 +28,8 @@ public interface ClientRelationService {
 
 	@LogDescription(des = "拜访查看")
 	public List<ClientVisitBean> selectVisitByPage(Page page);
+	
+	
+	public List<ClientVisitBean> selectVisitByParam(ClientVisitBean param);
 
 }

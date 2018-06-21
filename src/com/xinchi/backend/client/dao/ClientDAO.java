@@ -43,4 +43,6 @@ public interface ClientDAO{
 	public void deleteCompanyByPks(List<String> company_pks);
 
 	public void recoveryCompanyByPks(List<String> company_pks);
+
+	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
 }

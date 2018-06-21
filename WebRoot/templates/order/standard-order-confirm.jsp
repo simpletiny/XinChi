@@ -259,7 +259,7 @@
 											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate()" style="width: 90%" st="id" /></td>
+											<td><input type="text" data-bind="value:$data.id" onblur="autoPrice();autoCaculate()" style="width: 90%" st="id" /></td>
 											<td><input type="text" style="width: 90%" st="price" onblur="autoCaculate()"
 												data-bind="value:$data.price" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>

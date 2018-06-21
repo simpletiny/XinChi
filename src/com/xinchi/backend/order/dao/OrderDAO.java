@@ -19,6 +19,10 @@ public interface OrderDAO {
 	public List<OrderDto> selectTbcByParam(OrderDto option);
 
 	public OrderDto searchCOrderByPk(String order_pk);
-	
+
 	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page);
+
+	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
+
+	public List<OrderDto> selectByParam(OrderDto order);
 }

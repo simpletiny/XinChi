@@ -82,28 +82,51 @@
 	<select id="searchCOrderByPk" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
 		where
-		pk =
+		pk
+		=
 		#{order_pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
 		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
-		LEFT(A.confirm_date,7) as confirm_month,
+		LEFT(A.confirm_date,7) as
+		confirm_month,
 		A.create_user AS sale_number,
-		B.user_name AS sale_name, 
-		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people 
+		B.user_name AS sale_name,
+		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
 		FROM budget_standard_order A
-			LEFT JOIN user_base B on A.create_user = B.user_number
-			<where>
-				<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
-					and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
-				</if>
-				and A.confirm_flg !='N'
-			</where>
-			GROUP by LEFT(confirm_date,7),create_user 
-			ORDER by score DESC
+		LEFT JOIN user_base B on A.create_user = B.user_number
+		<where>
+			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
+				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
+			</if>
+			and A.confirm_flg !='N'
+		</where>
+		GROUP by LEFT(confirm_date,7),create_user
+		ORDER by score DESC
 	</select>
-	
+
+	<select id="searchSaleScoreByParam" parameterType="com.xinchi.bean.SaleScoreDto" resultMap="SaleScoreMap">
+		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+		LEFT(A.confirm_date,7) as
+		confirm_month,
+		A.create_user AS sale_number,
+		B.user_name AS sale_name,
+		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
+		FROM budget_standard_order A
+		LEFT JOIN user_base B on A.create_user = B.user_number
+		<where>
+			<if test="confirm_month != null and confirm_month !=''">
+				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
+			</if>
+			<if test="sale_number != null and sale_number !=''">
+				and A.create_user= #{sale_number,jdbcType=VARCHAR}
+			</if>
+			and A.confirm_flg !='N'
+		</where>
+		GROUP by LEFT(confirm_date,7),create_user
+	</select>
+
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select * from budget_order_view
 		<where>
@@ -131,6 +154,20 @@
 		select * from budget_order_view
 		<where>
 			and confirm_flg='N'
+		</where>
+	</select>
+	<select id="selectByParam" parameterType="com.xinchi.bean.OrderDto" resultMap="BaseResultMap">
+		select * from budget_order_view
+		<where>
+			<if test="client_employee_pk != null and client_employee_pk !=''">
+				and client_employee_pk =#{client_employee_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_date != null and confirm_date !=''">
+				and confirm_date =#{confirm_date,jdbcType=VARCHAR}
+			</if>
+			<if test="create_user_number != null and create_user_number !=''">
+				and create_user_number =#{create_user_number,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 
@@ -176,7 +213,8 @@
 		A.receivable_comment,
 		B.budget_balance AS balance,
 		A.product_value
-		from budget_order_view A LEFT JOIN
+		from
+		budget_order_view A LEFT JOIN
 		receivable B ON A.team_number = B.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
@@ -214,11 +252,13 @@
 			</if>
 			and confirm_flg='Y'
 		</where>
-		 ORDER BY 
-		 IF(TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) in (-1,-2,-3),A.departure_date,'2999-01-01'),
-		 IF(A.departure_date&lt;=DATE_FORMAT(NOW(), '%Y-%m-%d') and date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(day,A.departure_date,now())-days,-99999) DESC,
-		 IF(date_add(A.departure_date,INTERVAL A.days-1 DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) - days + 2,0) DESC,
-         A.departure_date
+		ORDER BY
+		IF(TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) in (-1,-2,-3),A.departure_date,'2999-01-01'),
+		IF(A.departure_date&lt;=DATE_FORMAT(NOW(), '%Y-%m-%d') and date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(),
+		'%Y-%m-%d'),TIMESTAMPDIFF(day,A.departure_date,now())-days,-99999) DESC,
+		IF(date_add(A.departure_date,INTERVAL A.days-1 DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d'))
+		- days + 2,0) DESC,
+		A.departure_date
 
 	</select>
 	<select id="selectFByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

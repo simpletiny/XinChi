@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.xinchi.bean.SqlBean;
+
 /**
  * 访问数据库Dao工具类,要求所有访问数据库都使用此工具类
  * 
@@ -90,7 +92,7 @@ public class DaoUtil {
 	 * @return
 	 */
 	public void insertBySql(String insertSql) {
-		sqlSession.insert("commonMapper.insertBySql", insertSql);
+		sqlSession.insert("com.xinchi.bean.mapper.CommonMapper.insertBySql", insertSql);
 	}
 
 	/**
@@ -100,7 +102,7 @@ public class DaoUtil {
 	 * @return
 	 */
 	public void deleteBySql(String sql) {
-		sqlSession.delete("commonMapper.executeBySql", sql);
+		sqlSession.delete("com.xinchi.bean.mapper.CommonMapper.executeBySql", sql);
 	}
 
 	/**
@@ -108,8 +110,8 @@ public class DaoUtil {
 	 * 
 	 * @param sql
 	 */
-	public void executeBySql(String sql) {
-		sqlSession.delete("commonMapper.executeBySql", sql);
+	public void executeBySql(SqlBean sql) {
+		sqlSession.delete("com.xinchi.bean.mapper.CommonMapper.executeBySql", sql);
 	}
 
 	/*

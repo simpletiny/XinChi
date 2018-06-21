@@ -5,9 +5,43 @@ var CompanyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCompanies = ko.observableArray([]);
 	self.createCompany = function() {
-		window.location.href = self.apiurl + "templates/client/company-creation.jsp";
+		window.location.href = self.apiurl
+				+ "templates/client/company-creation.jsp";
 	};
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.client = ko.observable({});
+	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
+			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.countyMapping = {
+		'哈尔滨' : [ '道里区', '南岗区', '道外区', '平房区', '松北区', '香坊区', '呼兰区', '阿城区',
+				'双城区', '哈西区', '开发区', '群力区', '尚志市', '五常市', '依兰县', '方正县', '宾县',
+				'巴彦县', '木兰县', '通河县', '延寿县' ],
+		'齐齐哈尔' : [ '齐齐哈尔' ],
+		'牡丹江' : [ '牡丹江' ],
+		'佳木斯' : [ '佳木斯' ],
+		'大庆' : [ '新村', '让胡路区', '萨尔图区', '龙凤区', '红岗区', '大同区', '肇州县', '肇源县',
+				'林甸县', '杜尔伯特县' ],
+		'鸡西' : [ '鸡西' ],
+		'绥化' : [ '绥化' ],
+		'呼伦贝尔' : [ '呼伦贝尔' ],
+		'伊春' : [ '伊春' ],
+		'鹤岗' : [ '鹤岗' ],
+		'双鸭山' : [ '双鸭山' ],
+		'黑河' : [ '黑河' ],
+		'大兴安岭' : [ '大兴安岭' ]
+	};
+	self.client().client_area = ko.observable();
+	self.client().client_county = ko.observable();
+
+	self.ter = function() {
+		$("#county").empty();
+		$("#county").append("<option value>--区县--</option>");
+		for (var i = 0; i < self.countyMapping[self.client().client_area()].length; i++) {
+			var value = self.countyMapping[self.client().client_area()][i];
+			$("#county").append(
+					"<option value='" + value + "'>" + value + "</option>");
+		}
+	};
+
 	self.clients = ko.observable({
 		total : 0,
 		items : []
@@ -17,12 +51,12 @@ var CompanyContext = function() {
 	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	self.status = [ 'N', 'Y' ];
-	self.talkLevels = [ '强', '中', '弱', '未知' ];
+	self.talkLevels = [ '核心', '主力', '市场', '排斥' ];
 	self.chosenTalkLevels = ko.observableArray([]);
-	self.chosenTalkLevels.push("强");
-	self.chosenTalkLevels.push("中");
-	self.chosenTalkLevels.push("弱");
-	self.chosenTalkLevels.push("未知");
+	self.chosenTalkLevels.push("核心");
+	self.chosenTalkLevels.push("主力");
+	self.chosenTalkLevels.push("市场");
+	self.chosenTalkLevels.push("排斥");
 	self.statusMapping = {
 		'N' : '正常',
 		'Y' : '已停用'
@@ -32,9 +66,8 @@ var CompanyContext = function() {
 	self.chosenMainBusinesses.push("综合");
 	self.chosenMainBusinesses.push("组团");
 	self.chosenMainBusinesses.push("未知");
-	
-	self.chosenStatus = ko.observableArray([]);
-	self.chosenStatus.push("N");
+
+	self.chosenStatus = self.chosenStatus = ko.observable('N');
 
 	self.relates = [ 'N', 'Y' ];
 	self.relatesMapping = {
@@ -61,9 +94,11 @@ var CompanyContext = function() {
 		var param = $("#form-search").serialize();
 		if (!$("#txt-public-flg").is(':checked'))
 			param += "&client.public_flg=N";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
+				data) {
 			self.clients(data.clients);
 			$(".rmb").formatCurrency();
 
@@ -83,8 +118,6 @@ var CompanyContext = function() {
 		self.refresh();
 		return true;
 	};
-
-	self.client = ko.observable({});
 
 	// 客户评级
 	self.setClientLevel = function() {
@@ -222,7 +255,7 @@ var CompanyContext = function() {
 			});
 		}
 	};
-	self.chosenUser = ko.observable("");
+	self.chosenUser = ko.observableArray([]);
 
 	/**
 	 * 调整财务主体所属销售
@@ -250,13 +283,19 @@ var CompanyContext = function() {
 			});
 		}
 	};
-
+	self.checkSale = function(){
+		if(self.chosenUser().contains("public")){
+			self.chosenUser.removeAll();
+			self.chosenUser.push("public");
+		};
+		return true;
+	}
 	self.doChangeSale = function() {
-		if (self.chosenUser() == "") {
+		if (self.chosenUser().length == 0) {
 			fail_msg("请选择销售！");
 			return;
 		}
-
+		
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
@@ -268,7 +307,7 @@ var CompanyContext = function() {
 					layer.close(index);
 					var data = {
 						company_pks : self.chosenCompanies(),
-						sale_pk : self.chosenUser()
+						sale_pks : self.chosenUser()
 					};
 
 					startLoadingSimpleIndicator("转移中...");
@@ -283,7 +322,7 @@ var CompanyContext = function() {
 							layer.close(salesLayer);
 							self.refresh();
 							self.chosenCompanies.removeAll();
-							self.chosenUser("");
+							self.chosenUser.removeAll();
 						} else {
 							fail_msg("转移失败，请联系管理员！");
 						}
@@ -313,12 +352,14 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCompanies().length == 1) {
-			window.location.href = self.apiurl + "templates/client/company-edit.jsp?key=" + self.chosenCompanies()[0];
+			window.location.href = self.apiurl
+					+ "templates/client/company-edit.jsp?key="
+					+ self.chosenCompanies()[0];
 		}
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {
@@ -350,9 +391,10 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

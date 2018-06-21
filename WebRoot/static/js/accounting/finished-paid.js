@@ -33,7 +33,8 @@ var PaidContext = function() {
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([ 'Y' ]);
-	self.items = ko.observableArray([ 'D', 'X', 'B', 'C', 'P', 'J', 'G', 'Q' ]);
+	self.items = ko.observableArray([ 'D', 'X', 'B', 'C', 'P', 'J', 'G', 'Q',
+			'M', 'F' ]);
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
@@ -42,7 +43,9 @@ var PaidContext = function() {
 		'P' : '票务费用',
 		'J' : '交通垫付',
 		'G' : '工资费用',
-		'Q' : '其他支出'
+		'Q' : '其他支出',
+		'M' : '多付返款',
+		'F' : 'FLY'
 	};
 
 	// 计算合计

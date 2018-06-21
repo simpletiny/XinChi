@@ -277,7 +277,8 @@ public class OrderServiceImpl implements OrderService {
 		}
 		// 保存凭证文件
 		if (!SimpletinyString.isEmpty(order.getVoucher_file())) {
-			FileUtil.saveFile(order.getVoucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(), budget_order.getTeam_number());
+			FileUtil.saveFile(order.getVoucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(),
+					budget_order.getTeam_number());
 		}
 
 		return SUCCESS;
@@ -403,7 +404,7 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setStatus(ResourcesConstants.FINAL_ORDER_STATUS_ING);
 			final_order.setSale(budget_order.getCreate_user_number());
 			fsoDao.insert(final_order);
-			
+
 			// 更新预算订单
 			BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
 			bsOrder.setConfirm_flg("F");
@@ -496,7 +497,8 @@ public class OrderServiceImpl implements OrderService {
 		}
 		// 保存凭证文件
 		if (!SimpletinyString.isEmpty(order.getVoucher_file())) {
-			FileUtil.saveFile(order.getVoucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(), budget_order.getTeam_number());
+			FileUtil.saveFile(order.getVoucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(),
+					budget_order.getTeam_number());
 		}
 
 		return SUCCESS;
@@ -505,5 +507,15 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page) {
 		return dao.searchSaleScore(page);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd) {
+		return dao.searchSaleScoreByParam(ssd);
+	}
+
+	@Override
+	public List<OrderDto> selectByParam(OrderDto order) {
+		return dao.selectByParam(order);
 	}
 }

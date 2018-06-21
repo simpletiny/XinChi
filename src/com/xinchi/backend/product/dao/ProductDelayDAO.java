@@ -45,5 +45,4 @@ public interface ProductDelayDAO {
 
 	public void deleteByProductPk(String product_pk);
 
-	public void truncateTable();
 }

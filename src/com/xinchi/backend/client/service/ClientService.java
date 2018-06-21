@@ -65,9 +65,11 @@ public interface ClientService extends BaseService {
 	@LogDescription(des = "恢复财务主体")
 	public String recoveryClientEmployee(List<String> company_pks);
 
-	public String changeClientSales(List<String> company_pks, String sale_pk);
+	public String changeClientSales(List<String> company_pks, List<String> sale_pks);
 
 	public String deleteClientReally(String client_pk);
 
 	public String pureUpdate(ClientBean client);
+
+	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
 }

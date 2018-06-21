@@ -73,12 +73,18 @@ String key = request.getParameter("key");
                 </div>
                <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">QQ</label>
-                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
+                        <label class="l">微信</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"/></div>
                     </div>
                      <div class="col-md-6 required">
                         <label class="l">类型</label>
                         <div class="ip"><select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type" required="required"></select></div>
+                    </div>
+                </div>
+               <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">QQ</label>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

@@ -1066,6 +1066,127 @@
 			<comment>insert into task</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product 
+					ADD COLUMN gross_child_profit DECIMAL(12,2) NULL DEFAULT NULL COMMENT '毛利' AFTER off_shelves_date,
+					ADD COLUMN gross_child_profit_rate FLOAT(7,2) NULL DEFAULT NULL COMMENT '毛利率' AFTER gross_child_profit,
+					ADD COLUMN cash_child_flow DECIMAL(12,2) NULL DEFAULT NULL COMMENT '现金流' AFTER gross_child_profit_rate,
+					ADD COLUMN spot_child_cash DECIMAL(12,2) NULL DEFAULT NULL COMMENT '现付资金' AFTER cash_child_flow;
+             ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product_delay 
+					ADD COLUMN gross_child_profit DECIMAL(12,2) NULL DEFAULT NULL COMMENT '毛利' AFTER update_time,
+					ADD COLUMN gross_child_profit_rate FLOAT(7,2) NULL DEFAULT NULL COMMENT '毛利率' AFTER gross_child_profit,
+					ADD COLUMN cash_child_flow DECIMAL(12,2) NULL DEFAULT NULL COMMENT '现金流' AFTER gross_child_profit_rate,
+					ADD COLUMN spot_child_cash DECIMAL(12,2) NULL DEFAULT NULL COMMENT '现付资金' AFTER cash_child_flow;
+             ]]>
+			<comment>ALTER TABLE product_delay</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE client 
+					ADD COLUMN client_county VARCHAR(20) NULL AFTER talk_level;
+             ]]>
+			<comment>ALTER TABLE client </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	update client set talk_level = '核心' where talk_level = '强';
+				update client set talk_level = '主力' where talk_level = '中';
+				update client set talk_level = '排斥' where talk_level = '弱';
+				update client set talk_level = '市场' where talk_level = '未知';
+             ]]>
+			<comment>update TABLE client </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	    CREATE VIEW view_relation_level AS
+				    SELECT sales,sales_name, 
+				    COUNT(pk) AS sum_cnt,
+				    COUNT(IF(relation_level IN('朋友级','商务级'),1,NULL)) AS strong_cnt,
+					COUNT(IF(relation_level='市场级',1,NULL)) AS middle_cnt,
+					COUNT(IF(relation_level='新增级',1,NULL)) AS weak_cnt,
+					COUNT(IF(relation_level='排斥级',1,NULL)) AS bad_cnt,
+					COUNT(IF(relation_level='' OR relation_level IS NULL,1,NULL)) AS unknow_cnt
+				    FROM client_employee GROUP BY sales;
+             ]]>
+			<comment>CREATE VIEW view_relation_level </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	  ALTER TABLE client 
+				  CHANGE COLUMN sales sales VARCHAR(600) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ;
+             ]]>
+			<comment>ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE TABLE client_user (
+				  client_pk CHAR(22) NOT NULL,
+				  user_pk CHAR(22) NOT NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '财务主体和销售对应表';
+             ]]>
+			<comment>CREATE TABLE client_user</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE TABLE job_hopping_log (
+				  client_employee_pk CHAR(22) NOT NULL,
+				  hop_date VARCHAR(10) NULL,
+				  pre_client_pk CHAR(22) NOT NULL,
+				  now_client_pk CHAR(22) NOT NULL,
+				  reason VARCHAR(200) NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '跳槽记录表';
+             ]]>
+			<comment>CREATE TABLE job_hopping_log </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 ALTER TABLE client_employee 
+					ADD COLUMN dimission_flg CHAR(1) NULL DEFAULT 'N' COMMENT '离职flg' AFTER market_level;
+             ]]>
+			<comment> ALTER TABLE client_employee </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

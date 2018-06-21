@@ -15,7 +15,10 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.client.dao.ClientUserDAO;
+import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
@@ -38,6 +41,8 @@ import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.PayableBean;
@@ -452,6 +457,126 @@ public class SimpletinyAction extends BaseAction {
 
 		return SUCCESS;
 
+	}
+
+	public String updateProductDetail() {
+		List<ProductBean> products = productService.getAllByParam(null);
+
+		for (ProductBean product : products) {
+			if (null != product.getAdult_price() && product.getBusiness_profit_substract() != null
+					&& product.getLocal_adult_cost() != null) {
+
+				BigDecimal product_price = product.getAdult_price().subtract(product.getBusiness_profit_substract())
+						.subtract(product.getMax_profit_substract());
+				// 毛利
+				BigDecimal gross_profit = product_price.subtract(product.getAir_ticket_cost())
+						.subtract(product.getLocal_adult_cost())
+						.subtract((null == product.getOther_cost()) ? BigDecimal.ZERO : product.getOther_cost());
+
+				// 毛利率
+				BigDecimal denominator = product.getAdult_price().subtract(product.getBusiness_profit_substract())
+						.divide(new BigDecimal(100));
+
+				BigDecimal gross_profit_rate = BigDecimal.ZERO;
+				if (denominator.compareTo(BigDecimal.ZERO) != 0)
+					gross_profit_rate = gross_profit.divide(denominator, 0, BigDecimal.ROUND_HALF_UP);
+				float rate = gross_profit_rate.floatValue();
+
+				// 现付资金
+				BigDecimal spot_cash = BigDecimal.ZERO;
+
+				if (product.getCash_flow_air_flg().equals("Y")) {
+					spot_cash = spot_cash.add(product.getAir_ticket_cost());
+				}
+
+				if (product.getCash_flow_local_flg().equals("Y")) {
+					spot_cash = spot_cash.add(product.getLocal_adult_cost());
+				}
+
+				if (product.getCash_flow_other_flg().equals("Y")) {
+					spot_cash = spot_cash
+							.add((null == product.getOther_cost()) ? BigDecimal.ZERO : product.getOther_cost());
+				}
+
+				// 现金流
+				BigDecimal cash_flow = product_price.subtract(spot_cash);
+
+				product.setGross_profit(gross_profit);
+				product.setGross_profit_rate(rate);
+				product.setCash_flow(cash_flow);
+				product.setSpot_cash(spot_cash);
+
+			}
+			if (null != product.getChild_price() && product.getBusiness_profit_substract() != null
+					&& product.getLocal_child_cost() != null) {
+
+				// 儿童
+				BigDecimal product_child_price = product.getChild_price()
+						.subtract(product.getBusiness_profit_substract()).subtract(product.getMax_profit_substract());
+
+				BigDecimal gross_child_profit = product_child_price.subtract(product.getAir_ticket_child_cost())
+						.subtract(product.getLocal_child_cost())
+						.subtract((null == product.getOther_child_cost()) ? BigDecimal.ZERO
+								: product.getOther_child_cost());
+
+				BigDecimal denominator_child = product.getChild_price().subtract(product.getBusiness_profit_substract())
+						.divide(new BigDecimal(100));
+
+				BigDecimal gross_child_profit_rate = BigDecimal.ZERO;
+
+				if (denominator_child.compareTo(BigDecimal.ZERO) != 0)
+					gross_child_profit_rate = gross_child_profit.divide(denominator_child, 0, BigDecimal.ROUND_HALF_UP);
+
+				float rate_child = gross_child_profit_rate.floatValue();
+
+				// 现付资金
+				BigDecimal spot_child_cash = BigDecimal.ZERO;
+
+				if (product.getCash_flow_air_flg().equals("Y")) {
+					spot_child_cash = spot_child_cash.add(product.getAir_ticket_child_cost());
+				}
+
+				if (product.getCash_flow_local_flg().equals("Y")) {
+					spot_child_cash = spot_child_cash.add(product.getLocal_child_cost());
+				}
+
+				if (product.getCash_flow_other_flg().equals("Y")) {
+
+					spot_child_cash = spot_child_cash.add(
+							(null == product.getOther_child_cost()) ? BigDecimal.ZERO : product.getOther_child_cost());
+				}
+
+				// 现金流
+				BigDecimal cash_child_flow = product_child_price.subtract(spot_child_cash);
+
+				product.setGross_child_profit(gross_child_profit_rate);
+				product.setGross_child_profit_rate(rate_child);
+				product.setCash_child_flow(cash_child_flow);
+				product.setSpot_child_cash(spot_child_cash);
+
+			}
+			productService.sysUpdate(product);
+		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ClientService clientService;
+	@Autowired
+	private ClientUserDAO clientUserDao;
+
+	public String insertIntoClientUser() {
+		List<ClientBean> clients = clientService.getAllCompaniesByParam(null);
+		for (ClientBean client : clients) {
+
+			ClientUserBean cub = new ClientUserBean();
+			cub.setClient_pk(client.getPk());
+			cub.setUser_pk(client.getSales());
+			clientUserDao.insert(cub);
+		}
+
+		return SUCCESS;
 	}
 
 	public List<PayableBean> getPayables() {

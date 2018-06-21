@@ -62,9 +62,4 @@ public class ProductDelayDAOImpl extends SqlSessionDaoSupport implements Product
 
 	}
 
-	@Override
-	public void truncateTable() {
-		daoUtil.executeBySql("truncate table product_delay");
-	}
-
 }

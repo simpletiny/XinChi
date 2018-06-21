@@ -38,6 +38,11 @@ public class ProductDelayBean extends SupperBO implements Serializable {
 
 	private BigDecimal spot_cash;
 
+	private BigDecimal gross_child_profit;
+	private BigDecimal cash_child_flow;
+	private BigDecimal spot_child_cash;
+	private float gross_child_profit_rate;
+
 	public String getPk() {
 		return pk;
 	}
@@ -156,6 +161,38 @@ public class ProductDelayBean extends SupperBO implements Serializable {
 
 	public void setSpot_cash(BigDecimal spot_cash) {
 		this.spot_cash = spot_cash;
+	}
+
+	public BigDecimal getGross_child_profit() {
+		return gross_child_profit;
+	}
+
+	public BigDecimal getCash_child_flow() {
+		return cash_child_flow;
+	}
+
+	public BigDecimal getSpot_child_cash() {
+		return spot_child_cash;
+	}
+
+	public float getGross_child_profit_rate() {
+		return gross_child_profit_rate;
+	}
+
+	public void setGross_child_profit(BigDecimal gross_child_profit) {
+		this.gross_child_profit = gross_child_profit;
+	}
+
+	public void setCash_child_flow(BigDecimal cash_child_flow) {
+		this.cash_child_flow = cash_child_flow;
+	}
+
+	public void setSpot_child_cash(BigDecimal spot_child_cash) {
+		this.spot_child_cash = spot_child_cash;
+	}
+
+	public void setGross_child_profit_rate(float gross_child_profit_rate) {
+		this.gross_child_profit_rate = gross_child_profit_rate;
 	}
 
 }

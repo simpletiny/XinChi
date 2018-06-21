@@ -1,45 +1,42 @@
 package apptest;
 
+import java.util.List;
+
 public class Student {
-	private String type;
-	private Info infor = new Info();
-	
-	public class Info{
-		private String name;
-		private String sex;
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public String getSex() {
-			return sex;
-		}
-		public void setSex(String sex) {
-			this.sex = sex;
-		}
-		
+	private String name;
+	private String age;
+	private List<String> scores;
+	private String sex;
+
+	public String getName() {
+		return name;
 	}
 
-
-	public String getType() {
-		return type;
+	public String getAge() {
+		return age;
 	}
 
-
-	public void setType(String type) {
-		this.type = type;
+	public List<String> getScores() {
+		return scores;
 	}
 
-
-	public Info getInfor() {
-		return infor;
+	public String getSex() {
+		return sex;
 	}
 
-
-	public void setInfor(Info infor) {
-		this.infor = infor;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public void setScores(List<String> scores) {
+		this.scores = scores;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 }

@@ -77,7 +77,7 @@
 						</div>
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
+								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 							</div>
 						</div>
 					</div>

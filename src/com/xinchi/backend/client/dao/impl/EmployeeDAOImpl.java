@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -41,33 +42,50 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements EmployeeDAO
 
 	@Override
 	public com.xinchi.bean.ClientEmployeeBean selectByPrimaryKey(String id) {
-		return (com.xinchi.bean.ClientEmployeeBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByPrimaryKey", id);
+		return (com.xinchi.bean.ClientEmployeeBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<com.xinchi.bean.ClientEmployeeBean> getAllByParam(com.xinchi.bean.ClientEmployeeBean bo) {
-		List<com.xinchi.bean.ClientEmployeeBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByParam", bo);
+		List<com.xinchi.bean.ClientEmployeeBean> list = daoUtil
+				.selectByBOParamT("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByParam", bo);
 		return list;
 	}
 
 	@Override
 	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page) {
-		List<ClientEmployeeBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByPage", page);
+		List<ClientEmployeeBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByPage", page);
 		return list;
 	}
 
 	@Override
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
-		return daoUtil.selectListByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectBodyPksByEmployeePks", employee_pks);
+		return daoUtil.selectListByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectBodyPksByEmployeePks",
+				employee_pks);
 	}
 
 	@Override
 	public void deleteClientEmployeeByPks(List<String> employee_pks) {
 		daoUtil.updateByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.stopEmployee", employee_pks);
 	}
+
 	@Override
 	public void recoveryClientEmployeeByPks(List<String> employee_pks) {
 		daoUtil.updateByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.recoveryEmployee", employee_pks);
+	}
+
+	@Override
+	public RelationLevelDto selectRelationCntBySales(String sales) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectRelationCntBySales",
+				sales);
+	}
+
+	@Override
+	public void publicClientEmployee(List<String> employee_pks) {
+		daoUtil.updateByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.publicClientEmployee", employee_pks);
+
 	}
 
 }

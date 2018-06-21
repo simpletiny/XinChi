@@ -52,9 +52,7 @@
     	comment,
     	payment_comment,
     	final_flg,
-    	create_time,update_time,
-    	treat_comment,
-    	receivable_comment
+    	create_time,update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

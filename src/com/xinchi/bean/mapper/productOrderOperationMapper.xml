@@ -309,7 +309,7 @@
 		A.off_day,
 		C.supplier_short_name AS supplier_name,
 		C.pk AS supplier_pk,
-		substring_index(D.name_list,':',1) AS passenger
+	 	IF(D.passenger_captain='',substring_index(D.name_list,':',1),D.passenger_captain) AS passenger
 		from product_order_operation A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk

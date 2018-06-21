@@ -1,6 +1,8 @@
 package apptest;
 
-import java.math.BigDecimal;
+import java.util.Arrays;
+
+import com.xinchi.common.ToolsUtil;
 
 public class SomeTest {
 
@@ -13,9 +15,22 @@ public class SomeTest {
 	// }
 
 	public static void main(String[] args) throws Exception {
-		BigDecimal a = new BigDecimal(1);
-		BigDecimal b = new BigDecimal(3).divide(new BigDecimal(100));
-		BigDecimal result = a.divide(b,0,BigDecimal.ROUND_HALF_UP);
-		System.out.println(result.floatValue());
+		 String[] exceptions = {"name","age"};
+	
+		Student s1 = new Student();
+		s1.setName("牛世行");
+		s1.setAge("");
+		s1.setScores(Arrays.asList(exceptions));
+		s1.setSex("");
+
+		Student s2 = new Student();
+		s2.setName("牛世行2");
+		s2.setAge("32");
+		s2.setScores(Arrays.asList(exceptions));
+		s2.setSex("女");
+		
+	 ToolsUtil.combineObject(s1, s2, Arrays.asList(exceptions));
+		
+		System.out.println(s1.getName()+","+s1.getAge()+","+s1.getSex()+","+s1.getScores());
 	}
 }

@@ -26,7 +26,6 @@ var ClientContext = function() {
 	self.refresh = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		console.log(param);
 		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param, function(data) {
 			self.relations(data.relations);
 
@@ -41,6 +40,8 @@ var ClientContext = function() {
 		total : 0,
 		items : []
 	});
+	self.saleScore = ko.observable();
+	self.todayPoint = ko.observable();
 	self.clientEmployeeCount = ko.observable();
 	self.monthOrderCount = ko.observable();
 	self.searchClientSummary = function() {
@@ -49,6 +50,8 @@ var ClientContext = function() {
 			self.clientSummary(data.clientSummary);
 			self.clientEmployeeCount(data.employeeCount);
 			self.monthOrderCount(data.monthOrderCount);
+			self.saleScore(data.sale_score);
+			self.todayPoint(data.today_point);
 		});
 	};
 	self.chosenEmployee = ko.observableArray([]);

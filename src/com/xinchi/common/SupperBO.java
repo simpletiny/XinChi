@@ -11,7 +11,7 @@ public class SupperBO {
 	private String date_to;
 
 	private String delete_flg;
-
+	
 	public String getUpdate_time() {
 		return update_time;
 	}

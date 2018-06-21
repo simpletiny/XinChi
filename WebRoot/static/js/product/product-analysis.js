@@ -37,6 +37,7 @@ var ProductContext = function() {
 				product_pk : self.chosenProducts()[0]
 			}, function(data) {
 				self.product(data.product);
+
 				if (self.product().cash_flow_air_flg == "Y")
 					$("#chk-air-ticket").attr("checked", true);
 
@@ -45,7 +46,7 @@ var ProductContext = function() {
 
 				if (self.product().cash_flow_other_flg == "Y")
 					$("#chk-other").attr("checked", true);
-
+				caculateGrossProfit();
 				costLayer = $.layer({
 					type : 1,
 					title : [ '成本编辑', '' ],
@@ -110,7 +111,7 @@ var ProductContext = function() {
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
 				function(data) {
 					self.products(data.products);
-
+					
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 				});
@@ -172,6 +173,7 @@ $(document).ready(function() {
 
 function caculateGrossProfit() {
 	var adult_price = $("#adult-price").val() - 0;
+	var child_price = $("#child-price").val() - 0;
 	var business_profit_substract = $("#business-profit-substract").val() - 0;
 	var max_profit_substract = $("#max-profit-substract").val() - 0;
 
@@ -179,42 +181,83 @@ function caculateGrossProfit() {
 	var product_price = adult_price - business_profit_substract
 			- max_profit_substract;
 
+	var product_child_price = child_price - business_profit_substract
+			- max_profit_substract;
+
 	var local_adult_cost = $("#local-adult-cost").val() - 0;
 	var air_ticket_cost = $("#air-ticket-cost").val() - 0;
 	var other_cost = $("#other-cost").val() - 0;
 
+	var local_child_cost = $("#local-child-cost").val() - 0;
+	var air_ticket_child_cost = $("#air-ticket-child-cost").val() - 0;
+	var other_child_cost = $("#other-child-cost").val() - 0;
+
 	// 毛利
 	var gross_profit = product_price - local_adult_cost - air_ticket_cost
 			- other_cost;
+	var gross_child_profit = product_child_price - local_child_cost
+			- air_ticket_child_cost - other_child_cost;
+
 	$("#gross-profit").text(gross_profit);
 	$("#txt-gross-profit").val(gross_profit);
+
+	$("#gross-child-profit").text(gross_child_profit);
+	$("#txt-gross-child-profit").val(gross_child_profit);
 
 	// 毛利率
 	var gross_profit_rate = 0;
 	if (adult_price - business_profit_substract != 0) {
 		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract))
 				.toFixed(2));
-		gross_profit_rate = Math.ceil(gross_profit_rate * 100);
+		gross_profit_rate = Math.round(gross_profit_rate * 100);
 	}
+
+	var gross_child_profit_rate = 0;
+	if (child_price - business_profit_substract != 0) {
+		gross_child_profit_rate = parseFloat((gross_child_profit / (child_price - business_profit_substract))
+				.toFixed(2));
+		gross_child_profit_rate = Math.round(gross_child_profit_rate * 100);
+	}
+
 	$("#gross-profit-rate").text(gross_profit_rate + "%");
 	$("#txt-gross-profit-rate").val(gross_profit_rate);
 
+	$("#gross-child-profit-rate").text(gross_child_profit_rate + "%");
+	$("#txt-gross-child-profit-rate").val(gross_child_profit_rate);
+
 	// 现付资金
 	var spot_cash = 0;
-	if ($("#chk-air-ticket").is(":checked"))
+	var spot_child_cash = 0;
+	if ($("#chk-air-ticket").is(":checked")) {
 		spot_cash += air_ticket_cost;
-	if ($("#chk-local").is(":checked"))
+		spot_child_cash += air_ticket_child_cost;
+	}
+
+	if ($("#chk-local").is(":checked")) {
 		spot_cash += local_adult_cost;
-	if ($("#chk-other").is(":checked"))
+		spot_child_cash += local_child_cost;
+	}
+
+	if ($("#chk-other").is(":checked")) {
 		spot_cash += other_cost;
+		spot_child_cash += other_child_cost;
+	}
 
 	$("#spot-cash").text(spot_cash)
 	$("#txt-spot-cash").val(spot_cash);
 
+	$("#spot-child-cash").text(spot_child_cash)
+	$("#txt-spot-child-cash").val(spot_child_cash);
+
 	// 现金流
 	var cash_flow = product_price - spot_cash;
+	var cash_child_flow = product_child_price - spot_child_cash;
+
 	$("#cash-flow").text(cash_flow);
 	$("#txt-cash-flow").val(cash_flow);
+
+	$("#cash-child-flow").text(cash_child_flow);
+	$("#txt-cash-child-flow").val(cash_child_flow);
 }
 
 function updateCost() {

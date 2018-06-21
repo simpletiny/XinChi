@@ -44,7 +44,9 @@ var PaidContext = function() {
 		'P' : '票务费用',
 		'J' : '交通垫付',
 		'G' : '工资费用',
-		'Q' : '其他支出'
+		'Q' : '其他支出',
+		'M' : '多付返款',
+		'F' : 'FLY'
 	};
 
 	self.statusMapping = {

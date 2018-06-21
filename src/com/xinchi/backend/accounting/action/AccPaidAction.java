@@ -17,9 +17,11 @@ import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReimbursementBean;
@@ -90,6 +92,9 @@ public class AccPaidAction extends BaseAction {
 	@Autowired
 	private AirTicketPaidDetailService airTicketPaidDetailService;
 
+	@Autowired
+	private ReceivedService receivedService;
+
 	public String pay() {
 		JSONArray array = JSONArray.fromObject(json);
 		for (int i = 0; i < array.size(); i++) {
@@ -140,6 +145,16 @@ public class AccPaidAction extends BaseAction {
 				paid.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
 				airTicketPaidDetailService.update(paid);
 			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+			receivedService.update(detail);
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+			receivedService.update(detail);
 		} else {
 			ReimbursementBean reim = reimService.selectByPk(related_pk);
 			reim.setPay_user(sessionBean.getUser_number());
@@ -199,6 +214,16 @@ public class AccPaidAction extends BaseAction {
 				paid.setTime(DateUtil.getDateStr(""));
 				airTicketPaidDetailService.update(paid);
 			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			receivedService.update(detail);
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			receivedService.update(detail);
 		} else {
 			ReimbursementBean reim = reimService.selectByPk(related_pk);
 			reim.setPay_user("");

@@ -15,6 +15,8 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private String client_area;
 
+	private String client_county;
+
 	private String client_type;
 
 	private String telephone;
@@ -66,6 +68,8 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private String market_level;
 	private String talk_level;
+
+	private List<ClientUserBean> client_users;
 	// search options
 
 	private List<String> statuses;
@@ -383,6 +387,22 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setMain_businesses(List<String> main_businesses) {
 		this.main_businesses = main_businesses;
+	}
+
+	public String getClient_county() {
+		return client_county;
+	}
+
+	public void setClient_county(String client_county) {
+		this.client_county = client_county;
+	}
+
+	public List<ClientUserBean> getClient_users() {
+		return client_users;
+	}
+
+	public void setClient_users(List<ClientUserBean> client_users) {
+		this.client_users = client_users;
 	}
 
 }

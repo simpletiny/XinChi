@@ -31,5 +31,11 @@
 		<action name="fixPassenger" class="simpletinyAction" method="fixPassenger">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="updateProductDetail" class="simpletinyAction" method="updateProductDetail">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="insertIntoClientUser" class="simpletinyAction" method="insertIntoClientUser">
+			<result name="success" type="redirect">/</result>
+		</action>
 	</package>
 </struts>

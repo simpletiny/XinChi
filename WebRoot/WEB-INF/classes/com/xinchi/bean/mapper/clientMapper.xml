@@ -5,6 +5,7 @@
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
 		<result column="client_short_name" property="client_short_name" jdbcType="VARCHAR" />
 		<result column="client_area" property="client_area" jdbcType="VARCHAR" />
+		<result column="client_county" property="client_county" jdbcType="VARCHAR" />
 		<result column="client_type" property="client_type" jdbcType="VARCHAR" />
 		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
 		<result column="fax" property="fax" jdbcType="VARCHAR" />
@@ -41,6 +42,27 @@
 		<result column="talk_level" property="talk_level" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientBean">
+		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean" select="selectClientUserByClientPk">
+			<result column="client_pk" property="client_pk" jdbcType="CHAR" />
+			<result column="user_pk" property="user_pk" jdbcType="CHAR" />
+			<result column="user_name" property="user_name" jdbcType="VACHAR" />
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+
+	<resultMap id="DayPointMap" type="com.xinchi.bean.DayPointDto">
+		<result column="point" property="point" jdbcType="DECIMAL" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="day_date" property="day_date" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 
 		client_name,
@@ -75,7 +97,8 @@
 		store_type,
 		back_level,
 		market_level,
-		talk_level
+		talk_level,
+		client_county
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -207,6 +230,9 @@
 			<if test="talk_level != null">
 				talk_level,
 			</if>
+			<if test="client_county != null">
+				client_county,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="client_name != null">
@@ -308,6 +334,9 @@
 			</if>
 			<if test="talk_level != null">
 				#{talk_level,jdbcType=VARCHAR},
+			</if>
+			<if test="client_county != null">
+				#{client_county,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -412,25 +441,54 @@
 			<if test="talk_level != null">
 				talk_level=#{talk_level,jdbcType=VARCHAR},
 			</if>
+			<if test="client_county != null">
+				client_county=#{client_county,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
 	<select id="selectByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from client
+		A.client_name,
+		A.client_short_name,
+		A.client_area,
+		A.client_county,
+		A.client_type,
+		A.telephone,
+		A.fax,
+		A.address,
+		A.body_name,
+		A.body_sex,
+		A.body_id,
+		A.body_birth_year,
+		A.body_wechat,
+		A.body_cellphone,
+		A.create_user,
+		A.update_user,
+		A.approve_user,
+		A.update_reason,
+		A.comment,
+		A.pk,
+		A.public_flg,
+		A.create_time,
+		A.update_time,
+		A.delete_flg,
+		A.agency_name,
+		A.agency_pk,
+		A.relate_flg,
+		A.main_business,
+		A.store_type,
+		A.back_level,
+		A.market_level,
+		A.talk_level
+		from client A LEFT JOIN
+		client_user B ON A.pk = B.client_pk
 		<where>
-			<if test="create_user != null">
-				and create_user = #{create_user,jdbcType=VARCHAR}
-			</if>
 			<if test="sales != null">
-				and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
+				and B.user_pk = #{sales,jdbcType=VARCHAR}
 			</if>
 			<if test="client_name != null">
-				and client_name = #{client_name,jdbcType=VARCHAR}
-			</if>
-			<if test="address != null">
-				and address = #{address,jdbcType=VARCHAR}
+				and A.client_name = #{client_name,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -439,6 +497,7 @@
 		A.client_name,
 		A.client_short_name,
 		A.client_area,
+		A.client_county,
 		A.client_type,
 		A.telephone,
 		A.fax,
@@ -475,17 +534,19 @@
 		F.last_order_date
 		from client A LEFT JOIN
 		user_base B ON A.sales = B.pk
-		LEFT JOIN view_client_employee_count C ON A.pk = C.client_pk
+		LEFT JOIN
+		view_client_employee_count C ON A.pk = C.client_pk
 		LEFT JOIN
 		view_client_receivable D ON A.pk = D.client_pk
 		LEFT JOIN
 		view_client_year_order_count E ON A.pk = E.client_pk
 		LEFT JOIN
-		view_client_last_order F ON A.pk
-		= F.client_pk
+		view_client_last_order F ON A.pk = F.client_pk
+		LEFT JOIN
+		client_user G ON A.pk = G.client_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
+				and (G.user_pk = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
 			</if>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and A.client_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -498,6 +559,9 @@
 			</if>
 			<if test="params.bo.client_area != null and params.bo.client_area !=''">
 				and A.client_area = #{params.bo.client_area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_county != null and params.bo.client_county !=''">
+				and A.client_county = #{params.bo.client_county,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.store_type != null and params.bo.store_type !=''">
 				and A.store_type=#{params.bo.store_type,jdbcType=VARCHAR}
@@ -537,5 +601,121 @@
 			</if>
 		</where>
 		ORDER BY address DESC
+	</select>
+	<select id="selectAdminByPage" parameterType="com.xinchi.tools.Page" resultMap="AdminResultMap">
+		select
+		A.client_name,
+		A.client_short_name,
+		A.client_area,
+		A.client_county,
+		A.client_type,
+		A.telephone,
+		A.fax,
+		A.address,
+		A.body_name,
+		A.body_sex,
+		A.body_id,
+		A.body_birth_year,
+		A.body_wechat,
+		A.body_cellphone,
+		A.create_user,
+		A.update_user,
+		A.approve_user,
+		A.update_reason,
+		A.comment,
+		A.pk,
+		A.public_flg,
+		A.create_time,
+		A.update_time,
+		A.delete_flg,
+		A.agency_name,
+		A.agency_pk,
+		A.relate_flg,
+		A.main_business,
+		A.store_type,
+		A.back_level,
+		A.market_level,
+		A.talk_level,
+		C.client_employee_count,
+		D.sum_balance,
+		E.client_year_order_count,
+		F.last_order_date
+		from client A LEFT JOIN
+		view_client_employee_count C ON A.pk = C.client_pk
+		LEFT JOIN
+		view_client_receivable D ON A.pk = D.client_pk
+		LEFT JOIN
+		view_client_year_order_count E ON A.pk = E.client_pk
+		LEFT JOIN
+		view_client_last_order F ON A.pk
+		= F.client_pk
+		<where>
+			<if test="params.bo.client_name != null and params.bo.client_name !=''">
+				and A.client_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.client_short_name != null and params.bo.client_short_name !=''">
+				and A.client_short_name like CONCAT('%',#{params.bo.client_short_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.address != null and params.bo.address !=''">
+				and A.address like CONCAT('%',#{params.bo.address,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.client_area != null and params.bo.client_area !=''">
+				and A.client_area = #{params.bo.client_area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_county != null and params.bo.client_county !=''">
+				and A.client_county = #{params.bo.client_county,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.store_type != null and params.bo.store_type !=''">
+				and A.store_type=#{params.bo.store_type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.back_level != null and params.bo.back_level !=''">
+				and A.back_level=#{params.bo.back_level,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.delete_flg in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.relate_flgs != null and params.bo.relate_flgs !=''">
+				and A.relate_flg in
+				<foreach item="item" index="index" collection="params.bo.relate_flgs" open="(" separator="," close=")">
+					#{params.bo.relate_flgs[${index}]}
+				</foreach>
+			</if>
+			<if test='params.bo.public_flg != null and params.bo.public_flg =="1"'>
+				and A.public_flg in ('Y','N')
+			</if>
+			<if test='params.bo.public_flg != null and params.bo.public_flg =="2"'>
+				and A.public_flg ='N'
+			</if>
+			<if test="params.bo.talk_levels != null and params.bo.talk_levels !=''">
+				and A.talk_level in
+				<foreach item="item" index="index" collection="params.bo.talk_levels" open="(" separator="," close=")">
+					#{params.bo.talk_levels[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.main_businesses != null and params.bo.main_businesses !=''">
+				and A.main_business in
+				<foreach item="item" index="index" collection="params.bo.main_businesses" open="(" separator="," close=")">
+					#{params.bo.main_businesses[${index}]}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY address DESC
+	</select>
+	<select id="selectClientUserByClientPk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientUserBean">
+		select
+		A.client_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
+		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user
+		from client_user A LEFT
+		JOIN user_base B ON
+		A.user_pk= B.pk
+		where A.client_pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectTodayPoint" parameterType="java.lang.String" resultMap="DayPointMap">
+
+
 	</select>
 </mapper>

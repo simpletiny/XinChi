@@ -53,4 +53,6 @@ public interface ProductService extends BaseService {
 	public String updateProductDirectly(ProductBean product);
 
 	public String updateProductValue(ProductBean product, ProductDelayBean delay);
+
+	public void sysUpdate(ProductBean product);
 }

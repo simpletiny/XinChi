@@ -6,19 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.client.dao.ClientChangeSaleLogDAO;
 import com.xinchi.backend.client.dao.ClientDAO;
+import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.ClientService;
-import com.xinchi.backend.sale.dao.SaleOrderDAO;
+import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.user.dao.UserDAO;
-import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ClientBean;
-import com.xinchi.bean.ClientChangeSaleLogBean;
 import com.xinchi.bean.ClientEmployeeBean;
-import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.UserSessionBean;
-import com.xinchi.common.XinChiApplicationContext;
+import com.xinchi.bean.ClientUserBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.tools.Page;
 
 @Service
@@ -111,43 +108,30 @@ public class ClientServiceImpl implements ClientService {
 	private EmployeeDAO employeeDao;
 
 	@Autowired
-	private ClientChangeSaleLogDAO clientChangeSaleLogDao;
+	private ClientUserDAO clientUserDao;
 
 	@Override
-	public String changeClientSales(List<String> company_pks, String sale_pk) {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String current_user = sessionBean.getUser_number();
+	public String changeClientSales(List<String> company_pks, List<String> sale_pks) {
+		String main_user = sale_pks.get(0);
 
 		for (String company_pk : company_pks) {
 			ClientBean client = dao.selectByPrimaryKey(company_pk);
-			// 如果本身就属于此销售，则略过
-			if (client.getSales().equals(sale_pk))
-				continue;
 
-			ClientBean options = new ClientBean();
-			options.setSales(sale_pk);
-			options.setClient_name(client.getClient_name());
+			// 删除之前存在的对应关系
+			clientUserDao.deleteByClientPk(company_pk);
 
-			String pre_sale_pk = client.getSales();
-			List<ClientBean> exists = dao.getAllByParam(options);
-			// 记录更换日志
-			ClientChangeSaleLogBean changeLog = new ClientChangeSaleLogBean();
-
-			// 如果新销售存在同名财务主体
-			if (exists != null && exists.size() > 0) {
-				// 原财务主体停用
-				client.setDelete_flg("Y");
-				changeLog.setType(ResourcesConstants.CLIENT_CHANGE_SALE_TYPE_COMBINE);
-				changeLog.setCombine_client_pk(exists.get(0).getPk());
+			if (main_user.equals("public")) {
+				client.setPublic_flg("Y");
 			} else {
-				client.setSales(sale_pk);
-				if (sale_pk.equals("public")) {
-					client.setPublic_flg("Y");
-				} else {
-					client.setPublic_flg("N");
-				}
+				client.setPublic_flg("N");
+				// 保存新的对应关系
+				for (String sale_pk : sale_pks) {
+					ClientUserBean cub = new ClientUserBean();
 
-				changeLog.setType(ResourcesConstants.CLIENT_CHANGE_SALE_TYPE_TRANSFER);
+					cub.setClient_pk(company_pk);
+					cub.setUser_pk(sale_pk);
+					clientUserDao.insert(cub);
+				}
 			}
 
 			ClientEmployeeBean employeeOption = new ClientEmployeeBean();
@@ -157,29 +141,23 @@ public class ClientServiceImpl implements ClientService {
 
 			if (null != PreEmployees) {
 				for (ClientEmployeeBean employee : PreEmployees) {
-					employee.setSales(sale_pk);
+					employee.setSales(main_user);
 
-					if (sale_pk.equals("public")) {
+					if (main_user.equals("public")) {
 						employee.setPublic_flg("Y");
 					} else {
 						employee.setPublic_flg("N");
 					}
-
 					employeeDao.update(employee);
 				}
 			}
-
-			changeLog.setPre_sale_pk(pre_sale_pk);
-			changeLog.setClient_pk(company_pk);
-			changeLog.setChange_user(current_user);
 			dao.update(client);
-			clientChangeSaleLogDao.insert(changeLog);
 		}
 		return SUCCESS;
 	}
 
 	@Autowired
-	private SaleOrderDAO saleOrderDao;
+	private OrderDAO orderDao;
 
 	@Override
 	public String deleteClientReally(String client_pk) {
@@ -187,12 +165,12 @@ public class ClientServiceImpl implements ClientService {
 		employeeOption.setFinancial_body_pk(client_pk);
 
 		List<ClientEmployeeBean> employees = employeeDao.getAllByParam(employeeOption);
-		BudgetOrderBean orderOption = new BudgetOrderBean();
+		OrderDto orderOption = new OrderDto();
 
 		// 查询每个客户下是否存在订单
 		for (ClientEmployeeBean employee : employees) {
 			orderOption.setClient_employee_pk(employee.getPk());
-			List<BudgetOrderBean> orders = saleOrderDao.selectAllByParam(orderOption);
+			List<OrderDto> orders = orderDao.selectByParam(orderOption);
 
 			if (null != orders && orders.size() > 0) {
 				return "has_order";
@@ -212,5 +190,11 @@ public class ClientServiceImpl implements ClientService {
 	public String pureUpdate(ClientBean client) {
 		dao.update(client);
 		return SUCCESS;
+	}
+
+	@Override
+	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page) {
+
+		return dao.selectCompaniesByPageAdmin(page);
 	}
 }

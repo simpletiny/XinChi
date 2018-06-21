@@ -6,12 +6,41 @@ var CompanyContext = function() {
 	self.genders = [ '男', '女' ];
 	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
 			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.countyMapping = {
+		'哈尔滨' : [ '道里区', '南岗区', '道外区', '平房区', '松北区', '香坊区', '呼兰区', '阿城区',
+				'双城区', '哈西区', '开发区', '群力区', '尚志市', '五常市', '依兰县', '方正县', '宾县',
+				'巴彦县', '木兰县', '通河县', '延寿县' ],
+		'齐齐哈尔' : [ '齐齐哈尔' ],
+		'牡丹江' : [ '牡丹江' ],
+		'佳木斯' : [ '佳木斯' ],
+		'大庆' : [ '新村', '让胡路区', '萨尔图区', '龙凤区', '红岗区', '大同区', '肇州县', '肇源县',
+				'林甸县', '杜尔伯特县' ],
+		'鸡西' : [ '鸡西' ],
+		'绥化' : [ '绥化' ],
+		'呼伦贝尔' : [ '呼伦贝尔' ],
+		'伊春' : [ '伊春' ],
+		'鹤岗' : [ '鹤岗' ],
+		'双鸭山' : [ '双鸭山' ],
+		'黑河' : [ '黑河' ],
+		'大兴安岭' : [ '大兴安岭' ]
+	};
+	self.client().client_area = ko.observable();
+	self.client().client_county = ko.observable();
+
+	self.ter = function() {
+		$("#county").empty();
+		for (var i = 0; i < self.countyMapping[self.client().client_area()].length; i++) {
+			var value = self.countyMapping[self.client().client_area()][i];
+			$("#county").append(
+					"<option value='" + value + "'>" + value + "</option>");
+		}
+	};
 	self.clientType = [ '总公司', '分公司', '营业部', '包桌', '经纪人', '其他' ];
 	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
 	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
 	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
-	self.talkLevels = [ '未知', '强', '中', '弱'];
+	self.talkLevels = [ '核心', '主力', '市场', '排斥' ];
 
 	self.createCompany = function() {
 		if (!$("form").valid()) {

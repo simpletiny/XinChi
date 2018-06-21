@@ -25,7 +25,8 @@ public class ClientAction extends BaseAction {
 	private ClientService clientService;
 
 	public String createCompany() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		client.setSales(sessionBean.getPk());
 		client.setSales_name(sessionBean.getUser_name());
 		if (!SimpletinyString.isEmpty(client.getAgency_pk())) {
@@ -52,41 +53,30 @@ public class ClientAction extends BaseAction {
 
 	private List<ClientBean> clients;
 
-	public String searchCompany() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String roles = sessionBean.getUser_roles();
-		ClientBean cb = null;
-
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			cb = new ClientBean();
-			cb.setCreate_user(sessionBean.getUser_number());
-		}
-
-		clients = clientService.getAllCompaniesByParam(cb);
-		return SUCCESS;
-	}
-
 	public String searchCompanyByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
+
+			if (client.getPublic_flg() != null && client.getPublic_flg().equals("Y")) {
+				client.setPublic_flg("1");
+			} else if (client.getPublic_flg() != null && client.getPublic_flg().equals("N")) {
+				client.setPublic_flg("2");
+			} else if (client.getPublic_flg() == null) {
+				client.setPublic_flg("1");
+			}
+			params.put("bo", client);
+			page.setParams(params);
+			clients = clientService.getAllCompaniesByPage(page);
+		}else {
+			params.put("bo", client);
+			page.setParams(params);
+			clients = clientService.selectCompaniesByPageAdmin(page);
 		}
-		if (client.getPublic_flg() != null && client.getPublic_flg().equals("Y")) {
-			client.setPublic_flg("1");
-		} else if (client.getPublic_flg() != null && client.getPublic_flg().equals("N")) {
-			client.setPublic_flg("2");
-		} else if (client.getPublic_flg() == null) {
-			client.setPublic_flg("1");
-		}
-
-		params.put("bo", client);
-
-		page.setParams(params);
-
-		clients = clientService.getAllCompaniesByPage(page);
 		return SUCCESS;
 	}
 
@@ -114,11 +104,11 @@ public class ClientAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private String sale_pk;
+	private List<String> sale_pks;
 
 	public String changeClientSales() {
 
-		resultStr = clientService.changeClientSales(company_pks, sale_pk);
+		resultStr = clientService.changeClientSales(company_pks, sale_pks);
 		return SUCCESS;
 	}
 
@@ -154,12 +144,12 @@ public class ClientAction extends BaseAction {
 		this.company_pks = company_pks;
 	}
 
-	public String getSale_pk() {
-		return sale_pk;
+	public List<String> getSale_pks() {
+		return sale_pks;
 	}
 
-	public void setSale_pk(String sale_pk) {
-		this.sale_pk = sale_pk;
+	public void setSale_pks(List<String> sale_pks) {
+		this.sale_pks = sale_pks;
 	}
 
 }

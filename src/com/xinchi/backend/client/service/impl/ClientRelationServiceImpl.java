@@ -70,4 +70,8 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 
 		return visitDao.selectByPage(page);
 	}
+	@Override
+	public List<ClientVisitBean> selectVisitByParam(ClientVisitBean param){
+		return visitDao.selectByParam(param);
+	}
 }

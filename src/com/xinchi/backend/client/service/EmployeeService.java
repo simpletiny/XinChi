@@ -3,11 +3,13 @@ package com.xinchi.backend.client.service;
 import java.util.List;
 
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.RelationLevelDto;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "客户员工")
-public interface EmployeeService {
+public interface EmployeeService extends BaseService {
 
 	/**
 	 * 新增
@@ -21,7 +23,7 @@ public interface EmployeeService {
 	 * 
 	 * @param bo
 	 */
-	public void update(com.xinchi.bean.ClientEmployeeBean bo);
+	public String update(com.xinchi.bean.ClientEmployeeBean bo);
 
 	/**
 	 * 删除
@@ -62,4 +64,14 @@ public interface EmployeeService {
 
 	@LogDescription(des = "恢复客户员工")
 	public String recoveryClientEmployee(List<String> employee_pks);
+
+	public RelationLevelDto selectRelationCntBySales(String sales_pk);
+
+	public String publicClientEmployee(List<String> employee_pks);
+
+	public String deleteClientEmployeeReally(String employee_pk);
+
+	public String combineClientEmployee(List<String> employee_pks);
+
+	public String jobHopping(ClientEmployeeBean employee);
 }

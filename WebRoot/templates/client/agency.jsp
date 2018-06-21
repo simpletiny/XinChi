@@ -92,7 +92,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-							<button  style="float:right" type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button  style="float:right" st="btn-search" type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">

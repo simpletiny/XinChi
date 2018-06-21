@@ -18,6 +18,7 @@
 		<!-- 配置sql语句文件 -->
 
 		<!-- Mapper注册 -->
+		<mapper resource="com/xinchi/bean/mapper/commonMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/userBaseMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/userInfoMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/userCommonMapper.xml" />
@@ -90,6 +91,8 @@
 		<mapper resource="com/xinchi/bean/mapper/finalNonStandardOrderMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/viewAirTicketPaidDetailMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/productDelayMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientUserMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/jobHoppingLogMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

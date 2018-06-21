@@ -2,8 +2,12 @@ package com.xinchi.common;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -627,5 +631,63 @@ public class ToolsUtil {
 			result += i;
 		}
 		return result;
+	}
+
+	/**
+	 * 合并对象，以main为主，main中为空的属性赋assist的值
+	 * 
+	 * @param main
+	 * @param assist
+	 * @param exceptions
+	 * @return
+	 */
+	public static Object combineObject(Object main, Object assist, List<String> exceptions) {
+		if (assist == null) {
+			return main;
+		}
+		if (!assist.getClass().getName().equals(main.getClass().getName()))
+			return main;
+
+		try {
+			Field[] fields = main.getClass().getDeclaredFields();
+			for (Field field : fields) {
+//				field.setAccessible(true);// 修改访问权限
+				if (Modifier.isFinal(field.getModifiers()))
+					continue;
+				// 排除例外
+				if (exceptions.contains(field.getName()))
+					continue;
+
+				if (isWrapType(field)) {
+					String firstLetter = field.getName().substring(0, 1).toUpperCase(); // 首字母大写
+					String getMethodName = "get" + firstLetter + field.getName().substring(1);
+					String setMethodName = "set" + firstLetter + field.getName().substring(1);
+					Method mainGetMethod = main.getClass().getMethod(getMethodName); // 从源对象获取get方法
+					Method assistGetMethod = assist.getClass().getMethod(getMethodName);
+
+					Method mainSetMethod = main.getClass().getMethod(setMethodName, new Class[] { field.getType() }); // 从目标对象获取set方法
+
+					// 获取main中的值
+					Object mainValue = mainGetMethod.invoke(main);
+					if (null == mainValue || mainValue.toString().equals("")) {
+						Object assistValue = assistGetMethod.invoke(assist);
+						mainSetMethod.invoke(main, new Object[] { assistValue }); // set 设置的是目标对象的值
+					}
+				}
+			}
+			return main;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		return main;
+	}
+
+	private static boolean isWrapType(Field field) {
+		String[] types = { "java.lang.Integer", "java.lang.Double", "java.lang.Float", "java.lang.Long",
+				"java.lang.Short", "java.lang.Byte", "java.lang.Boolean", "java.lang.Char", "java.lang.String", "int",
+				"double", "long", "short", "byte", "boolean", "char", "float" };
+		List<String> typeList = Arrays.asList(types);
+		return typeList.contains(field.getType().getName()) ? true : false;
 	}
 }

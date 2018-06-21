@@ -43,8 +43,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">财务主体</label>
-                        <div class="ip"><input type="text" class="ip- date-picker" data-bind="value: employee().financial_body_name,click:choseFinancial" placeholder="点击选择" name="employee.financial_body_name" id="financial_body_name" required="required"/>
-                        <input type="text" class="ip- date-picker" data-bind="value: employee().financial_body_pk,click:choseFinancial" style="display:none" name="employee.financial_body_pk" id="financial_body_pk" required="required"/>
+                        <div class="ip"><input type="text" class="ip-" data-bind="value: employee().financial_body_name,click:choseFinancial" placeholder="点击选择" name="employee.financial_body_name" id="financial_body_name" required="required"/>
+                        <input type="text" class="ip-" data-bind="value: employee().financial_body_pk,click:choseFinancial" style="display:none" name="employee.financial_body_pk" id="financial_body_pk" required="required"/>
                         </div>
                     </div>
                 </div>
@@ -71,12 +71,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </div>
                <div class="input-row clearfloat">
                     <div class="col-md-6">
-                        <label class="l">QQ</label>
-                        <div class="ip"><input type="text" class="ip-" maxlength="15" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
+                        <label class="l">微信</label>
+                        <div class="ip"><input type="text" class="ip-" maxlength="20" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"/></div>
                     </div>
                      <div class="col-md-6 required">
                         <label class="l">类型</label>
                         <div class="ip"><select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type" required="required"></select></div>
+                    </div>
+                </div>
+               <div class="input-row clearfloat">
+                    <div class="col-md-6">
+                        <label class="l">QQ</label>
+                        <div class="ip"><input type="text" class="ip-" maxlength="15" data-bind="value: employee().qq" placeholder="QQ" name="employee.qq"/></div>
                     </div>
                 </div>
 <!-- 				<div class="input-row clearfloat required">

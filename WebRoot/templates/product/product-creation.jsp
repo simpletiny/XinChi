@@ -63,7 +63,7 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<div class="input-row clearfloat">
-						<label class="l"><input type="checkbox" checked="checked" value="Y" name="product.strict_price_flg"/>严格执行定价</label>
+						<label class="l"><input type="checkbox" checked="checked" value="Y" name="product.strict_price_flg" />严格执行定价</label>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-1">&nbsp;</div>
@@ -130,8 +130,8 @@
 								</td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" data-bind="value: product().child_price" placeholder="儿童报价"
-											name="product.child_price" />
+										<input type="number" class="ip-" id="child-price" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().child_price" placeholder="儿童报价" name="product.child_price" />
 									</div>
 								</td>
 								<td>
@@ -156,7 +156,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" checked="checked" value="Y" id="chk-air-ticket" onclick="caculateGrossProfit()" name="product.cash_flow_air_flg"/></td>
+								<td><input type="checkbox" value="Y" id="chk-air-ticket" checked="checked" onclick="caculateGrossProfit()"
+									name="product.cash_flow_air_flg" /></td>
 								<td>
 									<div class="required">
 										<label class="l">机票成本</label>
@@ -168,8 +169,8 @@
 								</td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" data-bind="value: product().air_ticket_child_cost" placeholder="儿童机票"
-											name="product.air_ticket_child_cost" />
+										<input type="number" class="ip-" id="air-ticket-child-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().air_ticket_child_cost" placeholder="儿童机票" name="product.air_ticket_child_cost" />
 									</div>
 								</td>
 								<td><label class="l">首段出港</label>
@@ -184,7 +185,8 @@
 									</div></td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" value="Y" id="chk-local" onclick="caculateGrossProfit()" name="product.cash_flow_local_flg"/></td>
+								<td><input type="checkbox" value="Y" id="chk-local" onclick="caculateGrossProfit()"
+									name="product.cash_flow_local_flg" /></td>
 								<td>
 									<div class="required">
 										<label class="l">地接成本</label>
@@ -196,8 +198,8 @@
 								</td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" data-bind="value: product().local_child_cost" placeholder="儿童"
-											name="product.local_child_cost" />
+										<input type="number" class="ip-" id="local-child-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().local_child_cost" placeholder="儿童" name="product.local_child_cost" />
 									</div>
 								</td>
 								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
@@ -207,7 +209,8 @@
 									</div></td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" checked="checked" id="chk-other" value="Y" onclick="caculateGrossProfit()" name="product.cash_flow_other_flg"/></td>
+								<td><input type="checkbox" id="chk-other" value="Y" checked="checked" onclick="caculateGrossProfit()"
+									name="product.cash_flow_other_flg" /></td>
 								<td><label class="l">其他成本</label>
 									<div class="ip fix-width">
 										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()"
@@ -215,8 +218,8 @@
 									</div></td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" data-bind="value: product().other_child_cost" placeholder="儿童"
-											name="product.other_child_cost" />
+										<input type="number" class="ip-" id="other-child-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().other_child_cost" placeholder="儿童" name="product.other_child_cost" />
 									</div>
 								</td>
 							</tr>
@@ -226,18 +229,28 @@
 								<td style="width: 24%"><label class="l">毛利</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="gross-profit" data-bind="text: product().gross_profit"></p>
-										<input type="hidden" id="txt-gross-profit" data-bind="text: product().gross_profit" name="product.gross_profit" />
+										<input type="hidden" id="txt-gross-profit" data-bind="text: product().gross_profit"
+											name="product.gross_profit" />
 									</div></td>
-								<td style="width: 24%">&nbsp;</td>
+								<td style="width: 24%"><div class="ip fix-width">
+										<p class="ip-default" id="gross-child-profit" data-bind="text: product().gross_child_profit"></p>
+										<input type="hidden" id="txt-gross-child-profit" data-bind="text: product().gross_child_profit"
+											name="product.gross_child_profit" />
+									</div></td>
 							</tr>
 							<tr>
 								<td style="width: 4%">&nbsp;</td>
 								<td style="width: 24%"><label class="l">毛利率</label>
 									<div class="ip fix-width">
 										<p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"></p>
-										<input type="hidden" id="txt-gross-profit-rate" data-bind="text: product().gross_profit_rate" name="product.gross_profit_rate" />
+										<input type="hidden" id="txt-gross-profit-rate" data-bind="text: product().gross_profit_rate"
+											name="product.gross_profit_rate" />
 									</div></td>
-								<td style="width: 24%">&nbsp;</td>
+								<td style="width: 24%"><div class="ip fix-width">
+										<p class="ip-default" id="gross-child-profit-rate" data-bind="text: product().gross_child_profit_rate"></p>
+										<input type="hidden" id="txt-gross-child-profit-rate" data-bind="text: product().gross_child_profit_rate"
+											name="product.gross_child_profit_rate" />
+									</div></td>
 							</tr>
 							<tr>
 								<td style="width: 4%">&nbsp;</td>
@@ -246,7 +259,11 @@
 										<p class="ip-default" id="cash-flow" data-bind="text: product().cash_flow"></p>
 										<input type="hidden" id="txt-cash-flow" data-bind="text: product().cash_flow" name="product.cash_flow" />
 									</div></td>
-								<td style="width: 24%">&nbsp;</td>
+								<td style="width: 24%"><div class="ip fix-width">
+										<p class="ip-default" id="cash-child-flow" data-bind="text: product().cash_child_flow"></p>
+										<input type="hidden" id="txt-cash-child-flow" data-bind="text: product().cash_child_flow"
+											name="product.cash_child_flow" />
+									</div></td>
 								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
 									<div class="ip">
 										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy"
@@ -260,8 +277,13 @@
 										<p class="ip-default" id="spot-cash" data-bind="text: product().spot_cash"></p>
 										<input type="hidden" id="txt-spot-cash" data-bind="text: product().spot_cash" name="product.spot_cash" />
 									</div></td>
-								<td style="width: 24%">&nbsp;</td>
+								<td style="width: 24%"><div class="ip fix-width">
+										<p class="ip-default" id="spot-child-cash" data-bind="text: product().spot_child_cash"></p>
+										<input type="hidden" id="txt-spot-child-cash" data-bind="text: product().spot_child_cash"
+											name="product.spot_child_cash" />
+									</div></td>
 							</tr>
+
 							<tr>
 								<td></td>
 								<td>

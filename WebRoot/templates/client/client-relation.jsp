@@ -54,13 +54,16 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-					
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">新增拜访</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createAccurateSale() }">新增精推</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">有效拜访</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createAccurateSale() }">有效沟通</button>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button>
+						<label class="col-md-1 control-label">当月分值</label>
+						<div class="col-md-2"><p class="ip-default" data-bind="text: saleScore()"></p></div>
+						<label class="col-md-1 control-label">当日勤点</label>
+						<div class="col-md-2"><p class="ip-default" data-bind="text: todayPoint()"></p></div>
 					</div>
-		
+				
 					<div class="form-group">
 						<div class="span6">
 								<label class="col-md-1 control-label">客户</label>
@@ -84,7 +87,7 @@ tr td {
 								</div>
 							</div>
 						</s:if>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
+							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 					</div>
 				</form>
 				

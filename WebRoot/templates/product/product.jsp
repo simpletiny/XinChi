@@ -111,7 +111,7 @@ tr td {
 						</s:if>
 						<div style="width: 30%; float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
+								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 							</div>
 						</div>
 					</div>
@@ -167,8 +167,8 @@ tr td {
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
 								<td
 									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
-								<td data-bind="text: $data.sale_attention"></td>
-								<td data-bind="text: $data.sale_strategy"></td>
+								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}" ></a></td>
+								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}" ></a></td>
 
 								<!-- ko if: $data.air_ticket_charge=='NO' -->
 								<td>未绑定</td>

@@ -8,6 +8,8 @@ import com.xinchi.tools.Page;
 public interface ClientVisitDAO {
 
 	public void insert(ClientVisitBean visit);
+	
+	public void update(ClientVisitBean visit);
 
 	public List<ClientVisitBean> selectByPage(Page page);
 	

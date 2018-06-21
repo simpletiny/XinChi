@@ -42,6 +42,11 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="off_shelves_date" property="off_shelves_date" jdbcType="VARCHAR" />
+		<result column="gross_child_profit" property="gross_child_profit" jdbcType="DECIMAL" />
+		<result column="gross_child_profit_rate" property="gross_child_profit_rate" jdbcType="FLOAT" />
+		<result column="cash_child_flow" property="cash_child_flow" jdbcType="DECIMAL" />
+		<result column="spot_child_cash" property="spot_child_cash" jdbcType="DECIMAL" />
+
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -84,7 +89,11 @@
 		cash_flow_other_flg,
 		create_time,
 		update_time,
-		off_shelves_date
+		off_shelves_date,
+		gross_child_profit,
+		cash_child_flow,
+		spot_child_cash,
+		gross_child_profit_rate
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -223,6 +232,18 @@
 			<if test="off_shelves_date != null">
 				off_shelves_date,
 			</if>
+			<if test="gross_child_profit != null">
+				gross_child_profit,
+			</if>
+			<if test="cash_child_flow != null">
+				cash_child_flow,
+			</if>
+			<if test="spot_child_cash != null">
+				spot_child_cash,
+			</if>
+			<if test="gross_child_profit_rate != null">
+				gross_child_profit_rate,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -344,6 +365,18 @@
 			</if>
 			<if test="off_shelves_date != null">
 				#{off_shelves_date,jdbcType=VARCHAR},
+			</if>
+			<if test="gross_child_profit != null">
+				#{gross_child_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_child_flow != null">
+				#{cash_child_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_child_cash != null">
+				#{spot_child_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_child_profit_rate != null">
+				#{gross_child_profit_rate,jdbcType=FLOAT},
 			</if>
 		</trim>
 	</insert>
@@ -469,6 +502,18 @@
 			<if test="off_shelves_date != null">
 				off_shelves_date = #{off_shelves_date,jdbcType=VARCHAR},
 			</if>
+			<if test="gross_child_profit != null">
+				gross_child_profit = #{gross_child_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="cash_child_flow != null">
+				cash_child_flow = #{cash_child_flow,jdbcType=DECIMAL},
+			</if>
+			<if test="spot_child_cash != null">
+				spot_child_cash = #{spot_child_cash,jdbcType=DECIMAL},
+			</if>
+			<if test="gross_child_profit_rate != null">
+				gross_child_profit_rate = #{gross_child_profit_rate,jdbcType=FLOAT},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -536,7 +581,12 @@
 		A.cash_flow_other_flg,
 		A.create_time,
 		A.update_time,
-		A.off_shelves_date
+		A.off_shelves_date,
+		A.gross_child_profit,
+		A.cash_child_flow,
+		A.spot_child_cash,
+		A.gross_child_profit_rate
+		
 		from
 		product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number
@@ -564,6 +614,9 @@
 			</if>
 			<if test="params.bo.sale_flg != null and params.bo.sale_flg !=''">
 				and A.sale_flg = #{params.bo.sale_flg,jdbcType=VARCHAR}
+			</if>
+			<if test='params.bo.high_value_flg != null and params.bo.high_value_flg =="yes"'>
+				and A.product_value >= 11
 			</if>
 		</where>
 

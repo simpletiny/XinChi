@@ -199,7 +199,7 @@
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
-	
+
 	<select id="selectByParam" parameterType="com.xinchi.bean.ClientVisitBean" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -210,6 +210,12 @@
 			</if>
 			<if test="date != null and date !=''">
 				and date = #{date,jdbcType=VARCHAR}
+			</if>
+			<if test="create_user != null and create_user !=''">
+				and create_user = #{create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="type != null and type !=''">
+				and type = #{type,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

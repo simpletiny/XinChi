@@ -252,9 +252,9 @@ var OrderContext = function() {
 				+ '<td><input type="text" style="width: 90%" st="age" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
-				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoPrice();autoCaculate()" st="id" /></td>'
 				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" value="'
-				+ self.product().adult_price
+				+ (self.product().adult_price - self.product().business_profit_substract)
 				+ '" st="price" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
 				+ '<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input'
@@ -343,42 +343,68 @@ function cancelBat() {
 function autoCaculate() {
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
-	var audultCnt = 0;
-	var childrenCnt = 0;
 	var sumMoney = 0;
-	var otherCost = $("#other-cost").val()-0;
+	var otherCost = $("#other-cost").val() - 0;
 	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		var td_id = $(tr).find("[st='id']");
 		var td_price = $(tr).find("[st='price']");
 		var id = $(td_id).val();
-		
+
 		if (id.length < 18)
 			continue;
-		
-	
-		var birthday = id.substring(6, 14);
-		if (isChild(birthday)) {
-			$(td_price).val(ctx.product().child_price);
-			childrenCnt++;
-		}else{
-			$(td_price).val(ctx.product().adult_price);
-			audultCnt++;
-		}
-		
+
 		var price = $(td_price).val() - 0;
 		sumMoney += price;
 	}
-	sumMoney +=otherCost;
+	sumMoney += otherCost;
 	if (sumMoney != 0) {
 		$("#txt-auto-sum-money").text(sumMoney);
 		$("#auto-sum-money").val(sumMoney);
 	}
+}
 
-	if (audultCnt != 0) {
+function autoPrice() {
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	var adultCnt = 0;
+	var childrenCnt = 0;
 
-		$("#txt-auto-adult-count").text(audultCnt);
-		$("#auto-adult-count").val(audultCnt);
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var td_id = $(tr).find("[st='id']");
+		var td_price = $(tr).find("[st='price']");
+		var id = $(td_id).val();
+
+		if (id.length < 18)
+			continue;
+
+		var birthday = id.substring(6, 14);
+		if (isChild(birthday)) {
+			if ($(td_price).val() - 0 == ctx.product().adult_price
+					- ctx.product().business_profit_substract
+					|| $(td_price).val() == "") {
+				$(td_price).val(
+						ctx.product().child_price
+								- ctx.product().business_profit_substract);
+			}
+			childrenCnt++;
+
+		} else {
+			if ($(td_price).val() - 0 == ctx.product().child_price
+					- ctx.product().business_profit_substract
+					|| $(td_price).val() == "") {
+				$(td_price).val(
+						ctx.product().adult_price
+								- ctx.product().business_profit_substract);
+			}
+			adultCnt++;
+		}
+	}
+	if (adultCnt != 0) {
+
+		$("#txt-auto-adult-count").text(adultCnt);
+		$("#auto-adult-count").val(adultCnt);
 	}
 
 	if (childrenCnt != 0) {
@@ -386,6 +412,7 @@ function autoCaculate() {
 		$("#auto-children-count").val(childrenCnt);
 	}
 }
+
 function bindFix() {
 	var tbody = $("#name-table").find("tbody");
 	var prices = tbody.find("[st='price']");
@@ -479,6 +506,7 @@ function formatNameList() {
 
 	$("#txt-name-list").val(newNameList);
 	layer.close(passengerBatLayer);
+	autoPrice();
 	autoCaculate();
 }
 // 判断是否已经存在重复的id乘客

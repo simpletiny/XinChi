@@ -17,9 +17,9 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private Integer days;
 
-	private java.math.BigDecimal max_profit_substract;
+	private BigDecimal max_profit_substract;
 
-	private java.math.BigDecimal business_price;
+	private BigDecimal business_price;
 
 	private String product_manager;
 
@@ -35,37 +35,37 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private String air_ticket_charge;
 
-	private java.math.BigDecimal product_value;
+	private BigDecimal product_value;
 
-	private java.math.BigDecimal air_ticket_cost;
+	private BigDecimal air_ticket_cost;
 
-	private java.math.BigDecimal other_cost;
+	private BigDecimal other_cost;
 
-	private java.math.BigDecimal gross_profit;
+	private BigDecimal gross_profit;
 
 	private float gross_profit_rate;
 
 	private String product_model;
 
-	private java.math.BigDecimal adult_price;
+	private BigDecimal adult_price;
 
-	private java.math.BigDecimal child_price;
+	private BigDecimal child_price;
 
-	private java.math.BigDecimal business_profit_substract;
+	private BigDecimal business_profit_substract;
 
-	private java.math.BigDecimal air_ticket_child_cost;
+	private BigDecimal air_ticket_child_cost;
 
-	private java.math.BigDecimal local_adult_cost;
+	private BigDecimal local_adult_cost;
 
-	private java.math.BigDecimal local_child_cost;
+	private BigDecimal local_child_cost;
 
-	private java.math.BigDecimal other_child_cost;
+	private BigDecimal other_child_cost;
 
-	private java.math.BigDecimal product_child_value;
+	private BigDecimal product_child_value;
 
-	private java.math.BigDecimal cash_flow;
+	private BigDecimal cash_flow;
 
-	private java.math.BigDecimal spot_cash;
+	private BigDecimal spot_cash;
 
 	private String first_air_start;
 
@@ -85,9 +85,16 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private String off_shelves_date;
 
+	private BigDecimal gross_child_profit;
+	private BigDecimal cash_child_flow;
+	private BigDecimal spot_child_cash;
+	private float gross_child_profit_rate;
+
 	// search options
 	private List<String> locations;
 	private List<String> statuses;
+	
+	private String high_value_flg ="N";
 
 	public String getName() {
 		return name;
@@ -253,43 +260,43 @@ public class ProductBean extends SupperBO implements Serializable {
 		return product_model;
 	}
 
-	public java.math.BigDecimal getAdult_price() {
+	public BigDecimal getAdult_price() {
 		return adult_price;
 	}
 
-	public java.math.BigDecimal getChild_price() {
+	public BigDecimal getChild_price() {
 		return child_price;
 	}
 
-	public java.math.BigDecimal getBusiness_profit_substract() {
+	public BigDecimal getBusiness_profit_substract() {
 		return business_profit_substract;
 	}
 
-	public java.math.BigDecimal getAir_ticket_child_cost() {
+	public BigDecimal getAir_ticket_child_cost() {
 		return air_ticket_child_cost;
 	}
 
-	public java.math.BigDecimal getLocal_adult_cost() {
+	public BigDecimal getLocal_adult_cost() {
 		return local_adult_cost;
 	}
 
-	public java.math.BigDecimal getLocal_child_cost() {
+	public BigDecimal getLocal_child_cost() {
 		return local_child_cost;
 	}
 
-	public java.math.BigDecimal getOther_child_cost() {
+	public BigDecimal getOther_child_cost() {
 		return other_child_cost;
 	}
 
-	public java.math.BigDecimal getProduct_child_value() {
+	public BigDecimal getProduct_child_value() {
 		return product_child_value;
 	}
 
-	public java.math.BigDecimal getCash_flow() {
+	public BigDecimal getCash_flow() {
 		return cash_flow;
 	}
 
-	public java.math.BigDecimal getSpot_cash() {
+	public BigDecimal getSpot_cash() {
 		return spot_cash;
 	}
 
@@ -329,43 +336,43 @@ public class ProductBean extends SupperBO implements Serializable {
 		this.product_model = product_model;
 	}
 
-	public void setAdult_price(java.math.BigDecimal adult_price) {
+	public void setAdult_price(BigDecimal adult_price) {
 		this.adult_price = adult_price;
 	}
 
-	public void setChild_price(java.math.BigDecimal child_price) {
+	public void setChild_price(BigDecimal child_price) {
 		this.child_price = child_price;
 	}
 
-	public void setBusiness_profit_substract(java.math.BigDecimal business_profit_substract) {
+	public void setBusiness_profit_substract(BigDecimal business_profit_substract) {
 		this.business_profit_substract = business_profit_substract;
 	}
 
-	public void setAir_ticket_child_cost(java.math.BigDecimal air_ticket_child_cost) {
+	public void setAir_ticket_child_cost(BigDecimal air_ticket_child_cost) {
 		this.air_ticket_child_cost = air_ticket_child_cost;
 	}
 
-	public void setLocal_adult_cost(java.math.BigDecimal local_adult_cost) {
+	public void setLocal_adult_cost(BigDecimal local_adult_cost) {
 		this.local_adult_cost = local_adult_cost;
 	}
 
-	public void setLocal_child_cost(java.math.BigDecimal local_child_cost) {
+	public void setLocal_child_cost(BigDecimal local_child_cost) {
 		this.local_child_cost = local_child_cost;
 	}
 
-	public void setOther_child_cost(java.math.BigDecimal other_child_cost) {
+	public void setOther_child_cost(BigDecimal other_child_cost) {
 		this.other_child_cost = other_child_cost;
 	}
 
-	public void setProduct_child_value(java.math.BigDecimal product_child_value) {
+	public void setProduct_child_value(BigDecimal product_child_value) {
 		this.product_child_value = product_child_value;
 	}
 
-	public void setCash_flow(java.math.BigDecimal cash_flow) {
+	public void setCash_flow(BigDecimal cash_flow) {
 		this.cash_flow = cash_flow;
 	}
 
-	public void setSpot_cash(java.math.BigDecimal spot_cash) {
+	public void setSpot_cash(BigDecimal spot_cash) {
 		this.spot_cash = spot_cash;
 	}
 
@@ -407,6 +414,46 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setOff_shelves_date(String off_shelves_date) {
 		this.off_shelves_date = off_shelves_date;
+	}
+
+	public BigDecimal getGross_child_profit() {
+		return gross_child_profit;
+	}
+
+	public BigDecimal getCash_child_flow() {
+		return cash_child_flow;
+	}
+
+	public BigDecimal getSpot_child_cash() {
+		return spot_child_cash;
+	}
+
+	public float getGross_child_profit_rate() {
+		return gross_child_profit_rate;
+	}
+
+	public void setGross_child_profit(BigDecimal gross_child_profit) {
+		this.gross_child_profit = gross_child_profit;
+	}
+
+	public void setCash_child_flow(BigDecimal cash_child_flow) {
+		this.cash_child_flow = cash_child_flow;
+	}
+
+	public void setSpot_child_cash(BigDecimal spot_child_cash) {
+		this.spot_child_cash = spot_child_cash;
+	}
+
+	public void setGross_child_profit_rate(float gross_child_profit_rate) {
+		this.gross_child_profit_rate = gross_child_profit_rate;
+	}
+
+	public String getHigh_value_flg() {
+		return high_value_flg;
+	}
+
+	public void setHigh_value_flg(String high_value_flg) {
+		this.high_value_flg = high_value_flg;
 	}
 
 }

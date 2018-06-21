@@ -380,3 +380,17 @@ jQuery.fn.extend({
 		});
 	}
 });
+String.prototype.format = function(){    
+    var args = arguments;    
+    return this.replace(/\{(\d+)\}/g,                    
+        function(m,i){    
+            return args[i];    
+        });   
+} 
+
+document.onkeydown=function(event){
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+     if(e && e.keyCode==13){ // enter 键
+    	 $("[st='btn-search']").click();
+     }
+}; 

@@ -39,4 +39,9 @@ public class ClientVisitDAOImpl extends SqlSessionDaoSupport implements ClientVi
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientVisitMapper.selectByParam", visit);
 	}
 
+	@Override
+	public void update(ClientVisitBean visit) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientVisitMapper.updateByPrimaryKey", visit);
+	}
+
 }
