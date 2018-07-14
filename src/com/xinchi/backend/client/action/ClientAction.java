@@ -61,22 +61,11 @@ public class ClientAction extends BaseAction {
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
-
-			if (client.getPublic_flg() != null && client.getPublic_flg().equals("Y")) {
-				client.setPublic_flg("1");
-			} else if (client.getPublic_flg() != null && client.getPublic_flg().equals("N")) {
-				client.setPublic_flg("2");
-			} else if (client.getPublic_flg() == null) {
-				client.setPublic_flg("1");
-			}
-			params.put("bo", client);
-			page.setParams(params);
-			clients = clientService.getAllCompaniesByPage(page);
-		}else {
-			params.put("bo", client);
-			page.setParams(params);
-			clients = clientService.selectCompaniesByPageAdmin(page);
 		}
+		
+		params.put("bo", client);
+		page.setParams(params);
+		clients = clientService.getAllCompaniesByPage(page);
 		return SUCCESS;
 	}
 

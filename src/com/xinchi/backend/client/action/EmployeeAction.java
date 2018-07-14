@@ -37,6 +37,7 @@ public class EmployeeAction extends BaseAction {
 		resultStr = employeeService.updateEmployee(employee);
 		return SUCCESS;
 	}
+
 	public String swapDimission() {
 		resultStr = employeeService.update(employee);
 		return SUCCESS;
@@ -62,39 +63,29 @@ public class EmployeeAction extends BaseAction {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
-		// employee = new ClientEmployeeBean();
+
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			employee.setSales(sessionBean.getPk());
 		}
-		if (employee.getPublic_flg() != null && employee.getPublic_flg().equals("Y")) {
-			employee.setPublic_flg("1");
-		} else if (employee.getPublic_flg() != null && employee.getPublic_flg().equals("N")
-				&& roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			employee.setPublic_flg("2");
-		} else if (employee.getPublic_flg() == null
-				|| (employee.getPublic_flg() != null && !roles.contains(ResourcesConstants.USER_ROLE_ADMIN))) {
-			employee.setPublic_flg("1");
-		}
-
+		
 		params.put("bo", employee);
 		page.setParams(params);
 		employees = employeeService.getAllClientEmployeeByPage(page);
-
 		return SUCCESS;
 	}
 
 	private RelationLevelDto rld;
 
 	public String searchSumCntData() {
-		String sales_pk = "";
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			sales_pk = sessionBean.getPk();
+			employee = new ClientEmployeeBean();
+			employee.setSales(sessionBean.getPk());
 		}
 
-		rld = employeeService.selectRelationCntBySales(sales_pk);
+		rld = employeeService.selectRelationCntBySales(employee.getSales());
 		return SUCCESS;
 	}
 
@@ -119,6 +110,14 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<String> sale_pks;
+
+	public String changeEmployeeSales() {
+		resultStr = employeeService.changeEmployeeSales(employee_pks, sale_pks);
+
+		return SUCCESS;
+	}
+
 	/**
 	 * 删除客户员工（物理删除）
 	 * 
@@ -138,7 +137,7 @@ public class EmployeeAction extends BaseAction {
 		resultStr = employeeService.combineClientEmployee(employee_pks);
 		return SUCCESS;
 	}
-	
+
 	/**
 	 * 跳槽
 	 * 
@@ -212,6 +211,14 @@ public class EmployeeAction extends BaseAction {
 
 	public void setRld(RelationLevelDto rld) {
 		this.rld = rld;
+	}
+
+	public List<String> getSale_pks() {
+		return sale_pks;
+	}
+
+	public void setSale_pks(List<String> sale_pks) {
+		this.sale_pks = sale_pks;
 	}
 
 }

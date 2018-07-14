@@ -604,7 +604,6 @@ var OrderContext = function() {
 		} else {
 			var current = self.chosenOrders()[0];
 			var team_number = current.team_number;
-
 			$
 					.getJSON(
 							self.apiurl + 'order/selectOrderByTeamNumber',

@@ -55,4 +55,6 @@ public interface EmployeeDAO {
 	public RelationLevelDto selectRelationCntBySales(String sales);
 
 	public void publicClientEmployee(List<String> employee_pks);
+
+	public List<ClientEmployeeBean> selectByPageAdmin(Page<ClientEmployeeBean> page);
 }

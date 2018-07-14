@@ -72,9 +72,11 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
-		C.name AS client_employee_name,
+		C.name AS
+		client_employee_name,
 		B.client_employee_pk
-		from client_received_detail A left join budget_order B on A.team_number=B.team_number
+		from client_received_detail A left join budget_order B on
+		A.team_number=B.team_number
 		LEFT JOIN
 		client_employee C ON B.client_employee_pk = C.pk
 		where A.pk = #{pk,jdbcType=CHAR}
@@ -100,12 +102,15 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
-		C.name AS client_employee_name,
+		C.name AS
+		client_employee_name,
 		B.client_employee_pk
-		from client_received_detail A left join budget_order B on A.team_number=B.team_number
+		from client_received_detail A left join budget_order B on
+		A.team_number=B.team_number
 		LEFT JOIN
 		client_employee C ON B.client_employee_pk = C.pk
-		where A.related_pk = #{related_pks,jdbcType=VARCHAR}
+		where A.related_pk =
+		#{related_pks,jdbcType=VARCHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -320,6 +325,11 @@
 		select
 		<include refid="Base_Column_List" />
 		from client_received_detail
+		<where>
+			<if test="type != null and type !=''">
+				and type= #{type,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 
 	<select id="searchReceivableDetailsByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">

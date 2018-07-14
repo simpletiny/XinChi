@@ -33,8 +33,10 @@
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 57%; float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
+						<div style="width: 65%; float: right">
+							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
+							</s:if>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">停用</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicEmployee() }">公开</button>
@@ -42,7 +44,8 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { jobHopping() }">跳槽</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { dimission() }">离职</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee() }">删除</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changeSales()}">调整销售</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee()  }">删除</button>
 							</s:if>
 						</div>
 					</div>
@@ -83,18 +86,20 @@
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px"
-										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:$root.refresh}"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:function(){$root.refresh();$root.refreshSumCnt()}}"
 										name="employee.sales"></select>
 								</div>
 							</div>
-							<div class="span6">
-								<div class="col-md-2">
-									<em class="small-box "> <input type="checkbox" value="Y" id="txt-public-flg" name="employee.public_flg"
-										data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
-									</em>
-								</div>
-							</div>
 						</s:if>
+						<div class="span6">
+							<div class="col-md-2">
+								<em class="small-box "> <input type="checkbox" value="Y" name="employee.public_flgs"
+									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label> <input type="hidden"
+									value="N" name="employee.public_flgs" data-bind="event:{click:function(){refresh();return true;}}" />
+								</em>
+							</div>
+						</div>
+
 						<div class="span6" style="float: right">
 							<div style="padding-top: 3px;">
 								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
@@ -191,7 +196,7 @@
 	</div>
 	<div id="job-hopping" style="display: none; width: 350px">
 		<form id="form-hopping">
-			<input type="hidden" data-bind="value:employee().pk" name="employee.pk"/>
+			<input type="hidden" data-bind="value:employee().pk" name="employee.pk" />
 			<div class="input-row clearfloat">
 				<div class="col-md-12">
 					<label class="l" style="width: 30%">原</label>
@@ -204,8 +209,9 @@
 				<div class="col-md-12 required">
 					<label class="l" style="width: 30%">新</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" class="ip-" data-bind="click:choseFinancial" placeholder="点击选择" id="financial_body_name" required="required"/>
-                        <input type="text" class="ip-" style="display:none" name="employee.new_client_pk" id="financial_body_pk" required="required"/>
+						<input type="text" class="ip-" data-bind="click:choseFinancial" placeholder="点击选择" id="financial_body_name"
+							required="required" /> <input type="text" class="ip-" style="display: none" name="employee.new_client_pk"
+							id="financial_body_pk" required="required" />
 					</div>
 				</div>
 			</div>
@@ -220,8 +226,8 @@
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
-						<a type="button" class="btn btn-green btn-r" data-bind="click: doJobHopping">确定</a>
-						<a type="button" class="btn btn-green btn-r" data-bind="click: cancelJobHopping">取消</a>
+						<a type="button" class="btn btn-green btn-r" data-bind="click: doJobHopping">确定</a> <a type="button"
+							class="btn btn-green btn-r" data-bind="click: cancelJobHopping">取消</a>
 					</div>
 				</div>
 			</div>
@@ -270,6 +276,27 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="edit-sale" style="display: none">
+		<input type="hidden" id="current-pk" />
+		<div class="input-row clearfloat">
+			<div class="col-md-12 required">
+				<label class="l">选择销售</label>
+				<div class="ip">
+					<div data-bind="foreach: sales" style="padding-top: 4px;">
+						<em class="small-box"> <input type="checkbox"
+							data-bind="attr: {'value': $data.pk}, checked: $root.chosenUser,click:$root.checkSale" /> <!-- ko if: $data.user_name =='公开' -->
+							<label style="color: red" data-bind="text: $data.user_name"></label> <!-- /ko --> <!-- ko if: $data.user_name !='公开' -->
+							<label data-bind="text: $data.user_name"></label> <!-- /ko -->
+						</em>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: doChangeSale">保存</a> <a type="submit"
+				class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
 		</div>
 	</div>
 	<script>

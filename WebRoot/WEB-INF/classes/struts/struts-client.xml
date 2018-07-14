@@ -62,6 +62,9 @@
 		<action name="deleteClientEmployee" class="employeeAction" method="deleteClientEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="changeEmployeeSales" class="employeeAction" method="changeEmployeeSales">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="deleteClientEmployeeReally" class="employeeAction" method="deleteClientEmployeeReally">
 			<result name="success" type="str">resultStr</result>
 		</action>

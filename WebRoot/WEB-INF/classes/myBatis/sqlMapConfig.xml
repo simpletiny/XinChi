@@ -93,6 +93,7 @@
 		<mapper resource="com/xinchi/bean/mapper/productDelayMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/clientUserMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/jobHoppingLogMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientEmployeeUserMapper.xml" />
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

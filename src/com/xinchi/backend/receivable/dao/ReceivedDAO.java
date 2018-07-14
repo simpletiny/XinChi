@@ -22,4 +22,6 @@ public interface ReceivedDAO {
 	public void update(ClientReceivedDetailBean detail);
 
 	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk);
+
+	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean);
 }

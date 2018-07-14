@@ -71,7 +71,8 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private List<ClientUserBean> client_users;
 	// search options
-
+	
+	private List<String> public_flgs;
 	private List<String> statuses;
 	private List<String> relate_flgs;
 	private List<String> talk_levels;
@@ -403,6 +404,14 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setClient_users(List<ClientUserBean> client_users) {
 		this.client_users = client_users;
+	}
+
+	public List<String> getPublic_flgs() {
+		return public_flgs;
+	}
+
+	public void setPublic_flgs(List<String> public_flgs) {
+		this.public_flgs = public_flgs;
 	}
 
 }

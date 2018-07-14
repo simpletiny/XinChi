@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.AccurateSaleDAO;
+import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
+import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.dao.ClientVisitDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.dao.JobHoppingLogDAO;
@@ -16,6 +18,8 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.util.dao.CommonDAO;
 import com.xinchi.bean.AccurateSaleBean;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientEmployeeUserBean;
+import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.JobHoppingLogBean;
 import com.xinchi.bean.OrderDto;
@@ -44,8 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void delete(String id) {
-		// TODO Auto-generated method stub
-
+		dao.delete(id);
 	}
 
 	@Override
@@ -209,6 +212,64 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dao.update(old);
 
 		return SUCCESS;
+	}
+
+	@Autowired
+	private ClientEmployeeUserDAO employeeUserDao;
+
+	@Autowired
+	private ClientUserDAO clientUserDao;
+
+	@Override
+	public String changeEmployeeSales(List<String> employee_pks, List<String> sale_pks) {
+		String main_user = sale_pks.get(0);
+
+		for (String employee_pk : employee_pks) {
+			ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
+
+			// 删除之前存在的对应关系
+			employeeUserDao.deleteByEmployeePk(employee_pk);
+
+			if (main_user.equals("public")) {
+				employee.setPublic_flg("Y");
+			} else {
+				employee.setPublic_flg("N");
+				// 保存新的对应关系
+				for (String sale_pk : sale_pks) {
+					ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+
+					ceub.setEmployee_pk(employee_pk);
+					ceub.setUser_pk(sale_pk);
+					employeeUserDao.insert(ceub);
+				}
+			}
+			dao.update(employee);
+			if (main_user.equals("public"))
+				return SUCCESS;
+
+			// 调整客户财务主体相关
+			List<ClientUserBean> cubs = clientUserDao.selectByClientPk(employee.getFinancial_body_pk());
+			if (null != cubs) {
+				for (ClientUserBean cub : cubs) {
+					sale_pks.remove(cub.getUser_pk());
+				}
+			}
+
+			for (String sale_pk : sale_pks) {
+				ClientUserBean cub = new ClientUserBean();
+				cub.setClient_pk(employee.getFinancial_body_pk());
+				cub.setUser_pk(sale_pk);
+
+				clientUserDao.insert(cub);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@Override
+	public List<ClientEmployeeBean> selectEmployeesByPageAdmin(Page<ClientEmployeeBean> page) {
+		
+		return dao.selectByPageAdmin(page);
 	}
 
 }

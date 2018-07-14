@@ -1,5 +1,7 @@
 package com.xinchi.backend.client.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -39,6 +41,11 @@ public class ClientUserDAOImpl extends SqlSessionDaoSupport implements ClientUse
 	@Override
 	public void deleteByClientPk(String client_pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientUserMapper.deleteByClientPk", client_pk);
+	}
+
+	@Override
+	public List<ClientUserBean> selectByClientPk(String client_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientUserMapper.selectByClientPk", client_pk);
 	}
 
 }

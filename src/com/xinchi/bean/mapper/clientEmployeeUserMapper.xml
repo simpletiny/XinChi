@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.ClientUserMapper">
-	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientUserBean">
-		<result column="client_pk" property="client_pk" jdbcType="CHAR" />
+<mapper namespace="com.xinchi.bean.mapper.ClientEmployeeUserMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientEmployeeUserBean">
+		<result column="employee_pk" property="employee_pk" jdbcType="CHAR" />
 		<result column="user_pk" property="user_pk" jdbcType="CHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -12,7 +12,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		client_pk,
+		employee_pk,
 		user_pk,
 		pk,
 		create_user,
@@ -23,32 +23,27 @@
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from client_user
+		from client_employee_user
 		where pk = #{pk,jdbcType=CHAR}
-	</select>
-	<select id="selectByClientPk" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from client_user
-		where client_pk = #{client_pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from client_user
+		delete from client_employee_user
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
-	<delete id="deleteByClientPk" parameterType="java.lang.String">
-		delete from client_user
-		where client_pk = #{client_pk,jdbcType=CHAR}
+	<delete id="deleteByEmployeePk" parameterType="java.lang.String">
+		delete from client_employee_user
+		where employee_pk =
+		#{employee_pk,jdbcType=CHAR}
 	</delete>
 
-	<insert id="insert" parameterType="com.xinchi.bean.ClientUserBean">
+	<insert id="insert" parameterType="com.xinchi.bean.ClientEmployeeUserBean">
 
-		insert into client_user
+		insert into client_employee_user
 
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="client_pk != null">
-				client_pk,
+			<if test="employee_pk != null">
+				employee_pk,
 			</if>
 			<if test="user_pk != null">
 				user_pk,
@@ -70,8 +65,8 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="client_pk != null">
-				#{client_pk,jdbcType=CHAR},
+			<if test="employee_pk != null">
+				#{employee_pk,jdbcType=CHAR},
 			</if>
 			<if test="user_pk != null">
 				#{user_pk,jdbcType=CHAR},
@@ -95,11 +90,11 @@
 	</insert>
 
 
-	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientUserBean">
-		update client_user
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientEmployeeUserBean">
+		update client_employee_user
 		<set>
-			<if test="client_pk != null">
-				client_pk = #{client_pk,jdbcType=CHAR},
+			<if test="employee_pk != null">
+				employee_pk = #{employee_pk,jdbcType=CHAR},
 			</if>
 			<if test="user_pk != null">
 				user_pk = #{user_pk,jdbcType=CHAR},
@@ -119,9 +114,9 @@
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
-	<select id="selectByParam" parameterType="com.xinchi.bean.ClientUserBean" resultMap="BaseResultMap">
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientEmployeeUserBean" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from client_user
+		from client_employee_user
 	</select>
 </mapper>

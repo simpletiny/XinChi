@@ -1,5 +1,7 @@
 package com.xinchi.backend.client.dao;
 
+import java.util.List;
+
 import com.xinchi.bean.ClientUserBean;
 
 public interface ClientUserDAO {
@@ -24,7 +26,9 @@ public interface ClientUserDAO {
 	 * @param id
 	 */
 	public void delete(String id);
-	
+
 	public void deleteByClientPk(String client_pk);
+
+	public List<ClientUserBean> selectByClientPk(String client_pk);
 
 }

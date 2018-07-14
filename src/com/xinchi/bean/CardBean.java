@@ -32,6 +32,8 @@ public class CardBean extends SupperBO implements Serializable {
 
 	private Integer sort_index;
 
+	private String delete_flg;
+
 	public String getNumber() {
 		return number;
 	}
@@ -142,6 +144,14 @@ public class CardBean extends SupperBO implements Serializable {
 
 	public void setSort_index(Integer sort_index) {
 		this.sort_index = sort_index;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
 	}
 
 }

@@ -17,6 +17,9 @@
 		<action name="autoGenReceivable2th" class="simpletinyAction" method="autoGenReceivable2th">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="fixClientRelation" class="simpletinyAction" method="fixClientRelation">
+			<result name="success" type="redirect">/</result>
+		</action>
 
 		<action name="currentDate" class="STDateAction" method="currentDate">
 			<result name="success" type="json"></result>
@@ -35,6 +38,9 @@
 			<result name="success" type="redirect">/</result>
 		</action>
 		<action name="insertIntoClientUser" class="simpletinyAction" method="insertIntoClientUser">
+			<result name="success" type="redirect">/</result>
+		</action>
+		<action name="fixFly" class="simpletinyAction" method="fixFly">
 			<result name="success" type="redirect">/</result>
 		</action>
 	</package>

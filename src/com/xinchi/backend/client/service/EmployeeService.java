@@ -74,4 +74,8 @@ public interface EmployeeService extends BaseService {
 	public String combineClientEmployee(List<String> employee_pks);
 
 	public String jobHopping(ClientEmployeeBean employee);
+
+	public String changeEmployeeSales(List<String> employee_pks, List<String> sale_pks);
+
+	public List<ClientEmployeeBean> selectEmployeesByPageAdmin(Page<ClientEmployeeBean> page);
 }

@@ -1,5 +1,6 @@
 var financialLayer;
 var jobHoppingLayer;
+var salesLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -32,6 +33,7 @@ var CompanyContext = function() {
 		pub.pk = "public";
 		self.sales.push(pub);
 	});
+
 	self.createClientEmployee = function() {
 		window.location.href = self.apiurl
 				+ "templates/client/employee-creation.jsp";
@@ -46,8 +48,6 @@ var CompanyContext = function() {
 		startLoadingSimpleIndicator("加载中");
 
 		var param = $("form").serialize();
-		if (!$("#txt-public-flg").is(':checked'))
-			param += "&employee.public_flg=N"
 
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -69,10 +69,93 @@ var CompanyContext = function() {
 
 	});
 	self.refreshSumCnt = function() {
-		$.getJSON(self.apiurl + 'client/searchSumCntData', {}, function(data) {
-			self.rld(data.rld);
-		});
+		var param = $("form").serialize();
+		$.getJSON(self.apiurl + 'client/searchSumCntData', param,
+				function(data) {
+					self.rld(data.rld);
+				});
 	}
+	
+	self.chosenUser = ko.observableArray([]);
+	/**
+	 * 调整客户所属销售
+	 */
+	self.changeSales = function() {
+		if (self.chosenEmployees().length == 0) {
+			fail_msg("请选择客户");
+			return;
+		} else {
+			salesLayer = $.layer({
+				type : 1,
+				title : [ '修改客户销售', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '600px', '400px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#edit-sale'
+				},
+				end : function() {
+
+				}
+			});
+		}
+	};
+	self.checkSale = function() {
+		if (self.chosenUser().contains("public")) {
+			self.chosenUser.removeAll();
+			self.chosenUser.push("public");
+		}
+		;
+		return true;
+	}
+	self.doChangeSale = function() {
+		if (self.chosenUser().length == 0) {
+			fail_msg("请选择销售！");
+			return;
+		}
+
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确认将选中的客户移至新销售名下吗?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					var data = {
+						employee_pks : self.chosenEmployees(),
+						sale_pks : self.chosenUser()
+					};
+
+					startLoadingSimpleIndicator("转移中...");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/changeEmployeeSales',
+						traditional : true,
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							layer.close(salesLayer);
+							self.refresh();
+							self.chosenEmployees.removeAll();
+							self.chosenUser.removeAll();
+						} else {
+							fail_msg("转移失败，请联系管理员！");
+						}
+					});
+				}
+			}
+		});
+	};
+
+	self.doCancelChangeSale = function() {
+		layer.close(salesLayer);
+	};
 
 	self.search = function() {
 
@@ -481,7 +564,7 @@ var CompanyContext = function() {
 
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 100;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

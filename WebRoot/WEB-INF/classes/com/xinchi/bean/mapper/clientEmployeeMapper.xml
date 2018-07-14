@@ -31,6 +31,20 @@
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientEmployeeBean">
+		<collection column="pk" property="employee_users" ofType="com.xinchi.bean.ClientEmployeeUserBean" select="selectEmployeeUserByEmployeePk">
+			<result column="employee_pk" property="employee_pk" jdbcType="CHAR" />
+			<result column="user_pk" property="user_pk" jdbcType="CHAR" />
+			<result column="user_name" property="user_name" jdbcType="VACHAR" />
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	
 	<resultMap id="RelationLevelMap" type="com.xinchi.bean.RelationLevelDto">
 		<result column="sales" property="sales" jdbcType="VARCHAR" />
 		<result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
@@ -437,8 +451,7 @@
 		B.client_short_name AS
 		financial_body_name,
 		B.client_area as area,
-		A.sales,
-		IF(ISNULL(C.user_name),'公开',C.user_name) AS sales_name,
+		C.user_names AS sales_name,
 		A.create_user,
 		A.update_user,
 		A.pk,
@@ -453,8 +466,8 @@
 		A.market_level,
 		A.dimission_flg
 		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN user_base C ON A.sales
-		= C.pk
+		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
+		
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
@@ -466,7 +479,7 @@
 				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (A.sales = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
+				and (C.user_pks like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')  OR A.public_flg='Y')
 			</if>
 			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
 				and A.delete_flg in
@@ -474,12 +487,80 @@
 					#{params.bo.delete_flgs[${index}]}
 				</foreach>
 			</if>
-			<if test='params.bo.public_flg != null and params.bo.public_flg =="1"'>
-				and A.public_flg in ('Y','N')
-			</if>
-			<if test='params.bo.public_flg != null and params.bo.public_flg =="2"'>
-				and A.public_flg ='N'
+			<if test="params.bo.public_flgs != null and params.bo.public_flgs !=''">
+				and A.public_flg in
+				<foreach item="item" index="index" collection="params.bo.public_flgs" open="(" separator="," close=")">
+					#{params.bo.public_flgs[${index}]}
+				</foreach>
 			</if>
 		</where>
+		ORDER BY B.client_short_name,A.name
+	</select>
+	
+	<select id="selectAdminByPage" parameterType="com.xinchi.tools.Page" resultMap="AdminResultMap">
+		select
+		A.name,
+		A.nick_name,
+		A.sex,
+		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
+		END as age,
+		A.wechat,
+		A.qq,
+		A.type,
+		A.cellphone,
+		A.telephone,
+		A.fax,
+		A.id,
+		A.financial_body_pk,
+		B.client_short_name AS
+		financial_body_name,
+		B.client_area as area,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.comment,
+		A.public_flg,
+		A.delete_flg,
+		A.birth_year,
+		A.create_time,
+		A.update_time,
+		A.relation_level,
+		A.back_level,
+		A.market_level,
+		A.dimission_flg
+		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
+		<where>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.area != null and params.bo.area !=''">
+				and B.client_area = #{params.bo.area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
+				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
+				and A.delete_flg in
+				<foreach item="item" index="index" collection="params.bo.delete_flgs" open="(" separator="," close=")">
+					#{params.bo.delete_flgs[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.public_flgs != null and params.bo.public_flgs !=''">
+				and A.public_flg in
+				<foreach item="item" index="index" collection="params.bo.public_flgs" open="(" separator="," close=")">
+					#{params.bo.public_flgs[${index}]}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectEmployeeUserByEmployeePk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientEmployeeUserBean">
+		select
+		A.employee_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
+		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user
+		from client_employee_user A LEFT
+		JOIN user_base B ON
+		A.user_pk= B.pk
+		where A.employee_pk = #{pk,jdbcType=CHAR}
 	</select>
 </mapper>

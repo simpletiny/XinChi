@@ -98,6 +98,8 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String confirm_period;
 	private List<String> order_statuses;
 
+	private String confirm_year;
+
 	private String sale_number;
 	private String sale_name;
 
@@ -646,6 +648,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setProduct_value(BigDecimal product_value) {
 		this.product_value = product_value;
+	}
+
+	public String getConfirm_year() {
+		return confirm_year;
+	}
+
+	public void setConfirm_year(String confirm_year) {
+		this.confirm_year = confirm_year;
 	}
 
 }

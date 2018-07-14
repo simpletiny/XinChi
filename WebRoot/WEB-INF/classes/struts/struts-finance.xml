@@ -20,6 +20,9 @@
 		<action name="signCardPurpose" class="cardAction" method="signCardPurpose">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="stopUseCard" class="cardAction" method="stopUseCard">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchCardsByPurpose" class="cardAction" method="searchCardsByPurpose">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

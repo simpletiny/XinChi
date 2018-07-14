@@ -515,7 +515,7 @@
 		A.comment,
 		A.pk,
 		A.sales,
-		if(ISNULL(B.user_name),'公开',B.user_name) AS sales_name,
+		B.user_names AS sales_name,
 		A.public_flg,
 		A.create_time,
 		A.update_time,
@@ -532,8 +532,9 @@
 		D.sum_balance,
 		E.client_year_order_count,
 		F.last_order_date
-		from client A LEFT JOIN
-		user_base B ON A.sales = B.pk
+		from
+		client A LEFT JOIN
+		view_client_user B ON A.pk = B.client_pk
 		LEFT JOIN
 		view_client_employee_count C ON A.pk = C.client_pk
 		LEFT JOIN
@@ -542,11 +543,9 @@
 		view_client_year_order_count E ON A.pk = E.client_pk
 		LEFT JOIN
 		view_client_last_order F ON A.pk = F.client_pk
-		LEFT JOIN
-		client_user G ON A.pk = G.client_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (G.user_pk = #{params.bo.sales,jdbcType=VARCHAR} OR A.public_flg='Y')
+				and (B.user_pks like CONCAT('%', #{params.bo.sales,jdbcType=VARCHAR},'%') OR A.public_flg='Y')
 			</if>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and A.client_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -581,11 +580,11 @@
 					#{params.bo.relate_flgs[${index}]}
 				</foreach>
 			</if>
-			<if test='params.bo.public_flg != null and params.bo.public_flg =="1"'>
-				and A.public_flg in ('Y','N')
-			</if>
-			<if test='params.bo.public_flg != null and params.bo.public_flg =="2"'>
-				and A.public_flg ='N'
+			<if test="params.bo.public_flgs != null and params.bo.public_flgs !=''">
+				and A.public_flg in
+				<foreach item="item" index="index" collection="params.bo.public_flgs" open="(" separator="," close=")">
+					#{params.bo.public_flgs[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.talk_levels != null and params.bo.talk_levels !=''">
 				and A.talk_level in

@@ -29,7 +29,7 @@ public class CardAction extends BaseAction {
 
 	private List<CardBean> cards;
 	private BigDecimal sum_balance;
-	
+
 	public String searchCard() {
 		cards = cardService.getAllCardsByParam(null);
 		sum_balance = cardService.selectSumBalance();
@@ -40,6 +40,17 @@ public class CardAction extends BaseAction {
 
 	public String searchAllAccounts() {
 		accounts = cardService.getAllAccounts();
+		return SUCCESS;
+	}
+
+	public String stopUseCard() {
+		String[] pks = card_pks.split(",");
+		for (String pk : pks) {
+			CardBean current = cardService.selectByPk(pk);
+			current.setDelete_flg("Y");
+			cardService.update(current);
+		}
+		resultStr = SUCCESS;
 		return SUCCESS;
 	}
 

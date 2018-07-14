@@ -31,4 +31,6 @@ public interface ReceivedService {
 	public ClientReceivedDetailBean selectByPk(String received_pk);
 
 	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk);
+
+	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean);
 }

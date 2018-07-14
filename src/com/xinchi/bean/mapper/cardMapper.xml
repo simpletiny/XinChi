@@ -18,6 +18,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="bank_nickname" property="bank_nickname" jdbcType="VARCHAR" />
 		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
+		<result column="delete_flg" property="delete_flg" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		account,
@@ -35,7 +36,8 @@
 		update_time,
 		bank_nickname,
 		purpose,
-		sort_index
+		sort_index,
+		delete_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -209,6 +211,9 @@
 			<if test="sort_index != null">
 				sort_index = #{sort_index,jdbcType=INTEGER},
 			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -221,10 +226,10 @@
 				account= #{account,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY sort_index
+		ORDER BY delete_flg,sort_index
 	</select>
 	<select id="selectAllAccounts" resultType="String">
-		select account from card
+		select account from card where delete_flg='N'
 		ORDER BY sort_index
 	</select>
 

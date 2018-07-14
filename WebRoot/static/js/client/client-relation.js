@@ -11,7 +11,7 @@ var ClientContext = function() {
 	// 维度
 	self.level = [ '关系度', '回款誉', '市场力' ];
 	// 关系度
-	self.relationLevel = [ '朋友级', '商务级', '市场级', '新增级', '排斥级' ];
+	self.relationLevel = [ '核心级', '主力级', '老铁级', '市场级', '尝试级','新增级' ];
 
 	// 市场力
 	self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];

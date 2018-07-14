@@ -33,8 +33,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 		<div class="header-min-width">
 			<div class="user-status">
-				<font size="4" color="white">以客户为中心，以奋斗者为本，与优秀者为伍；创造价值，艰苦奋斗，共赢思维，团队精神；
-					坚持自我批评，坚持自我反思。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+				<font size="4" color="white">为组团社服务永无止境!&nbsp;&nbsp;&nbsp;以奋斗者为本,与优秀者为伍!&nbsp;&nbsp;&nbsp;创造价值,合作共赢!&nbsp;&nbsp;&nbsp;做世界一流旅游运营商!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
 				<s:property value="#session.user.nick_name" />
 				（
 				<s:property value="#session.user.user_number" />
@@ -114,13 +113,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+			<%-- <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 				<li class="order"><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-users fa-lg fa-fw"></i>预决算管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>预算单管理</a></li>
 						<li><a href="<%=basePath%>templates/sale/final-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>决算单管理</a></li>
 					</ol></li>
-			</s:if>
+			</s:if> --%>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="sale"><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-users fa-lg fa-fw"></i>应收款管理</a>

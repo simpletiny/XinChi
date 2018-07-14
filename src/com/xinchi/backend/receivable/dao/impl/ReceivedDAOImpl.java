@@ -36,13 +36,15 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 
 	@Override
 	public List<ClientReceivedDetailBean> getAllByPage(Page<ClientReceivedDetailBean> page) {
-		List<ClientReceivedDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPage", page);
+		List<ClientReceivedDetailBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPage", page);
 		return list;
 	}
 
 	@Override
 	public ClientReceivedDetailBean selectByPk(String pk) {
-		return (ClientReceivedDetailBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPrimaryKey", pk);
+		return (ClientReceivedDetailBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByPrimaryKey", pk);
 	}
 
 	@Override
@@ -52,7 +54,8 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 
 	@Override
 	public List<ClientReceivedDetailBean> selectByRelatedPks(String related_pks) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByRelatedPks", related_pks);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByRelatedPks",
+				related_pks);
 	}
 
 	@Override
@@ -63,7 +66,13 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 	@Override
 	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk) {
 
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectReceivedDetailByRelatedPk", related_pk);
+		return daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectReceivedDetailByRelatedPk", related_pk);
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByParam", bean);
 	}
 
 }

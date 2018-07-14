@@ -92,8 +92,7 @@ var CompanyContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("#form-search").serialize();
-		if (!$("#txt-public-flg").is(':checked'))
-			param += "&client.public_flg=N";
+
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 
@@ -359,7 +358,7 @@ var CompanyContext = function() {
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 50;
+	self.perPage = 100;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

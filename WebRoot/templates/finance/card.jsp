@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -15,6 +14,7 @@
 .form-group {
 	margin-bottom: 5px;
 }
+
 .form-control {
 	height: 30px;
 }
@@ -38,10 +38,13 @@
 								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
 							</div>
 						</div>
-						<div style="width: 20%; float: right">
+						<div style="width: 30%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCard() }">新建</button>
-							    <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { signPurpose() }">指定用途</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { signPurpose() }">指定用途</button>
+								<s:if test="#session.user.user_roles.contains('ADMIN')">
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopUse() }">停用</button>
+								</s:if>
 							</div>
 						</div>
 					</div>
@@ -76,7 +79,12 @@
 						<tbody data-bind="foreach: cards">
 							<tr style="overflow: hidden">
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenCards" /></td>
+								<!-- ko if: $data.delete_flg=="N"-->
 								<td data-bind="text: $data.account" style="overflow: hidden"></td>
+								<!--/ko  -->
+								<!-- ko if: $data.delete_flg=="Y"-->
+								<td data-bind="text: $data.account" style="overflow: hidden; color: red"></td>
+								<!--/ko  -->
 								<td data-bind="text: $data.number" style="overflow: hidden"></td>
 								<td data-bind="text: $data.name" style="overflow: hidden"></td>
 								<td data-bind="text: $data.bank" style="overflow: hidden"></td>
@@ -96,7 +104,8 @@
 		<div class="input-row clearfloat">
 			<label class="col-md-2 control-label" style="color: red">用途</label>
 			<div class="col-md-4">
-				<select class="form-control" style="height: 34px" id="purpose" data-bind="options: cardPurposes,optionsText: 'data_value', optionsValue: 'data_key'"></select>
+				<select class="form-control" style="height: 34px" id="purpose"
+					data-bind="options: cardPurposes,optionsText: 'data_value', optionsValue: 'data_key'"></select>
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="float: right">
@@ -104,7 +113,8 @@
 		</div>
 	</div>
 	<script>
-		$(".manager").addClass("current").children("ol").css("display", "block");
+		$(".manager").addClass("current").children("ol")
+				.css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/js/finance/card.js"></script>
 </body>

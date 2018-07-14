@@ -165,6 +165,9 @@
 			<if test="confirm_date != null and confirm_date !=''">
 				and confirm_date =#{confirm_date,jdbcType=VARCHAR}
 			</if>
+			<if test="confirm_year != null and confirm_year !=''">
+				and LEFT(confirm_date,4) =#{confirm_year,jdbcType=VARCHAR}
+			</if>
 			<if test="create_user_number != null and create_user_number !=''">
 				and create_user_number =#{create_user_number,jdbcType=VARCHAR}
 			</if>

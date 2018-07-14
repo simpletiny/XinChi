@@ -1,8 +1,7 @@
 package apptest;
 
-import java.util.Arrays;
-
-import com.xinchi.common.ToolsUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SomeTest {
 
@@ -15,22 +14,16 @@ public class SomeTest {
 	// }
 
 	public static void main(String[] args) throws Exception {
-		 String[] exceptions = {"name","age"};
-	
-		Student s1 = new Student();
-		s1.setName("牛世行");
-		s1.setAge("");
-		s1.setScores(Arrays.asList(exceptions));
-		s1.setSex("");
-
-		Student s2 = new Student();
-		s2.setName("牛世行2");
-		s2.setAge("32");
-		s2.setScores(Arrays.asList(exceptions));
-		s2.setSex("女");
+		List<String> a = new ArrayList<String>();
 		
-	 ToolsUtil.combineObject(s1, s2, Arrays.asList(exceptions));
+		a.add("1");
+		a.add("2");
+		a.add("1");
+		a.remove("3");
+		a.remove("1");
 		
-		System.out.println(s1.getName()+","+s1.getAge()+","+s1.getSex()+","+s1.getScores());
+		for(String c:a) {
+			System.out.println(c);
+		}
 	}
 }

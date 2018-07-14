@@ -5,6 +5,7 @@ import static com.xinchi.common.SimpletinyString.isEmpty;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +16,21 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.service.ClientService;
+import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
+import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
@@ -42,9 +45,12 @@ import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
@@ -574,6 +580,74 @@ public class SimpletinyAction extends BaseAction {
 			cub.setClient_pk(client.getPk());
 			cub.setUser_pk(client.getSales());
 			clientUserDao.insert(cub);
+		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ReceivedService receivedService;
+
+	public String fixFly() {
+		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+		option.setType("FLY");
+		List<ClientReceivedDetailBean> res = receivedService.selectByParam(option);
+		for (ClientReceivedDetailBean r : res) {
+			ReceivableBean receivable = receivableService.selectByTeamNumber(r.getTeam_number());
+
+			receivable.setReceived(receivable.getReceived().subtract(r.getReceived()));
+			receivable.setBudget_balance(receivable.getBudget_balance().add(r.getReceived()));
+
+			if (receivable.getFinal_flg().equals("Y")
+					&& receivable.getFinal_balance().compareTo(BigDecimal.ZERO) != 0) {
+				receivable.setFinal_balance(receivable.getFinal_balance().add(r.getReceived()));
+			}
+
+			receivableService.update(receivable);
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	private OrderService orderService;
+
+	public String fixClientRelation() {
+		List<ClientEmployeeBean> employees = employeeService.getAllClientEmployeeByParam(null);
+		for (ClientEmployeeBean c : employees) {
+			String a = DateUtil.castDate2Str(new Date(Long.parseLong(c.getCreate_time())));
+			OrderDto option2 = new OrderDto();
+
+			option2.setClient_employee_pk(c.getPk());
+			option2.setConfirm_year("2018");
+
+			List<OrderDto> orders = orderService.selectByParam(option2);
+			// 删除2018年4月份之前没有订单的
+			if (orders.size() == 0 && DateUtil.compare(a, "2018-04-01") == 2) {
+				employeeService.delete(c.getPk());
+			}
+			// 4月份之后没有订单的归为新增级
+			if (orders.size() == 0 && DateUtil.compare(a, "2018-03-31") == 1) {
+				c.setRelation_level("新增级");
+				employeeService.update(c);
+			}
+			//有2个订单以内的尝试级
+			if (orders.size() > 0 && orders.size() < 3) {
+				c.setRelation_level("尝试级");
+				employeeService.update(c);
+			}
+			
+			if(orders.size()>2&&(c.getRelation_level().equals("朋友级")||c.getRelation_level().equals("商务级"))) {
+				c.setRelation_level("尝试级");
+				employeeService.update(c);
+			}else if(orders.size()>2) {
+				c.setRelation_level("市场级");
+				employeeService.update(c);
+				
+			}
+
 		}
 
 		return SUCCESS;

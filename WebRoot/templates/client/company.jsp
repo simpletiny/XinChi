@@ -104,8 +104,10 @@
 						</s:if>
 						<div class="span6">
 							<div class="col-md-2">
-								<em class="small-box "> <input type="checkbox" value="Y" id="txt-public-flg" name="client.public_flg"
+								<em class="small-box "> <input type="checkbox" value="Y" name="client.public_flgs"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+									<input type="hidden"
+									value="N" name="client.public_flgs" data-bind="event:{click:function(){refresh();return true;}}" />
 								</em>
 							</div>
 						</div>
@@ -189,9 +191,7 @@
 								<th>市场力</th>
 								<th>回款誉</th>
 								<th>紧密度</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')">
-									<th>所属销售</th>
-								</s:if>
+								<th>所属销售</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: clients">
@@ -223,15 +223,13 @@
 								<td data-bind="text: $data.market_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.talk_level"></td>
-								
-								<s:if test="#session.user.user_roles.contains('ADMIN')">
-									<!-- ko if:$data.public_flg =='Y' -->
-									<td style="color: red">公开</td>
-									<!-- /ko -->
-									<!-- ko if:$data.public_flg =='N' -->
-									<td data-bind="foreach:$data.client_users"><label data-bind="text:$data.user_name"></label></td>
-									<!-- /ko -->
-								</s:if>
+
+								<!-- ko if:$data.public_flg =='Y' -->
+								<td data-bind="text: $data.sales_name" style="color: red"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.public_flg =='N' -->
+								<td data-bind="text: $data.sales_name"></td>
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>

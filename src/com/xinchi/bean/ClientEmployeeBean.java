@@ -24,7 +24,7 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String id;
 
 	private String financial_body_pk;
-
+	private List<String> public_flgs;
 	private String financial_body_name;
 
 	private String area;
@@ -49,10 +49,11 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String market_level;
 	private String dimission_flg;
 
+	private List<ClientEmployeeUserBean> employee_users;
 	//
 	private String new_client_pk;
 	private String hopping_date;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -283,6 +284,22 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setDimission_flg(String dimission_flg) {
 		this.dimission_flg = dimission_flg;
+	}
+
+	public List<String> getPublic_flgs() {
+		return public_flgs;
+	}
+
+	public void setPublic_flgs(List<String> public_flgs) {
+		this.public_flgs = public_flgs;
+	}
+
+	public List<ClientEmployeeUserBean> getEmployee_users() {
+		return employee_users;
+	}
+
+	public void setEmployee_users(List<ClientEmployeeUserBean> employee_users) {
+		this.employee_users = employee_users;
 	}
 
 }

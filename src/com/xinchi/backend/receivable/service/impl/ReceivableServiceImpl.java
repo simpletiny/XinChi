@@ -286,15 +286,19 @@ public class ReceivableServiceImpl implements ReceivableService {
 		document.addField("return_date", DateUtil.castStr2Date(receivable.getReturn_date()));
 		document.addField("product", receivable.getProduct());
 		document.addField("people_count", receivable.getPeople_count());
-		document.addField("budget_receivable", (null == receivable.getBudget_receivable() ? 0 : receivable.getBudget_receivable().doubleValue()));
+		document.addField("budget_receivable",
+				(null == receivable.getBudget_receivable() ? 0 : receivable.getBudget_receivable().doubleValue()));
 
-		document.addField("final_receivable", (null == receivable.getFinal_receivable() ? 0 : receivable.getFinal_receivable().doubleValue()));
+		document.addField("final_receivable",
+				(null == receivable.getFinal_receivable() ? 0 : receivable.getFinal_receivable().doubleValue()));
 
 		document.addField("received", (null == receivable.getReceived() ? 0 : receivable.getReceived().doubleValue()));
 
-		document.addField("budget_balance", (null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
+		document.addField("budget_balance",
+				(null == receivable.getBudget_balance() ? 0 : receivable.getBudget_balance().doubleValue()));
 
-		document.addField("final_balance", (null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
+		document.addField("final_balance",
+				(null == receivable.getFinal_balance() ? 0 : receivable.getFinal_balance().doubleValue()));
 		document.addField("financial_body_name", receivable.getFinancial_body_name());
 		document.addField("financial_body_pk", receivable.getFinancial_body_pk());
 		document.addField("sales", receivable.getSales());

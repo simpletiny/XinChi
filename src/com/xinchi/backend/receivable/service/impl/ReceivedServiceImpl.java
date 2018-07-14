@@ -67,6 +67,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getRelated_pk());
 				payApprovalDao.delete(pa.getPk());
 				doRollBack(detail);
+			} else if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_FLY)) {
+				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getRelated_pk());
+				payApprovalDao.delete(pa.getPk());
+				dao.deleteByPk(detail.getPk());
 			} else {
 				doRollBack(detail);
 			}
@@ -99,5 +103,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk) {
 		return dao.selectReceivedDetailByRelatedPk(related_pk);
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean) {
+		return dao.selectByParam(bean);
 	}
 }
