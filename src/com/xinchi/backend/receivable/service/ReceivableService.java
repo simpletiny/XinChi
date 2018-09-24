@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -29,4 +30,6 @@ public interface ReceivableService {
 	public void updateReceivableReceived(ClientReceivedDetailBean detail);
 
 	public ReceivableBean selectByTeamNumber(String team_number);
+
+	public BigDecimal fetchEmployeeBalance(String client_employee_pk);
 }

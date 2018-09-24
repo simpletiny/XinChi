@@ -98,16 +98,17 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 
 			</s:if>
-			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
+<%-- 			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
 					class="fa fa-users fa-lg fa-fw"></i>产品架</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
-				</ol></li>
+				</ol></li> --%>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="order-box"><a href="<%=basePath%>templates/order/tbc-order.jsp"><i
 						class="fa fa-users fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
 						<li><a href="<%=basePath%>templates/order/tbc-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待确认</a></li>
 						<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
 						<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
@@ -254,6 +255,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script src="<%=basePath%>static/vendor/jquery-formatCurrency.js"></script>
 	<script src="<%=basePath%>static/vendor/knockout-3.2.0.js"></script>
 	<script src="<%=basePath%>static/vendor/layer-v1.8.5/layer/layer.min.js"></script>
+	<%-- <script src="<%=basePath%>static/vendor/layer-v3.1.1/layer.js"></script> --%>
 	<script src="<%=basePath%>static/vendor/momentjs/moment-with-locales.min.js"></script>
 	<script src="<%=basePath%>static/vendor/autocomplete/jquery.autocomplete.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>

@@ -16,7 +16,7 @@
 		    <ref local="taskInfo"/>
 		</property>
 		<property name="cronExpression">
-		    <value>*/10 * * * * ?</value>
+		    <value>* */1 * * * ?</value>
 		</property>
 	</bean>
 	<bean id="registerQuartz" lazy-init="true" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

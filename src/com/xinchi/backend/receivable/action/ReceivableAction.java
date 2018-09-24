@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,14 @@ public class ReceivableAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String client_employee_pk;
+	private BigDecimal balance;
+
+	public String fetchEmployeeBalance() {
+		balance = receivableService.fetchEmployeeBalance(client_employee_pk);
+		return SUCCESS;
+	}
+
 	public ReceivableSummaryBean getSummary() {
 		return summary;
 	}
@@ -135,5 +144,21 @@ public class ReceivableAction extends BaseAction {
 
 	public void setUser_number(String user_number) {
 		this.user_number = user_number;
+	}
+
+	public String getClient_employee_pk() {
+		return client_employee_pk;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setClient_employee_pk(String client_employee_pk) {
+		this.client_employee_pk = client_employee_pk;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 }

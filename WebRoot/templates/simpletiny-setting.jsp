@@ -13,11 +13,11 @@
 
 	<div class="main-body">
 		<div class="subtitle">
-			<%-- <form action="<%=basePath%>simpletiny/autoFixBalance">	
+		<form action="<%=basePath%>simpletiny/autoFixBalance">	
         	<input type="text" name="account_name"></input>
         	<input type="submit" value="修正银行流水"></input>
-        </form> --%>
-        <a href="<%=basePath%>simpletiny/fixClientRelation" >修复FLY</a>
+        </form> 
+        <%-- <a href="<%=basePath%>simpletiny/fixClientRelation" >修复FLY</a> --%>
 			<%-- <form action="<%=basePath%>simpletiny/updateProductDetail">
 				<input type="submit" value="修正产品信息"></input>
 			</form> --%>

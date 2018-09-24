@@ -1,77 +1,13 @@
-var financialLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.client = ko.observable({});
 	self.genders = [ '男', '女' ];
 	self.employeeType = [ '未知', '员工', '老板', '包桌' ];
-	// self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆' ];
-	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
-	// self.sales = ko.observableArray([]);
 	self.employee = ko.observable({});
-	self.clients = ko.observable({
-		total : 0,
-		items : []
-	});
 
 	self.choosenSales = ko.observableArray([]);
 	self.publicFlg = ko.observable("N");
-
-	// $.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
-	// self.sales(data.users);
-	// });
-	self.choseFinancial = function() {
-		financialLayer = $.layer({
-			type : 1,
-			title : [ '选择财务主体', '' ],
-			maxmin : false,
-			closeBtn : [ 1, true ],
-			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
-			scrollbar : true,
-			page : {
-				dom : '#financial_pick'
-			},
-			end : function() {
-				console.log("Done");
-			}
-		});
-	};
-
-	self.refresh = function() {
-		var param = "client.client_short_name=" + $("#client_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
-			self.clients(data.clients);
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
-	};
-	self.searchFinancial = function() {
-		self.refresh();
-
-	};
-
-	// self.publicClient = function() {
-	// if ($("#check-public").is(":checked")) {
-	// $("[st='sales']").attr("checked", false);
-	// $("[st='sales']").attr("disabled", true);
-	// self.publicFlg("Y");
-	// self.choosenSales = ko.observableArray([]);
-	// } else {
-	// $("[st='sales']").attr("disabled", false);
-	// self.publicFlg("N");
-	// }
-	// return true;
-	// };
-
-	self.pickFinancial = function(name, pk) {
-		$("#financial_body_name").val(name);
-		$("#financial_body_pk").val(pk);
-		layer.close(financialLayer);
-	};
 
 	self.createEmployee = function() {
 		if (!$("form").valid()) {
@@ -90,54 +26,6 @@ var CompanyContext = function() {
 			}
 		});
 	};
-
-	// start pagination
-	self.currentPage = ko.observable(1);
-	self.perPage = 10;
-	self.pageNums = ko.observableArray();
-	self.totalCount = ko.observable(1);
-	self.startIndex = ko.computed(function() {
-		return (self.currentPage() - 1) * self.perPage;
-	});
-
-	self.resetPage = function() {
-		self.currentPage(1);
-	};
-
-	self.previousPage = function() {
-		if (self.currentPage() > 1) {
-			self.currentPage(self.currentPage() - 1);
-			self.refreshPage();
-		}
-	};
-
-	self.nextPage = function() {
-		if (self.currentPage() < self.pageNums().length) {
-			self.currentPage(self.currentPage() + 1);
-			self.refreshPage();
-		}
-	};
-
-	self.turnPage = function(pageIndex) {
-		self.currentPage(pageIndex);
-		self.refreshPage();
-	};
-
-	self.setPageNums = function(curPage) {
-		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
-		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
-			pageNums.push(i);
-		}
-		self.pageNums(pageNums);
-	};
-
-	self.refreshPage = function() {
-		self.searchFinancial();
-
-	};
-	// end pagination
 };
 
 var ctx = new CompanyContext();

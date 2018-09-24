@@ -55,6 +55,11 @@
 		from receivable
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectBalanceByClientEmployeePk" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		select SUM(IF(final_flg='N',budget_balance,final_balance)) from receivable
+		where client_employee_pk = #{client_employee_pk,jdbcType=CHAR}
+	</select>
 
 	<select id="selectReceivableByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -380,7 +385,7 @@
 				and A.return_date &lt;= #{params.bo.return_to,jdbcType=VARCHAR}
 			</if>
 			<if test='params.bo.zero_flg == null or params.bo.zero_flg !="Y"'>
-				and if(ISNULL(final_balance),budget_balance!=0,final_balance!=0)
+				and if(A.final_flg='N',A.budget_balance!=0,A.final_balance!=0)
 			</if>
 
 		</where>

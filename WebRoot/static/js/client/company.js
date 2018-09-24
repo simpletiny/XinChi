@@ -67,7 +67,7 @@ var CompanyContext = function() {
 	self.chosenMainBusinesses.push("组团");
 	self.chosenMainBusinesses.push("未知");
 
-	self.chosenStatus = self.chosenStatus = ko.observable('N');
+	self.chosenStatus = ko.observable('N');
 
 	self.relates = [ 'N', 'Y' ];
 	self.relatesMapping = {

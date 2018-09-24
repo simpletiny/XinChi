@@ -78,6 +78,15 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		if (null == beforeDetail) {
 			detail.setBalance(card.getInit_money());
 		} else {
+			// 判断如果之前这一笔是内转，就要考虑汇兑应该是正确的承接关系
+			if (beforeDetail.getInner_flg().equals("Y")) {
+				List<PaymentDetailBean> inners = dao.selectByInnerPk(beforeDetail.getInner_pk());
+				for (PaymentDetailBean pdb : inners) {
+					if (pdb.getExchange_flg().equals("Y")) {
+						beforeDetail = pdb;
+					}
+				}
+			}
 			detail.setBalance(beforeDetail.getBalance().add(wrong));
 		}
 
@@ -181,8 +190,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Transactional
 	public String deleteDetail(String detailId) {
 		PaymentDetailBean detail = dao.selectById(detailId);
-		/*if (detail.getFinance_flg().equals("N"))
-			return "forbidden";*/
+		/*
+		 * if (detail.getFinance_flg().equals("N")) return "forbidden";
+		 */
 
 		List<PaymentDetailBean> afterDetails = dao.selectAfterByParam(detail);
 		BigDecimal wrong = detail.getMoney();

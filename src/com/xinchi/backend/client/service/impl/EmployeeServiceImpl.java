@@ -68,7 +68,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (exists != null && exists.size() > 0)
 			return "exist";
+
 		dao.insert(employee);
+		// 记录客户和销售对应关系
+		ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+		ceub.setEmployee_pk(employee.getPk());
+		ceub.setUser_pk(employee.getSales());
+		employeeUserDao.insert(ceub);
+		
 		return "success";
 	}
 
@@ -264,12 +271,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			}
 		}
 		return SUCCESS;
-	}
-
-	@Override
-	public List<ClientEmployeeBean> selectEmployeesByPageAdmin(Page<ClientEmployeeBean> page) {
-		
-		return dao.selectByPageAdmin(page);
 	}
 
 }

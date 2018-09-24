@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.ReceivableBean;
@@ -21,5 +22,7 @@ public interface ReceivableDAO {
 	public List<ReceivableBean> selectByPage(Page<ReceivableBean> page);
 
 	public void deleteByTeamNumber(String team_number);
+
+	public BigDecimal fetchEmployeeBalance(String client_employee_pk);
 
 }

@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -36,14 +37,17 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	@Override
 	public ReceivableSummaryBean selectReceivableSummary(String sales) {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		String user_number = sessionBean.getUser_number();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableSummaryMapper.selectByUserNumber", user_number);
+			return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableSummaryMapper.selectByUserNumber",
+					user_number);
 		} else {
 			if (!SimpletinyString.isEmpty(sales)) {
-				return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableSummaryMapper.selectByUserNumber", sales);
+				return daoUtil.selectOneValueByParam(
+						"com.xinchi.bean.mapper.ReceivableSummaryMapper.selectByUserNumber", sales);
 			} else {
 				return daoUtil.selectOneValue("com.xinchi.bean.mapper.ReceivableSummaryMapper.selectReceivableSummary");
 			}
@@ -53,7 +57,8 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 
 	@Override
 	public ReceivableBean selectReceivableByTeamNumber(String team_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableMapper.selectReceivableByTeamNumber", team_number);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableMapper.selectReceivableByTeamNumber",
+				team_number);
 	}
 
 	@Override
@@ -75,5 +80,11 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	@Override
 	public void deleteByTeamNumber(String team_number) {
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.ReceivableMapper.deleteByTeamNumber", team_number);
+	}
+
+	@Override
+	public BigDecimal fetchEmployeeBalance(String client_employee_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableMapper.selectBalanceByClientEmployeePk",
+				client_employee_pk);
 	}
 }

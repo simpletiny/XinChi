@@ -10,6 +10,8 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	private String client_employee_pk;
 
+	private String nick_name;
+
 	private String sales;
 
 	private String sales_name;
@@ -42,8 +44,16 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 	private String back_level;
 	private String market_level;
 
+	private String connect_date;
+	private String type;
+	private String extra_info;
 	private String last_client_visit_target;
 	private String last_accurate_sale_summary;
+
+	// search options
+	private String sort_type;
+	
+	private String new_class_status;
 
 	public String getClient_employee_name() {
 		return client_employee_name;
@@ -219,6 +229,54 @@ public class ClientRelationSummaryBean extends SupperBO implements Serializable 
 
 	public void setLast_accurate_sale_summary(String last_accurate_sale_summary) {
 		this.last_accurate_sale_summary = last_accurate_sale_summary;
+	}
+
+	public String getNick_name() {
+		return nick_name;
+	}
+
+	public String getConnect_date() {
+		return connect_date;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getExtra_info() {
+		return extra_info;
+	}
+
+	public void setNick_name(String nick_name) {
+		this.nick_name = nick_name;
+	}
+
+	public void setConnect_date(String connect_date) {
+		this.connect_date = connect_date;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setExtra_info(String extra_info) {
+		this.extra_info = extra_info;
+	}
+
+	public String getSort_type() {
+		return sort_type;
+	}
+
+	public void setSort_type(String sort_type) {
+		this.sort_type = sort_type;
+	}
+
+	public String getNew_class_status() {
+		return new_class_status;
+	}
+
+	public void setNew_class_status(String new_class_status) {
+		this.new_class_status = new_class_status;
 	}
 
 }

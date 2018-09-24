@@ -2,8 +2,14 @@ package com.xinchi.backend.client.dao;
 
 import java.util.List;
 
+import com.xinchi.bean.AccurateSaleDto;
+import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
+import com.xinchi.bean.ConnectDto;
+import com.xinchi.bean.MeterDto;
+import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.tools.Page;
 
 public interface ClientRelationDAO {
@@ -35,5 +41,21 @@ public interface ClientRelationDAO {
 	public List<ClientSummaryDto> selectBackSummary(String sales_name);
 
 	public List<ClientSummaryDto> selectSummary(String sales_name);
+
+	public PotentialDto selectPotentialData(String user_pk);
+
+	public MeterDto selectMeterData(String user_pk);
+
+	public WorkOrderDto selectWorkOrderData(String user_pk);
+
+	public AccurateSaleDto selectAccurateSaleData(String user_pk);
+
+	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);
+	
+	public List<ClientRelationSummaryBean>  selectByParam(ClientRelationSummaryBean option);
+
+	public void insertClientRelation(ClientRelationBean two);
+
+	public void updateClientRelation(ClientRelationBean clientRelation);
 
 }

@@ -106,8 +106,6 @@
 							<div class="col-md-2">
 								<em class="small-box "> <input type="checkbox" value="Y" name="client.public_flgs"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
-									<input type="hidden"
-									value="N" name="client.public_flgs" data-bind="event:{click:function(){refresh();return true;}}" />
 								</em>
 							</div>
 						</div>

@@ -72,6 +72,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="fetchEmployeeBalance" class="receivableAction" method="fetchEmployeeBalance">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 		<action name="applyRidTail" class="receivedAction" method="applyRidTail">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -104,6 +111,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+
 		<action name="searchByRelatedPks" class="receivedAction" method="searchByRelatedPks">
 			<result name="success" type="json"></result>
 		</action>

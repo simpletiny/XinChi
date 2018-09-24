@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -20,7 +19,8 @@
 		<input type="hidden" id="client_key" value="<%=key%>" />
 		<div class="subtitle">
 			<h2>
-				新增拜访<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				新增拜访<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -30,26 +30,21 @@
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">客户</label>
-							
+
 							<div class="ip">
-								<p class="ip-default"  data-bind="text: visit().client_employee_name"></p>
+								<p class="ip-default" data-bind="text: visit().client_employee_name"></p>
 								<input type="hidden" class="ip-default" data-bind="value: visit().client_employee_name"
-									name="visit.client_employee_name" required="required" /> <input type="text" class="ip-" data-bind="value: visit().client_employee_pk" style="display: none"
-									name="visit.client_employee_pk" required="required" />
+									name="visit.client_employee_name" required="required" /> <input type="text" class="ip-"
+									data-bind="value: visit().client_employee_pk" style="display: none" name="visit.client_employee_pk"
+									required="required" />
 							</div>
 						</div>
-						<!-- <div class="col-md-6">
-							<div class="ip">
-								<em class="small-box"> <input type="radio" name="visit.type" value="CHAT" /><label>有效沟通</label>
-								</em> <em class="small-box"> <input type="radio" name="visit.type" checked="checked" value="VISIT" /><label>有效拜访</label>
-								</em>
-							</div>
-						</div> -->
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<div class="ip required" style="width: 30%">
-								<label class="l" style="width: 40%">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: visit().date" placeholder="2013-10-19" name="visit.date"
+								<label class="l">日期</label> <input type="text" style="width: 50%"
+									class="ip-default date-picker" data-bind="value: visit().date" placeholder="2013-10-19" name="visit.date"
 									required="required" />
 							</div>
 						</div>
@@ -58,7 +53,8 @@
 						<div class="col-md-6 required">
 							<label class="l">主要目的</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: target,optionsCaption: '-- 请选择--'" name="visit.target" required="required"></select>
+								<select class="form-control" data-bind="options: target,optionsCaption: '-- 请选择--'" name="visit.target"
+									required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -66,11 +62,11 @@
 						<div class="col-md-12">
 							<label class="l">辅助目的</label>
 							<div class="ip">
-							<div data-bind="foreach: target" style="padding-top: 4px;">
-	                           <em class="small-box">
-	                                 <input type="checkbox" data-bind="attr: {'value': $data},checked: $root.chosenSubTargets"/><label data-bind="text: $data"></label>
-	                            </em>
-	                        </div>
+								<div data-bind="foreach: target" style="padding-top: 4px;">
+									<em class="small-box"> <input type="checkbox"
+										data-bind="attr: {'value': $data},checked: $root.chosenSubTargets" /><label data-bind="text: $data"></label>
+									</em>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -78,7 +74,8 @@
 						<div class="col-md-12 required">
 							<label class="l">效果评估</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary" name="visit.summary" placeholder="效果评估" required="required"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary"
+									name="visit.summary" placeholder="效果评估" required="required"></textarea>
 							</div>
 						</div>
 					</div>

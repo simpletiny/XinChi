@@ -30,13 +30,11 @@
 
 		<div class="main-container">
 			<div class="main-box">
-				<form class="form-horizontal search-panel">
+				<form id="form-search" class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 65%; float: right">
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
-							</s:if>
+						<div style="width: 85%; float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">停用</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicEmployee() }">公开</button>
@@ -46,6 +44,7 @@
 							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changeSales()}">调整销售</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee()  }">删除</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reviewEmployee()  }">审核</button>
 							</s:if>
 						</div>
 					</div>
@@ -145,6 +144,7 @@
 								<th>微信号</th>
 								<th>沟通力</th>
 								<th>所属销售</th>
+								<th>审核</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: employees">
@@ -165,7 +165,7 @@
 								<td data-bind="text: $data.type"></td>
 								<td data-bind="text: $data.area"></td>
 								<td data-bind="text: $data.financial_body_name"></td>
-								<td data-bind="text: $data.ellphone"></td>
+								<td data-bind="text: $data.cellphone"></td>
 								<td data-bind="text: $data.wechat"></td>
 								<td data-bind="text: $root.relationMapping[$data.relation_level]"></td>
 								<!-- ko if:$data.public_flg =='Y' -->
@@ -173,6 +173,12 @@
 								<!-- /ko -->
 								<!-- ko if:$data.public_flg =='N' -->
 								<td data-bind="text: $data.sales_name"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.review_flg =="Y" -->
+								<td style="color: green">是</td>
+								<!-- /ko -->
+								<!-- ko if:$data.review_flg =="N" -->
+								<td style="color: red">否</td>
 								<!-- /ko -->
 							</tr>
 						</tbody>
@@ -251,13 +257,15 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th>财务主体简称</th>
+								<th>主体简称</th>
+								<th>地区</th>
 								<th>负责人</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: clients">
-							<tr data-bind="event: {click: function(){ $parent.pickFinancial($data.client_name,$data.pk)}}">
-								<td data-bind="text: $data.client_name"></td>
+							<tr data-bind="event: {click: function(){ $parent.pickFinancial($data.client_short_name,$data.pk)}}">
+								<td data-bind="text: $data.client_short_name"></td>
+								<td data-bind="text: $data.client_area"></td>
 								<td data-bind="text: $data.body_name"></td>
 							</tr>
 						</tbody>
@@ -297,6 +305,26 @@
 		<div class="input-row clearfloat" style="float: right">
 			<a type="submit" class="btn btn-green btn-r" data-bind="click: doChangeSale">保存</a> <a type="submit"
 				class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
+		</div>
+	</div>
+	<div id="div-review" style="display: none">
+		<form id="form-review">
+		<input type="hidden" data-bind="value:employee().pk" name="employee.pk" />
+		<input type="hidden" data-bind="value:employee().name" name="employee.name" />
+			<div class="input-row clearfloat">
+				<div class="col-md-12 required">
+					<label class="l" style="width: 30%">财务主体</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" class="ip-" data-bind="click:choseFinancial" placeholder="点击选择" id="financial_body_name1"
+							required="required" /> <input type="text" class="ip-" style="display: none" id="financial_body_pk1" name="employee.financial_body_pk"
+							required="required" />
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="input-row clearfloat" style="float: right">
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: doReview">保存</a> <a type="submit"
+				class="btn btn-green btn-r" data-bind="click: cancelReview">取消</a>
 		</div>
 	</div>
 	<script>

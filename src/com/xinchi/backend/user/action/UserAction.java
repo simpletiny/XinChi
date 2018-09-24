@@ -47,7 +47,7 @@ public class UserAction extends BaseAction {
 	public String login() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String result = userService.login(ubb);
-		if (result.equals(SUCCESS)) {
+		if (result.equals(SUCCESS)||result.equals("SALE")) {
 			request.removeAttribute("login_result");
 		} else {
 			request.setAttribute("login_result", result);

@@ -39,6 +39,7 @@ public class DaoUtil {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
+		
 		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
@@ -48,6 +49,14 @@ public class DaoUtil {
 		return pk;
 	}
 
+	public String insertWithoutLogin(String mapper,SupperBO supperBO) {
+		String pk = DBCommonUtil.genPk();
+		supperBO.setPk(pk);
+		supperBO.setCreate_time(DateUtil.getTimeMillis());
+		
+		sqlSession.insert(mapper, supperBO);
+		return pk;
+	}
 	public String insertBOWithPk(String mapper, SupperBO supperBO) {
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
 		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext

@@ -23,6 +23,8 @@
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="public_flg" property="public_flg" jdbcType="CHAR" />
+		<result column="review_flg" property="review_flg" jdbcType="CHAR" />
+		<result column="quit_flg" property="quit_flg" jdbcType="CHAR" />
 		<result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
@@ -43,8 +45,8 @@
 			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		</collection>
 	</resultMap>
-	
-	
+
+
 	<resultMap id="RelationLevelMap" type="com.xinchi.bean.RelationLevelDto">
 		<result column="sales" property="sales" jdbcType="VARCHAR" />
 		<result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
@@ -84,7 +86,9 @@
 		delete_flg,
 		relation_level,
 		back_level,
-		market_level
+		market_level,
+		review_flg,
+		quit_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -99,7 +103,7 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		B.client_short_name AS
+		IFNULL(B.client_short_name,A.financial_body_name) AS
 		financial_body_name,
 		A.area,
 		A.sales,
@@ -115,9 +119,12 @@
 		A.delete_flg,
 		A.relation_level,
 		A.back_level,
-		A.market_level
+		A.market_level,
+		A.review_flg,
+		A.quit_flg
 
-		from client_employee A LEFT JOIN
+		from client_employee
+		A LEFT JOIN
 		client B ON A.financial_body_pk = B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
@@ -204,6 +211,12 @@
 			<if test="delete_flg != null">
 				delete_flg,
 			</if>
+			<if test="review_flg != null">
+				review_flg,
+			</if>
+			<if test="quit_flg != null">
+				quit_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -277,6 +290,12 @@
 			</if>
 			<if test="delete_flg != null">
 				#{delete_flg,jdbcType=CHAR},
+			</if>
+			<if test="review_flg != null">
+				#{review_flg,jdbcType=CHAR},
+			</if>
+			<if test="quit_flg != null">
+				#{quit_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -369,23 +388,66 @@
 			<if test="dimission_flg != null">
 				dimission_flg = #{dimission_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="review_flg != null">
+				review_flg = #{review_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="quit_flg != null">
+				quit_flg = #{quit_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
 
 	<select id="selectByParam" parameterType="com.xinchi.bean.ClientEmployeeBean" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from client_employee
+		A.name,
+		A.nick_name,
+		A.sex,
+		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
+		END as age,
+		A.wechat,
+		A.qq,
+		A.type,
+		A.cellphone,
+		A.telephone,
+		A.fax,
+		A.id,
+		A.financial_body_pk,
+		IFNULL(B.client_short_name,A.financial_body_name) AS
+		financial_body_name,
+		B.client_area as area,
+		C.user_names AS
+		sales_name,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.comment,
+		A.public_flg,
+		A.delete_flg,
+		A.birth_year,
+		A.create_time,
+		A.update_time,
+		A.relation_level,
+		A.back_level,
+		A.market_level,
+		A.dimission_flg,
+		A.review_flg,
+		A.quit_flg
+		from client_employee A LEFT
+		JOIN client B ON A.financial_body_pk = B.pk
+		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
 		<where>
 			<if test="sales != null">
-				and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
+				and C.user_pks like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="name != null">
-				and name = #{name,jdbcType=VARCHAR}
+				and A.name = #{name,jdbcType=VARCHAR}
 			</if>
 			<if test="financial_body_pk != null">
-				and financial_body_pk = #{financial_body_pk,jdbcType=VARCHAR}
+				and A.financial_body_pk = #{financial_body_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="financial_body_name != null">
+				and B.client_short_name = #{financial_body_name,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -448,10 +510,11 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		B.client_short_name AS
+		IFNULL(B.client_short_name,A.financial_body_name) AS
 		financial_body_name,
 		B.client_area as area,
-		C.user_names AS sales_name,
+		C.user_names AS
+		sales_name,
 		A.create_user,
 		A.update_user,
 		A.pk,
@@ -464,10 +527,13 @@
 		A.relation_level,
 		A.back_level,
 		A.market_level,
-		A.dimission_flg
-		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
+		A.dimission_flg,
+		A.review_flg,
+		A.quit_flg
+		from client_employee A LEFT
+		JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
-		
+
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
@@ -479,7 +545,7 @@
 				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
-				and (C.user_pks like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%')  OR A.public_flg='Y')
+				and (C.user_pks like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') OR A.public_flg='Y')
 			</if>
 			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
 				and A.delete_flg in
@@ -492,74 +558,20 @@
 				<foreach item="item" index="index" collection="params.bo.public_flgs" open="(" separator="," close=")">
 					#{params.bo.public_flgs[${index}]}
 				</foreach>
+			</if>
+			<if test="params.bo.review_flg != null and params.bo.review_flg !=''">
+				and A.review_flg = #{params.bo.review_flg,jdbcType=CHAR}
 			</if>
 		</where>
 		ORDER BY B.client_short_name,A.name
 	</select>
-	
-	<select id="selectAdminByPage" parameterType="com.xinchi.tools.Page" resultMap="AdminResultMap">
-		select
-		A.name,
-		A.nick_name,
-		A.sex,
-		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
-		END as age,
-		A.wechat,
-		A.qq,
-		A.type,
-		A.cellphone,
-		A.telephone,
-		A.fax,
-		A.id,
-		A.financial_body_pk,
-		B.client_short_name AS
-		financial_body_name,
-		B.client_area as area,
-		A.create_user,
-		A.update_user,
-		A.pk,
-		A.comment,
-		A.public_flg,
-		A.delete_flg,
-		A.birth_year,
-		A.create_time,
-		A.update_time,
-		A.relation_level,
-		A.back_level,
-		A.market_level,
-		A.dimission_flg
-		from client_employee A LEFT JOIN client B ON A.financial_body_pk = B.pk
-		<where>
-			<if test="params.bo.name != null and params.bo.name !=''">
-				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
-			</if>
-			<if test="params.bo.area != null and params.bo.area !=''">
-				and B.client_area = #{params.bo.area,jdbcType=VARCHAR}
-			</if>
-			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
-				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
-			</if>
-			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
-				and A.delete_flg in
-				<foreach item="item" index="index" collection="params.bo.delete_flgs" open="(" separator="," close=")">
-					#{params.bo.delete_flgs[${index}]}
-				</foreach>
-			</if>
-			<if test="params.bo.public_flgs != null and params.bo.public_flgs !=''">
-				and A.public_flg in
-				<foreach item="item" index="index" collection="params.bo.public_flgs" open="(" separator="," close=")">
-					#{params.bo.public_flgs[${index}]}
-				</foreach>
-			</if>
-		</where>
-	</select>
-	
 	<select id="selectEmployeeUserByEmployeePk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientEmployeeUserBean">
 		select
 		A.employee_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
 		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user
 		from client_employee_user A LEFT
-		JOIN user_base B ON
+		JOIN user_base B
+		ON
 		A.user_pk= B.pk
 		where A.employee_pk = #{pk,jdbcType=CHAR}
 	</select>

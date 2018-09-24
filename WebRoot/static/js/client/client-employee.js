@@ -1,6 +1,7 @@
 var financialLayer;
 var jobHoppingLayer;
 var salesLayer;
+var reviewLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -47,7 +48,7 @@ var CompanyContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 
-		var param = $("form").serialize();
+		var param = $("#form-search").serialize();
 
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -69,13 +70,13 @@ var CompanyContext = function() {
 
 	});
 	self.refreshSumCnt = function() {
-		var param = $("form").serialize();
+		var param = $("#form-search").serialize();
 		$.getJSON(self.apiurl + 'client/searchSumCntData', param,
 				function(data) {
 					self.rld(data.rld);
 				});
 	}
-	
+
 	self.chosenUser = ko.observableArray([]);
 	/**
 	 * 调整客户所属销售
@@ -299,22 +300,26 @@ var CompanyContext = function() {
 			}, function(data) {
 				if (data.employee) {
 					self.employee(data.employee);
-					jobHoppingLayer = $.layer({
-						type : 1,
-						title : [ '跳槽', '' ],
-						maxmin : false,
-						closeBtn : [ 1, true ],
-						shadeClose : false,
-						area : [ '350px', '300px' ],
-						offset : [ '', '' ],
-						scrollbar : true,
-						page : {
-							dom : '#job-hopping'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
+					if (self.employee().review_flg == "Y") {
+						jobHoppingLayer = $.layer({
+							type : 1,
+							title : [ '跳槽', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '350px', '300px' ],
+							offset : [ '', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#job-hopping'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					} else {
+						fail_msg("员工还未审核！")
+					}
 				} else {
 					fail_msg("员工不存在！");
 				}
@@ -338,6 +343,7 @@ var CompanyContext = function() {
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
+				self.clearFinancial();
 				layer.close(jobHoppingLayer);
 				self.refresh();
 				self.chosenEmployees.removeAll();
@@ -349,6 +355,7 @@ var CompanyContext = function() {
 
 	self.cancelJobHopping = function() {
 		layer.close(jobHoppingLayer);
+		self.clearFinancial();
 	};
 	/**
 	 * 将员工标记为离职状态
@@ -474,6 +481,79 @@ var CompanyContext = function() {
 		}
 
 	};
+	/**
+	 * 审核客户员工
+	 */
+	self.reviewEmployee = function() {
+		if (self.chosenEmployees().length == 0) {
+			fail_msg("请选择员工");
+			return;
+		} else if (self.chosenEmployees().length > 1) {
+			fail_msg("只能选择一个员工");
+			return;
+		} else {
+			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+				employee_pk : self.chosenEmployees()[0]
+			}, function(data) {
+				if (data.employee) {
+					self.employee(data.employee);
+					if (self.employee().review_flg == "N") {
+						reviewLayer = $.layer({
+							type : 1,
+							title : [ '审核客户员工', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '400px', '200px' ],
+							offset : [ '', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#div-review'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					} else {
+						success_msg("已经审核！");
+					}
+				} else {
+					fail_msg("员工不存在！");
+				}
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
+			});
+		}
+	};
+
+	self.doReview = function() {
+		if (!$("#form-review").valid()) {
+			return;
+		}
+		var data = $("#form-review").serialize();
+		startLoadingIndicator("保存中...");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'client/reviewEmployee',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.clearFinancial();
+				layer.close(reviewLayer);
+				self.refresh();
+				self.chosenEmployees.removeAll();
+			} else if (str == "exist") {
+				fail_msg("已经存在同名客户员工！");
+			} else {
+				fail_msg(str);
+			}
+		});
+	};
+	self.cancelReview = function() {
+		layer.close(reviewLayer);
+		self.clearFinancial();
+	};
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
@@ -513,8 +593,17 @@ var CompanyContext = function() {
 	self.pickFinancial = function(name, pk) {
 		$("#financial_body_name").val(name);
 		$("#financial_body_pk").val(pk);
+		$("#financial_body_name1").val(name);
+		$("#financial_body_pk1").val(pk);
 		layer.close(financialLayer);
 	};
+
+	self.clearFinancial = function() {
+		$("#financial_body_name").val("");
+		$("#financial_body_pk").val("");
+		$("#financial_body_name1").val("");
+		$("#financial_body_pk1").val("");
+	}
 	// start pagination client
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 10;

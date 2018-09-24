@@ -1248,6 +1248,190 @@
 			<comment>ALTER VIEW view_relation_level </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS client_relation_summary;
+					CREATE VIEW client_relation_summary AS
+				    SELECT 
+				        A.name as client_employee_name,
+				        A.pk as client_employee_pk,
+				        G.user_pks AS sales,
+				        G.user_names AS sales_name,
+				        A.delete_flg as delete_flg,
+				        A.relation_level as relation_level,
+				        A.back_level as back_level,
+				        A.market_level as market_level,
+				        SUM(IF(LEFT(B.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+				            B.order_count,
+				            0)) as month_order_count,
+				        C.last_confirm_date,
+				        C.last_order_period,
+				        D.receivable,
+				        D.last_receivable_period,
+				        E.target AS last_client_visit_target,
+				        F.summary AS last_accurate_sale_summary
+				    from
+				        client_employee A
+				            LEFT JOIN
+				        view_order_count B ON A.pk = B.client_employee_pk
+				            LEFT JOIN
+				        order_period C ON A.pk = C.client_employee_pk
+				            LEFT JOIN
+				        receivable_for_client D ON A.pk = D.client_employee_pk
+				            LEFT JOIN
+				        view_last_client_visit E ON A.pk = E.client_employee_pk
+				            LEFT JOIN
+				        view_last_accurate_sale F ON A.pk = F.client_employee_pk
+							LEFT JOIN
+						view_client_employee_user G ON A.pk = G.employee_pk
+				    GROUP BY A.pk;
+             ]]>
+			<comment>ALTER VIEW client_relation_summary </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS receivable_a;	
+					create view receivable_a as
+				    select 					
+				    	B.pk AS sale_pk,
+				        B.user_name AS sales_name,
+				        A.sales,
+				         count(CASE WHEN A.final_flg='N' THEN if(A.budget_balance!=0,A.pk,null) 
+								ELSE if(A.final_balance!=0,A.pk,null) end) as all_count,
+				        sum(A.budget_balance) as all_budget_balance,
+				        sum(A.final_balance) as all_final_balance,
+				        sum(CASE
+				            WHEN A.final_flg='N' THEN A.budget_balance
+				            ELSE A.final_balance
+				        END) as all_balance
+				    from
+				        receivable A LEFT JOIN user_base B ON A.sales = B.user_number
+				    group by A.sales;
+             ]]>
+			<comment>ALTER VIEW receivable_a </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE VIEW view_receivable_meter AS
+				SELECT 
+				    B.pk AS user_pk,
+				    B.user_name AS user_name,
+				    A.sales AS user_number,
+				    SUM(CASE
+				        WHEN A.final_flg = 'N' THEN A.budget_balance
+				        ELSE A.final_balance
+				    END) AS receivable,
+				    SUM(CASE
+				        WHEN
+				            DATEDIFF(NOW(), A.return_date) >= 20
+				                AND DATEDIFF(NOW(), A.return_date) <= 30
+				        THEN
+				            IF(A.final_flg = 'N',
+				                A.budget_balance,
+				                A.final_balance)
+				        ELSE 0
+				    END) AS warning
+				FROM
+				    receivable A
+				        LEFT JOIN
+				    user_base B ON A.sales = B.user_number
+				GROUP BY A.sales;
+             ]]>
+			<comment>CREATE VIEW view_receivable_meter </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+          CREATE VIEW  view_score AS
+			SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+		    sum(IF(LEFT(A.confirm_date,7)=LEFT(curdate(),7),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0) ) as month_score,
+			A.create_user AS user_number,
+			B.user_name AS user_name,
+	        B.pk AS user_pk
+			FROM budget_standard_order A
+			LEFT JOIN user_base B on A.create_user = B.user_number
+	        GROUP by create_user;
+             ]]>
+			<comment> CREATE VIEW  view_score</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+					DROP VIEW IF EXISTS month_order_count;
+					CREATE VIEW month_order_count AS
+					select 
+				        A.client_employee_pk as client_employee_pk, count(A.client_employee_pk) as month_order_count,
+						B.relation_level as relation_level,
+				        B.back_level as back_level,
+				        B.market_level as market_level,
+						LEFT(A.confirm_date, 7) as month
+				    from
+						budget_order_view A 
+						LEFT JOIN client_employee B on A.client_employee_pk=B.pk
+				    group by A.client_employee_pk,month;
+	          ]]>
+			<comment>ALTER VIEW month_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+					ALTER TABLE client_employee 
+					CHANGE COLUMN financial_body_pk financial_body_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ,
+					ADD COLUMN review_flg CHAR(1) NULL DEFAULT 'Y' AFTER dimission_flg;
+	          ]]>
+			<comment>ALTER TABLE client_employee </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+					CREATE TABLE mobile_touch (
+					  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  touch_target VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  summary VARCHAR(500) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL)
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '销售主动电联客户记录表';
+	          ]]>
+			<comment>CREATE TABLE mobile_touch</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+					CREATE TABLE incoming_call (
+					  client_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  date VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  type VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  summary VARCHAR(500) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL)
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '被动咨询记录表';
+	          ]]>
+			<comment>CREATE TABLE incoming_call</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

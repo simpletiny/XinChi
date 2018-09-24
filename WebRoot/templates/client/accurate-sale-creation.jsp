@@ -37,18 +37,11 @@
 									name="accurate.client_employee_pk" required="required" />
 							</div>
 						</div>
-						<!-- <div class="col-md-6">
-							<div class="ip">
-								<em class="small-box"> <input type="radio" name="accurate.type" value="CHAT" /><label>有效沟通</label>
-								</em> <em class="small-box"> <input type="radio" name="accurate.type" checked="checked" value="VISIT" /><label>有效拜访</label>
-								</em>
-							</div>
-						</div> -->
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<div class="ip required" style="width: 30%">
-								<label class="l" style="width: 40%">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: accurate().date" placeholder="2013-10-19" name="accurate.date"
+								<label class="l">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: accurate().date" placeholder="2013-10-19" name="accurate.date"
 									required="required" />
 							</div>
 						</div>

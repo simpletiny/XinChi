@@ -56,5 +56,4 @@ public interface EmployeeDAO {
 
 	public void publicClientEmployee(List<String> employee_pks);
 
-	public List<ClientEmployeeBean> selectByPageAdmin(Page<ClientEmployeeBean> page);
 }

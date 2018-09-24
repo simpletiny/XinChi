@@ -48,6 +48,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String back_level;
 	private String market_level;
 	private String dimission_flg;
+	private String review_flg;
+	private String quit_flg;
 
 	private List<ClientEmployeeUserBean> employee_users;
 	//
@@ -300,6 +302,22 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setEmployee_users(List<ClientEmployeeUserBean> employee_users) {
 		this.employee_users = employee_users;
+	}
+
+	public String getReview_flg() {
+		return review_flg;
+	}
+
+	public void setReview_flg(String review_flg) {
+		this.review_flg = review_flg;
+	}
+
+	public String getQuit_flg() {
+		return quit_flg;
+	}
+
+	public void setQuit_flg(String quit_flg) {
+		this.quit_flg = quit_flg;
 	}
 
 }

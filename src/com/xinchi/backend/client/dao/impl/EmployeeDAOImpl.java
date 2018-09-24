@@ -88,11 +88,4 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements EmployeeDAO
 
 	}
 
-	@Override
-	public List<ClientEmployeeBean> selectByPageAdmin(Page<ClientEmployeeBean> page) {
-		List<ClientEmployeeBean> list = daoUtil
-				.selectByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectAdminByPage", page);
-		return list;
-	}
-
 }

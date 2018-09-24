@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ClientRelationMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientRelationBean">
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nick_name" jdbcType="VARCHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="sales" property="sales" jdbcType="VARCHAR" />
+		<result column="sales_name" property="sales_name" jdbcType="VARCHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+		<result column="relation_level" property="relation_level" jdbcType="VARCHAR" />
+		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
+		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
+		<result column="month_order_count" property="month_order_count" jdbcType="INTEGER" />
+		<result column="year_order_count" property="year_order_count" jdbcType="INTEGER" />
+		<result column="last_confirm_date" property="last_confirm_date" jdbcType="VARCHAR" />
+		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="last_receivable_period" property="last_receivable_period" jdbcType="INTEGER" />
+		<result column="connect_date" property="connect_date" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="extra_info" property="extra_info" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		client_employee_name,
+		nick_name,
+		client_employee_pk,
+		sales,
+		sales_name,
+		delete_flg,
+		relation_level,
+		back_level,
+		market_level,
+		month_order_count,
+		year_order_count,
+		last_confirm_date,
+		last_order_period,
+		receivable,
+		last_receivable_period,
+		connect_date,
+		type,
+		extra_info,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from client_relation
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from client_relation
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ClientRelationBean">
+
+		insert into client_relation
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="client_employee_name != null">
+				client_employee_name,
+			</if>
+			<if test="nick_name != null">
+				nick_name,
+			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk,
+			</if>
+			<if test="sales != null">
+				sales,
+			</if>
+			<if test="sales_name != null">
+				sales_name,
+			</if>
+			<if test="delete_flg != null">
+				delete_flg,
+			</if>
+			<if test="relation_level != null">
+				relation_level,
+			</if>
+			<if test="back_level != null">
+				back_level,
+			</if>
+			<if test="market_level != null">
+				market_level,
+			</if>
+			<if test="month_order_count != null">
+				month_order_count,
+			</if>
+			<if test="year_order_count != null">
+				year_order_count,
+			</if>
+			<if test="last_confirm_date != null">
+				last_confirm_date,
+			</if>
+			<if test="last_order_period != null">
+				last_order_period,
+			</if>
+			<if test="receivable != null">
+				receivable,
+			</if>
+			<if test="last_receivable_period != null">
+				last_receivable_period,
+			</if>
+			<if test="connect_date != null">
+				connect_date,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="extra_info != null">
+				extra_info,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="client_employee_name != null">
+				#{client_employee_name,jdbcType=VARCHAR},
+			</if>
+			<if test="nick_name != null">
+				#{nick_name,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				#{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="sales != null">
+				#{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="sales_name != null">
+				#{sales_name,jdbcType=VARCHAR},
+			</if>
+			<if test="delete_flg != null">
+				#{delete_flg,jdbcType=CHAR},
+			</if>
+			<if test="relation_level != null">
+				#{relation_level,jdbcType=VARCHAR},
+			</if>
+			<if test="back_level != null">
+				#{back_level,jdbcType=VARCHAR},
+			</if>
+			<if test="market_level != null">
+				#{market_level,jdbcType=VARCHAR},
+			</if>
+			<if test="month_order_count != null">
+				#{month_order_count,jdbcType=INTEGER},
+			</if>
+			<if test="year_order_count != null">
+				#{year_order_count,jdbcType=INTEGER},
+			</if>
+			<if test="last_confirm_date != null">
+				#{last_confirm_date,jdbcType=VARCHAR},
+			</if>
+			<if test="last_order_period != null">
+				#{last_order_period,jdbcType=INTEGER},
+			</if>
+			<if test="receivable != null">
+				#{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="last_receivable_period != null">
+				#{last_receivable_period,jdbcType=INTEGER},
+			</if>
+			<if test="connect_date != null">
+				#{connect_date,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="extra_info != null">
+				#{extra_info,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ClientRelationBean">
+		update client_relation
+		<set>
+			<if test="client_employee_name != null">
+				client_employee_name = #{client_employee_name,jdbcType=VARCHAR},
+			</if>
+			<if test="nick_name != null">
+				nick_name = #{nick_name,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="sales != null">
+				sales = #{sales,jdbcType=VARCHAR},
+			</if>
+			<if test="sales_name != null">
+				sales_name = #{sales_name,jdbcType=VARCHAR},
+			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=CHAR},
+			</if>
+			<if test="relation_level != null">
+				relation_level = #{relation_level,jdbcType=VARCHAR},
+			</if>
+			<if test="back_level != null">
+				back_level = #{back_level,jdbcType=VARCHAR},
+			</if>
+			<if test="market_level != null">
+				market_level = #{market_level,jdbcType=VARCHAR},
+			</if>
+			<if test="month_order_count != null">
+				month_order_count = #{month_order_count,jdbcType=INTEGER},
+			</if>
+			<if test="year_order_count != null">
+				year_order_count = #{year_order_count,jdbcType=INTEGER},
+			</if>
+			<if test="last_confirm_date != null">
+				last_confirm_date = #{last_confirm_date,jdbcType=VARCHAR},
+			</if>
+			<if test="last_order_period != null">
+				last_order_period = #{last_order_period,jdbcType=INTEGER},
+			</if>
+			<if test="receivable != null">
+				receivable = #{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="last_receivable_period != null">
+				last_receivable_period = #{last_receivable_period,jdbcType=INTEGER},
+			</if>
+			<if test="connect_date != null">
+				connect_date = #{connect_date,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="extra_info != null">
+				extra_info = #{extra_info,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientRelationBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_relation
+	</select>
+</mapper>

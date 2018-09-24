@@ -324,4 +324,9 @@ public class ReceivableServiceImpl implements ReceivableService {
 	public ReceivableBean selectByTeamNumber(String team_number) {
 		return dao.selectReceivableByTeamNumber(team_number);
 	}
+
+	@Override
+	public BigDecimal fetchEmployeeBalance(String client_employee_pk) {
+		return dao.fetchEmployeeBalance(client_employee_pk);
+	}
 }

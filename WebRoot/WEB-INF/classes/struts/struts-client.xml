@@ -35,6 +35,9 @@
 		<action name="createEmployee" class="employeeAction" method="createEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="reviewEmployee" class="employeeAction" method="reviewEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchEmployee" class="employeeAction" method="searchEmployee">
 			<result name="success" type="json"></result>
 		</action>
@@ -54,6 +57,9 @@
 			<result name="success" type="json"></result>
 		</action>
 		<action name="updateEmployee" class="employeeAction" method="updateEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateEmployeeSimply" class="employeeAction" method="updateEmployeeSimply">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="setClientEmployeeLevel" class="employeeAction" method="setClientEmployeeLevel">
@@ -121,7 +127,25 @@
 		<action name="createAccurateSale" class="accurateSaleAction" method="createAccurateSale">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="createMobileTouch" class="clientRelationAction" method="createMobileTouch">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="createIncomingCall" class="clientRelationAction" method="createIncomingCall">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="quitConnectEmployee" class="clientRelationAction" method="quitConnectEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateEmployeeRelationLevel" class="clientRelationAction" method="updateEmployeeRelationLevel">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchRelationsByPage" class="clientRelationAction" method="searchRelationsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchConnectsByPage" class="clientRelationAction" method="searchConnectsByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

@@ -1,0 +1,181 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE client_employee_quit_connect_log (
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  client_employee_pk CHAR(22) NOT NULL,
+				  date VARCHAR(10) NOT NULL,
+				  reason VARCHAR(10) NOT NULL,
+				  comment VARCHAR(200) NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '放弃维护客户关系记录表';
+             ]]>
+			<comment>CREATE TABLE client_employee_quit_connect_log</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE client_employee 
+					ADD COLUMN quit_flg CHAR(1) NULL DEFAULT 'N' COMMENT '放弃维护标识' AFTER review_flg;
+             ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	insert into mobile_touch select client_employee_pk,date,LEFT(product,10),summary,pk,create_time,create_user,update_time,update_user from accurate_sale;
+             ]]>
+			<comment>insert into mobile_touch </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE VIEW view_connect_info AS
+			select confirm_date AS connect_date,client_employee_pk ,concat(product_name, ':',ifnull(special_count,0)+adult_count,'人') AS extra_info ,'ORDER' AS type from budget_order_view where confirm_date is not null
+			union all 
+			select date AS connect_date,client_employee_pk,target AS extra_info,'VISIT' AS type from client_visit where type='VISIT' and date is not null
+			union all 
+			select date AS connect_date,client_employee_pk,touch_target AS extra_info,'TOUCH' AS type from mobile_touch  where date is not null
+			union all 
+			select date AS connect_date,client_employee_pk,type AS extra_info,'INCOMING' AS type from incoming_call where date is not null;
+			
+			CREATE VIEW view_connect_date AS
+			select max(confirm_date) AS connect_date,client_employee_pk from budget_order_view where confirm_date is not null group by client_employee_pk
+			union all 
+			select max(date) AS connect_date,client_employee_pk from client_visit where type='VISIT' and date is not null  group by client_employee_pk
+			union all 
+			select max(date) AS connect_date,client_employee_pk from mobile_touch where date is not null  group by client_employee_pk
+			union all 
+			select max(date) AS connect_date,client_employee_pk from incoming_call where date is not null group by client_employee_pk;
+			
+			CREATE VIEW view_last_connect_date  AS 
+			select max(A.connect_date) AS connect_date,A.client_employee_pk from 
+			view_connect_date A
+			group by A.client_employee_pk;
+			
+			CREATE VIEW view_last_connect AS 
+			select distinct A.connect_date,A.client_employee_pk,B.extra_info,B.type from view_connect_date A 
+			LEFT JOIN 
+			view_connect_info B ON A.connect_date= B.connect_date AND A.client_employee_pk = B.client_employee_pk;
+             ]]>
+			<comment>create VIEW view_last_connect</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS client_relation_summary;
+				CREATE VIEW client_relation_summary AS
+				    SELECT 
+				        A.name as client_employee_name,
+                        A.nick_name AS nick_name,
+				        A.pk as client_employee_pk,
+				        G.user_pks AS sales,
+				        G.user_names AS sales_name,
+				        A.delete_flg as delete_flg,
+				        A.relation_level as relation_level,
+				        A.back_level as back_level,
+				        A.market_level as market_level,
+				        SUM(IF(LEFT(B.order_date, 7) = DATE_FORMAT(now(), '%Y-%m'),
+				            B.order_count,
+				            0)) as month_order_count,
+						SUM(IF(LEFT(B.order_date,4) = DATE_FORMAT(now(),'%Y'),B.order_count,0)) AS year_order_count,
+				        C.last_confirm_date,
+				        C.last_order_period,
+				        D.receivable,
+				        D.last_receivable_period,
+                        E.connect_date,
+                        E.type,
+                        E.extra_info
+				    from
+				        client_employee A
+				            LEFT JOIN
+				        view_order_count B ON A.pk = B.client_employee_pk
+				            LEFT JOIN
+				        order_period C ON A.pk = C.client_employee_pk
+				            LEFT JOIN
+				        receivable_for_client D ON A.pk = D.client_employee_pk
+							LEFT JOIN 
+						view_last_connect E ON A.pk = E.client_employee_pk
+				            LEFT JOIN
+						view_client_employee_user G ON A.pk = G.employee_pk
+				    GROUP BY A.pk;
+             ]]>
+			<comment>ALTER VIEW client_relation_summary</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE VIEW view_sum_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement group by apply_user;
+             ]]>
+			<comment>CREATE VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+	       CREATE VIEW view_all_connect AS
+				select date AS connect_date,client_employee_pk,summary AS extra_info,'VISIT' AS type,create_user from client_visit where type='VISIT' and date is not null
+				union all 
+				select date AS connect_date,client_employee_pk,summary AS extra_info,'TOUCH' AS type,create_user from mobile_touch  where date is not null
+				union all 
+				select date AS connect_date,client_employee_pk,summary AS extra_info,'INCOMING' AS type,create_user from incoming_call where date is not null;
+             ]]>
+			<comment>CREATE VIEW view_all_connect</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+	       CREATE TABLE client_relation (
+			  client_employee_name VARCHAR(10) NULL,
+			  nick_name VARCHAR(10) NULL,
+			  client_employee_pk CHAR(22) NULL,
+			  sales VARCHAR(300) NULL,
+			  sales_name VARCHAR(200) NULL,
+			  delete_flg CHAR(1) NULL,
+			  relation_level VARCHAR(10) NULL,
+			  back_level VARCHAR(10) NULL,
+			  market_level VARCHAR(10) NULL,
+			  month_order_count INT NULL,
+			  year_order_count INT NULL,
+			  last_confirm_date VARCHAR(10) NULL,
+			  last_order_period INT NULL,
+			  receivable DECIMAL(12,2) NULL,
+			  last_receivable_period INT NULL,
+			  connect_date VARCHAR(10) NULL,
+			  type VARCHAR(10) NULL,
+			  extra_info VARCHAR(100) NULL,
+			  pk CHAR(22) NOT NULL,
+			  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  PRIMARY KEY (pk))
+			ENGINE = InnoDB
+			DEFAULT CHARACTER SET = utf8
+			COLLATE = utf8_bin;
+             ]]>
+			<comment>CREATE TABLE client_relation</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>
+
+
+

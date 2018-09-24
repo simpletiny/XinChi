@@ -174,7 +174,7 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".product-box").addClass("current").children("ol").css("display",
+		$(".order-box").addClass("current").children("ol").css("display",
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-box.js"></script>

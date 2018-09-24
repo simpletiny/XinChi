@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
 @Service
@@ -55,6 +58,8 @@ public class PaidServiceImpl implements PaidService {
 
 	@Autowired
 	private PayableDAO payableDao;
+	@Autowired
+	private PayApprovalDAO payApprovalDao;
 
 	@Override
 	public String rollBackPayApply(String related_pk) {
@@ -80,6 +85,12 @@ public class PaidServiceImpl implements PaidService {
 				payableDao.update(payable);
 			}
 			dao.deleteByPk(paid.getPk());
+		}
+
+		// 如果是待审批状态，则清除待审批支付
+		PayApprovalBean pa = payApprovalDao.selectByBackPk(related_pk);
+		if (null != pa && pa.getStatus().equals(ResourcesConstants.PAID_STATUS_ING)) {
+			payApprovalDao.delete(pa.getPk());
 		}
 		return SUCCESS;
 	}

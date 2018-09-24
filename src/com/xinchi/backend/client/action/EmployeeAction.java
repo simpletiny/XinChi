@@ -38,6 +38,11 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String updateEmployeeSimply() {
+		resultStr = employeeService.update(employee);
+		return SUCCESS;
+	}
+
 	public String swapDimission() {
 		resultStr = employeeService.update(employee);
 		return SUCCESS;
@@ -67,7 +72,7 @@ public class EmployeeAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			employee.setSales(sessionBean.getPk());
 		}
-		
+
 		params.put("bo", employee);
 		page.setParams(params);
 		employees = employeeService.getAllClientEmployeeByPage(page);
@@ -145,6 +150,17 @@ public class EmployeeAction extends BaseAction {
 	 */
 	public String jobHopping() {
 		resultStr = employeeService.jobHopping(employee);
+		return SUCCESS;
+	}
+
+	/**
+	 * 审核客户员工
+	 * 
+	 * @return
+	 */
+	public String reviewEmployee() {
+		employee.setReview_flg("Y");
+		resultStr = employeeService.updateEmployee(employee);
 		return SUCCESS;
 	}
 
