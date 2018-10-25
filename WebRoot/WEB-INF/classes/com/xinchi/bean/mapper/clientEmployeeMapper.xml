@@ -32,6 +32,9 @@
 		<result column="relation_level" property="relation_level" jdbcType="VARCHAR" />
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
+		<result column="useful_time" property="useful_time" jdbcType="VARCHAR" />
+		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
+		<result column="year_oder_count" property="year_oder_count" jdbcType="INTEGER" />
 	</resultMap>
 	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientEmployeeBean">
 		<collection column="pk" property="employee_users" ofType="com.xinchi.bean.ClientEmployeeUserBean" select="selectEmployeeUserByEmployeePk">
@@ -125,7 +128,8 @@
 
 		from client_employee
 		A LEFT JOIN
-		client B ON A.financial_body_pk = B.pk
+		client B ON A.financial_body_pk =
+		B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
 
@@ -433,7 +437,8 @@
 		A.dimission_flg,
 		A.review_flg,
 		A.quit_flg
-		from client_employee A LEFT
+		from client_employee
+		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
 		<where>
@@ -448,6 +453,9 @@
 			</if>
 			<if test="financial_body_name != null">
 				and B.client_short_name = #{financial_body_name,jdbcType=VARCHAR}
+			</if>
+			<if test="public_flg != null and public_flg !=''">
+				and A.public_flg = #{public_flg,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -466,6 +474,19 @@
 		<where>
 			and sales like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
 		</where>
+	</select>
+	<select id="selectRelationCntAdmin" parameterType="java.lang.String" resultMap="RelationLevelMap">
+		SELECT
+		COUNT(pk) AS sum_cnt,
+		COUNT(IF(relation_level IN ('朋友级' , '商务级'),1,NULL)) AS strong_cnt,
+		COUNT(IF(relation_level = '市场级',1,NULL)) AS
+		middle_cnt,
+		COUNT(IF(relation_level = '新增级',1,NULL)) AS weak_cnt,
+		COUNT(IF(relation_level = '排斥级',1,NULL)) AS bad_cnt,
+		COUNT(IF(relation_level = ''OR relation_level IS NULL,1,NULL)) AS unknow_cnt
+		FROM
+		client_employee
+		where delete_flg='N'
 	</select>
 
 	<select id="selectBodyPksByEmployeePks" resultType="java.lang.String">
@@ -529,10 +550,15 @@
 		A.market_level,
 		A.dimission_flg,
 		A.review_flg,
-		A.quit_flg
-		from client_employee A LEFT
+		A.quit_flg,
+		C.useful_time AS useful_time,
+		D.last_order_period AS last_order_period,
+		D.year_order_count AS year_order_count
+		from client_employee
+		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
+		LEFT JOIN client_relation D ON A.pk = D.client_employee_pk
 
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">

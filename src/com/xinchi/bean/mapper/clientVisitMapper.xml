@@ -44,6 +44,13 @@
 		from client_visit
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectMaxVisitDateByEmployeePk" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		max(date)
+		from client_visit
+		where client_employee_pk = #{employee_pk,jdbcType=CHAR}
+		and type="VISIT"
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from client_visit

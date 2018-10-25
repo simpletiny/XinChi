@@ -33,6 +33,19 @@ public class DateUtil {
 		return String.valueOf(Calendar.getInstance().getTimeInMillis());
 	}
 
+	public static String getTimeMillis(String date) {
+		try {
+			Date d = sdf1.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			return String.valueOf(c.getTimeInMillis());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
 	/**
 	 * 计算加几天后的日期（date 格式yyyy-MM-dd)
 	 * 
@@ -107,8 +120,11 @@ public class DateUtil {
 		if (format.length > 0) {
 			sdf = new SimpleDateFormat(format[0]);
 		}
-
+		if (isEmpty(source)) {
+			source = "1988-03-22";
+		}
 		try {
+
 			return sdf.parse(source);
 		} catch (ParseException e) {
 
@@ -237,6 +253,6 @@ public class DateUtil {
 	public static void main(String[] args) {
 		String d1 = "2018-03-22";
 		String d2 = "2018-03-21";
-		System.out.println(compare(d1,d2));
+		System.out.println(compare(d1, d2));
 	}
 }

@@ -5,6 +5,7 @@
 		<result column="employee_pk" property="employee_pk" jdbcType="CHAR" />
 		<result column="user_pk" property="user_pk" jdbcType="CHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -25,6 +26,20 @@
 		<include refid="Base_Column_List" />
 		from client_employee_user
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	
+	<select id="selectByEmployeePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.employee_pk,
+		A.user_pk,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		IFNULL(B.user_name,'公开') AS user_name
+		from client_employee_user A LEFT JOIN user_base B ON A.user_pk = B.pk
+		where A.employee_pk = #{employee_pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -29,6 +28,7 @@
 								<th>姓名</th>
 								<th>员工号</th>
 								<th>登录时间</th>
+								<th>当前页面</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: users">
@@ -36,6 +36,7 @@
 								<td data-bind="text: $data.user_name"></td>
 								<td data-bind="text: $data.user_number"></td>
 								<td data-bind="text: $data.login_time"></td>
+								<td><a data-bind="text:$data.current_url,attr{href: $data.current_url}"></a></td>
 							</tr>
 						</tbody>
 					</table>

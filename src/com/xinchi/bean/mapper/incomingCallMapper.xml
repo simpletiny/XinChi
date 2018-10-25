@@ -31,7 +31,13 @@
 		from incoming_call
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-
+	<select id="selectMaxCallDateByEmployeePk" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		max(date)
+		from
+		incoming_call
+		where client_employee_pk = #{employee_pk,jdbcType=CHAR}
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from incoming_call
 		where pk = #{pk,jdbcType=CHAR}
@@ -136,5 +142,16 @@
 		select
 		<include refid="Base_Column_List" />
 		from incoming_call
+		<where>
+			<if test="client_employee_pk != null and client_employee_pk !=''">
+				and client_employee_pk = #{client_employee_pk,jdbcType=VARCHAR}
+			</if>
+			<if test="date != null and date !=''">
+				and date = #{date,jdbcType=VARCHAR}
+			</if>
+			<if test="create_user != null and create_user !=''">
+				and create_user = #{create_user,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 </mapper>

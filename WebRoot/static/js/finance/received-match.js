@@ -1,4 +1,6 @@
 var matchDetailLayer;
+var viewDetailLayer;
+var viewCommentLayer;
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -31,9 +33,12 @@ var DetailContext = function() {
 	self.today(x.Format("yyyy-MM-dd"));
 
 	self.refresh = function() {
-		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
+		var param = $("form").serialize()
+				+ "&detail.type=收入&detail.inner_flg=N";
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(
+				data) {
 			self.details(data.details);
 			$(".rmb").formatCurrency();
 
@@ -42,30 +47,12 @@ var DetailContext = function() {
 		});
 	};
 
-	// 匹配主营业务收入
-	self.match = function() {
-		if (self.chosenDetails().length == 0) {
-			fail_msg("请选择收入");
-			return;
-		} else if (self.chosenDetails().length > 1) {
-			fail_msg("只能选择一笔收入");
-			return;
-		} else if (self.chosenDetails().length == 1) {
-			var key = self.chosenDetails()[0];
-			self.chosenDetails.removeAll();
-			window.location=self.apiurl + "templates/finance/do-match.jsp?key=" + key;
-		}
-	};
 	// 匹配其他收入
 	self.matchOther = function() {
-		if (self.chosenDetails().length == 0) {
+		if (self.chosenDetails() == null || self.chosenDetails()=="") {
 			fail_msg("请选择收入");
 			return;
-		} else if (self.chosenDetails().length > 1) {
-			fail_msg("只能选择一笔收入");
-			return;
-		} else if (self.chosenDetails().length == 1) {
-
+		} else {
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
@@ -86,7 +73,7 @@ var DetailContext = function() {
 							} else {
 								fail_msg(str);
 							}
-							self.chosenDetails.removeAll();
+							self.chosenDetails(null);
 						});
 						layer.close(index);
 					}
@@ -118,62 +105,89 @@ var DetailContext = function() {
 	self.showDetails = function(data, event) {
 		var detail_pk = data.pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'finance/searchReceivedDetailByPaymentDetailPk', {
-			detailId : detail_pk
-		}, function(data) {
-			self.received(data.received_detail);
-
-			if (self.received().type == "SUM") {
-				var param = "related_pks=" + self.received().related_pk;
-
-				$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
-					self.sumDetails(data.receiveds);
-					self.sumDetail(self.sumDetails()[0]);
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
-					matchDetailLayer = $.layer({
-						type : 1,
-						title : [ '合账详情', '' ],
-						maxmin : false,
-						closeBtn : [ 1, true ],
-						shadeClose : false,
-						area : [ '800px', 'auto' ],
-						offset : [ '150px', '' ],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail'
+		$
+				.getJSON(
+						self.apiurl
+								+ 'finance/searchReceivedDetailByPaymentDetailPk',
+						{
+							detailId : detail_pk
 						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
-			} else {
-				var param = "team_number=" + self.received().team_number;
-				$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
-					self.order(data.order);
-					self.comment(self.received().comment);
-					endLoadingIndicator();
-					matchDetailLayer = $.layer({
-						type : 1,
-						title : [ '摘要详情', '' ],
-						maxmin : false,
-						closeBtn : [ 1, true ],
-						shadeClose : false,
-						area : [ '700px', 'auto' ],
-						offset : [ '150px', '' ],
-						scrollbar : true,
-						page : {
-							dom : '#comment'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
-			}
+						function(data) {
+							self.received(data.received_detail);
 
-		});
+							if (self.received().type == "SUM") {
+								var param = "related_pks="
+										+ self.received().related_pk;
+
+								$.getJSON(self.apiurl
+										+ 'sale/searchByRelatedPks', param,
+										function(data) {
+											self.sumDetails(data.receiveds);
+											self
+													.sumDetail(self
+															.sumDetails()[0]);
+											$(".rmb").formatCurrency();
+											endLoadingIndicator();
+											matchDetailLayer = $.layer({
+												type : 1,
+												title : [ '合账详情', '' ],
+												maxmin : false,
+												closeBtn : [ 1, true ],
+												shadeClose : false,
+												area : [ '800px', 'auto' ],
+												offset : [ '150px', '' ],
+												scrollbar : true,
+												page : {
+													dom : '#sum_detail'
+												},
+												end : function() {
+													console.log("Done");
+												}
+											});
+										});
+							} else {
+								var param = "team_number="
+										+ self.received().team_number;
+								$
+										.getJSON(
+												self.apiurl
+														+ 'sale/searchOrderByTeamNumber',
+												param,
+												function(data) {
+													self.order(data.order);
+													self
+															.comment(self
+																	.received().comment);
+													endLoadingIndicator();
+													matchDetailLayer = $
+															.layer({
+																type : 1,
+																title : [
+																		'摘要详情',
+																		'' ],
+																maxmin : false,
+																closeBtn : [ 1,
+																		true ],
+																shadeClose : false,
+																area : [
+																		'700px',
+																		'auto' ],
+																offset : [
+																		'150px',
+																		'' ],
+																scrollbar : true,
+																page : {
+																	dom : '#comment'
+																},
+																end : function() {
+																	console
+																			.log("Done");
+																}
+															});
+												});
+							}
+
+						});
 	};
 
 	// 取消匹配
@@ -181,10 +195,7 @@ var DetailContext = function() {
 		if (self.chosenDetails().length == 0) {
 			fail_msg("请选择收入");
 			return;
-		} else if (self.chosenDetails().length > 1) {
-			fail_msg("只能选择一笔收入");
-			return;
-		} else if (self.chosenDetails().length == 1) {
+		} else {
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
@@ -201,7 +212,7 @@ var DetailContext = function() {
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
-								window.location.href = self.apiurl + "templates/finance/received-match.jsp";
+								self.search();
 							}
 						});
 						layer.close(index);
@@ -251,9 +262,10 @@ var DetailContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -261,6 +273,226 @@ var DetailContext = function() {
 
 	self.refreshPage = function() {
 		self.refresh();
+	};
+	// end pagination
+	// right side info
+	self.typeMapping = {
+		'TAIL' : '抹零',
+		'SUM' : '合账',
+		'STRIKE' : '冲账',
+		'RECEIVED' : '收入'
+	};
+	self.receiveds = ko.observableArray([]);
+	self.detail = ko.observable({});
+	self.dateTo = ko.observable();
+	self.dateFrom = ko.observable();
+	self.checkReceived = function() {
+		var detailId = self.chosenDetails();
+		// 获取收入信息
+		$.getJSON(self.apiurl + 'finance/searchDetailByPk',
+				"detailId=" + detailId, function(data) {
+					if (data.detail) {
+						self.detail(data.detail);
+						var x = new Date(data.detail.time);
+						self.dateTo(x.Format("yyyy-MM-dd"));
+						self.dateFrom(x.Format("yyyy-MM-dd"));
+						self.searchReceiveApply();
+					} else {
+						fail_msg("不存在的收入明细！");
+					}
+				}).fail(function(reason) {
+			fail_msg(reason.responseText);
+		});
+		return true;
+	}
+	self.searchReceiveApply = function() {
+		var param = "detail.date_from=" + self.dateFrom() + "&detail.date_to="
+				+ self.dateTo() + "&detail.statuses=I";
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
+				data) {
+			self.receiveds(data.receiveds);
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+
+			$(".rmb").formatCurrency();
+		});
+	};
+	self.chosenReceiveds = ko.observableArray([]);
+	// 匹配主营业务收入
+	self.match = function() {
+		var checks = new Array();
+		for (var i = 0; i < self.receiveds().length; i++) {
+			var sou = self.receiveds()[i];
+			for (var j = 0; j < self.chosenReceiveds().length; j++) {
+				var des = self.chosenReceiveds()[j];
+				var x = des.split(";");
+				if (x[1] == sou.related_pk) {
+					checks.push(sou);
+				}
+
+			}
+		}
+		var sum = 0;
+		for (var i = 0; i < checks.length; i++) {
+			if (self.detail().account != checks[i].card_account) {
+				fail_msg("账户不同！不能匹配");
+				return;
+			}
+
+			if (checks[i].type == "SUM") {
+				sum += checks[i].allot_received;
+			} else {
+				sum += checks[i].received;
+			}
+		}
+		if (self.detail().money != sum) {
+			fail_msg("匹配金额不同！不能匹配");
+			return;
+		}
+		var json = '{"detailId":"' + self.chosenDetails() + '","arr":[';
+		for (var i = 0; i < checks.length; i++) {
+			json += '{"related_pk":"' + checks[i].related_pk + '","type":"'
+					+ checks[i].type + '"';
+			if (i == checks.length - 1) {
+				json += '}]}';
+			} else {
+				json += '},';
+			}
+		}
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '是否确认匹配?',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					startLoadingSimpleIndicator("匹配中");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'finance/matchReceived',
+						data : "json=" + json
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.searchReceiveApply();
+							self.search();
+							self.chosenDetails(null);
+						}
+					});
+					layer.close(index);
+				}
+			}
+		});
+	};
+	self.viewComment = function(detail) {
+		if (detail.type == "SUM") {
+			msg(detail.comment);
+		} else {
+			var param = "team_number=" + detail.team_number;
+			startLoadingSimpleIndicator("加载中");
+			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param,
+					function(data) {
+						self.order(data.order);
+						self.comment(detail.comment);
+						endLoadingIndicator();
+						viewCommentLayer = $.layer({
+							type : 1,
+							title : [ '摘要详情', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '700px', 'auto' ],
+							offset : [ '150px', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#comment1'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					});
+		}
+	};
+	self.viewDetail = function(related_pk) {
+		var param = "related_pks=" + related_pk;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
+				function(data) {
+
+					self.sumDetails(data.receiveds);
+					self.sumDetail(self.sumDetails()[0]);
+					$(".rmb").formatCurrency();
+					endLoadingIndicator();
+
+					viewDetailLayer = $.layer({
+						type : 1,
+						title : [ '合账详情', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '800px', 'auto' ],
+						offset : [ '150px', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#sum_detail1'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+	};
+	// start pagination
+	self.currentPage1 = ko.observable(1);
+	self.perPage1 = 20;
+	self.pageNums1 = ko.observableArray();
+	self.totalCount1 = ko.observable(1);
+	self.startIndex1 = ko.computed(function() {
+		return (self.currentPage1() - 1) * self.perPage1;
+	});
+
+	self.resetPage1 = function() {
+		self.currentPage1(1);
+	};
+
+	self.previousPage1 = function() {
+		if (self.currentPage1() > 1) {
+			self.currentPage1(self.currentPage1() - 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.nextPage1 = function() {
+		if (self.currentPage1() < self.pageNums1().length) {
+			self.currentPage1(self.currentPage1() + 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.turnPage1 = function(pageIndex) {
+		self.currentPage1(pageIndex);
+		self.refreshPage1();
+	};
+
+	self.setPageNums1 = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
+				.totalCount1();
+		var pageNums = [];
+		for (var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums1(pageNums);
+	};
+
+	self.refreshPage1 = function() {
+		self.searchReceiveApply();
 	};
 	// end pagination
 };

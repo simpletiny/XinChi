@@ -40,4 +40,6 @@ public interface IncomingCallDAO {
 	 * @param bean
 	 */
 	public List<IncomingCallBean> selectByParam(IncomingCallBean bean);
+
+	public String selectMaxCallDateByEmployeePk(String employee_pk);
 }

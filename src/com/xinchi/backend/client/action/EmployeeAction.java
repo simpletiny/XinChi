@@ -85,12 +85,22 @@ public class EmployeeAction extends BaseAction {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+
+		if (roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			if (null == employee.getSales() || employee.getSales().equals("")) {
+				rld = employeeService.selectRelationCntAdmin();
+			} else {
+				rld = employeeService.selectRelationCntBySales(employee.getSales());
+			}
+		} else {
 			employee = new ClientEmployeeBean();
 			employee.setSales(sessionBean.getPk());
+			rld = employeeService.selectRelationCntBySales(employee.getSales());
 		}
 
-		rld = employeeService.selectRelationCntBySales(employee.getSales());
+		if (null == rld) {
+			rld = new RelationLevelDto();
+		}
 		return SUCCESS;
 	}
 

@@ -17,6 +17,15 @@ public class UserList {
 		return userList;
 	}
 
+	public UserSessionBean getUser(String user_pk) {
+		List<UserSessionBean> users = getUserList();
+		for (UserSessionBean user : users) {
+			if (user.getPk().equals(user_pk))
+				return user;
+		}
+		return null;
+	}
+
 	// 将用户登陆身份证保存到Vector中
 	public void addUser(UserSessionBean user) {
 		if (user != null) {

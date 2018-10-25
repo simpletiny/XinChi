@@ -51,6 +51,9 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String review_flg;
 	private String quit_flg;
 
+	private String useful_time;
+	private int year_order_count;
+	private int last_order_period;
 	private List<ClientEmployeeUserBean> employee_users;
 	//
 	private String new_client_pk;
@@ -318,6 +321,30 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setQuit_flg(String quit_flg) {
 		this.quit_flg = quit_flg;
+	}
+
+	public String getUseful_time() {
+		return useful_time;
+	}
+
+	public void setUseful_time(String useful_time) {
+		this.useful_time = useful_time;
+	}
+
+	public int getYear_order_count() {
+		return year_order_count;
+	}
+
+	public int getLast_order_period() {
+		return last_order_period;
+	}
+
+	public void setYear_order_count(int year_order_count) {
+		this.year_order_count = year_order_count;
+	}
+
+	public void setLast_order_period(int last_order_period) {
+		this.last_order_period = last_order_period;
 	}
 
 }

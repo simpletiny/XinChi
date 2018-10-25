@@ -5,6 +5,7 @@ import static com.xinchi.common.SimpletinyString.isEmpty;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.client.dao.ClientUserDAO;
+import com.xinchi.backend.client.dao.ClientVisitDAO;
+import com.xinchi.backend.client.dao.IncomingCallDAO;
+import com.xinchi.backend.client.dao.MobileTouchDAO;
+import com.xinchi.backend.client.service.ClientEmployeeUserService;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.client.service.EmployeeService;
+import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
@@ -46,19 +53,26 @@ import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientUserBean;
+import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.FinalOrderBean;
 import com.xinchi.bean.FinalOrderSupplierBean;
+import com.xinchi.bean.IncomingCallBean;
+import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.bean.TempBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.solr.service.SimpletinySolr;
 import com.xinchi.tools.PropertiesUtil;
@@ -633,20 +647,162 @@ public class SimpletinyAction extends BaseAction {
 				c.setRelation_level("新增级");
 				employeeService.update(c);
 			}
-			//有2个订单以内的尝试级
+			// 有2个订单以内的尝试级
 			if (orders.size() > 0 && orders.size() < 3) {
 				c.setRelation_level("尝试级");
 				employeeService.update(c);
 			}
-			
-			if(orders.size()>2&&(c.getRelation_level().equals("朋友级")||c.getRelation_level().equals("商务级"))) {
+
+			if (orders.size() > 2 && (c.getRelation_level().equals("朋友级") || c.getRelation_level().equals("商务级"))) {
 				c.setRelation_level("尝试级");
 				employeeService.update(c);
-			}else if(orders.size()>2) {
+			} else if (orders.size() > 2) {
 				c.setRelation_level("市场级");
 				employeeService.update(c);
-				
+
 			}
+
+		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ClientEmployeeUserService clientEmployeeUserService;
+
+	/**
+	 * 自动更新以公开的客户用户对应表
+	 * 
+	 * @return
+	 */
+	public String autoUpdateClientUser() {
+		// 清除多余的对应关系
+		List<ClientEmployeeUserBean> allCeubs = clientEmployeeUserService.selectByParam(null);
+		for (ClientEmployeeUserBean ceub : allCeubs) {
+			ClientEmployeeBean employee = employeeService.selectByPrimaryKey(ceub.getEmployee_pk());
+			if (null == employee) {
+				clientEmployeeUserService.delete(ceub.getPk());
+			} else {
+				if (ceub.getUser_pk().equals(ResourcesConstants.USER_PUBLIC) && employee.getPublic_flg().equals("N")) {
+					clientEmployeeUserService.delete(ceub.getPk());
+				}
+			}
+		}
+
+		ClientEmployeeBean option1 = new ClientEmployeeBean();
+		option1.setPublic_flg("Y");
+		List<ClientEmployeeBean> employees = employeeService.getAllClientEmployeeByParam(option1);
+		for (ClientEmployeeBean employee : employees) {
+			List<ClientEmployeeUserBean> ceubs = clientEmployeeUserService.selectByEmployeePk(employee.getPk());
+			for (ClientEmployeeUserBean ceub : ceubs) {
+				clientEmployeeUserService.delete(ceub.getPk());
+			}
+			ClientEmployeeUserBean newCeub = new ClientEmployeeUserBean();
+			newCeub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+			newCeub.setEmployee_pk(employee.getPk());
+			newCeub.setCreate_time(DateUtil.getTimeMillis("2018-10-01"));
+			clientEmployeeUserService.insertWithCreateTime(newCeub);
+		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ClientRelationDAO clientRelationDao;
+
+	@Autowired
+	private OrderDAO orderDao;
+	@Autowired
+	private ClientVisitDAO visitDao;
+	@Autowired
+	private IncomingCallDAO callDao;
+	@Autowired
+	private MobileTouchDAO touchDao;
+
+	/**
+	 * 校正客户关系交流信息
+	 * 
+	 * @return
+	 */
+	public String autoUpdateClientRelationConnect() {
+		List<ClientRelationBean> crbs = clientRelationDao.selectByParam(null);
+		String tempDate = "1988-03-22";
+		for (ClientRelationBean crb : crbs) {
+			String connect_date = "-";
+			String type = "-";
+			String extra_info = "-";
+			String employee_pk = crb.getClient_employee_pk();
+			String date1 = orderDao.selectMaxConfirmDateByEmployeePk(employee_pk);
+			String date2 = visitDao.selectMaxVisitDateByEmployeePk(employee_pk);
+			String date3 = callDao.selectMaxCallDateByEmployeePk(employee_pk);
+			String date4 = touchDao.selectMaxTouchDateByEmployeePk(employee_pk);
+			if (null == date1 && null == date2 && null == date3 && null == date4) {
+				crb.setConnect_date(connect_date);
+				crb.setType(type);
+				crb.setExtra_info(extra_info);
+			} else {
+				List<TempBean> a = new ArrayList<TempBean>();
+
+				if (null == date1)
+					date1 = tempDate;
+				if (null == date2)
+					date2 = tempDate;
+				if (null == date3)
+					date3 = tempDate;
+				if (null == date4)
+					date4 = tempDate;
+				TempBean d1 = new TempBean();
+				TempBean d2 = new TempBean();
+				TempBean d3 = new TempBean();
+				TempBean d4 = new TempBean();
+				d1.setConnect_date(date1);
+				d1.setType("ORDER");
+				d2.setConnect_date(date2);
+				d2.setType("VISIT");
+				d3.setConnect_date(date3);
+				d3.setType("INCOMING");
+				d4.setConnect_date(date4);
+				d4.setType("TOUCH");
+				a.add(d1);
+				a.add(d2);
+				a.add(d3);
+				a.add(d4);
+				Collections.sort(a);
+				connect_date = a.get(3).getConnect_date();
+				type = a.get(3).getType();
+				if (type.equals("ORDER")) {
+					OrderDto option = new OrderDto();
+					option.setConfirm_date(connect_date);
+					option.setClient_employee_pk(employee_pk);
+					List<OrderDto> orders = orderDao.selectByParam(option);
+					extra_info = orders.get(0).getProduct_name() + ":"
+							+ (orders.get(0).getAdult_count()
+									+ (orders.get(0).getSpecial_count() == null ? 0 : orders.get(0).getSpecial_count()))
+							+ "人";
+				} else if (type.equals("VISIT")) {
+					ClientVisitBean option = new ClientVisitBean();
+					option.setDate(connect_date);
+					option.setClient_employee_pk(employee_pk);
+					List<ClientVisitBean> orders = visitDao.selectByParam(option);
+					extra_info = orders.get(0).getTarget();
+				} else if (type.equals("INCOMING")) {
+					IncomingCallBean option = new IncomingCallBean();
+					option.setDate(connect_date);
+					option.setClient_employee_pk(employee_pk);
+					List<IncomingCallBean> orders = callDao.selectByParam(option);
+					extra_info = orders.get(0).getType();
+				} else if (type.equals("TOUCH")) {
+					MobileTouchBean option = new MobileTouchBean();
+					option.setDate(connect_date);
+					option.setClient_employee_pk(employee_pk);
+					List<MobileTouchBean> orders = touchDao.selectByParam(option);
+					extra_info = orders.get(0).getTouch_target();
+				}
+				crb.setConnect_date(connect_date);
+				crb.setType(type);
+				crb.setExtra_info(extra_info);
+			}
+			clientRelationDao.update(crb);
 
 		}
 

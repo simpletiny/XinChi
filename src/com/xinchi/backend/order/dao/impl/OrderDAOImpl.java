@@ -69,5 +69,9 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	public List<OrderDto> selectByParam(OrderDto order) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectByParam", order);
 	}
+	@Override
+	public String selectMaxConfirmDateByEmployeePk(String employee_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk", employee_pk);
+	}
 
 }

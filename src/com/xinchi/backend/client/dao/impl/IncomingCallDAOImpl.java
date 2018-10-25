@@ -49,4 +49,10 @@ public class IncomingCallDAOImpl extends SqlSessionDaoSupport implements Incomin
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.IncomingCallMapper.selectByParam", bean);
 	}
 
+	@Override
+	public String selectMaxCallDateByEmployeePk(String employee_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.IncomingCallMapper.selectMaxCallDateByEmployeePk",
+				employee_pk);
+	}
+
 }

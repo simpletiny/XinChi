@@ -2,6 +2,7 @@ var financialLayer;
 var jobHoppingLayer;
 var salesLayer;
 var reviewLayer;
+var checkFinancialLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -49,7 +50,6 @@ var CompanyContext = function() {
 		startLoadingSimpleIndicator("加载中");
 
 		var param = $("#form-search").serialize();
-
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
@@ -575,7 +575,7 @@ var CompanyContext = function() {
 
 	self.clients = ko.observableArray([]);
 	self.refreshClient = function() {
-		var param = "client.client_short_name=" + $("#client_name").val();
+		var param = "client.client_short_name=" + $("#client_name").val()+"&client.statuses=N";
 		param += "&page.start=" + self.startIndex1() + "&page.count="
 				+ self.perPage1;
 
@@ -603,6 +603,46 @@ var CompanyContext = function() {
 		$("#financial_body_pk").val("");
 		$("#financial_body_name1").val("");
 		$("#financial_body_pk1").val("");
+	}
+	self.financial = ko.observable({});
+	/**
+	 * 查看财务主体详细
+	 */
+	self.checkFinancialBody = function(client_pk) {
+		if (null != client_pk) {
+			$.getJSON(self.apiurl + 'client/searchOneCompany', {
+				client_pk : client_pk
+			}, function(data) {
+				if (data.client) {
+					self.financial(data.client);
+					console.log(self.financial());
+					checkFinancialLayer = $.layer({
+						type : 1,
+						title : [ '财务主体详情', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '600px', '400px' ],
+						offset : [ '', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#check-financial'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				} else {
+					fail_msg("公司不存在！");
+				}
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
+			});
+
+		} else {
+			fail_msg("客户未审核！");
+		}
+
 	}
 	// start pagination client
 	self.currentPage1 = ko.observable(1);

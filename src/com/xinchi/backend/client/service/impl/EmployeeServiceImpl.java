@@ -25,7 +25,10 @@ import com.xinchi.bean.JobHoppingLogBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.bean.SqlBean;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.ToolsUtil;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 
 @Service
@@ -68,14 +71,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (exists != null && exists.size() > 0)
 			return "exist";
-
+		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
 		ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
 		ceub.setEmployee_pk(employee.getPk());
 		ceub.setUser_pk(employee.getSales());
 		employeeUserDao.insert(ceub);
-		
+
 		return "success";
 	}
 
@@ -85,6 +88,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (exists != null && exists.size() > 0) {
 			if (exists.get(0).getPk().equals(employee.getPk())) {
+				if (employee.getPublic_flg().equals("Y")) {
+					UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+							.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+					employee.setPublic_flg("N");
+					employee.setRelation_level(ResourcesConstants.CLIENT_RELATION_LEVEL_01);
+					// 删除之前存在的对应关系
+					employeeUserDao.deleteByEmployeePk(employee.getPk());
+
+					// 保存新的对应关系
+					ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+
+					ceub.setEmployee_pk(employee.getPk());
+					ceub.setUser_pk(sessionBean.getPk());
+					employeeUserDao.insert(ceub);
+				}
+
 				dao.update(employee);
 				return "success";
 			} else {
@@ -126,7 +146,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public String publicClientEmployee(List<String> employee_pks) {
-		dao.publicClientEmployee(employee_pks);
+		for (String employee_pk : employee_pks) {
+			ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
+			employee.setPublic_flg("Y");
+			// 删除之前存在的对应关系
+			employeeUserDao.deleteByEmployeePk(employee_pk);
+
+			// 保存新的对应关系
+			ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+
+			ceub.setEmployee_pk(employee_pk);
+			ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+			employeeUserDao.insert(ceub);
+
+			dao.update(employee);
+		}
 		return "success";
 	}
 
@@ -271,6 +305,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 			}
 		}
 		return SUCCESS;
+	}
+
+	@Override
+	public RelationLevelDto selectRelationCntAdmin() {
+		return dao.selectRelationCntAdmin();
 	}
 
 }

@@ -51,11 +51,15 @@ public interface ClientRelationDAO {
 	public AccurateSaleDto selectAccurateSaleData(String user_pk);
 
 	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);
-	
-	public List<ClientRelationSummaryBean>  selectByParam(ClientRelationSummaryBean option);
 
-	public void insertClientRelation(ClientRelationBean two);
+	public List<ClientRelationBean> selectByParam(ClientRelationBean option);
 
-	public void updateClientRelation(ClientRelationBean clientRelation);
+	public void insert(ClientRelationBean two);
+
+	public void update(ClientRelationBean clientRelation);
+
+	public ClientRelationBean selectByEmployeePk(String employee_pk);
+
+	public void delete(String pk);
 
 }

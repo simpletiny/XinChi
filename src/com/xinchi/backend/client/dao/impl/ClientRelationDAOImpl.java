@@ -147,18 +147,31 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	}
 
 	@Override
-	public List<ClientRelationSummaryBean> selectByParam(ClientRelationSummaryBean option) {
+	public List<ClientRelationBean> selectByParam(ClientRelationBean option) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectByParam", option);
 	}
 
 	@Override
-	public void insertClientRelation(ClientRelationBean two) {
+	public void insert(ClientRelationBean two) {
 		daoUtil.insertWithoutLogin("com.xinchi.bean.mapper.ClientRelationMapper.insert", two);
 	}
 
 	@Override
-	public void updateClientRelation(ClientRelationBean clientRelation) {
+	public void update(ClientRelationBean clientRelation) {
 		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientRelationMapper.updateByPrimaryKey", clientRelation);
+	}
+
+	@Override
+	public ClientRelationBean selectByEmployeePk(String employee_pk) {
+
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationMapper.selectByEmployeePk",
+				employee_pk);
+	}
+
+	@Override
+	public void delete(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientRelationMapper.deleteByPrimaryKey", pk);
+
 	}
 
 }

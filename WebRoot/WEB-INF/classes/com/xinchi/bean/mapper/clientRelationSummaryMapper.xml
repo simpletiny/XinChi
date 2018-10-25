@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.ClientRelationSummaryMapper">
-	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientRelationSummaryBean">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientRelationBean">
 		<id column="pk" property="pk" jdbcType="CHAR" />
 		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
@@ -123,7 +123,6 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		pk,
 		client_employee_name,
 		client_employee_pk,
 		nick_name,
@@ -144,10 +143,10 @@
 		extra_info
 	</sql>
 
-	<select id="selectByParam" parameterType="com.xinchi.bean.ClientRelationSummaryBean" resultMap="BaseResultMap">
+	<select id="selectByParam" parameterType="com.xinchi.bean.ClientRelationBean" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from client_relation_summary
+		from client_relation
 	</select>
 	<!-- 搜索潜力值数据 -->
 	<select id="selectPotentialData" parameterType="java.lang.String" resultMap="PotentialMap">
@@ -227,6 +226,8 @@
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
 			</if>
+			and A.public_flg='N'
+			and A.delete_flg='N'
 		</where>
 	</select>
 
@@ -642,7 +643,25 @@
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
+		pk,
+		client_employee_name,
+		client_employee_pk,
+		nick_name,
+		sales,
+		sales_name,
+		delete_flg,
+		relation_level,
+		back_level,
+		market_level,
+		month_order_count,
+		year_order_count,
+		last_confirm_date,
+		last_order_period,
+		receivable,
+		last_receivable_period,
+		connect_date,
+		type,
+		extra_info
 		from client_relation
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
@@ -661,6 +680,7 @@
 				and relation_level !='新增级'
 			</if>
 			and delete_flg='N'
+			and not ((sales is null OR sales='public') and (receivable is null OR receivable =0))
 		</where>
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="1"'>
 			ORDER BY last_receivable_period DESC
@@ -669,7 +689,10 @@
 			ORDER BY connect_date ASC
 		</if>
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="3"'>
-			ORDER BY field(type,'ORDER') DESC
+			ORDER BY last_order_period DESC
+		</if>
+		<if test='params.bo.sort_type!=null and params.bo.sort_type=="4"'>
+			ORDER BY year_order_count DESC
 		</if>
 	</select>
 </mapper>	

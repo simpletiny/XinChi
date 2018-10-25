@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
@@ -20,9 +21,9 @@
 		</property>
 	</bean>
 	<!-- 配置线程池 -->
-	<!-- <bean id ="taskExecutor" class ="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" > 线程池维护线程的最少数量 <property name ="corePoolSize" 
-		value ="50" /> 线程池维护线程所允许的空闲时间 <property name ="keepAliveSeconds" value ="3000" /> 线程池维护线程的最大数量 <property name ="maxPoolSize" value ="1000" /> 线程池所使用的缓冲队列 
-		<property name ="queueCapacity" value ="200" /> </bean> -->
+	<!-- <bean id ="taskExecutor" class ="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" > 线程池维护线程的最少数量 <property 
+		name ="corePoolSize" value ="50" /> 线程池维护线程所允许的空闲时间 <property name ="keepAliveSeconds" value ="3000" /> 线程池维护线程的最大数量 <property 
+		name ="maxPoolSize" value ="1000" /> 线程池所使用的缓冲队列 <property name ="queueCapacity" value ="200" /> </bean> -->
 	<!-- ****************数据源配置**************** -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="jdbcUrl" value="${ibatis.connection.url}" />
@@ -61,34 +62,16 @@
 	</bean>
 
 	<!-- shiro start -->
-<!-- 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="securityManager" ref="securityManager" />
-		<property name="loginUrl" value="/login" />
-		<property name="successUrl" value="/management/index" />
-		<property name="filters">
-			<map>
-				<entry key="authc" value-ref="baseFormAuthenticationFilter" />
-				是否启用验证码检验
-				<entry key="authc" value-ref="captchaFormAuthenticationFilter" />
-				<entry key="user" value-ref="dWZUserFilter" />
-			</map>
-		</property>
-		<property name="filterChainDefinitions">
-			<value> /Captcha.jpg = anon /styles/** = anon
-				/login/timeout = anon /login = authc /logout = logout /** = user
-			</value>
-		</property>
-	</bean>
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="shiroDbRealm" />
-		缓存用户的授权信息
-		<property name="cacheManager" ref="shiroEhcacheManager" />
-	</bean>
-	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml" />
-	</bean>
-	<bean id="shiroDbRealm" class="com.xinchi.common.ShiroDbRealm" depends-on="">
-	</bean> -->
+	<!-- <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean"> <property name="securityManager" 
+		ref="securityManager" /> <property name="loginUrl" value="/login" /> <property name="successUrl" value="/management/index" 
+		/> <property name="filters"> <map> <entry key="authc" value-ref="baseFormAuthenticationFilter" /> 是否启用验证码检验 <entry key="authc" 
+		value-ref="captchaFormAuthenticationFilter" /> <entry key="user" value-ref="dWZUserFilter" /> </map> </property> <property 
+		name="filterChainDefinitions"> <value> /Captcha.jpg = anon /styles/** = anon /login/timeout = anon /login = authc /logout 
+		= logout /** = user </value> </property> </bean> <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager"> 
+		<property name="realm" ref="shiroDbRealm" /> 缓存用户的授权信息 <property name="cacheManager" ref="shiroEhcacheManager" /> </bean> 
+		<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> <property name="cacheManagerConfigFile" 
+		value="classpath:ehcache/ehcache-shiro.xml" /> </bean> <bean id="shiroDbRealm" class="com.xinchi.common.ShiroDbRealm" depends-on=""> 
+		</bean> -->
 
 	<!-- shiro end -->
 
@@ -106,8 +89,9 @@
 	<!-- service类添加@Transactional或者单一原子方法@Transactional(propagation=Propagation.REQUIRED)注解即可 -->
 	<context:component-scan base-package="com.xinchi" />
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
+	<aop:aspectj-autoproxy />
 	<!-- AOP日志 -->
-	<!-- <bean id="simpletinyLog" class="com.xinchi.common.SimpletinyLog"></bean> <aop:config> <aop:aspect id="mylog" ref="simpletinyLog"> <aop:pointcut id="log" 
-		expression="execution(* com.xinchi.backend.*.service.*.*(..))"/> <aop:after pointcut-ref="log" method="after"/> </aop:aspect> </aop:config> -->
+	<!-- <bean id="simpletinyLog" class="com.xinchi.common.SimpletinyLog"></bean> <aop:config> <aop:aspect id="mylog" ref="simpletinyLog"> 
+		<aop:pointcut id="log" expression="execution(* com.xinchi.backend.*.service.*.*(..))"/> <aop:after pointcut-ref="log" method="after"/> 
+		</aop:aspect> </aop:config> -->
 </beans>

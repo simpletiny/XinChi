@@ -1,5 +1,6 @@
 package com.xinchi.common;
 
+import java.util.List;
 
 public class UserSessionBean {
 	private String id;
@@ -13,6 +14,10 @@ public class UserSessionBean {
 	private String user_roles;
 
 	private String login_time;
+	
+	private List<String> current_page;
+	
+	private String current_url;
 
 	public String getId() {
 		return id;
@@ -84,6 +89,22 @@ public class UserSessionBean {
 
 	public void setLogin_time(String login_time) {
 		this.login_time = login_time;
+	}
+
+	public List<String> getCurrent_page() {
+		return current_page;
+	}
+
+	public void setCurrent_page(List<String> current_page) {
+		this.current_page = current_page;
+	}
+
+	public String getCurrent_url() {
+		return current_url;
+	}
+
+	public void setCurrent_url(String current_url) {
+		this.current_url = current_url;
 	}
 	
 //	public boolean equals(Object obj) {

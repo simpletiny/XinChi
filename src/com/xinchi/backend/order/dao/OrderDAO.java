@@ -25,4 +25,6 @@ public interface OrderDAO {
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
 
 	public List<OrderDto> selectByParam(OrderDto order);
+
+	String selectMaxConfirmDateByEmployeePk(String employee_pk);
 }

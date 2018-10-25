@@ -53,6 +53,8 @@ public interface EmployeeDAO {
 	public void recoveryClientEmployeeByPks(List<String> employee_pks);
 	
 	public RelationLevelDto selectRelationCntBySales(String sales);
+	
+	public RelationLevelDto selectRelationCntAdmin();
 
 	public void publicClientEmployee(List<String> employee_pks);
 

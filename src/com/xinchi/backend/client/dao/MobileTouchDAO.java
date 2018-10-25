@@ -40,4 +40,6 @@ public interface MobileTouchDAO {
 	 * @param bean
 	 */
 	public List<MobileTouchBean> selectByParam(MobileTouchBean bean);
+
+	public String selectMaxTouchDateByEmployeePk(String employee_pk);
 }

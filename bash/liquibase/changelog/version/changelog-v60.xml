@@ -175,6 +175,74 @@
 			<comment>CREATE TABLE client_relation</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+	      ALTER TABLE incoming_call 
+				ADD PRIMARY KEY (pk);
+             ]]>
+			<comment>ALTER TABLE incoming_call</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+	    ALTER TABLE mobile_touch 
+			ADD PRIMARY KEY (pk);
+             ]]>
+			<comment>  ALTER TABLE mobile_touch </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+                 DROP VIEW IF EXISTS view_relation_level;
+       	    CREATE VIEW view_relation_level AS
+			    SELECT 
+			        B.user_pk AS sales,
+			        C.user_name AS sales_name,
+			        COUNT(A.pk) AS sum_cnt,
+			        COUNT(IF(A.relation_level IN ('朋友级' , '商务级'),
+			            1,
+			            NULL)) AS strong_cnt,
+			        COUNT(IF(A.relation_level = '市场级',
+			            1,
+			            NULL)) AS middle_cnt,
+			        COUNT(IF(A.relation_level = '新增级',
+			            1,
+			            NULL)) AS weak_cnt,
+			        COUNT(IF(A.relation_level = '排斥级',
+			            1,
+			            NULL)) AS bad_cnt,
+			        COUNT(IF(A.relation_level = ''
+			                OR relation_level IS NULL,
+			            1,
+			            NULL)) AS unknow_cnt
+			    FROM
+			        client_employee A
+			            LEFT JOIN
+			        client_employee_user B ON A.pk = B.employee_pk
+			            LEFT JOIN
+			        user_base C ON B.user_pk = C.pk
+			    WHERE
+			        A.delete_flg = 'N'
+			    GROUP BY B.user_pk;
+             ]]>
+			<comment>  ALTER TABLE VIEW view_relation_level  </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP VIEW IF EXISTS view_client_employee_user;
+       	    CREATE VIEW view_client_employee_user AS
+			SELECT A.employee_pk,GROUP_CONCAT(A.user_pk) AS user_pks,GROUP_CONCAT(IFNULL(B.user_name,'公开')) AS user_names,A.create_time AS useful_time FROM client_employee_user A
+					LEFT JOIN user_base B ON A.user_pk=B.pk
+					GROUP BY A.employee_pk ;
+             ]]>
+			<comment>  ALTER TABLE VIEW view_client_employee_user</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

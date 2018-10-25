@@ -44,4 +44,9 @@ public class ClientVisitDAOImpl extends SqlSessionDaoSupport implements ClientVi
 		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientVisitMapper.updateByPrimaryKey", visit);
 	}
 
+	@Override
+	public String selectMaxVisitDateByEmployeePk(String employee_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientVisitMapper.selectMaxVisitDateByEmployeePk", employee_pk);
+	}
+
 }

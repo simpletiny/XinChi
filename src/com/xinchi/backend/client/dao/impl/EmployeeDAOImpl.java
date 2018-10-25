@@ -88,4 +88,9 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements EmployeeDAO
 
 	}
 
+	@Override
+	public RelationLevelDto selectRelationCntAdmin() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.ClientEmployeeMapper.selectRelationCntAdmin");
+	}
+
 }

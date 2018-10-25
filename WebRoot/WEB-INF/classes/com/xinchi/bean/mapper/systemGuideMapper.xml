@@ -127,7 +127,6 @@
 		A.update_time
 		from system_guide A LEFT JOIN user_base B on
 		A.create_user = B.user_number
-		<!-- <where> <if test="params.bo.sales != null and params.bo.sales !=''"> and (sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') or public_flg 
-			='Y') </if> </where> -->
+		ORDER BY A.title
 	</select>
 </mapper>

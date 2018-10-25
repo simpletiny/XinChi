@@ -173,6 +173,14 @@
 			</if>
 		</where>
 	</select>
+	
+	 <select id="selectMaxConfirmDateByEmployeePk"  parameterType="java.lang.String" resultType="java.lang.String">
+     	select max(confirm_date) from budget_order_view
+     	<where>
+     	client_employee_pk=#{employee_pk,jdbcType=CHAR}
+     	</where>
+     	
+   </select>
 
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select

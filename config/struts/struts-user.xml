@@ -64,6 +64,9 @@
 		<action name="getOnlineUsers" class="userListAction" method="onlineUsers">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="updateUserCurrentPage" class="userListAction" method="updateUserCurrentPage">
+			<result name="success" type="str">resultStr</result>
+		</action>
 
 		<action name="searchUserLogs" class="userLogAction" method="searchUserLogs">
 			<result name="success" type="json">

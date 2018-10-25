@@ -32,11 +32,12 @@ var ClientContext = function() {
 	self.chosenBackLevel = ko.observableArray([]);
 	self.chosenMarketLevel = ko.observableArray([]);
 
-	self.sortTypes = [ '1', '2', '3' ];
+	self.sortTypes = [ '1', '2', '3' ,'4'];
 	self.sortTypeMapping = {
 		'1' : '账期倒序',
 		'2' : '交流日期',
-		'3' : '订单排序'
+		'3' : '订单排序',
+		'4' : '年单排序'
 	};
 
 	self.chosenSortType = ko.observable('1');
@@ -321,7 +322,7 @@ var ClientContext = function() {
 					.getJSON(self.apiurl + 'sale/fetchEmployeeBalance', param,
 							function(data) {
 								var balance = data.balance;
-								if (0 == balance) {
+								if (null==balance || 0 == balance) {
 									var quit_in = new Object();
 									quit_in.client_employee_pk = self
 											.chosenEmployee()[0].split(";")[0];

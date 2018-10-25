@@ -394,3 +394,19 @@ document.onkeydown=function(event){
     	 $("[st='btn-search']").click();
      }
 }; 
+
+$(document).ready(function() {
+	var current_url = window.location.href;
+	var apiurl = $("#hidden_apiurl").val();
+	$.ajax({
+		url : apiurl + "user/updateUserCurrentPage",
+		type : "post",
+		data : "current_url=" + current_url,
+		success : function(data) {
+			
+		},
+		error : function(data) {
+			console.log(eval(data));
+		}
+	});
+});

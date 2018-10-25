@@ -22,6 +22,11 @@ public class ResourcesConstants {
 	// 定时任务列表
 	public static List<TaskBean> ARRAY_TASK = new ArrayList<TaskBean>();
 
+	// 公开用户id
+	public static String USER_PUBLIC = "public";
+	// 管理员员工号
+	public static String USER_ADMIN_NUMBER = "N00000";
+
 	// 用户编号和用户姓名map
 	public static Map<Object, Object> MAP_USER_NO = new HashMap<Object, Object>();
 	public static Map<Object, Object> MAP_USER_NAME = new HashMap<Object, Object>();
@@ -38,6 +43,8 @@ public class ResourcesConstants {
 	public static String TASK_EVERYYEAR = "5";
 	// never used每个世纪
 	public static String TASK_EVERYCENTURY = "6";
+	// 每隔30分钟
+	public static String TASK_EVERY30MINS = "7";
 
 	/* 用户角色 */
 	public static String USER_ROLE_ADMIN = "ADMIN";
@@ -229,4 +236,6 @@ public class ResourcesConstants {
 	public static String FINAL_ORDER_STATUS_COMPLAIN = "O";
 	// 变更
 	public static String FINAL_ORDER_STATUS_CHANGE = "H";
+
+	public static String CLIENT_RELATION_LEVEL_01 = "新增级";
 }

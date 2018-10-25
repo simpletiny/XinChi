@@ -35,7 +35,7 @@
 					<div class="form-group">
 						<div style="width: 85%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">停用</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicEmployee() }">公开</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { combineEmployee() }">合并</button>
@@ -93,8 +93,7 @@
 						<div class="span6">
 							<div class="col-md-2">
 								<em class="small-box "> <input type="checkbox" value="Y" name="employee.public_flgs"
-									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label> <input type="hidden"
-									value="N" name="employee.public_flgs" data-bind="event:{click:function(){refresh();return true;}}" />
+									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
 								</em>
 							</div>
 						</div>
@@ -134,15 +133,17 @@
 								<th></th>
 								<th>昵称</th>
 								<th>姓名</th>
-
 								<th>性别</th>
-								<th>状态</th>
 								<th>类型</th>
+								<th>状态</th>
 								<th>地区</th>
 								<th>财务主体简称</th>
+								<th>年单</th>
+								<th>回款誉</th>
+								<th>签单期间</th>
+								<th>公开日期</th>
 								<th>手机号</th>
 								<th>微信号</th>
-								<th>沟通力</th>
 								<th>所属销售</th>
 								<th>审核</th>
 							</tr>
@@ -154,6 +155,7 @@
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.sex"></td>
+								<td data-bind="text: $data.type"></td>
 								<!-- ko if:$data.delete_flg =='Y' -->
 								<td style="color: red">停用</td>
 								<!-- /ko -->
@@ -162,12 +164,20 @@
 								<td style="color: green">正常</td>
 								<!-- /ko -->
 
-								<td data-bind="text: $data.type"></td>
 								<td data-bind="text: $data.area"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
+								<td data-bind="text: $data.year_order_count"></td>
+								<td data-bind="text: $data.back_level"></td>
+								<td data-bind="text: $data.last_order_period"></td>
+								<!-- ko if:$data.public_flg =='Y' -->
+								<td data-bind="text: moment($data.useful_time-0).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.public_flg =='N' -->
+								<td></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.cellphone"></td>
 								<td data-bind="text: $data.wechat"></td>
-								<td data-bind="text: $root.relationMapping[$data.relation_level]"></td>
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->
@@ -309,15 +319,15 @@
 	</div>
 	<div id="div-review" style="display: none">
 		<form id="form-review">
-		<input type="hidden" data-bind="value:employee().pk" name="employee.pk" />
-		<input type="hidden" data-bind="value:employee().name" name="employee.name" />
+			<input type="hidden" data-bind="value:employee().pk" name="employee.pk" /> <input type="hidden"
+				data-bind="value:employee().name" name="employee.name" />
 			<div class="input-row clearfloat">
 				<div class="col-md-12 required">
 					<label class="l" style="width: 30%">财务主体</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" class="ip-" data-bind="click:choseFinancial" placeholder="点击选择" id="financial_body_name1"
-							required="required" /> <input type="text" class="ip-" style="display: none" id="financial_body_pk1" name="employee.financial_body_pk"
-							required="required" />
+							required="required" /> <input type="text" class="ip-" style="display: none" id="financial_body_pk1"
+							name="employee.financial_body_pk" required="required" />
 					</div>
 				</div>
 			</div>
@@ -325,6 +335,34 @@
 		<div class="input-row clearfloat" style="float: right">
 			<a type="submit" class="btn btn-green btn-r" data-bind="click: doReview">保存</a> <a type="submit"
 				class="btn btn-green btn-r" data-bind="click: cancelReview">取消</a>
+		</div>
+	</div>
+	<div id="check-financial" style="display: none">
+		<div class="clearfloat" style="width: 100%">
+			<div class="col-md-12">
+				<label class="l">财务主体</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text: financial().client_short_name"></p>
+				</div>
+			</div>
+		</div>
+		<div class="clearfloat">
+			<div class="col-md-12">
+				<label class="l">全称</label>
+				<p class="ip-default" data-bind="text: financial().client_name"></p>
+			</div>
+		</div>
+		<div class="clearfloat">
+			<div class="col-md-12">
+				<label class="l">负责人</label>
+				<p class="ip-default" data-bind="text: financial().body_name"></p>
+			</div>
+		</div>
+		<div class="clearfloat">
+			<div class="col-md-12">
+				<label class="l">地址</label>
+				<p class="ip-default" data-bind="text: financial().address"></p>
+			</div>
 		</div>
 	</div>
 	<script>

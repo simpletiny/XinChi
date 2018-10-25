@@ -48,4 +48,10 @@ public class MobileTouchDAOImpl extends SqlSessionDaoSupport implements MobileTo
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.MobileTouchMapper.selectByParam", bean);
 	}
 
+	@Override
+	public String selectMaxTouchDateByEmployeePk(String employee_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.MobileTouchMapper.selectMaxTouchDateByEmployeePk",
+				employee_pk);
+	}
+
 }

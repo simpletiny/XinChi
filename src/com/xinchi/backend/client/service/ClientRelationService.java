@@ -59,4 +59,6 @@ public interface ClientRelationService extends BaseService {
 
 	public String updateEmployeeRelationLevel(ClientRelationBean clientRelation);
 
+	public int caculateTodayPoint();
+
 }

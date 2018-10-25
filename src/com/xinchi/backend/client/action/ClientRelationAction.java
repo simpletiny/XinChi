@@ -118,7 +118,9 @@ public class ClientRelationAction extends BaseAction {
 
 		return SUCCESS;
 	}
+
 	private ClientRelationBean clientRelation;
+
 	public String updateEmployeeRelationLevel() {
 		resultStr = service.updateEmployeeRelationLevel(clientRelation);
 		return SUCCESS;
@@ -161,36 +163,8 @@ public class ClientRelationAction extends BaseAction {
 		if (null != scores && scores.size() > 0) {
 			sale_score = scores.get(0).getScore();
 		}
-		// 计算当日勤点
-		today_point = -10;
-		String today = DateUtil.today();
-		// 搜索当日确认订单
-		OrderDto orderOption = new OrderDto();
-		orderOption.setCreate_user_number(sessionBean.getUser_number());
-		orderOption.setConfirm_date(today);
-		List<OrderDto> orders = orderService.selectByParam(orderOption);
-		if (null != orders && orders.size() > 0) {
-			today_point += orders.size() * 3;
-		}
-		// 搜索当日有效拜访
-		ClientVisitBean visitOption = new ClientVisitBean();
-		visitOption.setCreate_user(sessionBean.getUser_number());
-		visitOption.setDate(today);
-		visitOption.setType("VISIT");
-		List<ClientVisitBean> visits = service.selectVisitByParam(visitOption);
 
-		if (null != visits && visits.size() > 0) {
-			today_point += visits.size() * 2;
-		}
-
-		// 搜索当日有效沟通（精推）
-		AccurateSaleBean asOption = new AccurateSaleBean();
-		asOption.setDate(today);
-		asOption.setCreate_user(sessionBean.getUser_number());
-		List<AccurateSaleBean> ases = accurateSaleService.getAllByParam(asOption);
-		if (null != ases && ases.size() > 0) {
-			today_point += ases.size();
-		}
+		today_point = service.caculateTodayPoint();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			potential = service.selectPotentialData(sessionBean.getPk());

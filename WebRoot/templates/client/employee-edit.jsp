@@ -26,6 +26,7 @@
 			<div class="main-box">
 				<form class="form-box info-form">
 					<input type="hidden" id="employee_key" name="employee.pk" value="<%=key%>" />
+					<input type="hidden" name="employee.public_flg" data-bind="value: employee().public_flg"  />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">昵称</label>

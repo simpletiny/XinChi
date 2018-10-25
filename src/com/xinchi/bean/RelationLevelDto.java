@@ -10,17 +10,17 @@ public class RelationLevelDto extends SupperBO implements Serializable {
 
 	private String sales_name;
 
-	private int sum_cnt;
+	private int sum_cnt = 0;
 
-	private int strong_cnt;
+	private int strong_cnt = 0;
 
-	private int middle_cnt;
+	private int middle_cnt = 0;
 
-	private int weak_cnt;
+	private int weak_cnt = 0;
 
-	private int bad_cnt;
+	private int bad_cnt = 0;
 
-	private int unknow_cnt;
+	private int unknow_cnt = 0;
 
 	public String getSales() {
 		return sales;

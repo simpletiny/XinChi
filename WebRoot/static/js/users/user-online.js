@@ -6,10 +6,12 @@ var GroupContext = function() {
 		total : 0,
 		items : []
 	});
-	$.getJSON(self.apiurl + 'user/getOnlineUsers', {}, function(data) {
-		self.users(data.users);
-	});
 
+	self.refresh = function() {
+		$.getJSON(self.apiurl + 'user/getOnlineUsers', {}, function(data) {
+			self.users(data.users);
+		});
+	}
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -44,9 +46,10 @@ var GroupContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -66,4 +69,6 @@ var GroupContext = function() {
 var ctx = new GroupContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	ctx.refresh();
+	var t1 = window.setInterval("ctx.refresh()",3000)
 });

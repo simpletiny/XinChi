@@ -8,15 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientEmployeeQuitConnectLogDAO;
+import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.client.dao.ClientVisitDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.dao.IncomingCallDAO;
 import com.xinchi.backend.client.dao.MobileTouchDAO;
 import com.xinchi.backend.client.service.ClientRelationService;
+import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.bean.AccurateSaleBean;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -25,10 +29,14 @@ import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 
 @Service
@@ -138,14 +146,25 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	@Autowired
 	private ClientEmployeeQuitConnectLogDAO quitDao;
 
+	@Autowired
+	private ClientEmployeeUserDAO clientEmployeeUserDao;
+
 	@Override
 	public String quitConnectEmployee(ClientEmployeeQuitConnectLogBean quit) {
 		ClientEmployeeBean employee = employeeDao.selectByPrimaryKey(quit.getClient_employee_pk());
 		employee.setQuit_flg("Y");
-		employeeDao.update(employee);
+		employee.setPublic_flg("Y");
+
+		clientEmployeeUserDao.deleteByEmployeePk(quit.getClient_employee_pk());
+		ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+		ceub.setEmployee_pk(quit.getClient_employee_pk());
+		ceub.setUser_pk("public");
+		clientEmployeeUserDao.insert(ceub);
 
 		quit.setDate(DateUtil.today());
 		quitDao.insert(quit);
+
+		employeeDao.update(employee);
 		return SUCCESS;
 	}
 
@@ -159,12 +178,65 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 
 	@Override
 	public String updateEmployeeRelationLevel(ClientRelationBean clientRelation) {
-		dao.updateClientRelation(clientRelation);
+		dao.update(clientRelation);
 		ClientEmployeeBean employee = new ClientEmployeeBean();
 		employee.setPk(clientRelation.getClient_employee_pk());
 
 		employee.setRelation_level(clientRelation.getRelation_level());
 		employeeDAO.update(employee);
 		return SUCCESS;
+	}
+
+	@Autowired
+	private OrderDAO orderDao;
+
+	@Override
+	public int caculateTodayPoint() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		// 计算当日勤点
+		int today_point = -10;
+		String today = DateUtil.today();
+		// 搜索当日确认订单
+		OrderDto orderOption = new OrderDto();
+		orderOption.setCreate_user_number(sessionBean.getUser_number());
+		orderOption.setConfirm_date(today);
+		List<OrderDto> orders = orderDao.selectByParam(orderOption);
+		if (null != orders && orders.size() > 0) {
+			today_point += orders.size() * 4;
+		}
+		// 搜索当日有效拜访
+		ClientVisitBean visitOption = new ClientVisitBean();
+		visitOption.setCreate_user(sessionBean.getUser_number());
+		visitOption.setDate(today);
+		visitOption.setType("VISIT");
+
+		List<ClientVisitBean> visits = visitDao.selectByParam(visitOption);
+
+		if (null != visits && visits.size() > 0) {
+			today_point += visits.size() * 3;
+		}
+
+		// 搜索当日主动电联（精推）
+		MobileTouchBean touchOption = new MobileTouchBean();
+		touchOption.setCreate_user(sessionBean.getUser_number());
+		touchOption.setDate(today);
+
+		List<MobileTouchBean> touchs = mobileTouchDao.selectByParam(touchOption);
+		if (null != touchs && touchs.size() > 0) {
+			today_point += touchs.size() * 2;
+		}
+
+		// 搜索当日被动咨询（精推）
+		IncomingCallBean callOption = new IncomingCallBean();
+		callOption.setCreate_user(sessionBean.getUser_number());
+		callOption.setDate(today);
+
+		List<IncomingCallBean> calls = incomingCallDao.selectByParam(callOption);
+		if (null != calls && calls.size() > 0) {
+			today_point += calls.size() * 1;
+		}
+
+		return today_point;
 	}
 }

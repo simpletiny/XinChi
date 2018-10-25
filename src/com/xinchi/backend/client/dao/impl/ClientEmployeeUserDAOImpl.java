@@ -1,5 +1,7 @@
 package com.xinchi.backend.client.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -39,6 +41,22 @@ public class ClientEmployeeUserDAOImpl extends SqlSessionDaoSupport implements C
 	@Override
 	public void deleteByEmployeePk(String employee_pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientEmployeeUserMapper.deleteByEmployeePk", employee_pk);
+	}
+
+	@Override
+	public List<ClientEmployeeUserBean> selectByEmployeePk(String employee_pk) {
+
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientEmployeeUserMapper.selectByEmployeePk", employee_pk);
+	}
+
+	@Override
+	public void insertWithCreateTime(ClientEmployeeUserBean bo) {
+		daoUtil.insertBOWithCreateTime("com.xinchi.bean.mapper.ClientEmployeeUserMapper.insert", bo);
+	}
+
+	@Override
+	public List<ClientEmployeeUserBean> selectByParam(ClientEmployeeUserBean option) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientEmployeeUserMapper.selectByParam", option);
 	}
 
 }

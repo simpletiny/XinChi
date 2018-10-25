@@ -77,4 +77,6 @@ public interface EmployeeService extends BaseService {
 
 	public String changeEmployeeSales(List<String> employee_pks, List<String> sale_pks);
 
+	public RelationLevelDto selectRelationCntAdmin();
+
 }

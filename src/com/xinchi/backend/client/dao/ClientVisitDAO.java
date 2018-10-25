@@ -14,6 +14,8 @@ public interface ClientVisitDAO {
 	public List<ClientVisitBean> selectByPage(Page page);
 	
 	public List<ClientVisitBean> selectByParam(ClientVisitBean visit);
+
+	public String selectMaxVisitDateByEmployeePk(String employee_pk);
 	
 
 }
