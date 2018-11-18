@@ -154,11 +154,10 @@
 									placeholder="财务主体姓名" name="client.body_name" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">性别</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: genders,value: client().body_sex" name="client.body_sex"
-									required="required"></select>
+								<select class="form-control" data-bind="options: genders,value: client().body_sex" name="client.body_sex"></select>
 							</div>
 						</div>
 					</div>
@@ -179,11 +178,11 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">手机号</label>
 							<div class="ip">
 								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: client().body_cellphone"
-									placeholder="财务主体手机号" name="client.body_cellphone" required="required" />
+									placeholder="财务主体手机号" name="client.body_cellphone" />
 							</div>
 						</div>
 						<div class="col-md-6">

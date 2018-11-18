@@ -8,11 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.bean.AccurateSaleDto;
+import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.MeterDto;
+import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DaoUtil;
@@ -172,6 +174,16 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	public void delete(String pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientRelationMapper.deleteByPrimaryKey", pk);
 
+	}
+
+	@Override
+	public List<PointDto> selectPointByParam(PointDto option) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectPointByParam", option);
+	}
+
+	@Override
+	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectEnableBackPointByParam", option);
 	}
 
 }

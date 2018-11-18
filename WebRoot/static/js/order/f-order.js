@@ -2,6 +2,7 @@ var confirmCheckLayer;
 var commentLayer;
 var passengerCheckLayer;
 var finalCheckLayer;
+var budgetConfirmCheckLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -207,6 +208,28 @@ var ProductBoxContext = function() {
 		});
 
 		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_FINAL&subFolder=" + team_number);
+	};
+	// 查看确认件
+	self.checkBudgetConfirmPic = function(fileName, team_number) {
+		$("#img-pic").attr("src", "");
+		budgetConfirmCheckLayer = $.layer({
+			type : 1,
+			title : [ '查看确认件', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '650px' ],
+			offset : [ '50px', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+		
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder=" + team_number);
 	};
 	// 查看凭证
 	self.checkVoucherPic = function(fileName, team_number) {

@@ -54,13 +54,11 @@ public class ReceivedServiceImpl implements ReceivedService {
 			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM)
 					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
 					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN)) {
-				String[] related_pks = detail.getRelated_pk().split(",");
-				for (String related : related_pks) {
-					List<ClientReceivedDetailBean> related_detail = dao.selectByRelatedPks(related);
-					if (related_detail != null && related_detail.size() > 0) {
-						for (ClientReceivedDetailBean d : related_detail) {
-							doRollBack(d);
-						}
+				String related_pk = detail.getRelated_pk();
+				List<ClientReceivedDetailBean> related_detail = dao.selectByRelatedPks(related_pk);
+				if (related_detail != null && related_detail.size() > 0) {
+					for (ClientReceivedDetailBean d : related_detail) {
+						doRollBack(d);
 					}
 				}
 			} else if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {

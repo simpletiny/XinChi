@@ -16,6 +16,12 @@ var ClientContext = function() {
 	self.mobile().date = ko.observable();
 	self.mobile().date(x.Format("yyyy-MM-dd"));
 
+	var minDate= x.addDate(-2).Format("yyyy/MM/dd");
+	$('.date-picker').datetimepicker({
+		maxDate:0,
+		minDate:minDate
+	});
+	
 	self.saveMobileTouch = function() {
 		if (!$("form").valid()) {
 			return;

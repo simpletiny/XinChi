@@ -17,6 +17,12 @@ var ClientContext = function() {
 	self.incoming().date = ko.observable();
 	self.incoming().date(x.Format("yyyy-MM-dd"));
 
+	var minDate= x.addDate(-2).Format("yyyy/MM/dd");
+	$('.date-picker').datetimepicker({
+		maxDate:0,
+		minDate:minDate
+	});
+	
 	self.saveIncomingCall = function() {
 		if (!$("form").valid()) {
 			return;

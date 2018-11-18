@@ -85,7 +85,7 @@ var ReceivedContext = function() {
 		var totalPayable = 0;
 		var totalProfit = 0;
 		var totalPerProfit = 0;
-
+		startLoadingSimpleIndicator("搜索中");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -111,6 +111,7 @@ var ReceivedContext = function() {
 			self.setPageNums(self.currentPage());
 
 			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 		});
 	};
 
@@ -151,9 +152,10 @@ var ReceivedContext = function() {
 							if (str != "OK") {
 								fail_msg("回滚失败，请联系管理员");
 							}
+							endLoadingIndicator();
 							self.refresh();
 							self.chosenReceiveds = ko.observableArray([]);
-							endLoadingIndicator();
+
 						}
 					});
 				}
@@ -238,6 +240,35 @@ var ReceivedContext = function() {
 					});
 				});
 
+	};
+	// 查看收入凭证
+	self.checkVoucherPic = function(fileName, received_time) {
+		$("#img-pic").attr("src", "");
+		budgetConfirmCheckLayer = $.layer({
+			type : 1,
+			title : [ '查看确认件', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '650px' ],
+			offset : [ '50px', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+		console.log(received_time)
+		var subFolder = received_time.substring(0, 4) + "/"
+				+ received_time.substring(5, 7);
+
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder="
+						+ subFolder);
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);

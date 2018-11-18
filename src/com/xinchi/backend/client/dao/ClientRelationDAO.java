@@ -3,11 +3,13 @@ package com.xinchi.backend.client.dao;
 import java.util.List;
 
 import com.xinchi.bean.AccurateSaleDto;
+import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.MeterDto;
+import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.tools.Page;
@@ -61,5 +63,9 @@ public interface ClientRelationDAO {
 	public ClientRelationBean selectByEmployeePk(String employee_pk);
 
 	public void delete(String pk);
+
+	public List<PointDto> selectPointByParam(PointDto option);
+
+	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option);
 
 }

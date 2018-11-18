@@ -96,4 +96,6 @@ public interface UserService extends BaseService {
 	public String checkPassword(UserCommonBean ucb);
 
 	public String changePassword(UserCommonBean ucb);
+
+	public String reuseUser(String user_pk);
 }

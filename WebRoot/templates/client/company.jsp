@@ -189,6 +189,7 @@
 								<th>市场力</th>
 								<th>回款誉</th>
 								<th>紧密度</th>
+								<th>备注</th>
 								<th>所属销售</th>
 							</tr>
 						</thead>
@@ -221,7 +222,12 @@
 								<td data-bind="text: $data.market_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.talk_level"></td>
-
+								<!-- ko if: $data.comment==null || $data.comment==''-->
+								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment!=null && $data.comment!=''-->
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<!-- /ko -->
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->
@@ -300,6 +306,21 @@
 					type="button" data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
 			</div>
 		</form>
+	</div>
+	<div id="comment-edit" style="display: none; width: 500px">
+		<div class="input-row clearfloat">
+			<div>
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: company().comment" placeholder="备注"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
+		</div>
 	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");

@@ -161,6 +161,15 @@ public class UserAction extends BaseAction {
 		resultStr = userService.stopUser(user_pk);
 		return SUCCESS;
 	}
+	/**
+	 * 启用用户
+	 * 
+	 * @return
+	 */
+	public String reuseUser() {
+		resultStr = userService.reuseUser(user_pk);
+		return SUCCESS;
+	}
 
 	public String checkPassword() {
 		resultStr = userService.checkPassword(ucb);

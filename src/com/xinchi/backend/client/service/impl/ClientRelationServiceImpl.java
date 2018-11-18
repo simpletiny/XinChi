@@ -1,5 +1,6 @@
 package com.xinchi.backend.client.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +17,13 @@ import com.xinchi.backend.client.dao.IncomingCallDAO;
 import com.xinchi.backend.client.dao.MobileTouchDAO;
 import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.backend.order.dao.OrderDAO;
-import com.xinchi.bean.AccurateSaleBean;
+import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.bean.AccurateSaleDto;
+import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -30,6 +33,7 @@ import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DateUtil;
@@ -238,5 +242,68 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		}
 
 		return today_point;
+	}
+
+	@Override
+	public BigDecimal caculatePointMoneyDeduct(String user_pk) {
+		PointDto option = new PointDto();
+		option.setUser_pk(user_pk);
+
+		BigDecimal deduct = BigDecimal.ZERO;
+
+		List<PointDto> point = dao.selectPointByParam(option);
+
+		if (null == point) {
+			deduct = new BigDecimal(100 * DateUtil.todayOfMonth());
+		} else {
+			for (int i = 0; i < point.size(); i++) {
+				PointDto p = point.get(i);
+				if (p.getPoint() < 10) {
+					deduct = deduct.add(new BigDecimal(10 * (10 - p.getPoint())));
+				}
+			}
+
+			int nullDays = DateUtil.todayOfMonth() - point.size();
+
+			deduct = deduct.add(new BigDecimal(100 * nullDays));
+		}
+
+		return deduct;
+	}
+
+	@Autowired
+	private ReceivedDAO receivedDao;
+
+	@Override
+	public float caculateBackPoint(String user_pk) {
+		float point = 0;
+		BackPointDto option = new BackPointDto();
+		option.setUser_pk(user_pk);
+		List<BackPointDto> enableBackPoints = dao.selectEnableBackPointByParam(option);
+
+		ClientReceivedDetailBean rOption = new ClientReceivedDetailBean();
+
+		if (null != enableBackPoints) {
+			for (BackPointDto bp : enableBackPoints) {
+				rOption.setTeam_number(bp.getTeam_number());
+				rOption.setConfirm_time_end(DateUtil.addDate(bp.getConfirm_date(), 1));
+				List<ClientReceivedDetailBean> crdbs = receivedDao.selectByParam(rOption);
+
+				if (null == crdbs || crdbs.size() == 0)
+					continue;
+				boolean flg = true;
+				for (ClientReceivedDetailBean crdb : crdbs) {
+					if (!crdb.getStatus().equals("E")) {
+						flg = false;
+						continue;
+					}
+				}
+				if (flg) {
+					point += bp.getProduct_point() * 0.2;
+				}
+			}
+		}
+
+		return point;
 	}
 }

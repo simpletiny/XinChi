@@ -10,6 +10,8 @@ public class MeterDto implements Serializable {
 	private BigDecimal receivable = BigDecimal.ZERO;
 	private BigDecimal warning = BigDecimal.ZERO;
 	private BigDecimal sum_reimbursement = BigDecimal.ZERO;
+	private BigDecimal point_money_deduct = BigDecimal.ZERO;
+	private float back_score = 0;
 	private int score = 0;
 	private int month_score = 0;
 
@@ -52,4 +54,21 @@ public class MeterDto implements Serializable {
 	public void setSum_reimbursement(BigDecimal sum_reimbursement) {
 		this.sum_reimbursement = sum_reimbursement;
 	}
+
+	public BigDecimal getPoint_money_deduct() {
+		return point_money_deduct;
+	}
+
+	public void setPoint_money_deduct(BigDecimal point_money_deduct) {
+		this.point_money_deduct = point_money_deduct;
+	}
+
+	public float getBack_score() {
+		return back_score;
+	}
+
+	public void setBack_score(float back_score) {
+		this.back_score = back_score;
+	}
+
 }

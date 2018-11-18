@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.client.service.AccurateSaleService;
 import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.backend.order.service.OrderService;
-import com.xinchi.bean.AccurateSaleBean;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
 import com.xinchi.bean.ClientRelationBean;
@@ -23,13 +22,13 @@ import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
-import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -166,17 +165,27 @@ public class ClientRelationAction extends BaseAction {
 
 		today_point = service.caculateTodayPoint();
 
+		BigDecimal point_money_deduct = BigDecimal.ZERO;
+		float back_score = 0;
+
+		String user_pk = "";
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			potential = service.selectPotentialData(sessionBean.getPk());
-			meter = service.selectMeterData(sessionBean.getPk());
-			workOrder = service.selectWorkOrderData(sessionBean.getPk());
-			accurateSale = service.selectAccurateSaleData(sessionBean.getPk());
+			user_pk = sessionBean.getPk();
 		} else {
-			potential = service.selectPotentialData(relation.getSales());
-			meter = service.selectMeterData(relation.getSales());
-			workOrder = service.selectWorkOrderData(relation.getSales());
-			accurateSale = service.selectAccurateSaleData(relation.getSales());
+			user_pk = relation.getSales();
 		}
+
+		potential = service.selectPotentialData(user_pk);
+		meter = service.selectMeterData(user_pk);
+		workOrder = service.selectWorkOrderData(user_pk);
+		accurateSale = service.selectAccurateSaleData(user_pk);
+
+		if (!SimpletinyString.isEmpty(user_pk)) {
+			point_money_deduct = service.caculatePointMoneyDeduct(user_pk);
+		}
+
+		back_score = service.caculateBackPoint(user_pk);
+
 		if (meter == null)
 			meter = new MeterDto();
 
@@ -186,6 +195,8 @@ public class ClientRelationAction extends BaseAction {
 		if (accurateSale == null)
 			accurateSale = new AccurateSaleDto();
 
+		meter.setPoint_money_deduct(point_money_deduct);
+		meter.setBack_score(back_score);
 		// clientSummary = service.getClientSummary(relation);
 		// employeeCount = service.selectClientEmployeeCount(relation);
 		// monthOrderCount = service.selectMonthOrderCount(relation);

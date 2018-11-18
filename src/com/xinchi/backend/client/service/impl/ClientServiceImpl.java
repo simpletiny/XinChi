@@ -11,11 +11,12 @@ import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.order.dao.OrderDAO;
-import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
 @Service
@@ -24,8 +25,9 @@ public class ClientServiceImpl implements ClientService {
 
 	@Autowired
 	private ClientDAO dao;
+
 	@Autowired
-	private UserDAO userDao;
+	private ClientUserDAO clientUserDao;
 
 	@Override
 	public String createCompany(ClientBean client) {
@@ -38,6 +40,12 @@ public class ClientServiceImpl implements ClientService {
 			return "exist";
 
 		dao.insert(client);
+		// 记录客户和销售对应关系
+		ClientUserBean cub = new ClientUserBean();
+		cub.setClient_pk(client.getPk());
+		cub.setUser_pk(client.getSales());
+		clientUserDao.insert(cub);
+
 		return "success";
 	}
 
@@ -107,9 +115,6 @@ public class ClientServiceImpl implements ClientService {
 	@Autowired
 	private EmployeeDAO employeeDao;
 
-	@Autowired
-	private ClientUserDAO clientUserDao;
-
 	@Override
 	public String changeClientSales(List<String> company_pks, List<String> sale_pks) {
 		String main_user = sale_pks.get(0);
@@ -122,6 +127,12 @@ public class ClientServiceImpl implements ClientService {
 
 			if (main_user.equals("public")) {
 				client.setPublic_flg("Y");
+				// 保存新的对应关系
+				ClientUserBean cub = new ClientUserBean();
+
+				cub.setClient_pk(company_pk);
+				cub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+				clientUserDao.insert(cub);
 			} else {
 				client.setPublic_flg("N");
 				// 保存新的对应关系

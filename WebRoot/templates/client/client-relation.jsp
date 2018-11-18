@@ -84,7 +84,8 @@
 							<label class="col-md-1 control-label">关系度</label>
 							<div class="col-md-2">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:refresh}" name="relation.relation_level"></select>
+									data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:refresh}"
+									name="relation.relation_level"></select>
 							</div>
 						</div>
 						<div class="span6">
@@ -104,10 +105,10 @@
 								</div>
 							</div>
 						</s:if>
-						
+
 					</div>
 					<div class="form-group">
-							<div class="span6">
+						<div class="span6">
 							<label class="col-md-1 control-label">排序方式</label>
 							<div data-bind="foreach: sortTypes" class="col-md-4">
 								<em class="small-box "> <input name="relation.sort_type" type="radio"
@@ -116,7 +117,7 @@
 								</em>
 							</div>
 						</div>
-							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
+						<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 					</div>
 				</form>
 
@@ -206,9 +207,9 @@
 								<td style="border-right: solid 1px #ff0000;"></td>
 								<td></td>
 								<td></td>
-								<td data-bind="text:meter().sum_reimbursement"></td>
+								<td data-bind="text:meter().sum_reimbursement" class="rmb"></td>
 								<td></td>
-								<td></td>
+								<td data-bind="text:meter().point_money_deduct" class="rmb"></td>
 								<td></td>
 								<td></td>
 							</tr>
@@ -246,8 +247,8 @@
 								<td></td>
 								<td style="border-right: solid 1px #ff0000;"></td>
 								<td data-bind="text:meter().month_score"></td>
-								<td></td>
-								<td data-bind="text:meter().month_score"></td>
+								<td data-bind="text:meter().back_score"></td>
+								<td data-bind="text:meter().month_score+meter().back_score"></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -356,17 +357,18 @@
 								<td data-bind="text: $data.last_order_period"></td>
 								<td data-bind="text: $data.connect_date"></td>
 								<td data-bind="text: $root.connectTypeMapping[$data.type]"></td>
-								<td ><a data-bind="text: $data.extra_info,click:function(){$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
+								<td><a
+									data-bind="text: $data.extra_info,click:function(){$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.last_receivable_period"></td>
 								<!-- ko if: $data.relation_level=="市场级" -->
-									<td><a href="#" data-bind="click:function(){$root.upToFriend($data.pk,$data.client_employee_pk);}">升级朋友</a></td>
+								<td><a href="#" data-bind="click:function(){$root.upToFriend($data.pk,$data.client_employee_pk);}">升级朋友</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.relation_level=="朋友级" -->
-									<td><a href="#" data-bind="click:function(){$root.downToMarket($data.pk,$data.client_employee_pk);}">降级市场</a></td>
+								<td><a href="#" data-bind="click:function(){$root.downToMarket($data.pk,$data.client_employee_pk);}">降级市场</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.relation_level!="朋友级"&& $data.relation_level!="市场级" -->
-									<td></td>
+								<td></td>
 								<!-- /ko -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.sales_name"></td>
@@ -394,9 +396,9 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr role="row">
-					<th style="width:15%">日期</th>
-					<th style="width:15%">方式</th>
-					<th style="width:70%">效果</th>
+					<th style="width: 15%">日期</th>
+					<th style="width: 15%">方式</th>
+					<th style="width: 70%">效果</th>
 				</tr>
 			</thead>
 			<tbody id="tbody-data" data-bind="foreach: connects">

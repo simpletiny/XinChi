@@ -1,5 +1,6 @@
 package com.xinchi.backend.client.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.AccurateSaleDto;
@@ -60,5 +61,9 @@ public interface ClientRelationService extends BaseService {
 	public String updateEmployeeRelationLevel(ClientRelationBean clientRelation);
 
 	public int caculateTodayPoint();
+
+	public BigDecimal caculatePointMoneyDeduct(String user_pk);
+
+	public float caculateBackPoint(String user_pk);
 
 }

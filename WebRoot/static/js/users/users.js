@@ -1,5 +1,6 @@
 var idCheckLayer;
 var userRoleLayer;
+var passwordLayer;
 var UsersContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -10,7 +11,8 @@ var UsersContext = function() {
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET' ];
+	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
+			'TICKET' ];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'
@@ -27,27 +29,32 @@ var UsersContext = function() {
 
 	self.refresh = function() {
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'user/searchUsersByPage', param, function(data) {
-			var users = data.users;
-			$(users).each(function(idx, user) {
-				var user_roles = user.user_roles;
-				var arr = user_roles.split(",");
-				var roles_name = "";
-				for ( var i = 0; i < arr.length; i++) {
-					roles_name += self.roleMapping[arr[i]] + ",";
-				}
+		$.getJSON(self.apiurl + 'user/searchUsersByPage', param,
+				function(data) {
+					var users = data.users;
+					$(users).each(
+							function(idx, user) {
+								var user_roles = user.user_roles;
+								var arr = user_roles.split(",");
+								var roles_name = "";
+								for (var i = 0; i < arr.length; i++) {
+									roles_name += self.roleMapping[arr[i]]
+											+ ",";
+								}
 
-				roles_name = roles_name.substring(0, roles_name.length - 1);
-				user.user_roles = ko.observable();
-				user.user_roles(roles_name);
-			});
+								roles_name = roles_name.substring(0,
+										roles_name.length - 1);
+								user.user_roles = ko.observable();
+								user.user_roles(roles_name);
+							});
 
-			self.users(users);
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.users(users);
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 
 	// 修改用户角色
@@ -60,11 +67,12 @@ var UsersContext = function() {
 			return;
 		} else {
 
-			$.getJSON(self.apiurl + 'user/searchUserByPk', "user_pk=" + self.chosenUsers()[0], function(data) {
+			$.getJSON(self.apiurl + 'user/searchUserByPk', "user_pk="
+					+ self.chosenUsers()[0], function(data) {
 				self.chosenUserRoles.removeAll();
 				var user = data.ucb;
 				var roles = user.user_roles.split(",");
-				for ( var i = 0; i < roles.length; i++) {
+				for (var i = 0; i < roles.length; i++) {
 					if (roles[i] == '')
 						continue;
 					self.chosenUserRoles.push(roles[i]);
@@ -92,7 +100,8 @@ var UsersContext = function() {
 	};
 	self.doSave = function() {
 		startLoadingSimpleIndicator("保存中");
-		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles();
+		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles="
+				+ self.chosenUserRoles();
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'user/updateUserRoles',
@@ -135,6 +144,7 @@ var UsersContext = function() {
 							data : 'user_pk=' + self.chosenUsers()[0]
 						}).success(function(str) {
 							if (str == "success") {
+								self.chosenUsers.removeAll();
 								self.refresh();
 								endLoadingIndicator();
 							}
@@ -143,7 +153,92 @@ var UsersContext = function() {
 				}
 			});
 		}
+	};
+	// 启用员工
+	self.reuse = function() {
+		if (self.chosenUsers().length < 1) {
+			fail_msg("请选择用户");
+			return;
+		} else if (self.chosenUsers().length > 1) {
+			fail_msg("只能选择一个用户");
+			return;
+		} else {
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要启用该用户吗?',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("启用中");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'user/reuseUser',
+							data : 'user_pk=' + self.chosenUsers()[0]
+						}).success(function(str) {
+							if (str == "success") {
+								self.chosenUsers.removeAll();
+								self.refresh();
+								endLoadingIndicator();
+							}
+						});
+					}
+				}
+			});
+		}
+	};
 
+	// 修改员工密码
+	self.changePassword = function() {
+		if (self.chosenUsers().length < 1) {
+			fail_msg("请选择用户");
+			return;
+		} else if (self.chosenUsers().length > 1) {
+			fail_msg("只能选择一个用户");
+			return;
+		} else {
+			passwordLayer = $.layer({
+				type : 1,
+				title : [ '设置新密码', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '600px', '250px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#password-new'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
+	};
+	self.doChangePassword = function() {
+		var newPassword = $("#password_new").val();
+
+		if (newPassword.trim() == "") {
+			fail_msg("密码不能为空!");
+			return;
+		} else {
+			var data = "ucb.pk=" + self.chosenUsers()[0] + "&ucb.password="
+					+ newPassword;
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'user/changePassword',
+				data : data
+			}).success(function(str) {
+				layer.close(passwordLayer);
+				if (str == "success") {
+					success_msg("修改成功，下次登录请使用新密码！");
+				} else {
+					fail_msg("修改失败，请联系管理员！");
+				}
+			});
+		}
 	};
 
 	// 查看身份证图片
@@ -166,12 +261,19 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+						+ "&fileType=USER_ID");
 	};
 	// 新标签页显示大图片
-	$("#img-pic").on('click', function() {
-		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
-	});
+	$("#img-pic").on(
+			'click',
+			function() {
+				window.open(self.apiurl
+						+ "templates/common/check-picture-big.jsp?src="
+						+ encodeURIComponent($(this).attr("src")));
+			});
 
 	// start pagination
 	self.currentPage = ko.observable(1);
@@ -207,9 +309,10 @@ var UsersContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

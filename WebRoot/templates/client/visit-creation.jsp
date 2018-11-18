@@ -44,7 +44,7 @@
 						<div class="col-md-12">
 							<div class="ip required" style="width: 30%">
 								<label class="l">日期</label> <input type="text" style="width: 50%"
-									class="ip-default date-picker" data-bind="value: visit().date" placeholder="2013-10-19" name="visit.date"
+									class="ip-default date-picker" data-bind="value: visit().date"  name="visit.date"
 									required="required" />
 							</div>
 						</div>

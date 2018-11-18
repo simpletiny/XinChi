@@ -144,6 +144,7 @@
 								<th>公开日期</th>
 								<th>手机号</th>
 								<th>微信号</th>
+								<th>备注</th>
 								<th>所属销售</th>
 								<th>审核</th>
 							</tr>
@@ -178,6 +179,13 @@
 								<!-- /ko -->
 								<td data-bind="text: $data.cellphone"></td>
 								<td data-bind="text: $data.wechat"></td>
+								<!-- ko if: $data.comment==null || $data.comment==''-->
+								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment!=null && $data.comment!=''-->
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<!-- /ko -->
+								
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->
@@ -362,6 +370,21 @@
 			<div class="col-md-12">
 				<label class="l">地址</label>
 				<p class="ip-default" data-bind="text: financial().address"></p>
+			</div>
+		</div>
+	</div>
+	<div id="comment-edit" style="display: none; width: 500px">
+		<div class="input-row clearfloat">
+			<div>
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>

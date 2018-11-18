@@ -243,6 +243,90 @@
 			<comment>  ALTER TABLE VIEW view_client_employee_user</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP VIEW IF EXISTS received_detail;
+				create view received_detail as
+			    select 
+			        *
+			    From
+			        client_received_detail
+			    where
+			        type <> 'SUM' 
+			    union select 
+			        *
+			    from
+			        client_received_detail
+			    where
+			        type = 'SUM'
+			    group by related_pk
+             ]]>
+			<comment>  ALTER TABLE VIEW received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+           ALTER TABLE client 
+				CHANGE COLUMN body_sex body_sex VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ;
+             ]]>
+			<comment> ALTER TABLE client </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		create view view_order_point AS
+					select count(pk)*4 AS order_point,create_user_number AS create_user,confirm_date AS date from budget_order_view where confirm_flg='Y' and LEFT(confirm_date,7)= date_format(now(),'%Y-%m')
+					group by create_user_number,confirm_date;
+					
+					create view view_visit_point AS
+					select count(pk)*3 AS visit_point,create_user,date from client_visit where type='VISIT' and LEFT(date,7)= date_format(now(),'%Y-%m') group by create_user,date;
+					
+					create view view_touch_point AS
+					select count(pk)*2 AS touch_point,create_user,date from mobile_touch where LEFT(date,7)= date_format(now(),'%Y-%m') group by create_user,date;
+					
+					create view view_incoming_point AS
+					select count(pk)*1 AS incoming_point,create_user,date from incoming_call where LEFT(date,7)= date_format(now(),'%Y-%m') group by create_user,date;
+					
+					
+					create view view_point AS
+					select order_point AS point,create_user,date from view_order_point
+					union 
+					select visit_point AS point,create_user,date from view_visit_point
+					union 
+					select touch_point AS point,create_user,date from view_touch_point
+					union 
+					select incoming_point AS point,create_user,date from view_incoming_point;
+             ]]>
+			<comment>create view view_order_point view_visit_point view_touch_point view_incoming_point view_point</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE VIEW view_enable_back_point AS
+					SELECT 
+					    A.team_number,
+					    A.create_user AS user_number,
+					    (A.adult_count+ifnull(A.special_count,0))*A.product_value AS product_point,
+					    A.confirm_date,
+					    IF(B.final_flg = 'Y',
+					        B.final_balance,
+					        B.budget_balance) AS balance
+					FROM
+					    budget_standard_order A
+					        LEFT JOIN
+					    receivable B ON A.team_number = B.team_number
+					WHERE
+					    A.confirm_flg = 'Y'
+					        AND LEFT(A.confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+					HAVING balance =0 ;
+             ]]>
+			<comment>CREATE VIEW view_enable_back_point</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

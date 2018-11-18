@@ -49,7 +49,7 @@ var DetailContext = function() {
 
 	// 匹配其他收入
 	self.matchOther = function() {
-		if (self.chosenDetails() == null || self.chosenDetails()=="") {
+		if (self.chosenDetails() == null || self.chosenDetails() == "") {
 			fail_msg("请选择收入");
 			return;
 		} else {
@@ -228,6 +228,7 @@ var DetailContext = function() {
 	self.resetPage = function() {
 
 	};
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -448,6 +449,43 @@ var DetailContext = function() {
 					});
 				});
 	};
+	// 查看收入凭证
+	self.checkVoucherPic = function(fileName, received_time) {
+		$("#img-pic").attr("src", "");
+		budgetConfirmCheckLayer = $.layer({
+			type : 1,
+			title : [ '查看确认件', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '650px' ],
+			offset : [ '50px', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+		console.log(received_time)
+		var subFolder = received_time.substring(0, 4) + "/"
+				+ received_time.substring(5, 7);
+
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder="
+						+ subFolder);
+	};
+	// 新标签页显示大图片
+	$("#img-pic").on(
+			'click',
+			function() {
+				window.open(self.apiurl
+						+ "templates/common/check-picture-big.jsp?src="
+						+ encodeURIComponent($(this).attr("src")));
+			});
 	// start pagination
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 20;

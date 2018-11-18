@@ -68,12 +68,12 @@
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">地市</label>
-							<div class="ip" style="width:35%">
+							<div class="ip" style="width: 35%">
 								<select class="form-control"
 									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',value: client().client_area,event:{change:ter}"
 									name="client.client_area" required="required"></select>
 							</div>
-							<div class="ip" style="width:35%">
+							<div class="ip" style="width: 35%">
 								<select class="form-control" id="county" name="client.client_county"></select>
 							</div>
 						</div>
@@ -137,12 +137,13 @@
 							<label class="l">旅游公司</label>
 							<div class="ip">
 								<input type="text" class="ip-" data-bind="click:chooseAgency" placeholder="点击选择" name="client.agency_name"
-									id="agency_name" /> <input type="text" class="ip-" style="display: none" name="client.agency_pk" id="agency_pk" />
+									id="agency_name" /> <input type="text" class="ip-" style="display: none" name="client.agency_pk"
+									id="agency_pk" />
 							</div>
 						</div>
 					</div>
 					<hr noshade color="#0066cc" />
-					<h3>负责人信息</h3>
+					<h3>法人信息</h3>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">姓名</label>
@@ -151,11 +152,10 @@
 									name="client.body_name" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">性别</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: genders,value: client().body_sex" name="client.body_sex"
-									required="required"></select>
+								<select class="form-control" data-bind="options: genders,value: client().body_sex" name="client.body_sex"></select>
 							</div>
 						</div>
 					</div>
@@ -176,11 +176,11 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">手机号</label>
 							<div class="ip">
 								<input type="text" maxlength="11" class="ip- cellphone" data-bind="value: client().body_cellphone"
-									placeholder="手机号" name="client.body_cellphone" required="required" />
+									placeholder="手机号" name="client.body_cellphone" />
 							</div>
 						</div>
 						<div class="col-md-6">

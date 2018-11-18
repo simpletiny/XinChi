@@ -250,6 +250,11 @@ public class DateUtil {
 		return 0;
 	}
 
+	public static int todayOfMonth() {
+		Calendar c = Calendar.getInstance();
+		return c.get(Calendar.DATE);
+	}
+
 	public static void main(String[] args) {
 		String d1 = "2018-03-22";
 		String d2 = "2018-03-21";

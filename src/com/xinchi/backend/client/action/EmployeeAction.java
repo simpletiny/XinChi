@@ -170,7 +170,7 @@ public class EmployeeAction extends BaseAction {
 	 */
 	public String reviewEmployee() {
 		employee.setReview_flg("Y");
-		resultStr = employeeService.updateEmployee(employee);
+		resultStr = employeeService.reviewEmployee(employee);
 		return SUCCESS;
 	}
 

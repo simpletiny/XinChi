@@ -329,6 +329,12 @@
 			<if test="type != null and type !=''">
 				and type= #{type,jdbcType=VARCHAR}
 			</if>
+			<if test="team_number != null and team_number !=''">
+				and team_number= #{team_number,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_time_end != null and confirm_time_end !=''">
+				and LEFT(confirm_time,10) &lt;= #{confirm_time_end,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 
@@ -364,7 +370,8 @@
 		A.create_time,
 		A.update_time,
 		D.name AS client_employee_name,
-		B.client_employee_pk
+		B.client_employee_pk,
+		A.voucher_file
 		from received_detail A
 		left join
 		budget_order B on A.team_number=B.team_number

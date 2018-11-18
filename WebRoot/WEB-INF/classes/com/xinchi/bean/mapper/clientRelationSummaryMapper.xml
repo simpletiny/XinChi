@@ -122,6 +122,20 @@
 		<result column="new_accurate" property="new_accurate" jdbcType="INTEGER" />
 	</resultMap>
 
+	<resultMap id="PointMap" type="com.xinchi.bean.PointDto">
+		<result column="point" property="point" jdbcType="INTEGER" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="user_pk" property="user_pk" jdbcType="VARCHAR" />
+		<result column="date" property="date" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BackPointMap" type="com.xinchi.bean.BackPointDto">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="user_pk" property="user_pk" jdbcType="VARCHAR" />
+		<result column="product_point" property="product_point" jdbcType="INTEGER" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 		client_employee_name,
 		client_employee_pk,
@@ -694,5 +708,39 @@
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="4"'>
 			ORDER BY year_order_count DESC
 		</if>
+	</select>
+
+	<select id="selectPointByParam" parameterType="com.xinchi.bean.PointDto" resultMap="PointMap">
+		select
+		sum(A.point) AS point,
+		A.create_user AS user_number,
+		A.date,
+		B.pk AS user_pk
+		from view_point A
+		LEFT JOIN
+		user_base B
+		ON A.create_user = B.user_number
+		<where>
+			<if test="user_pk != null and user_pk !=''">
+				and B.pk = #{user_pk,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY A.create_user,A.date
+	</select>
+	<select id="selectEnableBackPointByParam" parameterType="com.xinchi.bean.BackPointDto" resultMap="BackPointMap">
+		select
+		A.team_number,
+		A.user_number,
+		A.confirm_date,
+		B.pk AS user_pk,
+		A.product_point
+		from view_enable_back_point A
+		LEFT JOIN
+		user_base B ON A.user_number = B.user_number
+		<where>
+			<if test="user_pk != null and user_pk !=''">
+				and B.pk = #{user_pk,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 </mapper>	

@@ -60,6 +60,7 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private BigDecimal money_from;
 	private BigDecimal money_to;
 	private BigDecimal money;
+	private String confirm_time_end;
 
 	public String getTeam_number() {
 		return team_number;
@@ -299,6 +300,14 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setReceiver_bank(String receiver_bank) {
 		this.receiver_bank = receiver_bank;
+	}
+
+	public String getConfirm_time_end() {
+		return confirm_time_end;
+	}
+
+	public void setConfirm_time_end(String confirm_time_end) {
+		this.confirm_time_end = confirm_time_end;
 	}
 
 }

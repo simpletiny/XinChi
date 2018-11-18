@@ -211,4 +211,12 @@ public class UserServiceImpl implements UserService {
 		dao.update(user);
 		return SUCCESS;
 	}
+
+	@Override
+	public String reuseUser(String user_pk) {
+		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
+		ubb.setDelete_flg("N");
+		dao.update(ubb);
+		return SUCCESS;
+	}
 }

@@ -134,6 +134,7 @@ tr td {
 								<th>预算团款</th>
 								<th>决算团款</th>
 								<th>决算单</th>
+								<th>确认件</th>
 								<th>产品经理</th>
 								<th>决算详情</th>
 								<th>凭证</th>
@@ -158,6 +159,8 @@ tr td {
 								<td class="rmb" data-bind="text: $data.final_receivable"></td>
 								<td><a href="javascript:void(0)"
 									data-bind="click: function() {$root.checkConfirmPic($data.confirm_file,$data.team_number)} ">查看</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click: function() {$root.checkBudgetConfirmPic($data.confirm_file,$data.create_user)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkFinalDetail($data)} ">查看</a></td>
 								<td><a href="javascript:void(0)"

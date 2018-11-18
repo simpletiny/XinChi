@@ -79,4 +79,6 @@ public interface EmployeeService extends BaseService {
 
 	public RelationLevelDto selectRelationCntAdmin();
 
+	public String reviewEmployee(ClientEmployeeBean employee);
+
 }

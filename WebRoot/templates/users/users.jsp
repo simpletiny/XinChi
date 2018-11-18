@@ -25,9 +25,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div style="width: 30%; float: right">
 					<div>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editUserRole() }">修改角色</button>
-					</div>
-					<div>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stop() }">停用</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reuse() }">启用</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changePassword() }">修改密码</button>
 					</div>
 				</div>
 			</div>
@@ -116,6 +116,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	       <a type="submit" class="btn btn-green btn-r" data-bind="click: doCancel">取消</a>
      </div>
   </div>
+  <div style="display: none;width:600px" id="password-new" >
+		<div class="input-row clearfloat">
+			<div class="col-md-12 required">
+				<label class="l">新密码</label>
+				<div class="ip">
+				 <div class="ip"><input type="password" id="password_new" class="ip-default" placeholder="新密码"/></div>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<button style="float: right; margin-top: 10px" type="submit" class="btn btn-green col-md-1" data-bind="click:doChangePassword">完成</button>
+		</div>
+	</div>
  <div id="pic-check" style="display:none">
  	<jsp:include page="../common/check-picture.jsp" />
  </div>

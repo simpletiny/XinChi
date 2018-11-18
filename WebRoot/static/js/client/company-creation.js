@@ -3,7 +3,7 @@ var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.client = ko.observable({});
-	self.genders = [ '男', '女' ];
+	self.genders = [ '未知', '男', '女' ];
 	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
 			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
 	self.countyMapping = {
@@ -27,6 +27,7 @@ var CompanyContext = function() {
 	self.client().client_area = ko.observable();
 	self.client().client_county = ko.observable();
 
+	self.client().client_area("哈尔滨");
 	self.ter = function() {
 		$("#county").empty();
 		for (var i = 0; i < self.countyMapping[self.client().client_area()].length; i++) {
@@ -35,6 +36,8 @@ var CompanyContext = function() {
 					"<option value='" + value + "'>" + value + "</option>");
 		}
 	};
+	self.ter();
+
 	self.clientType = [ '总公司', '分公司', '营业部', '包桌', '经纪人', '其他' ];
 	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
 	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
@@ -42,6 +45,21 @@ var CompanyContext = function() {
 	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	self.talkLevels = [ '核心', '主力', '市场', '排斥' ];
 
+	self.client().client_type = ko.observable();
+	self.client().main_business = ko.observable();
+	self.client().back_level = ko.observable();
+	self.client().market_level = ko.observable();
+	self.client().talk_level = ko.observable();
+	self.client().store_type = ko.observable();
+	
+	
+	self.client().main_business("未知");
+	self.client().back_level("未知");
+	self.client().market_level("普通级");
+	self.client().talk_level("市场");
+	self.client().store_type("未知");
+	self.client().client_type("总公司");
+	
 	self.createCompany = function() {
 		if (!$("form").valid()) {
 			return;

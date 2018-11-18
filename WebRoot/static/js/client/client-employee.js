@@ -3,6 +3,7 @@ var jobHoppingLayer;
 var salesLayer;
 var reviewLayer;
 var checkFinancialLayer;
+var commentLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -86,21 +87,36 @@ var CompanyContext = function() {
 			fail_msg("请选择客户");
 			return;
 		} else {
-			salesLayer = $.layer({
-				type : 1,
-				title : [ '修改客户销售', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '600px', '400px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#edit-sale'
-				},
-				end : function() {
+			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+				employee_pk : self.chosenEmployees()[0]
+			}, function(data) {
+				if (data.employee) {
+					if (data.employee.review_flg == 'N') {
+						fail_msg("客户未审核！！");
+					} else {
+						salesLayer = $.layer({
+							type : 1,
+							title : [ '修改客户销售', '' ],
+							maxmin : false,
+							closeBtn : [ 1, true ],
+							shadeClose : false,
+							area : [ '600px', '400px' ],
+							offset : [ '', '' ],
+							scrollbar : true,
+							page : {
+								dom : '#edit-sale'
+							},
+							end : function() {
 
+							}
+						});
+					}
+				} else {
+					fail_msg("员工不存在！");
 				}
+
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
 			});
 		}
 	};
@@ -109,7 +125,6 @@ var CompanyContext = function() {
 			self.chosenUser.removeAll();
 			self.chosenUser.push("public");
 		}
-		;
 		return true;
 	}
 	self.doChangeSale = function() {
@@ -575,7 +590,8 @@ var CompanyContext = function() {
 
 	self.clients = ko.observableArray([]);
 	self.refreshClient = function() {
-		var param = "client.client_short_name=" + $("#client_name").val()+"&client.statuses=N";
+		var param = "client.client_short_name=" + $("#client_name").val()
+				+ "&client.statuses=N";
 		param += "&page.start=" + self.startIndex1() + "&page.count="
 				+ self.perPage1;
 
@@ -644,6 +660,59 @@ var CompanyContext = function() {
 		}
 
 	}
+
+	self.clientEmployee = ko.observable({});
+	// 添加/修改备注
+	self.editComment = function(employee_pk) {
+		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+			employee_pk : employee_pk
+		}, function(data) {
+			self.clientEmployee(data.employee);
+			commentLayer = $.layer({
+				type : 1,
+				title : [ '备注', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '500px', '300px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#comment-edit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+
+		});
+	};
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+		$("#txt-comment").val('');
+	};
+
+	self.updateComment = function() {
+		var employee_pk = self.clientEmployee().pk;
+		var comment = $("#txt-comment").val();
+		var data = "employee.pk=" + employee_pk + "&" + "employee.comment="
+				+ comment;
+
+		startLoadingIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + "client/updateEmployeeSimply",
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+				$("#txt-comment").val('');
+			}
+		});
+	};
 	// start pagination client
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 10;

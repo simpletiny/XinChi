@@ -1,5 +1,6 @@
 var salesLayer;
 var levelLayer;
+var commentLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -282,11 +283,12 @@ var CompanyContext = function() {
 			});
 		}
 	};
-	self.checkSale = function(){
-		if(self.chosenUser().contains("public")){
+	self.checkSale = function() {
+		if (self.chosenUser().contains("public")) {
 			self.chosenUser.removeAll();
 			self.chosenUser.push("public");
-		};
+		}
+		;
 		return true;
 	}
 	self.doChangeSale = function() {
@@ -294,7 +296,7 @@ var CompanyContext = function() {
 			fail_msg("请选择销售！");
 			return;
 		}
-		
+
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
@@ -308,7 +310,7 @@ var CompanyContext = function() {
 						company_pks : self.chosenCompanies(),
 						sale_pks : self.chosenUser()
 					};
-
+					console.log(data.sale_pks);
 					startLoadingSimpleIndicator("转移中...");
 					$.ajax({
 						type : "POST",
@@ -356,6 +358,58 @@ var CompanyContext = function() {
 					+ self.chosenCompanies()[0];
 		}
 	};
+	self.company = ko.observable({});
+	// 添加/修改备注
+	self.editComment = function(client_pk) {
+		$.getJSON(self.apiurl + 'client/searchOneCompany', {
+			client_pk : client_pk
+		}, function(data) {
+			self.company(data.client);
+			commentLayer = $.layer({
+				type : 1,
+				title : [ '备注', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '500px', '300px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#comment-edit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+
+		});
+	};
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+		$("#txt-comment").val('');
+	};
+
+	self.updateComment = function() {
+		var client_pk = self.company().pk;
+		var comment = $("#txt-comment").val();
+		var data = "client.pk=" + client_pk + "&" + "client.comment=" + comment;
+
+		startLoadingIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + "client/pureUpdateCompany",
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+				$("#txt-comment").val('');
+			}
+		});
+	};
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 100;

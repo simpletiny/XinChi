@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.AccurateSaleDAO;
+import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.dao.ClientVisitDAO;
@@ -17,6 +18,7 @@ import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.util.dao.CommonDAO;
 import com.xinchi.bean.AccurateSaleBean;
+import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientUserBean;
@@ -273,6 +275,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			if (main_user.equals("public")) {
 				employee.setPublic_flg("Y");
+				// 保存新的对应关系
+				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+
+				ceub.setEmployee_pk(employee_pk);
+				ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+				employeeUserDao.insert(ceub);
 			} else {
 				employee.setPublic_flg("N");
 				// 保存新的对应关系
@@ -310,6 +318,63 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public RelationLevelDto selectRelationCntAdmin() {
 		return dao.selectRelationCntAdmin();
+	}
+
+	@Autowired
+	private ClientDAO clientDao;
+	@Override
+	public String reviewEmployee(ClientEmployeeBean employee) {
+		// 更新客户资料
+		dao.update(employee);
+
+		// 客户所属的销售
+		List<ClientEmployeeUserBean> ceubs = employeeUserDao.selectByEmployeePk(employee.getPk());
+
+		// 财务主体所属的销售
+		List<ClientUserBean> cubs = clientUserDao.selectByClientPk(employee.getFinancial_body_pk());
+
+		// 如果财务主体是公开状态
+		if (cubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+			
+			//如果客户也是公开状态则什么也不做
+			if(ceubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+				//do nothing
+			}else {
+				
+				ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
+				client.setPublic_flg("N");
+				clientDao.update(client);
+				
+				// 删除之前的对应关系
+				clientUserDao.deleteByClientPk(employee.getFinancial_body_pk());
+
+				// 保存新的对应关系
+				for (ClientEmployeeUserBean ceub : ceubs) {
+					ClientUserBean cub = new ClientUserBean();
+					cub.setClient_pk(employee.getFinancial_body_pk());
+					cub.setUser_pk(ceub.getUser_pk());
+					clientUserDao.insert(cub);
+				}
+			}
+
+		} else {
+			for (int i = ceubs.size() - 1; i >= 0; i--) {
+				for (int j = 0; j < cubs.size(); j++) {
+					if (ceubs.get(i).getUser_pk().equals(cubs.get(j).getUser_pk())) {
+						ceubs.remove(i);
+					}
+				}
+			}
+			// 添加新的对应关系
+			for (ClientEmployeeUserBean ceub : ceubs) {
+				ClientUserBean cub = new ClientUserBean();
+				cub.setClient_pk(employee.getFinancial_body_pk());
+				cub.setUser_pk(ceub.getUser_pk());
+				clientUserDao.insert(cub);
+			}
+		}
+
+		return SUCCESS;
 	}
 
 }

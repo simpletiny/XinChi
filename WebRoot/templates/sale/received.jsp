@@ -114,6 +114,7 @@
 								<th>类型</th>
 								<th>时间</th>
 								<th>我方账户</th>
+								<th>凭证</th>
 								<th>客户</th>
 								<th>摘要</th>
 								<th>填报日期</th>
@@ -136,6 +137,9 @@
 								<td data-bind="text: $root.typeMapping[$data.type]"></td>
 								<td data-bind="text: $data.received_time"></td>
 								<td data-bind="text: $data.card_account"></td>
+								<td><a href="javascript:void(0)"
+												data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
+								
 								<!-- ko if:$data.type=='SUM' -->
 								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewDetail($data.related_pk)}}">详情</a></td>
 								<!-- /ko -->
@@ -280,7 +284,9 @@
 			</div>
 		</div>
 	</div>
-
+	<div id="pic-check" style="display: none">
+		<jsp:include page="../common/check-picture.jsp" />
+	</div>
 	<script>
 		$(".sale").addClass("current").children("ol").css("display", "block");
 	</script>

@@ -43,6 +43,9 @@
 		<action name="stopUser" class="userAction" method="stopUser">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="reuseUser" class="userAction" method="reuseUser">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchAllSales" class="userAction" method="searchAllSales">
 			<result name="success" type="json"></result>
 		</action>
