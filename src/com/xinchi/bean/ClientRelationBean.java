@@ -52,6 +52,9 @@ public class ClientRelationBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	private String comment;
+	private String head_photo;
+
 	public String getClient_employee_name() {
 		return client_employee_name;
 	}
@@ -218,6 +221,22 @@ public class ClientRelationBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getHead_photo() {
+		return head_photo;
+	}
+
+	public void setHead_photo(String head_photo) {
+		this.head_photo = head_photo;
 	}
 
 }

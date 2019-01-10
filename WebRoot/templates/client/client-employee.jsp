@@ -78,7 +78,18 @@
 					</div>
 
 					<div class="form-group">
-
+						<div class="span6">
+							<label class="col-md-1 control-label">手机号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="手机号" maxlength="20" name="employee.cellphone" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">微信号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="微信号" maxlength="20" name="employee.wechat" />
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 
 							<div class="span6">
@@ -92,7 +103,7 @@
 						</s:if>
 						<div class="span6">
 							<div class="col-md-2">
-								<em class="small-box "> <input type="checkbox" value="Y" name="employee.public_flgs"
+								<em class="small-box "> <input type="checkbox" id="chk_public"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
 								</em>
 							</div>
@@ -131,6 +142,7 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>头像</th>
 								<th>昵称</th>
 								<th>姓名</th>
 								<th>性别</th>
@@ -152,6 +164,7 @@
 						<tbody data-bind="foreach: employees">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees" /></td>
+								<td><img style="width:25px;height:25px" src="<%=basePath%>static/img/head.jpg" /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
 								<td data-bind="text: $data.nick_name"></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
@@ -183,9 +196,10 @@
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.comment!=null && $data.comment!=''-->
-								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
-								
+
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
 								<!-- /ko -->
@@ -378,13 +392,15 @@
 			<div>
 				<label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment"
+						data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>

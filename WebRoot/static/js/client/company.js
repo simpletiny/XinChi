@@ -93,7 +93,14 @@ var CompanyContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("#form-search").serialize();
-
+		
+		if($("#chk_public").is(":checked")){
+			param+="&client.public_flgs=Y";
+		}else{
+			param+="&client.public_flgs=N";
+		}
+		
+		
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 

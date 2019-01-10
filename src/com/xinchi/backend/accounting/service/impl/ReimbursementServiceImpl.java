@@ -35,7 +35,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		pa.setMoney(reimbursement.getMoney());
 		pa.setItem(reimbursement.getItem());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
-		pa.setComment(reimbursement.getComment());
+		pa.setComment("归属月份："+reimbursement.getMonth() +"\n"+reimbursement.getComment());
 		pa.setApply_user(reimbursement.getApply_user());
 		pa.setBack_pk(reimbursement.getPk());
 		pa.setApply_time(DateUtil.getTimeMillis());

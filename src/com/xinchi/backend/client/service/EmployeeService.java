@@ -81,4 +81,6 @@ public interface EmployeeService extends BaseService {
 
 	public String reviewEmployee(ClientEmployeeBean employee);
 
+	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e);
+
 }

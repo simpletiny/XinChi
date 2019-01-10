@@ -58,4 +58,6 @@ public interface EmployeeDAO {
 
 	public void publicClientEmployee(List<String> employee_pks);
 
+	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e);
+
 }

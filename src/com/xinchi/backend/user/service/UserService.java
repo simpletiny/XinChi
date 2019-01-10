@@ -1,5 +1,6 @@
 package com.xinchi.backend.user.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.xinchi.bean.UserBaseBean;
@@ -18,7 +19,7 @@ public interface UserService extends BaseService {
 	 * @param bo
 	 */
 	@LogDescription(ignore = true)
-	public void register(UserBaseBean bo, UserInfoBean uib);
+	public String register(UserBaseBean bo, UserInfoBean uib) throws IOException;
 
 	/**
 	 * 修改

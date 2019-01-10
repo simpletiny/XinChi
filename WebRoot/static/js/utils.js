@@ -1,4 +1,5 @@
 var nanobar;
+var CHARACTER_ARRAY = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 var changeValueByPath = function(obj, path, value) {
 	var ps = path.split('.'), co = obj;
 	for ( var i = 0; i < ps.length - 1; i++) {
@@ -410,3 +411,14 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function dataURLtoFile(dataurl, filename) {
+	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(
+			n);
+	while (n--) {
+		u8arr[n] = bstr.charCodeAt(n);
+	}
+	return new File([ u8arr ], filename, {
+		type : mime
+	});
+}

@@ -327,6 +327,142 @@
 			<comment>CREATE VIEW view_enable_back_point</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+				CREATE VIEW view_sum_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement where LEFT(date,7)>='2018-11' group by apply_user;
+             ]]>
+			<comment>Alter VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE reimbursement 
+				ADD COLUMN month VARCHAR(7) NOT NULL COMMENT '归属月份' AFTER date;
+             ]]>
+			<comment>ALTER TABLE reimbursement </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+				update reimbursement set month = LEFT(date,7);
+             ]]>
+			<comment>update reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+				CREATE VIEW view_sum_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement where month>='2018-11' and status!='N' group by apply_user;
+             ]]>
+			<comment>Alter VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE VIEW  view_month_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement where month=DATE_FORMAT(now(),'%Y-%m') and status!='N' group by apply_user;
+             ]]>
+			<comment>CREATE VIEW view_month_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+			  CREATE TABLE flight (
+				  name VARCHAR(50) NOT NULL COMMENT '航班名称',
+				  number VARCHAR(10) NOT NULL COMMENT '航班编号',
+				  adult_price DECIMAL(12,2) NOT NULL DEFAULT 0,
+				  child_price DECIMAL(12,2) NOT NULL DEFAULT 0,
+				  comment VARCHAR(200) NULL COMMENT '票务要求',
+				  pk CHAR(22) NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  UNIQUE INDEX number_UNIQUE (number ASC),
+				  PRIMARY KEY (pk),
+				  INDEX name (name ASC))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '票务航班表';
+             ]]>
+			<comment>CREATE TABLE flight</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE flight_info (
+				  pk CHAR(22) NOT NULL,
+				  flight_index TINYINT NOT NULL COMMENT '航段排序',
+				  flight_leg VARCHAR(10) NOT NULL COMMENT '航段名',
+				  start_day TINYINT NOT NULL COMMENT '起始天次',
+				  start_city VARCHAR(10) NOT NULL COMMENT '起飞城市',
+				  end_day TINYINT NOT NULL COMMENT '降落天次',
+				  end_city VARCHAR(10) NOT NULL COMMENT '降落城市',
+				  flight_number VARCHAR(10) NULL COMMENT '指定的航班号',
+				  flight_pk CHAR(22) NOT NULL COMMENT '航班pk',
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk),
+				  INDEX flight_pk (flight_pk ASC))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '航班信息表';
+             ]]>
+			<comment>CREATE TABLE flight_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_employee 
+					ADD COLUMN wechat1 VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL AFTER wechat,
+					ADD COLUMN cellphone1 VARCHAR(11) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL AFTER cellphone;
+             ]]>
+			<comment>ALTER TABLE client_employee add column cellphone1 and wechat1</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+				CREATE VIEW view_sum_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement where month>='2019-01' and status!='N' group by apply_user;
+             ]]>
+			<comment>Alter VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_employee 
+					ADD COLUMN head_photo VARCHAR(26) NULL DEFAULT 'img' AFTER quit_flg;
+             ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_relation 
+				ADD COLUMN head_photo VARCHAR(26) NULL DEFAULT 'img' AFTER update_user;
+             ]]>
+			<comment>ALTER TABLE client_relation </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

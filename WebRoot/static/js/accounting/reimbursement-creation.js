@@ -4,7 +4,11 @@ var ClientContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.visit = ko.observable({});
 	self.clientEmployees = ko.observable({});
-
+	self.reibursement = ko.observable({
+		date:'',
+		month:''
+	});
+	
 	self.item = [ 'X', 'J', 'Q' ];
 	self.itemMapping = ko.observableArray([ {
 		"key" : "X",
@@ -16,7 +20,12 @@ var ClientContext = function() {
 		"key" : "Q",
 		"value" : "其他支出"
 	} ]);
-
+	var x = new Date();
+	self.reibursement().date = ko.observable();
+	self.reibursement().month = ko.observable();
+	self.reibursement().date(x.Format("yyyy-MM-dd"));
+	self.reibursement().month(x.Format("yyyy-MM"));
+	
 	self.save = function() {
 		if (!$("form").valid()) {
 			return;

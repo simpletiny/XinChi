@@ -93,4 +93,11 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements EmployeeDAO
 		return daoUtil.selectOneValue("com.xinchi.bean.mapper.ClientEmployeeMapper.selectRelationCntAdmin");
 	}
 
+	@Override
+	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e) {
+		List<ClientEmployeeBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectSameTelEmployee", e);
+		return list;
+	}
+
 }

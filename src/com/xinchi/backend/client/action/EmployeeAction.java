@@ -13,6 +13,7 @@ import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -191,6 +192,72 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String checkEmployeeCellphone() {
+		employee.setCellphone1(employee.getCellphone());
+		employees = employeeService.getAllClientEmployeeByParam(employee);
+
+		if (employees != null && employees.size() > 0) {
+			if (employee.getPk() != null) {
+				resultStr = INPUT;
+				for (ClientEmployeeBean e : employees) {
+					if (!e.getPk().equals(employee.getPk())) {
+						resultStr = SUCCESS;
+					}
+				}
+			} else {
+				resultStr = SUCCESS;
+			}
+		} else {
+			resultStr = INPUT;
+		}
+
+		return SUCCESS;
+	}
+
+	public String checkEmployeeWechat() {
+		employee.setWechat1(employee.getWechat());
+		employees = employeeService.getAllClientEmployeeByParam(employee);
+
+		if (employees != null && employees.size() > 0) {
+			if (employee.getPk() != null) {
+				resultStr = INPUT;
+				for (ClientEmployeeBean e : employees) {
+					if (!e.getPk().equals(employee.getPk())) {
+
+						resultStr = SUCCESS;
+					}
+				}
+			} else {
+				resultStr = SUCCESS;
+			}
+		} else {
+			resultStr = INPUT;
+		}
+
+		return SUCCESS;
+	}
+
+	public String checkTelInfo() {
+		ClientEmployeeBean e = employeeService.selectByPrimaryKey(employee_pk);
+		if (SimpletinyString.isEmpty(e.getCellphone1())) {
+			e.setCellphone1(ResourcesConstants.PLACE_HOLDER);
+		}
+		if (SimpletinyString.isEmpty(e.getWechat1())) {
+			e.setWechat1(ResourcesConstants.PLACE_HOLDER);
+		}
+		if (SimpletinyString.isEmpty(e.getWechat())) {
+			e.setWechat(ResourcesConstants.PLACE_HOLDER);
+		}
+		List<ClientEmployeeBean> es = employeeService.selectSameTelEmployee(e);
+		if (null != es && es.size() > 0) {
+			resultStr = "exist";
+			employee = es.get(0);
+		} else {
+			resultStr = SUCCESS;
+		}
+		return SUCCESS;
+	}
+
 	public ClientEmployeeBean getEmployee() {
 		return employee;
 	}
@@ -246,5 +313,4 @@ public class EmployeeAction extends BaseAction {
 	public void setSale_pks(List<String> sale_pks) {
 		this.sale_pks = sale_pks;
 	}
-
 }

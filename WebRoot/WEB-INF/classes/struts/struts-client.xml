@@ -89,6 +89,18 @@
 		<action name="recoveryClientEmployee" class="employeeAction" method="recoveryClientEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="checkEmployeeCellphone" class="employeeAction" method="checkEmployeeCellphone">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="checkEmployeeWechat" class="employeeAction" method="checkEmployeeWechat">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="checkTelInfo" class="employeeAction" method="checkTelInfo">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!-- agency -->
 		<action name="createAgency" class="travelAgencyAction" method="createAgency">

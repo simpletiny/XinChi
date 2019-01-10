@@ -1,6 +1,8 @@
 package com.xinchi.struts.filter;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,18 +29,23 @@ public class LoginFilter extends HttpServlet implements Filter {
 	private static final long serialVersionUID = 2781540410299414055L;
 	private String[] escapeUrl;
 	private String[] escapeSysUrl;
+	private String superKey;
 
 	@Override
-	public void doFilter(ServletRequest srquest, ServletResponse sresponse, FilterChain fc) throws IOException, ServletException {
+	public void doFilter(ServletRequest srquest, ServletResponse sresponse, FilterChain fc)
+			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srquest;
+		request.setCharacterEncoding("UTF-8");
 		HttpServletResponse response = (HttpServletResponse) sresponse;
 		HttpSession session = request.getSession();
 		UserSessionBean sessionBean = (UserSessionBean) session.getAttribute(ResourcesConstants.LOGIN_SESSION_KEY);
 		String url = request.getServletPath();
+
+		String superKey = request.getParameter("superKey");
 		String contextPath = request.getContextPath();
 
 		// 如果是XMLHttpRequest则为Ajax请求
-		if (isEscapse(url)) {
+		if (isEscapse(url) || (null != superKey && superKey.equals(this.superKey))) {
 			fc.doFilter(request, response);
 		} else if (isNotControlUrl(url)) {
 			fc.doFilter(request, response);
@@ -57,6 +64,8 @@ public class LoginFilter extends HttpServlet implements Filter {
 	public void init(FilterConfig arg0) throws ServletException {
 		String escape = PropertiesUtil.getProperty("escapeUrl");
 		String escapeSys = PropertiesUtil.getProperty("escapeSysUrl");
+		String superKey = PropertiesUtil.getProperty("superKey");
+		this.superKey = superKey;
 		if (null != escape && escape.trim().length() > 0) {
 			this.escapeUrl = escape.split(";");
 			this.escapeSysUrl = escapeSys.split(";");

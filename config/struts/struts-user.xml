@@ -3,7 +3,7 @@
 <struts>
 	<package name="user" extends="default" namespace="/user">
 		<action name="register" class="userAction" method="register">
-			<result name="success" type="redirect">/</result>
+			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="login" class="userAction" method="login">
 			<result name="success" type="redirect">/templates/home.jsp</result>

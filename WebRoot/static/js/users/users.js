@@ -38,7 +38,13 @@ var UsersContext = function() {
 					$(users).each(
 							function(idx, user) {
 								var user_roles = user.user_roles;
-								var arr = user_roles.split(",");
+								var arr;
+								if (user_roles == null) {
+									arr = [];
+								} else {
+									arr = user_roles.split(",");
+								}
+
 								var roles_name = "";
 								for (var i = 0; i < arr.length; i++) {
 									roles_name += self.roleMapping[arr[i]]
@@ -71,7 +77,13 @@ var UsersContext = function() {
 					+ self.chosenUsers()[0], function(data) {
 				self.chosenUserRoles.removeAll();
 				var user = data.ucb;
-				var roles = user.user_roles.split(",");
+				var roles;
+				if (user.user_roles == null) {
+					roles = [];
+				} else {
+					roles = user.user_roles.split(",");
+				}
+				
 				for (var i = 0; i < roles.length; i++) {
 					if (roles[i] == '')
 						continue;

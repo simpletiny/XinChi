@@ -66,7 +66,7 @@ public class AopUpdateClientRelation {
 			crb.setYear_order_count(0);
 			crb.setSales(employee.getSales());
 			crb.setSales_name(employee.getSales_name());
-
+			crb.setHead_photo(employee.getHead_photo());
 			clientRelationDao.insert(crb);
 		}
 	}
@@ -107,7 +107,7 @@ public class AopUpdateClientRelation {
 
 		crb.setSales(sales);
 		crb.setSales_name(sales_name);
-
+		crb.setHead_photo(e.getHead_photo());
 		clientRelationDao.update(crb);
 	}
 	// *********** 更新客户 end***********

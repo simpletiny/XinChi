@@ -8,7 +8,7 @@ import java.util.Map;
 import com.xinchi.bean.TaskBean;
 
 public class ResourcesConstants {
-
+	public static String PLACE_HOLDER = "&&^^@@@";
 	// 用户注册状态
 	// 申请中
 	public static String USER_STATUS_APPLY = "A";

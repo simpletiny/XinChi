@@ -40,6 +40,7 @@ var employeeContext = function() {
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
+			self.loadFiles();
 		} else {
 			fail_msg("员工不存在！");
 		}
@@ -48,7 +49,33 @@ var employeeContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
+	// 加载头像
+	self.loadFiles = function() {
+		var fileName = $("#head").val();
+		if (fileName != "img") {
+			self.downFile(fileName);
+		}
+	};
+
+	self.downFile = function(fileName) {
+		var imgContainer = $("#avatar");
+
+		var formData = new FormData();
+		formData.append("fileFileName", fileName);
+		formData.append("fileType", "CLIENT_EMPLOYEE_HEAD");
+
+		var url = ctx.apiurl + 'file/getFileStream';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+		xhr.responseType = "blob";
+		xhr.onload = function() {
+			if (this.status == 200) {
+				var blob = this.response;
+				imgContainer.attr("src", window.URL.createObjectURL(blob));
+			}
+		};
+		xhr.send(formData);
+	};
 	//查看拜访记录
 	self.visitRecord = function(){
 		window.location.href = self.apiurl + "templates/client/visit-view.jsp?key="+self.employeePk;

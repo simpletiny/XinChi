@@ -254,16 +254,23 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		List<PointDto> point = dao.selectPointByParam(option);
 
 		if (null == point) {
-			deduct = new BigDecimal(100 * DateUtil.todayOfMonth());
+			deduct = new BigDecimal(100 * DateUtil.workDays());
 		} else {
-			for (int i = 0; i < point.size(); i++) {
+			for (int i = point.size() - 1; i >= 0; i--) {
+
 				PointDto p = point.get(i);
+
+				if (DateUtil.isWeekend(p.getDate())) {
+					point.remove(i);
+					continue;
+				}
+
 				if (p.getPoint() < 10) {
 					deduct = deduct.add(new BigDecimal(10 * (10 - p.getPoint())));
 				}
 			}
 
-			int nullDays = DateUtil.todayOfMonth() - point.size();
+			int nullDays = DateUtil.workDays() - point.size();
 
 			deduct = deduct.add(new BigDecimal(100 * nullDays));
 		}

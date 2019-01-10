@@ -2,6 +2,7 @@ var todoLayer;
 var levelLayer;
 var quitLayer;
 var connectInfoLayer;
+var commentLayer;
 var ClientContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -55,7 +56,8 @@ var ClientContext = function() {
 		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param,
 				function(data) {
 					self.relations(data.relations);
-
+					
+					self.loadFiles();
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 					$(".rmb").formatCurrency();
@@ -503,6 +505,88 @@ var ClientContext = function() {
 		});
 
 	};
+	self.clientEmployee = ko.observable({});
+	// 添加/修改备注
+	self.editComment = function(employee_pk) {
+		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+			employee_pk : employee_pk
+		}, function(data) {
+			self.clientEmployee(data.employee);
+			commentLayer = $.layer({
+				type : 1,
+				title : [ '备注', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '500px', '300px' ],
+				offset : [ '', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#comment-edit'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+
+		});
+	};
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+		$("#txt-comment").val('');
+	};
+
+	self.updateComment = function() {
+		var employee_pk = self.clientEmployee().pk;
+		var comment = $("#txt-comment").val();
+		var data = "employee.pk=" + employee_pk + "&" + "employee.comment="
+				+ comment;
+
+		startLoadingIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + "client/updateEmployeeSimply",
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+				$("#txt-comment").val('');
+			}
+		});
+	};
+	// 加载头像
+	self.loadFiles = function() {
+		$("[st='st-file-name']").each(function(idx, stFileName) {
+			var fileName = $(stFileName).val();
+			if (fileName != "img") {
+				self.downFile(stFileName, fileName);
+			}
+		});
+	};
+
+	self.downFile = function(stFileName, fileName) {
+		var imgContainer = $(stFileName).prev();
+		
+		var formData = new FormData();
+		formData.append("fileFileName", fileName);
+		formData.append("fileType", "CLIENT_EMPLOYEE_MIN_HEAD");
+
+		var url = ctx.apiurl + 'file/getFileStream';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+		xhr.responseType = "blob";
+		xhr.onload = function() {
+			if (this.status == 200) {
+				var blob = this.response;
+				imgContainer.attr("src", window.URL.createObjectURL(blob));
+			}
+		};
+		xhr.send(formData);
+	};
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 100;

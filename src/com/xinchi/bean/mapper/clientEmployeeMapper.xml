@@ -7,9 +7,11 @@
 		<result column="sex" property="sex" jdbcType="CHAR" />
 		<result column="age" property="age" jdbcType="VARCHAR" />
 		<result column="wechat" property="wechat" jdbcType="VARCHAR" />
+		<result column="wechat1" property="wechat1" jdbcType="VARCHAR" />
 		<result column="qq" property="qq" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="cellphone1" property="cellphone1" jdbcType="VARCHAR" />
 		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
 		<result column="fax" property="fax" jdbcType="VARCHAR" />
 		<result column="id" property="id" jdbcType="VARCHAR" />
@@ -33,6 +35,7 @@
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 		<result column="useful_time" property="useful_time" jdbcType="VARCHAR" />
+		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
 		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
 		<result column="year_oder_count" property="year_oder_count" jdbcType="INTEGER" />
 	</resultMap>
@@ -67,9 +70,11 @@
 		nick_name,
 		sex,
 		wechat,
+		wechat1,
 		qq,
 		type,
 		cellphone,
+		cellphone1,
 		telephone,
 		fax,
 		id,
@@ -91,7 +96,8 @@
 		back_level,
 		market_level,
 		review_flg,
-		quit_flg
+		quit_flg,
+		head_photo
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -99,9 +105,11 @@
 		A.nick_name,
 		A.sex,
 		A.wechat,
+		A.wechat1,
 		A.qq,
 		A.type,
 		A.cellphone,
+		A.cellphone1,
 		A.telephone,
 		A.fax,
 		A.id,
@@ -124,8 +132,8 @@
 		A.back_level,
 		A.market_level,
 		A.review_flg,
-		A.quit_flg
-
+		A.quit_flg,
+		A.head_photo
 		from client_employee
 		A LEFT JOIN
 		client B ON A.financial_body_pk =
@@ -155,6 +163,9 @@
 			<if test="wechat != null">
 				wechat,
 			</if>
+			<if test="wechat1 != null">
+				wechat1,
+			</if>
 			<if test="qq != null">
 				qq,
 			</if>
@@ -163,6 +174,9 @@
 			</if>
 			<if test="cellphone != null">
 				cellphone,
+			</if>
+			<if test="cellphone1 != null">
+				cellphone1,
 			</if>
 			<if test="telephone != null">
 				telephone,
@@ -215,6 +229,9 @@
 			<if test="delete_flg != null">
 				delete_flg,
 			</if>
+			<if test="head_photo != null">
+				head_photo,
+			</if>
 			<if test="review_flg != null">
 				review_flg,
 			</if>
@@ -235,6 +252,9 @@
 			<if test="wechat != null">
 				#{wechat,jdbcType=VARCHAR},
 			</if>
+			<if test="wechat1 != null">
+				#{wechat1,jdbcType=VARCHAR},
+			</if>
 			<if test="qq != null">
 				#{qq,jdbcType=VARCHAR},
 			</if>
@@ -243,6 +263,9 @@
 			</if>
 			<if test="cellphone != null">
 				#{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone1 != null">
+				#{cellphone1,jdbcType=VARCHAR},
 			</if>
 			<if test="telephone != null">
 				#{telephone,jdbcType=VARCHAR},
@@ -295,6 +318,9 @@
 			<if test="delete_flg != null">
 				#{delete_flg,jdbcType=CHAR},
 			</if>
+			<if test="head_photo != null">
+				#{head_photo,jdbcType=VARCHAR},
+			</if>
 			<if test="review_flg != null">
 				#{review_flg,jdbcType=CHAR},
 			</if>
@@ -320,6 +346,9 @@
 			<if test="wechat != null">
 				wechat = #{wechat,jdbcType=VARCHAR},
 			</if>
+			<if test="wechat1 != null">
+				wechat1 = #{wechat1,jdbcType=VARCHAR},
+			</if>
 			<if test="qq != null">
 				qq = #{qq,jdbcType=VARCHAR},
 			</if>
@@ -329,10 +358,13 @@
 			<if test="cellphone != null">
 				cellphone = #{cellphone,jdbcType=VARCHAR},
 			</if>
+			<if test="cellphone1 != null">
+				cellphone1 = #{cellphone1,jdbcType=VARCHAR},
+			</if>
 			<if test="telephone != null">
 				telephone = #{telephone,jdbcType=VARCHAR},
 			</if>
-			<if test="telephone != null">
+			<if test="fax != null">
 				fax = #{fax,jdbcType=VARCHAR},
 			</if>
 			<if test="id != null">
@@ -392,6 +424,9 @@
 			<if test="dimission_flg != null">
 				dimission_flg = #{dimission_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="head_photo != null">
+				head_photo = #{head_photo,jdbcType=VARCHAR},
+			</if>
 			<if test="review_flg != null">
 				review_flg = #{review_flg,jdbcType=VARCHAR},
 			</if>
@@ -410,9 +445,11 @@
 		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
 		END as age,
 		A.wechat,
+		A.wechat1,
 		A.qq,
 		A.type,
 		A.cellphone,
+		A.cellphone1,
 		A.telephone,
 		A.fax,
 		A.id,
@@ -436,7 +473,8 @@
 		A.market_level,
 		A.dimission_flg,
 		A.review_flg,
-		A.quit_flg
+		A.quit_flg,
+		A.head_photo
 		from client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
@@ -457,6 +495,24 @@
 			<if test="public_flg != null and public_flg !=''">
 				and A.public_flg = #{public_flg,jdbcType=VARCHAR}
 			</if>
+			<if test="cellphone != null and cellphone !=''">
+				and (A.cellphone = #{cellphone,jdbcType=VARCHAR} OR A.cellphone1 = #{cellphone,jdbcType=VARCHAR})
+			</if>
+			<if test="wechat != null and wechat !=''">
+				and (A.wechat = #{wechat,jdbcType=VARCHAR} OR A.wechat1 = #{wechat,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	<select id="selectSameTelEmployee" parameterType="com.xinchi.bean.ClientEmployeeBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from client_employee
+
+		<where>
+			and ((cellphone = #{cellphone,jdbcType=VARCHAR} OR cellphone1 = #{cellphone,jdbcType=VARCHAR} OR cellphone = #{cellphone1,jdbcType=VARCHAR} OR cellphone1 = #{cellphone1,jdbcType=VARCHAR})
+			OR (wechat = #{wechat,jdbcType=VARCHAR} OR wechat1 = #{wechat,jdbcType=VARCHAR} OR wechat = #{wechat1,jdbcType=VARCHAR} OR wechat1 = #{wechat1,jdbcType=VARCHAR}))
+			and pk != #{pk,jdbcType=VARCHAR}
+			and review_flg='Y'
 		</where>
 	</select>
 
@@ -524,9 +580,11 @@
 		CASE WHEN isnull(A.birth_year) or A.birth_year='' then 0 else year(now())-A.birth_year
 		END as age,
 		A.wechat,
+		A.wechat1,
 		A.qq,
 		A.type,
 		A.cellphone,
+		A.cellphone1,
 		A.telephone,
 		A.fax,
 		A.id,
@@ -551,14 +609,17 @@
 		A.dimission_flg,
 		A.review_flg,
 		A.quit_flg,
-		C.useful_time AS useful_time,
+		C.useful_time AS
+		useful_time,
+		A.head_photo,
 		D.last_order_period AS last_order_period,
 		D.year_order_count AS year_order_count
 		from client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
-		LEFT JOIN client_relation D ON A.pk = D.client_employee_pk
+		LEFT JOIN
+		client_relation D ON A.pk = D.client_employee_pk
 
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
@@ -568,7 +629,7 @@
 				and B.client_area = #{params.bo.area,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
-				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+				and B.client_short_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and (C.user_pks like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%') OR A.public_flg='Y')
@@ -587,6 +648,12 @@
 			</if>
 			<if test="params.bo.review_flg != null and params.bo.review_flg !=''">
 				and A.review_flg = #{params.bo.review_flg,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.cellphone != null and params.bo.cellphone !=''">
+				and (A.cellphone = #{params.bo.cellphone,jdbcType=CHAR} OR A.cellphone1 = #{params.bo.cellphone,jdbcType=CHAR})
+			</if>
+			<if test="params.bo.wechat != null and params.bo.wechat !=''">
+				and (A.wechat = #{params.bo.wechat,jdbcType=CHAR} OR A.wechat1 = #{params.bo.wechat,jdbcType=CHAR})
 			</if>
 		</where>
 		ORDER BY B.client_short_name,A.name

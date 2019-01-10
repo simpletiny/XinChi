@@ -10,6 +10,8 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String item;
 
 	private String date;
+	
+	private String month;
 
 	private java.math.BigDecimal money;
 
@@ -145,6 +147,14 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setCreate_user(String create_user) {
 		this.create_user = create_user;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 }

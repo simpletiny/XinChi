@@ -1,8 +1,11 @@
 package com.xinchi.backend.user.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +22,11 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.Utils;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -77,7 +82,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void register(UserBaseBean bo, UserInfoBean uib) {
+	public String register(UserBaseBean bo, UserInfoBean uib) throws IOException {
+		// 判断是否有相同的登录名
+		UserBaseBean ubbOption = new UserBaseBean();
+		ubbOption.setLogin_name(bo.getLogin_name());
+		List<UserBaseBean> arr = dao.getAllByParam(ubbOption);
+		if (arr != null && arr.size() > 0)
+			return "same_login_name";
+
+		// 判断是否有相同的身份证号
+		UserInfoBean oldUif = infoDao.selectByUserId(bo.getId());
+		if (oldUif != null)
+			return "same_id";
+
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		String fileFolder = PropertiesUtil.getProperty("userIdFileFolder");
+
+		File sourceFile = new File(tempFolder + File.separator + uib.getId_file_name());
+		File destfile = new File(fileFolder + File.separator + uib.getId_file_name());
+		FileUtils.copyFile(sourceFile, destfile);
+		sourceFile.delete();
+
 		String userNumber = uus.getNextUserNumber();
 		bo.setPassword(SimpletinyString.MD5(bo.getPassword()));
 		bo.setUser_number(userNumber);
@@ -87,6 +112,8 @@ public class UserServiceImpl implements UserService {
 		uib.setId(bo.getId());
 		uib.setUser_right("");
 		userInfoService.insert(uib);
+
+		return SUCCESS;
 	}
 
 	@Override
@@ -109,14 +136,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String rejectUser(String user_pk) {
-		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		ubb.setApprove_time(DateUtil.getTimeMillis());
-		ubb.setApprove_user(sessionBean.getUser_number());
-		ubb.setUser_status(ResourcesConstants.USER_STATUS_REJECT);
-		dao.update(ubb);
-		return "success";
+		dao.delete(user_pk);
+		return SUCCESS;
 	}
 
 	@Override

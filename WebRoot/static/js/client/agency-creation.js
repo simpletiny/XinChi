@@ -55,7 +55,6 @@ var SupplierContext = function() {
 	};
 
 	self.createAgency = function() {
-		console.log($("form").serialize());
 		if (!$("form").valid()) {
 			return;
 		}

@@ -1,5 +1,6 @@
 package com.xinchi.backend.client.service.impl;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,11 @@ import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
-import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -189,7 +190,9 @@ public class ClientServiceImpl implements ClientService {
 		}
 		// 删除当前财务主体下的客户
 		for (ClientEmployeeBean employee : employees) {
+			deleteOldHead(employee.getHead_photo());
 			employeeDao.delete(employee.getPk());
+			
 		}
 
 		// 删除财务主体
@@ -207,5 +210,15 @@ public class ClientServiceImpl implements ClientService {
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page) {
 
 		return dao.selectCompaniesByPageAdmin(page);
+	}
+	private void deleteOldHead(String fileName) {
+		String fileFolder = PropertiesUtil.getProperty("clientEmployeeHeadFolder");
+		String minFolder = PropertiesUtil.getProperty("clientEmployeeMinHeadFolder");
+
+		File fullImg = new File(fileFolder + File.separator + fileName);
+		File minImg = new File(minFolder + File.separator + fileName);
+
+		fullImg.delete();
+		minImg.delete();
 	}
 }

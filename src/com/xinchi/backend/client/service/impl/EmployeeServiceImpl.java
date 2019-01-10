@@ -1,8 +1,11 @@
 package com.xinchi.backend.client.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +30,13 @@ import com.xinchi.bean.JobHoppingLogBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.bean.SqlBean;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.ToolsUtil;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -73,6 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (exists != null && exists.size() > 0)
 			return "exist";
+		saveFile(employee.getHead_photo());
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
@@ -106,16 +112,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 					ceub.setUser_pk(sessionBean.getPk());
 					employeeUserDao.insert(ceub);
 				}
-
-				dao.update(employee);
-				return "success";
 			} else {
 				return "exist";
 			}
-		} else {
-			dao.update(employee);
-			return "success";
 		}
+		ClientEmployeeBean oldCeb = dao.selectByPrimaryKey(employee.getPk());
+
+		if (!oldCeb.getHead_photo().equals(employee.getHead_photo())) {
+			deleteOldHead(oldCeb.getHead_photo());
+			saveFile(employee.getHead_photo());
+		}
+
+		dao.update(employee);
+		return SUCCESS;
+
 	}
 
 	@Override
@@ -198,6 +208,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (null != results3 && results3.size() > 0) {
 			return "exist_order";
 		}
+		ClientEmployeeBean ceb = dao.selectByPrimaryKey(employee_pk);
+		deleteOldHead(ceb.getHead_photo());
+		//删除头像
 		dao.delete(employee_pk);
 		return SUCCESS;
 	}
@@ -322,6 +335,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private ClientDAO clientDao;
+
 	@Override
 	public String reviewEmployee(ClientEmployeeBean employee) {
 		// 更新客户资料
@@ -334,17 +348,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<ClientUserBean> cubs = clientUserDao.selectByClientPk(employee.getFinancial_body_pk());
 
 		// 如果财务主体是公开状态
-		if (cubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
-			
-			//如果客户也是公开状态则什么也不做
-			if(ceubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
-				//do nothing
-			}else {
-				
+		if (cubs.size() == 0 || cubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+
+			// 如果客户也是公开状态则什么也不做
+			if (ceubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+				// do nothing
+			} else {
+
 				ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
 				client.setPublic_flg("N");
 				clientDao.update(client);
-				
+
 				// 删除之前的对应关系
 				clientUserDao.deleteByClientPk(employee.getFinancial_body_pk());
 
@@ -377,4 +391,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return SUCCESS;
 	}
 
+	@Override
+	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e) {
+
+		return dao.selectSameTelEmployee(e);
+	}
+
+	private void saveFile(String fileName) {
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		String fileFolder = PropertiesUtil.getProperty("clientEmployeeHeadFolder");
+
+		File sourceFile = new File(tempFolder + File.separator + fileName);
+		File destfile = new File(fileFolder + File.separator + fileName);
+		try {
+			FileUtils.copyFile(sourceFile, destfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// 压缩头像
+		String minFolder = PropertiesUtil.getProperty("clientEmployeeMinHeadFolder");
+		File minDestFile = new File(minFolder + File.separator + fileName);
+		FileUtil.reduceImg(sourceFile, minDestFile, 100, 100, new Float(0.3));
+
+		sourceFile.delete();
+	}
+
+	private void deleteOldHead(String fileName) {
+		String fileFolder = PropertiesUtil.getProperty("clientEmployeeHeadFolder");
+		String minFolder = PropertiesUtil.getProperty("clientEmployeeMinHeadFolder");
+
+		File fullImg = new File(fileFolder + File.separator + fileName);
+		File minImg = new File(minFolder + File.separator + fileName);
+
+		fullImg.delete();
+		minImg.delete();
+	}
 }

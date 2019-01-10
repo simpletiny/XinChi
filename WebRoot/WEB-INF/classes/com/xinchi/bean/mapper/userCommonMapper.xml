@@ -73,6 +73,6 @@
     from user_base A LEFT JOIN user_info B 
     ON A.id = B.id
     where A.user_number!='N00000' and A.user_number !='N00001'
-    ORDER BY user_number
+    ORDER BY delete_flg,user_number
   </select>
 </mapper>

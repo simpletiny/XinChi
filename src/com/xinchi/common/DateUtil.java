@@ -255,6 +255,41 @@ public class DateUtil {
 		return c.get(Calendar.DATE);
 	}
 
+	public static int dayOfWeek(String date) {
+		try {
+			Date d = sdf1.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+
+			int res = c.get(Calendar.DAY_OF_WEEK);
+			return (res + 6) % 7;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public static boolean isWeekend(String date) {
+		int res = dayOfWeek(date);
+		return res == 0 || res == 6;
+	}
+
+	public static int workDays() {
+		int max = DateUtil.todayOfMonth();
+		int min = 0;
+		int count = 0;
+		Calendar c = Calendar.getInstance();
+		while (max > min) {
+			c.set(Calendar.DAY_OF_MONTH, max);
+			if (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && c.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+				count++;
+			}
+			max--;
+		}
+
+		return count;
+	}
+
 	public static void main(String[] args) {
 		String d1 = "2018-03-22";
 		String d2 = "2018-03-21";

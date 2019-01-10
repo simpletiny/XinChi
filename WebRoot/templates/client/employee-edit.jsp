@@ -11,6 +11,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/cropper/cropper.css" />
+<style>
+.progress {
+	display: none;
+	margin-bottom: 1rem;
+}
+
+.img-container img {
+	max-width: 100%;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -25,14 +36,41 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form">
-					<input type="hidden" id="employee_key" name="employee.pk" value="<%=key%>" />
-					<input type="hidden" name="employee.public_flg" data-bind="value: employee().public_flg"  />
+					<input type="hidden" id="employee_key" name="employee.pk" value="<%=key%>" /> <input type="hidden"
+						name="employee.public_flg" data-bind="value: employee().public_flg" />
+					
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">昵称</label>
 							<div class="ip">
 								<input type="text" class="ip- date-picker" data-bind="value: employee().nick_name" placeholder="昵称"
 									name="employee.nick_name" />
+							</div>
+						</div>
+						<label class="label" style="cursor: pointer" data-toggle="tooltip" title="更换头像">
+						 	<img style="width: 100px; height: 100px" class="rounded" id="avatar" src="<%=basePath%>static/img/head.jpg" alt="avatar" /> 
+						 	<input type="file" class="sr-only" id="input" name="image" accept="image/*" />
+						 	<input type="hidden" name="employee.head_photo" data-bind="value:employee().head_photo" id="head"/>
+						</label>
+						<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modalLabel">上传头像</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<div class="img-container">
+											<img id="image" src="<%=basePath%>static/img/head.jpg" />
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="button" class="btn btn-primary" id="crop">上传</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -54,13 +92,38 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
-							<label class="l">手机号</label>
+							<label class="l">手机号1</label>
 							<div class="ip">
 								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: employee().cellphone"
-									placeholder="手机号" name="employee.cellphone" required="required" />
+									placeholder="手机号" name="employee.cellphone" required="required" onblur="checkCellphone(this)" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">手机号2</label>
+							<div class="ip">
+								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: employee().cellphone1"
+									placeholder="手机号" name="employee.cellphone1" onblur="checkCellphone(this)" />
 							</div>
 						</div>
 
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6">
+							<label class="l">微信1</label>
+							<div class="ip">
+								<input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"
+									onblur="checkWechat(this)" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">微信2</label>
+							<div class="ip">
+								<input type="text" class="ip-" data-bind="value: employee().wechat1" placeholder="微信" name="employee.wechat1"
+									onblur="checkWechat(this)" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">财务主体</label>
 							<!-- ko if: employee().review_flg == "Y" -->
@@ -79,6 +142,14 @@
 							</div>
 							<!-- /ko -->
 
+						</div>
+
+						<div class="col-md-6 required">
+							<label class="l">类型</label>
+							<div class="ip">
+								<select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type"
+									required="required"></select>
+							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
@@ -109,21 +180,6 @@
 							<label class="l">传真</label>
 							<div class="ip">
 								<input type="text" class="ip-" data-bind="value: employee().fax" placeholder="传真" name="employee.fax" />
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">微信</label>
-							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat" />
-							</div>
-						</div>
-						<div class="col-md-6 required">
-							<label class="l">类型</label>
-							<div class="ip">
-								<select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type"
-									required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -203,6 +259,8 @@
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
+	<script type="text/javascript" src="<%=basePath%>static/vendor/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/client/employee-edit.js"></script>
 </body>

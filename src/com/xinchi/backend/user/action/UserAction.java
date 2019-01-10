@@ -39,7 +39,6 @@ public class UserAction extends BaseAction {
 
 	// 提交过来的file的MIME类型
 	private String fileContentType;
-	private String password2;
 	private String login_name;
 	@Autowired
 	private UserService userService;
@@ -47,7 +46,7 @@ public class UserAction extends BaseAction {
 	public String login() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String result = userService.login(ubb);
-		if (result.equals(SUCCESS)||result.equals("SALE")) {
+		if (result.equals(SUCCESS) || result.equals("SALE")) {
 			request.removeAttribute("login_result");
 		} else {
 			request.setAttribute("login_result", result);
@@ -64,21 +63,8 @@ public class UserAction extends BaseAction {
 	}
 
 	public String register() throws IOException {
-		if (null == file)
-			return ERROR;
-		if (ubb.getPassword().equals(password2)) {
-
-			String ext = Utils.getFileExt(fileFileName);
-			String fileFolder = PropertiesUtil.getProperty("userIdFileFolder");
-			File destfile = new File(fileFolder + File.separator + ubb.getId() + "." + ext);
-			FileUtils.copyFile(file, destfile);
-			file.delete();
-			uib.setId_file_name(ubb.getId() + "." + ext);
-			userService.register(ubb, uib);
-			return SUCCESS;
-		} else {
-			return ERROR;
-		}
+		resultStr = userService.register(ubb, uib);
+		return SUCCESS;
 	}
 
 	public String checkLoginName() {
@@ -161,6 +147,7 @@ public class UserAction extends BaseAction {
 		resultStr = userService.stopUser(user_pk);
 		return SUCCESS;
 	}
+
 	/**
 	 * 启用用户
 	 * 
@@ -188,15 +175,6 @@ public class UserAction extends BaseAction {
 
 	public void setUbb(UserBaseBean ubb) {
 		this.ubb = ubb;
-	}
-
-	@JSON(serialize = false)
-	public String getPassword2() {
-		return password2;
-	}
-
-	public void setPassword2(String password2) {
-		this.password2 = password2;
 	}
 
 	@JSON(serialize = false)

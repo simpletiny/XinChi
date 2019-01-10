@@ -1,13 +1,20 @@
 package apptest;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+
+import javax.imageio.ImageIO;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import com.xinchi.common.DateUtil;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * 
@@ -17,7 +24,13 @@ import com.xinchi.common.DateUtil;
 @Component
 public class SomeTest {
 
-	public static void main(String[] aa) {
-	System.out.println(DateUtil.addDate("2018-11-18", 1));
+	public static void main(String[] args) {
+
+		File srcfile = new File("d://test.png");
+		File distfile = new File("d://test1.png");
+
+		distfile.delete();
+
 	}
+
 }

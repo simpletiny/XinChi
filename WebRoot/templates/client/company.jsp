@@ -104,7 +104,7 @@
 						</s:if>
 						<div class="span6">
 							<div class="col-md-2">
-								<em class="small-box "> <input type="checkbox" value="Y" name="client.public_flgs"
+								<em class="small-box "> <input id="chk_public" type="checkbox"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
 								</em>
 							</div>
@@ -226,7 +226,8 @@
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.comment!=null && $data.comment!=''-->
-								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.public_flg =='Y' -->
 								<td data-bind="text: $data.sales_name" style="color: red"></td>
@@ -312,13 +313,15 @@
 			<div>
 				<label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: company().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment"
+						data-bind="value: company().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>

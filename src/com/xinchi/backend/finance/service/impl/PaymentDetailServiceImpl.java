@@ -82,7 +82,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 			if (beforeDetail.getInner_flg().equals("Y")) {
 				List<PaymentDetailBean> inners = dao.selectByInnerPk(beforeDetail.getInner_pk());
 				for (PaymentDetailBean pdb : inners) {
-					if (pdb.getExchange_flg().equals("Y")) {
+					if (pdb.getAccount().equals(detail.getAccount()) && pdb.getExchange_flg().equals("Y")) {
 						beforeDetail = pdb;
 					}
 				}

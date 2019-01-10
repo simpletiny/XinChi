@@ -52,6 +52,18 @@ public class FileAction extends BaseAction {
 		// fips.close();
 		return SUCCESS;
 	}
+	public String blobUpload() throws IOException {
+		InputStream in = new FileInputStream(file);
+		
+		String ext = Utils.getFileExt(fileFileName);
+		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		File destfile = new File(fileFolder + File.separator + DBCommonUtil.genPk() + "." + ext);
+		FileUtils.copyFile(file, destfile);
+		fileName = destfile.getName();
+		fips = new FileInputStream(destfile);
+		// fips.close();
+		return SUCCESS;
+	}
 
 	public InputStream getFips() {
 		return fips;

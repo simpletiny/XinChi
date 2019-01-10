@@ -100,7 +100,7 @@
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px"
-										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:fetchSummary()}"
+										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:function(){fetchSummary()}}"
 										name="relation.sales"></select>
 								</div>
 							</div>
@@ -205,7 +205,7 @@
 								<td data-bind="text:accurateSale().main_accurate"></td>
 								<td></td>
 								<td style="border-right: solid 1px #ff0000;"></td>
-								<td></td>
+								<td data-bind="text:meter().month_reimbursement" class="rmb"></td>
 								<td></td>
 								<td data-bind="text:meter().sum_reimbursement" class="rmb"></td>
 								<td></td>
@@ -323,6 +323,7 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>头像</th>
 								<th>客户姓名</th>
 								<th>昵称</th>
 								<th>年单</th>
@@ -336,6 +337,7 @@
 								<th>应收款总计</th>
 								<th>最长账期</th>
 								<th>操作</th>
+								<th>备注</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
@@ -345,6 +347,7 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.client_employee_pk+';'+$data.client_employee_name}, checked: $root.chosenEmployee" /></td>
+								<td><img style="width:25px;height:25px" src="<%=basePath%>static/img/head.jpg" /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.client_employee_name,attr: {href: 'employee-detail.jsp?key='+$data.client_employee_pk}"></a></td>
 
@@ -369,6 +372,13 @@
 								<!-- /ko -->
 								<!-- ko if: $data.relation_level!="朋友级"&& $data.relation_level!="市场级" -->
 								<td></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment==null || $data.comment==''-->
+								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment!=null && $data.comment!=''-->
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.sales_name"></td>
@@ -491,6 +501,21 @@
 				</div>
 			</div>
 		</form>
+	</div>
+	<div id="comment-edit" style="display: none; width: 500px">
+		<div class="input-row clearfloat">
+			<div>
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
+		</div>
 	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");

@@ -51,6 +51,12 @@ var CompanyContext = function() {
 		startLoadingSimpleIndicator("加载中");
 
 		var param = $("#form-search").serialize();
+		if ($("#chk_public").is(":checked")) {
+			param += "&employee.public_flgs=Y";
+		} else {
+			param += "&employee.public_flgs=N";
+		}
+
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
@@ -58,6 +64,7 @@ var CompanyContext = function() {
 			self.employees(data.employees);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			self.loadFiles();
 			endLoadingIndicator();
 		});
 	};
@@ -507,37 +514,52 @@ var CompanyContext = function() {
 			fail_msg("只能选择一个员工");
 			return;
 		} else {
-			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-				employee_pk : self.chosenEmployees()[0]
-			}, function(data) {
-				if (data.employee) {
-					self.employee(data.employee);
-					if (self.employee().review_flg == "N") {
-						reviewLayer = $.layer({
-							type : 1,
-							title : [ '审核客户员工', '' ],
-							maxmin : false,
-							closeBtn : [ 1, true ],
-							shadeClose : false,
-							area : [ '400px', '200px' ],
-							offset : [ '', '' ],
-							scrollbar : true,
-							page : {
-								dom : '#div-review'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					} else {
-						success_msg("已经审核！");
-					}
-				} else {
-					fail_msg("员工不存在！");
+			// 检测手机号和微信号
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'client/checkTelInfo',
+				data : {
+					employee_pk : self.chosenEmployees()[0]
 				}
-			}).fail(function(reason) {
-				fail_msg(reason.responseText);
+			}).success(function(data) {
+				console.log(data);
+				if (data.resultStr == "success") {
+					$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+						employee_pk : self.chosenEmployees()[0]
+					}, function(data) {
+						if (data.employee) {
+							self.employee(data.employee);
+							if (self.employee().review_flg == "N") {
+								reviewLayer = $.layer({
+									type : 1,
+									title : [ '审核客户员工', '' ],
+									maxmin : false,
+									closeBtn : [ 1, true ],
+									shadeClose : false,
+									area : [ '400px', '200px' ],
+									offset : [ '', '' ],
+									scrollbar : true,
+									page : {
+										dom : '#div-review'
+									},
+									end : function() {
+										console.log("Done");
+									}
+								});
+							} else {
+								success_msg("已经审核！");
+							}
+						} else {
+							fail_msg("员工不存在！");
+						}
+					}).fail(function(reason) {
+						fail_msg(reason.responseText);
+					});
+				} else {
+					fail_msg("存在相同的电话号码或者微信号:" + data.employee.name);
+				}
 			});
+
 		}
 	};
 
@@ -713,6 +735,37 @@ var CompanyContext = function() {
 			}
 		});
 	};
+
+	// 加载头像
+	self.loadFiles = function() {
+		$("[st='st-file-name']").each(function(idx, stFileName) {
+			var fileName = $(stFileName).val();
+			if (fileName != "img") {
+				self.downFile(stFileName, fileName);
+			}
+		});
+	};
+
+	self.downFile = function(stFileName, fileName) {
+		var imgContainer = $(stFileName).prev();
+		
+		var formData = new FormData();
+		formData.append("fileFileName", fileName);
+		formData.append("fileType", "CLIENT_EMPLOYEE_MIN_HEAD");
+
+		var url = ctx.apiurl + 'file/getFileStream';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+		xhr.responseType = "blob";
+		xhr.onload = function() {
+			if (this.status == 200) {
+				var blob = this.response;
+				imgContainer.attr("src", window.URL.createObjectURL(blob));
+			}
+		};
+		xhr.send(formData);
+	};
+
 	// start pagination client
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 10;

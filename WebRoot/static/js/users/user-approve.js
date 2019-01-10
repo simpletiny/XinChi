@@ -9,7 +9,8 @@ var UsersContext = function() {
 	});
 	self.chosenUserRoles = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET' ];
+	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
+			'TICKET' ];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
@@ -44,7 +45,10 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.basePath + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
+		$("#img-pic").attr(
+				"src",
+				self.basePath + 'file/getFileStream?fileFileName=' + fileName
+						+ "&fileType=USER_ID");
 	};
 
 	self.agreeUser = function(pk) {
@@ -83,7 +87,8 @@ var UsersContext = function() {
 		$.ajax({
 			url : self.basePath + "user/approveUser",
 			type : "post",
-			data : "user_pk=" + pk + "&" + "user_roles=" + self.chosenUserRoles(),
+			data : "user_pk=" + pk + "&" + "user_roles="
+					+ self.chosenUserRoles(),
 			success : function(data) {
 				if (data == "success") {
 					success_msg("审批成功");
@@ -105,27 +110,44 @@ var UsersContext = function() {
 	};
 
 	self.rejectUser = function(pk) {
-		$.ajax({
-			url : self.basePath + "user/rejectUser",
-			type : "post",
-			data : "user_pk=" + pk,
-			success : function(data) {
-				if (data == "success") {
-					success_msg("操作成功");
-					self.refresh();
-				} else {
-					fail_msg(data);
+		$.layer({
+			area : [ 'auto', 'auto' ],
+			dialog : {
+				msg : '确定要拒绝此用户申请吗？',
+				btns : 2,
+				type : 4,
+				btn : [ '确认', '取消' ],
+				yes : function(index) {
+					layer.close(index);
+					$.ajax({
+						url : self.basePath + "user/rejectUser",
+						type : "post",
+						data : "user_pk=" + pk,
+						success : function(data) {
+							if (data == "success") {
+								success_msg("操作成功");
+								self.refresh();
+							} else {
+								fail_msg(data);
+							}
+						},
+						error : function(data) {
+							console.log(eval(data));
+						}
+					});
 				}
-			},
-			error : function(data) {
-				console.log(eval(data));
 			}
 		});
+
 	};
 	// 新标签页显示大图片
-	$("#img-pic").on('click', function() {
-		window.open(self.basePath + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
-	});
+	$("#img-pic").on(
+			'click',
+			function() {
+				window.open(self.basePath
+						+ "templates/common/check-picture-big.jsp?src="
+						+ encodeURIComponent($(this).attr("src")));
+			});
 };
 
 var ctx = new UsersContext();

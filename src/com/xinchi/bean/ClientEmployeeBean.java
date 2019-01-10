@@ -13,11 +13,13 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String sex;
 	private String age;
 	private String wechat;
-
+	private String wechat1;
+	
 	private String qq;
 
 	private String cellphone;
-
+	private String cellphone1;
+	
 	private String telephone;
 	private String fax;
 	private String type;
@@ -51,6 +53,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String review_flg;
 	private String quit_flg;
 
+	private String head_photo;
+	
 	private String useful_time;
 	private int year_order_count;
 	private int last_order_period;
@@ -345,6 +349,30 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setLast_order_period(int last_order_period) {
 		this.last_order_period = last_order_period;
+	}
+
+	public String getWechat1() {
+		return wechat1;
+	}
+
+	public String getCellphone1() {
+		return cellphone1;
+	}
+
+	public void setWechat1(String wechat1) {
+		this.wechat1 = wechat1;
+	}
+
+	public void setCellphone1(String cellphone1) {
+		this.cellphone1 = cellphone1;
+	}
+
+	public String getHead_photo() {
+		return head_photo;
+	}
+
+	public void setHead_photo(String head_photo) {
+		this.head_photo = head_photo;
 	}
 
 }

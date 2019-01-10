@@ -6,10 +6,12 @@ import com.xinchi.common.SupperBO;
 
 public class UserBaseBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private java.lang.String login_name;
 
 	private java.lang.String password;
+
+	private String password2;
 
 	private java.lang.String user_number;
 
@@ -22,7 +24,7 @@ public class UserBaseBean extends SupperBO implements Serializable {
 	private java.lang.String delete_flg;
 
 	private java.lang.String user_status;
-	
+
 	private String approve_user;
 	private String approve_time;
 
@@ -104,6 +106,14 @@ public class UserBaseBean extends SupperBO implements Serializable {
 
 	public void setApprove_time(String approve_time) {
 		this.approve_time = approve_time;
+	}
+
+	public String getPassword2() {
+		return password2;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
 	}
 
 }
