@@ -81,10 +81,57 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 产品供应商 -->
+		<action name="searchSuppliersByProductPk" class="productAction" method="searchSuppliersByProductPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!-- 产品维护操作 start -->
+		<!-- 上传组团确认模板 -->
+		<action name="uploadClientConfirmTemplet" class="productAction" method="uploadClientConfirmTemplet">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 上传出团通知模板 -->
+		<action name="uploadOutNoticeTemplet" class="productAction" method="uploadOutNoticeTemplet">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 保存地接维护 -->
+		<action name="saveProductSupplier" class="productAction" method="saveProductSupplier">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 更新地接维护 -->
+		<action name="updateProductSupplier" class="productAction" method="updateProductSupplier">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 保存地接维护 -->
+		<action name="saveProductLocal" class="productAction" method="saveProductLocal">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 保存机票维护 -->
+		<action name="saveProductFlight" class="productAction" method="saveProductFlight">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 产品维护操作 end -->
+
 
 		<!-- 产品订单操作 start -->
 
 		<!-- 搜索产品供应商信息 -->
+		<action name="searchProductDataForOrder" class="productOrderOperationAction" method="searchProductDataForOrder">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 		<action name="searchProductSuppliersByPk" class="productOrderOperationAction" method="searchProductSuppliersByPk">
 			<result name="success" type="json"></result>
 		</action>

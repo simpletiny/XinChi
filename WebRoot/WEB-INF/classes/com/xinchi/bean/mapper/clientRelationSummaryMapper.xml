@@ -28,6 +28,7 @@
 		<result column="connect_date" property="connect_date" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="extra_info" property="extra_info" jdbcType="VARCHAR" />
+		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -682,6 +683,7 @@
 		A.connect_date,
 		A.type,
 		A.extra_info,
+		A.head_photo,
 		B.comment
 		from
 		client_relation A
@@ -733,6 +735,7 @@
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
+			and LEFT(date,7)='2018-12'
 		</where>
 		GROUP BY A.create_user,A.date
 	</select>

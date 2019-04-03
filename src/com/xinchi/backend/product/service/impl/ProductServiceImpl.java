@@ -1,7 +1,11 @@
 package com.xinchi.backend.product.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,17 +13,31 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductDelayDAO;
+import com.xinchi.backend.product.dao.ProductLocalDAO;
+import com.xinchi.backend.product.dao.ProductSupplierDAO;
+import com.xinchi.backend.product.dao.ProductSupplierInfoDAO;
 import com.xinchi.backend.product.service.ProductService;
+import com.xinchi.backend.ticket.dao.FlightDAO;
+import com.xinchi.backend.ticket.dao.FlightInfoDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.FlightBean;
+import com.xinchi.bean.FlightInfoBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
+import com.xinchi.bean.ProductLocalBean;
+import com.xinchi.bean.ProductSupplierBean;
+import com.xinchi.bean.ProductSupplierInfoBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 @Transactional
@@ -232,7 +250,7 @@ public class ProductServiceImpl implements ProductService {
 
 			}
 		}
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
@@ -251,4 +269,367 @@ public class ProductServiceImpl implements ProductService {
 		dao.sysUpdate(product);
 
 	}
+
+	@Override
+	public String uploadClientConfirmTemplet(ProductBean product) {
+		String fileFolder = PropertiesUtil.getProperty("clientConfirmTempletFolder");
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		// 删除旧的模板
+		ProductBean oldProduct = dao.selectByPrimaryKey(product.getPk());
+		if (!oldProduct.getClient_confirm_templet().equals("no")
+				&& !oldProduct.getClient_confirm_templet().equals("default")) {
+
+			File oldFile = new File(fileFolder + File.separator + oldProduct.getClient_confirm_templet());
+			oldFile.delete();
+		}
+		if (!product.getClient_confirm_templet().equals("no")) {
+
+			File sourceFile = new File(tempFolder + File.separator + product.getClient_confirm_templet());
+			File destfile = new File(fileFolder + File.separator + product.getClient_confirm_templet());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
+
+		// 保存文件
+		dao.update(product);
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String uploadOutNoticeTemplet(ProductBean product) {
+		String fileFolder = PropertiesUtil.getProperty("outNoticeTempletFolder");
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+
+		// 删除旧的模板
+		ProductBean oldProduct = dao.selectByPrimaryKey(product.getPk());
+		if (!oldProduct.getOut_notice_templet().equals("no") && !oldProduct.getOut_notice_templet().equals("default")) {
+
+			File oldFile = new File(fileFolder + File.separator + oldProduct.getOut_notice_templet());
+			oldFile.delete();
+		}
+
+		if (!product.getOut_notice_templet().equals("no")) {
+			File sourceFile = new File(tempFolder + File.separator + product.getOut_notice_templet());
+			File destfile = new File(fileFolder + File.separator + product.getOut_notice_templet());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
+
+		// 保存文件
+		dao.update(product);
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ProductSupplierDAO psDao;
+
+	@Autowired
+	private ProductSupplierInfoDAO psiDao;
+
+	@Override
+	public String saveProductSupplier(String json) {
+		JSONObject obj = JSONObject.fromObject(json);
+		String product_pk = obj.getString("product_pk");
+
+		// 原产品标记为已维护
+		ProductBean product = dao.selectByPrimaryKey(product_pk);
+		product.setSupplier_upkeep_flg("Y");
+
+		JSONArray suppliers = obj.getJSONArray("json");
+
+		for (int i = 0; i < suppliers.size(); i++) {
+			JSONObject supplier = suppliers.getJSONObject(i);
+			ProductSupplierBean psb = new ProductSupplierBean();
+
+			int supplier_index = supplier.getInt("supplier_index");
+			String supplier_pk = supplier.getString("supplier_pk");
+			String supplier_product_name = supplier.getString("supplier_product_name");
+			int supplier_product_days = supplier.getInt("supplier_product_days");
+			BigDecimal adult_cost = new BigDecimal(supplier.getString("adult_cost"));
+			BigDecimal child_cost = new BigDecimal(supplier.getString("child_cost"));
+
+			String tourist_info = supplier.getString("tourist_info");
+			String confirm_file_templet = supplier.getString("confirm_file_templet");
+
+			psb.setSupplier_index(supplier_index);
+			psb.setSupplier_employee_pk(supplier_pk);
+			psb.setSupplier_product_name(supplier_product_name);
+			psb.setDays(supplier_product_days);
+			psb.setProduct_pk(product_pk);
+			psb.setAdult_cost(adult_cost);
+			psb.setChild_cost(child_cost);
+			psb.setTourist_info(tourist_info);
+			psb.setConfirm_file_templet(confirm_file_templet);
+
+			// 保存地接社确认模板文件
+			saveSupplierConfirmTemplet(confirm_file_templet);
+			String product_supplier_pk = psDao.insert(psb);
+
+			JSONArray infos = supplier.getJSONArray("info_json");
+
+			for (int j = 0; j < infos.size(); j++) {
+
+				JSONObject info = infos.getJSONObject(j);
+
+				int info_index = info.getInt("info_index");
+				String pick_type = info.getString("pick_type");
+				String pick_leg = info.getString("pick_leg");
+				String pick_other = info.getString("pick_other");
+				int pick_day = info.getInt("pick_day");
+				String pick_traffic = info.getString("pick_traffic");
+				String pick_time = info.getString("pick_time");
+				String pick_city = info.getString("pick_city");
+				String pick_place = info.getString("pick_place");
+
+				String send_type = info.getString("send_type");
+				String send_leg = info.getString("send_leg");
+				String send_other = info.getString("send_other");
+				int send_day = info.getInt("send_day");
+				String send_traffic = info.getString("send_traffic");
+				String send_time = info.getString("send_time");
+				String send_city = info.getString("send_city");
+				String send_place = info.getString("send_place");
+
+				ProductSupplierInfoBean psib = new ProductSupplierInfoBean();
+
+				psib.setProduct_supplier_pk(product_supplier_pk);
+				psib.setInfo_index(info_index);
+				psib.setPick_type(pick_type);
+				psib.setPick_leg(pick_leg);
+				psib.setPick_other(pick_other);
+				psib.setPick_day(pick_day);
+				psib.setPick_traffic(pick_traffic);
+				psib.setPick_time(pick_time);
+				psib.setPick_city(pick_city);
+				psib.setPick_place(pick_place);
+				psib.setSend_type(send_type);
+				psib.setSend_leg(send_leg);
+				psib.setSend_other(send_other);
+				psib.setSend_day(send_day);
+				psib.setSend_traffic(send_traffic);
+				psib.setSend_time(send_time);
+				psib.setSend_city(send_city);
+				psib.setSend_place(send_place);
+				psiDao.insert(psib);
+			}
+		}
+
+		dao.update(product);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ProductLocalDAO plDao;
+
+	@Override
+	public String saveProductLocal(String json) {
+		JSONObject obj = JSONObject.fromObject(json);
+		String product_pk = obj.getString("product_pk");
+
+		// 原产品标记为已维护
+		ProductBean product = dao.selectByPrimaryKey(product_pk);
+		product.setLocal_upkeep_flg("Y");
+
+		JSONArray locals = obj.getJSONArray("json");
+
+		for (int i = 0; i < locals.size(); i++) {
+			JSONObject local = locals.getJSONObject(i);
+
+			String service_type = local.getString("service_type");
+			String cost = local.getString("cost");
+			String supplier_pk = local.getString("supplier_pk");
+			String service_name = local.getString("service_name");
+			String adult_cost = local.getString("adult_cost");
+			String child_cost = local.getString("child_cost");
+			String service_comment = local.getString("service_comment");
+			String tourist_info = local.getString("tourist_info");
+
+			ProductLocalBean pl = new ProductLocalBean();
+			pl.setProduct_pk(product_pk);
+			pl.setService_type(service_type);
+			pl.setSupplier_pk(supplier_pk);
+			pl.setService_name(service_name);
+			pl.setService_comment(service_comment);
+			pl.setTourist_info(tourist_info);
+
+			pl.setCost(new BigDecimal(cost));
+			pl.setAdult_cost(new BigDecimal(adult_cost));
+
+			if (!SimpletinyString.isEmpty(child_cost)) {
+				pl.setChild_cost(new BigDecimal(child_cost));
+			}
+
+			plDao.insert(pl);
+
+		}
+
+		dao.update(product);
+		return SUCCESS;
+	}
+
+	private void saveSupplierConfirmTemplet(String confirm_file_templet) {
+		if (SimpletinyString.isEmpty(confirm_file_templet))
+			return;
+
+		String fileFolder = PropertiesUtil.getProperty("supplierConfirmTempletFolder");
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+
+		File sourceFile = new File(tempFolder + File.separator + confirm_file_templet);
+		File destfile = new File(fileFolder + File.separator + confirm_file_templet);
+		try {
+			FileUtils.copyFile(sourceFile, destfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sourceFile.delete();
+	}
+
+	@Autowired
+	private FlightDAO flightDao;
+
+	@Autowired
+	private FlightInfoDAO flightInfoDao;
+
+	@Override
+	public String saveProductFlight(FlightBean flight, String json) {
+		String product_pk = flight.getProduct_pk();
+
+		ProductBean product = dao.selectByPrimaryKey(product_pk);
+
+		String flight_pk = flightDao.insert(flight);
+		JSONArray arr = JSONArray.fromObject(json);
+
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject obj = arr.getJSONObject(i);
+
+			int flight_index = obj.getInt("flight_index");
+			String flight_leg = obj.getString("flight_leg");
+
+			int start_day = obj.getInt("start_day");
+			String start_city = obj.getString("start_city");
+			int end_day = obj.getInt("end_day");
+			String end_city = obj.getString("end_city");
+			String flight_number = obj.getString("flight_number");
+
+			FlightInfoBean info = new FlightInfoBean();
+
+			info.setFlight_pk(flight_pk);
+			info.setFlight_index(flight_index);
+			info.setFlight_leg(flight_leg);
+			info.setStart_day(start_day);
+			info.setStart_city(start_city);
+			info.setEnd_day(end_day);
+			info.setEnd_city(end_city);
+			info.setFlight_number(flight_number);
+
+			flightInfoDao.insert(info);
+		}
+		// 更新产品机票维护标识
+		product.setAir_ticket_upkeep_flg("Y");
+		dao.update(product);
+		return SUCCESS;
+	}
+
+	@Override
+	public String updateProductSupplier(String json) {
+		JSONObject obj = JSONObject.fromObject(json);
+		String product_pk = obj.getString("product_pk");
+
+		// 原产品标记为已维护
+		ProductBean product = dao.selectByPrimaryKey(product_pk);
+		product.setSupplier_upkeep_flg("Y");
+
+		JSONArray suppliers = obj.getJSONArray("json");
+
+		for (int i = 0; i < suppliers.size(); i++) {
+			JSONObject supplier = suppliers.getJSONObject(i);
+			ProductSupplierBean psb = new ProductSupplierBean();
+
+			int supplier_index = supplier.getInt("supplier_index");
+			String supplier_pk = supplier.getString("supplier_pk");
+			String supplier_product_name = supplier.getString("supplier_product_name");
+			int supplier_product_days = supplier.getInt("supplier_product_days");
+			BigDecimal adult_cost = new BigDecimal(supplier.getString("adult_cost"));
+			BigDecimal child_cost = new BigDecimal(supplier.getString("child_cost"));
+
+			String tourist_info = supplier.getString("tourist_info");
+			String confirm_file_templet = supplier.getString("confirm_file_templet");
+
+			psb.setSupplier_index(supplier_index);
+			psb.setSupplier_employee_pk(supplier_pk);
+			psb.setSupplier_product_name(supplier_product_name);
+			psb.setDays(supplier_product_days);
+			psb.setProduct_pk(product_pk);
+			psb.setAdult_cost(adult_cost);
+			psb.setChild_cost(child_cost);
+			psb.setTourist_info(tourist_info);
+			psb.setConfirm_file_templet(confirm_file_templet);
+
+			// 保存地接社确认模板文件
+			saveSupplierConfirmTemplet(confirm_file_templet);
+			String product_supplier_pk = psDao.insert(psb);
+
+			JSONArray infos = supplier.getJSONArray("info_json");
+
+			for (int j = 0; j < infos.size(); j++) {
+
+				JSONObject info = infos.getJSONObject(j);
+
+				int info_index = info.getInt("info_index");
+				String pick_type = info.getString("pick_type");
+				String pick_leg = info.getString("pick_leg");
+				String pick_other = info.getString("pick_other");
+				int pick_day = info.getInt("pick_day");
+				String pick_traffic = info.getString("pick_traffic");
+				String pick_time = info.getString("pick_time");
+				String pick_city = info.getString("pick_city");
+				String pick_place = info.getString("pick_place");
+
+				String send_type = info.getString("send_type");
+				String send_leg = info.getString("send_leg");
+				String send_other = info.getString("send_other");
+				int send_day = info.getInt("send_day");
+				String send_traffic = info.getString("send_traffic");
+				String send_time = info.getString("send_time");
+				String send_city = info.getString("send_city");
+				String send_place = info.getString("send_place");
+
+				ProductSupplierInfoBean psib = new ProductSupplierInfoBean();
+
+				psib.setProduct_supplier_pk(product_supplier_pk);
+				psib.setInfo_index(info_index);
+				psib.setPick_type(pick_type);
+				psib.setPick_leg(pick_leg);
+				psib.setPick_other(pick_other);
+				psib.setPick_day(pick_day);
+				psib.setPick_traffic(pick_traffic);
+				psib.setPick_time(pick_time);
+				psib.setPick_city(pick_city);
+				psib.setPick_place(pick_place);
+				psib.setSend_type(send_type);
+				psib.setSend_leg(send_leg);
+				psib.setSend_other(send_other);
+				psib.setSend_day(send_day);
+				psib.setSend_traffic(send_traffic);
+				psib.setSend_time(send_time);
+				psib.setSend_city(send_city);
+				psib.setSend_place(send_place);
+				psiDao.insert(psib);
+			}
+		}
+
+		dao.update(product);
+		return SUCCESS;
+	}
+
 }

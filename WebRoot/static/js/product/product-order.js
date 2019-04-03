@@ -36,23 +36,25 @@ var OrderContext = function() {
 		var totalSpecial = 0;
 		var param = $('form').serialize();
 		param += "&order_option.operate_flg=N";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param, function(data) {
-			self.orders(data.productOrders);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param,
+				function(data) {
+					self.orders(data.productOrders);
 
-			$(self.orders()).each(function(idx, data) {
-				totalAdult += data.adult_count - 0;
-				if (data.special_count != null) {
-					totalSpecial += data.special_count - 0;
-				}
-			});
+					$(self.orders()).each(function(idx, data) {
+						totalAdult += data.adult_count - 0;
+						if (data.special_count != null) {
+							totalSpecial += data.special_count - 0;
+						}
+					});
 
-			self.totalAdult(totalAdult);
-			self.totalSpecial(totalSpecial);
+					self.totalAdult(totalAdult);
+					self.totalSpecial(totalSpecial);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 
 	self.productSuppliers = ko.observableArray([]);
@@ -77,34 +79,40 @@ var OrderContext = function() {
 				return;
 			}
 
-			var product_pk = data[1];
-			var data = "team_number=" + team_number + "&product_pk=" + product_pk;
+			window.location.href = self.apiurl
+					+ 'templates/product/order-operate-creation.jsp?key='
+					+ team_number;
 
-			$.getJSON(self.apiurl + 'product/searchProductSuppliersByPk', data, function(data) {
-				self.productSuppliers(data.productSuppliers);
-				operateLayer = $.layer({
-					type : 1,
-					title : [ '供应商信息', '' ],
-					maxmin : false,
-					closeBtn : [ 1, true ],
-					shadeClose : false,
-					area : [ '1400px', '500px' ],
-					offset : [ '', '' ],
-					scrollbar : true,
-					page : {
-						dom : '#supplier-info'
-					},
-					end : function() {
-					}
-				});
-			});
+			// var product_pk = data[1];
+			// var data = "team_number=" + team_number + "&product_pk="
+			// + product_pk;
+			// $.getJSON(self.apiurl +
+			// 'product/searchProductSuppliersByPk',
+			// data, function(data) {
+			// self.productSuppliers(data.productSuppliers);
+			// operateLayer = $.layer({
+			// type : 1,
+			// title : [ '供应商信息', '' ],
+			// maxmin : false,
+			// closeBtn : [ 1, true ],
+			// shadeClose : false,
+			// area : [ '1400px', '500px' ],
+			// offset : [ '', '' ],
+			// scrollbar : true,
+			// page : {
+			// dom : '#supplier-info'
+			// },
+			// end : function() {
+			// }
+			// });
+			// });
 
 		}
 	};
 
 	self.doOperate = function() {
 		var allNeeds = $('.need');
-		for ( var i = 0; i < allNeeds.length; i++) {
+		for (var i = 0; i < allNeeds.length; i++) {
 			var current = allNeeds[i];
 			if ($(current).val().trim() == "") {
 				fail_msg("请填写必填项目！");
@@ -122,7 +130,7 @@ var OrderContext = function() {
 		var json = '[';
 		var tbody = $("#table-supplier tbody");
 		var trs = $(tbody).children();
-		for ( var i = 0; i < trs.length; i++) {
+		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			var index = i + 1;
 			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
@@ -130,7 +138,8 @@ var OrderContext = function() {
 			if (supplierEmployeePk == '')
 				continue;
 
-			var supplierProductName = $(tr).find("[st='supplier-product-name']").val();
+			var supplierProductName = $(tr)
+					.find("[st='supplier-product-name']").val();
 			var supplierCost = $(tr).find("[st='supplier-cost']").val();
 
 			var landDay = $(tr).find("[st='land-day']").val();
@@ -140,9 +149,14 @@ var OrderContext = function() {
 			var offDay = $(tr).find("[st='off-day']").val();
 			var sendType = $(tr).find("[st='send-type']").val();
 
-			var current = '{"supplier_index":"' + index + '","supplier_employee_pk":"' + supplierEmployeePk + '","supplier_product_name":"' + supplierProductName + '","supplier_cost":"'
-					+ supplierCost + '","land_day":"' + landDay + '","pick_type":"' + pickType + '","picker":"' + picker + '","picker_cellphone":"' + pickerCellphone + '","off_day":"' + offDay
-					+ '","send_type":"' + sendType + '"}';
+			var current = '{"supplier_index":"' + index
+					+ '","supplier_employee_pk":"' + supplierEmployeePk
+					+ '","supplier_product_name":"' + supplierProductName
+					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
+					+ landDay + '","pick_type":"' + pickType + '","picker":"'
+					+ picker + '","picker_cellphone":"' + pickerCellphone
+					+ '","off_day":"' + offDay + '","send_type":"' + sendType
+					+ '"}';
 			if (i == trs.length - 1) {
 				json += current + ']';
 			} else {
@@ -237,9 +251,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -253,13 +268,17 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
 
-			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
-			self.setPageNums1(self.currentPage1());
-		});
+					self
+							.totalCount1(Math.ceil(data.page.total
+									/ self.perPage1));
+					self.setPageNums1(self.currentPage1());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -305,9 +324,10 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
+				.totalCount1();
 		var pageNums1 = [];
-		for ( var i = startPage1; i <= endPage1; i++) {
+		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
 		}
 		self.pageNums1(pageNums1);
@@ -367,7 +387,7 @@ function deleteRow(btn) {
 function refreshIndex() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		$(tr).find("td[st='index']").html(i + 1);
 	}

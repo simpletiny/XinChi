@@ -463,6 +463,248 @@
 			<comment>ALTER TABLE client_relation </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_research_view (
+				  title VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  content MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  label VARCHAR(10) NULL COMMENT '标签',
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品研发文章表';
+             ]]>
+			<comment>CREATE TABLE product_research_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_research_label (
+				  label_name VARCHAR(10) NOT NULL COMMENT '标签名',
+				  label_tag VARCHAR(10) NULL COMMENT '标签代号，预留',
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk),
+				  UNIQUE INDEX label_UNIQUE (label_name ASC))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品研发文章标签表';
+             ]]>
+			<comment>CREATE TABLE product_research_label</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product_research_label 
+				ADD COLUMN label_index INT NULL COMMENT '排序' AFTER create_user;
+             ]]>
+			<comment>ALTER TABLE product_research_label </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product 
+				ADD COLUMN client_confirm_templet VARCHAR(45) NULL DEFAULT 'default' COMMENT '组团社确认件模板' AFTER spot_child_cash,
+				ADD COLUMN out_notice_templet VARCHAR(45) NULL DEFAULT 'default' COMMENT '出团通知模板文件名,默认是default将调用系统自带模板' AFTER client_confirm_templet,
+				ADD COLUMN air_ticket_upkeep_flg CHAR(1) NULL DEFAULT 'N' COMMENT '机票维护标识，默认N未维护。Y已维护，D无维护' AFTER out_notice_templet,
+				ADD COLUMN supplier_upkeep_flg CHAR(1) NULL DEFAULT 'N' COMMENT '地接维护标识，默认N未维护。Y已维护，D无维护' AFTER air_ticket_upkeep_flg,
+				ADD COLUMN local_upkeep_flg CHAR(1) NULL DEFAULT 'N' COMMENT '本地维护标识，默认N未维护。Y已维护，D无维护' AFTER supplier_upkeep_flg;
+             ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+			ALTER TABLE product_supplier 
+				ADD COLUMN adult_cost DECIMAL(12,2) NOT NULL DEFAULT 0 COMMENT '地接产品成人价格' AFTER update_user,
+				ADD COLUMN child_cost DECIMAL(12,2) NOT NULL DEFAULT 0 COMMENT '儿童价格' AFTER adult_cost,
+				ADD COLUMN days TINYINT NOT NULL DEFAULT 0 COMMENT '地接产品天数' AFTER child_cost,
+				ADD COLUMN tourist_info VARCHAR(100) NULL COMMENT '游客信息,用分号分割，用冒号属性' AFTER days,
+				ADD COLUMN confirm_file_templet VARCHAR(45) NOT NULL DEFAULT 'default' COMMENT '地接社确认文件模板，默认default，用系统自带模板' AFTER tourist_info;
+             ]]>
+			<comment>ALTER TABLE product_supplier</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE TABLE product_supplier_info (
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  product_supplier_pk CHAR(22) NOT NULL COMMENT '产品地接pk',
+				  info_index TINYINT NULL COMMENT '排序号',
+				  pick_type CHAR(1) NOT NULL DEFAULT 0 COMMENT '接方式0航段，1其他',
+				  pick_leg VARCHAR(10) NULL COMMENT '接航段',
+				  pick_other VARCHAR(10) NULL COMMENT '接其他',
+				  pick_day TINYINT NULL COMMENT '接天次',
+				  pick_traffic VARCHAR(10) NULL COMMENT '接交通工具',
+				  pick_time VARCHAR(15) NULL COMMENT '接抵离时间13:00-9:00',
+				  pick_city VARCHAR(15) NULL COMMENT '接抵离城市哈尔滨-沈阳',
+				  pick_place VARCHAR(30) NULL COMMENT '接抵离地点太平机场-沈阳火车站',
+				  send_type CHAR(1) NOT NULL DEFAULT 0 COMMENT '送方式0航段，1其他',
+				  send_leg VARCHAR(10) NULL COMMENT '送航段',
+				  send_other VARCHAR(10) NULL COMMENT '送其他',
+				  send_day TINYINT NULL COMMENT '送天次',
+				  send_traffic VARCHAR(10) NULL COMMENT '送交通工具',
+				  send_time VARCHAR(15) NULL COMMENT '送抵离时间13:00-9:00',
+				  send_city VARCHAR(15) NULL COMMENT '送抵离城市哈尔滨-沈阳',
+				  send_place VARCHAR(30) NULL COMMENT '送抵离地点太平机场-沈阳火车站',
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品地接社维护详细信息';
+             ]]>
+			<comment>CREATE TABLE product_supplier_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE TABLE product_local (
+				  product_pk CHAR(22) NOT NULL COMMENT '产品pk',
+				  service_type CHAR(1) NULL DEFAULT 0 COMMENT '服务类型0机场衔接，1接送机场',
+				  service_name VARCHAR(15) NULL,
+				  supplier_pk CHAR(22) NULL,
+				  cost DECIMAL(12,2) NULL,
+				  adult_cost DECIMAL(12,2) NULL COMMENT '人均成人',
+				  child_cost DECIMAL(12,2) NULL COMMENT '人均儿童',
+				  service_comment VARCHAR(200) NULL COMMENT '服务要求',
+				  tourist_info VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '游客信息,用分号分割，用冒号属性',
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品本地维护信息表';
+             ]]>
+			<comment>CREATE TABLE product_local</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+			ALTER TABLE flight 
+				ADD COLUMN product_pk CHAR(22) NOT NULL FIRST;
+             ]]>
+			<comment>ALTER TABLE flight</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE TABLE order_supplier (
+			  order_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL COMMENT '订单pk',
+			  supplier_employee_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  supplier_index INT(11) NULL DEFAULT NULL,
+			  supplier_product_name VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  supplier_cost DECIMAL(12,2) NULL DEFAULT NULL,
+			  land_day INT(11) NULL DEFAULT NULL,
+			  pick_type VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  picker VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  picker_cellphone VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  off_day INT(11) NULL DEFAULT NULL,
+			  send_type VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  adult_cost DECIMAL(12,2) NOT NULL DEFAULT '0.00' COMMENT '地接产品成人价格',
+			  child_cost DECIMAL(12,2) NOT NULL DEFAULT '0.00' COMMENT '儿童价格',
+			  days TINYINT(4) NOT NULL DEFAULT '0' COMMENT '地接产品天数',
+			  tourist_info VARCHAR(100) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '游客信息,用分号分割，用冒号属性',
+			  confirm_file_templet VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT 'default' COMMENT '地接社确认文件模板，默认default，用系统自带模板',
+			  PRIMARY KEY (pk))
+			ENGINE = InnoDB
+			DEFAULT CHARACTER SET = utf8
+			COLLATE = utf8_bin
+			COMMENT = '订单地接信息';
+			
+			CREATE TABLE order_supplier_info (
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  order_supplier_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL COMMENT '订单地接pk',
+				  info_index TINYINT(4) NULL DEFAULT NULL COMMENT '排序号',
+				  pick_type CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' COMMENT '接方式0航段，1其他',
+				  pick_leg VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接航段',
+				  pick_other VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接其他',
+				  pick_day TINYINT(4) NULL DEFAULT NULL COMMENT '接天次',
+				  pick_traffic VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接交通工具',
+				  pick_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接抵离时间13:00-9:00',
+				  pick_city VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接抵离城市哈尔滨-沈阳',
+				  pick_place VARCHAR(30) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '接抵离地点太平机场-沈阳火车站',
+				  send_type CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL DEFAULT '0' COMMENT '送方式0航段，1其他',
+				  send_leg VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送航段',
+				  send_other VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送其他',
+				  send_day TINYINT(4) NULL DEFAULT NULL COMMENT '送天次',
+				  send_traffic VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送交通工具',
+				  send_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送抵离时间13:00-9:00',
+				  send_city VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送抵离城市哈尔滨-沈阳',
+				  send_place VARCHAR(30) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL COMMENT '送抵离地点太平机场-沈阳火车站',
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '订单地接信息信息表';
+             ]]>
+			<comment>CREATE TABLE order_supplier and order_supplier_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE VIEW view_back_money_balance AS
+			    SELECT 
+			        A.team_number AS team_number,
+			        A.create_user AS user_number,
+			        ((A.adult_count + IFNULL(A.special_count, 0)) * A.product_value) AS product_point,
+			        A.confirm_date AS confirm_date,
+			        IF((B.final_flg = 'Y'),
+			            B.final_balance,
+			            B.budget_balance) AS balance,
+			        A.receivable AS receivable
+			    FROM
+			        budget_standard_order A
+			            LEFT JOIN
+			        receivable B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        client_received_detail C ON A.team_number = C.team_number
+			            AND LEFT(C.received_time, 10) <= (A.confirm_date + INTERVAL 1 DAY)
+			    WHERE
+			        A.confirm_flg = 'Y'
+					AND C.team_number IS NOT NULL
+					AND C.status = 'E'
+				GROUP BY A.team_number;
+             ]]>
+			<comment>CREATE VIEW view_back_money_balance </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

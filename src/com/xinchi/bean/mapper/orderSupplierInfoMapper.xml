@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.OrderSupplierInfoMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderSupplierInfoBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="order_supplier_pk" property="order_supplier_pk" jdbcType="CHAR" />
+		<result column="info_index" property="info_index" jdbcType="INTEGER" />
+		<result column="pick_type" property="pick_type" jdbcType="CHAR" />
+		<result column="pick_leg" property="pick_leg" jdbcType="VARCHAR" />
+		<result column="pick_other" property="pick_other" jdbcType="VARCHAR" />
+		<result column="pick_day" property="pick_day" jdbcType="INTEGER" />
+		<result column="pick_traffic" property="pick_traffic" jdbcType="VARCHAR" />
+		<result column="pick_time" property="pick_time" jdbcType="VARCHAR" />
+		<result column="pick_city" property="pick_city" jdbcType="VARCHAR" />
+		<result column="pick_place" property="pick_place" jdbcType="VARCHAR" />
+		<result column="send_type" property="send_type" jdbcType="CHAR" />
+		<result column="send_leg" property="send_leg" jdbcType="VARCHAR" />
+		<result column="send_other" property="send_other" jdbcType="VARCHAR" />
+		<result column="send_day" property="send_day" jdbcType="INTEGER" />
+		<result column="send_traffic" property="send_traffic" jdbcType="VARCHAR" />
+		<result column="send_time" property="send_time" jdbcType="VARCHAR" />
+		<result column="send_city" property="send_city" jdbcType="VARCHAR" />
+		<result column="send_place" property="send_place" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pk,
+		order_supplier_pk,
+		info_index,
+		pick_type,
+		pick_leg,
+		pick_other,
+		pick_day,
+		pick_traffic,
+		pick_time,
+		pick_city,
+		pick_place,
+		send_type,
+		send_leg,
+		send_other,
+		send_day,
+		send_traffic,
+		send_time,
+		send_city,
+		send_place,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from order_supplier_info
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from order_supplier_info
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.OrderSupplierInfoBean">
+
+		insert into order_supplier_info
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="order_supplier_pk != null">
+				order_supplier_pk,
+			</if>
+			<if test="info_index != null">
+				info_index,
+			</if>
+			<if test="pick_type != null">
+				pick_type,
+			</if>
+			<if test="pick_leg != null">
+				pick_leg,
+			</if>
+			<if test="pick_other != null">
+				pick_other,
+			</if>
+			<if test="pick_day != null">
+				pick_day,
+			</if>
+			<if test="pick_traffic != null">
+				pick_traffic,
+			</if>
+			<if test="pick_time != null">
+				pick_time,
+			</if>
+			<if test="pick_city != null">
+				pick_city,
+			</if>
+			<if test="pick_place != null">
+				pick_place,
+			</if>
+			<if test="send_type != null">
+				send_type,
+			</if>
+			<if test="send_leg != null">
+				send_leg,
+			</if>
+			<if test="send_other != null">
+				send_other,
+			</if>
+			<if test="send_day != null">
+				send_day,
+			</if>
+			<if test="send_traffic != null">
+				send_traffic,
+			</if>
+			<if test="send_time != null">
+				send_time,
+			</if>
+			<if test="send_city != null">
+				send_city,
+			</if>
+			<if test="send_place != null">
+				send_place,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="order_supplier_pk != null">
+				#{order_supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="info_index != null">
+				#{info_index,jdbcType=INTEGER},
+			</if>
+			<if test="pick_type != null">
+				#{pick_type,jdbcType=CHAR},
+			</if>
+			<if test="pick_leg != null">
+				#{pick_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_other != null">
+				#{pick_other,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_day != null">
+				#{pick_day,jdbcType=INTEGER},
+			</if>
+			<if test="pick_traffic != null">
+				#{pick_traffic,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_time != null">
+				#{pick_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_city != null">
+				#{pick_city,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_place != null">
+				#{pick_place,jdbcType=VARCHAR},
+			</if>
+			<if test="send_type != null">
+				#{send_type,jdbcType=CHAR},
+			</if>
+			<if test="send_leg != null">
+				#{send_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="send_other != null">
+				#{send_other,jdbcType=VARCHAR},
+			</if>
+			<if test="send_day != null">
+				#{send_day,jdbcType=INTEGER},
+			</if>
+			<if test="send_traffic != null">
+				#{send_traffic,jdbcType=VARCHAR},
+			</if>
+			<if test="send_time != null">
+				#{send_time,jdbcType=VARCHAR},
+			</if>
+			<if test="send_city != null">
+				#{send_city,jdbcType=VARCHAR},
+			</if>
+			<if test="send_place != null">
+				#{send_place,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.OrderSupplierInfoBean">
+		update order_supplier_info
+		<set>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="order_supplier_pk != null">
+				order_supplier_pk = #{order_supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="info_index != null">
+				info_index = #{info_index,jdbcType=INTEGER},
+			</if>
+			<if test="pick_type != null">
+				pick_type = #{pick_type,jdbcType=CHAR},
+			</if>
+			<if test="pick_leg != null">
+				pick_leg = #{pick_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_other != null">
+				pick_other = #{pick_other,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_day != null">
+				pick_day = #{pick_day,jdbcType=INTEGER},
+			</if>
+			<if test="pick_traffic != null">
+				pick_traffic = #{pick_traffic,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_time != null">
+				pick_time = #{pick_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_city != null">
+				pick_city = #{pick_city,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_place != null">
+				pick_place = #{pick_place,jdbcType=VARCHAR},
+			</if>
+			<if test="send_type != null">
+				send_type = #{send_type,jdbcType=CHAR},
+			</if>
+			<if test="send_leg != null">
+				send_leg = #{send_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="send_other != null">
+				send_other = #{send_other,jdbcType=VARCHAR},
+			</if>
+			<if test="send_day != null">
+				send_day = #{send_day,jdbcType=INTEGER},
+			</if>
+			<if test="send_traffic != null">
+				send_traffic = #{send_traffic,jdbcType=VARCHAR},
+			</if>
+			<if test="send_time != null">
+				send_time = #{send_time,jdbcType=VARCHAR},
+			</if>
+			<if test="send_city != null">
+				send_city = #{send_city,jdbcType=VARCHAR},
+			</if>
+			<if test="send_place != null">
+				send_place = #{send_place,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.OrderSupplierInfoBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from order_supplier_info
+	</select>
+</mapper>

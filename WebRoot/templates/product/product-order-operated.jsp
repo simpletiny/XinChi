@@ -56,7 +56,7 @@ tr td {
 					<div class="form-group">
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">确认件批量下载</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { batDownload() }">确认件批量下载</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { finalOperate() }">决算</button>
 								<button type="submit" class="btn btn-green " data-bind="click: function() { deleteOperation() }">打回重新操作</button>
 							</div>

@@ -90,11 +90,18 @@ public class ProductBean extends SupperBO implements Serializable {
 	private BigDecimal spot_child_cash;
 	private float gross_child_profit_rate;
 
+	// 产品维护相关标识
+	private String client_confirm_templet;
+	private String out_notice_templet;
+	private String air_ticket_upkeep_flg;
+	private String supplier_upkeep_flg;
+	private String local_upkeep_flg;
+
 	// search options
 	private List<String> locations;
 	private List<String> statuses;
-	
-	private String high_value_flg ="N";
+
+	private String high_value_flg = "N";
 
 	public String getName() {
 		return name;
@@ -454,6 +461,46 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setHigh_value_flg(String high_value_flg) {
 		this.high_value_flg = high_value_flg;
+	}
+
+	public String getClient_confirm_templet() {
+		return client_confirm_templet;
+	}
+
+	public String getOut_notice_templet() {
+		return out_notice_templet;
+	}
+
+	public String getAir_ticket_upkeep_flg() {
+		return air_ticket_upkeep_flg;
+	}
+
+	public String getSupplier_upkeep_flg() {
+		return supplier_upkeep_flg;
+	}
+
+	public String getLocal_upkeep_flg() {
+		return local_upkeep_flg;
+	}
+
+	public void setClient_confirm_templet(String client_confirm_templet) {
+		this.client_confirm_templet = client_confirm_templet;
+	}
+
+	public void setOut_notice_templet(String out_notice_templet) {
+		this.out_notice_templet = out_notice_templet;
+	}
+
+	public void setAir_ticket_upkeep_flg(String air_ticket_upkeep_flg) {
+		this.air_ticket_upkeep_flg = air_ticket_upkeep_flg;
+	}
+
+	public void setSupplier_upkeep_flg(String supplier_upkeep_flg) {
+		this.supplier_upkeep_flg = supplier_upkeep_flg;
+	}
+
+	public void setLocal_upkeep_flg(String local_upkeep_flg) {
+		this.local_upkeep_flg = local_upkeep_flg;
 	}
 
 }

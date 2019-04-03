@@ -3,6 +3,7 @@
 <mapper namespace="com.xinchi.bean.mapper.ProductSupplierMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductSupplierBean">
 		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="product_name" property="product_name" jdbcType="CHAR" />
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
 		<result column="supplier_index" property="supplier_index" jdbcType="INTEGER" />
 		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
@@ -18,6 +19,39 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
+		<result column="child_cost" property="child_cost" jdbcType="DECIMAL" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="tourist_info" property="tourist_info" jdbcType="VARCHAR" />
+		<result column="confirm_file_templet" property="confirm_file_templet" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.ProductSupplierBean">
+		<collection column="pk" property="infos" ofType="com.xinchi.bean.ProductSupplierInfoBean" select="selectProductSupplierInfoByPSPk">
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="product_supplier_pk" property="product_supplier_pk" jdbcType="CHAR" />
+			<result column="info_index" property="info_index" jdbcType="INTEGER" />
+			<result column="pick_type" property="pick_type" jdbcType="CHAR" />
+			<result column="pick_leg" property="pick_leg" jdbcType="VARCHAR" />
+			<result column="pick_other" property="pick_other" jdbcType="VARCHAR" />
+			<result column="pick_day" property="pick_day" jdbcType="INTEGER" />
+			<result column="pick_traffic" property="pick_traffic" jdbcType="VARCHAR" />
+			<result column="pick_time" property="pick_time" jdbcType="VARCHAR" />
+			<result column="pick_city" property="pick_city" jdbcType="VARCHAR" />
+			<result column="pick_place" property="pick_place" jdbcType="VARCHAR" />
+			<result column="send_type" property="send_type" jdbcType="CHAR" />
+			<result column="send_leg" property="send_leg" jdbcType="VARCHAR" />
+			<result column="send_other" property="send_other" jdbcType="VARCHAR" />
+			<result column="send_day" property="send_day" jdbcType="INTEGER" />
+			<result column="send_traffic" property="send_traffic" jdbcType="VARCHAR" />
+			<result column="send_time" property="send_time" jdbcType="VARCHAR" />
+			<result column="send_city" property="send_city" jdbcType="VARCHAR" />
+			<result column="send_place" property="send_place" jdbcType="VARCHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -37,7 +71,12 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		adult_cost,
+		child_cost,
+		days,
+		tourist_info,
+		confirm_file_templet
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -46,9 +85,10 @@
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
 
-	<select id="selectByProductPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectByProductPk" resultMap="InfoResultMap" parameterType="java.lang.String">
 		select
 		A.product_pk,
+		C.name AS product_name,
 		A.supplier_employee_pk,
 		A.supplier_index,
 		A.supplier_product_name,
@@ -64,12 +104,29 @@
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		B.name AS supplier_employee_name
+		B.name AS
+		supplier_employee_name,
+		A.adult_cost,
+		A.child_cost,
+		A.days,
+		A.tourist_info,
+		A.confirm_file_templet
 		from
-		product_supplier A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		where A.product_pk = #{product_pk,jdbcType=CHAR}
+		product_supplier A
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN product C ON A.product_pk = C.pk
+		where
+		A.product_pk =
+		#{product_pk,jdbcType=CHAR}
 		ORDER BY
 		supplier_index
+	</select>
+
+	<select id="selectProductSupplierInfoByPSPk" parameterType="java.lang.String" resultType="com.xinchi.bean.ProductSupplierInfoBean">
+		select * from
+		product_supplier_info
+		where product_supplier_pk = #{pk,jdbcType=CHAR}
+		order by info_index
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -79,7 +136,8 @@
 
 	<delete id="deleteByProductPk" parameterType="java.lang.String">
 		delete from product_supplier
-		where product_pk = #{product_pk,jdbcType=CHAR}
+		where product_pk =
+		#{product_pk,jdbcType=CHAR}
 	</delete>
 
 
@@ -136,6 +194,21 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="adult_cost != null">
+				adult_cost,
+			</if>
+			<if test="child_cost != null">
+				child_cost,
+			</if>
+			<if test="days != null">
+				days,
+			</if>
+			<if test="tourist_info != null">
+				tourist_info,
+			</if>
+			<if test="confirm_file_templet != null">
+				confirm_file_templet,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="product_pk != null">
@@ -185,6 +258,21 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_cost != null">
+				#{adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="child_cost != null">
+				#{child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="days != null">
+				#{days,jdbcType=INTEGER},
+			</if>
+			<if test="tourist_info != null">
+				#{tourist_info,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_file_templet != null">
+				#{confirm_file_templet,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -237,6 +325,21 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_cost != null">
+				adult_cost = #{adult_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="child_cost != null">
+				child_cost = #{child_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="days != null">
+				days = #{days,jdbcType=INTEGER},
+			</if>
+			<if test="tourist_info != null">
+				tourist_info = #{tourist_info,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_file_templet != null">
+				confirm_file_templet = #{confirm_file_templet,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

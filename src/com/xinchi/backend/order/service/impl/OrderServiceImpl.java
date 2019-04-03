@@ -508,6 +508,11 @@ public class OrderServiceImpl implements OrderService {
 	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page) {
 		return dao.searchSaleScore(page);
 	}
+	
+	@Override
+	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page) {
+		return dao.searchBackMoneyScoreByPage(page);
+	}
 
 	@Override
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd) {

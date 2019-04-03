@@ -71,3 +71,26 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+
+var switchType = function(rad) {
+	var v = $(rad).val();
+	if (v == "month") {
+		$(".date-picker").attr("disabled", true);
+		$(".month-picker-st").attr("disabled", false);
+	} else {
+		$(".date-picker").attr("disabled", false);
+		$(".month-picker-st").attr("disabled", true);
+	}
+}
+var st_page = "s";
+var st_page_map = {
+	"s" : "sale-score.jsp",
+	"b" : "back-money-score.jsp"
+}
+function changePage(rad) {
+	var v = $(rad).val();
+	if (v == st_page)
+		return;
+	else
+		window.location.href = ctx.apiurl + 'templates/sale/' + st_page_map[v];
+}

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.SimpletinyString;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -31,6 +32,16 @@ public class SaleDashBoardAction extends BaseAction {
 		page.setParams(params);
 		
 		scores = orderService.searchSaleScoreByPage(page);
+		return SUCCESS;
+	}
+	
+	public String searchBackMoneyScoreByPage() {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", score);
+		page.setParams(params);
+		
+		scores = orderService.searchBackMoneyScoreByPage(page);
 		return SUCCESS;
 	}
 

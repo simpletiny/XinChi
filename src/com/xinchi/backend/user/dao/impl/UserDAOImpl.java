@@ -110,4 +110,10 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 		return (UserCommonBean)daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByPrimaryKey", user_pk);
 	}
 
+	@Override
+	public UserCommonBean selectUserCommonByUserNumber(String user_number) {
+		
+		 return (UserCommonBean)daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByUserNumber", user_number);
+	}
+
 }

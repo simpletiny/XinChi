@@ -46,7 +46,11 @@
 		<result column="gross_child_profit_rate" property="gross_child_profit_rate" jdbcType="FLOAT" />
 		<result column="cash_child_flow" property="cash_child_flow" jdbcType="DECIMAL" />
 		<result column="spot_child_cash" property="spot_child_cash" jdbcType="DECIMAL" />
-
+		<result column="client_confirm_templet" property="client_confirm_templet" jdbcType="VARCHAR" />
+		<result column="out_notice_templet" property="out_notice_templet" jdbcType="VARCHAR" />
+		<result column="air_ticket_upkeep_flg" property="air_ticket_upkeep_flg" jdbcType="VARCHAR" />
+		<result column="supplier_upkeep_flg" property="supplier_upkeep_flg" jdbcType="VARCHAR" />
+		<result column="local_upkeep_flg" property="local_upkeep_flg" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -93,7 +97,13 @@
 		gross_child_profit,
 		cash_child_flow,
 		spot_child_cash,
-		gross_child_profit_rate
+		gross_child_profit_rate,
+		client_confirm_templet,
+		out_notice_templet,
+		air_ticket_upkeep_flg,
+		supplier_upkeep_flg,
+		local_upkeep_flg
+
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -514,6 +524,21 @@
 			<if test="gross_child_profit_rate != null">
 				gross_child_profit_rate = #{gross_child_profit_rate,jdbcType=FLOAT},
 			</if>
+			<if test="client_confirm_templet != null">
+				client_confirm_templet = #{client_confirm_templet,jdbcType=VARCHAR},
+			</if>
+			<if test="out_notice_templet != null">
+				out_notice_templet = #{out_notice_templet,jdbcType=VARCHAR},
+			</if>
+			<if test="air_ticket_upkeep_flg != null">
+				air_ticket_upkeep_flg = #{air_ticket_upkeep_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_upkeep_flg != null">
+				supplier_upkeep_flg = #{supplier_upkeep_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="off_shelves_date != null">
+				local_upkeep_flg = #{local_upkeep_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -585,8 +610,12 @@
 		A.gross_child_profit,
 		A.cash_child_flow,
 		A.spot_child_cash,
-		A.gross_child_profit_rate
-		
+		A.gross_child_profit_rate,
+		A.client_confirm_templet,
+		A.out_notice_templet,
+		A.air_ticket_upkeep_flg,
+		A.supplier_upkeep_flg,
+		A.local_upkeep_flg
 		from
 		product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number

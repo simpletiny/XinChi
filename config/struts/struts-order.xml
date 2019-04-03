@@ -127,5 +127,11 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchBackMoneyScoreByPage" class="saleDashBoardAction" method="searchBackMoneyScoreByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

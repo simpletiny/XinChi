@@ -43,4 +43,6 @@ public interface ProductOrderOperationService extends BaseService{
 	public List<ProductOrderOperationBean> selectByTeamNumber(String team_number);
 
 	public void deleteByTeamNumber(String team_number);
+
+	public String createOrderOperation(String json);
 }

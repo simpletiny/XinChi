@@ -40,7 +40,8 @@
 		<div class="subtitle" style="float: left">
 			<h2 style="width: 30%; float: left">销售仪表盘-->分值查询(限标准订单)</h2>
 			<div class="tab">
-				<input type="radio" checked="checked" /><label>分值查询</label>
+				<input type="radio" checked="checked" name="rad-page" value="s" onclick="changePage(this)"/><label>分值查询</label>
+				<input type="radio"  name="rad-page" value="b" onclick="changePage(this)"/><label>回款分值</label>
 			</div>
 		</div>
 		<div class="main-container">
@@ -48,10 +49,23 @@
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div align="left">
-							<label class="col-md-1 control-label">确认月份</label>
+							<label class="col-md-1 control-label"><input type="radio" name="rad-confirm"  value="month" onclick="switchType(this)" checked="checked"/>确认月份</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control month-picker-st" data-bind="value:confirm_month()" placeholder="确认月份"
 									name="score.confirm_month" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label"><input type="radio" value="date" onclick="switchType(this)" name="rad-confirm"/>确认日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="起始日期"
+									name="score.date_from" />
+							</div>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="截止日期"
+									name="score.date_to" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -99,6 +113,7 @@
 	</script>
 
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/sale/sale-score.js"></script>

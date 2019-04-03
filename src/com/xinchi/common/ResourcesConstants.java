@@ -238,4 +238,11 @@ public class ResourcesConstants {
 	public static String FINAL_ORDER_STATUS_CHANGE = "H";
 
 	public static String CLIENT_RELATION_LEVEL_01 = "新增级";
+
+	// 文件下载类型
+
+	// 出团通知
+	public static String FILE_TYPE_OUT_NOTICE = "A";
+	// 出团通知
+	public static String FILE_TYPE_CLIENT_CONFIRM = "B";
 }

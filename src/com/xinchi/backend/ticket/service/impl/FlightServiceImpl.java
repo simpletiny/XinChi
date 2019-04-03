@@ -90,4 +90,9 @@ public class FlightServiceImpl implements FlightService {
 		return dao.selectByPage(page);
 	}
 
+	@Override
+	public FlightBean selectByProductPk(String product_pk) {
+		return dao.selectByProductPk(product_pk);
+	}
+
 }

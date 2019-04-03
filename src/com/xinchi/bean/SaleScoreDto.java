@@ -14,6 +14,8 @@ public class SaleScoreDto extends SupperBO implements Serializable {
 	private String confirm_month;
 	private int sum_people;
 
+	private float discount;
+
 	public BigDecimal getScore() {
 		return score;
 	}
@@ -52,5 +54,13 @@ public class SaleScoreDto extends SupperBO implements Serializable {
 
 	public void setSum_people(int sum_people) {
 		this.sum_people = sum_people;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
+		this.discount = discount;
 	}
 }

@@ -15,6 +15,8 @@ import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.product.service.ProductReportService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.bean.FlightBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
@@ -70,6 +72,16 @@ public class ProductAction extends BaseAction {
 		page.setParams(params);
 
 		products = service.selectByPage(page);
+		return SUCCESS;
+	}
+
+	/**
+	 * 搜索产品供应商信息
+	 * 
+	 * @return
+	 */
+	public String searchSuppliersByProductPk() {
+		productSuppliers = productSupplierService.selectByProductPk(product_pk);
 		return SUCCESS;
 	}
 
@@ -314,6 +326,62 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 上传组团确认模板
+	 * 
+	 * @return
+	 */
+	public String uploadClientConfirmTemplet() {
+		resultStr = service.uploadClientConfirmTemplet(product);
+		return SUCCESS;
+	}
+
+	/**
+	 * 上传出团通知模板
+	 * 
+	 * @return
+	 */
+	public String uploadOutNoticeTemplet() {
+		resultStr = service.uploadOutNoticeTemplet(product);
+		return SUCCESS;
+	}
+
+	/**
+	 * 保存地接维护信息
+	 * 
+	 * @return
+	 */
+	public String saveProductSupplier() {
+		resultStr = service.saveProductSupplier(json);
+		return SUCCESS;
+	}
+	/**
+	 * 更新地接维护信息
+	 * 
+	 * @return
+	 */
+	public String updateProductSupplier() {
+		resultStr = service.updateProductSupplier(json);
+		return SUCCESS;
+	}
+
+	/**
+	 * 保存本地维护信息
+	 * 
+	 * @return
+	 */
+	public String saveProductLocal() {
+		resultStr = service.saveProductLocal(json);
+		return SUCCESS;
+	}
+
+	private FlightBean flight;
+
+	public String saveProductFlight() {
+		resultStr = service.saveProductFlight(flight, json);
+		return SUCCESS;
+	}
+
 	// 通过团号查询机票信息
 	public String searchProductAirTicketInfoByTeamNumber() {
 
@@ -446,5 +514,13 @@ public class ProductAction extends BaseAction {
 
 	public void setDelay(ProductDelayBean delay) {
 		this.delay = delay;
+	}
+
+	public FlightBean getFlight() {
+		return flight;
+	}
+
+	public void setFlight(FlightBean flight) {
+		this.flight = flight;
 	}
 }

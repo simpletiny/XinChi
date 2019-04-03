@@ -46,4 +46,6 @@ public interface FlightService extends BaseService {
 	public String createFlight(FlightBean flight, String json);
 
 	public List<FlightBean> selectByPage(Page<FlightBean> page);
+	
+	public FlightBean selectByProductPk(String product_pk);
 }

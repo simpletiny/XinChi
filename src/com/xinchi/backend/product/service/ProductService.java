@@ -2,6 +2,7 @@ package com.xinchi.backend.product.service;
 
 import java.util.List;
 
+import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.common.BaseService;
@@ -55,4 +56,16 @@ public interface ProductService extends BaseService {
 	public String updateProductValue(ProductBean product, ProductDelayBean delay);
 
 	public void sysUpdate(ProductBean product);
+
+	public String uploadClientConfirmTemplet(ProductBean product);
+
+	public String uploadOutNoticeTemplet(ProductBean product);
+
+	public String saveProductSupplier(String json);
+
+	public String saveProductLocal(String json);
+
+	public String saveProductFlight(FlightBean flight, String json);
+
+	public String updateProductSupplier(String json);
 }

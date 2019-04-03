@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -30,13 +31,22 @@ public class ProductSupplierBean extends SupperBO implements Serializable {
 
 	private String pk;
 
-	private String supplier_employee_name;
-
 	private String create_user;
 
 	private String update_user;
 
 	private BigDecimal sum_cost;
+
+	private BigDecimal adult_cost;
+	private BigDecimal child_cost;
+	private int days;
+	private String tourist_info;
+	private String confirm_file_templet;
+
+	// dto属性
+	private String product_name;
+	private String supplier_employee_name;
+	private List<ProductSupplierInfoBean> infos;
 
 	public String getProduct_pk() {
 		return product_pk;
@@ -164,6 +174,62 @@ public class ProductSupplierBean extends SupperBO implements Serializable {
 
 	public void setSum_cost(BigDecimal sum_cost) {
 		this.sum_cost = sum_cost;
+	}
+
+	public BigDecimal getAdult_cost() {
+		return adult_cost;
+	}
+
+	public BigDecimal getChild_cost() {
+		return child_cost;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public String getTourist_info() {
+		return tourist_info;
+	}
+
+	public String getConfirm_file_templet() {
+		return confirm_file_templet;
+	}
+
+	public void setAdult_cost(BigDecimal adult_cost) {
+		this.adult_cost = adult_cost;
+	}
+
+	public void setChild_cost(BigDecimal child_cost) {
+		this.child_cost = child_cost;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
+	public void setTourist_info(String tourist_info) {
+		this.tourist_info = tourist_info;
+	}
+
+	public void setConfirm_file_templet(String confirm_file_templet) {
+		this.confirm_file_templet = confirm_file_templet;
+	}
+
+	public List<ProductSupplierInfoBean> getInfos() {
+		return infos;
+	}
+
+	public void setInfos(List<ProductSupplierInfoBean> infos) {
+		this.infos = infos;
+	}
+
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
 	}
 
 }

@@ -311,13 +311,18 @@ var ProductBoxContext = function() {
 	};
 	// 下载相关文件
 	self.downloadFile = function(data, event) {
+		var team_number = data.team_number;
 		$('.download-panel').remove();
 		var label = event.target;
 		var X = $(label).offset().top;
 		var Y = $(label).offset().left;
 		var div = $('<div></div>');
-		var departure_notice = $('<a href="#" style="cursor:pointer;margin-right:10px">出团通知</a>');
-		var supplier_confirm = $('<a href="#" style="cursor:pointer">地接确认</a>');
+		var departure_notice = $('<a href="' + self.apiurl
+				+ 'file/downloadProductFile?team_number=' + team_number
+				+ '&fileType=A" style="cursor:pointer;margin-right:10px">出团通知</a>');
+		var supplier_confirm = $('<a href="' + self.apiurl
+				+ 'file/downloadProductFile?team_number=' + team_number
+				+ '&fileType=B" style="cursor:pointer">组团社确认</a>');
 
 		$(div).append(departure_notice);
 		$(div).append(supplier_confirm);

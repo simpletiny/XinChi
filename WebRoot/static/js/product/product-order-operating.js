@@ -36,22 +36,32 @@ var OrderContext = function() {
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=I";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
-			self.operations(data.operations);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$
+				.getJSON(
+						self.apiurl
+								+ 'product/searchProductOrderOperationByPage',
+						param,
+						function(data) {
+							self.operations(data.operations);
 
-			$(self.operations()).each(function(idx, data) {
-				total_people_count += data.people_count - 0;
-				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
-			});
+							$(self.operations())
+									.each(
+											function(idx, data) {
+												total_people_count += data.people_count - 0;
+												total_supplier_cost += data.supplier_cost == null ? 0
+														: data.supplier_cost;
+											});
 
-			self.totalPeopleCount(total_people_count);
-			self.totalSupplierCost(total_supplier_cost);
+							self.totalPeopleCount(total_people_count);
+							self.totalSupplierCost(total_supplier_cost);
 
-			$(".detail").showDetail();
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+							$(".detail").showDetail();
+							self.totalCount(Math.ceil(data.page.total
+									/ self.perPage));
+							self.setPageNums(self.currentPage());
+						});
 	};
 
 	self.productSuppliers = ko.observableArray([]);
@@ -61,29 +71,50 @@ var OrderContext = function() {
 			fail_msg("请选择产品订单！");
 			return;
 		} else if (self.chosenOperations().length > 0) {
-			var operate_pks = "";
-			for ( var i = 0; i < self.chosenOperations().length; i++) {
-				var current = self.chosenOperations()[i].split(";");
-				operate_pks += current[0] + ",";
-			}
+			$
+					.layer({
+						area : [ 'auto', 'auto' ],
+						dialog : {
+							msg : '是否要确认此订单！',
+							btns : 2,
+							type : 4,
+							btn : [ '确认', '取消' ],
+							yes : function(index) {
+								layer.close(index);
+								var operate_pks = "";
+								for (var i = 0; i < self.chosenOperations().length; i++) {
+									var current = self.chosenOperations()[i]
+											.split(";");
+									operate_pks += current[0] + ",";
+								}
 
-			operate_pks = operate_pks.substr(0, operate_pks.length - 1);
+								operate_pks = operate_pks.substr(0,
+										operate_pks.length - 1);
 
-			startLoadingIndicator("确认中...");
-			var data = "operate_pks=" + operate_pks;
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'product/confirmOperation',
-				data : data
-			}).success(function(str) {
-				endLoadingIndicator();
-				if (str == "success") {
-					self.refresh();
-					self.chosenOperations.removeAll();
-				} else {
-					fail_msg(str);
-				}
-			});
+								startLoadingIndicator("确认中...");
+								var data = "operate_pks=" + operate_pks;
+								$
+										.ajax(
+												{
+													type : "POST",
+													url : self.apiurl
+															+ 'product/confirmOperation',
+													data : data
+												}).success(
+												function(str) {
+													endLoadingIndicator();
+													if (str == "success") {
+														self.refresh();
+														self.chosenOperations
+																.removeAll();
+													} else {
+														fail_msg(str);
+													}
+												});
+							}
+						}
+					});
+
 		}
 	};
 
@@ -94,7 +125,7 @@ var OrderContext = function() {
 			return;
 		} else if (self.chosenOperations().length > 0) {
 			var team_numbers = "";
-			for ( var i = 0; i < self.chosenOperations().length; i++) {
+			for (var i = 0; i < self.chosenOperations().length; i++) {
 				var current = self.chosenOperations()[i].split(";");
 				team_numbers += current[1] + ",";
 			}
@@ -168,7 +199,7 @@ var OrderContext = function() {
 
 	self.doEdit = function() {
 		var allNeeds = $('.need');
-		for ( var i = 0; i < allNeeds.length; i++) {
+		for (var i = 0; i < allNeeds.length; i++) {
 			var current = allNeeds[i];
 			if ($(current).val().trim() == "") {
 				fail_msg("请填写必填项目！");
@@ -185,7 +216,7 @@ var OrderContext = function() {
 		var json = '[';
 		var tbody = $("#table-supplier tbody");
 		var trs = $(tbody).children();
-		for ( var i = 0; i < trs.length; i++) {
+		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			var index = i + 1;
 			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
@@ -193,7 +224,8 @@ var OrderContext = function() {
 			if (supplierEmployeePk == '')
 				continue;
 
-			var supplierProductName = $(tr).find("[st='supplier-product-name']").val();
+			var supplierProductName = $(tr)
+					.find("[st='supplier-product-name']").val();
 			var supplierCost = $(tr).find("[st='supplier-cost']").val();
 
 			var landDay = $(tr).find("[st='land-day']").val();
@@ -203,9 +235,14 @@ var OrderContext = function() {
 			var offDay = $(tr).find("[st='off-day']").val();
 			var sendType = $(tr).find("[st='send-type']").val();
 
-			var current = '{"supplier_index":"' + index + '","supplier_employee_pk":"' + supplierEmployeePk + '","supplier_product_name":"' + supplierProductName + '","supplier_cost":"'
-					+ supplierCost + '","land_day":"' + landDay + '","pick_type":"' + pickType + '","picker":"' + picker + '","picker_cellphone":"' + pickerCellphone + '","off_day":"' + offDay
-					+ '","send_type":"' + sendType + '"}';
+			var current = '{"supplier_index":"' + index
+					+ '","supplier_employee_pk":"' + supplierEmployeePk
+					+ '","supplier_product_name":"' + supplierProductName
+					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
+					+ landDay + '","pick_type":"' + pickType + '","picker":"'
+					+ picker + '","picker_cellphone":"' + pickerCellphone
+					+ '","off_day":"' + offDay + '","send_type":"' + sendType
+					+ '"}';
 			if (i == trs.length - 1) {
 				json += current + ']';
 			} else {
@@ -300,9 +337,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -316,13 +354,17 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
 
-			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
-			self.setPageNums1(self.currentPage1());
-		});
+					self
+							.totalCount1(Math.ceil(data.page.total
+									/ self.perPage1));
+					self.setPageNums1(self.currentPage1());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -368,9 +410,10 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
+				.totalCount1();
 		var pageNums1 = [];
-		for ( var i = startPage1; i <= endPage1; i++) {
+		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
 		}
 		self.pageNums1(pageNums1);
@@ -430,7 +473,7 @@ function deleteRow(btn) {
 function refreshIndex() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		$(tr).find("td[st='index']").html(i + 1);
 	}

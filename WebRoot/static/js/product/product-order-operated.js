@@ -165,6 +165,23 @@ var OrderContext = function() {
 			});
 		}
 	};
+	
+	// 批量下载地接确认文件
+	self.batDownload = function(){
+		if (self.chosenOperations().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else if (self.chosenOperations().length > 0) {
+			var operatePks = [];
+			for ( var i = 0; i < self.chosenOperations().length; i++) {
+				var current = self.chosenOperations()[i].split(";");
+				operatePks.push(current[0]);
+			}
+//			window.location.href = self.apiurl +"file/batDownloadSupplierConfirm?operate_pks="+operatePks;
+			
+		}
+	}
+	
 	self.productSuppliers = ko.observableArray([]);
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息

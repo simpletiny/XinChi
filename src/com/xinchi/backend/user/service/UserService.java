@@ -99,4 +99,8 @@ public interface UserService extends BaseService {
 	public String changePassword(UserCommonBean ucb);
 
 	public String reuseUser(String user_pk);
+
+	public UserBaseBean selectByUserNumber(String user_number);
+
+	public UserCommonBean selectUserCommonByUserNumber(String user_number);
 }

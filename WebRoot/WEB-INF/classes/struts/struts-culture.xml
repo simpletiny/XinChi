@@ -90,6 +90,42 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 
+		<!-- 产品研发 -->
+		<action name="createProductResearchView" class="productResearchViewAction" method="createProductResearchView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchProductResearchViewByPage" class="productResearchViewAction" method="searchProductResearchViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneProductResearchView" class="productResearchViewAction" method="searchOneProductResearchView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateProductResearchView" class="productResearchViewAction" method="updateProductResearchView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteProductResearchView" class="productResearchViewAction" method="deleteProductResearchView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="createLabel" class="productResearchViewAction" method="createLabel">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchAllLabels" class="productResearchViewAction" method="searchAllLabels">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteLabelByName" class="productResearchViewAction" method="deleteLabelByName">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="sortLabels" class="productResearchViewAction" method="sortLabels">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 销售制度 -->
 		<action name="createSaleRuleView" class="saleRuleViewAction" method="createSaleRuleView">
 			<result name="success" type="str">resultStr

@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -30,6 +27,9 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -63,12 +63,23 @@ public class ProductOrderOperationAction extends BaseAction {
 	@Autowired
 	private ProductSupplierService productSupplierService;
 
+	private OrderDto order;
+
+	public String searchProductDataForOrder() {
+		order = orderService.selectByTeamNumber(team_number);
+		if (order != null) {
+			productSuppliers = productSupplierService.selectByProductPk(order.getProduct_pk());
+		}
+		return SUCCESS;
+	}
+
 	public String searchProductSuppliersByPk() {
 		productSuppliers = productSupplierService.selectByProductPk(product_pk);
 
 		if (productSuppliers != null && productSuppliers.size() > 0) {
 			OrderDto order = orderService.selectByTeamNumber(team_number);
-			BigDecimal peopleCnt = new BigDecimal(order.getAdult_count() + (null == order.getSpecial_count() ? 0 : order.getSpecial_count()));
+			BigDecimal peopleCnt = new BigDecimal(
+					order.getAdult_count() + (null == order.getSpecial_count() ? 0 : order.getSpecial_count()));
 
 			for (ProductSupplierBean ps : productSuppliers) {
 				ps.setSum_cost(ps.getSupplier_cost().multiply(peopleCnt));
@@ -83,84 +94,7 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String createOrderOperation() {
-		OrderDto order = orderService.selectByTeamNumber(team_number);
-		String departure_date = order.getDeparture_date();
-		int people_count = order.getAdult_count() + (null == order.getSpecial_count() ? 0 : order.getSpecial_count());
-		String return_date = DateUtil.addDate(departure_date, order.getDays() - 1);
-
-		BigDecimal product_cost = BigDecimal.ZERO;
-		JSONArray array = JSONArray.fromObject(json);
-		int sumcount = array.size();
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = array.getJSONObject(i);
-			int supplier_index = obj.getInt("supplier_index");
-			String supplier_employee_pk = obj.getString("supplier_employee_pk");
-			String supplier_product_name = obj.getString("supplier_product_name");
-			String c = obj.getString("supplier_cost");
-			BigDecimal supplier_cost = null == c ? BigDecimal.ZERO : new BigDecimal(c);
-
-			product_cost = product_cost.add(supplier_cost);
-			int land_day = obj.getInt("land_day");
-			String pick_type = obj.getString("pick_type");
-			String picker = obj.getString("picker");
-			String picker_cellphone = obj.getString("picker_cellphone");
-			int off_day = obj.getInt("off_day");
-			String send_type = obj.getString("send_type");
-
-			ProductOrderOperationBean poo = new ProductOrderOperationBean();
-			poo.setSupplier_count(sumcount);
-			poo.setTeam_number(team_number);
-			poo.setOperate_index(supplier_index);
-			poo.setSupplier_cost(supplier_cost);
-			poo.setSupplier_product_name(supplier_product_name);
-			poo.setPeople_count(people_count);
-			String pick_date = DateUtil.addDate(departure_date, land_day - 1);
-			String send_date = DateUtil.addDate(departure_date, off_day - 1);
-			poo.setPick_date(pick_date);
-			poo.setSend_date(send_date);
-			poo.setSupplier_employee_pk(supplier_employee_pk);
-			poo.setPick_type(pick_type);
-			poo.setPicker_cellphone(picker_cellphone);
-			poo.setSend_type(send_type);
-			poo.setPicker(picker);
-			poo.setOff_day(off_day);
-			poo.setLand_day(land_day);
-			service.insert(poo);
-
-			// 生成应付款
-			PayableBean payable = new PayableBean();
-
-			payable.setTeam_number(team_number);
-			payable.setFinal_flg("N");
-			payable.setSupplier_employee_pk(supplier_employee_pk);
-			payable.setDeparture_date(departure_date);
-			payable.setReturn_date(return_date);
-			payable.setProduct(supplier_product_name);
-			payable.setPeople_count(people_count);
-			payable.setBudget_payable(supplier_cost);
-			payable.setPaid(BigDecimal.ZERO);
-			payable.setBudget_balance(supplier_cost);
-			payable.setSales(order.getCreate_user_number());
-
-			payableService.insert(payable);
-		}
-
-		String standard_flg = order.getStandard_flg();
-		String order_pk = order.getPk();
-
-		if (standard_flg.equals("Y")) {
-			BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order_pk);
-			bsOrder.setProduct_cost(product_cost);
-			bsOrder.setOperate_flg("I");
-			bsoService.updateComment(bsOrder);
-		} else {
-			BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
-			bnsOrder.setProduct_cost(product_cost);
-			bnsOrder.setOperate_flg("I");
-			bnsoService.updateComment(bnsOrder);
-		}
-
-		resultStr = SUCCESS;
+		resultStr = service.createOrderOperation(json);
 		return SUCCESS;
 	}
 
@@ -169,7 +103,8 @@ public class ProductOrderOperationAction extends BaseAction {
 	private List<ProductOrderOperationBean> operations;
 
 	public String searchProductOrderOperationByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == operate_option)
 			operate_option = new ProductOrderOperationBean();
@@ -507,5 +442,13 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setTeam_numbers(String team_numbers) {
 		this.team_numbers = team_numbers;
+	}
+
+	public OrderDto getOrder() {
+		return order;
+	}
+
+	public void setOrder(OrderDto order) {
+		this.order = order;
 	}
 }

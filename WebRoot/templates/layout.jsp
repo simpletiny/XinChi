@@ -31,9 +31,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<input type="hidden" id="hidden_apiurl" value="<%=basePath%>" />
 	<div class="main-header">
 
-		<div class="header-min-width">
+		<div class="header-min-width" style="text-align: center">
+			<%-- <img src="<%=basePath%>/static/img/head.jpg"></img>  --%>
+			<div style="display:block;">
+				<font size="4" color="white">为组团社服务永无止境!&nbsp;&nbsp;&nbsp;以奋斗者为本,与优秀者为伍!&nbsp;&nbsp;&nbsp;创造价值,合作共赢!&nbsp;&nbsp;&nbsp;做世界一流旅游运营商!</font>
+			</div>
 			<div class="user-status">
-				<font size="4" color="white">为组团社服务永无止境!&nbsp;&nbsp;&nbsp;以奋斗者为本,与优秀者为伍!&nbsp;&nbsp;&nbsp;创造价值,合作共赢!&nbsp;&nbsp;&nbsp;做世界一流旅游运营商!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+
 				<s:property value="#session.user.nick_name" />
 				（
 				<s:property value="#session.user.user_number" />
@@ -61,6 +65,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
 						<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
+						<li><a href="<%=basePath%>templates/culture/product-academy-view.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>产品研发</a></li>
+
 					</s:if>
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
 						<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i
@@ -70,8 +77,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/culture/sale-academy-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>销售学院</a></li>
 					</s:if>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-						<li><a href="<%=basePath%>templates/culture/product-academy-view.jsp"><i
+					<s:if
+						test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')||#session.user.user_roles.contains('SALES')">
+						<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
 					</s:if>
 					<s:if test="#session.user.user_roles.contains('ADMIN')">
@@ -143,10 +151,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/product/product.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品管理</a></li>
 						<li><a href="<%=basePath%>templates/product/product-analysis.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>产品分析</a></li>
-						<li><a href="<%=basePath%>templates/product/local-management.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>地接维护</a></li>
-						<li><a href="<%=basePath%>templates/product/homie-management.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>本地维护</a></li>
+						<li><a href="<%=basePath%>templates/product/product-upkeep.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品维护</a></li>
 						<li><a href="<%=basePath%>templates/product/product-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品报表</a></li>
 						<li><a href="<%=basePath%>templates/order/order-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>单团核算单</a></li>
 					</ol></li>

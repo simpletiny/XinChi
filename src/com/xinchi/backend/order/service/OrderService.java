@@ -28,6 +28,8 @@ public interface OrderService extends BaseService {
 	public String cancelOrder(OrderDto order);
 
 	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page);
+	
+	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
 

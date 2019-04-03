@@ -55,7 +55,7 @@
 						</div>
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOperate() }">生成操作</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOperate() }">订单操作</button>
 							</div>
 						</div>
 					</div>

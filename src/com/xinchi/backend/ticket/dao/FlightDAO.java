@@ -43,4 +43,6 @@ public interface FlightDAO {
 	public List<FlightBean> selectByParam(FlightBean bean);
 
 	public List<FlightBean> selectByPage(Page<FlightBean> page);
+
+	public FlightBean selectByProductPk(String product_pk);
 }

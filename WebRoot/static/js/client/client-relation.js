@@ -3,6 +3,7 @@ var levelLayer;
 var quitLayer;
 var connectInfoLayer;
 var commentLayer;
+var headCheckLayer;
 var ClientContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -557,6 +558,33 @@ var ClientContext = function() {
 			}
 		});
 	};
+	
+	//查看头像
+	self.checkHeadPhoto = function(fileName) {
+		$("#img-pic").attr("src","");
+		headCheckLayer = $.layer({
+			type : 1,
+			title : [ '头像', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '320px', '355px' ],
+			offset : [ '', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+		if(fileName=="img"){
+			$("#img-pic").attr("src", self.apiurl + "static/img/head.jpg");
+		}else{
+			$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");	
+		}
+	};
+	
 	// 加载头像
 	self.loadFiles = function() {
 		$("[st='st-file-name']").each(function(idx, stFileName) {
@@ -690,4 +718,5 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 	ctx.searchClientSummary();
+	$("#img-pic").css({"width":"320px","height":"320px"});
 });

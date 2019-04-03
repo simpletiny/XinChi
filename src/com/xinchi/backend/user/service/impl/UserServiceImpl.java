@@ -240,4 +240,14 @@ public class UserServiceImpl implements UserService {
 		dao.update(ubb);
 		return SUCCESS;
 	}
+
+	@Override
+	public UserBaseBean selectByUserNumber(String user_number) {
+		return dao.getByUserNumber(user_number);
+	}
+
+	@Override
+	public UserCommonBean selectUserCommonByUserNumber(String user_number) {
+		return dao.selectUserCommonByUserNumber(user_number);
+	}
 }

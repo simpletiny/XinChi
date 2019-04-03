@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductResearchLabelMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductResearchLabelBean">
+		<result column="label_name" property="label_name" jdbcType="VARCHAR" />
+		<result column="label_tag" property="label_tag" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="label_index" property="label_index" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		label_name,
+		label_tag,
+		pk,
+		label_index,
+		update_user,
+		create_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_research_label
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_research_label
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByName" parameterType="java.lang.String">
+		delete from product_research_label
+		where label_name = #{label_name,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductResearchLabelBean">
+
+		insert into product_research_label
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="label_name != null">
+				label_name,
+			</if>
+			<if test="label_tag != null">
+				label_tag,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="label_index != null">
+				label_index,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="label_name != null">
+				#{label_name,jdbcType=VARCHAR},
+			</if>
+			<if test="label_tag != null">
+				#{label_tag,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="label_index != null">
+				#{label_index,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductResearchLabelBean">
+		update product_research_label
+		<set>
+			<if test="label_name != null">
+				label_name = #{label_name,jdbcType=VARCHAR},
+			</if>
+			<if test="label_tag != null">
+				label_tag = #{label_tag,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="label_index != null">
+				label_index = #{label_index,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductResearchLabelBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_research_label
+		ORDER BY label_index
+	</select>
+</mapper>

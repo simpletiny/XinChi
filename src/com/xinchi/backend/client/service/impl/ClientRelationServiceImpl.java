@@ -306,7 +306,7 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 					}
 				}
 				if (flg) {
-					point += bp.getProduct_point() * 0.2;
+					point += bp.getProduct_point() * 0.1;
 				}
 			}
 		}

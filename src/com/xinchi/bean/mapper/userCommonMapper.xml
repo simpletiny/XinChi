@@ -41,6 +41,13 @@
     ON A.id = B.id 
     where A.pk = #{pk,jdbcType=CHAR}
   </select>
+   <select id="selectByUserNumber" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_base A LEFT JOIN user_info B 
+    ON A.id = B.id 
+    where A.user_number = #{user_number,jdbcType=CHAR}
+  </select>
    <select id="selectAllNewUsers" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

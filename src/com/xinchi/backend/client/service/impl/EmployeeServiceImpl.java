@@ -32,6 +32,7 @@ import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.bean.SqlBean;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.ToolsUtil;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
@@ -78,7 +79,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (exists != null && exists.size() > 0)
 			return "exist";
-		saveFile(employee.getHead_photo());
+		
+		if (SimpletinyString.isEmpty(employee.getHead_photo())) {
+			employee.setHead_photo(null);
+		} else {
+			saveFile(employee.getHead_photo());
+		}
+		
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
@@ -210,7 +217,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		ClientEmployeeBean ceb = dao.selectByPrimaryKey(employee_pk);
 		deleteOldHead(ceb.getHead_photo());
-		//删除头像
+		// 删除头像
 		dao.delete(employee_pk);
 		return SUCCESS;
 	}
@@ -376,6 +383,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				for (int j = 0; j < cubs.size(); j++) {
 					if (ceubs.get(i).getUser_pk().equals(cubs.get(j).getUser_pk())) {
 						ceubs.remove(i);
+						break;
 					}
 				}
 			}

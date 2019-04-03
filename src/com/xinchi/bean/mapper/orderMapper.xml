@@ -100,12 +100,40 @@
 			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.confirm_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.confirm_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
 			and A.confirm_flg !='N'
 		</where>
 		GROUP by LEFT(confirm_date,7),create_user
 		ORDER by score DESC
 	</select>
-
+	<select id="searchBackMoneyScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
+		select 
+		B.user_name AS sale_name,
+		sum(A.product_point)*0.1 AS score  
+		from view_back_money_balance A
+		LEFT JOIN user_base B ON A.user_number = B.user_number 
+		<where>
+			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
+				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.confirm_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.confirm_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.discount != null and params.bo.discount !=''">
+				and  A.balance &lt;= (A.receivable-A.receivable*#{params.bo.discount})
+			</if>
+		</where>
+		group by A.user_number
+		ORDER by score DESC
+	</select>
 	<select id="searchSaleScoreByParam" parameterType="com.xinchi.bean.SaleScoreDto" resultMap="SaleScoreMap">
 		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
 		LEFT(A.confirm_date,7) as

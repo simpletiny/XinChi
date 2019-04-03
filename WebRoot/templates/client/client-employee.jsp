@@ -164,7 +164,7 @@
 						<tbody data-bind="foreach: employees">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees" /></td>
-								<td><img style="width:25px;height:25px" src="<%=basePath%>static/img/head.jpg" /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
+								<td><img style="width:25px;height:25px" data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" src="<%=basePath%>static/img/head.jpg" /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
 								<td data-bind="text: $data.nick_name"></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
@@ -404,6 +404,9 @@
 			</div>
 		</div>
 	</div>
+	<div id="pic-check" style="display:none">
+ 		<jsp:include page="../common/check-picture.jsp" />
+ 	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>

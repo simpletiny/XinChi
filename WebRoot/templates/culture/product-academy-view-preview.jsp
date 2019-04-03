@@ -29,7 +29,7 @@ span {
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				产品学院<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				产品研发<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 		<div class="main-container">

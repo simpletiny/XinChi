@@ -7,6 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -62,7 +66,7 @@ public class FileUtil {
 
 			if (!dest.getParentFile().exists())
 				dest.getParentFile().mkdirs();
-			
+
 			FileOutputStream out = new FileOutputStream(dest);
 			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 			encoder.encode(tag);
@@ -93,5 +97,34 @@ public class FileUtil {
 		}
 
 		return result;
+	}
+
+	public static void toZip(List<File> srcFiles, OutputStream out) {
+		ZipOutputStream zos = null;
+		try {
+			zos = new ZipOutputStream(out);
+			for (File srcFile : srcFiles) {
+				byte[] buf = new byte[2048];
+				zos.putNextEntry(new ZipEntry(srcFile.getName()));
+				int len;
+				FileInputStream in = new FileInputStream(srcFile);
+				while ((len = in.read(buf)) != -1) {
+					zos.write(buf, 0, len);
+				}
+				zos.closeEntry();
+				in.close();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

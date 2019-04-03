@@ -1,12 +1,15 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class FlightBean extends SupperBO implements Serializable {
 
 	private static final long serialVersionUID = 2609168678743043721L;
 
+	private String product_pk;
 	private String name;
 
 	private String number;
@@ -22,6 +25,8 @@ public class FlightBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String comment;
+	
+	private List<FlightInfoBean> infos;
 
 	public String getName() {
 		return name;
@@ -85,6 +90,22 @@ public class FlightBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getProduct_pk() {
+		return product_pk;
+	}
+
+	public void setProduct_pk(String product_pk) {
+		this.product_pk = product_pk;
+	}
+
+	public List<FlightInfoBean> getInfos() {
+		return infos;
+	}
+
+	public void setInfos(List<FlightInfoBean> infos) {
+		this.infos = infos;
 	}
 
 }

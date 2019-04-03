@@ -64,4 +64,6 @@ public interface UserDAO {
 	public List<UserCommonBean> selectByPage(Page page);
 
 	public UserCommonBean selectUserCommonByPk(String user_pk);
+
+	public UserCommonBean selectUserCommonByUserNumber(String user_number);
 }

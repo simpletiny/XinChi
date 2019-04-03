@@ -20,10 +20,32 @@
 		</action>
 		<action name="detailExcelUpload" class="fileAction" method="fileUpload">
 			<result name="success" type="chain">
-				  <param name="actionName">importDetailExcel</param>
-      			  <param name="namespace">/finance</param>
-      			  <param name="fileName">${fileName}</param>
+				  
+				<param name="actionName">importDetailExcel</param>
+				        
+				<param name="namespace">/finance</param>
+				        
+				<param name="fileName">${fileName}</param>
 			</result>
 		</action>
+		<!-- 产品相关文件下载 start -->
+		<action name="downloadProductFile" class="productFileAction" method="downloadProductFile">
+			<result name="success" type="stream">
+				<param name="inputName">fips</param>
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="contentType">application/msword</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		<!-- 批量下载地接确认文件 -->
+		<action name="batDownloadSupplierConfirm" class="productFileAction" method="batDownloadSupplierConfirm">
+			<result name="success" type="stream">
+				<param name="inputName">fips</param>
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+
+		<!-- 产品相关文件下载 end -->
 	</package>
 </struts>

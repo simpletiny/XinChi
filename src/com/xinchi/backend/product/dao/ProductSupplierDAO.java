@@ -11,7 +11,7 @@ public interface ProductSupplierDAO {
 	 * 
 	 * @param bean
 	 */
-	public void insert(ProductSupplierBean bean);
+	public String insert(ProductSupplierBean bean);
 
 	/**
 	 * 修改

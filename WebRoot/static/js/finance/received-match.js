@@ -309,15 +309,16 @@ var DetailContext = function() {
 	self.searchReceiveApply = function() {
 		var param = "detail.date_from=" + self.dateFrom() + "&detail.date_to="
 				+ self.dateTo() + "&detail.statuses=I";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		
+		
 		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
 				data) {
 			self.receiveds(data.receiveds);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
+			self.totalCount1(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums1(self.currentPage1());
 
 			$(".rmb").formatCurrency();
 		});

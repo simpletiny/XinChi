@@ -55,4 +55,9 @@ public class FlightDAOImpl extends SqlSessionDaoSupport implements FlightDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.FlightMapper.selectByPage", page);
 	}
 
+	@Override
+	public FlightBean selectByProductPk(String product_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.FlightMapper.selectByProductPk", product_pk);
+	}
+
 }

@@ -24,8 +24,8 @@ public class ProductSupplierDAOImpl extends SqlSessionDaoSupport implements Prod
 	}
 
 	@Override
-	public void insert(ProductSupplierBean bean) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.ProductSupplierMapper.insert", bean);
+	public String insert(ProductSupplierBean bean) {
+		return daoUtil.insertBO("com.xinchi.bean.mapper.ProductSupplierMapper.insert", bean);
 	}
 
 	@Override

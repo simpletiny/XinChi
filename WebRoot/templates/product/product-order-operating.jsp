@@ -56,7 +56,7 @@ tr td {
 							<div>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">编辑</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperation() }">确认</button>
-								<button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
+								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button> -->
 							</div>
 						</div>
 					</div>
@@ -123,10 +123,10 @@ tr td {
 								<th>产品名称</th>
 								<th>人数</th>
 								<th>接团日期</th>
-								<th>接团方式</th>
-								<th>接团联系</th>
+							<!-- 	<th>接团方式</th>
+								<th>接团联系</th> -->
 								<th>送团日期</th>
-								<th>送团方式</th>
+								<!-- <th>送团方式</th> -->
 								<th>接待详情</th>
 								<th>游客信息</th>
 								<th>联系方式</th>
@@ -143,14 +143,12 @@ tr td {
 								<td data-bind="text: $data.supplier_product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
-								<td class="detail" data-bind="text: $data.pick_type"></td>
-								<td data-bind="text: $data.picker_cellphone"></td>
 								<td data-bind="text: $data.send_date"></td>
-								<td data-bind="text: $data.send_type"></td>
 								<td></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td></td>
 								<td></td>
+								
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -161,10 +159,6 @@ tr td {
 							<td data-bind="text:totalSupplierCost"></td>
 							<td></td>
 							<td data-bind="text:totalPeopleCount"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
