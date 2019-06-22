@@ -22,46 +22,7 @@ var ProductContext = function() {
 		}
 
 		startLoadingIndicator("保存中");
-		// json化供应商信息
-		var json = '[';
-		var tbody = $("#table-supplier tbody");
-		var trs = $(tbody).children();
-		for (var i = 0; i < trs.length; i++) {
-			var tr = trs[i];
-			var index = i + 1;
-			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
-
-			if (supplierEmployeePk == '')
-				continue;
-
-			var supplierProductName = $(tr)
-					.find("[st='supplier-product-name']").val();
-			var supplierCost = $(tr).find("[st='supplier-cost']").val();
-
-			var landDay = $(tr).find("[st='land-day']").val();
-			var pickType = $(tr).find("[st='pick-type']").val();
-			var picker = $(tr).find("[st='picker']").val();
-			var pickerCellphone = $(tr).find("[st='picker-cellphone']").val();
-			var offDay = $(tr).find("[st='off-day']").val();
-			var sendType = $(tr).find("[st='send-type']").val();
-
-			var current = '{"supplier_index":"' + index
-					+ '","supplier_employee_pk":"' + supplierEmployeePk
-					+ '","supplier_product_name":"' + supplierProductName
-					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
-					+ landDay + '","pick_type":"' + pickType + '","picker":"'
-					+ picker + '","picker_cellphone":"' + pickerCellphone
-					+ '","off_day":"' + offDay + '","send_type":"' + sendType
-					+ '"}';
-			if (i == trs.length - 1) {
-				json += current + ']';
-			} else {
-				json += current + ',';
-			}
-		}
-
 		var data = $("form").serialize();
-		data += "&json=" + json;
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/createProduct',
@@ -73,7 +34,7 @@ var ProductContext = function() {
 						window.location.href = self.apiurl
 								+ "templates/product/product.jsp";
 					} else if (str == "exists") {
-						fail_msg("产品库中存在同名产品！");
+						fail_msg("产品库中存在同型号产品！");
 						endLoadingIndicator();
 					}
 				});
@@ -83,13 +44,15 @@ var ProductContext = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+		$
+				.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+						function(data) {
+							self.supplierEmployees(data.employees);
 
-					self.totalCount(Math.round(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-				});
+							self.totalCount(Math.round(data.page.total
+									/ self.perPage));
+							self.setPageNums(self.currentPage());
+						});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -250,7 +213,7 @@ function caculateGrossProfit() {
 
 	$("#gross-profit").text(gross_profit);
 	$("#txt-gross-profit").val(gross_profit);
-	
+
 	$("#gross-child-profit").text(gross_child_profit);
 	$("#txt-gross-child-profit").val(gross_child_profit);
 
@@ -295,17 +258,17 @@ function caculateGrossProfit() {
 
 	$("#spot-cash").text(spot_cash)
 	$("#txt-spot-cash").val(spot_cash);
-	
+
 	$("#spot-child-cash").text(spot_child_cash)
 	$("#txt-spot-child-cash").val(spot_child_cash);
 
 	// 现金流
 	var cash_flow = product_price - spot_cash;
 	var cash_child_flow = product_child_price - spot_child_cash;
-	
+
 	$("#cash-flow").text(cash_flow);
 	$("#txt-cash-flow").val(cash_flow);
-	
+
 	$("#cash-child-flow").text(cash_child_flow);
 	$("#txt-cash-child-flow").val(cash_child_flow);
 

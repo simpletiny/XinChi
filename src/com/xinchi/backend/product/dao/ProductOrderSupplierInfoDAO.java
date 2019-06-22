@@ -41,4 +41,6 @@ public interface ProductOrderSupplierInfoDAO {
 	 */
 	public List<OrderSupplierInfoBean> selectByParam(OrderSupplierInfoBean bean);
 
+	public void deleteByOrderSupplierPk(String order_supplier_pk);
+
 }

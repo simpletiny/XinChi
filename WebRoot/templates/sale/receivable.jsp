@@ -285,6 +285,7 @@
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ridTail() }">抹零</button>
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { collect()}">代收</button>
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive()}">收入</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { tail98()}">98清尾</button>
 				</div>
 			</div>
 
@@ -333,7 +334,7 @@
 		</form>
 	</div>
 	<!-- 代收申请 -->
-	<div id="collect-submit" style="display: none; width: 1100px;height:700px; padding-top: 30px;overflow: auto">
+	<div id="collect-submit" style="display: none; width: 1100px; height: 700px; padding-top: 30px; overflow: auto">
 		<form id="form-collect">
 			<div class="input-row clearfloat">
 				<div class="col-md-3">
@@ -404,6 +405,64 @@
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
 						<a type="button" class="btn btn-green btn-r" data-bind="click: applyCollect">申请</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- 98清尾 -->
+	<div id="tail98-clear" style="display: none; width: 1100px; height: 500px; padding-top: 30px; overflow: auto">
+		<form id="form-tail98">
+			<div class="input-row clearfloat">
+				<div class="col-md-3">
+					<label class="l" style="width: 30%">客户</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:client_employee_name()"></p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 30%">主体</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:financial_body_name()"></p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 30%">团号</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:team_number()"></p>
+						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<label class="l" style="width: 30%">尾款</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default rmb" data-bind="text:tailMoney()"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-4">
+					<label class="l" style="width: 30%">清尾金额</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:tailMoney()"></p>
+						<input type="hidden" name="detail.received" data-bind="value:tailMoney()" id="tail98-money" class="form-control" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12">
+					<label class="l" style="width: 10%">备注</label>
+					<div class="ip" style="width: 90%">
+						<textarea maxlength="200" class="ip-" cols="60" rows="7" placeholder="备注" name="detail.comment"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="margin-top: 10px">
+					<div align="right">
+						<a type="button" class="btn btn-green btn-r" data-bind="click: applyTail98">申请</a>
 					</div>
 				</div>
 			</div>
@@ -654,7 +713,7 @@
 	</div>
 
 	<!-- 收入申请 -->
-	<div id="receive_submit" style="display: none; width: 1000px;height:650px; padding-top: 30px;overflow: auto">
+	<div id="receive_submit" style="display: none; width: 1000px; height: 650px; padding-top: 30px; overflow: auto">
 		<form id="form-receive">
 			<div class="input-row clearfloat">
 				<div class="col-md-4">
@@ -854,7 +913,7 @@
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">收款方</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.receiver" maxlength="10"class="form-control" required="required" />
+						<input type="text" name="detail.receiver" maxlength="10" class="form-control" required="required" />
 					</div>
 				</div>
 				<div class="col-md-4 required">
@@ -866,7 +925,7 @@
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">收款银行</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.receiver_bank" maxlength="30"  class="form-control" required="required" />
+						<input type="text" name="detail.receiver_bank" maxlength="30" class="form-control" required="required" />
 					</div>
 				</div>
 			</div>

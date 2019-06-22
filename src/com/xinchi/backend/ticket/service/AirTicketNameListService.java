@@ -3,6 +3,7 @@ package com.xinchi.backend.ticket.service;
 import java.util.List;
 
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -48,4 +49,6 @@ public interface AirTicketNameListService extends BaseService {
 	public List<AirTicketNameListBean> selectByPage(Page<AirTicketNameListBean> page);
 
 	public List<AirTicketNameListBean> selectByPks(String[] pks);
+
+	public List<PassengerAllotDto> selectPassengerAllotByPassengerPks(List<String> pks);
 }

@@ -44,6 +44,11 @@
 		delete from flight_info
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	
+	<delete id="deleteByFlightPk" parameterType="java.lang.String">
+		delete from flight_info
+		where flight_pk = #{flight_pk,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.FlightInfoBean">
 

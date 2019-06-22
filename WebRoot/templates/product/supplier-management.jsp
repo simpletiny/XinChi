@@ -170,7 +170,7 @@
 										<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0" /></td>
 										<td><input name="radio-jie-0" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-1" disabled="disabled" /></td>
-										<td><input class="required" type="number" st="day" /></td>
+										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
 										<td><input class="required" type="text" maxlength="15" st="time" /></td>
 										<td><input class="required" type="text" maxlength="15" st="city" /></td>
@@ -184,7 +184,7 @@
 										<td><input class="required" type="text" maxlength="10" st="txt-song-type-0" /></td>
 										<td><input name="radio-song-0" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-1" disabled="disabled" /></td>
-										<td><input class="required" type="number" st="day" /></td>
+										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
 										<td><input class="required" type="text" maxlength="15" st="time" /></td>
 										<td><input class="required" type="text" maxlength="15" st="city" /></td>

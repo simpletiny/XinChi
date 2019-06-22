@@ -27,6 +27,7 @@ import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
@@ -137,11 +138,18 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			osb.setOrder_pk(order_pk);
 			osb.setSupplier_cost(supplier_cost);
 			osb.setTourist_info(tourist_info);
-			String order_supplier_templet = DBCommonUtil.genPk() + ".doc";
-			osb.setConfirm_file_templet(order_supplier_templet);
 
-			// 保存地接社确认模板文件
-			saveSupplierConfirmTemplet(confirm_file_templet, order_supplier_templet);
+			String order_supplier_templet = DBCommonUtil.genPk() + ".doc";
+
+			osb.setConfirm_file_templet(
+					SimpletinyString.isEmpty(confirm_file_templet) || confirm_file_templet.equals("default") ? "default"
+							: order_supplier_templet);
+
+			if (!osb.getConfirm_file_templet().equals("default")) {
+				// 保存地接社确认模板文件
+				saveSupplierConfirmTemplet(confirm_file_templet, order_supplier_templet);
+			}
+
 			String order_supplier_pk = posDao.insert(osb);
 
 			JSONArray infos = supplier.getJSONArray("info_json");
@@ -209,7 +217,7 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			ProductOrderOperationBean poo = new ProductOrderOperationBean();
 			poo.setSupplier_count(sumcount);
 			poo.setTeam_number(order.getTeam_number());
-			poo.setOperate_index(supplier_index+1);
+			poo.setOperate_index(supplier_index + 1);
 			poo.setSupplier_cost(supplier_cost);
 			poo.setSupplier_product_name(supplier_product_name);
 			poo.setPeople_count(people_count);
@@ -271,5 +279,23 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void deleteOrderSupplier(String order_pk) {
+		List<OrderSupplierBean> osbs = posDao.selectByOrderPk(order_pk);
+		String destFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
+		for (OrderSupplierBean osb : osbs) {
+			// 删除订单供应商详细信息
+			posiDao.deleteByOrderSupplierPk(osb.getPk());
+			// 删除上传的模板
+			if (!osb.getConfirm_file_templet().equals(ResourcesConstants.DEFAULT)) {
+				File destFile = new File(destFolder + File.separator + osb.getConfirm_file_templet());
+				destFile.delete();
+			}
+		}
+
+		// 删除订单供应商信息
+		posDao.deleteByOrderPk(order_pk);
 	}
 }

@@ -40,4 +40,6 @@ public interface FlightInfoDAO {
 	 * @param bean
 	 */
 	public List<FlightInfoBean> selectByParam(FlightInfoBean bean);
+
+	public void deleteByFlightPk(String flight_pk);
 }

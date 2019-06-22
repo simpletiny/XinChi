@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.bean.AirTicketNeedBean;
+import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.tools.Page;
 
 @Service
@@ -27,6 +28,12 @@ public class AirTicketNeedServiceImpl implements AirTicketNeedService {
 	@Override
 	public List<AirTicketNeedBean> selectOrderByPage(Page page) {
 		return dao.selectOrderByPage(page);
+	}
+
+	@Override
+	public List<OrderAirInfoBean> selectOrderAirInfoByTeamNumber(String team_number) {
+		
+		return dao.selectOrderAirInfoByTeamNumber(team_number);
 	}
 
 }

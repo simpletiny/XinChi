@@ -1,0 +1,225 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@taglib uri="/struts-tags" prefix="s"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+
+	String key = request.getParameter("key");
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>欣驰国际</title>
+<style>
+.form-group {
+	margin-bottom: 5px;
+}
+
+.form-control {
+	height: 30px;
+}
+
+.fix-width1 {
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+	<div class="main-body">
+		<jsp:include page="../layout.jsp" />
+		<div class="subtitle">
+			<h2>
+				本地维护<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
+			</h2>
+		</div>
+		<input type="hidden" id="product-pk" value="<%=key%>" />
+		<div class="main-container">
+			<div class="main-box">
+
+				<div class="form-box info-form">
+
+					<div class="input-row clearfloat">
+						<div class="col-md-6">
+							<label class="l">产品名称</label>
+							<div class="ip">
+								<p class="ip-default" data-bind="text: product().name"></p>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">产品线</label>
+							<div class="ip">
+								<p class="ip-default" data-bind="text: product().location"></p>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6">
+							<label class="l">型号</label>
+							<div class="ip">
+								<p class="ip-default" data-bind="text: product().product_model"></p>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">编号</label>
+							<div class="ip">
+								<p class="ip-default" data-bind="text: product().product_number"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="div-location" data-bind="foreach:locals">
+					<div>
+						<div class="input-row clearfloat">
+							<div class="col-md-3">
+								<div class="ip">
+									<em class="small-box"> <input type="radio"
+										data-bind="attr:{name:'service_type_'+$index()}, checked:$data.service_type" value="0" st="chk-0" /><label>机场衔接</label>
+									</em>
+								</div>
+
+							</div>
+							<div class="col-md-1">
+								<div class="ip">
+									<em class="small-box"> <input type="radio"
+										data-bind="attr:{name:'service_type_'+$index()}, checked:$data.service_type" value="1" st="chk-1" /><label>接送机场</label>
+									</em>
+								</div>
+							</div>
+							<div class="col-md-3 required">
+								<label class="l" style="width: 70px !important">费用：</label>
+								<div class="ip">
+									<input class="ip- required" type="number" data-bind="value:$data.cost" st="cost" />
+								</div>
+							</div>
+						</div>
+						<div class="input-row clearfloat">
+							<div class="col-md-3">
+								<label class="l" style="width: 80px !important">供应商</label>
+								<div class="fix-width1">
+									<input type="text" class="ip-" st="supplier-name" data-bind="value:$data.supplier_name" onclick="choseSupplierEmployee(event)" /> <input type="text"
+										class="need" st="supplier-pk" data-bind="value:$data.supplier_pk" style="display: none" />
+								</div>
+							</div>
+							<div class="col-md-3 required">
+								<label class="l" style="width: 70px !important">服务名称</label>
+								<div class="ip">
+									<input class="ip- required" type="text" data-bind="value:$data.service_name" st="service-name" />
+								</div>
+							</div>
+							<div class="col-md-3 required">
+								<label class="l" style="width: 70px !important">人均成人</label>
+								<div class="ip">
+									<input class="ip- required" type="number" data-bind="value:$data.adult_cost" st="adult-cost" />
+								</div>
+							</div>
+							<div class="col-md-3">
+								<label class="l" style="width: 70px !important">人均儿童</label>
+								<div class="ip">
+									<input class="ip- " type="number" data-bind="value:$data.child_cost" st="child-cost" />
+								</div>
+							</div>
+						</div>
+						<div class="input-row clearfloat">
+							<div class="col-md-12">
+								<label class="l">服务要求：</label>
+								<div class="ip">
+									<textarea type="text" class="ip-default" rows="3" data-bind="value:$data.service_comment" maxlength="200"
+										st="service-comment" placeholder="服务要求"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="input-row clearfloat">
+							<div class="col-md-6">
+								<label class="l" style="width: 70px !important">游客信息：</label>
+								<div class="ip">
+									<div style="padding-top: 4px;">
+										<em class="small-box"> <input type="checkbox" data-bind="checked:$data.tourist_info.indexOf('name')>=0"
+											name="chk_tourist" value="name" /><label>姓名</label> <input type="checkbox"
+											data-bind="checked:$data.tourist_info.indexOf('sex')>=0" name="chk_tourist" value="sex" /><label>性别</label>
+											<input type="checkbox" data-bind="checked:$data.tourist_info.indexOf('age')>=0" name="chk_tourist"
+											value="age" /><label>年龄</label> <input type="checkbox" name="chk_tourist" value="id"
+											data-bind="checked:$data.tourist_info.indexOf('id')>=0" /><label>身份证号码</label> <input type="checkbox"
+											name="chk_tourist" data-bind="checked:$data.tourist_info.indexOf('tel')>=0" value="tel" /><label>联系方式</label>
+											<input type="checkbox" data-bind="checked:$data.tourist_info.indexOf('room_group')>=0" name="chk_tourist"
+											value="room_group" /><label>分房组</label>
+										</em>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr />
+					</div>
+				</div>
+				<div class="input-row clearfloat" style="text-align: right">
+					<div class="col-md-12">
+						<div class="ip">
+							<a type="submit" class="btn btn-r" href="javacript:void(0);" onclick="deleteLocation()">-本地</a> <a type="submit"
+								class="btn btn-r" href="javacript:void(0);" onclick="addLocation()">+本地</a>
+						</div>
+					</div>
+				</div>
+
+				<hr class="hr-big" />
+				<div align="right">
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: updateProductLocal">更新</a> <a type="submit"
+						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="supplier-pick" style="display: none;">
+		<div class="main-container">
+			<div class="main-box" style="width: 600px">
+				<div class="form-group">
+					<div class="span8">
+						<label class="col-md-2 control-label">姓名</label>
+						<div class="col-md-6">
+							<input type="text" id="supplier_name" class="form-control" placeholder="姓名" />
+						</div>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>姓名</th>
+								<th>财务主体</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: supplierEmployees">
+							<tr data-bind="event: {click: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
+								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.financial_body_name"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNums -->
+						<!-- ko if: $data == $root.currentPage() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPage() -->
+						<a data-bind="text: $data, click: $root.turnPage"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
+	</script>
+	<script src="<%=basePath%>static/js/product/local-management-edit.js"></script>
+</body>
+</html>

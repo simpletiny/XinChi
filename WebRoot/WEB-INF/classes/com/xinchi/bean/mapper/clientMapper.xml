@@ -42,6 +42,11 @@
 		<result column="talk_level" property="talk_level" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<resultMap id="CountMap" type="com.xinchi.bean.ClientCountDto">
+		<result column="oneYearorderCnt" property="oneYearorderCnt" jdbcType="INTEGER" />
+		<result column="moreYearorderCnt" property="moreYearorderCnt" jdbcType="INTEGER" />
+	</resultMap>
+
 	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientBean">
 		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean" select="selectClientUserByClientPk">
 			<result column="client_pk" property="client_pk" jdbcType="CHAR" />
@@ -600,6 +605,79 @@
 			</if>
 		</where>
 		ORDER BY address DESC
+	</select>
+	<select id="selectCountByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="CountMap">
+		SELECT
+		COUNT(IF(C.client_year_order_count IS NOT NULL
+		AND C.client_year_order_count = 1,
+		TRUE,
+		NULL)) AS oneYearorderCnt,
+		COUNT(IF(C.client_year_order_count IS NOT NULL
+		AND C.client_year_order_count > 1,
+		TRUE,
+		NULL)) AS moreYearorderCnt
+		FROM
+		client A
+		LEFT JOIN
+		view_client_user B ON A.pk = B.client_pk
+		LEFT JOIN
+		view_client_year_order_count C ON A.pk = C.client_pk
+		<where>
+			<if test="sales != null and sales !=''">
+				and (B.user_pks like CONCAT('%', #{sales,jdbcType=VARCHAR},'%') OR A.public_flg='Y')
+			</if>
+			<if test="client_name != null and client_name !=''">
+				and A.client_name like CONCAT('%',#{client_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="client_short_name != null and client_short_name !=''">
+				and A.client_short_name like CONCAT('%',#{client_short_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="address != null and address !=''">
+				and A.address like CONCAT('%',#{address,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="client_area != null and client_area !=''">
+				and A.client_area = #{client_area,jdbcType=VARCHAR}
+			</if>
+			<if test="client_county != null and client_county !=''">
+				and A.client_county = #{client_county,jdbcType=VARCHAR}
+			</if>
+			<if test="store_type != null and store_type !=''">
+				and A.store_type=#{store_type,jdbcType=VARCHAR}
+			</if>
+			<if test="back_level != null and back_level !=''">
+				and A.back_level=#{back_level,jdbcType=VARCHAR}
+			</if>
+			<if test="statuses != null and statuses !=''">
+				and A.delete_flg in
+				<foreach item="item" index="index" collection="statuses" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="relate_flgs != null and relate_flgs !=''">
+				and A.relate_flg in
+				<foreach item="item" index="index" collection="relate_flgs" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="public_flgs != null and public_flgs !=''">
+				and A.public_flg in
+				<foreach item="item" index="index" collection="public_flgs" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		 	<if test="talk_levels != null and talk_levels !=''">
+				and A.talk_level in
+				<foreach item="item" index="index" collection="talk_levels" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="main_businesses != null and main_businesses !=''">
+				and A.main_business in
+				<foreach item="item" index="index" collection="main_businesses" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> 
+		</where>
 	</select>
 	<select id="selectAdminByPage" parameterType="com.xinchi.tools.Page" resultMap="AdminResultMap">
 		select

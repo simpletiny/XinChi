@@ -41,4 +41,8 @@ public interface ProductLocalDAO {
 	 */
 	public List<ProductLocalBean> selectByParam(ProductLocalBean bean);
 
+	public List<ProductLocalBean> selectByProductPk(String product_pk);
+
+	public void deleteByProductPk(String product_pk);
+
 }

@@ -1,6 +1,5 @@
 package com.xinchi.backend.product.action;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +14,12 @@ import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.product.service.ProductReportService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.bean.FlightBean;
-import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
+import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductOrderDto;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
@@ -93,39 +93,7 @@ public class ProductAction extends BaseAction {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		product.setProduct_manager(sessionBean.getUser_number());
-		resultStr = service.insert(product);
-
-		JSONArray array = JSONArray.fromObject(json);
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = array.getJSONObject(i);
-			int supplier_index = obj.getInt("supplier_index");
-			String supplier_employee_pk = obj.getString("supplier_employee_pk");
-			String supplier_product_name = obj.getString("supplier_product_name");
-			String c = obj.getString("supplier_cost");
-			BigDecimal supplier_cost = null == c ? BigDecimal.ZERO : new BigDecimal(c);
-
-			int land_day = obj.getInt("land_day");
-			String pick_type = obj.getString("pick_type");
-			String picker = obj.getString("picker");
-			String picker_cellphone = obj.getString("picker_cellphone");
-			int off_day = obj.getInt("off_day");
-			String send_type = obj.getString("send_type");
-
-			ProductSupplierBean psb = new ProductSupplierBean();
-			psb.setSupplier_index(supplier_index);
-			psb.setSupplier_employee_pk(supplier_employee_pk);
-			psb.setLand_day(land_day);
-			psb.setPick_type(pick_type);
-			psb.setPicker(picker);
-			psb.setPicker_cellphone(picker_cellphone);
-			psb.setOff_day(off_day);
-			psb.setProduct_pk(product.getPk());
-			psb.setSupplier_product_name(supplier_product_name);
-			psb.setSupplier_cost(supplier_cost);
-			psb.setSend_type(send_type);
-
-			productSupplierService.insert(psb);
-		}
+		resultStr = service.createProduct(product);
 
 		return SUCCESS;
 	}
@@ -145,40 +113,40 @@ public class ProductAction extends BaseAction {
 	public String updateProduct() {
 		resultStr = service.update(product, delay);
 
-		// 删除之前的供应商联系
-		productSupplierService.deleteByProductPk(product.getPk());
-
-		JSONArray array = JSONArray.fromObject(json);
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = array.getJSONObject(i);
-			int supplier_index = obj.getInt("supplier_index");
-			String supplier_employee_pk = obj.getString("supplier_employee_pk");
-			String supplier_product_name = obj.getString("supplier_product_name");
-			String c = obj.getString("supplier_cost");
-			BigDecimal supplier_cost = null == c ? BigDecimal.ZERO : new BigDecimal(c);
-
-			int land_day = obj.getInt("land_day");
-			String pick_type = obj.getString("pick_type");
-			String picker = obj.getString("picker");
-			String picker_cellphone = obj.getString("picker_cellphone");
-			int off_day = obj.getInt("off_day");
-			String send_type = obj.getString("send_type");
-
-			ProductSupplierBean psb = new ProductSupplierBean();
-			psb.setSupplier_index(supplier_index);
-			psb.setSupplier_employee_pk(supplier_employee_pk);
-			psb.setLand_day(land_day);
-			psb.setPick_type(pick_type);
-			psb.setPicker(picker);
-			psb.setPicker_cellphone(picker_cellphone);
-			psb.setOff_day(off_day);
-			psb.setProduct_pk(product.getPk());
-			psb.setSupplier_product_name(supplier_product_name);
-			psb.setSupplier_cost(supplier_cost);
-			psb.setSend_type(send_type);
-
-			productSupplierService.insert(psb);
-		}
+		// // 删除之前的供应商联系
+		// productSupplierService.deleteByProductPk(product.getPk());
+		//
+		// JSONArray array = JSONArray.fromObject(json);
+		// for (int i = 0; i < array.size(); i++) {
+		// JSONObject obj = array.getJSONObject(i);
+		// int supplier_index = obj.getInt("supplier_index");
+		// String supplier_employee_pk = obj.getString("supplier_employee_pk");
+		// String supplier_product_name = obj.getString("supplier_product_name");
+		// String c = obj.getString("supplier_cost");
+		// BigDecimal supplier_cost = null == c ? BigDecimal.ZERO : new BigDecimal(c);
+		//
+		// int land_day = obj.getInt("land_day");
+		// String pick_type = obj.getString("pick_type");
+		// String picker = obj.getString("picker");
+		// String picker_cellphone = obj.getString("picker_cellphone");
+		// int off_day = obj.getInt("off_day");
+		// String send_type = obj.getString("send_type");
+		//
+		// ProductSupplierBean psb = new ProductSupplierBean();
+		// psb.setSupplier_index(supplier_index);
+		// psb.setSupplier_employee_pk(supplier_employee_pk);
+		// psb.setLand_day(land_day);
+		// psb.setPick_type(pick_type);
+		// psb.setPicker(picker);
+		// psb.setPicker_cellphone(picker_cellphone);
+		// psb.setOff_day(off_day);
+		// psb.setProduct_pk(product.getPk());
+		// psb.setSupplier_product_name(supplier_product_name);
+		// psb.setSupplier_cost(supplier_cost);
+		// psb.setSend_type(send_type);
+		//
+		// productSupplierService.insert(psb);
+		// }
 
 		return SUCCESS;
 	}
@@ -355,6 +323,7 @@ public class ProductAction extends BaseAction {
 		resultStr = service.saveProductSupplier(json);
 		return SUCCESS;
 	}
+
 	/**
 	 * 更新地接维护信息
 	 * 
@@ -375,10 +344,45 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 更新本地维护信息
+	 * 
+	 * @return
+	 */
+	public String updateProductLocal() {
+		resultStr = service.updateProductLocal(json);
+		return SUCCESS;
+	}
+
+	private List<ProductLocalBean> productLocals;
+
+	/**
+	 * 搜索本地维护
+	 * 
+	 * @return
+	 */
+	public String searchProductLocalByProductPk() {
+		productLocals = service.searchProductLocalByProductPk(product_pk);
+		return SUCCESS;
+	}
+
 	private FlightBean flight;
 
 	public String saveProductFlight() {
 		resultStr = service.saveProductFlight(flight, json);
+		return SUCCESS;
+	}
+
+	public String updateProductFlight() {
+		resultStr = service.updateProductFlight(flight, json);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private FlightService flightService;
+
+	public String searchFlightByProductPk() {
+		flight = flightService.selectByProductPk(product_pk);
 		return SUCCESS;
 	}
 
@@ -522,5 +526,13 @@ public class ProductAction extends BaseAction {
 
 	public void setFlight(FlightBean flight) {
 		this.flight = flight;
+	}
+
+	public List<ProductLocalBean> getProductLocals() {
+		return productLocals;
+	}
+
+	public void setProductLocals(List<ProductLocalBean> productLocals) {
+		this.productLocals = productLocals;
 	}
 }

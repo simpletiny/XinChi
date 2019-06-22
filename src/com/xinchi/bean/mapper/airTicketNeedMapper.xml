@@ -14,6 +14,24 @@
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="ordered" property="ordered" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OrderAirInfoMap" type="com.xinchi.bean.OrderAirInfoBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="air_leg" property="air_leg" jdbcType="VARCHAR" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="info_index" property="info_index" jdbcType="INTEGER" />
+		<result column="air_index" property="air_index" jdbcType="INTEGER" />
+		<result column="day_index" property="day_index" jdbcType="INTEGER" />
+		<result column="from_to_place" property="from_to_place" jdbcType="VARCHAR" />
+		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="operate_flg" property="operate_flg" jdbcType="VARCHAR" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="confirm_flg" property="confirm_flg" jdbcType="VARCHAR" />
+		<result column="air_date" property="air_date" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -42,33 +60,39 @@
 		from air_ticket_need
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-		select
+		SELECT
 		A.confirm_flg,
 		A.ticket_client_number,
-		B.user_name AS
-		ticket_client_name,
+		B.user_name AS ticket_client_name,
 		A.first_ticket_date,
 		A.first_from_to,
 		A.people_count,
 		A.team_number,
-		A.product_pk,
 		A.sale_order_pk,
-		A.air_ticket_cost,
 		A.standard_flg,
-		substring_index(A.passengers,':',1) AS passenger
-		from air_ticket_need A LEFT JOIN
+		A.passenger,
+		A.ordered
+		FROM
+		air_ticket_need A
+		LEFT JOIN
 		user_base B ON A.ticket_client_number = B.user_number
+		LEFT JOIN
+		air_ticket_order C ON A.team_number = C.team_number
 		<where>
-			<if test="params.bo.status != null and params.bo.status !=''">
-				and A.confirm_flg in 
-				<foreach item="item" index="index" collection="params.bo.status" open="(" separator="," close=")">
-					#{params.bo.status[${index}]}
-				</foreach>
+			<if test="params.bo.client_name != null and params.bo.client_name !=''">
+				and B.user_name like CONCAT('%', #{params.bo.client_name,jdbcType=VARCHAR},'%')
 			</if>
-				and A.air_ticket_cost IS NULL
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.ordered != null and params.bo.ordered !=''">
+				and A.ordered = #{params.bo.ordered,jdbcType=VARCHAR}
+			</if>
 		</where>
+		<!-- <where> <if test="params.bo.status != null and params.bo.status !=''"> and A.confirm_flg in <foreach item="item" index="index" 
+			collection="params.bo.status" open="(" separator="," close=")"> #{params.bo.status[${index}]} </foreach> </if> </where> -->
 	</select>
-<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+	<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.confirm_flg,
 		A.ticket_client_number,
@@ -83,8 +107,40 @@
 		A.sale_order_pk,
 		A.air_ticket_cost,
 		A.standard_flg
-		from air_ticket_need A LEFT JOIN
+		from air_ticket_need A LEFT
+		JOIN
 		user_base B ON A.ticket_client_number = B.user_number
 		where A.air_ticket_cost is not null
 	</select>
+
+	<select id="selectOrderAirInfoByTeamNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
+		select
+		pk,
+		air_leg,
+		info_index,
+		air_index,
+		day_index,
+		from_to_city,
+		from_to_place,
+		CASE
+		WHEN ISNULL(departure_date) THEN NULL
+		ELSE
+		DATE_ADD(departure_date,
+		INTERVAL day_index - 1 DAY)
+		END AS air_date,
+		team_number,
+		product_manager_number,
+		standard_flg,
+		departure_date,
+		operate_flg,
+		confirm_flg,
+		confirm_date
+		from
+		view_order_air_info
+		where team_number =
+		#{team_number,jdbcType=CHAR}
+		ORDER BY info_index,air_index
+	</select>
+
+
 </mapper>

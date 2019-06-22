@@ -368,7 +368,7 @@ var ProductBoxContext = function() {
 	self.orders = ko.observable({});
 
 	self.refresh = function() {
-
+		startLoadingIndicator("加载中");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -377,6 +377,8 @@ var ProductBoxContext = function() {
 			self.orders(data.tbcOrders);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
 		});
 	};
 	// 查看确认件

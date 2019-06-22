@@ -29,6 +29,8 @@ public class ProductLocalBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	private String supplier_name;
+
 	public String getProduct_pk() {
 		return product_pk;
 	}
@@ -115,6 +117,14 @@ public class ProductLocalBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
 	}
 
 }

@@ -24,6 +24,10 @@ public class ResourcesConstants {
 
 	// 公开用户id
 	public static String USER_PUBLIC = "public";
+
+	// default
+	public static String DEFAULT = "default";
+
 	// 管理员员工号
 	public static String USER_ADMIN_NUMBER = "N00000";
 
@@ -65,6 +69,8 @@ public class ResourcesConstants {
 	public static String RECEIVED_TYPE_TAIL = "TAIL";
 	// 代收
 	public static String RECEIVED_TYPE_COLLECT = "COLLECT";
+	// 98清尾
+	public static String RECEIVED_TYPE_TAIL98 = "TAIL98";
 	// 合账
 	public static String RECEIVED_TYPE_SUM = "SUM";
 	// 冲账出

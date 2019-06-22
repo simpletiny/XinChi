@@ -59,6 +59,12 @@
 		from product_supplier_info
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByProductSupplierPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_supplier_info
+		where product_supplier_pk = #{product_supplier_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from product_supplier_info

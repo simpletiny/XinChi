@@ -4,13 +4,12 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
-import com.xinchi.backend.product.dao.ProductDAO;
 
 @Repository
 public class ProductDAOImpl extends SqlSessionDaoSupport implements ProductDAO {

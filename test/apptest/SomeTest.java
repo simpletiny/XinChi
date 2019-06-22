@@ -1,9 +1,12 @@
 package apptest;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.FileReader;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
@@ -17,23 +20,36 @@ import org.springframework.stereotype.Component;
 public class SomeTest {
 	private static final int BUFFER_SIZE = 2 * 1024;
 
-	public static void main(String[] args) throws IOException {
-		File folder = new File("C:\\Users\\simpl\\Desktop\\mod\\test");
-		rename(folder,"grass","iron_grass");
+	public static void main(String[] args) throws Exception {
+		Set<String> xx = new HashSet<String>();
+		for (int i = 0; i < 10; i++) {
+			xx.add("sedwww");
+		}
+		for (String x:xx) {
+			System.out.println(x);
+		}
+
 	}
 
-	public static void rename(File f, String src, String dest) {
-		if (f.isDirectory()) {
-			List<File> files = Arrays.asList(f.listFiles());
-			for (File f1 : files) {
-				rename(f1, src, dest);
+	public static int countLine(File f, int n) throws Exception {
+		if (f.isFile()) {
+			String fn = f.getName();
+			if (fn.indexOf("java") >= 0 || fn.indexOf("jsp") >= 0 || fn.indexOf("js") >= 0 || fn.indexOf("xml") >= 0
+					|| fn.indexOf("properties") >= 0 || fn.indexOf("css") >= 0) {
+				LineNumberReader lnr = new LineNumberReader(new FileReader(f));
+				lnr.skip(Long.MAX_VALUE);
+				n += lnr.getLineNumber() + 1;
+				lnr.close();
+			}
+		} else {
+			File[] files = f.listFiles();
+			for (File file : files) {
+				n += countLine(file, n);
 			}
 		}
-		String parent = f.getParent();
-		String oldName = f.getName();
-		if (oldName.indexOf(src) >= 0) {
-			f.renameTo(new File(parent + File.separator + oldName.replaceAll(src, dest)));
-		}
+
+		return n;
 
 	}
+
 }

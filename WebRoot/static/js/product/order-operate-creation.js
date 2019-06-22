@@ -16,6 +16,9 @@ var ProductContext = function() {
 	}, function(data) {
 		self.order(data.order);
 		self.productSuppliers(data.productSuppliers);
+		if(self.productSuppliers().length==0){
+			addSupplier();
+		}
 	});
 
 	self.isD = function(t) {
@@ -25,79 +28,6 @@ var ProductContext = function() {
 		else
 			return false;
 	}
-
-	self.createProduct = function() {
-		if (!$("form").valid()) {
-			return;
-		}
-
-		var allNeeds = $('.need');
-		for (var i = 0; i < allNeeds.length; i++) {
-			var current = allNeeds[i];
-			if ($(current).val().trim() == "") {
-				fail_msg("请填写必填项目！");
-				return;
-			}
-		}
-
-		startLoadingIndicator("保存中");
-		// json化供应商信息
-		var json = '[';
-		var tbody = $("#table-supplier tbody");
-		var trs = $(tbody).children();
-		for (var i = 0; i < trs.length; i++) {
-			var tr = trs[i];
-			var index = i + 1;
-			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
-
-			if (supplierEmployeePk == '')
-				continue;
-
-			var supplierProductName = $(tr)
-					.find("[st='supplier-product-name']").val();
-			var supplierCost = $(tr).find("[st='supplier-cost']").val();
-
-			var landDay = $(tr).find("[st='land-day']").val();
-			var pickType = $(tr).find("[st='pick-type']").val();
-			var picker = $(tr).find("[st='picker']").val();
-			var pickerCellphone = $(tr).find("[st='picker-cellphone']").val();
-			var offDay = $(tr).find("[st='off-day']").val();
-			var sendType = $(tr).find("[st='send-type']").val();
-
-			var current = '{"supplier_index":"' + index
-					+ '","supplier_employee_pk":"' + supplierEmployeePk
-					+ '","supplier_product_name":"' + supplierProductName
-					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
-					+ landDay + '","pick_type":"' + pickType + '","picker":"'
-					+ picker + '","picker_cellphone":"' + pickerCellphone
-					+ '","off_day":"' + offDay + '","send_type":"' + sendType
-					+ '"}';
-			if (i == trs.length - 1) {
-				json += current + ']';
-			} else {
-				json += current + ',';
-			}
-		}
-
-		var data = $("form").serialize();
-		data += "&json=" + json;
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'product/createProduct',
-			data : data
-		}).success(
-				function(str) {
-					endLoadingIndicator();
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product.jsp";
-					} else if (str == "exists") {
-						fail_msg("产品库中存在同名产品！");
-						endLoadingIndicator();
-					}
-				});
-
-	};
 
 	// 保存地接维护信息
 	self.createOrderOperation = function() {
@@ -117,7 +47,7 @@ var ProductContext = function() {
 					endLoadingIndicator();
 					if (str == "success") {
 						window.location.href = self.apiurl
-								+ "templates/product/product-upkeep.jsp";
+								+ "templates/product/product-order.jsp";
 					} else {
 						fail_msg(str);
 					}
@@ -435,7 +365,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -452,7 +382,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -538,7 +468,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -555,7 +485,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'

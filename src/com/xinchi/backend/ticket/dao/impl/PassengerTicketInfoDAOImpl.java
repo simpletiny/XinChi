@@ -40,13 +40,21 @@ public class PassengerTicketInfoDAOImpl extends SqlSessionDaoSupport implements 
 
 	@Override
 	public PassengerTicketInfoBean selectByPrimaryKey(String id) {
-		return (PassengerTicketInfoBean) daoUtil.selectByPK("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByPrimaryKey", id);
+		return (PassengerTicketInfoBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<PassengerTicketInfoBean> selectByParam(PassengerTicketInfoBean bean) {
-		List<PassengerTicketInfoBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByParam", bean);
+		List<PassengerTicketInfoBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByParam", bean);
 		return list;
 	}
 
+	@Override
+	public List<PassengerTicketInfoBean> selectByPassengerPk(String passenger_pk) {
+		List<PassengerTicketInfoBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByPassengerPk", passenger_pk);
+		return list;
+	}
 }

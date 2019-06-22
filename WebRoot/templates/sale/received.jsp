@@ -95,7 +95,7 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">销售</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',click:refresh, optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',event:{change:refresh}, optionsCaption: '--全部--'"
 										name="detail.create_user"></select>
 								</div>
 							</div>
@@ -137,9 +137,13 @@
 								<td data-bind="text: $root.typeMapping[$data.type]"></td>
 								<td data-bind="text: $data.received_time"></td>
 								<td data-bind="text: $data.card_account"></td>
+								<!-- ko if:$data.type!='TAIL98' -->
 								<td><a href="javascript:void(0)"
 												data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
-								
+								<!-- /ko -->
+								<!-- ko if:$data.type=='TAIL98' -->
+								<td>无 </td>
+								<!-- /ko -->
 								<!-- ko if:$data.type=='SUM' -->
 								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewDetail($data.related_pk)}}">详情</a></td>
 								<!-- /ko -->

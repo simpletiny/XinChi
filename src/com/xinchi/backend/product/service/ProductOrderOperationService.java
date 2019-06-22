@@ -45,4 +45,6 @@ public interface ProductOrderOperationService extends BaseService{
 	public void deleteByTeamNumber(String team_number);
 
 	public String createOrderOperation(String json);
+
+	public void deleteOrderSupplier(String order_pk);
 }

@@ -47,5 +47,10 @@
 		</action>
 
 		<!-- 产品相关文件下载 end -->
+	
+		<!-- 预览word html文件 -->
+		<action name="viewWord" class="fileAction" method="viewWord">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 </struts>

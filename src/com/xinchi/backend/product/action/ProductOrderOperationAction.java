@@ -171,7 +171,8 @@ public class ProductOrderOperationAction extends BaseAction {
 			}
 
 			service.deleteByTeamNumber(t_n);
-
+			// 删除订单地接维护信息
+			service.deleteOrderSupplier(order_pk);
 			// 删除应付款
 			payableService.deletePayableByTeamNumber(t_n);
 

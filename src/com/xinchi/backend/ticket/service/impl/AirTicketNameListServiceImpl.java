@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.tools.Page;
 
 @Service
@@ -59,6 +60,11 @@ public class AirTicketNameListServiceImpl implements AirTicketNameListService {
 	@Override
 	public List<AirTicketNameListBean> selectByPks(String[] pks) {
 		return dao.selectByPks(pks);
+	}
+
+	@Override
+	public List<PassengerAllotDto> selectPassengerAllotByPassengerPks(List<String> pks) {
+		return dao.selectByPassengerPks(pks);
 	}
 
 }

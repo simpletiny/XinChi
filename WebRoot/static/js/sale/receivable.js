@@ -6,6 +6,7 @@ var receiveLayer;
 var payLayer;
 var sumPayLayer;
 var flyLayer;
+var tail98Layer;
 
 var OrderContext = function() {
 	var today = new Date();
@@ -187,6 +188,87 @@ var OrderContext = function() {
 			success : function(str) {
 				endLoadingIndicator();
 				layer.close(tailLayer);
+				if (str == "success") {
+					self.search();
+				} else {
+					fail_msg("申请失败，请联系管理员");
+				}
+			}
+		});
+	};
+
+	// 98清尾
+	self.tail98 = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选中一个订单");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var current = self.chosenOrders()[0];
+			var check_result = true;
+			var receivable = 0;
+			if (current.final_flg == "Y") {
+				if (current.final_balance <= 0) {
+					fail_msg(current.team_number + "尾款必须为正");
+					check_result = false;
+				} else {
+					receivable = current.final_receivable;
+					self.tailMoney(current.final_balance);
+				}
+
+			} else {
+				if (current.budget_balance == 0) {
+					fail_msg(current.team_number + "尾款必须为正");
+					check_result = false;
+				} else {
+					receivable = current.budget_receivable;
+					self.tailMoney(current.budget_balance);
+				}
+			}
+			
+			if (Math.ceil(receivable * 0.02) < self.tailMoney()) {
+				check_result = false;
+				fail_msg("尾款太多！");
+			}
+
+			if (!check_result)
+				return;
+
+			self.team_number(current.team_number);
+			self.client_employee_name(current.client_employee_name);
+			self.financial_body_name(current.financial_body_name);
+			$(".rmb").formatCurrency();
+			tail98Layer = $.layer({
+				type : 1,
+				title : [ '98清尾', '' ],
+				maxmin : false,
+				closeBtn : [ 1, true ],
+				shadeClose : false,
+				area : [ '1120px', '450px' ],
+				offset : [ '150px', '' ],
+				scrollbar : true,
+				page : {
+					dom : '#tail98-clear'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		}
+	};
+
+	self.applyTail98 = function() {
+		startLoadingSimpleIndicator("保存中");
+		var data = $("#form-tail98").serialize();
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/applyTail98',
+			data : data,
+			success : function(str) {
+				endLoadingIndicator();
+				layer.close(tail98Layer);
 				if (str == "success") {
 					self.search();
 				} else {

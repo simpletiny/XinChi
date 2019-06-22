@@ -97,7 +97,7 @@ var ProductContext = function() {
 		var data = "json=" + json;
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'product/updateProductSupplier',
+			url : self.apiurl + 'product/saveProductSupplier',
 			data : data
 		}).success(
 				function(str) {
@@ -393,7 +393,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -410,7 +410,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -503,7 +503,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -520,7 +520,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'

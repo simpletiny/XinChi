@@ -705,6 +705,359 @@
 			<comment>CREATE VIEW view_back_money_balance </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS budget_order_view;
+            		CREATE VIEW budget_order_view AS
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            substring_index(A.name_list,':',1) AS passenger_captain,
+                            '' AS receivable_comment,
+                            '' AS treat_comment,
+                            '' AS client_name,
+                            '' AS ticket_number,
+                            '' AS start_city,
+                            '' AS start_airport,
+                            '' AS end_city,
+                            '' AS end_airport,
+                            '' AS off_time,
+                            '' AS land_time,
+                            '' AS next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							0 AS product_value
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            A.passenger_captain,
+                            A.receivable_comment,
+                            A.treat_comment,
+                            F.client_short_name AS client_name,
+                            A.ticket_number,
+                            A.start_city,
+                            A.start_airport,
+                            A.end_city,
+                            A.end_airport,
+                            A.off_time,
+                            A.land_time,
+                            A.next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							A.product_value
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+       				LEFT JOIN client F ON D.financial_body_pk = F.pk
+             ]]>
+			<comment>UPDATE budget_standard_order A</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS view_order_air_info_base;
+					CREATE VIEW view_order_air_info_base AS
+					    SELECT 
+					        pk,
+					        order_supplier_pk,
+					        info_index,
+					        1 AS air_index,
+					        pick_leg AS air_leg,
+					        pick_day AS day_index,
+					        pick_city AS from_to_city,
+					        pick_place AS from_to_place
+					    FROM
+					        order_supplier_info
+					    WHERE
+					        pick_type = 0 
+					    UNION ALL SELECT 
+					        pk,
+					        order_supplier_pk,
+					        info_index,
+					        2 AS air_index,
+					        send_leg,
+					        send_day,
+					        send_city,
+					        send_place
+					    FROM
+					        order_supplier_info
+					    WHERE
+					        send_type = 0
+					    ORDER BY pk , day_index;
+             ]]>
+			<comment>CREATE VIEW view_order_air_info_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS view_order_air_info;
+					CREATE VIEW view_order_air_info AS
+					    SELECT 
+					        A.pk,
+					        A.air_leg,
+					        A.info_index,
+					        A.air_index,
+					        A.day_index,
+					        A.from_to_city,
+					        A.from_to_place,
+					        C.team_number,
+					        C.product_manager_number,
+					        C.standard_flg,
+					        C.departure_date,
+					        C.operate_flg,
+					        C.confirm_flg,
+					        C.confirm_date
+					    FROM
+					        view_order_air_info_base A
+					            LEFT JOIN
+					        order_supplier B ON A.order_supplier_pk = B.pk
+					            LEFT JOIN
+					        budget_order_view C ON B.order_pk = C.pk;
+             ]]>
+			<comment>CREATE VIEW view_order_air_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS air_ticket_need;
+					 CREATE VIEW air_ticket_need AS
+					    SELECT 
+					        A.confirm_flg,
+					        A.operate_flg,
+					        A.standard_flg,
+					        B.pk AS product_pk,
+					        A.pk AS sale_order_pk,
+					        A.passenger_captain AS passenger,
+					        B.product_manager_number AS ticket_client_number,
+					        CASE
+					            WHEN ISNULL(A.departure_date) OR ISNULL(B.pk) THEN NULL
+					            ELSE DATE_ADD(A.departure_date,
+					                INTERVAL B.day_index - 1 DAY)
+					        END AS first_ticket_date,
+					        CASE
+					            WHEN ISNULL(B.pk) THEN NULL
+					            ELSE B.from_to_city
+					        END AS first_from_to,
+					        (IF(ISNULL(A.adult_count),
+					            0,
+					            A.adult_count) + IF(ISNULL(A.special_count),
+					            0,
+					            A.special_count)) AS people_count,
+					        A.team_number
+					    FROM
+					        budget_order_view A
+					            LEFT JOIN
+					        view_order_air_info B ON A.team_number = B.team_number
+					            AND B.info_index = 0
+					            AND B.air_index = 1
+					    WHERE
+					        A.operate_flg = 'I'
+					            AND A.confirm_date >= '2019-05-01';
+             ]]>
+			<comment>ALTER VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE TABLE air_leg (
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  from_city VARCHAR(20) NULL COMMENT '出发城市',
+					  to_city VARCHAR(20) NULL COMMENT '抵达城市',
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  hot_flg CHAR(1) NULL DEFAULT 'N' COMMENT '常用标识',
+					  sort_index INT NULL DEFAULT 1 COMMENT '排序号',
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '票务航段表';
+             ]]>
+			<comment>CREATE TABLE air_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE TABLE air_ticket_order_leg (
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  ticket_order_pk CHAR(22) NOT NULL,
+					  date VARCHAR(10) NOT NULL,
+					  sort_index INT(11) NOT NULL DEFAULT '1' COMMENT '排序号',
+					  from_city VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL COMMENT '出发城市',
+					  to_city VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL COMMENT '抵达城市',
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '票务订单航段表';
+             ]]>
+			<comment>CREATE TABLE air_ticket_order_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE air_ticket_order 
+						DROP COLUMN sale_standard_flg,
+						DROP COLUMN sale_order_pk,
+						DROP COLUMN tour_product_pk,
+						CHANGE COLUMN ticket_cost ticket_cost DECIMAL(12,2) NULL ;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE air_ticket_payable 
+						CHANGE COLUMN PNR PNR VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ;
+             ]]>
+			<comment>ALTER TABLE air_ticket_payable </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_name_list 
+					ADD COLUMN status CHAR(1) NULL DEFAULT 'I' COMMENT 'I待操作，Y已操作' AFTER update_user;
+             ]]>
+			<comment>ALTER TABLE air_ticket_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP view if exists view_passenger_allot;
+				CREATE VIEW view_passenger_allot AS
+				    SELECT 
+				        A.pk AS passenger_pk,
+				        A.id,
+				        A.name,
+				        B.date,
+				        B.from_city,
+				        B.to_city,
+				        A.ticket_order_pk,
+				        IF(C.pk IS NULL, 'N', 'Y') AS is_allot
+				    FROM
+				        air_ticket_name_list A
+				            LEFT JOIN
+				        air_ticket_order_leg B ON A.ticket_order_pk = B.ticket_order_pk
+				            LEFT JOIN
+				        passenger_ticket_info C ON A.pk = C.passenger_pk
+				            AND C.from_to_city = CONCAT(B.from_city, '--', B.to_city);
+             ]]>
+			<comment>CREATE VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_order 
+				CHANGE COLUMN ticket_cost ticket_cost DECIMAL(12,2) NULL DEFAULT 0 ;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE air_ticket_order
+				ADD COLUMN cost_done_flg CHAR NULL DEFAULT 'N' AFTER update_user;
+			]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

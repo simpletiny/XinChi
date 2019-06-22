@@ -86,6 +86,25 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 98清尾
+	 * 
+	 * @return
+	 */
+	public String applyTail98() {
+		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
+		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
+		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+		detail.setClient_employee_pk(receivable.getClient_employee_pk());
+		detail.setReceived_time(DateUtil.today());
+		detail.setCollecter("98清尾");
+		receivedService.insert(detail);
+		receivableService.updateReceivableReceived(detail);
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	// 收入申请
 	public String applyReceive() {
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_RECEIVED);

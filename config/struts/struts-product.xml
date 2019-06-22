@@ -110,14 +110,34 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		
-		<!-- 保存地接维护 -->
+		<!-- 保存本地维护 -->
 		<action name="saveProductLocal" class="productAction" method="saveProductLocal">
 			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateProductLocal" class="productAction" method="updateProductLocal">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 搜索本地维护 -->
+		<action name="searchProductLocalByProductPk" class="productAction" method="searchProductLocalByProductPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 		
 		<!-- 保存机票维护 -->
 		<action name="saveProductFlight" class="productAction" method="saveProductFlight">
 			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="updateProductFlight" class="productAction" method="updateProductFlight">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchFlightByProductPk" class="productAction" method="searchFlightByProductPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 		<!-- 产品维护操作 end -->
 

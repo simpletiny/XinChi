@@ -18,14 +18,18 @@ var OrderContext = function() {
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
-					msg : '锁定操作后销售不能修改名单。',
+					msg : '确定要生成操作名单 吗？',
 					btns : 2,
 					type : 4,
 					btn : [ '知道了', '再等等' ],
 					yes : function(index) {
 						layer.close(index);
-						startLoadingIndicator("锁定中...");
-						var data = "airTicketOrderPks=" + self.chosenOrders();
+						startLoadingIndicator("生成中...");
+						var data = "";
+						for (var i = 0; i < self.chosenOrders().length; i++) {
+							data += "airTicketOrderPks="
+									+ self.chosenOrders()[i] + "&";
+						}
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'ticket/lockTicketOrder',
@@ -46,22 +50,13 @@ var OrderContext = function() {
 		}
 	};
 
-	self.airTickets = ko.observableArray([]);
+	self.airTickets = ko.observable();
 	// 查看航段信息
-	self.checkTicketPart = function(product_pk, first_ticket_date) {
-		var x = new Date(first_ticket_date);
-		self.airTickets.removeAll();
-		$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-			product_pk : product_pk
+	self.checkTicketPart = function(ticket_order_pk) {
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderLegByOrderPk', {
+			order_pk : ticket_order_pk
 		}, function(data) {
-			$(data.air_tickets).each(function(idx, ticket) {
-				var ticket_start_day = ticket.start_day;
-				var ticket_end_day = ticket.end_day;
-				ticket.off_date = (x.addDate(ticket_start_day - 1)).Format("yyyy-MM-dd");
-				ticket.land_date = (x.addDate(ticket_end_day - 1)).Format("yyyy-MM-dd");
-				self.airTickets.push(ticket);
-			});
-
+			self.airTickets(data.air_tickets);
 			airTicketCheckLayer = $.layer({
 				type : 1,
 				title : [ '航段信息', '' ],
@@ -82,39 +77,17 @@ var OrderContext = function() {
 
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(sale_order_pk, standard_flg) {
+	self.checkPassengers = function(team_number) {
 		self.passengers.removeAll();
-		var url = "";
-		if (standard_flg == "Y") {
-			url = "order/searchTbcBsOrderByPk";
-		} else {
-			url = "order/searchTbcBnsOrderByPk";
-		}
+		startLoadingIndicator("加载中...");
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
 		$.getJSON(self.apiurl + url, {
-			order_pk : sale_order_pk
+			team_number : team_number
 		}, function(data) {
-			var order;
-			if (standard_flg == "Y") {
-				order = data.bsOrder;
-			} else {
-				order = data.bnsOrder;
-			}
 
-			var name_list = order.name_list;
-			if (null != name_list) {
-				var names = name_list.split(";");
-				for ( var i = 0; i < names.length; i++) {
-					var d = names[i].split(":");
-					if (d.length < 2)
-						continue;
-
-					var passenger = new Object();
-					passenger.index = i + 1;
-					passenger.name = d[0];
-					passenger.id = d[1];
-					self.passengers.push(passenger);
-				}
-			}
+			self.passengers(data.passengers);
+			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,
 				title : [ '乘客信息', '' ],
@@ -138,14 +111,18 @@ var OrderContext = function() {
 	});
 
 	self.refresh = function() {
+		startLoadingIndicator("加载中...");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderByPage', param, function(data) {
-			self.orders(data.airTicketOrders);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage + "&airTicketOrder.status=I";
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderByPage', param,
+				function(data) {
+					self.orders(data.airTicketOrders);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+					endLoadingIndicator();
+				});
 	};
 
 	self.search = function() {
@@ -190,9 +167,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

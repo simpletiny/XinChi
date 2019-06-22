@@ -51,4 +51,9 @@ public class ProductOrderSupplierInfoDAOImpl extends SqlSessionDaoSupport implem
 		return list;
 	}
 
+	@Override
+	public void deleteByOrderSupplierPk(String order_supplier_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.OrderSupplierInfoMapper.deleteByOrderSupplierPk", order_supplier_pk);
+	}
+
 }

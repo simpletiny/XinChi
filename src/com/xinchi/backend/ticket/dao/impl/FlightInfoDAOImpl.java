@@ -50,4 +50,9 @@ public class FlightInfoDAOImpl extends SqlSessionDaoSupport implements FlightInf
 		return list;
 	}
 
+	@Override
+	public void deleteByFlightPk(String flight_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.FlightInfoMapper.deleteByFlightPk", flight_pk);
+	}
+
 }

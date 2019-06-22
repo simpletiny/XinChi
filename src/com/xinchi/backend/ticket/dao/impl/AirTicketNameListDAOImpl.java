@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -41,12 +42,14 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 
 	@Override
 	public AirTicketNameListBean selectByPrimaryKey(String id) {
-		return (AirTicketNameListBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByPrimaryKey", id);
+		return (AirTicketNameListBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<AirTicketNameListBean> selectByParam(AirTicketNameListBean bean) {
-		List<AirTicketNameListBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByParam", bean);
+		List<AirTicketNameListBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByParam", bean);
 		return list;
 	}
 
@@ -58,6 +61,27 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 	@Override
 	public List<AirTicketNameListBean> selectByPks(String[] pks) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByPks", pks);
+	}
+
+	@Override
+	public List<PassengerAllotDto> selectByPassengerPks(List<String> passenger_pks) {
+		List<PassengerAllotDto> list = daoUtil
+				.selectListByParam("com.xinchi.bean.mapper.PassengerAllotMapper.selectByPassengerPks", passenger_pks);
+		return list;
+	}
+
+	@Override
+	public List<PassengerAllotDto> selectPassengerAllotByPassengerPk(String passenger_pk) {
+		List<PassengerAllotDto> list = daoUtil.selectListByParam(
+				"com.xinchi.bean.mapper.PassengerAllotMapper.selectByPassengerPk", passenger_pk);
+		return list;
+	}
+
+	@Override
+	public List<PassengerAllotDto> selectPassengerAllotByOrderPk(String order_pk) {
+		List<PassengerAllotDto> list = daoUtil.selectListByParam(
+				"com.xinchi.bean.mapper.PassengerAllotMapper.selectByOrderPk", order_pk);
+		return list;
 	}
 
 }

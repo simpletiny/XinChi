@@ -22,6 +22,7 @@
 		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="cost_done_flg" property="cost_done_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -32,16 +33,14 @@
 		first_end_city,
 		people_count,
 		team_number,
-		tour_product_pk,
-		sale_order_pk,
 		status,
 		lock_flg,
-		sale_standard_flg,
 		pk,
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		cost_done_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -238,6 +237,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="cost_done_flg != null">
+				cost_done_flg = #{cost_done_flg,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -258,31 +260,28 @@
 		A.first_end_city,
 		A.people_count,
 		A.team_number,
-		A.tour_product_pk,
-		A.sale_order_pk,
 		A.status,
 		A.lock_flg,
-		A.sale_standard_flg,
 		A.pk,
 		A.create_user,
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		substring_index(C.name_list,':',1) AS passenger
+		A.cost_done_flg,
+		C.passenger_captain AS
+		passenger
 		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
-		LEFT JOIN budget_order_view C ON A.sale_order_pk = C.pk
+		LEFT JOIN budget_order_view C
+		ON A.team_number = C.team_number
 		<where>
-			<if test="params.bo.lock_flgs != null and params.bo.lock_flgs !=''">
-				and A.lock_flg in
-				<foreach item="item" index="index" collection="params.bo.lock_flgs" open="(" separator="," close=")">
-					#{params.bo.lock_flgs[${index}]}
-				</foreach>
-			</if>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.team_number != null and params.bo.team_number !=''">
 				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.status != null and params.bo.status !=''">
+				and A.status = #{params.bo.status,jdbcType=VARCHAR}
 			</if>
 		</where>
 		order by A.first_ticket_date

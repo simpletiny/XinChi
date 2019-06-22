@@ -22,7 +22,6 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
-import com.xinchi.common.Utils;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
 import com.xinchi.tools.Page;

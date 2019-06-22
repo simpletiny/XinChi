@@ -1,5 +1,7 @@
 package com.xinchi.backend.util.action;
 
+import static com.xinchi.common.SimpletinyString.isEmpty;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.FileFolder;
-import static com.xinchi.common.SimpletinyString.isEmpty;
 import com.xinchi.common.Utils;
+import com.xinchi.common.office.SimpletinyWord;
 import com.xinchi.tools.PropertiesUtil;
 
 @Controller
@@ -27,6 +29,8 @@ public class FileAction extends BaseAction {
 	private String fileFileName;
 	// 下载的文件类型，通过类型查找文件夹地址
 	private String fileType;
+
+	private String viewType;
 
 	public String getFileStream() throws IOException {
 		String baseFolder = PropertiesUtil.getProperty(FileFolder.valueOf(fileType).value());
@@ -52,9 +56,10 @@ public class FileAction extends BaseAction {
 		// fips.close();
 		return SUCCESS;
 	}
+
 	public String blobUpload() throws IOException {
 		InputStream in = new FileInputStream(file);
-		
+
 		String ext = Utils.getFileExt(fileFileName);
 		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		File destfile = new File(fileFolder + File.separator + DBCommonUtil.genPk() + "." + ext);
@@ -62,6 +67,19 @@ public class FileAction extends BaseAction {
 		fileName = destfile.getName();
 		fips = new FileInputStream(destfile);
 		// fips.close();
+		return SUCCESS;
+	}
+
+	public String viewWord() throws Exception {
+		String fileFolder = "";
+		// 地接确认文件
+		if (viewType.endsWith("sc")) {
+			fileFolder = PropertiesUtil.getProperty("supplierConfirmTempletFolder");
+
+		} else if (viewType.equals("")) {
+
+		}
+		resultStr = SimpletinyWord.Word2003ToHtml(fileFolder + File.separator + fileName);
 		return SUCCESS;
 	}
 
@@ -111,5 +129,13 @@ public class FileAction extends BaseAction {
 
 	public void setSubFolder(String subFolder) {
 		this.subFolder = subFolder;
+	}
+
+	public String getViewType() {
+		return viewType;
+	}
+
+	public void setViewType(String viewType) {
+		this.viewType = viewType;
 	}
 }

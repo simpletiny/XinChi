@@ -69,7 +69,8 @@ var ReceivedContext = function() {
 		'STRIKEOUT' : '冲账/出',
 		'STRIKEIN' : '冲账/入',
 		'COLLECT' : '代收',
-		'FLY' : 'FLY'
+		'FLY' : 'FLY',
+		'TAIL98':'98清尾'
 	};
 
 	// 计算合计

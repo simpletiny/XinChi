@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -41,6 +40,9 @@
 	margin-left: 10px;
 	margin-top: 10px;
 	background: #fff;
+	position: fixed;
+	right: 8%;
+	z-index: 100;
 }
 
 .deletePassenger {
@@ -49,23 +51,40 @@
 	border: solid 1px red;
 	z-index: 200
 }
+
+.fixed {
+	font-size: 12px;
+	display: block;
+	position: fixed;
+	right: 15%;
+	top: 200px;
+	margin-left: 10px;
+	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
+}
 </style>
 </head>
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>名单操作</h2>
+			<h2>待操作名单</h2>
 		</div>
-
+		<div class="fixed">
+			<div style="width: 30%; float: right">
+				<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
+			</div>
+		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box">
 				<form class="form-horizontal search-panel">
-					<div class="form-group">
-						<div style="width: 30%; float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
-						</div>
-					</div>
+
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -86,7 +105,8 @@
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
+							<!-- <button type="submit" class="btn btn-green" data-bind="click: doCopy">复制选中的名单信息</button> -->
 						</div>
 					</div>
 				</form>
@@ -95,23 +115,25 @@
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" onclick="checkAll(this)" />全选</th>
-								<th>客户</th>
+								<th>乘机人</th>
 								<th>团号</th>
+								<th>客户</th>
 								<th>首段日期</th>
 								<th>首航段</th>
-								<th>乘机人</th>
 								<th>身份证号</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
-							<tr style="overflow: hidden">
+							<tr style="overflow: hidden;">
 								<!--  onclick="showDetail(this)" -->
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+':'+$data.name}, checked: $root.chosenPassengers" /></td>
-								<td data-bind="text: $data.client_name"></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id}, checked: $root.chosenPassengers" /></td>
+								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.team_number"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-								<td data-bind="text: $data.name"></td>
+
 								<td data-bind="text: $data.id"></td>
 							</tr>
 						</tbody>
@@ -142,7 +164,8 @@
 		<div class="form-group">
 			<label class="col-md-3 control-label" style="float: left">票源</label>
 			<div style="width: 70%; float: left">
-				<select class="form-control" style="height: 34px" id="select-ticket-source" data-bind="options: existsSources,optionsText:'name',optionsValue:'index', optionsCaption: '新增'"></select>
+				<select class="form-control" style="height: 34px" id="select-ticket-source"
+					data-bind="options: existsSources,optionsText:'name',optionsValue:'index', optionsCaption: '新增'"></select>
 			</div>
 		</div>
 		<div class="form-group" style="float: right; margin-top: 10px">

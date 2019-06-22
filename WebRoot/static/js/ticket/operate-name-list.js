@@ -15,7 +15,7 @@ var AgencyContext = function() {
 			var ticket_cost = $(current).find("input[st^='ticket-cost']").val();
 			var ticket_PNR = $(current).find("input[st^='ticket-PNR']").val();
 
-			if (ticket_source == "" || ticket_cost == "" || ticket_PNR == "") {
+			if (ticket_source == "" || ticket_cost == "") {
 				fail_msg("请填写必填项！");
 				endLoadingIndicator();
 				return;
@@ -25,7 +25,7 @@ var AgencyContext = function() {
 			var trs = $(current).find(".table-ticket tbody tr");
 			for ( var j = 0; j < trs.length; j++) {
 				var tr = trs[j];
-				var ticket_index = $(tr).find("input[st^='ticket-index']").val();
+				var ticket_index = j+1;
 				var ticket_date = $(tr).find("input[st^='ticket-date']").val();
 				var ticket_number = $(tr).find("input[st^='ticket-number']").val();
 				var from_to_time = $(tr).find("input[st^='from-to-time']").val();
@@ -83,17 +83,17 @@ function deleteRow(input) {
 		// do nothing
 	}
 }
-/**
- * 添加row
- * 
- * @param btn
- */
-function addRow(btn) {
-	var template = '<tr>' + '<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>' + '<td><input st="ticket-index" type="number" /></td>'
-			+ '<td><input class="date-picker" st="ticket-date" type="text" /></td>' + '<td><input st="ticket-number" maxlength="10" type="text" /></td>'
-			+ '<td><input st="from-to-time" maxlength="20" type="text" /></td>' + '<td><input st="from-to-city"  maxlength="50" type="text" /></td>'
-			+ '<td><input st="from-airport"  maxlength="10" type="text" /></td>' + '<td><input st="to-airport"  maxlength="10" type="text" /></td>'
-			+ '<td><input st="terminal"  maxlength="10" type="text" /></td>' + '</tr>';
-	$(btn).parent().parent().find("tbody").append(template);
-	reloadDatePicker();
-}
+///**
+// * 添加row
+// * 
+// * @param btn
+// */
+//function addRow(btn) {
+//	var template = '<tr>' + '<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>' + '<td><input st="ticket-index" type="number" /></td>'
+//			+ '<td><input class="date-picker" st="ticket-date" type="text" /></td>' + '<td><input st="ticket-number" maxlength="10" type="text" /></td>'
+//			+ '<td><input st="from-to-time" maxlength="20" type="text" /></td>' + '<td><input st="from-to-city"  maxlength="50" type="text" /></td>'
+//			+ '<td><input st="from-airport"  maxlength="10" type="text" /></td>' + '<td><input st="to-airport"  maxlength="10" type="text" /></td>'
+//			+ '<td><input st="terminal"  maxlength="10" type="text" /></td>' + '</tr>';
+//	$(btn).parent().parent().find("tbody").append(template);
+//	reloadDatePicker();
+//}

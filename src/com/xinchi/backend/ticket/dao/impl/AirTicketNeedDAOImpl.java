@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.bean.AirTicketNeedBean;
+import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -26,14 +27,22 @@ public class AirTicketNeedDAOImpl extends SqlSessionDaoSupport implements AirTic
 
 	@Override
 	public List<AirTicketNeedBean> selectByPage(Page<AirTicketNeedBean> page) {
-		List<AirTicketNeedBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectByPage", page);
+		List<AirTicketNeedBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectByPage",
+				page);
 		return list;
 	}
 
 	@Override
 	public List<AirTicketNeedBean> selectOrderByPage(Page page) {
-		List<AirTicketNeedBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectOrderByPage", page);
+		List<AirTicketNeedBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectOrderByPage", page);
 		return list;
+	}
+
+	@Override
+	public List<OrderAirInfoBean> selectOrderAirInfoByTeamNumber(String team_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectOrderAirInfoByTeamNumber",
+				team_number);
 	}
 
 }

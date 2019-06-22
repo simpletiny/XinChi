@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirLegMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirLegBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="from_city" property="from_city" jdbcType="VARCHAR" />
+		<result column="to_city" property="to_city" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="hot_flg" property="hot_flg" jdbcType="CHAR" />
+		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		pk,
+		from_city,
+		to_city,
+		create_user,
+		update_user,
+		hot_flg,
+		sort_index,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_leg
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_leg
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirLegBean">
+
+		insert into air_leg
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="from_city != null">
+				from_city,
+			</if>
+			<if test="to_city != null">
+				to_city,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="hot_flg != null">
+				hot_flg,
+			</if>
+			<if test="sort_index != null">
+				sort_index,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="from_city != null">
+				#{from_city,jdbcType=VARCHAR},
+			</if>
+			<if test="to_city != null">
+				#{to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="hot_flg != null">
+				#{hot_flg,jdbcType=CHAR},
+			</if>
+			<if test="sort_index != null">
+				#{sort_index,jdbcType=INTEGER},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirLegBean">
+		update air_leg
+		<set>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="from_city != null">
+				from_city = #{from_city,jdbcType=VARCHAR},
+			</if>
+			<if test="to_city != null">
+				to_city = #{to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="hot_flg != null">
+				hot_flg = #{hot_flg,jdbcType=CHAR},
+			</if>
+			<if test="sort_index != null">
+				sort_index = #{sort_index,jdbcType=INTEGER},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirLegBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_leg
+		<where>
+			<if test="from_city != null and from_city !=''">
+				and from_city = #{from_city,jdbcType=VARCHAR}
+			</if>
+			<if test="to_city != null and to_city !=''">
+				and to_city = #{to_city,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_leg
+		<where>
+			<if test="params.bo.from_city != null and params.bo.from_city !=''">
+				and from_city like concat('%', #{params.bo.from_city,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.to_city != null and params.bo.to_city !=''">
+				and to_city like concat('%', #{params.bo.to_city,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.city != null and params.bo.city !=''">
+				and(from_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%') OR to_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+		ORDER BY hot_flg DESC
+	</select>
+</mapper>

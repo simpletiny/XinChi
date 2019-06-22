@@ -51,4 +51,11 @@ public class ProductSupplierInfoDAOImpl extends SqlSessionDaoSupport implements 
 		return list;
 	}
 
+	@Override
+	public List<ProductSupplierInfoBean> selectByProductSupplierPk(String product_supplier_pk) {
+		List<ProductSupplierInfoBean> list = daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.ProductSupplierInfoMapper.selectByProductSupplierPk", product_supplier_pk);
+		return list;
+	}
+
 }

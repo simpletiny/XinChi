@@ -35,6 +35,8 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private String first_from_to;
 	private String client_name;
 
+	private String status;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -145,6 +147,14 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setClient_name(String client_name) {
 		this.client_name = client_name;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

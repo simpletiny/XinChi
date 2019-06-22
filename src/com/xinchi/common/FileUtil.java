@@ -38,7 +38,10 @@ public class FileUtil {
 
 	public static void deleteFile(String fileName, String destFolderStr, String subFolder) {
 		String fileFolder = PropertiesUtil.getProperty(destFolderStr);
-		File destfile = new File(fileFolder + File.separator + subFolder + File.separator + fileName);
+		if (subFolder != null) {
+			fileFolder += File.separator + subFolder;
+		}
+		File destfile = new File(fileFolder + File.separator + fileName);
 		if (destfile.exists())
 			destfile.delete();
 	}

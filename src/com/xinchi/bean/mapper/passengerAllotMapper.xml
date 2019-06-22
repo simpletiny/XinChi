@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PassengerAllotMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PassengerAllotDto">
+		<result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="date" property="date" jdbcType="VARCHAR" />
+		<result column="from_city" property="from_city" jdbcType="VARCHAR" />
+		<result column="to_city" property="to_city" jdbcType="VARCHAR" />
+		<result column="ticket_order_pk" property="ticket_order_pk" jdbcType="CHAR" />
+		<result column="is_allot" property="is_allot" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		passenger_pk,
+		id,
+		name,
+		date,
+		from_city,
+		to_city,
+		ticket_order_pk,
+		is_allot
+	</sql>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.PassengerAllotDto" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_passenger_allot
+	</select>
+	<select id="selectByPassengerPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_passenger_allot
+		where passenger_pk = #{passenger_pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByOrderPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_passenger_allot
+		where ticket_order_pk = #{order_pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPassengerPks" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_passenger_allot
+		where passenger_pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

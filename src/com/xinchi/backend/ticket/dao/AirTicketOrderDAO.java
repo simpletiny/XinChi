@@ -12,7 +12,7 @@ public interface AirTicketOrderDAO{
 	 * 新增
 	 * @param bean
 	 */
-	public void insert(AirTicketOrderBean bean);
+	public String insert(AirTicketOrderBean bean);
 	
 	/**
 	 * 修改

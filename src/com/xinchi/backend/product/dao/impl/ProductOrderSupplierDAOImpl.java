@@ -62,4 +62,14 @@ public class ProductOrderSupplierDAOImpl extends SqlSessionDaoSupport implements
 
 	}
 
+	@Override
+	public List<OrderSupplierBean> selectByOrderPk(String order_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderSupplierMapper.selectByOrderPk", order_pk);
+	}
+
+	@Override
+	public void deleteByOrderPk(String order_pk) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.OrderSupplierMapper.deleteByOrderPk", order_pk);
+	}
+
 }

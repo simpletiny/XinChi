@@ -3,6 +3,7 @@ package com.xinchi.backend.ticket.service;
 import java.util.List;
 
 import com.xinchi.bean.AirTicketOrderBean;
+import com.xinchi.bean.AirTicketOrderLegBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -43,4 +44,8 @@ public interface AirTicketOrderService extends BaseService{
 	public List<AirTicketOrderBean> selectByPks(List<String> airTicketOrderPks);
 
 	public AirTicketOrderBean selectBySaleOrderPk(String id);
+
+	public String createOrder(String team_number, String json);
+
+	public List<AirTicketOrderLegBean> selectAirTicketOrderLegByOrderPk(String order_pk);
 }

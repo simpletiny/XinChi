@@ -3,6 +3,7 @@ package com.xinchi.backend.client.dao;
 import java.util.List;
 
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientCountDto;
 import com.xinchi.tools.Page;
 
 
@@ -45,4 +46,6 @@ public interface ClientDAO{
 	public void recoveryCompanyByPks(List<String> company_pks);
 
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
+
+	public ClientCountDto selectCountByParam(ClientBean client);
 }

@@ -38,4 +38,8 @@ public interface PassengerTicketInfoService extends BaseService{
 	public List<PassengerTicketInfoBean> selectByParam(PassengerTicketInfoBean bean);
 
 	public String insertList(List<PassengerTicketInfoBean> ptis);
+
+	public String checkSameAirLeg(List<String> passenger_pks);
+
+	public String allotTicket(String json);
 }

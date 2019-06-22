@@ -79,33 +79,30 @@ var OrderContext = function() {
 				return;
 			}
 
-			window.location.href = self.apiurl
-					+ 'templates/product/order-operate-creation.jsp?key='
-					+ team_number;
+			var product_pk = data[1];
+			if (product_pk == "undefined") {
+				window.location.href = self.apiurl
+						+ 'templates/product/order-operate-creation.jsp?key='
+						+ team_number;
+			} else {
+				$
+						.getJSON(
+								self.apiurl + 'product/searchProductByPk',
+								{
+									product_pk : product_pk
+								},
+								function(data) {
+									if (data
+											&& data.product.supplier_upkeep_flg == 'Y') {
+										window.location.href = self.apiurl
+												+ 'templates/product/order-operate-creation.jsp?key='
+												+ team_number;
+									} else {
+										fail_msg("产品未添加地接维护！不能操作");
+									}
 
-			// var product_pk = data[1];
-			// var data = "team_number=" + team_number + "&product_pk="
-			// + product_pk;
-			// $.getJSON(self.apiurl +
-			// 'product/searchProductSuppliersByPk',
-			// data, function(data) {
-			// self.productSuppliers(data.productSuppliers);
-			// operateLayer = $.layer({
-			// type : 1,
-			// title : [ '供应商信息', '' ],
-			// maxmin : false,
-			// closeBtn : [ 1, true ],
-			// shadeClose : false,
-			// area : [ '1400px', '500px' ],
-			// offset : [ '', '' ],
-			// scrollbar : true,
-			// page : {
-			// dom : '#supplier-info'
-			// },
-			// end : function() {
-			// }
-			// });
-			// });
+								});
+			}
 
 		}
 	};

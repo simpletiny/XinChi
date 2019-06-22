@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.client.dao.ClientDAO;
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientCountDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -73,6 +74,11 @@ public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO {
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page) {
 
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientMapper.selectAdminByPage", page);
+	}
+
+	@Override
+	public ClientCountDto selectCountByParam(ClientBean client) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientMapper.selectCountByParam", client);
 	}
 
 }

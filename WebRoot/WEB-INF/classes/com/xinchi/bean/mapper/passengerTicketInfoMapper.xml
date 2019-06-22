@@ -51,6 +51,12 @@
 		from passenger_ticket_info
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByPassengerPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from passenger_ticket_info
+		where passenger_pk = #{passenger_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from passenger_ticket_info
@@ -247,4 +253,5 @@
 		<include refid="Base_Column_List" />
 		from passenger_ticket_info
 	</select>
+
 </mapper>

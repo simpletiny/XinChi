@@ -41,4 +41,6 @@ public interface ProductSupplierInfoDAO {
 	 */
 	public List<ProductSupplierInfoBean> selectByParam(ProductSupplierInfoBean bean);
 
+	public List<ProductSupplierInfoBean> selectByProductSupplierPk(String pk);
+
 }

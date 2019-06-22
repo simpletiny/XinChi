@@ -160,6 +160,7 @@
 										<th class="r" style="width: 10%">抵离地点</th>
 									</tr>
 								</thead>
+								<!-- ko if:supplier.infos.length!=0 -->
 								<tbody st="t-body" data-bind="foreach:$data.infos">
 									<tr>
 										<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
@@ -174,7 +175,7 @@
 											st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-1"
 											data-bind="value:$data.pick_other,enable:!$root.isD($data.pick_type),css:{required:!$root.isD($data.pick_type)}" /></td>
-										<td><input class="required" type="number" st="day" data-bind="value:$data.pick_day" /></td>
+										<td><input class="required" type="number" maxlength="2" st="day" data-bind="value:$data.pick_day" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.pick_traffic" maxlength="10"
 											st="traffic-tool" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.pick_time" maxlength="15" st="time" /></td>
@@ -194,19 +195,52 @@
 											st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-1"
 											data-bind="value:$data.send_other,enable:!$root.isD($data.send_type),css:{required:!$root.isD($data.send_type)}" /></td>
-										<td><input class="required" type="number" st="day" data-bind="value:$data.send_day" /></td>
+										<td><input class="required" type="number" maxlength="2" st="day" data-bind="value:$data.send_day" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_traffic" maxlength="10"
 											st="traffic-tool" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_time" maxlength="15" st="time" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_city" maxlength="15" st="city" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_place" maxlength="30" st="place" /></td>
 									</tr>
-									<!-- ko if:($index()+1) < supplier.infos.length -->  
+									<!-- ko if:($index()+1) < supplier.infos.length -->
 									<tr>
 										<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>
 									</tr>
 									<!-- /ko -->
 								</tbody>
+								<!-- /ko -->
+								<!-- ko if:supplier.infos.length==0 -->
+								<tbody st="t-body">
+									<tr>
+										<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
+										<td class="r">接：</td>
+										<td><input checked="checked" name="radio-jie-0" st="radio-jie-0" type="radio" value="0"
+											onclick="changeJieSongType(this)" />航段</td>
+										<td><input type="text" maxlength="10" st="txt-jie-type-0" /></td>
+										<td><input name="radio-jie-0" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input type="text" maxlength="10" st="txt-jie-type-1" disabled="disabled" /></td>
+										<td><input class="required" maxlength="2" type="number" st="day" /></td>
+										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
+										<td><input class="required" type="text" maxlength="15" st="time" /></td>
+										<td><input class="required" type="text" maxlength="15" st="city" /></td>
+										<td><input class="required" type="text" maxlength="30" st="place" /></td>
+									</tr>
+									<tr>
+										<td><input type="button" value="+" onclick="addRow(this)" /></td>
+										<td class="r">送：</td>
+										<td><input name="radio-song-0" checked="checked" st="radio-song-0" type="radio" value="0"
+											onclick="changeJieSongType(this)" />航段</td>
+										<td><input type="text" maxlength="10" st="txt-song-type-0" /></td>
+										<td><input name="radio-song-0" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input type="text" maxlength="10" st="txt-song-type-1" disabled="disabled" /></td>
+										<td><input class="required" maxlength="2" type="number" st="day" /></td>
+										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
+										<td><input class="required" type="text" maxlength="15" st="time" /></td>
+										<td><input class="required" type="text" maxlength="15" st="city" /></td>
+										<td><input class="required" type="text" maxlength="30" st="place" /></td>
+									</tr>
+								</tbody>
+								<!-- /ko -->
 							</table>
 						</div>
 						<div class="input-row clearfloat">
@@ -235,7 +269,8 @@
 									<span style="color: blue">默认模板</span>
 									<!-- /ko -->
 									<!-- ko if: $data.confirm_file_templet != "default" && $data.confirm_file_templet!="" -->
-									<span style="color: green">已上传</span>
+									<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+										data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></span>
 									<!-- /ko -->
 								</div>
 							</div>
@@ -253,8 +288,8 @@
 				</div>
 				<hr class="hr-big" />
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrderOperation">生成操作</a> <a type="submit"
-						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrderOperation">保存</a> <a type="submit" class="btn btn-green btn-r"
+						onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
 		</div>
@@ -329,7 +364,7 @@
 		</div>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
+		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/order-operate-creation.js"></script>

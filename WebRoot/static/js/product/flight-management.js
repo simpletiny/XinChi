@@ -82,7 +82,7 @@ $(document).ready(function() {
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
-	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td ><input st="flight-leg" type="text" /></td><td><input st="start-day" type="number" min="1" max="20"/></td><td><input st="start-city" type="text" maxlength="10"/></td><td><input st="end-day" type="number" min="1" max="20" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input st="flight-number" type="text" maxlength="10" disabled="disabled"/></td></tr>');
+	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td ><input st="flight-leg" type="text"  maxlength="10"/></td><td><input st="start-day" type="number" min="1" maxlength="2"/></td><td><input st="start-city" type="text" maxlength="10"/></td><td><input st="end-day" type="number" min="1" maxlength="2"/></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input st="flight-number" type="text" maxlength="10" disabled="disabled"/></td></tr>');
 	$(tr).find("input[st='flight-leg']").val(CHARACTER_ARRAY[index]);
 
 	$(tr).find("input[st='flight-index']").val(index + 1);

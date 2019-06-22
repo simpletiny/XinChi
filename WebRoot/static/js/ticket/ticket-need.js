@@ -5,12 +5,8 @@ var NeedContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenNeeds = ko.observableArray([]);
-	self.status = ["Y","N"];
-	self.statusMapping = {
-		'Y' : '已确认',
-		'N' : '待确认'
-	};
 
+	// 生成机票订单
 	self.createOrder = function() {
 		if (self.chosenNeeds().length == 0) {
 			fail_msg("请选择");
@@ -19,44 +15,91 @@ var NeedContext = function() {
 			fail_msg("只能选择一个");
 			return;
 		} else if (self.chosenNeeds().length == 1) {
-			createLayer = $.layer({
-				type : 1,
-				title : [ '生成订单', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '800px', '200px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#order-create'
-				},
-				end : function() {
-				}
+			self.airTickets.removeAll();
+			startLoadingIndicator("加载中...");
+			$.getJSON(self.apiurl + 'ticket/searchOrderAirInfoByTeamNumber', {
+				team_number : self.chosenNeeds()[0]
+			}, function(data) {
+				self.airTickets(data.order_air_infos);
+				endLoadingIndicator();
+				createLayer = $.layer({
+					type : 1,
+					title : [ '生成订单', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '800px', '500px' ],
+					offset : [ '', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#order-create'
+					},
+					end : function() {
+					}
+				});
 			});
+
 		}
 	};
+	self.deleteAirInfo = function(data, event) {
+		var a = event.target;
+		var tr = $(a).parent().parent();
+		tr.remove();
+	}
 	// 确认生成订单
 	self.doCreateOrder = function() {
-		var cost = $("#air_ticket_cost").val();
-		if (cost.trim() == "") {
-			fail_msg("请填写机票款！");
-			return
+
+		var allLegTxt = $(".ticket-air-leg");
+		for (var i = 0; i < allLegTxt.length; i++) {
+			var v = $(allLegTxt[i]).val().trim();
+			if (v == "") {
+				fail_msg("请填写票务航段！");
+				return;
+			}
 		}
-		var param = self.chosenNeeds()[0].split(";");
-		var sale_order_pk = param[0];
-		var standard_flg = param[1];
-		var data = "air_ticket_cost=" + cost + "&sale_order_pk=" + sale_order_pk + "&standard_flg=" + standard_flg;
+
+		var confirm_msg = "确认要生成订单吗";
+		var hasLeg = true;
+
+		var tbody = $("#leg-table tbody");
+		var trs = tbody.children();
+		var legJson = '[';
+		if (trs.length < 1) {
+			hasLeg = false;
+			confirm_msg = "没有航段信息，生成的订单将直接归入已操作订单，并且机票费用为0！确认要生成订单吗？";
+		} else {
+			for (var i = 0; i < trs.length; i++) {
+				var tr = $(trs[i]);
+				var leg_index = tr.find(':input[st="leg-index"]').val();
+				var leg_date = tr.find(':input[st="leg-date"]').val();
+				var leg_from = tr.find(':input[st="leg-from-city"]').val();
+				var leg_to = tr.find(':input[st="leg-to-city"]').val();
+				legJson += '{"leg_index":"' + leg_index + '","leg_date":"'
+						+ leg_date + '","leg_from":"' + leg_from
+						+ '","leg_to":"' + leg_to + '"}';
+
+				if (i != trs.length - 1) {
+					legJson += ',';
+				}
+
+			}
+		}
+		legJson += ']';
+
 		$.layer({
 			area : [ 'auto', 'auto' ],
 			dialog : {
-				msg : '确认要生成订单吗?',
+				msg : confirm_msg,
 				btns : 2,
 				type : 4,
 				btn : [ '确认', '取消' ],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
+
+					var data = "team_number=" + self.chosenNeeds()[0]
+							+ "&json=" + legJson;
+
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'ticket/createTicketOrder',
@@ -81,20 +124,14 @@ var NeedContext = function() {
 	};
 	self.airTickets = ko.observableArray([]);
 	// 查看航段信息
-	self.checkTicketPart = function(product_pk,first_ticket_date) {
-		var x = new Date(first_ticket_date);
+	self.checkTicketPart = function(team_number) {
 		self.airTickets.removeAll();
-		$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-			product_pk : product_pk
+		startLoadingIndicator("加载中...");
+		$.getJSON(self.apiurl + 'ticket/searchOrderAirInfoByTeamNumber', {
+			team_number : team_number
 		}, function(data) {
-			$(data.air_tickets).each(function(idx, ticket) {
-				var ticket_start_day=ticket.start_day;
-				var ticket_end_day =ticket.end_day;
-				ticket.off_date=(x.addDate(ticket_start_day-1)).Format("yyyy-MM-dd");
-				ticket.land_date=(x.addDate(ticket_end_day-1)).Format("yyyy-MM-dd");
-				self.airTickets.push(ticket);
-			});
-			
+			self.airTickets(data.order_air_infos);
+			endLoadingIndicator();
 			airTicketCheckLayer = $.layer({
 				type : 1,
 				title : [ '航段信息', '' ],
@@ -114,40 +151,18 @@ var NeedContext = function() {
 	};
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(sale_order_pk,standard_flg) {
+	self.checkPassengers = function(team_number) {
 		self.passengers.removeAll();
-		var url = "";
-		if (standard_flg == "Y") {
-			url = "order/searchTbcBsOrderByPk";
-		} else {
-			url = "order/searchTbcBnsOrderByPk";
-		}
+		startLoadingIndicator("加载中...");
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
 		$.getJSON(self.apiurl + url, {
-			order_pk : sale_order_pk
+			team_number : team_number
 		}, function(data) {
-			var order;
-			if (standard_flg == "Y") {
-				order = data.bsOrder;
-			} else {
-				order= data.bnsOrder;
-			}
-			console.log(order);
-		 var name_list = order.name_list;
-		 if(null!=name_list){
-			 var names = name_list.split(";");
-			 for(var i=0;i<names.length;i++){
-				 var d = names[i].split(":");
-				 if(d.length<2)
-					continue;
-				 
-				 var passenger = new Object();
-				 passenger.index = i+1;
-				 passenger.name = d[0];
-				 passenger.id = d[1];
-				 self.passengers.push(passenger);
-			 }
-		 }
-		 passengerCheckLayer = $.layer({
+
+			self.passengers(data.passengers);
+			endLoadingIndicator();
+			passengerCheckLayer = $.layer({
 				type : 1,
 				title : [ '乘客信息', '' ],
 				maxmin : false,
@@ -170,14 +185,21 @@ var NeedContext = function() {
 	});
 
 	self.refresh = function() {
-		var param =$("form").serialize();
-		 param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'ticket/searchAirTicketNeedByPage', param, function(data) {
-			self.needs(data.airTicketNeeds);
+		startLoadingIndicator("加载中...");
+		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		param += "&airTicketNeed.ordered=N"
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketNeedByPage', param,
+				function(data) {
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.needs(data.airTicketNeeds);
+
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+
+					endLoadingIndicator();
+				});
 	};
 
 	self.search = function() {
@@ -222,9 +244,10 @@ var NeedContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -234,6 +257,79 @@ var NeedContext = function() {
 		self.refresh();
 	};
 	// end pagination
+
+	// 查询票务航段模块
+	self.airLegs = ko.observable({});
+	self.refreshAirLeg = function() {
+		var param = "leg.city=" + $("#city").val();
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(
+				data) {
+			self.airLegs(data.legs);
+
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
+	};
+
+	self.searchAirLeg = function() {
+		self.refreshAirLeg();
+	};
+	self.pickAirLeg = function(from, to) {
+		$(currentAirLeg).val(from + "--" + to);
+		var tr = $(currentAirLeg).parent().parent();
+		tr.find(":input[st='leg-from-city']").val(from);
+		tr.find(":input[st='leg-to-city']").val(to);
+		layer.close(airLegLayer);
+	};
+
+	// start pagination air leg
+	self.currentPage1 = ko.observable(1);
+	self.perPage1 = 10;
+	self.pageNums1 = ko.observableArray();
+	self.totalCount1 = ko.observable(1);
+	self.startIndex1 = ko.computed(function() {
+		return (self.currentPage1() - 1) * self.perPage1;
+	});
+	self.resetPage1 = function() {
+		self.currentPage1(1);
+	};
+
+	self.previousPage1 = function() {
+		if (self.currentPage1() > 1) {
+			self.currentPage1(self.currentPage1() - 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.nextPage1 = function() {
+		if (self.currentPage1() < self.pageNums1().length) {
+			self.currentPage1(self.currentPage1() + 1);
+			self.refreshPage1();
+		}
+	};
+
+	self.turnPage1 = function(pageIndex1) {
+		self.currentPage1(pageIndex1);
+		self.refreshPage1();
+	};
+
+	self.setPageNums1 = function(curPage1) {
+		var startPage1 = curPage1 - 4 > 0 ? curPage1 - 4 : 1;
+		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self
+				.totalCount1();
+		var pageNums1 = [];
+		for (var i = startPage1; i <= endPage1; i++) {
+			pageNums1.push(i);
+		}
+		self.pageNums1(pageNums1);
+	};
+
+	self.refreshPage1 = function() {
+		self.refreshClient();
+	};
+	// end pagination client
 };
 
 var ctx = new NeedContext();
@@ -242,3 +338,28 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+
+var currentAirLeg;
+var airLegLayer;
+function choseAirLeg(event) {
+	ctx.searchAirLeg();
+	airLegLayer = $.layer({
+		type : 1,
+		title : [ '选择票务航段', '' ],
+		maxmin : false,
+		closeBtn : [ 1, true ],
+		shadeClose : false,
+		area : [ '600px', '650px' ],
+		offset : [ '', '' ],
+		scrollbar : true,
+		page : {
+			dom : '#air-leg-pick'
+		},
+		end : function() {
+			console.log("Done");
+		}
+	});
+
+	currentAirLeg = event.toElement;
+	$(currentAirLeg).blur();
+}

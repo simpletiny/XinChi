@@ -6,6 +6,7 @@
 		<result column="service_type" property="service_type" jdbcType="CHAR" />
 		<result column="service_name" property="service_name" jdbcType="VARCHAR" />
 		<result column="supplier_pk" property="supplier_pk" jdbcType="CHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 		<result column="cost" property="cost" jdbcType="DECIMAL" />
 		<result column="adult_cost" property="adult_cost" jdbcType="DECIMAL" />
 		<result column="child_cost" property="child_cost" jdbcType="DECIMAL" />
@@ -16,6 +17,7 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,10 +43,35 @@
 		from product_local
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByProductPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.product_pk,
+		A.service_type,
+		A.service_name,
+		A.supplier_pk,
+		A.cost,
+		A.adult_cost,
+		A.child_cost,
+		A.service_comment,
+		A.tourist_info,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.name AS supplier_name
+		from product_local A LEFT JOIN supplier_employee B ON A.supplier_pk = B.pk
+		where A.product_pk = #{product_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from product_local
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	
+	<delete id="deleteByProductPk" parameterType="java.lang.String">
+		delete from product_local
+		where product_pk = #{product_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductLocalBean">

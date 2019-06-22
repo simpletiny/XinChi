@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.bean.FlightBean;
-import com.xinchi.bean.ProductBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;

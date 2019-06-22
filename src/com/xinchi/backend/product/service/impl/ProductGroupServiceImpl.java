@@ -45,7 +45,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 			pgsb.setSupplier_pk(supplier_pk);
 			pgsdao.insert(pgsb);
 		}
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
@@ -72,14 +72,14 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 			pgsb.setSupplier_pk(supplier_pk);
 			pgsdao.insert(pgsb);
 		}
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
 	public String delete(String id) {
 		dao.delete(id);
 		pgsdao.deleteByGroupPk(id);
-		return "success";
+		return SUCCESS;
 
 	}
 
@@ -119,7 +119,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 	public String delete(ProductGroupBean group) {
 		dao.delete(group.getPk());
 		pgsdao.deleteByGroupPk(group.getPk());
-		return "success";
+		return SUCCESS;
 	}
 
 }

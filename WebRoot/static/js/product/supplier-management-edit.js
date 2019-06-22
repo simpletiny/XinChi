@@ -7,10 +7,10 @@ var ProductContext = function() {
 
 	self.product_pk = $("#key").val();
 	self.product = ko.observable({});
-	
+
 	// 产品包含的供应商信息
 	self.productSuppliers = ko.observableArray([]);
-	
+
 	$.getJSON(self.apiurl + 'product/searchProductByPk', {
 		product_pk : self.product_pk
 	}, function(data) {
@@ -42,11 +42,11 @@ var ProductContext = function() {
 			return;
 		}
 		var json = self.getJson();
-		
+
 		var data = "json=" + json;
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'product/saveProductSupplier',
+			url : self.apiurl + 'product/updateProductSupplier',
 			data : data
 		}).success(
 				function(str) {
@@ -281,6 +281,18 @@ var ProductContext = function() {
 		});
 	};
 
+	self.viewTemplet = function(file) {
+		var data = "viewType=sc&fileName=" + file;
+		console.log(file);
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'file/viewWord',
+			data : data
+		}).success(function(str) {
+			window.open(self.apiurl + "templates/temp/viewword/" + str)
+		});
+	}
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -372,7 +384,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" maxlength="2" type="number" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -389,7 +401,7 @@ function addRow(btn) {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" maxlength="2" type="number" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -441,9 +453,15 @@ function addSupplier() {
 			+ '</div>'
 			+ '</div>'
 			+ '<div class="col-md-2 required">'
-			+ '<label class="l" style="width: 70px !important">结算价格</label>'
+			+ '<label class="l" style="width: 70px !important">成人</label>'
 			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-" st="supplier-cost"/>'
+			+ '<input type="number" class="ip-" st="adult-cost"/>'
+			+ '</div>'
+			+ '</div>'
+			+ '<div class="col-md-2 required">'
+			+ '<label class="l" style="width: 70px !important">儿童</label>'
+			+ '<div class="ip" style="width: 50% !important">'
+			+ '<input type="number" class="ip-"  st="child-cost"/>'
 			+ '</div>'
 			+ '</div>'
 			+ '</div>'
@@ -475,7 +493,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -492,7 +510,7 @@ function addSupplier() {
 			+ timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" st="day"/></td>'
+			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
@@ -545,23 +563,6 @@ function changeJieSongType(ra) {
 		$(txt0).attr("disabled", true);
 		$(txt0).removeClass("required");
 	}
-}
-/**
- * 计算供应商成本合计
- */
-function caculateOtherCost() {
-
-	var tbody = $("#table-supplier tbody");
-	var trs = $(tbody).children();
-	var sum = 0;
-	for (var i = 0; i < trs.length; i++) {
-		var tr = trs[i];
-		var supplierCost = $(tr).find("[st='supplier-cost']").val();
-		sum += supplierCost - 0;
-	}
-
-	$("#local-adult-cost").val(sum);
-	caculateGrossProfit();
 }
 function changeFile(thisx) {
 	var file = thisx.files[0];

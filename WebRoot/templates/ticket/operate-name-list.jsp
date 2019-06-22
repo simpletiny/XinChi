@@ -108,15 +108,15 @@
 									</div>
 								</div>
 								<div class="col-md-3 required">
-									<label class="l" style="width: 60px">总票价</label>
+									<label class="l" style="width: 60px">单价</label>
 									<div class="ip">
-										<input type="number" class="ip-" st="ticket-cost" placeholder="总票价" required="required" />
+										<input type="number" class="ip-" st="ticket-cost" placeholder="单价" required="required" />
 									</div>
 								</div>
-								<div class="col-md-3 required">
+								<div class="col-md-3">
 									<label class="l" style="width: 60px">PNR码</label>
 									<div class="ip">
-										<input type="text" class="ip-" maxlength="50" st="ticket-PNR" placeholder="PNR码" required="required" />
+										<input type="text" class="ip-" maxlength="50" st="ticket-PNR" placeholder="PNR码"/>
 									</div>
 								</div>
 							</div>
@@ -125,7 +125,6 @@
 									<thead>
 										<tr class="required">
 											<th></th>
-											<th style="width: 8%">航段</th>
 											<th style="width: 10%">航班日期</th>
 											<th style="width: 10%">航班号</th>
 											<th style="width: 20%">起降时刻</th>
@@ -136,22 +135,21 @@
 										</tr>
 									</thead>
 									<tbody>
+										<s:set name="legs" value='#ta.airLegs'></s:set>
+										<s:iterator value="#legs" id="leg">
 										<tr>
 											<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
-											<td><input st="ticket-index" type="number" /></td>
-											<td><input class="date-picker" st="ticket-date" type="text" /></td>
+											<td><s:property value="#leg.date" /><input type="hidden" st="ticket-date" value='<s:property value="#leg.date"/>'/></td>
 											<td><input st="ticket-number" maxlength="10" type="text" /></td>
 											<td><input st="from-to-time" maxlength="20" type="text" /></td>
-											<td><input st="from-to-city"  maxlength="50" type="text" /></td>
+											<td><s:property value="#leg.from_city"/>--<s:property value="#leg.to_city"/><input st="from-to-city" type="hidden"  value='<s:property value="#leg.from_city"/>--<s:property value="#leg.to_city"/>'/></td>
 											<td><input st="from-airport"  maxlength="10" type="text" /></td>
 											<td><input st="to-airport"  maxlength="10" type="text" /></td>
 											<td><input st="terminal"  maxlength="10" type="text" /></td>
 										</tr>
+										</s:iterator>
 									</tbody>
 								</table>
-								<div style="margin-top: 20px; float: right">
-									<input type="button" style="width: 20px" value="+" onclick="addRow(this)"></input>
-								</div>
 							</div>
 							<div class="input-row clearfloat">
 								<div class="col-md-12">

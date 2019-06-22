@@ -32,6 +32,10 @@ var ProductContext = function() {
 
 	self.chosenProducts = ko.observableArray([]);
 
+	self.chosenProduct = ko.observable();
+
+	self.clientConfirmType = ko.observable("D");
+	self.clientConfirmTemplet = ko.observable("");
 	// 上传组团确认模板
 	self.uploadClientConfirmTemplet = function() {
 		if (self.chosenProducts().length == 0) {
@@ -41,26 +45,41 @@ var ProductContext = function() {
 			fail_msg("只能选择一个产品！");
 			return;
 		} else if (self.chosenProducts().length == 1) {
-			ctLayer = $.layer({
-				type : 1,
-				title : [ '上传组团确认模板', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '500px', '240px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#c-c-t'
-				},
-				end : function() {
+			$.getJSON(self.apiurl + 'product/searchProductByPk', {
+				product_pk : self.chosenProducts()[0]
+			}, function(data) {
+				self.chosenProduct(data.product);
+				var t = self.chosenProduct().client_confirm_templet;
+				if (t != "no") {
+					self.clientConfirmType("Y");
+					self.clientConfirmTemplet(t);
+					$("#c-c-t-a").show();
 				}
+				ctLayer = $.layer({
+					type : 1,
+					title : [ '上传组团确认模板', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '500px', '240px' ],
+					offset : [ '', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#c-c-t'
+					},
+					end : function() {
+						self.clientConfirmType("D");
+						self.clientConfirmTemplet("");
+					}
+				});
 			});
 		}
 	}
 	// 取消组团确认
 	self.cancelCCT = function() {
 		layer.close(ctLayer);
+		self.clientConfirmType("D");
+		self.clientConfirmTemplet("");
 		// 清除上传信息
 	}
 	// 保存组团确认
@@ -89,6 +108,8 @@ var ProductContext = function() {
 			}
 		});
 	}
+	self.outNoticeType = ko.observable("D");
+	self.outNoticeTemplet = ko.observable("");
 	// 上传出团通知模板
 	self.uploadOutNoticeConfirmTemplet = function() {
 		if (self.chosenProducts().length == 0) {
@@ -98,27 +119,44 @@ var ProductContext = function() {
 			fail_msg("只能选择一个产品！");
 			return;
 		} else if (self.chosenProducts().length == 1) {
-			ontLayer = $.layer({
-				type : 1,
-				title : [ '上传出团通知模板', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '500px', '240px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#o-n-t'
-				},
-				end : function() {
+			$.getJSON(self.apiurl + 'product/searchProductByPk', {
+				product_pk : self.chosenProducts()[0]
+			}, function(data) {
+				self.chosenProduct(data.product);
+				var t = self.chosenProduct().out_notice_templet;
+				if (t != "no") {
+					self.outNoticeType("Y");
+					self.outNoticeTemplet(t);
+					$("#o-n-t-a").show();
 				}
+
+				ontLayer = $.layer({
+					type : 1,
+					title : [ '上传出团通知模板', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '500px', '240px' ],
+					offset : [ '', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#o-n-t'
+					},
+					end : function() {
+						self.outNoticeType("D");
+						self.outNoticeTemplet("");
+					}
+				});
 			});
+
 		}
 	}
 	// 取消出团通知上传
 	self.cancelONT = function() {
 		layer.close(ontLayer);
 		// 清除上传信息
+		self.outNoticeType("D");
+		self.outNoticeTemplet("");
 	}
 	// 保存出团通知模板
 	self.saveONT = function() {
@@ -186,9 +224,25 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 
-			window.location.href = self.apiurl
-					+ 'templates/product/local-management.jsp?key='
-					+ self.chosenProducts()[0];
+			$
+					.getJSON(
+							self.apiurl + 'product/searchProductByPk',
+							{
+								product_pk : self.chosenProducts()[0]
+							},
+							function(data) {
+								if (data.product.local_upkeep_flg == "Y") {
+									window.location.href = self.apiurl
+											+ 'templates/product/local-management-edit.jsp?key='
+											+ self.chosenProducts()[0];
+								} else {
+
+									window.location.href = self.apiurl
+											+ 'templates/product/local-management.jsp?key='
+											+ self.chosenProducts()[0];
+								}
+							});
+
 		}
 	}
 
@@ -202,9 +256,24 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 
-			window.location.href = self.apiurl
-					+ 'templates/product/flight-management.jsp?key='
-					+ self.chosenProducts()[0];
+			$
+					.getJSON(
+							self.apiurl + 'product/searchProductByPk',
+							{
+								product_pk : self.chosenProducts()[0]
+							},
+							function(data) {
+								if (data.product.air_ticket_upkeep_flg == "Y") {
+									window.location.href = self.apiurl
+											+ 'templates/product/flight-management-edit.jsp?key='
+											+ self.chosenProducts()[0];
+								} else {
+									window.location.href = self.apiurl
+											+ 'templates/product/flight-management.jsp?key='
+											+ self.chosenProducts()[0];
+								}
+							});
+
 		}
 	}
 

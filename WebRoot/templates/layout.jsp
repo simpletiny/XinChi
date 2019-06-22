@@ -197,15 +197,19 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users fa-lg fa-fw"></i>票务管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单列表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>名单操作</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作订单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作名单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已操作名单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
-						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li>
+						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
+<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')">

@@ -3,6 +3,7 @@ package com.xinchi.backend.product.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.ProductSupplierInfoBean;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
@@ -55,11 +57,38 @@ public class ProductServiceImpl implements ProductService {
 		return "success";
 	}
 
+	@Override
+	public String createProduct(ProductBean product) {
+		ProductBean option = new ProductBean();
+		option.setProduct_model(product.getProduct_model());
+
+		// 检测产品型号
+		List<ProductBean> exists = dao.selectByParam(option);
+
+		if (null != exists && exists.size() > 0)
+			return "exists";
+
+		dao.insert(product);
+		return SUCCESS;
+	}
+
 	@Autowired
 	private ProductDelayDAO delayDao;
 
 	@Override
 	public String update(ProductBean bean, ProductDelayBean delay) {
+		// 检测产品型号
+		ProductBean option = new ProductBean();
+		option.setProduct_model(bean.getProduct_model());
+		List<ProductBean> exists = dao.selectByParam(option);
+		if (null != exists) {
+			for (ProductBean exist : exists) {
+				if (!exist.getPk().equals(bean.getPk())) {
+					return "exists";
+				}
+			}
+		}
+
 		ProductBean oldProduct = dao.selectByPrimaryKey(bean.getPk());
 		ProductDelayBean exist_delay = delayDao.selectByProductPk(bean.getPk());
 
@@ -146,7 +175,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<ProductBean> selectByPage(Page<ProductBean> page) {
-
 		return dao.selectByPage(page);
 	}
 
@@ -369,10 +397,13 @@ public class ProductServiceImpl implements ProductService {
 			psb.setAdult_cost(adult_cost);
 			psb.setChild_cost(child_cost);
 			psb.setTourist_info(tourist_info);
-			psb.setConfirm_file_templet(confirm_file_templet);
+			psb.setConfirm_file_templet(
+					SimpletinyString.isEmpty(confirm_file_templet) ? "default" : confirm_file_templet);
 
 			// 保存地接社确认模板文件
-			saveSupplierConfirmTemplet(confirm_file_templet);
+			if (!psb.getConfirm_file_templet().equals("default")) {
+				saveSupplierConfirmTemplet(confirm_file_templet);
+			}
 			String product_supplier_pk = psDao.insert(psb);
 
 			JSONArray infos = supplier.getJSONArray("info_json");
@@ -540,14 +571,70 @@ public class ProductServiceImpl implements ProductService {
 		return SUCCESS;
 	}
 
+	/**
+	 * 更新产品机票信息
+	 */
+	@Override
+	public String updateProductFlight(FlightBean flight, String json) {
+		String flight_pk = flight.getPk();
+
+		// 删除之前的机票对应信息
+		flightInfoDao.deleteByFlightPk(flight_pk);
+
+		// 保存新的机票对应信息
+		JSONArray arr = JSONArray.fromObject(json);
+
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject obj = arr.getJSONObject(i);
+
+			int flight_index = obj.getInt("flight_index");
+			String flight_leg = obj.getString("flight_leg");
+
+			int start_day = obj.getInt("start_day");
+			String start_city = obj.getString("start_city");
+			int end_day = obj.getInt("end_day");
+			String end_city = obj.getString("end_city");
+			String flight_number = obj.getString("flight_number");
+
+			FlightInfoBean info = new FlightInfoBean();
+
+			info.setFlight_pk(flight_pk);
+			info.setFlight_index(flight_index);
+			info.setFlight_leg(flight_leg);
+			info.setStart_day(start_day);
+			info.setStart_city(start_city);
+			info.setEnd_day(end_day);
+			info.setEnd_city(end_city);
+			info.setFlight_number(flight_number);
+
+			flightInfoDao.insert(info);
+		}
+		// 更新产品机票维护基本信息
+		flightDao.update(flight);
+
+		return SUCCESS;
+	}
+
 	@Override
 	public String updateProductSupplier(String json) {
 		JSONObject obj = JSONObject.fromObject(json);
 		String product_pk = obj.getString("product_pk");
 
-		// 原产品标记为已维护
-		ProductBean product = dao.selectByPrimaryKey(product_pk);
-		product.setSupplier_upkeep_flg("Y");
+		// 原先的地接维护信息
+		List<ProductSupplierBean> oldSuppliers = psDao.selectByProductPk(product_pk);
+		List<String> templetFiles = new ArrayList<String>();
+		for (ProductSupplierBean psb : oldSuppliers) {
+			templetFiles.add(psb.getConfirm_file_templet());
+			// 原先的地接信息info
+			List<ProductSupplierInfoBean> oldSupplierInfos = psiDao.selectByProductSupplierPk(psb.getPk());
+			// 删除原先的的地接维护info信息
+			for (ProductSupplierInfoBean psi : oldSupplierInfos) {
+				psiDao.delete(psi.getPk());
+			}
+
+			// 删除原先的地接信息
+			psDao.delete(psb.getPk());
+		}
 
 		JSONArray suppliers = obj.getJSONArray("json");
 
@@ -573,16 +660,23 @@ public class ProductServiceImpl implements ProductService {
 			psb.setAdult_cost(adult_cost);
 			psb.setChild_cost(child_cost);
 			psb.setTourist_info(tourist_info);
-			psb.setConfirm_file_templet(confirm_file_templet);
+			psb.setConfirm_file_templet(
+					SimpletinyString.isEmpty(confirm_file_templet) ? "default" : confirm_file_templet);
 
-			// 保存地接社确认模板文件
-			saveSupplierConfirmTemplet(confirm_file_templet);
+			// 更新地接社确认模板文件
+			if (!psb.getConfirm_file_templet().equals("default")) {
+				if (templetFiles.contains(confirm_file_templet)) {
+					templetFiles.remove(confirm_file_templet);
+				} else {
+					saveSupplierConfirmTemplet(confirm_file_templet);
+				}
+			}
+
 			String product_supplier_pk = psDao.insert(psb);
 
 			JSONArray infos = supplier.getJSONArray("info_json");
 
 			for (int j = 0; j < infos.size(); j++) {
-
 				JSONObject info = infos.getJSONObject(j);
 
 				int info_index = info.getInt("info_index");
@@ -627,8 +721,61 @@ public class ProductServiceImpl implements ProductService {
 				psiDao.insert(psib);
 			}
 		}
+		// 删除之前没用的模板
+		for (String file : templetFiles) {
+			if (!file.equals("default")) {
+				FileUtil.deleteFile(file, "supplierConfirmTempletFolder", null);
+			}
+		}
+		return SUCCESS;
+	}
 
-		dao.update(product);
+	@Override
+	public List<ProductLocalBean> searchProductLocalByProductPk(String product_pk) {
+		return plDao.selectByProductPk(product_pk);
+	}
+
+	@Override
+	public String updateProductLocal(String json) {
+		JSONObject obj = JSONObject.fromObject(json);
+		String product_pk = obj.getString("product_pk");
+
+		// 删除之前的本地维护
+		plDao.deleteByProductPk(product_pk);
+
+		// 保存新的本地维护
+		JSONArray locals = obj.getJSONArray("json");
+
+		for (int i = 0; i < locals.size(); i++) {
+			JSONObject local = locals.getJSONObject(i);
+
+			String service_type = local.getString("service_type");
+			String cost = local.getString("cost");
+			String supplier_pk = local.getString("supplier_pk");
+			String service_name = local.getString("service_name");
+			String adult_cost = local.getString("adult_cost");
+			String child_cost = local.getString("child_cost");
+			String service_comment = local.getString("service_comment");
+			String tourist_info = local.getString("tourist_info");
+
+			ProductLocalBean pl = new ProductLocalBean();
+			pl.setProduct_pk(product_pk);
+			pl.setService_type(service_type);
+			pl.setSupplier_pk(supplier_pk);
+			pl.setService_name(service_name);
+			pl.setService_comment(service_comment);
+			pl.setTourist_info(tourist_info);
+
+			pl.setCost(new BigDecimal(cost));
+			pl.setAdult_cost(new BigDecimal(adult_cost));
+
+			if (!SimpletinyString.isEmpty(child_cost)) {
+				pl.setChild_cost(new BigDecimal(child_cost));
+			}
+
+			plDao.insert(pl);
+
+		}
 		return SUCCESS;
 	}
 

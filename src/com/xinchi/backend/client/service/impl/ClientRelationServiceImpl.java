@@ -17,13 +17,11 @@ import com.xinchi.backend.client.dao.IncomingCallDAO;
 import com.xinchi.backend.client.dao.MobileTouchDAO;
 import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.backend.order.dao.OrderDAO;
-import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
-import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -278,8 +276,8 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		return deduct;
 	}
 
-	@Autowired
-	private ReceivedDAO receivedDao;
+	// @Autowired
+	// private ReceivedDAO receivedDao;
 
 	@Override
 	public float caculateBackPoint(String user_pk) {
@@ -288,26 +286,26 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		option.setUser_pk(user_pk);
 		List<BackPointDto> enableBackPoints = dao.selectEnableBackPointByParam(option);
 
-		ClientReceivedDetailBean rOption = new ClientReceivedDetailBean();
+		// ClientReceivedDetailBean rOption = new ClientReceivedDetailBean();
 
 		if (null != enableBackPoints) {
 			for (BackPointDto bp : enableBackPoints) {
-				rOption.setTeam_number(bp.getTeam_number());
-				rOption.setConfirm_time_end(DateUtil.addDate(bp.getConfirm_date(), 1));
-				List<ClientReceivedDetailBean> crdbs = receivedDao.selectByParam(rOption);
-
-				if (null == crdbs || crdbs.size() == 0)
-					continue;
-				boolean flg = true;
-				for (ClientReceivedDetailBean crdb : crdbs) {
-					if (!crdb.getStatus().equals("E")) {
-						flg = false;
-						continue;
-					}
-				}
-				if (flg) {
-					point += bp.getProduct_point() * 0.1;
-				}
+				// rOption.setTeam_number(bp.getTeam_number());
+				// rOption.setConfirm_time_end(DateUtil.addDate(bp.getConfirm_date(), 1));
+				// List<ClientReceivedDetailBean> crdbs = receivedDao.selectByParam(rOption);
+				//
+				// if (null == crdbs || crdbs.size() == 0)
+				// continue;
+				// boolean flg = true;
+				// for (ClientReceivedDetailBean crdb : crdbs) {
+				// if (!crdb.getStatus().equals("E")) {
+				// flg = false;
+				// continue;
+				// }
+				// }
+				// if (flg) {
+				point += bp.getProduct_point() * 0.1;
+				// }
 			}
 		}
 

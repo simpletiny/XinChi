@@ -13,6 +13,7 @@ import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientCountDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.OrderDto;
@@ -192,7 +193,7 @@ public class ClientServiceImpl implements ClientService {
 		for (ClientEmployeeBean employee : employees) {
 			deleteOldHead(employee.getHead_photo());
 			employeeDao.delete(employee.getPk());
-			
+
 		}
 
 		// 删除财务主体
@@ -211,6 +212,7 @@ public class ClientServiceImpl implements ClientService {
 
 		return dao.selectCompaniesByPageAdmin(page);
 	}
+
 	private void deleteOldHead(String fileName) {
 		String fileFolder = PropertiesUtil.getProperty("clientEmployeeHeadFolder");
 		String minFolder = PropertiesUtil.getProperty("clientEmployeeMinHeadFolder");
@@ -220,5 +222,11 @@ public class ClientServiceImpl implements ClientService {
 
 		fullImg.delete();
 		minImg.delete();
+	}
+
+	@Override
+	public ClientCountDto selectCountByParam(ClientBean client) {
+
+		return dao.selectCountByParam(client);
 	}
 }

@@ -90,6 +90,10 @@
 		<action name="applyCollect" class="receivedAction" method="applyCollect">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 98清尾申请 -->
+		<action name="applyTail98" class="receivedAction" method="applyTail98">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="applySum" class="receivedAction" method="applySum">
 			<result name="success" type="str">resultStr</result>
 		</action>

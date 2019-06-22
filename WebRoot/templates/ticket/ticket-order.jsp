@@ -25,20 +25,15 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>订单列表</h2>
+			<h2>待操作订单</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div class="span6" style="text-align: center">
-							<div class="col-md-3">
-								<input value="1" type="checkbox" data-bind="click: function(){refresh();return true;}"  name="airTicketOrder.lock_flgs" />已锁定 <input value="0" data-bind="click: function(){refresh();return true;}" type="checkbox" name="airTicketOrder.lock_flgs" />未锁定
-							</div>
-						</div>
 						<div style="width: 30%; float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { lockOrder() }">锁定操作</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -64,7 +59,6 @@
 						<thead>
 							<tr role="row">
 								<th></th>
-								<th>订单状态</th>
 								<th>客户</th>
 								<th>机票款</th>
 								<th>首段日期</th>
@@ -79,12 +73,6 @@
 						<tbody data-bind="foreach: orders">
 							<tr style="overflow: hidden">
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
-								<!-- ko if: $data.lock_flg=='0' -->
-								<td data-bind="text: $root.statusMapping[$data.lock_flg]"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.lock_flg=='1' -->
-								<td style="color:red" data-bind="text: $root.statusMapping[$data.lock_flg]"></td>
-								<!-- /ko -->
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.ticket_cost"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
@@ -94,13 +82,13 @@
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.first_ticket_date!=null -->
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketPart($data.tour_product_pk,$data.first_ticket_date)}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketPart($data.pk)}">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count==0 -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
-								<td><a href="javascript:void(0)" data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.sale_order_pk,$data.sale_standard_flg)}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
 								<!-- /ko -->
 								<td></td>
 								<td data-bind="text: $data.team_number"></td>
@@ -130,25 +118,17 @@
 					<thead>
 						<tr>
 							<th style="width: 10%">航段</th>
-							<th style="width: 10%">天次</th>
-							<th style="width: 15%">起飞日期</th>
+							<th style="width: 15%">日期</th>
 							<th style="width: 15%">起飞城市</th>
-							<th style="width: 10%">天次</th>
-							<th style="width: 15%">抵达日期</th>
 							<th style="width: 15%">抵达城市</th>
-							<th style="width: 20%">航班号</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:airTickets">
 						<tr>
-							<td data-bind="text:$data.ticket_index"></td>
-							<td data-bind="text:$data.start_day"></td>
-							<td data-bind="text:$data.off_date"></td>
-							<td data-bind="text:$data.start_city"></td>
-							<td data-bind="text:$data.end_day"></td>
-							<td data-bind="text:$data.land_date"></td>
-							<td data-bind="text:$data.end_city"></td>
-							<td data-bind="text:$data.ticket_number"></td>
+							<td data-bind="text:$data.sort_index"></td>
+							<td data-bind="text:$data.date"></td>
+							<td data-bind="text:$data.from_city"></td>
+							<td data-bind="text:$data.to_city"></td>
 						</tr>
 					</tbody>
 				</table>

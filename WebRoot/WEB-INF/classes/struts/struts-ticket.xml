@@ -20,6 +20,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchOrderAirInfoByTeamNumber" class="ticketAction" method="searchOrderAirInfoByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="createTicketOrder" class="ticketAction" method="createTicketOrder">
 			<result name="success" type="str">
 				resultStr
@@ -40,6 +46,12 @@
 				resultStr
 			</result>
 		</action>
+		<action name="searchAirTicketOrderLegByOrderPk" class="ticketAction" method="searchAirTicketOrderLegByOrderPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!-- 航班 -->
 		<action name="createFlight" class="flightAction" method="createFlight">
@@ -51,6 +63,47 @@
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!--票务航段 -->
+		<action name="createAirLeg" class="airLegAction" method="createAirLeg">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="searchAirLegsByPage" class="airLegAction" method="searchAirLegsByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchAirLegByPk" class="airLegAction" method="searchAirLegByPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteAirLeg" class="airLegAction" method="deleteAirLeg">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="updateAirLeg" class="airLegAction" method="updateAirLeg">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="switchHot" class="airLegAction" method="switchHot">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+
+		<!-- 名单操作 -->
+		<action name="checkSameAirLeg" class="ticketAction" method="checkSameAirLeg">
+			<result name="success" type="str">
+				resultStr
 			</result>
 		</action>
 	</package>

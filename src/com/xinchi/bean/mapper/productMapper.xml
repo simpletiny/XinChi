@@ -536,7 +536,7 @@
 			<if test="supplier_upkeep_flg != null">
 				supplier_upkeep_flg = #{supplier_upkeep_flg,jdbcType=VARCHAR},
 			</if>
-			<if test="off_shelves_date != null">
+			<if test="local_upkeep_flg != null">
 				local_upkeep_flg = #{local_upkeep_flg,jdbcType=VARCHAR},
 			</if>
 		</set>

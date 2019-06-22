@@ -122,6 +122,7 @@
 								<th>航班信息</th>
 								<th>销售</th>
 								<th>接待特请</th>
+								<th>接待特请</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -137,6 +138,7 @@
 								<td data-bind="text: $data.air_info"></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
+								<td data-bind="text: $data.standard_flg"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">

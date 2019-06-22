@@ -6,12 +6,7 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="login" class="userAction" method="login">
-			<result name="success" type="redirect">/templates/home.jsp</result>
-			<result name="sale" type="redirect">/templates/client/client-relation.jsp</result>
-			<result name="none">/</result>
-			<result name="input">/</result>
-			<result name="stop">/</result>
-			<result name="noright">/</result>
+			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="logout" class="userAction" method="logout">
 			<result name="SUCCESS" type="redirect">/templates/users/login.jsp</result>

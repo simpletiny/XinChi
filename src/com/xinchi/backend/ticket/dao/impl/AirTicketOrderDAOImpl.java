@@ -25,8 +25,8 @@ public class AirTicketOrderDAOImpl extends SqlSessionDaoSupport implements AirTi
 	}
 
 	@Override
-	public void insert(AirTicketOrderBean bean) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.AirTicketOrderMapper.insert", bean);
+	public String insert(AirTicketOrderBean bean) {
+		return daoUtil.insertBO("com.xinchi.bean.mapper.AirTicketOrderMapper.insert", bean);
 	}
 
 	@Override
@@ -41,12 +41,14 @@ public class AirTicketOrderDAOImpl extends SqlSessionDaoSupport implements AirTi
 
 	@Override
 	public AirTicketOrderBean selectByPrimaryKey(String id) {
-		return (AirTicketOrderBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByPrimaryKey", id);
+		return (AirTicketOrderBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByPrimaryKey",
+				id);
 	}
 
 	@Override
 	public List<AirTicketOrderBean> selectByParam(AirTicketOrderBean bean) {
-		List<AirTicketOrderBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByParam", bean);
+		List<AirTicketOrderBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByParam", bean);
 		return list;
 	}
 
@@ -62,7 +64,7 @@ public class AirTicketOrderDAOImpl extends SqlSessionDaoSupport implements AirTi
 
 	@Override
 	public AirTicketOrderBean selectBySaleOrderPk(String pk) {
-		
+
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.AirTicketOrderMapper.selectBySaleOrderPk", pk);
 	}
 

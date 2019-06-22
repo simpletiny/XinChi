@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientCountDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -62,10 +63,25 @@ public class ClientAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
 		}
-		
+
 		params.put("bo", client);
 		page.setParams(params);
 		clients = clientService.getAllCompaniesByPage(page);
+		return SUCCESS;
+	}
+
+	private ClientCountDto clientCount;
+
+	public String searchClinetCount() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			client.setSales(sessionBean.getPk());
+		}
+
+		clientCount = clientService.selectCountByParam(client);
 		return SUCCESS;
 	}
 
@@ -139,6 +155,14 @@ public class ClientAction extends BaseAction {
 
 	public void setSale_pks(List<String> sale_pks) {
 		this.sale_pks = sale_pks;
+	}
+
+	public ClientCountDto getClientCount() {
+		return clientCount;
+	}
+
+	public void setClientCount(ClientCountDto clientCount) {
+		this.clientCount = clientCount;
 	}
 
 }

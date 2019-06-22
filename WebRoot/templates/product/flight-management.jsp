@@ -179,7 +179,7 @@ tr td {
 	</div>
 
 	<script>
-		$(".product").addClass("current").children("ol")
+		$(".product-manager").addClass("current").children("ol")
 				.css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>

@@ -3,6 +3,7 @@ package com.xinchi.backend.client.service;
 import java.util.List;
 
 import com.xinchi.bean.ClientBean;
+import com.xinchi.bean.ClientCountDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
@@ -72,4 +73,6 @@ public interface ClientService extends BaseService {
 	public String pureUpdate(ClientBean client);
 
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
+
+	public ClientCountDto selectCountByParam(ClientBean client);
 }

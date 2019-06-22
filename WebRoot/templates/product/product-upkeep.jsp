@@ -59,7 +59,8 @@ tr td {
 						<div style="width: 50%; float: right">
 							<button type="submit" class="btn btn-green col-md-1"
 								data-bind="click: function() { uploadClientConfirmTemplet() }">组团确认</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { uploadOutNoticeConfirmTemplet() }">出团通知</button>
+							<button type="submit" class="btn btn-green col-md-1"
+								data-bind="click: function() { uploadOutNoticeConfirmTemplet() }">出团通知</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { flightManagement() }">机票维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { supplierManagement() }">地接维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { localManagement() }">本地维护</button>
@@ -67,7 +68,7 @@ tr td {
 					</div>
 					<div class="form-group">
 						<div class="col-md-6">
-							<div data-bind="foreach: status" style="padding-top: 4px;display:none">
+							<div data-bind="foreach: status" style="padding-top: 4px; display: none">
 								<em class="small-box"> <input type="checkbox"
 									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
 									name="product.statuses" /><label data-bind="text: $root.saleMapping[$data]"></label>
@@ -216,18 +217,31 @@ tr td {
 	<div id="c-c-t" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
-				<em class="small-box"> <input type="radio" name="cctradio" checked="checked" value="D" onclick="changeCctRadio(this)"/> <label>无模板</label>
+				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="D"
+					onclick="changeCctRadio(this)" /> <label>无模板</label>
 				</em>
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="height:40px">
 			<div class="col-md-6">
-				<em class="small-box"> <input type="radio" name="cctradio" value="Y" onclick="changeCctRadio(this)"/> <label>上传</label>
-				</em> <a id="c-c-t-a" style="display:none" href="javascript:;" class="a-upload">上传模板<input type="file" name="cct" /></a> <input type="hidden"
-					id="cct_file"/>
+				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="Y"
+					onclick="changeCctRadio(this)" /> <label>上传</label>
+				</em> <a href="javascript:;" id="c-c-t-a" style="display: none" class="a-upload">上传模板<input type="file" name="cct" />
+
+				</a> <input type="hidden" id="cct_file" />
+
 			</div>
 		</div>
-		<div class="input-row clearfloat" >
+		<div class="input-row clearfloat" style="padding-left:220px">
+			<!-- ko if: clientConfirmTemplet() == "default" -->
+			<label style="color: blue">默认模板</label>
+			<!-- /ko -->
+			<!-- ko if: clientConfirmTemplet() != "default" && clientConfirmTemplet()!="" -->
+			<label style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+				data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></label>
+			<!-- /ko -->
+		</div>
+		<div class="input-row clearfloat">
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:cancelCCT">取消</button>
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:saveCCT">保存</button>
 		</div>
@@ -235,18 +249,28 @@ tr td {
 	<div id="o-n-t" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
-				<em class="small-box"> <input type="radio" name="ontradio" checked="checked" value="D" onclick="changeOntRadio(this)"/> <label>无模板</label>
+				<em class="small-box"> <input type="radio" name="ontradio" data-bind="checked:outNoticeType()" value="D"
+					onclick="changeOntRadio(this)" /> <label>无模板</label>
 				</em>
 			</div>
 		</div>
-		<div class="input-row clearfloat" style="height:40px">
+		<div class="input-row clearfloat" style="height: 40px">
 			<div class="col-md-6">
-				<em class="small-box"> <input type="radio" name="ontradio" value="Y" onclick="changeOntRadio(this)"/> <label>上传</label>
-				</em> <a id="o-n-t-a" style="display:none" href="javascript:;" class="a-upload">上传模板<input type="file" name="ont" /></a> <input type="hidden"
-					id="ont_file"/>
+				<em class="small-box"> <input type="radio" name="ontradio" value="Y" data-bind="checked:outNoticeType()" onclick="changeOntRadio(this)" /> <label>上传</label>
+				</em> <a id="o-n-t-a" style="display: none" href="javascript:;" class="a-upload">上传模板<input type="file" name="ont" /></a>
+				<input type="hidden" id="ont_file" />
 			</div>
 		</div>
-		<div class="input-row clearfloat" >
+		<div class="input-row clearfloat" style="padding-left:220px">
+			<!-- ko if: outNoticeTemplet() == "default" -->
+			<label style="color: blue">默认模板</label>
+			<!-- /ko -->
+			<!-- ko if: outNoticeTemplet() != "default" && outNoticeTemplet()!="" -->
+			<label style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+				data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></label>
+			<!-- /ko -->
+		</div>
+		<div class="input-row clearfloat">
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:cancelONT">取消</button>
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:saveONT">保存</button>
 		</div>

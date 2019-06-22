@@ -5,6 +5,7 @@ import java.util.List;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
+import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -68,4 +69,12 @@ public interface ProductService extends BaseService {
 	public String saveProductFlight(FlightBean flight, String json);
 
 	public String updateProductSupplier(String json);
+
+	public String updateProductFlight(FlightBean flight, String json);
+
+	public List<ProductLocalBean> searchProductLocalByProductPk(String product_pk);
+
+	public String updateProductLocal(String json);
+
+	public String createProduct(ProductBean product);
 }

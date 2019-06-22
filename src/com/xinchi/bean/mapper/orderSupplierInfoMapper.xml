@@ -64,6 +64,10 @@
 		delete from order_supplier_info
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByOrderSupplierPk" parameterType="java.lang.String">
+		delete from order_supplier_info
+		where order_supplier_pk = #{order_supplier_pk,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.OrderSupplierInfoBean">
 

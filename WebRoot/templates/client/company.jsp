@@ -104,12 +104,14 @@
 						</s:if>
 						<div class="span6">
 							<div class="col-md-2">
-								<em class="small-box "> <input id="chk_public" type="checkbox"
-									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+								<em class="small-box "> <input type="radio" value="N"
+									data-bind="event:{click:function(){refresh();return true;}}" checked="checked" name="client.public_flgs" /><label>未公开</label>
+									<input type="radio" value="A" data-bind="event:{click:function(){refresh();return true;}}"
+									name="client.public_flgs" /><label>含公开</label> <input type="radio" name="client.public_flgs"
+									data-bind="event:{click:function(){refresh();return true;}}" value="Y" /><label>只看公开</label>
 								</em>
 							</div>
 						</div>
-
 					</div>
 					<div class="form-group">
 						<label class="col-md-1 control-label">地址</label>
@@ -137,10 +139,19 @@
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">主营</label>
-							<div data-bind="foreach: mainBusinesses" class="col-md-4">
-								<em class="small-box "> <input name="client.main_businesses" type="checkbox"
-									data-bind="attr: {'value': $data}, checked: $root.chosenMainBusinesses,event:{click:function(){$root.refresh();return true;}}" /><label
-									data-bind="text: $data"></label>
+							<div class="col-md-4">
+								<em class="small-box "> <input name="client.main_businesses" type="checkbox" value="组团" checked="checked"
+									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label>
+									<input name="client.main_businesses" type="checkbox" value="综合"
+									data-bind="event:{click:chkMainBusinessChk}" checked="checked"/><label>综合</label>
+									<input name="client.main_businesses" type="radio" value="地接"
+									data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
+									<input name="client.main_businesses" type="radio" value="同业"
+									data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
+									<input name="client.main_businesses" type="radio" value="其它"
+									data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
+									<input name="client.main_businesses" type="radio" value="全部"
+									data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
 								</em>
 							</div>
 						</div>
@@ -157,10 +168,10 @@
 							<tr>
 								<td width="11.11%">总数</td>
 								<td width="11.11%" data-bind="text:totalCompanies()"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
+								<td width="11.11%">年单1</td>
+								<td width="11.11%" data-bind="text:clientCount().oneYearorderCnt"></td>
+								<td width="11.11%">年单1+</td>
+								<td width="11.11%" data-bind="text:clientCount().moreYearorderCnt"></td>
 								<td width="11.11%"></td>
 								<td width="11.11%"></td>
 								<td width="11.11%"></td>

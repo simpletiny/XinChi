@@ -31,6 +31,11 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 	private String passenger;
 	private List<String> status;
 
+	private String ordered;
+
+	// option
+	private String client_name;
+
 	public String getConfirm_flg() {
 		return confirm_flg;
 	}
@@ -133,6 +138,22 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 
 	public void setPassenger(String passenger) {
 		this.passenger = passenger;
+	}
+
+	public String getOrdered() {
+		return ordered;
+	}
+
+	public void setOrdered(String ordered) {
+		this.ordered = ordered;
+	}
+
+	public String getClient_name() {
+		return client_name;
+	}
+
+	public void setClient_name(String client_name) {
+		this.client_name = client_name;
 	}
 
 }

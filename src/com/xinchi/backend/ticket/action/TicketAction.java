@@ -2,12 +2,10 @@ package com.xinchi.backend.ticket.action;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -17,9 +15,6 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
-import com.xinchi.backend.payable.service.AirTicketPayableService;
-import com.xinchi.backend.product.service.ProductAirTicketService;
-import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
@@ -27,18 +22,15 @@ import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
-import com.xinchi.bean.AirTicketPayableBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
-import com.xinchi.bean.PassengerTicketInfoBean;
-import com.xinchi.bean.ProductAirTicketBean;
-import com.xinchi.bean.ProductBean;
+import com.xinchi.bean.AirTicketOrderLegBean;
+import com.xinchi.bean.OrderAirInfoBean;
+import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.DateUtil;
-import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -75,6 +67,15 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<OrderAirInfoBean> order_air_infos;
+	private String team_number;
+
+	public String searchOrderAirInfoByTeamNumber() {
+
+		order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(team_number);
+		return SUCCESS;
+	}
+
 	private String sale_order_pk;
 	private BigDecimal air_ticket_cost;
 	private String standard_flg;
@@ -85,71 +86,12 @@ public class TicketAction extends BaseAction {
 	private BudgetNonStandardOrderService bnsoService;
 
 	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private ProductAirTicketService productAirTicketService;
-
-	@Autowired
 	private AirTicketOrderService airTicketOrderService;
 
 	public String createTicketOrder() {
-		AirTicketOrderBean airTicketOrder = new AirTicketOrderBean();
 
-		if (standard_flg.equals("Y")) {
-			BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(sale_order_pk);
-			if (bsOrder.getName_list() == null) {
-				resultStr = "没有名单不能生成订单";
-				return SUCCESS;
-			}
-			bsOrder.setAir_ticket_cost(air_ticket_cost);
-			bsoService.updateComment(bsOrder);
-			String client_number = "";
-			// 销售的产品
-			ProductBean saleProduct = productService.selectByPrimaryKey(bsOrder.getProduct_pk());
-			if (saleProduct.getAir_ticket_charge().equals(ResourcesConstants.PRODUCT_AIR_TICKET_CHARGE_PRODUCT)) {
-				client_number = saleProduct.getCreate_user();
-			} else if (saleProduct.getAir_ticket_charge().equals(ResourcesConstants.PRODUCT_AIR_TICKET_CHARGE_SALE)) {
-				client_number = bsOrder.getCreate_user();
-			} else if (saleProduct.getAir_ticket_charge().equals(ResourcesConstants.PRODUCT_AIR_TICKET_CHARGE_NONE)) {
-				client_number = "NONE";
-			}
-			// 产品机票信息
-			List<ProductAirTicketBean> productAirTickets = productAirTicketService.selectByProductPk(saleProduct.getPk());
-			ProductAirTicketBean firstTicketInfo = productAirTickets.get(0);
+		resultStr = airTicketOrderService.createOrder(team_number, json);
 
-			airTicketOrder.setClient_number(client_number);
-			airTicketOrder.setTicket_cost(air_ticket_cost);
-			airTicketOrder.setFirst_ticket_date(DateUtil.addDate(bsOrder.getDeparture_date(), firstTicketInfo.getStart_day() - 1));
-			airTicketOrder.setFirst_start_city(firstTicketInfo.getStart_city());
-			airTicketOrder.setFirst_end_city(firstTicketInfo.getEnd_city());
-			airTicketOrder.setPeople_count((bsOrder.getAdult_count() == null ? 0 : bsOrder.getAdult_count())
-					+ (bsOrder.getSpecial_count() == null ? 0 : bsOrder.getSpecial_count()));
-			airTicketOrder.setTeam_number(bsOrder.getTeam_number());
-			airTicketOrder.setTour_product_pk(saleProduct.getPk());
-			airTicketOrder.setSale_order_pk(bsOrder.getPk());
-
-		} else {
-			BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(sale_order_pk);
-			if (bnsOrder.getName_list() == null) {
-				resultStr = "没有名单不能生成订单";
-				return SUCCESS;
-			}
-			bnsOrder.setPk(sale_order_pk);
-			bnsOrder.setAir_ticket_cost(air_ticket_cost);
-			bnsoService.updateComment(bnsOrder);
-
-			airTicketOrder.setClient_number(bnsOrder.getCreate_user());
-			airTicketOrder.setTicket_cost(air_ticket_cost);
-			airTicketOrder.setPeople_count((bnsOrder.getAdult_count() == null ? 0 : bnsOrder.getAdult_count())
-					+ (bnsOrder.getSpecial_count() == null ? 0 : bnsOrder.getSpecial_count()));
-			airTicketOrder.setTeam_number(bnsOrder.getTeam_number());
-			airTicketOrder.setSale_order_pk(bnsOrder.getPk());
-
-		}
-		airTicketOrder.setSale_standard_flg(standard_flg);
-		airTicketOrderService.insert(airTicketOrder);
-		resultStr = SUCCESS;
 		return SUCCESS;
 	}
 
@@ -172,35 +114,8 @@ public class TicketAction extends BaseAction {
 		airTicketNameList = new ArrayList<AirTicketNameListBean>();
 
 		for (AirTicketOrderBean order : ticketOrders) {
-			// 已经锁定的不参与
-			if (order.getLock_flg().equals("1"))
-				continue;
-
 			List<SaleOrderNameListBean> nameList = new ArrayList<SaleOrderNameListBean>();
-			if (null == order.getTeam_number()) {
-				String names = "";
-				if (order.getSale_standard_flg().equals("Y")) {
-					BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order.getSale_order_pk());
-					names = bsOrder.getName_list();
-				} else {
-					BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order.getSale_order_pk());
-					names = bnsOrder.getName_list();
-				}
-				String[] arrName = names.split(";");
-				for (String name : arrName) {
-
-					String[] info = name.split(":");
-					if (info.length < 2)
-						continue;
-					SaleOrderNameListBean nn = new SaleOrderNameListBean();
-					nn.setName(info[0].trim());
-					nn.setId(info[1].trim());
-					nameList.add(nn);
-				}
-
-			} else {
-				nameList = orderNameListService.selectByTeamNumber(order.getTeam_number());
-			}
+			nameList = orderNameListService.selectByTeamNumber(order.getTeam_number());
 
 			for (SaleOrderNameListBean name : nameList) {
 				AirTicketNameListBean nn = new AirTicketNameListBean();
@@ -212,10 +127,9 @@ public class TicketAction extends BaseAction {
 				nn.setTicket_order_pk(order.getPk());
 				nn.setName(name.getName());
 				nn.setId(name.getId());
-				nn.setSale_product_pk(order.getTour_product_pk());
 				airTicketNameList.add(nn);
 			}
-			order.setLock_flg("1");
+			order.setStatus("Y");
 			airTicketOrderService.update(order);
 		}
 
@@ -256,8 +170,43 @@ public class TicketAction extends BaseAction {
 			String pks[] = passengerPks.split(",");
 			List<AirTicketNameListBean> passengers = airTicketNameListService.selectByPks(pks);
 			ta.setPassengers(passengers);
-
 			ticketAllots.add(ta);
+
+			List<PassengerAllotDto> airLegs = airTicketNameListService
+					.selectPassengerAllotByPassengerPks(Arrays.asList(pks));
+
+			// 去除不同的航段
+			List<PassengerAllotDto> compares = new ArrayList<PassengerAllotDto>();
+			String compare_passenger_pk = airLegs.get(0).getPassenger_pk();
+			for (int j = airLegs.size() - 1; j >= 0; j--) {
+				if (airLegs.get(j).getPassenger_pk().equals(compare_passenger_pk)) {
+					compares.add(airLegs.get(j));
+				}
+			}
+
+			for (int k = compares.size() - 1; k >= 0; k--) {
+				if (compares.get(k).getIs_allot().equals("Y")) {
+					compares.remove(k);
+					continue;
+				}
+				
+				int hasCount = 1;
+				for (PassengerAllotDto leg : airLegs) {
+					if (compares.get(k).getPassenger_pk().equals(leg.getPassenger_pk())) {
+						continue;
+					}
+					if (compares.get(k).getDate().equals(leg.getDate())
+							&& compares.get(k).getFrom_city().equals(leg.getFrom_city())
+							&& compares.get(k).getTo_city().equals(leg.getTo_city()) && leg.getIs_allot().equals("N")) {
+						hasCount += 1;
+					}
+				}
+				if (hasCount != pks.length) {
+					compares.remove(k);
+				}
+			}
+			ta.setAirLegs(compares);
+
 		}
 
 		return SUCCESS;
@@ -266,73 +215,28 @@ public class TicketAction extends BaseAction {
 	@Autowired
 	private PassengerTicketInfoService passengerTicketInfoService;
 
-	@Autowired
-	private AirTicketPayableService airTicketPayableService;
-
 	public String allotTicket() {
-		JSONArray arr = JSONArray.fromObject(json);
-		List<PassengerTicketInfoBean> ptis = new ArrayList<PassengerTicketInfoBean>();
+		resultStr = passengerTicketInfoService.allotTicket(json);
+		return SUCCESS;
+	}
 
-		for (int i = 0; i < arr.size(); i++) {
+	private String order_pk;
+	private List<AirTicketOrderLegBean> air_tickets;
 
-			JSONObject obj = arr.getJSONObject(i);
-			String ticket_source = obj.getString("ticket_source");
-			String ticket_source_pk = obj.getString("ticket_source_pk");
+	public String searchAirTicketOrderLegByOrderPk() {
+		air_tickets = airTicketOrderService.selectAirTicketOrderLegByOrderPk(order_pk);
+		return SUCCESS;
+	}
 
-			String ticket_cost = obj.getString("ticket_cost");
-			String ticket_PNR = obj.getString("ticket_PNR");
-			String passenger_pks = obj.getString("passenger_pks");
-			String pkkk[] = passenger_pks.split(",");
+	private List<String> passenger_pks;
 
-			// 保存机票供应商应付款
-			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
-			airTicketPayable.setSupplier_employee_pk(ticket_source_pk);
-			airTicketPayable.setBudget_payable(null != ticket_cost ? new BigDecimal(ticket_cost) : BigDecimal.ZERO);
-			airTicketPayable.setPNR(ticket_PNR);
-			airTicketPayable.setBudget_balance(null != ticket_cost ? new BigDecimal(ticket_cost) : BigDecimal.ZERO);
-			airTicketPayable.setPaid(BigDecimal.ZERO);
-
-			airTicketPayableService.insert(airTicketPayable);
-
-			BigDecimal cost = new BigDecimal(ticket_cost);
-			JSONArray ticket_info = obj.getJSONArray("ticket_info");
-			for (int j = 0; j < ticket_info.size(); j++) {
-				JSONObject info = ticket_info.getJSONObject(j);
-				int ticket_index = info.getInt("ticket_index");
-				String ticket_date = info.getString("ticket_date");
-				String ticket_number = info.getString("ticket_number");
-				String from_to_time = info.getString("from_to_time");
-				String from_to_city = info.getString("from_to_city");
-				String from_airport = info.getString("from_airport");
-				String to_airport = info.getString("to_airport");
-				String terminal = info.getString("terminal");
-
-				for (String pk : pkkk) {
-					if (SimpletinyString.isEmpty(pk))
-						continue;
-					PassengerTicketInfoBean pti = new PassengerTicketInfoBean();
-
-					pti.setTicket_cost(cost);
-					pti.setTicket_source(ticket_source);
-					pti.setTicket_source_pk(ticket_source_pk);
-					pti.setPNR(ticket_PNR);
-					pti.setTicket_index(ticket_index);
-					pti.setTicket_date(ticket_date);
-					pti.setTicket_number(ticket_number);
-					pti.setFrom_to_time(from_to_time);
-					pti.setFrom_to_city(from_to_city);
-					pti.setFrom_airport(from_airport);
-					pti.setTo_airport(to_airport);
-					pti.setTerminal(terminal);
-					pti.setPassenger_pk(pk);
-					pti.setBase_pk(airTicketPayable.getPk());
-					ptis.add(pti);
-				}
-
-			}
-		}
-
-		resultStr = passengerTicketInfoService.insertList(ptis);
+	/**
+	 * 判断操作的名单是否存在相同票务航段
+	 * 
+	 * @return
+	 */
+	public String checkSameAirLeg() {
+		resultStr = passengerTicketInfoService.checkSameAirLeg(passenger_pks);
 		return SUCCESS;
 	}
 
@@ -430,6 +334,46 @@ public class TicketAction extends BaseAction {
 
 	public void setTicketAllots(List<TicketAllotDto> ticketAllots) {
 		this.ticketAllots = ticketAllots;
+	}
+
+	public List<OrderAirInfoBean> getOrder_air_infos() {
+		return order_air_infos;
+	}
+
+	public void setOrder_air_infos(List<OrderAirInfoBean> order_air_infos) {
+		this.order_air_infos = order_air_infos;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
+	}
+
+	public List<AirTicketOrderLegBean> getAir_tickets() {
+		return air_tickets;
+	}
+
+	public void setAir_tickets(List<AirTicketOrderLegBean> air_tickets) {
+		this.air_tickets = air_tickets;
+	}
+
+	public String getOrder_pk() {
+		return order_pk;
+	}
+
+	public void setOrder_pk(String order_pk) {
+		this.order_pk = order_pk;
+	}
+
+	public List<String> getPassenger_pks() {
+		return passenger_pks;
+	}
+
+	public void setPassenger_pks(List<String> passenger_pks) {
+		this.passenger_pks = passenger_pks;
 	}
 
 }

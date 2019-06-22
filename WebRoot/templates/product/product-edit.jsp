@@ -65,7 +65,7 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="product.pk"></input>
 					<div class="input-row clearfloat">
-						<label class="l"><input type="checkbox" id="chk-strict" value="Y" name="product.strict_price_flg" />严格执行定价</label>
+						<label class="l"><input type="checkbox" id="chk-strict" checked="checked" value="Y" name="product.strict_price_flg" />严格执行定价</label>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-1">&nbsp;</div>
@@ -104,7 +104,6 @@
 					<div class="input-row clearfloat">
 						<table style="width: 100%" id="table-product">
 							<tr>
-								<td style="width: 4%"></td>
 								<td style="width: 24%"><label class="l">&nbsp;</label>
 									<div class="ip fix-width required">
 										<label class="l" style="text-align: center">成人</label>
@@ -117,10 +116,7 @@
 								<td style="width: 24%"></td>
 								<td style="width: 24%"></td>
 							</tr>
-
-
 							<tr>
-								<td>现付</td>
 								<td>
 									<div class="required">
 										<label class="l">直客报价</label>
@@ -158,21 +154,15 @@
 								</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" value="Y" id="chk-air-ticket" onclick="caculateGrossProfit()"
-									name="product.cash_flow_air_flg" /></td>
-								<td>
-									<div class="required">
-										<label class="l">机票成本</label>
-										<div class="ip fix-width">
-											<input type="number" class="ip-" required="required" id="air-ticket-cost" onkeyup="caculateGrossProfit()"
-												data-bind="value: product().air_ticket_cost" placeholder="成人机票" name="product.air_ticket_cost" />
-										</div>
-									</div>
-								</td>
+								<td><label class="l">其他成本</label>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().other_cost" placeholder="成人" name="product.other_cost" />
+									</div></td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" id="air-ticket-child-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().air_ticket_child_cost" placeholder="儿童机票" name="product.air_ticket_child_cost" />
+										<input type="number" class="ip-" id="other-child-cost" onkeyup="caculateGrossProfit()"
+											data-bind="value: product().other_child_cost" placeholder="儿童" name="product.other_child_cost" />
 									</div>
 								</td>
 								<td><label class="l">首段出港</label>
@@ -187,106 +177,6 @@
 									</div></td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" value="Y" id="chk-local" onclick="caculateGrossProfit()"
-									name="product.cash_flow_local_flg" /></td>
-								<td>
-									<div class="required">
-										<label class="l">地接成本</label>
-										<div class="ip fix-width">
-											<input type="number" class="ip-" id="local-adult-cost" onkeyup="caculateGrossProfit()" required="required"
-												data-bind="value: product().local_adult_cost" placeholder="成人" name="product.local_adult_cost" />
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="ip fix-width">
-										<input type="number" class="ip-" id="local-child-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().local_child_cost" placeholder="儿童" name="product.local_child_cost" />
-									</div>
-								</td>
-								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
-									<div class="ip">
-										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_attention"
-											name="product.sale_attention" placeholder="技术交底"></textarea>
-									</div></td>
-							</tr>
-							<tr>
-								<td><input type="checkbox" id="chk-other" value="Y" onclick="caculateGrossProfit()"
-									name="product.cash_flow_other_flg" /></td>
-								<td><label class="l">其他成本</label>
-									<div class="ip fix-width">
-										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().other_cost" placeholder="成人" name="product.other_cost" />
-									</div></td>
-								<td>
-									<div class="ip fix-width">
-										<input type="number" class="ip-" id="other-child-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().other_child_cost" placeholder="儿童" name="product.other_child_cost" />
-									</div>
-								</td>
-							</tr>
-
-							<tr>
-								<td style="width: 4%">&nbsp;</td>
-								<td style="width: 24%"><label class="l">毛利</label>
-									<div class="ip fix-width">
-										<p class="ip-default" id="gross-profit" data-bind="text: product().gross_profit"></p>
-										<input type="hidden" id="txt-gross-profit" data-bind="text: product().gross_profit" name="delay.gross_profit" />
-									</div></td>
-								<td style="width: 24%"><div class="ip fix-width">
-										<p class="ip-default" id="gross-child-profit" data-bind="text: product().gross_child_profit"></p>
-										<input type="hidden" id="txt-gross-child-profit" data-bind="text: product().gross_child_profit"
-											name="delay.gross_child_profit" />
-									</div></td>
-							</tr>
-							<tr>
-								<td style="width: 4%">&nbsp;</td>
-								<td style="width: 24%"><label class="l">毛利率</label>
-									<div class="ip fix-width">
-										<p class="ip-default" id="gross-profit-rate" data-bind="text: product().gross_profit_rate"></p>
-										<input type="hidden" id="txt-gross-profit-rate" data-bind="text: product().gross_profit_rate"
-											name="delay.gross_profit_rate" />
-									</div></td>
-								<td style="width: 24%"><div class="ip fix-width">
-										<p class="ip-default" id="gross-child-profit-rate" data-bind="text: product().gross_child_profit_rate"></p>
-										<input type="hidden" id="txt-gross-child-profit-rate" data-bind="text: product().gross_child_profit_rate"
-											name="delay.gross_child_profit_rate" />
-									</div></td>
-							</tr>
-
-							<tr>
-								<td style="width: 4%">&nbsp;</td>
-								<td style="width: 24%"><label class="l">现金流</label>
-									<div class="ip fix-width">
-										<p class="ip-default" id="cash-flow" data-bind="text: product().cash_flow"></p>
-										<input type="hidden" id="txt-cash-flow" data-bind="text: product().cash_flow" name="delay.cash_flow" />
-									</div></td>
-								<td style="width: 24%"><div class="ip fix-width">
-										<p class="ip-default" id="cash-child-flow" data-bind="text: product().cash_child_flow"></p>
-										<input type="hidden" id="txt-cash-child-flow" data-bind="text: product().cash_child_flow"
-											name="delay.cash_child_flow" />
-									</div></td>
-								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
-									<div class="ip">
-										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy"
-											name="product.sale_strategy" placeholder="收客建议"></textarea>
-									</div></td>
-							</tr>
-							<tr>
-								<td style="width: 4%">&nbsp;</td>
-								<td style="width: 24%"><label class="l">现付资金</label>
-									<div class="ip fix-width">
-										<p class="ip-default" id="spot-cash" data-bind="text: product().spot_cash"></p>
-										<input type="hidden" id="txt-spot-cash" data-bind="text: product().spot_cash" name="delay.spot_cash" />
-									</div></td>
-								<td style="width: 24%"><div class="ip fix-width">
-										<p class="ip-default" id="spot-child-cash" data-bind="text: product().spot_child_cash"></p>
-										<input type="hidden" id="txt-spot-child-cash" data-bind="text: product().spot_child_cash"
-											name="delay.spot_child_cash" />
-									</div></td>
-							</tr>
-							<tr>
-								<td></td>
 								<td>
 									<div class="required">
 										<label class="l">产品分值</label>
@@ -302,73 +192,21 @@
 											placeholder="0-20整数" name="delay.product_child_value" required="required" />
 									</div>
 								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
+									<div class="ip">
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_attention"
+											name="product.sale_attention" placeholder="技术交底"></textarea>
+									</div></td>
+								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
+									<div class="ip">
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy"
+											name="product.sale_strategy" placeholder="收客建议"></textarea>
+									</div></td>
 							</tr>
 						</table>
-					</div>
-					<hr />
-					<h3>供应商信息</h3>
-					<div style="margin-top: 20px;">
-						<table style="width: 90%" id="table-supplier">
-							<thead>
-								<tr class="required">
-									<th style="width: 5%">序号</th>
-									<th class="r" style="width: 10%">供应商</th>
-									<th class="r" style="width: 10%">产品名称</th>
-									<th class="r" style="width: 5%">价格</th>
-									<th class="r" style="width: 9%">接团天次</th>
-									<th style="width: 10%">接团方式</th>
-									<th style="width: 10%">接团人</th>
-									<th style="width: 10%">联系方式</th>
-									<th class="r" style="width: 9%">送团天次</th>
-									<th style="width: 10%">送团方式</th>
-									<th style="width: 2%"></th>
-								</tr>
-							</thead>
-							<!-- ko if:productSuppliers().length>0 -->
-							<tbody data-bind="foreach:productSuppliers">
-								<tr>
-									<td st="index" data-bind="text:$data.supplier_index"></td>
-									<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name"
-										onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
-										data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
-									<td><input class="need" st="supplier-product-name" maxlength="10"
-										data-bind="value:$data.supplier_product_name" type="text" /></td>
-									<td><input class="need" onkeyup="caculateOtherCost()" st="supplier-cost"
-										data-bind="value:$data.supplier_cost" type="number" /></td>
-									<td><input class="need" st="land-day" data-bind="value:$data.land_day" type="number" /></td>
-									<td><input st="pick-type" data-bind="value:$data.pick_type" maxlength="50" type="text" /></td>
-									<td><input st="picker" data-bind="value:$data.picker" maxlength="10" type="text" /></td>
-									<td><input st="picker-cellphone" data-bind="value:$data.picker_cellphone" maxlength="15" type="number" /></td>
-									<td><input class="need" st="off-day" type="number" data-bind="value:$data.off_day" /></td>
-									<td><input st="send-type" maxlength="50" type="text" data-bind="value:$data.send_type" /></td>
-									<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
-								</tr>
-							</tbody>
-							<!-- /ko -->
-							<!-- ko if:productSuppliers().length<1 -->
-							<tbody>
-								<tr>
-									<td st="index">1</td>
-									<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input class="need"
-										type="text" st="supplier-pk" style="display: none" /></td>
-									<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
-									<td><input class="need" onkeyup="caculateOtherCost()" st="supplier-cost" type="number" /></td>
-									<td><input class="need" st="land-day" type="number" /></td>
-									<td><input st="pick-type" maxlength="50" type="text" /></td>
-									<td><input st="picker" maxlength="10" type="text" /></td>
-									<td><input st="picker-cellphone" maxlength="15" type="number" /></td>
-									<td><input class="need" st="off-day" type="number" /></td>
-									<td><input st="send-type" maxlength="50" type="text" /></td>
-									<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
-								</tr>
-							</tbody>
-							<!-- /ko -->
-
-
-						</table>
-						<div style="margin-top: 20px; padding-left: 200px">
-							<input type="button" value="添加供应商" onclick="addRow()"></input>
-						</div>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">

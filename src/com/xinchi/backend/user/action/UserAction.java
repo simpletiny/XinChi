@@ -44,16 +44,8 @@ public class UserAction extends BaseAction {
 	private UserService userService;
 
 	public String login() {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String result = userService.login(ubb);
-		if (result.equals(SUCCESS) || result.equals("SALE")) {
-			request.removeAttribute("login_result");
-		} else {
-			request.setAttribute("login_result", result);
-		}
-		// SimpletinyUser su = new SimpletinyUser();
-		// System.out.println(su.getUser().getUser_number());
-		return result;
+		resultStr = userService.login(ubb);
+		return SUCCESS;
 	}
 
 	public String logout() {

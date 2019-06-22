@@ -51,4 +51,14 @@ public class ProductLocalDAOImpl extends SqlSessionDaoSupport implements Product
 		return list;
 	}
 
+	@Override
+	public List<ProductLocalBean> selectByProductPk(String product_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ProductLocalMapper.selectByProductPk", product_pk);
+	}
+
+	@Override
+	public void deleteByProductPk(String product_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.ProductLocalMapper.deleteByProductPk", product_pk);
+	}
+
 }

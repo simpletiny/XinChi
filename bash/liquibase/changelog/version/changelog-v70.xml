@@ -1,0 +1,64 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS air_ticket_need;
+					 CREATE VIEW air_ticket_need AS
+					    SELECT 
+					    A.confirm_flg,
+					    A.operate_flg,
+					    A.standard_flg,
+					    B.pk AS product_pk,
+					    A.pk AS sale_order_pk,
+					    A.passenger_captain AS passenger,
+					    B.product_manager_number AS ticket_client_number,
+					    CASE
+					        WHEN ISNULL(A.departure_date) OR ISNULL(B.pk) THEN NULL
+					        ELSE DATE_ADD(A.departure_date,
+					            INTERVAL B.day_index - 1 DAY)
+					    END AS first_ticket_date,
+					    CASE
+					        WHEN ISNULL(B.pk) THEN NULL
+					        ELSE B.from_to_city
+					    END AS first_from_to,
+					    (IF(ISNULL(A.adult_count),
+					        0,
+					        A.adult_count) + IF(ISNULL(A.special_count),
+					        0,
+					        A.special_count)) AS people_count,
+					    A.team_number,
+					    IF(C.pk IS NULL, 'N', 'Y') AS ordered
+					FROM
+					    budget_order_view A
+					        LEFT JOIN
+					    view_order_air_info B ON A.team_number = B.team_number
+					        AND B.info_index = 0
+					        AND B.air_index = 1
+					        LEFT JOIN
+					    air_ticket_order C ON A.team_number = C.team_number
+					WHERE
+					    A.operate_flg = 'I'
+					        AND A.confirm_date >= '2019-05-01';
+             ]]>
+			<comment>ALTER VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE budget_non_standard_order 
+					ADD INDEX team_number (team_number ASC);
+					ALTER TABLE budget_standard_order 
+					ADD INDEX team_number (team_number ASC);
+					
+             ]]>
+			<comment>add table index</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>
+
+
+

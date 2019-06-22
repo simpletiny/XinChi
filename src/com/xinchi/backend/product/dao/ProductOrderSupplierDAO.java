@@ -44,4 +44,8 @@ public interface ProductOrderSupplierDAO {
 	public void deleteByProductPk(String product_pk);
 
 	public List<OrderSupplierBean> selectByProductPk(String product_pk);
+
+	public List<OrderSupplierBean> selectByOrderPk(String order_pk);
+
+	public void deleteByOrderPk(String order_pk);
 }

@@ -29,6 +29,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchClinetCount" class="clientAction" method="searchClinetCount">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOneCompany" class="clientAction" method="searchCompanyByPk">
 			<result name="success" type="json"></result>
 		</action>

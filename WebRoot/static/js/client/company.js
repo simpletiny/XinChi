@@ -48,8 +48,8 @@ var CompanyContext = function() {
 		items : []
 	});
 	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
-	self.mainBusinesses = [ '未知', '组团', '地接', '同业', '综合' ];
-	self.backLevels = [ '未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
+	self.mainBusinesses = [ '其它', '组团', '地接', '同业', '综合' ];
+	self.backLevels = [ '其它', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
 	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
 	self.status = [ 'N', 'Y' ];
 	self.talkLevels = [ '核心', '主力', '市场', '排斥' ];
@@ -63,10 +63,9 @@ var CompanyContext = function() {
 		'Y' : '已停用'
 	};
 
-	self.chosenMainBusinesses = ko.observableArray([]);
-	self.chosenMainBusinesses.push("综合");
-	self.chosenMainBusinesses.push("组团");
-	self.chosenMainBusinesses.push("未知");
+	// self.chosenMainBusinesses = ko.observableArray([]);
+	// self.chosenMainBusinesses.push("综合");
+	// self.chosenMainBusinesses.push("组团");
 
 	self.chosenStatus = ko.observable('N');
 
@@ -90,17 +89,27 @@ var CompanyContext = function() {
 		self.sales.push(pub);
 	});
 
+	self.clientCount = ko.observable({
+		oneYearorderCnt : 0,
+		moreYearorderCnt : 0
+	});
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("#form-search").serialize();
-		
-		if($("#chk_public").is(":checked")){
-			param+="&client.public_flgs=Y";
-		}else{
-			param+="&client.public_flgs=N";
+
+		if ($(":radio[name='client.main_businesses']:checked").val() == "全部") {
+			param += "&client.main_businesses=组团&client.main_businesses=综合&client.main_businesses=地接&client.main_businesses=同业&client.main_businesses=其它";
 		}
-		
-		
+		if ($("input[name='client.public_flgs']:checked").val() == "A") {
+			param += "&client.public_flgs=Y&client.public_flgs=N";
+		}
+
+		$.getJSON(self.apiurl + 'client/searchClinetCount', param, function(
+				data) {
+			self.clientCount(data.clientCount);
+			console.log(self.clientCount());
+		});
+
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 
@@ -116,6 +125,16 @@ var CompanyContext = function() {
 		});
 	};
 
+	self.chkMainBusinessRad = function(data, event) {
+		$(":checkbox[name='client.main_businesses']").attr("checked", false);
+		self.refresh();
+		return true;
+	}
+	self.chkMainBusinessChk = function(data, event) {
+		$(":radio[name='client.main_businesses']").attr("checked", false);
+		self.refresh();
+		return true;
+	}
 	self.changeStatus = function() {
 		self.refresh();
 		return true;
