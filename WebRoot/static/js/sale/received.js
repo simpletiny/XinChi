@@ -52,13 +52,28 @@ var ReceivedContext = function() {
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("I");
-	self.allStatus = [ 'I', 'N', 'E' ];
+	self.allStatus = [ 'I', 'Y','N', 'E' ];
 
 	self.statusMapping = {
 		'I' : '待确认',
 		'N' : '被驳回',
+		'Y' : '已确认',
 		'E' : '已入账'
 	};
+
+	var receivedType = function(key, value) {
+		this.key = key;
+		this.value = value;
+	}
+	self.chosenReceivedType = ko.observable();
+	self.chosenReceivedType("RECEIVED");
+	self.receivedTypes = ko.observableArray([ new receivedType('TAIL', '抹零'),
+			new receivedType('SUM', '合账'), new receivedType('STRIKE', '冲账'),
+			new receivedType('RECEIVED', '收入'), new receivedType('PAY', '支出'),
+			new receivedType('STRIKEOUT', '冲账/出'),
+			new receivedType('STRIKEIN', '冲账/入'),
+			new receivedType('COLLECT', '代收'), new receivedType('FLY', 'FLY'),
+			new receivedType('TAIL98', '98清尾') ]);
 
 	self.typeMapping = {
 		'TAIL' : '抹零',
@@ -70,7 +85,7 @@ var ReceivedContext = function() {
 		'STRIKEIN' : '冲账/入',
 		'COLLECT' : '代收',
 		'FLY' : 'FLY',
-		'TAIL98':'98清尾'
+		'TAIL98' : '98清尾'
 	};
 
 	// 计算合计

@@ -47,4 +47,6 @@ public interface PayApprovalService extends BaseService {
 	public List<PayApprovalBean> selectByPage(Page<PayApprovalBean> page);
 
 	public BigDecimal selectSumBalance();
+
+	public PayApprovalBean selectByBackPk(String back_pk);
 }

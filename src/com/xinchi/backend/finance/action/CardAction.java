@@ -1,7 +1,12 @@
 package com.xinchi.backend.finance.action;
 
-import java.io.UnsupportedEncodingException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
@@ -30,9 +35,23 @@ public class CardAction extends BaseAction {
 	private List<CardBean> cards;
 	private BigDecimal sum_balance;
 
-	public String searchCard() {
+	public String searchCard() throws Exception {
 		cards = cardService.getAllCardsByParam(null);
-		sum_balance = cardService.selectSumBalance();
+		
+		String basePath = this.getClass().getClassLoader().getResource("").getPath();
+		InputStreamReader config = new InputStreamReader(
+				new FileInputStream(basePath + File.separator + "hot" + File.separator + "accountSumConfig.txt"),
+				"UTF-8");
+		BufferedReader br = new BufferedReader(config);
+		String line;
+		String r = "";
+		while ((line = br.readLine()) != null) {
+			r += line;
+		}
+		br.close();
+		
+		List<String> accounts = Arrays.asList(r.split(","));
+		sum_balance = cardService.selectSumBalance(accounts);
 		return SUCCESS;
 	}
 

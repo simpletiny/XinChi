@@ -123,6 +123,7 @@ var NeedContext = function() {
 
 	};
 	self.airTickets = ko.observableArray([]);
+	self.airBase = ko.observable([]);
 	// 查看航段信息
 	self.checkTicketPart = function(team_number) {
 		self.airTickets.removeAll();

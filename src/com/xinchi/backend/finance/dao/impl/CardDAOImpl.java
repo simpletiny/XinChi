@@ -75,7 +75,7 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 	}
 
 	@Override
-	public BigDecimal selectSumBalance() {
-		return daoUtil.selectOneValue("com.xinchi.bean.mapper.CardMapper.selectSumBalance");
+	public BigDecimal selectSumBalance(List<String> accounts) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.CardMapper.selectSumBalance",accounts);
 	}
 }

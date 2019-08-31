@@ -108,10 +108,10 @@
 
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6">
+						<div class="col-md-6 required">
 							<label class="l">微信1</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: employee().wechat" placeholder="微信" name="employee.wechat"
+								<input type="text" class="ip-" data-bind="value: employee().wechat" required="required" placeholder="微信" name="employee.wechat"
 									onblur="checkWechat(this)" />
 							</div>
 						</div>

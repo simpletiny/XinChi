@@ -91,7 +91,7 @@
 								<td><a href="javascript:void(0)"
 									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
 								<!-- /ko -->
-								<td></td>
+								<td data-bind="text:$data.comment"></td>
 								<td data-bind="text: $data.team_number"></td>
 							</tr>
 						</tbody>

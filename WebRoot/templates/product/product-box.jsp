@@ -69,7 +69,7 @@ tr td {
 								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
-						<label class="col-md-1 fix-width1 control-label"><input name="product.high_value_flg" checked="checked" data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />只看高分</label>
+						<label class="col-md-1 fix-width1 control-label"><input name="product.high_value_flg" data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />只看高分</label>
 					</div>
 					<div class="form-group">
 						<div style="width: 30%; float: right">

@@ -17,10 +17,7 @@ import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
-import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
-import com.xinchi.bean.AirTicketNameListBean;
-import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.ReceivableBean;
@@ -84,12 +81,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 	@Autowired
 	private OrderNameListDAO nameListDao;
-
-	@Autowired
-	private AirTicketOrderDAO airTicketOrderDao;
-
-	@Autowired
-	private AirTicketNameListDAO airTicketNameListDao;
 
 	@Override
 	public String update(BudgetNonStandardOrderBean bean, String json) {
@@ -157,9 +148,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			budgetOrder.setComment(bean.getComment());
 			budgetOrder.setReceivable(bean.getReceivable());
 			budgetOrder.setConfirm_date(bean.getConfirm_date());
-			budgetOrder
-					.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
-							: bean.getFy())));
+			budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost())
+					.add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
 
 			String other_cost_comment = "";
 			if (bean.getFy() != null) {
@@ -167,7 +157,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			}
 
 			budgetOrder.setPayment_comment(other_cost_comment);
-			budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+			budgetOrder.setPeople_count(
+					bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
 			budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
 			budgetOrderDao.insert(budgetOrder);
 
@@ -190,23 +181,25 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 			receivableDao.insert(receivable);
 
-			// 更新票务信息团号
-			AirTicketOrderBean airTicketOrder = airTicketOrderDao.selectBySaleOrderPk(bean.getPk());
-
-			if (null != airTicketOrder) {
-				airTicketOrder.setTeam_number(bean.getTeam_number());
-				airTicketOrderDao.update(airTicketOrder);
-				AirTicketNameListBean airTicketNameListOption = new AirTicketNameListBean();
-				airTicketNameListOption.setTicket_order_pk(airTicketOrder.getPk());
-				List<AirTicketNameListBean> airTicketNameList = airTicketNameListDao.selectByParam(airTicketNameListOption);
-
-				if (null != airTicketNameList && airTicketNameList.size() > 0) {
-					for (AirTicketNameListBean passenger : airTicketNameList) {
-						passenger.setTeam_number(bean.getTeam_number());
-						airTicketNameListDao.update(passenger);
-					}
-				}
-			}
+			// // 更新票务信息团号
+			// AirTicketOrderBean airTicketOrder =
+			// airTicketOrderDao.selectBySaleOrderPk(bean.getPk());
+			//
+			// if (null != airTicketOrder) {
+			// airTicketOrder.setTeam_number(bean.getTeam_number());
+			// airTicketOrderDao.update(airTicketOrder);
+			// AirTicketNameListBean airTicketNameListOption = new AirTicketNameListBean();
+			// airTicketNameListOption.setTicket_order_pk(airTicketOrder.getPk());
+			// List<AirTicketNameListBean> airTicketNameList =
+			// airTicketNameListDao.selectByParam(airTicketNameListOption);
+			//
+			// if (null != airTicketNameList && airTicketNameList.size() > 0) {
+			// for (AirTicketNameListBean passenger : airTicketNameList) {
+			// passenger.setTeam_number(bean.getTeam_number());
+			// airTicketNameListDao.update(passenger);
+			// }
+			// }
+			// }
 		}
 		dao.update(bean);
 		return SUCCESS;
@@ -255,9 +248,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		budgetOrder.setComment(bean.getComment());
 		budgetOrder.setReceivable(bean.getReceivable());
 		budgetOrder.setConfirm_date(bean.getConfirm_date());
-		budgetOrder
-				.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost()).add((bean.getFy() == null ? BigDecimal.ZERO
-						: bean.getFy())));
+		budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO : bean.getOther_cost())
+				.add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
 
 		String other_cost_comment = "";
 		if (bean.getFy() != null) {
@@ -265,7 +257,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		}
 
 		budgetOrder.setPayment_comment(other_cost_comment);
-		budgetOrder.setPeople_count(bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+		budgetOrder.setPeople_count(
+				bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
 		budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
 		budgetOrderDao.updateBudgetOrder(budgetOrder);
 
@@ -279,7 +272,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		receivable.setPeople_count(budgetOrder.getPeople_count());
 		receivable.setBudget_receivable(bean.getReceivable());
 
-		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivable.setBudget_balance(bean.getReceivable()
+				.subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
 		receivable.setSales(old.getCreate_user());
 
 		receivableDao.update(receivable);
@@ -291,7 +285,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	private void saveFile(BudgetNonStandardOrderBean bean) {
 		String user_number = "";
 		if (null == bean.getCreate_user()) {
-			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 			user_number = sessionBean.getUser_number();
 		} else {
 			user_number = bean.getCreate_user();
@@ -319,23 +314,22 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	@Override
 	public String delete(String id) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(id);
-		AirTicketOrderBean ticketOrder = airTicketOrderService.selectBySaleOrderPk(id);
-		if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
-			return "air_ticket_lock";
+		// AirTicketOrderBean ticketOrder =
+		// airTicketOrderService.selectBySaleOrderPk(id);
+		// if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
+		// return "air_ticket_lock";
 		deleteFile(old);
 		dao.delete(id);
 		return SUCCESS;
 	}
 
-	@Autowired
-	private AirTicketOrderService airTicketOrderService;
-
 	@Override
 	public BudgetNonStandardOrderBean selectByPrimaryKey(String id) {
 		BudgetNonStandardOrderBean order = dao.selectByPrimaryKey(id);
-		AirTicketOrderBean ticketOrder = airTicketOrderService.selectBySaleOrderPk(id);
-		if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
-			order.setName_list_lock("1");
+		// AirTicketOrderBean ticketOrder =
+		// airTicketOrderService.selectBySaleOrderPk(id);
+		// if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
+		// order.setName_list_lock("1");
 		return order;
 	}
 

@@ -32,6 +32,9 @@
 		<action name="pay" class="accPaidAction" method="pay">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="rollBackWfp" class="accPaidAction" method="rollBackWfp">
+			<result name="success" type="str">resultStr</result>
+		</action>
 
 		<!-- 已支付页面 -->
 

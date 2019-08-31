@@ -55,49 +55,31 @@ var PaidContext = function() {
 		'N' : '已驳回'
 	};
 	// 计算合计
-	self.totalPeople = ko.observable(0);
-	self.totalReceivable = ko.observable(0);
-	self.totalPayable = ko.observable(0);
-	self.totalProfit = ko.observable(0);
-	self.totalPerProfit = ko.observable(0);
+	self.totalPaid = ko.observable(0);
 
 	self.refresh = function() {
-		var totalPeople = 0;
-		var totalReceivable = 0;
-		var totalPayable = 0;
-		var totalProfit = 0;
-		var totalPerProfit = 0;
+		var totalPaid = 0;
 
 		var param = $("form").serialize() + "&wfp.statuses="
 				+ self.chosenStatus();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 
-		$
-				.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage',
-						param, function(data) {
-							self.paids(data.wfps);
-							// 计算合计
-							$(self.paids()).each(function(idx, data) {
-								totalPeople += data.people_count;
-								totalReceivable += data.receivable;
-								totalPayable += data.payable;
-								totalProfit += data.gross_profit;
-							});
+		$.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage', param,
+				function(data) {
+					self.paids(data.wfps);
+					// 计算合计
+					$(self.paids()).each(function(idx, data) {
+						totalPaid += data.money;
+					});
 
-							self.totalPeople(totalPeople);
-							self.totalReceivable(totalReceivable);
-							self.totalPayable(totalPayable);
-							self.totalProfit(totalProfit);
-							self.totalPerProfit((totalProfit / totalPeople)
-									.toFixed(2));
+					self.totalPaid(totalPaid);
 
-							self.totalCount(Math.ceil(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
 
-							$(".rmb").formatCurrency();
-						});
+					$(".rmb").formatCurrency();
+				});
 	};
 
 	self.pay = function() {
@@ -113,6 +95,47 @@ var PaidContext = function() {
 					+ self.chosenPaids()[0];
 		}
 	};
+	// 打回重报
+	self.rollBack = function() {
+		if (self.chosenPaids().length == 0) {
+			fail_msg("请选择");
+			return;
+		} else if (self.chosenPaids().length > 1) {
+			fail_msg("只能选中一个");
+			return;
+		} else if (self.chosenPaids().length == 1) {
+
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : '确认要打回到待审批状态吗?',
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						var wfpPk = self.chosenPaids()[0];
+						startLoadingSimpleIndicator("操作中");
+						layer.close(index);
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'accounting/rollBackWfp',
+							data : "wfp_pk=" + self.chosenPaids()[0],
+							success : function(str) {
+								if (str != "success") {
+									fail_msg("回滚失败，请联系管理员");
+								}
+								self.refresh();
+								self.chosenPaids.removeAll();
+								endLoadingIndicator();
+							}
+						});
+					}
+				}
+			});
+
+		}
+	};
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

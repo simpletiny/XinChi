@@ -89,6 +89,14 @@
 								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
+						<div align="right" style="padding-right:200px">
+							<em class="small-box"> <input type="checkbox" id="chk-data" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>日期</label>
+							</em>
+							<em class="small-box"> <input type="checkbox" id="chk-account" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>账户</label>
+							</em>
+							<em class="small-box"> <input type="checkbox" id="chk-money" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>金额</label>
+							</em>
+						</div>
 						<div style="padding-top: 3px; float: right">
 							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
@@ -181,7 +189,7 @@
 												<td data-bind="text: $data.received_time"></td>
 												<td data-bind="text: $data.card_account"></td>
 												<td><a href="javascript:void(0)"
-												data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
+													data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
 												<!-- 	ko if:$data.type=='SUM' -->
 												<td><a href="javascript:void(0)"
 													data-bind="event:{click:function(){$root.viewDetail($data.related_pk)}}">详情</a></td>

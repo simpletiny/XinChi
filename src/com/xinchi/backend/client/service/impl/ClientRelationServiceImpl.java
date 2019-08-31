@@ -28,6 +28,7 @@ import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCallBean;
+import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
@@ -57,7 +58,7 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	}
 
 	@Override
-	public List<ClientRelationSummaryBean> getRelationsByPage(Page page) {
+	public List<ClientRelationBean> getRelationsByPage(Page page) {
 		return dao.selectByPage(page);
 	}
 
@@ -310,5 +311,20 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		}
 
 		return point;
+	}
+
+	@Override
+	public IncomingCountDto selectIncomingDate(String user_pk) {
+		return dao.selectIncomingData(user_pk);
+	}
+
+	@Override
+	public ClientRelationBean selectByEmployeePk(String employee_pk) {
+		return dao.selectByEmployeePk(employee_pk);
+	}
+
+	@Override
+	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk) {
+		return dao.selectSummaryByEmployeePk(employee_pk);
 	}
 }

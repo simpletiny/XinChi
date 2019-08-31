@@ -79,7 +79,7 @@ public class AccountingServiceImpl implements AccountingService {
 			waiting.setApproval_user(approve_user);
 			waiting.setRelated_pk(detail.getRelated_pk());
 			waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
-
+			waiting.setComment("地接款");
 			accPaidService.insert(waiting);
 		}
 		return SUCCESS;
@@ -116,7 +116,7 @@ public class AccountingServiceImpl implements AccountingService {
 		waiting.setApproval_user(approve_user);
 		waiting.setRelated_pk(detail.getRelated_pk());
 		waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
-
+		waiting.setComment("票务费用");
 		accPaidService.insert(waiting);
 
 		return SUCCESS;
@@ -172,6 +172,7 @@ public class AccountingServiceImpl implements AccountingService {
 		bean.setApproval_time(DateUtil.getTimeMillis());
 		bean.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		reimDao.update(bean);
+		
 
 		WaitingForPaidBean waiting = new WaitingForPaidBean();
 
@@ -187,6 +188,7 @@ public class AccountingServiceImpl implements AccountingService {
 		waiting.setApply_user(bean.getApply_user());
 		waiting.setApproval_user(bean.getApproval_user());
 		waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
+		waiting.setComment(bean.getComment());
 		accPaidService.insert(waiting);
 
 		return SUCCESS;
@@ -229,6 +231,7 @@ public class AccountingServiceImpl implements AccountingService {
 			waiting.setApply_user(bean.getCreate_user());
 			waiting.setApproval_user(user_number);
 			waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
+			waiting.setComment("多退返款");
 			accPaidService.insert(waiting);
 		}
 		return SUCCESS;
@@ -355,6 +358,7 @@ public class AccountingServiceImpl implements AccountingService {
 			waiting.setApply_user(bean.getCreate_user());
 			waiting.setApproval_user(user_number);
 			waiting.setStatus(ResourcesConstants.PAY_STATUS_ING);
+			waiting.setComment("返佣");
 			accPaidService.insert(waiting);
 		}
 		return SUCCESS;

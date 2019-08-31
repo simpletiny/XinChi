@@ -16,10 +16,13 @@ import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.product.service.ProductOrderOperationService;
 import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableBean;
+import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
@@ -85,6 +88,31 @@ public class ProductOrderOperationAction extends BaseAction {
 				ps.setSum_cost(ps.getSupplier_cost().multiply(peopleCnt));
 			}
 		}
+		return SUCCESS;
+	}
+
+	private FlightBean flight;
+
+	@Autowired
+	private FlightService flightService;
+
+	public String searchProductFlightByProductPk() {
+		flight = flightService.selectByProductPk(product_pk);
+		if (null == flight)
+			flight = new FlightBean();
+		return SUCCESS;
+	}
+
+	private ProductOrderAirBaseBean air_base;
+
+	/**
+	 * 产品订单票务处理
+	 * 
+	 * @return
+	 */
+	public String operateOrderAirTicket() {
+		resultStr = service.operateOrderAirTicket(air_base, json);
+
 		return SUCCESS;
 	}
 
@@ -451,5 +479,21 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setOrder(OrderDto order) {
 		this.order = order;
+	}
+
+	public FlightBean getFlight() {
+		return flight;
+	}
+
+	public void setFlight(FlightBean flight) {
+		this.flight = flight;
+	}
+
+	public ProductOrderAirBaseBean getAir_base() {
+		return air_base;
+	}
+
+	public void setAir_base(ProductOrderAirBaseBean air_base) {
+		this.air_base = air_base;
 	}
 }

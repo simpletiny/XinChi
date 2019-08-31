@@ -33,6 +33,8 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 
 	private String ordered;
 
+	private String comment;
+
 	// option
 	private String client_name;
 
@@ -154,6 +156,14 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 
 	public void setClient_name(String client_name) {
 		this.client_name = client_name;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

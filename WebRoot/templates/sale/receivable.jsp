@@ -898,13 +898,13 @@
 				<div class="col-md-3">
 					<label class="l" style="width: 30%">FLY金额</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default rmb" data-bind="text:flyMoney()"></p>
+						<p class="ip-default rmb" data-bind="text:flyMoney()" ></p>
 					</div>
 				</div>
 				<div class="col-md-3 required">
 					<label class="l" style="width: 40%">支付金额</label>
 					<div class="ip" style="width: 60%">
-						<input type="number" name="detail.received" data-bind="value:flyMoney()" class="form-control" required="required" />
+						<input type="number" name="detail.received" data-bind="value:flyMoney()" min="0" class="form-control" required="required" />
 					</div>
 				</div>
 			</div>

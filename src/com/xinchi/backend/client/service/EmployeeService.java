@@ -83,4 +83,6 @@ public interface EmployeeService extends BaseService {
 
 	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e);
 
+	public String updateMarketLevel(List<String> employee_pks, String market_level);
+
 }

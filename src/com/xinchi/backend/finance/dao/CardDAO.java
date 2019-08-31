@@ -29,5 +29,5 @@ public interface CardDAO {
 
 	public List<CardBean> selectByPurpose(String purpose);
 
-	public BigDecimal selectSumBalance();
+	public BigDecimal selectSumBalance(List<String> accounts);
 }

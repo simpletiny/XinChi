@@ -8,6 +8,7 @@ import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
+import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
@@ -16,7 +17,7 @@ import com.xinchi.tools.Page;
 
 public interface ClientRelationDAO {
 
-	public List<ClientRelationSummaryBean> selectByPage(Page page);
+	public List<ClientRelationBean> selectByPage(Page page);
 
 	public String selectClientCount(String sales_name);
 
@@ -51,6 +52,8 @@ public interface ClientRelationDAO {
 	public WorkOrderDto selectWorkOrderData(String user_pk);
 
 	public AccurateSaleDto selectAccurateSaleData(String user_pk);
+	
+	public IncomingCountDto selectIncomingData(String user_pk);
 
 	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);
 
@@ -67,5 +70,7 @@ public interface ClientRelationDAO {
 	public List<PointDto> selectPointByParam(PointDto option);
 
 	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option);
+
+	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
 
 }

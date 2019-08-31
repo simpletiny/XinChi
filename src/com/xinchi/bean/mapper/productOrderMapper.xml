@@ -19,12 +19,14 @@
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
 		<result column="air_info" property="air_info" jdbcType="VARCHAR" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		IF(ISNULL(B.product_number),'非标',B.product_number) AS product_number,
 		A.product_name,
+		IF(ISNULL(B.product_model),'非标',B.product_model) AS product_model,
 		CASE WHEN A.confirm_flg ='Y' THEN '已确认'
 		WHEN A.confirm_flg = 'N' THEN '待确认'
 		end AS status,

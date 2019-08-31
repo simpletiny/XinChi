@@ -13,6 +13,7 @@ import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
+import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
@@ -34,8 +35,8 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	}
 
 	@Override
-	public List<ClientRelationSummaryBean> selectByPage(Page page) {
-		List<ClientRelationSummaryBean> list = daoUtil
+	public List<ClientRelationBean> selectByPage(Page page) {
+		List<ClientRelationBean> list = daoUtil
 				.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectByPage", page);
 		return list;
 	}
@@ -183,7 +184,20 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 
 	@Override
 	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectEnableBackPointByParam", option);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectEnableBackPointByParam",
+				option);
+	}
+
+	@Override
+	public IncomingCountDto selectIncomingData(String user_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectIncomingData",
+				user_pk);
+	}
+
+	@Override
+	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk) {
+		return daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectSummaryByEmployeePk", employee_pk);
 	}
 
 }

@@ -4,19 +4,21 @@ import java.util.List;
 
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.WaitingForPaidBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 /**
  * Acc for Accounting,意在指会计中的支付
+ * 
  * @author simpletiny
  *
  */
 @LogDescription(des = "支付逻辑")
-public interface AccPaidService {
+public interface AccPaidService extends BaseService {
 	@LogDescription(des = "生成待支付")
 	public String insert(WaitingForPaidBean paid);
-	
+
 	@LogDescription(des = "搜索待支付数据")
 	public List<WaitingForPaidBean> selectByPage(Page page);
 
@@ -31,4 +33,6 @@ public interface AccPaidService {
 
 	@LogDescription(des = "通过凭证号查看支付详情")
 	public PaidDetailSummary selectPaidDetailSummaryByPayNumber(String voucher_number);
+
+	public String rollBackWfp(String wfp_pk);
 }

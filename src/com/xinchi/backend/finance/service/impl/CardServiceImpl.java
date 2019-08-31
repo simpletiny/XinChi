@@ -69,8 +69,8 @@ public class CardServiceImpl implements CardService {
 	}
 
 	@Override
-	public BigDecimal selectSumBalance() {
-		return dao.selectSumBalance();
+	public BigDecimal selectSumBalance(List<String> accounts) {
+		return dao.selectSumBalance(accounts);
 	}
 
 }

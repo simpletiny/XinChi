@@ -35,6 +35,8 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 	private String related_pk;
 
 	private String pay_user;
+	
+	private String comment;
 
 	// search options
 	private BigDecimal money_from;
@@ -185,6 +187,14 @@ public class WaitingForPaidBean extends SupperBO implements Serializable {
 
 	public void setApply_date_to(String apply_date_to) {
 		this.apply_date_to = apply_date_to;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

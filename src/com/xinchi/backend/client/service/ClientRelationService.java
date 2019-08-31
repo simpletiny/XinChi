@@ -11,6 +11,7 @@ import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCallBean;
+import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
@@ -26,7 +27,7 @@ public interface ClientRelationService extends BaseService {
 	public String createVisit(ClientVisitBean visit);
 
 	@LogDescription(des = "客户关系查看")
-	public List<ClientRelationSummaryBean> getRelationsByPage(Page page);
+	public List<ClientRelationBean> getRelationsByPage(Page page);
 
 	@LogDescription(ignore = true)
 	public List<ClientSummaryDto> getClientSummary(ClientRelationSummaryBean relation);
@@ -65,5 +66,11 @@ public interface ClientRelationService extends BaseService {
 	public BigDecimal caculatePointMoneyDeduct(String user_pk);
 
 	public float caculateBackPoint(String user_pk);
+
+	public IncomingCountDto selectIncomingDate(String user_pk);
+	
+	public ClientRelationBean selectByEmployeePk(String employee_pk);
+
+	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
 
 }

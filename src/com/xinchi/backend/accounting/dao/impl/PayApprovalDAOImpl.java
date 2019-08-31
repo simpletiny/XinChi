@@ -47,7 +47,8 @@ public class PayApprovalDAOImpl extends SqlSessionDaoSupport implements PayAppro
 
 	@Override
 	public List<PayApprovalBean> selectByParam(PayApprovalBean bean) {
-		List<PayApprovalBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.PayApprovalMapper.selectByParam", bean);
+		List<PayApprovalBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.PayApprovalMapper.selectByParam",
+				bean);
 		return list;
 	}
 

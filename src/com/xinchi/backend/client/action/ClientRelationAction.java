@@ -1,6 +1,7 @@
 package com.xinchi.backend.client.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.client.service.AccurateSaleService;
 import com.xinchi.backend.client.service.ClientRelationService;
+import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.AccurateSaleDto;
+import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
@@ -20,6 +23,7 @@ import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCallBean;
+import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
@@ -40,7 +44,7 @@ public class ClientRelationAction extends BaseAction {
 	private ClientVisitBean visit;
 
 	private ClientRelationSummaryBean relation;
-	private List<ClientRelationSummaryBean> relations;
+	private List<ClientRelationBean> relations;
 	@Autowired
 	private ClientRelationService service;
 
@@ -102,6 +106,62 @@ public class ClientRelationAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String wechat;
+	private String cellphone;
+
+	private String sales_name;
+	@Autowired
+	private EmployeeService employeeService;
+
+	private List<ClientEmployeeBean> employees;
+
+	/**
+	 * 查询系统客户
+	 * 
+	 * @return
+	 */
+	public String querySysClient() {
+		if (SimpletinyString.isEmpty(cellphone) && SimpletinyString.isEmpty(wechat)) {
+			resultStr = "no";
+			return SUCCESS;
+		}
+
+		ClientEmployeeBean option = new ClientEmployeeBean();
+		option.setCellphone(cellphone);
+		option.setWechat(wechat);
+		employees = employeeService.getAllClientEmployeeByParam(option);
+		if (null == employees || employees.size() == 0) {
+			if (SimpletinyString.isEmpty(cellphone)) {
+				resultStr = "nowechat";
+			} else if (SimpletinyString.isEmpty(wechat)) {
+				resultStr = "nocellphone";
+			} else {
+				resultStr = "noclient";
+			}
+		} else {
+
+			ClientEmployeeBean e = employees.get(0);
+			ClientRelationBean cr = service.selectSummaryByEmployeePk(e.getPk());
+			if (e.getDelete_flg().equals("Y")) {
+				resultStr = "stopuse";
+			} else if (e.getPublic_flg().equals("Y")) {
+				resultStr = "public";
+				relations = new ArrayList<ClientRelationBean>();
+				relations.add(cr);
+			} else {
+				if (cr.getRelation_level().equals("主力级")) {
+					resultStr = "main";
+				} else if (cr.getRelation_level().equals("忽略级")) {
+					resultStr = "ignore";
+					sales_name = cr.getSales_name();
+				} else {
+					resultStr = "normal";
+				}
+			}
+		}
+		return SUCCESS;
+	}
+
 	private List<ConnectDto> connects;
 	private String client_employee_pk;
 
@@ -146,6 +206,8 @@ public class ClientRelationAction extends BaseAction {
 
 	private AccurateSaleDto accurateSale;
 
+	private IncomingCountDto incomingCount;
+
 	public String searchClientSummary() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -179,6 +241,7 @@ public class ClientRelationAction extends BaseAction {
 		meter = service.selectMeterData(user_pk);
 		workOrder = service.selectWorkOrderData(user_pk);
 		accurateSale = service.selectAccurateSaleData(user_pk);
+		incomingCount = service.selectIncomingDate(user_pk);
 
 		if (!SimpletinyString.isEmpty(user_pk)) {
 			point_money_deduct = service.caculatePointMoneyDeduct(user_pk);
@@ -194,6 +257,9 @@ public class ClientRelationAction extends BaseAction {
 
 		if (accurateSale == null)
 			accurateSale = new AccurateSaleDto();
+
+		if (incomingCount == null)
+			incomingCount = new IncomingCountDto();
 
 		meter.setPoint_money_deduct(point_money_deduct);
 		meter.setBack_score(back_score);
@@ -229,14 +295,6 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setRelation(ClientRelationSummaryBean relation) {
 		this.relation = relation;
-	}
-
-	public List<ClientRelationSummaryBean> getRelations() {
-		return relations;
-	}
-
-	public void setRelations(List<ClientRelationSummaryBean> relations) {
-		this.relations = relations;
 	}
 
 	public List<ClientSummaryDto> getClientSummary() {
@@ -365,5 +423,53 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setClientRelation(ClientRelationBean clientRelation) {
 		this.clientRelation = clientRelation;
+	}
+
+	public IncomingCountDto getIncomingCount() {
+		return incomingCount;
+	}
+
+	public void setIncomingCount(IncomingCountDto incomingCount) {
+		this.incomingCount = incomingCount;
+	}
+
+	public String getWechat() {
+		return wechat;
+	}
+
+	public String getCellphone() {
+		return cellphone;
+	}
+
+	public void setWechat(String wechat) {
+		this.wechat = wechat;
+	}
+
+	public void setCellphone(String cellphone) {
+		this.cellphone = cellphone;
+	}
+
+	public List<ClientEmployeeBean> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<ClientEmployeeBean> employees) {
+		this.employees = employees;
+	}
+
+	public String getSales_name() {
+		return sales_name;
+	}
+
+	public void setSales_name(String sales_name) {
+		this.sales_name = sales_name;
+	}
+
+	public List<ClientRelationBean> getRelations() {
+		return relations;
+	}
+
+	public void setRelations(List<ClientRelationBean> relations) {
+		this.relations = relations;
 	}
 }

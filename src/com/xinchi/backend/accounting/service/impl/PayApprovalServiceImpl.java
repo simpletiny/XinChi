@@ -54,4 +54,9 @@ public class PayApprovalServiceImpl implements PayApprovalService {
 		return dao.selectSumBalance();
 	}
 
+	@Override
+	public PayApprovalBean selectByBackPk(String back_pk) {
+		return dao.selectByBackPk(back_pk);
+	}
+
 }

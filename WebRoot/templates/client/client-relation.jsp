@@ -56,13 +56,17 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createVisit() }">登门拜访</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createMobileTouch() }">主动电联</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIncomingCall() }">被动咨询</button>
-						<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button> -->
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { quitConnect() }">放弃维护</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {createEmployee() }">新增客户</button>
+						<button type="submit" class="btn btn-green" data-bind="click: function() { createVisit() }">登门拜访</button>
+						<button type="submit" class="btn btn-green" data-bind="click: function() { createMobileTouch() }">主动电联</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() { createIncomingCall() }">被动咨询</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() { setClientLevel() }">销售力调整</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用报销</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() { quitConnect() }">放弃维护</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() {createEmployee() }">新增客户</button>
+						<button type="submit" class="btn btn-yellow " data-bind="click: function() {querySysClient() }">系统客户查询</button>
+						<!-- ko if: canEdit()-->
+						<button type="submit" class="btn btn-green " data-bind="click: function() {editEmployee()}">维护</button>
+						<!-- /ko -->
 						<label class="col-md-1 control-label">当月分值</label>
 						<div class="col-md-1">
 							<p class="ip-default" data-bind="text: saleScore()"></p>
@@ -127,22 +131,21 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th colspan="5" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
-								<th colspan="5" style="border-right: solid 1px #ff0000; text-align: center"><h3>努力度</h3></th>
-								<th colspan="7" style="border-right: solid 1px #ff0000; text-align: center"><h3>仪表盘</h3></th>
+								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
+								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3>努力度</h3></th>
+								<th colspan="7" style="text-align: center"><h3>仪表盘</h3></th>
 							</tr>
 							<tr>
 								<th></th>
 								<th>全部</th>
-								<th>雄厚</th>
-								<th>普通</th>
-								<th>玩闹</th>
-								<th style="border-right: solid 1px #ff0000;">未知</th>
+								<th>电话</th>
+								<th>微信</th>
+								<th style="border-right: solid 1px #ff0000;">广告</th>
 								<th>订单</th>
-								<th>咨询</th>
-								<th>精推</th>
-								<th>忽略</th>
-								<th style="border-right: solid 1px #ff0000;">呆账</th>
+								<th>拜访</th>
+								<th>电话</th>
+								<th style="border-right: solid 1px #ff0000;">微信</th>
+								<!-- <th style="border-right: solid 1px #ff0000;">忽略</th> -->
 								<th>日均占款</th>
 								<th>资金费用</th>
 								<th>应收款</th>
@@ -156,15 +159,13 @@
 							<tr>
 								<td>全部</td>
 								<td data-bind="text:potential().all_all"></td>
-								<td data-bind="text:potential().all_strong"></td>
-								<td data-bind="text:potential().all_normal"></td>
-								<td data-bind="text:potential().all_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().all_unknow"></td>
+								<td data-bind="text:potential().all_tel"></td>
+								<td data-bind="text:potential().all_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().all_ad"></td>
 								<td data-bind="text:workOrder().all_order"></td>
-								<td></td>
 								<td data-bind="text:accurateSale().all_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td data-bind="text:incomingCount().all_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().all_wechat"></td>
 								<td></td>
 								<td></td>
 								<td data-bind="text:meter().receivable" class="rmb"></td>
@@ -174,17 +175,15 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>核心</td>
-								<td data-bind="text:potential().core_all"></td>
-								<td data-bind="text:potential().core_strong"></td>
-								<td data-bind="text:potential().core_normal"></td>
-								<td data-bind="text:potential().core_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().core_unknow"></td>
-								<td data-bind="text:workOrder().core_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().core_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td>主力</td>
+								<td data-bind="text:potential().main_all"></td>
+								<td data-bind="text:potential().main_tel"></td>
+								<td data-bind="text:potential().main_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().main_ad"></td>
+								<td data-bind="text:workOrder().main_order"></td>
+								<td data-bind="text:accurateSale().main_accurate"></td>
+								<td data-bind="text:incomingCount().main_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().main_wechat"></td>
 								<th>本月费用</th>
 								<th>本月节余</th>
 								<th>累计费用</th>
@@ -194,17 +193,15 @@
 								<th></th>
 							</tr>
 							<tr>
-								<td>主力</td>
-								<td data-bind="text:potential().main_all"></td>
-								<td data-bind="text:potential().main_strong"></td>
-								<td data-bind="text:potential().main_normal"></td>
-								<td data-bind="text:potential().main_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().main_unknow"></td>
-								<td data-bind="text:workOrder().main_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().main_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td>市场</td>
+								<td data-bind="text:potential().market_all"></td>
+								<td data-bind="text:potential().market_tel"></td>
+								<td data-bind="text:potential().market_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().market_ad"></td>
+								<td data-bind="text:workOrder().market_order"></td>
+								<td data-bind="text:accurateSale().market_accurate"></td>
+								<td data-bind="text:incomingCount().market_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().market_wechat"></td>
 								<td data-bind="text:meter().month_reimbursement" class="rmb"></td>
 								<td></td>
 								<td data-bind="text:meter().sum_reimbursement" class="rmb"></td>
@@ -215,17 +212,15 @@
 							</tr>
 
 							<tr>
-								<td>朋友</td>
-								<td data-bind="text:potential().friend_all"></td>
-								<td data-bind="text:potential().friend_strong"></td>
-								<td data-bind="text:potential().friend_normal"></td>
-								<td data-bind="text:potential().friend_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().friend_unknow"></td>
-								<td data-bind="text:workOrder().friend_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().friend_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td>尝试</td>
+								<td data-bind="text:potential().try_all"></td>
+								<td data-bind="text:potential().try_tel"></td>
+								<td data-bind="text:potential().try_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().try_ad"></td>
+								<td data-bind="text:workOrder().try_order"></td>
+								<td data-bind="text:accurateSale().try_accurate"></td>
+								<td data-bind="text:incomingCount().try_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().try_wechat"></td>
 								<th>收客分值</th>
 								<th>回款分值</th>
 								<th>当月分值</th>
@@ -235,17 +230,15 @@
 								<th></th>
 							</tr>
 							<tr>
-								<td>市场</td>
-								<td data-bind="text:potential().market_all"></td>
-								<td data-bind="text:potential().market_strong"></td>
-								<td data-bind="text:potential().market_normal"></td>
-								<td data-bind="text:potential().market_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().market_unknow"></td>
-								<td data-bind="text:workOrder().market_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().market_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td>忽略</td>
+								<td data-bind="text:potential().ignore_all"></td>
+								<td data-bind="text:potential().ignore_tel"></td>
+								<td data-bind="text:potential().ignore_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().ignore_ad"></td>
+								<td data-bind="text:workOrder().ignore_order"></td>
+								<td data-bind="text:accurateSale().ignore_accurate"></td>
+								<td data-bind="text:incomingCount().ignore_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().ignore_wechat"></td>
 								<td data-bind="text:meter().month_score"></td>
 								<td data-bind="text:meter().back_score"></td>
 								<td data-bind="text:meter().month_score+meter().back_score"></td>
@@ -255,57 +248,15 @@
 								<td></td>
 							</tr>
 							<tr>
-								<td>尝试</td>
-								<td data-bind="text:potential().try_all"></td>
-								<td data-bind="text:potential().try_strong"></td>
-								<td data-bind="text:potential().try_normal"></td>
-								<td data-bind="text:potential().try_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().try_unknow"></td>
-								<td data-bind="text:workOrder().try_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().try_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>忽略</td>
-								<td data-bind="text:potential().ignore_all"></td>
-								<td data-bind="text:potential().ignore_strong"></td>
-								<td data-bind="text:potential().ignore_normal"></td>
-								<td data-bind="text:potential().ignore_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().ignore_unknow"></td>
-								<td data-bind="text:workOrder().ignore_order"></td>
-								<td></td>
-								<td data-bind="text:accurateSale().ignore_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
 								<td>新增</td>
 								<td data-bind="text:potential().new_all"></td>
-								<td data-bind="text:potential().new_strong"></td>
-								<td data-bind="text:potential().new_normal"></td>
-								<td data-bind="text:potential().new_play"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().new_unknow"></td>
+								<td data-bind="text:potential().new_tel"></td>
+								<td data-bind="text:potential().new_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().new_ad"></td>
 								<td data-bind="text:workOrder().new_order"></td>
-								<td></td>
 								<td data-bind="text:accurateSale().new_accurate"></td>
-								<td></td>
-								<td style="border-right: solid 1px #ff0000;"></td>
+								<td data-bind="text:incomingCount().new_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().new_wechat"></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -329,25 +280,24 @@
 								<th>年单</th>
 								<th>关系度</th>
 								<th>回款誉</th>
-								<th>市场力</th>
+								<th>销售力</th>
 								<th>签单期间</th>
 								<th>最近交流日期</th>
 								<th>交流方式</th>
 								<th>交流信息</th>
 								<th>应收款总计</th>
 								<th>最长账期</th>
-								<th>操作</th>
 								<th>备注</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>销售</th>
-								</s:if>
+								<th>销售</th>
 							</tr>
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: relations">
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.client_employee_pk+';'+$data.client_employee_name}, checked: $root.chosenEmployee" /></td>
-								<td><img style="width:25px;height:25px" src="<%=basePath%>static/img/head.jpg" data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}"  /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
+								<td><img style="width: 25px; height: 25px" src="<%=basePath%>static/img/head.jpg"
+									data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" /><input type="hidden"
+									st="st-file-name" data-bind="value:$data.head_photo" /></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.client_employee_name,attr: {href: 'employee-detail.jsp?key='+$data.client_employee_pk}"></a></td>
 
@@ -364,15 +314,6 @@
 									data-bind="text: $data.extra_info,click:function(){$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.last_receivable_period"></td>
-								<!-- ko if: $data.relation_level=="市场级" -->
-								<td><a href="#" data-bind="click:function(){$root.upToFriend($data.pk,$data.client_employee_pk);}">升级朋友</a></td>
-								<!-- /ko -->
-								<!-- ko if: $data.relation_level=="朋友级" -->
-								<td><a href="#" data-bind="click:function(){$root.downToMarket($data.pk,$data.client_employee_pk);}">降级市场</a></td>
-								<!-- /ko -->
-								<!-- ko if: $data.relation_level!="朋友级"&& $data.relation_level!="市场级" -->
-								<td></td>
-								<!-- /ko -->
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->
@@ -380,9 +321,12 @@
 								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
 									data-bind="text: $data.comment,click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.sales_name"></td>
-								</s:if>
+								<!-- ko if: $data.sales=='public'-->
+								<td style="color:red" data-bind="text: $data.sales_name"></td>
+								<!-- /ko -->
+								<!-- ko if: $data.sales!='public'-->
+								<td data-bind="text: $data.sales_name"></td>
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>
@@ -447,7 +391,47 @@
 			</div>
 		</div>
 	</div>
-	<div id="client-level" style="display: none; width: 800px">
+	<div id="client-market-level" style="display: none; width: 300px">
+		<div class="form-horizontal search-panel">
+			<div class="form-group" style="width: 300px">
+				<div class="span6">
+					<label class="col-md-3 control-label">销售力</label>
+					<div class="col-md-9">
+						<select class="form-control" data-bind="options: marketLevel,value:chosenMarketLevel" name="relation.level"></select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group" style="float: right">
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doSetClientLevel}" value="保存"></input> <input
+					type="button" data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
+			</div>
+		</div>
+	</div>
+	<div id="query-sys-client" style="display: none; width: 600px">
+		<div class="form-horizontal search-panel">
+			<div class="form-group col-md-6">
+				<div class="span6">
+					<label class="col-md-3 control-label">微信号</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" maxlength="20" id="txt-wechat" placeholder="微信号（区分大小写）"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-md-6">
+				<div class="span6">
+					<label class="col-md-3 control-label">手机</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" maxlength="11" id="txt-cellphone" placeholder="手机号"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-md-6" style="float: right">
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doQuery}" value="查询"></input> <input
+					type="button" data-bind="event:{click:cancelQuery}" class="btn btn-green col-md-1" value="取消"></input>
+			</div>
+		</div>
+	</div>
+	<%-- 	<div id="client-level" style="display: none; width: 800px">
 		<div class="form-horizontal search-panel">
 			<div class="form-group" style="width: 800px">
 				<div class="span6">
@@ -474,7 +458,7 @@
 					type="button" data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
 			</div>
 		</div>
-	</div>
+	</div> --%>
 	<div id="quit-connect" style="display: none">
 		<form id="form-quit">
 			<input type="hidden" data-bind="value:quit().client_employee_pk" name="quit.client_employee_pk" />
@@ -507,19 +491,21 @@
 			<div>
 				<label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment"
+						data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>
-	<div id="pic-check" style="display:none">
- 		<jsp:include page="../common/check-picture.jsp" />
- 	</div>
+	<div id="pic-check" style="display: none">
+		<jsp:include page="../common/check-picture.jsp" />
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>

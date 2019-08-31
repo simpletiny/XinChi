@@ -94,22 +94,22 @@
 		<action name="uploadClientConfirmTemplet" class="productAction" method="uploadClientConfirmTemplet">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 上传出团通知模板 -->
 		<action name="uploadOutNoticeTemplet" class="productAction" method="uploadOutNoticeTemplet">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 保存地接维护 -->
 		<action name="saveProductSupplier" class="productAction" method="saveProductSupplier">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 更新地接维护 -->
 		<action name="updateProductSupplier" class="productAction" method="updateProductSupplier">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 保存本地维护 -->
 		<action name="saveProductLocal" class="productAction" method="saveProductLocal">
 			<result name="success" type="str">resultStr</result>
@@ -117,7 +117,7 @@
 		<action name="updateProductLocal" class="productAction" method="updateProductLocal">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 搜索本地维护 -->
 		<action name="searchProductLocalByProductPk" class="productAction" method="searchProductLocalByProductPk">
 			<result name="success" type="json">
@@ -125,7 +125,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<!-- 保存机票维护 -->
 		<action name="saveProductFlight" class="productAction" method="saveProductFlight">
 			<result name="success" type="str">resultStr</result>
@@ -151,11 +151,22 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="searchProductSuppliersByPk" class="productOrderOperationAction" method="searchProductSuppliersByPk">
 			<result name="success" type="json"></result>
 		</action>
 
+		<action name="searchProductFlightByProductPk" class="productOrderOperationAction" method="searchProductFlightByProductPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="operateOrderAirTicket" class="productOrderOperationAction" method="operateOrderAirTicket">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<!-- 生成产品订单 -->
 		<action name="createOrderOperation" class="productOrderOperationAction" method="createOrderOperation">
 			<result name="success" type="str">

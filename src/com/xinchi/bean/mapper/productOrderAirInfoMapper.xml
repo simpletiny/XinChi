@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductOrderAirInfoMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductOrderAirInfoBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="flight_index" property="flight_index" jdbcType="INTEGER" />
+		<result column="flight_leg" property="flight_leg" jdbcType="VARCHAR" />
+		<result column="start_day" property="start_day" jdbcType="INTEGER" />
+		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
+		<result column="end_day" property="end_day" jdbcType="INTEGER" />
+		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
+		<result column="flight_number" property="flight_number" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pk,
+		flight_index,
+		flight_leg,
+		start_day,
+		start_city,
+		end_day,
+		end_city,
+		flight_number,
+		base_pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_air_info
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_order_air_info
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByBasePk" parameterType="java.lang.String">
+		delete from product_order_air_info
+		where base_pk =
+		#{base_pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderAirInfoBean">
+
+		insert into product_order_air_info
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="flight_index != null">
+				flight_index,
+			</if>
+			<if test="flight_leg != null">
+				flight_leg,
+			</if>
+			<if test="start_day != null">
+				start_day,
+			</if>
+			<if test="start_city != null">
+				start_city,
+			</if>
+			<if test="end_day != null">
+				end_day,
+			</if>
+			<if test="end_city != null">
+				end_city,
+			</if>
+			<if test="flight_number != null">
+				flight_number,
+			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="flight_index != null">
+				#{flight_index,jdbcType=INTEGER},
+			</if>
+			<if test="flight_leg != null">
+				#{flight_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_day != null">
+				#{start_day,jdbcType=INTEGER},
+			</if>
+			<if test="start_city != null">
+				#{start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="end_day != null">
+				#{end_day,jdbcType=INTEGER},
+			</if>
+			<if test="end_city != null">
+				#{end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="flight_number != null">
+				#{flight_number,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductOrderAirInfoBean">
+		update product_order_air_info
+		<set>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="flight_index != null">
+				flight_index = #{flight_index,jdbcType=INTEGER},
+			</if>
+			<if test="flight_leg != null">
+				flight_leg = #{flight_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_day != null">
+				start_day = #{start_day,jdbcType=INTEGER},
+			</if>
+			<if test="start_city != null">
+				start_city = #{start_city,jdbcType=VARCHAR},
+			</if>
+			<if test="end_day != null">
+				end_day = #{end_day,jdbcType=INTEGER},
+			</if>
+			<if test="end_city != null">
+				end_city = #{end_city,jdbcType=VARCHAR},
+			</if>
+			<if test="flight_number != null">
+				flight_number = #{flight_number,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductOrderAirInfoBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_air_info
+	</select>
+</mapper>

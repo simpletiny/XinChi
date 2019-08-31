@@ -15,6 +15,7 @@
 		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="ordered" property="ordered" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="OrderAirInfoMap" type="com.xinchi.bean.OrderAirInfoBean">
 		<result column="pk" property="pk" jdbcType="CHAR" />
@@ -71,7 +72,8 @@
 		A.sale_order_pk,
 		A.standard_flg,
 		A.passenger,
-		A.ordered
+		A.ordered,
+		A.comment
 		FROM
 		air_ticket_need A
 		LEFT JOIN
@@ -118,10 +120,8 @@
 		pk,
 		air_leg,
 		info_index,
-		air_index,
 		day_index,
 		from_to_city,
-		from_to_place,
 		CASE
 		WHEN ISNULL(departure_date) THEN NULL
 		ELSE
@@ -139,7 +139,7 @@
 		view_order_air_info
 		where team_number =
 		#{team_number,jdbcType=CHAR}
-		ORDER BY info_index,air_index
+		ORDER BY info_index
 	</select>
 
 

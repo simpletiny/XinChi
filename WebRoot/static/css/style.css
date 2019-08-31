@@ -228,7 +228,27 @@ input[type=checkbox]:checked::after {
 	background: -o-linear-gradient(left, #00d36e, #00b55e);
 	background: linear-gradient(to bottom, #00d36e, #00b55e);
 }
+.btn-yellow {
+	color: #FFF;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+	border-color: #00b65f #009e52 #008244 #009e52;
+	background: -moz-linear-gradient(left, #00d36e, #00b55e);
+	background: -webkit-linear-gradient(left, #00d36e, #00b55e);
+	background: -ms-linear-gradient(left, #00d36e, #00b55e);
+	background: -o-linear-gradient(left, #00d36e, #00b55e);
+	background: linear-gradient(to bottom, #004ed3, #b2b500);
+}
 
+.btn-yellow:hover {
+	border-color: #008d49 #008d49 #008244 #008d49;
+	background: -moz-linear-gradient(left, #00d36e, #00b55e);
+	background: -webkit-linear-gradient(left, #00d36e, #00b55e);
+	background: -ms-linear-gradient(left, #00d36e, #00b55e);
+	background: -o-linear-gradient(left, #00d36e, #00b55e);
+	background: linear-gradient(to bottom, #cad300, #0048b5);
+	color: #FFF;
+}
 .btn-green:hover {
 	border-color: #008d49 #008d49 #008244 #008d49;
 	background: -moz-linear-gradient(left, #00d36e, #00b55e);

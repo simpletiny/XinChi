@@ -157,6 +157,7 @@
 		<action name="updateEmployeeRelationLevel" class="clientRelationAction" method="updateEmployeeRelationLevel">
 			<result name="success" type="str">resultStr</result>
 		</action>
+
 		<action name="searchRelationsByPage" class="clientRelationAction" method="searchRelationsByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -176,6 +177,13 @@
 			</result>
 		</action>
 		<action name="searchVisitByPage" class="clientRelationAction" method="searchVisitByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 查询系统客户 -->
+		<action name="querySysClient" class="clientRelationAction" method="querySysClient">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

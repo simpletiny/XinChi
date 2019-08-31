@@ -294,10 +294,7 @@ var DetailContext = function() {
 				"detailId=" + detailId, function(data) {
 					if (data.detail) {
 						self.detail(data.detail);
-						var x = new Date(data.detail.time);
-						self.dateTo(x.Format("yyyy-MM-dd"));
-						self.dateFrom(x.Format("yyyy-MM-dd"));
-						self.searchReceiveApply();
+						self.refreshRight(data);
 					} else {
 						fail_msg("不存在的收入明细！");
 					}
@@ -306,13 +303,41 @@ var DetailContext = function() {
 		});
 		return true;
 	}
+	self.account = ko.observable();
+	self.money = ko.observable();
+
+	self.refreshRight = function(data) {
+		var x = new Date(data.detail.time);
+		self.dateTo(x.Format("yyyy-MM-dd"));
+		self.dateFrom(x.Format("yyyy-MM-dd"));
+		self.account(data.detail.account);
+		self.money(data.detail.money);
+		// todo
+		self.searchReceiveApply();
+	}
+
 	self.searchReceiveApply = function() {
-		var param = "detail.date_from=" + self.dateFrom() + "&detail.date_to="
-				+ self.dateTo() + "&detail.statuses=I";
+
+		if (self.chosenDetails().length == 0)
+			return;
+		var param = "detail.statuses=I";
+
+		if ($("#chk-data").is(":checked")) {
+			param += "&detail.date_from=" + self.dateFrom()
+					+ "&detail.date_to=" + self.dateTo();
+		}
+
+		if ($("#chk-account").is(":checked")) {
+			param += "&detail.card_account=" + self.account();
+		}
+
+		if ($("#chk-money").is(":checked")) {
+			param += "&detail.money=" + self.money();
+		}
+
 		param += "&page.start=" + self.startIndex1() + "&page.count="
 				+ self.perPage1;
-		
-		
+
 		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
 				data) {
 			self.receiveds(data.receiveds);

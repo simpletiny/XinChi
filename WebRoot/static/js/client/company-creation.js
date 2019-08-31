@@ -53,7 +53,7 @@ var CompanyContext = function() {
 	self.client().store_type = ko.observable();
 	
 	
-	self.client().main_business("其它");
+	self.client().main_business("组团");
 	self.client().back_level("未知");
 	self.client().market_level("普通级");
 	self.client().talk_level("市场");

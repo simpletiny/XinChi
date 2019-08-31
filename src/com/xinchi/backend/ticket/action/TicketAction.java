@@ -12,8 +12,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
-import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
@@ -25,6 +23,7 @@ import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
 import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.bean.PassengerAllotDto;
+import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
@@ -70,8 +69,9 @@ public class TicketAction extends BaseAction {
 	private List<OrderAirInfoBean> order_air_infos;
 	private String team_number;
 
-	public String searchOrderAirInfoByTeamNumber() {
+	private ProductOrderAirBaseBean air_base;
 
+	public String searchOrderAirInfoByTeamNumber() {
 		order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(team_number);
 		return SUCCESS;
 	}
@@ -79,11 +79,6 @@ public class TicketAction extends BaseAction {
 	private String sale_order_pk;
 	private BigDecimal air_ticket_cost;
 	private String standard_flg;
-	@Autowired
-	private BudgetStandardOrderService bsoService;
-
-	@Autowired
-	private BudgetNonStandardOrderService bnsoService;
 
 	@Autowired
 	private AirTicketOrderService airTicketOrderService;
@@ -189,7 +184,7 @@ public class TicketAction extends BaseAction {
 					compares.remove(k);
 					continue;
 				}
-				
+
 				int hasCount = 1;
 				for (PassengerAllotDto leg : airLegs) {
 					if (compares.get(k).getPassenger_pk().equals(leg.getPassenger_pk())) {
@@ -374,6 +369,14 @@ public class TicketAction extends BaseAction {
 
 	public void setPassenger_pks(List<String> passenger_pks) {
 		this.passenger_pks = passenger_pks;
+	}
+
+	public ProductOrderAirBaseBean getAir_base() {
+		return air_base;
+	}
+
+	public void setAir_base(ProductOrderAirBaseBean air_base) {
+		this.air_base = air_base;
 	}
 
 }

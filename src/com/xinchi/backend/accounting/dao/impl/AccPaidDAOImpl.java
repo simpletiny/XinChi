@@ -55,4 +55,10 @@ public class AccPaidDAOImpl extends SqlSessionDaoSupport implements AccPaidDAO {
 	public PaidDetailSummary selectPaidSummaryByPayNumber(String voucher_number) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectPaidSummaryByPayNumber", voucher_number);
 	}
+
+	@Override
+	public void deleteByPk(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.deleteByPrimaryKey", pk);
+		
+	}
 }

@@ -297,7 +297,7 @@ public class ReceivedAction extends BaseAction {
 		detail.setReceived(detail.getReceived().negate());
 
 		receivedService.insert(detail);
-		// receivableService.updateReceivableReceived(detail);
+		receivableService.updateReceivableReceived(detail);
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);

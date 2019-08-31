@@ -92,8 +92,12 @@ var EmployeeContext = function() {
 					if (str == "success") {
 						window.location.href = self.apiurl
 								+ "templates/client/client-employee.jsp";
-					} else if (str = "exist") {
-						fail_msg("同一财务主体下存在同名客户！");
+					} else if (str == "existcellphone") {
+						fail_msg("存在相同手机号！")
+					} else if (str == "existwechat") {
+						fail_msg("存在相同微信号！")
+					} else if (str == "exist") {
+						fail_msg("同一财务主体下存在同名客户!");
 					}
 				});
 	};

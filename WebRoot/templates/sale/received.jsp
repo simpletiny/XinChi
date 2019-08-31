@@ -43,12 +43,19 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="ip">
-							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
+						<div class="span6">
+							<div data-bind="foreach: allStatus" style="padding-top: 4px;" class="col-md-4">
 								<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data}, checked: $root.chosenStatus" name="detail.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
+						<div class="span6">
+								<label class="col-md-1 control-label">类型</label>
+								<div class="col-md-2">
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: receivedTypes,  optionsText: 'value', optionsValue: 'key',value:chosenReceivedType,event:{change:refresh}, optionsCaption: '--全部--'"
+										name="detail.type"></select>
+								</div>
+							</div>
 					</div>
 					<div class="form-group">
 						<div align="left">

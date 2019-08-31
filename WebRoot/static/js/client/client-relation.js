@@ -4,6 +4,7 @@ var quitLayer;
 var connectInfoLayer;
 var commentLayer;
 var headCheckLayer;
+var queryLayer;
 var ClientContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -13,12 +14,14 @@ var ClientContext = function() {
 		items : []
 	});
 	// 维度
-	self.level = [ '新增级', '忽略级', '尝试级', '市场级', '朋友级', '主力级', '核心级' ];
+	// self.level = [ '新增级', '忽略级', '尝试级', '市场级', '朋友级', '主力级', '核心级' ];
+	self.level = [ '主力级', '市场级', '尝试级', '忽略级', '新增级' ];
 	// 关系度
-	self.relationLevel = [ '核心级', '主力级', '老铁级', '市场级', '尝试级', '新增级' ];
+	self.relationLevel = [ '主力级', '市场级', '尝试级', '忽略级', '新增级' ];
 
 	// 市场力
-	self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+	// self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
+	self.marketLevel = [ '电话级', '微信级', '广告级' ];
 	// 回款誉
 	self.backLevel = [ '未知', '提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
 	self.chosenLevel = ko.observableArray([ '关系度' ]);
@@ -34,7 +37,7 @@ var ClientContext = function() {
 	self.chosenBackLevel = ko.observableArray([]);
 	self.chosenMarketLevel = ko.observableArray([]);
 
-	self.sortTypes = [ '1', '2', '3' ,'4'];
+	self.sortTypes = [ '1', '2', '3', '4' ];
 	self.sortTypeMapping = {
 		'1' : '账期倒序',
 		'2' : '交流日期',
@@ -49,6 +52,90 @@ var ClientContext = function() {
 		return true;
 	};
 
+	self.canEdit = ko.observable(false);
+	self.querySysClient = function() {
+
+		queryLayer = $.layer({
+			type : 1,
+			title : [ '系统客户查询', '' ],
+			maxmin : false,
+			closeBtn : [ 1, true ],
+			shadeClose : false,
+			area : [ '600px', '200px' ],
+			offset : [ '', '' ],
+			scrollbar : true,
+			page : {
+				dom : '#query-sys-client'
+			},
+			end : function() {
+
+			}
+		});
+	}
+
+	self.doQuery = function() {
+		var wechat = $("#txt-wechat").val();
+		var cellphone = $("#txt-cellphone").val();
+
+		var data = "wechat=" + wechat + "&cellphone=" + cellphone;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'client/querySysClient',
+			data : data
+		}).success(function(data) {
+			var str = data.resultStr;
+
+			if (str == "no") {
+				fail_msg("请输入条件!");
+			} else if (str == "nowechat") {
+				success_msg("无此微信号！");
+			} else if (str == "nocellphone") {
+				success_msg("无此手机号！");
+			} else if (str == "noclient") {
+				success_msg("无此客户！");
+			} else if (str == "stopuse") {
+				success_msg("已停用，请联系管理员！");
+			} else if (str == "public") {
+				success_msg("目前处于公开状态，勾选后维护！");
+				self.canEdit(true);
+				self.relations(data.relations);
+				self.loadFiles();
+				self.totalCount(1);
+				self.setPageNums(1);
+				$(".rmb").formatCurrency();
+				$(".detail").showDetail();
+
+			} else if (str == "main") {
+				success_msg("同事维护主力！");
+			} else if (str == "ignore") {
+				success_msg(data.sales_name + "忽略维护！");
+			} else if (str == "normal") {
+				success_msg("同事维护中！");
+			} else {
+				fail_msg("查询失败，联系管理员！");
+			}
+		});
+	}
+
+	self.cancelQuery = function() {
+		layer.close(queryLayer);
+	}
+
+	self.editEmployee = function() {
+		if (self.chosenEmployee().length == 0) {
+			fail_msg("请选择员工");
+			return;
+		} else if (self.chosenEmployee().length > 1) {
+			fail_msg("维护只能选中一个");
+			return;
+		} else if (self.chosenEmployee().length == 1) {
+			var employeePk = self.chosenEmployee()[0].split(";")[0];
+			window.location.href = self.apiurl
+					+ "templates/client/employee-edit.jsp?key="
+					+ employeePk;
+		}
+	};
+
 	self.refresh = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
@@ -57,7 +144,7 @@ var ClientContext = function() {
 		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param,
 				function(data) {
 					self.relations(data.relations);
-					
+					self.canEdit(false);
 					self.loadFiles();
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
@@ -71,6 +158,7 @@ var ClientContext = function() {
 	self.todayPoint = ko.observable();
 
 	self.potential = ko.observable({});
+	self.incomingCount = ko.observable({});
 	self.meter = ko.observable({
 		receivable : 0,
 		warning : 0,
@@ -88,6 +176,7 @@ var ClientContext = function() {
 			self.meter(data.meter);
 			self.workOrder(data.workOrder);
 			self.accurateSale(data.accurateSale);
+			self.incomingCount(data.incomingCount);
 
 			self.saleScore(data.sale_score);
 			self.todayPoint(data.today_point);
@@ -168,62 +257,33 @@ var ClientContext = function() {
 			fail_msg("请选择客户");
 			return;
 		} else if (self.chosenEmployee().length > 1) {
-			fail_msg("只能选中一个");
-			return;
-		} else if (self.chosenEmployee().length == 1) {
-			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-				employee_pk : self.chosenEmployee()[0].split(";")[0]
-			}, function(data) {
-				if (data.employee) {
-					self.employee(data.employee);
-					self.chosenRelationLevel(self.employee().relation_level);
-					self.chosenBackLevel(self.employee().back_level);
-					self.chosenMarketLevel(self.employee().market_level);
-				} else {
-					fail_msg("员工不存在！");
-				}
-			}).fail(function(reason) {
-				fail_msg(reason.responseText);
-			});
-
 			levelLayer = $.layer({
 				type : 1,
-				title : [ '客户评级', '' ],
+				title : [ '市场力调整', '' ],
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
-				area : [ '800px', '150px' ],
+				area : [ '300px', '150px' ],
 				offset : [ '', '' ],
 				scrollbar : true,
 				page : {
-					dom : '#client-level'
+					dom : '#client-market-level'
 				},
 				end : function() {
 
 				}
 			});
 		}
+
 	};
 
 	self.doSetClientLevel = function() {
-		param = "employee.pk=" + self.chosenEmployee()[0].split(";")[0];
-		if (self.chosenRelationLevel() != null) {
-			param += "&employee.relation_level=" + self.chosenRelationLevel();
-		} else {
-			param += "&employee.relation_level=";
+		var param = "";
+		for (var i = 0; i < self.chosenEmployee().length; i++) {
+			var pk = self.chosenEmployee()[i].split(";")[0];
+			param += "employee_pks=" + pk + "&";
 		}
-
-		if (self.chosenBackLevel() != null) {
-			param += "&employee.back_level=" + self.chosenBackLevel();
-		} else {
-			param += "&employee.back_level=";
-		}
-
-		if (self.chosenMarketLevel() != null) {
-			param += "&employee.market_level=" + self.chosenMarketLevel();
-		} else {
-			param += "&employee.market_level=";
-		}
+		param += "market_level=" + self.chosenMarketLevel();
 
 		$.ajax({
 			type : "POST",
@@ -251,6 +311,7 @@ var ClientContext = function() {
 	self.fetchSummary = function() {
 		self.refresh();
 		self.searchClientSummary();
+		self.chosenEmployee.removeAll();
 	};
 
 	self.createToDo = function(pk) {
@@ -325,7 +386,7 @@ var ClientContext = function() {
 					.getJSON(self.apiurl + 'sale/fetchEmployeeBalance', param,
 							function(data) {
 								var balance = data.balance;
-								if (null==balance || 0 == balance) {
+								if (null == balance || 0 == balance) {
 									var quit_in = new Object();
 									quit_in.client_employee_pk = self
 											.chosenEmployee()[0].split(";")[0];
@@ -558,10 +619,10 @@ var ClientContext = function() {
 			}
 		});
 	};
-	
-	//查看头像
+
+	// 查看头像
 	self.checkHeadPhoto = function(fileName) {
-		$("#img-pic").attr("src","");
+		$("#img-pic").attr("src", "");
 		headCheckLayer = $.layer({
 			type : 1,
 			title : [ '头像', '' ],
@@ -578,13 +639,16 @@ var ClientContext = function() {
 				console.log("Done");
 			}
 		});
-		if(fileName=="img"){
+		if (fileName == "img") {
 			$("#img-pic").attr("src", self.apiurl + "static/img/head.jpg");
-		}else{
-			$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");	
+		} else {
+			$("#img-pic").attr(
+					"src",
+					self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+							+ "&fileType=CLIENT_EMPLOYEE_HEAD");
 		}
 	};
-	
+
 	// 加载头像
 	self.loadFiles = function() {
 		$("[st='st-file-name']").each(function(idx, stFileName) {
@@ -597,7 +661,7 @@ var ClientContext = function() {
 
 	self.downFile = function(stFileName, fileName) {
 		var imgContainer = $(stFileName).prev();
-		
+
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_EMPLOYEE_MIN_HEAD");
@@ -718,5 +782,8 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 	ctx.searchClientSummary();
-	$("#img-pic").css({"width":"320px","height":"320px"});
+	$("#img-pic").css({
+		"width" : "320px",
+		"height" : "320px"
+	});
 });

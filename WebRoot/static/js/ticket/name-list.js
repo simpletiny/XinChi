@@ -266,6 +266,7 @@ var PassengerContext = function() {
 
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
+					$("#chk-all").attr('checked', false);
 
 					var trs = $("#div-table").find("tbody").find("tr");
 					var current_no = "";
@@ -473,6 +474,28 @@ $(document).ready(function() {
 			$('.deletePassenger').remove();
 		}
 	});
+
+	var clipboard = new Clipboard('#copy', {
+		text : function() {
+			var text = "";
+			if (ctx.chosenPassengers().length > 0) {
+				for (var i = 0; i < ctx.chosenPassengers().length; i++) {
+					var name = ctx.chosenPassengers()[i].split(":")[1];
+					var id = ctx.chosenPassengers()[i].split(":")[2];
+					text += name + "：" + id + "；\n";
+				}
+			}
+			return text;
+		}
+	});
+
+	clipboard.on('success', function(e) {
+		success_msg("已经成功复制到剪切板！")
+	});
+
+	clipboard.on('error', function(e) {
+		console.log('error');
+	});
 });
 /**
  * 
@@ -507,4 +530,18 @@ function choseSupplierEmployee(event) {
 
 	currentSupplier = event.toElement;
 	$(currentSupplier).blur();
+}
+
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.passengers().length; i++) {
+			var passenger = ctx.passengers()[i];
+			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":" + passenger.id)
+		}
+	} else {
+		for (var i = 0; i < ctx.passengers().length; i++) {
+			var passenger = ctx.passengers()[i];
+			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name + ":" + passenger.id)
+		}
+	}
 }

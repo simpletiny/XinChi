@@ -106,7 +106,7 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
-							<!-- <button type="submit" class="btn btn-green" data-bind="click: doCopy">复制选中的名单信息</button> -->
+							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -114,7 +114,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th><input type="checkbox" onclick="checkAll(this)" />全选</th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>乘机人</th>
 								<th>团号</th>
 								<th>客户</th>
@@ -225,5 +225,6 @@
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/js/ticket/name-list.js"></script>
+	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

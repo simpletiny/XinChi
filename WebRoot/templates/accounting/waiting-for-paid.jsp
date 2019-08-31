@@ -43,6 +43,7 @@
 							</div>
 						</div> -->
 						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: pay">支付</button>
 						</div>
 					</div>
@@ -96,6 +97,7 @@
 								<th>支付时限</th>
 								<th>申请人</th>
 								<th>审批人</th>
+								<th>备注</th>
 								<th>支付状态</th>
 							</tr>
 						</thead>
@@ -110,10 +112,23 @@
 								<td data-bind="text: $data.limit_time"></td>
 								<td data-bind="text: $data.apply_user"></td>
 								<td data-bind="text: $data.approval_user"></td>
+								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 
 							</tr>
 						</tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>合计</td>
+							<td data-bind="text:totalPaid()"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>

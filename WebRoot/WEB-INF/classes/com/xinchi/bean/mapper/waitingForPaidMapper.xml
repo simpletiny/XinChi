@@ -18,6 +18,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="PaidDetailSummaryResultMap" type="com.xinchi.bean.PaidDetailSummary">
 		<result column="money" property="money" jdbcType="DECIMAL" />
@@ -44,7 +45,8 @@
 		update_user,
 		create_time,
 		update_time,
-		pay_user
+		pay_user,
+		comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -132,6 +134,9 @@
 			<if test="pay_user != null">
 				pay_user,
 			</if>
+			<if test="comment != null">
+				comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="pay_number != null">
@@ -178,6 +183,9 @@
 			</if>
 			<if test="pay_user != null">
 				#{pay_user,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -228,6 +236,9 @@
 			<if test="pay_user != null">
 				pay_user = #{pay_user,jdbcType=VARCHAR},
 			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -253,7 +264,8 @@
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		D.user_name as pay_user
+		D.user_name as pay_user,
+		A.comment
 		from
 		waiting_for_paid A
 		LEFT JOIN user_base B on A.apply_user=B.user_number

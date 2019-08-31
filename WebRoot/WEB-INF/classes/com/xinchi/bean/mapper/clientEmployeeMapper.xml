@@ -136,9 +136,19 @@
 		A.head_photo
 		from client_employee
 		A LEFT JOIN
-		client B ON A.financial_body_pk =
+		client B ON
+		A.financial_body_pk =
 		B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPks" resultMap="BaseResultMap">
+		select
+		*
+		from client_employee
+		where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -475,10 +485,12 @@
 		A.review_flg,
 		A.quit_flg,
 		A.head_photo
-		from client_employee
+		from
+		client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
+		LEFT JOIN view_client_employee_user C ON A.pk =
+		C.employee_pk
 		<where>
 			<if test="sales != null">
 				and C.user_pks like CONCAT('%',#{sales,jdbcType=VARCHAR},'%')
@@ -495,22 +507,31 @@
 			<if test="public_flg != null and public_flg !=''">
 				and A.public_flg = #{public_flg,jdbcType=VARCHAR}
 			</if>
-			<if test="cellphone != null and cellphone !=''">
+			<if test='cellphone != null and cellphone !=""'>
 				and (A.cellphone = #{cellphone,jdbcType=VARCHAR} OR A.cellphone1 = #{cellphone,jdbcType=VARCHAR})
 			</if>
-			<if test="wechat != null and wechat !=''">
+			<if test='wechat != null and wechat !=""'>
 				and (A.wechat = #{wechat,jdbcType=VARCHAR} OR A.wechat1 = #{wechat,jdbcType=VARCHAR})
+			</if>
+			<if test='cellphone1 != null and cellphone1 !=""'>
+				and (A.cellphone = #{cellphone1,jdbcType=VARCHAR} OR A.cellphone1 = #{cellphone1,jdbcType=VARCHAR})
+			</if>
+			<if test='wechat1 != null and wechat1 !=""'>
+				and (A.wechat = #{wechat1,jdbcType=VARCHAR} OR A.wechat1 = #{wechat1,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</select>
 	<select id="selectSameTelEmployee" parameterType="com.xinchi.bean.ClientEmployeeBean" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List"/>
+		<include refid="Base_Column_List" />
 		from client_employee
 
 		<where>
-			and ((cellphone = #{cellphone,jdbcType=VARCHAR} OR cellphone1 = #{cellphone,jdbcType=VARCHAR} OR cellphone = #{cellphone1,jdbcType=VARCHAR} OR cellphone1 = #{cellphone1,jdbcType=VARCHAR})
-			OR (wechat = #{wechat,jdbcType=VARCHAR} OR wechat1 = #{wechat,jdbcType=VARCHAR} OR wechat = #{wechat1,jdbcType=VARCHAR} OR wechat1 = #{wechat1,jdbcType=VARCHAR}))
+			and ((cellphone = #{cellphone,jdbcType=VARCHAR} OR cellphone1 = #{cellphone,jdbcType=VARCHAR} OR cellphone =
+			#{cellphone1,jdbcType=VARCHAR} OR cellphone1 = #{cellphone1,jdbcType=VARCHAR})
+			OR (wechat = #{wechat,jdbcType=VARCHAR}
+			OR wechat1 = #{wechat,jdbcType=VARCHAR} OR wechat = #{wechat1,jdbcType=VARCHAR} OR wechat1 =
+			#{wechat1,jdbcType=VARCHAR}))
 			and pk != #{pk,jdbcType=VARCHAR}
 			and review_flg='Y'
 		</where>
@@ -614,10 +635,12 @@
 		A.head_photo,
 		D.last_order_period AS last_order_period,
 		D.year_order_count AS year_order_count
-		from client_employee
+		from
+		client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk = C.employee_pk
+		LEFT JOIN view_client_employee_user C ON A.pk =
+		C.employee_pk
 		LEFT JOIN
 		client_relation D ON A.pk = D.client_employee_pk
 
@@ -650,7 +673,8 @@
 				and A.review_flg = #{params.bo.review_flg,jdbcType=CHAR}
 			</if>
 			<if test="params.bo.cellphone != null and params.bo.cellphone !=''">
-				and (A.cellphone = #{params.bo.cellphone,jdbcType=CHAR} OR A.cellphone1 = #{params.bo.cellphone,jdbcType=CHAR})
+				and (A.cellphone = #{params.bo.cellphone,jdbcType=CHAR} OR A.cellphone1 =
+				#{params.bo.cellphone,jdbcType=CHAR})
 			</if>
 			<if test="params.bo.wechat != null and params.bo.wechat !=''">
 				and (A.wechat = #{params.bo.wechat,jdbcType=CHAR} OR A.wechat1 = #{params.bo.wechat,jdbcType=CHAR})

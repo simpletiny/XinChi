@@ -75,17 +75,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public String createEmployee(ClientEmployeeBean employee) {
 
-		List<ClientEmployeeBean> exists = dao.getAllByParam(employee);
+		ClientEmployeeBean option1 = new ClientEmployeeBean();
+		option1.setCellphone(employee.getCellphone());
+		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
+		if (exists1 != null && exists1.size() > 0)
+			return "existcellphone";
 
-		if (exists != null && exists.size() > 0)
-			return "exist";
-		
+		ClientEmployeeBean option2 = new ClientEmployeeBean();
+		option2.setCellphone1(employee.getCellphone1());
+		List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		if (exists2 != null && exists2.size() > 0)
+			return "existcellphone";
+
+		ClientEmployeeBean option3 = new ClientEmployeeBean();
+		option3.setWechat(employee.getWechat());
+		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
+		if (exists3 != null && exists3.size() > 0)
+			return "existwechat";
+
+		ClientEmployeeBean option4 = new ClientEmployeeBean();
+		option4.setWechat1(employee.getWechat1());
+		List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		if (exists4 != null && exists4.size() > 0)
+			return "existwechat";
+
 		if (SimpletinyString.isEmpty(employee.getHead_photo())) {
 			employee.setHead_photo(null);
 		} else {
 			saveFile(employee.getHead_photo());
 		}
-		
+
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
@@ -99,30 +118,52 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public String updateEmployee(ClientEmployeeBean employee) {
-		List<ClientEmployeeBean> exists = dao.getAllByParam(employee);
+		ClientEmployeeBean option1 = new ClientEmployeeBean();
+		option1.setCellphone(employee.getCellphone());
+		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
+		if (exists1 != null && exists1.size() > 0 && !exists1.get(0).getPk().equals(employee.getPk())
+				&& !employee.getPublic_flg().equals("Y"))
+			return "existcellphone";
 
-		if (exists != null && exists.size() > 0) {
-			if (exists.get(0).getPk().equals(employee.getPk())) {
-				if (employee.getPublic_flg().equals("Y")) {
-					UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-							.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		ClientEmployeeBean option2 = new ClientEmployeeBean();
+		option2.setCellphone1(employee.getCellphone1());
+		List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		if (exists2 != null && exists2.size() > 0 && !exists2.get(0).getPk().equals(employee.getPk())
+				&& !employee.getPublic_flg().equals("Y"))
+			return "existcellphone";
 
-					employee.setPublic_flg("N");
-					employee.setRelation_level(ResourcesConstants.CLIENT_RELATION_LEVEL_01);
-					// 删除之前存在的对应关系
-					employeeUserDao.deleteByEmployeePk(employee.getPk());
+		ClientEmployeeBean option3 = new ClientEmployeeBean();
+		option3.setWechat(employee.getWechat());
+		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
+		if (exists3 != null && exists3.size() > 0 && !exists3.get(0).getPk().equals(employee.getPk())
+				&& !employee.getPublic_flg().equals("Y"))
+			return "existwechat";
 
-					// 保存新的对应关系
-					ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+		ClientEmployeeBean option4 = new ClientEmployeeBean();
+		option4.setWechat1(employee.getWechat1());
+		List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		if (exists4 != null && exists4.size() > 0 && !exists4.get(0).getPk().equals(employee.getPk())
+				&& !employee.getPublic_flg().equals("Y"))
+			return "existwechat";
 
-					ceub.setEmployee_pk(employee.getPk());
-					ceub.setUser_pk(sessionBean.getPk());
-					employeeUserDao.insert(ceub);
-				}
-			} else {
-				return "exist";
-			}
+		// 如果是公开维护修改所属销售
+		if (employee.getPublic_flg().equals("Y")) {
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+			employee.setPublic_flg("N");
+			employee.setRelation_level(ResourcesConstants.CLIENT_RELATION_LEVEL_01);
+			// 删除之前存在的对应关系
+			employeeUserDao.deleteByEmployeePk(employee.getPk());
+
+			// 保存新的对应关系
+			ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+
+			ceub.setEmployee_pk(employee.getPk());
+			ceub.setUser_pk(sessionBean.getPk());
+			employeeUserDao.insert(ceub);
 		}
+
 		ClientEmployeeBean oldCeb = dao.selectByPrimaryKey(employee.getPk());
 
 		if (!oldCeb.getHead_photo().equals(employee.getHead_photo())) {
@@ -434,5 +475,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		fullImg.delete();
 		minImg.delete();
+	}
+
+	@Override
+	public String updateMarketLevel(List<String> employee_pks, String market_level) {
+		List<ClientEmployeeBean> employees = dao.selectByPks(employee_pks);
+		for (ClientEmployeeBean employee : employees) {
+			employee.setMarket_level(market_level);
+			dao.update(employee);
+		}
+		return SUCCESS;
 	}
 }

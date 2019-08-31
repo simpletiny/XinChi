@@ -14,6 +14,8 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.payable.dao.PayableDAO;
+import com.xinchi.backend.product.dao.ProductOrderAirBaseDAO;
+import com.xinchi.backend.product.dao.ProductOrderAirInfoDAO;
 import com.xinchi.backend.product.dao.ProductOrderOperationDAO;
 import com.xinchi.backend.product.dao.ProductOrderSupplierDAO;
 import com.xinchi.backend.product.dao.ProductOrderSupplierInfoDAO;
@@ -24,6 +26,8 @@ import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderSupplierBean;
 import com.xinchi.bean.OrderSupplierInfoBean;
 import com.xinchi.bean.PayableBean;
+import com.xinchi.bean.ProductOrderAirBaseBean;
+import com.xinchi.bean.ProductOrderAirInfoBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -297,5 +301,59 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 		// 删除订单供应商信息
 		posDao.deleteByOrderPk(order_pk);
+	}
+
+	@Autowired
+	private ProductOrderAirBaseDAO airBaseDao;
+
+	@Autowired
+	private ProductOrderAirInfoDAO airInfoDao;
+
+	@Override
+	public String operateOrderAirTicket(ProductOrderAirBaseBean air_base, String json) {
+		String base_pk = airBaseDao.insert(air_base);
+
+		JSONArray arr = JSONArray.fromObject(json);
+
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject obj = arr.getJSONObject(i);
+
+			int flight_index = obj.getInt("flight_index");
+			String flight_leg = obj.getString("flight_leg");
+
+			int start_day = obj.getInt("start_day");
+			String start_city = obj.getString("start_city");
+			int end_day = obj.getInt("end_day");
+			String end_city = obj.getString("end_city");
+			String flight_number = obj.getString("flight_number");
+
+			ProductOrderAirInfoBean info = new ProductOrderAirInfoBean();
+
+			info.setBase_pk(base_pk);
+			info.setFlight_index(flight_index);
+			info.setFlight_leg(flight_leg);
+			info.setStart_day(start_day);
+			info.setStart_city(start_city);
+			info.setEnd_day(end_day);
+			info.setEnd_city(end_city);
+			info.setFlight_number(flight_number);
+
+			airInfoDao.insert(info);
+		}
+
+		// 更新销售订单操作标识
+		// 更新产品状态
+		OrderDto order = orderDao.selectByTeamNumber(air_base.getTeam_number());
+		String standard_flg = order.getStandard_flg();
+		if (standard_flg.equals("Y")) {
+			BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
+			bsOrder.setOperate_flg("A");
+			bsoDao.update(bsOrder);
+		} else {
+			BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
+			bnsOrder.setOperate_flg("A");
+			bnsoDao.update(bnsOrder);
+		}
+		return SUCCESS;
 	}
 }

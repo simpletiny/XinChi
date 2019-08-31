@@ -645,10 +645,10 @@
 				and A.sale_flg = #{params.bo.sale_flg,jdbcType=VARCHAR}
 			</if>
 			<if test='params.bo.high_value_flg != null and params.bo.high_value_flg =="yes"'>
-				and A.product_value >= 11
+				and A.product_value >= 9
 			</if>
 		</where>
 
-		order by A.create_time DESC
+		order by A.name,A.product_model
 	</select>
 </mapper>

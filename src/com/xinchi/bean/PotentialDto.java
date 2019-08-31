@@ -16,32 +16,32 @@ public class PotentialDto implements Serializable {
 	private int ignore_all;
 	private int new_all;
 
-	private int all_strong;
-	private int core_strong;
-	private int main_strong;
-	private int friend_strong;
-	private int market_strong;
-	private int try_strong;
-	private int ignore_strong;
-	private int new_strong;
+	private int all_tel;
+	private int core_tel;
+	private int main_tel;
+	private int friend_tel;
+	private int market_tel;
+	private int try_tel;
+	private int ignore_tel;
+	private int new_tel;
 
-	private int all_normal;
-	private int core_normal;
-	private int main_normal;
-	private int friend_normal;
-	private int market_normal;
-	private int try_normal;
-	private int ignore_normal;
-	private int new_normal;
+	private int all_wechat;
+	private int core_wechat;
+	private int main_wechat;
+	private int friend_wechat;
+	private int market_wechat;
+	private int try_wechat;
+	private int ignore_wechat;
+	private int new_wechat;
 
-	private int all_play;
-	private int core_play;
-	private int main_play;
-	private int friend_play;
-	private int market_play;
-	private int try_play;
-	private int ignore_play;
-	private int new_play;
+	private int all_ad;
+	private int core_ad;
+	private int main_ad;
+	private int friend_ad;
+	private int market_ad;
+	private int try_ad;
+	private int ignore_ad;
+	private int new_ad;
 
 	private int all_unknow;
 	private int core_unknow;
@@ -116,100 +116,100 @@ public class PotentialDto implements Serializable {
 		this.new_all = new_all;
 	}
 
-	public int getAll_strong() {
-		return all_strong;
+	public int getAll_tel() {
+		return all_tel;
 	}
 
-	public int getCore_strong() {
-		return core_strong;
+	public int getCore_tel() {
+		return core_tel;
 	}
 
-	public int getMain_strong() {
-		return main_strong;
+	public int getMain_tel() {
+		return main_tel;
 	}
 
-	public int getFriend_strong() {
-		return friend_strong;
+	public int getFriend_tel() {
+		return friend_tel;
 	}
 
-	public int getMarket_strong() {
-		return market_strong;
+	public int getMarket_tel() {
+		return market_tel;
 	}
 
-	public int getTry_strong() {
-		return try_strong;
+	public int getTry_tel() {
+		return try_tel;
 	}
 
-	public int getIgnore_strong() {
-		return ignore_strong;
+	public int getIgnore_tel() {
+		return ignore_tel;
 	}
 
-	public int getNew_strong() {
-		return new_strong;
+	public int getNew_tel() {
+		return new_tel;
 	}
 
-	public int getAll_normal() {
-		return all_normal;
+	public int getAll_wechat() {
+		return all_wechat;
 	}
 
-	public int getCore_normal() {
-		return core_normal;
+	public int getCore_wechat() {
+		return core_wechat;
 	}
 
-	public int getMain_normal() {
-		return main_normal;
+	public int getMain_wechat() {
+		return main_wechat;
 	}
 
-	public int getFriend_normal() {
-		return friend_normal;
+	public int getFriend_wechat() {
+		return friend_wechat;
 	}
 
-	public int getMarket_normal() {
-		return market_normal;
+	public int getMarket_wechat() {
+		return market_wechat;
 	}
 
-	public int getTry_normal() {
-		return try_normal;
+	public int getTry_wechat() {
+		return try_wechat;
 	}
 
-	public int getIgnore_normal() {
-		return ignore_normal;
+	public int getIgnore_wechat() {
+		return ignore_wechat;
 	}
 
-	public int getNew_normal() {
-		return new_normal;
+	public int getNew_wechat() {
+		return new_wechat;
 	}
 
-	public int getAll_play() {
-		return all_play;
+	public int getAll_ad() {
+		return all_ad;
 	}
 
-	public int getCore_play() {
-		return core_play;
+	public int getCore_ad() {
+		return core_ad;
 	}
 
-	public int getMain_play() {
-		return main_play;
+	public int getMain_ad() {
+		return main_ad;
 	}
 
-	public int getFriend_play() {
-		return friend_play;
+	public int getFriend_ad() {
+		return friend_ad;
 	}
 
-	public int getMarket_play() {
-		return market_play;
+	public int getMarket_ad() {
+		return market_ad;
 	}
 
-	public int getTry_play() {
-		return try_play;
+	public int getTry_ad() {
+		return try_ad;
 	}
 
-	public int getIgnore_play() {
-		return ignore_play;
+	public int getIgnore_ad() {
+		return ignore_ad;
 	}
 
-	public int getNew_play() {
-		return new_play;
+	public int getNew_ad() {
+		return new_ad;
 	}
 
 	public int getAll_unknow() {
@@ -244,100 +244,100 @@ public class PotentialDto implements Serializable {
 		return new_unknow;
 	}
 
-	public void setAll_strong(int all_strong) {
-		this.all_strong = all_strong;
+	public void setAll_tel(int all_tel) {
+		this.all_tel = all_tel;
 	}
 
-	public void setCore_strong(int core_strong) {
-		this.core_strong = core_strong;
+	public void setCore_tel(int core_tel) {
+		this.core_tel = core_tel;
 	}
 
-	public void setMain_strong(int main_strong) {
-		this.main_strong = main_strong;
+	public void setMain_tel(int main_tel) {
+		this.main_tel = main_tel;
 	}
 
-	public void setFriend_strong(int friend_strong) {
-		this.friend_strong = friend_strong;
+	public void setFriend_tel(int friend_tel) {
+		this.friend_tel = friend_tel;
 	}
 
-	public void setMarket_strong(int market_strong) {
-		this.market_strong = market_strong;
+	public void setMarket_tel(int market_tel) {
+		this.market_tel = market_tel;
 	}
 
-	public void setTry_strong(int try_strong) {
-		this.try_strong = try_strong;
+	public void setTry_tel(int try_tel) {
+		this.try_tel = try_tel;
 	}
 
-	public void setIgnore_strong(int ignore_strong) {
-		this.ignore_strong = ignore_strong;
+	public void setIgnore_tel(int ignore_tel) {
+		this.ignore_tel = ignore_tel;
 	}
 
-	public void setNew_strong(int new_strong) {
-		this.new_strong = new_strong;
+	public void setNew_tel(int new_tel) {
+		this.new_tel = new_tel;
 	}
 
-	public void setAll_normal(int all_normal) {
-		this.all_normal = all_normal;
+	public void setAll_wechat(int all_wechat) {
+		this.all_wechat = all_wechat;
 	}
 
-	public void setCore_normal(int core_normal) {
-		this.core_normal = core_normal;
+	public void setCore_wechat(int core_wechat) {
+		this.core_wechat = core_wechat;
 	}
 
-	public void setMain_normal(int main_normal) {
-		this.main_normal = main_normal;
+	public void setMain_wechat(int main_wechat) {
+		this.main_wechat = main_wechat;
 	}
 
-	public void setFriend_normal(int friend_normal) {
-		this.friend_normal = friend_normal;
+	public void setFriend_wechat(int friend_wechat) {
+		this.friend_wechat = friend_wechat;
 	}
 
-	public void setMarket_normal(int market_normal) {
-		this.market_normal = market_normal;
+	public void setMarket_wechat(int market_wechat) {
+		this.market_wechat = market_wechat;
 	}
 
-	public void setTry_normal(int try_normal) {
-		this.try_normal = try_normal;
+	public void setTry_wechat(int try_wechat) {
+		this.try_wechat = try_wechat;
 	}
 
-	public void setIgnore_normal(int ignore_normal) {
-		this.ignore_normal = ignore_normal;
+	public void setIgnore_wechat(int ignore_wechat) {
+		this.ignore_wechat = ignore_wechat;
 	}
 
-	public void setNew_normal(int new_normal) {
-		this.new_normal = new_normal;
+	public void setNew_wechat(int new_wechat) {
+		this.new_wechat = new_wechat;
 	}
 
-	public void setAll_play(int all_play) {
-		this.all_play = all_play;
+	public void setAll_ad(int all_ad) {
+		this.all_ad = all_ad;
 	}
 
-	public void setCore_play(int core_play) {
-		this.core_play = core_play;
+	public void setCore_ad(int core_ad) {
+		this.core_ad = core_ad;
 	}
 
-	public void setMain_play(int main_play) {
-		this.main_play = main_play;
+	public void setMain_ad(int main_ad) {
+		this.main_ad = main_ad;
 	}
 
-	public void setFriend_play(int friend_play) {
-		this.friend_play = friend_play;
+	public void setFriend_ad(int friend_ad) {
+		this.friend_ad = friend_ad;
 	}
 
-	public void setMarket_play(int market_play) {
-		this.market_play = market_play;
+	public void setMarket_ad(int market_ad) {
+		this.market_ad = market_ad;
 	}
 
-	public void setTry_play(int try_play) {
-		this.try_play = try_play;
+	public void setTry_ad(int try_ad) {
+		this.try_ad = try_ad;
 	}
 
-	public void setIgnore_play(int ignore_play) {
-		this.ignore_play = ignore_play;
+	public void setIgnore_ad(int ignore_ad) {
+		this.ignore_ad = ignore_ad;
 	}
 
-	public void setNew_play(int new_play) {
-		this.new_play = new_play;
+	public void setNew_ad(int new_ad) {
+		this.new_ad = new_ad;
 	}
 
 	public void setAll_unknow(int all_unknow) {
@@ -371,4 +371,5 @@ public class PotentialDto implements Serializable {
 	public void setNew_unknow(int new_unknow) {
 		this.new_unknow = new_unknow;
 	}
+
 }

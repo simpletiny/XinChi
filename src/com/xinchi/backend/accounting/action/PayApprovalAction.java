@@ -1,6 +1,11 @@
 package com.xinchi.backend.accounting.action;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +35,27 @@ public class PayApprovalAction extends BaseAction {
 	private CardService cardService;
 	private BigDecimal sum_balance;
 	private BigDecimal sum_card_balance;
-	public String searchPaidApplyByPage() {
+	public String searchPaidApplyByPage() throws Exception{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", option);
 		page.setParams(params);
 
 		payApprovals = service.selectByPage(page);
 		sum_balance = service.selectSumBalance();
-		sum_card_balance = cardService.selectSumBalance();
+		String basePath = this.getClass().getClassLoader().getResource("").getPath();
+		InputStreamReader config = new InputStreamReader(
+				new FileInputStream(basePath + File.separator + "hot" + File.separator + "accountSumConfig.txt"),
+				"UTF-8");
+		BufferedReader br = new BufferedReader(config);
+		String line;
+		String r = "";
+		while ((line = br.readLine()) != null) {
+			r += line;
+		}
+		br.close();
+		
+		List<String> accounts = Arrays.asList(r.split(","));
+		sum_card_balance = cardService.selectSumBalance(accounts);
 		return SUCCESS;
 	}
 

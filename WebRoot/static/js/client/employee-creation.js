@@ -18,15 +18,15 @@ var CompanyContext = function() {
 			type : "POST",
 			url : self.apiurl + 'client/createEmployee',
 			data : $("form").serialize()
-		}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/client/client-employee.jsp";
-					} else if (str = "exist") {
-						fail_msg("同一财务主体下存在同名客户！");
-					}
-				});
+		}).success(function(str) {
+			if (str == "success") {
+				window.history.go(-1);
+			} else if (str == "existcellphone") {
+				fail_msg("存在相同的手机号！");
+			} else if (str == "existwechat") {
+				fail_msg("存在相同的微信号！");
+			}
+		});
 	};
 
 };
@@ -159,4 +159,3 @@ checkWechat = function(input) {
 window.addEventListener('DOMContentLoaded', function() {
 
 });
-

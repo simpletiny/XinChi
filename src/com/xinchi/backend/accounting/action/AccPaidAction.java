@@ -235,6 +235,16 @@ public class AccPaidAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 出纳打回有问题的待支付单子
+	 * 
+	 * @return
+	 */
+	public String rollBackWfp() {
+		resultStr = service.rollBackWfp(wfp_pk);
+		return SUCCESS;
+	}
+
 	private List<PaymentDetailBean> details;
 	private PaidDetailSummary ps;
 

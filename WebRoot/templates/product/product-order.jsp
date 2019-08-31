@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -13,7 +12,7 @@
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
-#table-supplier th,#table-supplier td {
+#table-supplier th, #table-supplier td {
 	text-align: center;
 }
 
@@ -31,6 +30,25 @@
 	color: red;
 	font-weight: bold;
 }
+
+#table-ticket th, #table-ticket td {
+	text-align: center;
+}
+
+#table-ticket tr td input {
+	width: 90%;
+}
+
+#table-ticket {
+	border-collapse: separate;
+	border-spacing: 0px 10px;
+}
+
+#air-ticket input[type="button"] {
+	width: 30px;
+	font-weight: bold;
+	font-size: 20px;
+}
 </style>
 </head>
 <body>
@@ -44,18 +62,10 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div class="span6">
-							<div class="col-md-6">
-								<div data-bind="foreach: status" style="padding-top: 4px;">
-									<em class="small-box"> <input type="checkbox" data-bind="attr: {'value': $data},checked: $root.chosenStatus,click:function(){$root.refresh();return true;}"
-										name="order_option.operate_flgs" /><label data-bind="text: $root.statusMapping[$data]"></label>
-									</em>
-								</div>
-							</div>
-						</div>
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createOperate() }">订单操作</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { operateAir() }">票务处理</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
 							</div>
 						</div>
 					</div>
@@ -76,7 +86,8 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px"
+										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
 										name="order_option.product_manager_number"></select>
 								</div>
 							</div>
@@ -116,6 +127,7 @@
 								<th>团号</th>
 								<th>出团日期</th>
 								<th>产品名称</th>
+								<th>产品型号</th>
 								<th>成人</th>
 								<th>特殊</th>
 								<th>游客信息</th>
@@ -127,11 +139,13 @@
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg}, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text:$root.statusMapping[$data.operate_flg]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
+								<td data-bind="text: $data.product_model"></td>
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
@@ -170,73 +184,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="supplier-info" style="display: none; width: 1400px">
-		<div class="input-row clearfloat">
-			<div style="margin-top: 20px; height: 300px" id="div-ticket">
-				<table style="width: 90%" id="table-supplier">
-					<thead>
-						<tr class="required">
-							<th style="width: 5%">序号</th>
-							<th style="width: 10%" class="r">供应商</th>
-							<th style="width: 10%" class="r">产品名称</th>
-							<th style="width: 5%" class="r">总价格</th>
-							<th style="width: 9%" class="r">接团天次</th>
-							<th style="width: 10%">接团方式</th>
-							<th style="width: 10%">接团人</th>
-							<th style="width: 10%">联系方式</th>
-							<th style="width: 9%" class="r">送团天次</th>
-							<th style="width: 10%">送团方式</th>
-							<th style="width: 2%"></th>
-						</tr>
-					</thead>
-					<!-- ko if:productSuppliers().length>0 -->
-					<tbody data-bind="foreach:productSuppliers">
-						<tr>
-							<td st="index" data-bind="text:$data.supplier_index"></td>
-							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name" onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
-								data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
-							<td><input class="need" st="supplier-product-name" maxlength="10" data-bind="value:$data.supplier_product_name" type="text" /></td>
-							<td><input class="need" st="supplier-cost" data-bind="value:$data.sum_cost" type="number" /></td>
-							<td><input class="need" st="land-day" data-bind="value:$data.land_day" type="number" /></td>
-							<td><input st="pick-type" data-bind="value:$data.pick_type" maxlength="50" type="text" /></td>
-							<td><input st="picker" data-bind="value:$data.picker" maxlength="10" type="text" /></td>
-							<td><input st="picker-cellphone" data-bind="value:$data.picker_cellphone" maxlength="15" type="number" /></td>
-							<td><input class="need" st="off-day" type="number" data-bind="value:$data.off_day" /></td>
-							<td><input st="send-type" maxlength="50" type="text" data-bind="value:$data.send_type" /></td>
-							<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
-						</tr>
-					</tbody>
-					<!-- /ko -->
-					<!-- ko if:productSuppliers().length<1 -->
-					<tbody>
-						<tr>
-							<td st="index">1</td>
-							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input class="need" type="text" st="supplier-pk" style="display: none" /></td>
-							<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
-							<td><input class="need" st="supplier-cost" type="number" /></td>
-							<td><input class="need" st="land-day" type="number" /></td>
-							<td><input st="pick-type" maxlength="50" type="text" /></td>
-							<td><input st="picker" maxlength="10" type="text" /></td>
-							<td><input st="picker-cellphone" maxlength="15" type="number" /></td>
-							<td><input class="need" st="off-day" type="number" /></td>
-							<td><input st="send-type" maxlength="50" type="text" /></td>
-							<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
-						</tr>
-					</tbody>
-					<!-- /ko -->
-				</table>
-				<div style="margin-top: 20px; float: right">
-					<input type="button" value="添加供应商" onclick="addRow()"></input>
-				</div>
-			</div>
-
-			<div style="margin-top: 50px; width: 700px; float: right">
-				<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:function(){cancelOperate()}">取消</button>
-				<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:function(){doOperate()}">确定</button>
-			</div>
-		</div>
-
 	</div>
 
 	<div id="supplier-pick" style="display: none;">
@@ -285,7 +232,7 @@
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -307,8 +254,93 @@
 			</div>
 		</div>
 	</div>
+	<!-- 机票信息 -->
+	<div id="air-ticket-edit" style="display: none; width: 800px; height: 500px; overflow: auto">
+		<form class="form-box info-form" id="form-air">
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">航班名称</label>
+					<div class="ip" style="width: 50%">
+						<input type="text" class="ip-" data-bind="value: flight().name" name="air_base.name" required="required" />
+					</div>
+				</div>
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">编号</label>
+					<div class="ip" style="width: 50%">
+						<input type="text" class="ip-" maxlength="10" data-bind="value: flight().number" name="air_base.number"
+							required="required" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">成人票价</label>
+					<div class="ip" style="width: 50%">
+						<input type="number" class="ip-" data-bind="value: flight().adult_price" name="air_base.adult_price"
+							required="required" />
+					</div>
+				</div>
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">儿童票价</label>
+					<div class="ip" style="width: 50%">
+						<input type="number" class="ip-" data-bind="value: flight().child_price" name="air_base.child_price"
+							required="required" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat" id="air-ticket">
+				<div class="col-md-12">
+					<table style="width: 100%" id="table-ticket">
+						<thead>
+							<tr class="required">
+								<th class="r" style="width: 10%">航段</th>
+								<th class="r" style="width: 10%">天次</th>
+								<th class="r" style="width: 15%">起飞城市</th>
+								<th class="r" style="width: 10%">天次</th>
+								<th class="r" style="width: 15%">降落城市</th>
+								<th style="width: 40%">指定航班</th>
+								<th style="width: 10%"></th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach : flight().infos">
+							<tr>
+								<input type="hidden" st="flight-leg" data-bind="value:$data.flight_leg" />
+								<td data-bind="text:$data.flight_leg"></td>
+								<td><input st="start-day" type="text" maxlength="2" min="1" max="20" data-bind="value:$data.start_day"
+									required="required" /></td>
+								<td><input st="start-city" type="text" maxlength="10" required="required" data-bind="value:$data.start_city"/></td>
+								<td><input st="end-day" type="text" maxlength="2" min="1" max="20" required="required" data-bind="value:$data.end_day"/></td>
+								<td><input st="end-city" type="text" maxlength="10" required="required" data-bind="value:$data.end_city"/></td>
+								<td><input st="flight-number" type="text" maxlength="10" data-bind="value:$data.flight_number"/></td>
+								<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
+							</tr>
+						</tbody>
+					</table>
+					<div style="margin-top: 20px; float: right">
+						<input type="button" value="+" onclick="addRow()"></input>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12">
+					<label class="l">票务要求</label>
+					<div class="ip">
+						<textarea type="text" class="ip-default" rows="5" data-bind="value: flight().comment" name="air_base.comment"
+							placeholder="需要备注说明的信息"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="text-align: right">
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: doSendAir">提交</a> <a type="submit"
+						class="btn btn-green btn-r" data-bind="click: cancelSendAir">取消</a>
+				</div>
+			</div>
+		</form>
+	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display", "block");
+		$(".order-operate").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

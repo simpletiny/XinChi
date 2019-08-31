@@ -18,4 +18,7 @@ public interface AccPaidDAO {
 	public void update(WaitingForPaidBean wfp);
 
 	public PaidDetailSummary selectPaidSummaryByPayNumber(String voucher_number);
+	
+	
+	public void deleteByPk(String wfp_pk);
 }

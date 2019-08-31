@@ -49,13 +49,9 @@ public class EmployeeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String market_level;
 	public String setClientEmployeeLevel() {
-		ClientEmployeeBean e = employeeService.selectByPrimaryKey(employee.getPk());
-		e.setRelation_level(employee.getRelation_level());
-		e.setMarket_level(employee.getMarket_level());
-		e.setBack_level(employee.getBack_level());
-
-		resultStr = employeeService.updateEmployee(e);
+		resultStr  = employeeService.updateMarketLevel(employee_pks,market_level);
 		return SUCCESS;
 	}
 
@@ -312,5 +308,13 @@ public class EmployeeAction extends BaseAction {
 
 	public void setSale_pks(List<String> sale_pks) {
 		this.sale_pks = sale_pks;
+	}
+
+	public String getMarket_level() {
+		return market_level;
+	}
+
+	public void setMarket_level(String market_level) {
+		this.market_level = market_level;
 	}
 }
