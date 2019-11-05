@@ -3,13 +3,13 @@ var PassengerContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenPassengers = ko.observableArray([]);
-	self.colors = [ '#ffff99', '#ccffff', '#9999ff', '#00ffcc' ];
+	self.colors = ['#ffff99', '#ccffff', '#9999ff', '#00ffcc'];
 	self.passengers = ko.observable({
 		total : 0,
 		items : []
 	});
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
-			'TICKET' ];
+	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
+			'TICKET'];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
@@ -25,11 +25,28 @@ var PassengerContext = function() {
 			fail_msg("请选择乘客！");
 			return;
 		} else {
-			startLoadingSimpleIndicator("分配中");
+			// // 判断销售是否已经进行名单确认
+			// startLoadingSimpleIndicator("检查中...");
+			// var checkParam = "";
+			// for (var i = 0; i < self.chosenPassengers().length; i++) {
+			// var team_number = self.chosenPassengers()[i].split(":")[3];
+			// checkParam += "team_numbers=" + team_number + "&";
+			// }
+			//		
+			// $
+			// .ajax({
+			// type : "POST",
+			// url : self.apiurl + 'ticket/checkSaleConfirm',
+			// async : false,
+			// data : checkParam
+			// })
+			// .success(
+			// function(str) {
+			// endLoadingIndicator();
+			// if (str == "success") {
 
 			var sources = $(".txt-ticket-source");
 			self.existsSources.removeAll();
-			endLoadingIndicator();
 			// 先填写票源
 			if (sources.length > 0) {
 				for (var i = 0; i < sources.length; i++) {
@@ -46,12 +63,12 @@ var PassengerContext = function() {
 				}
 				sourceLayer = $.layer({
 					type : 1,
-					title : [ '选择票源', '' ],
+					title : ['选择票源', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '400px', '150px' ],
-					offset : [ '', '' ],
+					area : ['400px', '150px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#source-pick'
@@ -85,6 +102,10 @@ var PassengerContext = function() {
 				}
 
 			}
+			// } else {
+			// fail_msg(str + "团号下的名单未确认，请销售确认后再分配！");
+			// }
+			// });
 
 		}
 	};
@@ -156,7 +177,7 @@ var PassengerContext = function() {
 				return;
 			}
 
-			outer: for (var i = 0; i < self.chosenPassengers().length; i++) {
+			outer : for (var i = 0; i < self.chosenPassengers().length; i++) {
 				var data = self.chosenPassengers()[i].split(":");
 				for (var j = 0; j < alreadyPks.length; j++) {
 					var passenger_pk = $(alreadyPks[j]).val();
@@ -199,7 +220,7 @@ var PassengerContext = function() {
 		for (var i = 0; i < self.chosenPassengers().length; i++) {
 			var data = self.chosenPassengers()[i].split(":");
 			var padiv = $('<em class="small-box"></em>');
-			var label = $('<a href="#" style="margin-left:5px;cursor:pointer" class="passenger-name"></a>');
+			var label = $('<a href="javascript:void(0);" style="margin-left:5px;cursor:pointer" class="passenger-name"></a>');
 			var hiddenPk = $('<input type="hidden" class="passenger-pk"></input>');
 			$(hiddenPk).val(data[0]);
 			$(label).text(data[1]);
@@ -237,15 +258,17 @@ var PassengerContext = function() {
 		var X = $(label).offset().top;
 		var Y = $(label).offset().left;
 		var div = $('<div></div>');
-		var a_name = $('<a href="#" style="cursor:pointer">删除</a>');
+		var a_name = $('<a href="javascript:void(0);" style="cursor:pointer">删除</a>');
 		$(div).append(a_name);
 
+		$('.right-div').append(div);
 		$(div).addClass("deletePassenger");
-		$(div).css({
-			'top' : X + 20,
-			'left' : Y
-		});
-		$('body').append(div);
+
+		$(div).offset({
+			top : X + 20,
+			left : Y
+		})
+
 		$(a_name).click({
 			label : label
 		}, function(event) {
@@ -513,12 +536,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -536,12 +559,14 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":" + passenger.id)
+			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":"
+					+ passenger.id + ":" + passenger.team_number)
 		}
 	} else {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name + ":" + passenger.id)
+			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name
+					+ ":" + passenger.id + ":" + passenger.team_number)
 		}
 	}
 }

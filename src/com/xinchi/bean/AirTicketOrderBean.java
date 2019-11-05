@@ -46,6 +46,9 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 
 	private String passenger;
 
+	private String product_name;
+	private String departure_date;
+
 	public String getClient_number() {
 		return client_number;
 	}
@@ -204,6 +207,22 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 
 	public void setCost_done_flg(String cost_done_flg) {
 		this.cost_done_flg = cost_done_flg;
+	}
+
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public String getDeparture_date() {
+		return departure_date;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
+
+	public void setDeparture_date(String departure_date) {
+		this.departure_date = departure_date;
 	}
 
 }

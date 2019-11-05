@@ -20,6 +20,9 @@
 		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
 		<result column="air_info" property="air_info" jdbcType="VARCHAR" />
 		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
+		<result column="standard_flg" property="standard_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -28,7 +31,8 @@
 		A.product_name,
 		IF(ISNULL(B.product_model),'非标',B.product_model) AS product_model,
 		CASE WHEN A.confirm_flg ='Y' THEN '已确认'
-		WHEN A.confirm_flg = 'N' THEN '待确认'
+		WHEN
+		A.confirm_flg = 'N' THEN '待确认'
 		end AS status,
 		A.team_number,
 		A.departure_date,
@@ -47,11 +51,16 @@
 		A.passenger_captain
 		END AS passenger,
 		A.treat_comment,
-		CONCAT(A.start_city,'-',A.end_city) AS air_info
-		
+		A.lock_flg,
+		A.name_confirm_status,
+		A.standard_flg,
+		CONCAT(A.start_city,'-',A.end_city) AS
+		air_info
+
 		from budget_order_view A
 		LEFT JOIN product B ON A.product_pk=B.pk
-		LEFT JOIN user_base C ON A.product_manager_number = C.user_number
+		LEFT JOIN user_base C ON A.product_manager_number =
+		C.user_number
 		<where>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}

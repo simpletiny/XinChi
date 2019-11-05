@@ -30,6 +30,8 @@
 		<result column="name_list" property="name_list" jdbcType="VARCHAR" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -61,7 +63,9 @@
 		confirm_file,
 		name_list,
 		air_ticket_cost,
-		product_cost
+		product_cost,
+		lock_flg,
+		name_confirm_status
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -170,6 +174,12 @@
 			<if test="product_cost != null">
 				product_cost,
 			</if>
+			<if test="lock_flg != null">
+				lock_flg,
+			</if>
+			<if test="name_confirm_status != null">
+				name_confirm_status,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -255,6 +265,12 @@
 			</if>
 			<if test="product_cost != null">
 				#{product_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="lock_flg != null">
+				#{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="name_confirm_status != null">
+				#{name_confirm_status,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -343,6 +359,12 @@
 			</if>
 			<if test="product_cost != null">
 				product_cost = #{product_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="lock_flg != null">
+				lock_flg = #{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="name_confirm_status != null">
+				name_confirm_status = #{name_confirm_status,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

@@ -553,6 +553,9 @@
 			<if test="product_model !=null and product_model !='' ">
 				and product_model = #{product_model,jdbcType=VARCHAR}
 			</if>
+			<if test="location !=null and location !='' ">
+				and location = #{location,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 	<select id="selectByPks" resultMap="BaseResultMap">
@@ -628,6 +631,9 @@
 			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like concat('%', #{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.location != null and params.bo.location !=''">
+				and A.location = #{params.bo.location,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.locations != null and params.bo.locations !=''">
 				and A.location in

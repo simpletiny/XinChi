@@ -59,4 +59,9 @@ public class ClientEmployeeUserDAOImpl extends SqlSessionDaoSupport implements C
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientEmployeeUserMapper.selectByParam", option);
 	}
 
+	@Override
+	public void insertWithoutLogin(ClientEmployeeUserBean ceub) {
+		daoUtil.insertWithoutLogin("com.xinchi.bean.mapper.ClientEmployeeUserMapper.insert", ceub);
+	}
+
 }

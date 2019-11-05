@@ -93,7 +93,7 @@ tr td {
 							<label class="col-md-1 control-label">产品线</label>
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
+									data-bind="options: locations,optionsText:'name',optionsValue:'name',value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
 									name="product.location"></select>
 							</div>
 						</div>
@@ -222,7 +222,7 @@ tr td {
 				</em>
 			</div>
 		</div>
-		<div class="input-row clearfloat" style="height:40px">
+		<div class="input-row clearfloat" style="height: 40px">
 			<div class="col-md-6">
 				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="Y"
 					onclick="changeCctRadio(this)" /> <label>上传</label>
@@ -232,7 +232,7 @@ tr td {
 
 			</div>
 		</div>
-		<div class="input-row clearfloat" style="padding-left:220px">
+		<div class="input-row clearfloat" style="padding-left: 220px">
 			<!-- ko if: clientConfirmTemplet() == "default" -->
 			<label style="color: blue">默认模板</label>
 			<!-- /ko -->
@@ -256,12 +256,13 @@ tr td {
 		</div>
 		<div class="input-row clearfloat" style="height: 40px">
 			<div class="col-md-6">
-				<em class="small-box"> <input type="radio" name="ontradio" value="Y" data-bind="checked:outNoticeType()" onclick="changeOntRadio(this)" /> <label>上传</label>
+				<em class="small-box"> <input type="radio" name="ontradio" value="Y" data-bind="checked:outNoticeType()"
+					onclick="changeOntRadio(this)" /> <label>上传</label>
 				</em> <a id="o-n-t-a" style="display: none" href="javascript:;" class="a-upload">上传模板<input type="file" name="ont" /></a>
 				<input type="hidden" id="ont_file" />
 			</div>
 		</div>
-		<div class="input-row clearfloat" style="padding-left:220px">
+		<div class="input-row clearfloat" style="padding-left: 220px">
 			<!-- ko if: outNoticeTemplet() == "default" -->
 			<label style="color: blue">默认模板</label>
 			<!-- /ko -->

@@ -5,5 +5,7 @@
 	<update id="executeBySql" parameterType="com.xinchi.bean.SqlBean">
 		${sql}
 	</update>
-
+	<select id="selectRecords" parameterType="com.xinchi.bean.SqlBean">
+		${sql}
+	</select>
 </mapper>

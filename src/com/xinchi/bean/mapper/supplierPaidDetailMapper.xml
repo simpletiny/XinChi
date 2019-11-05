@@ -283,6 +283,12 @@
 			<if test="pk != null and pk !=''">
 				and pk = #{pk,jdbcType=CHAR}
 			</if>
+			<if test="team_number != null and team_number !=''">
+				and team_number = #{team_number,jdbcType=VARCHAR}
+			</if>
+			<if test="supplier_employee_pk != null and supplier_employee_pk !=''">
+				and supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
+			</if>
 		</where>
 	</select>
 

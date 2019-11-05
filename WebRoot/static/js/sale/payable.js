@@ -580,7 +580,7 @@ var OrderContext = function() {
 		var totalBudgetBalance = 0;
 		var totalBalance = 0;
 		var totalFinalBalance = 0;
-
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
@@ -624,6 +624,7 @@ var OrderContext = function() {
 
 			$(".rmb").formatCurrency();
 			self.changeType();
+			endLoadingIndicator();
 		});
 	};
 

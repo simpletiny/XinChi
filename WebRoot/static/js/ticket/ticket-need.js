@@ -328,7 +328,7 @@ var NeedContext = function() {
 	};
 
 	self.refreshPage1 = function() {
-		self.refreshClient();
+		self.refreshAirLeg();
 	};
 	// end pagination client
 };

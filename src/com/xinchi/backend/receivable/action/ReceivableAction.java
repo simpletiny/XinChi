@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.client.service.EmployeeService;
+import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.receivable.service.ReceivableService;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.user.dao.UserDAO;
+import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.common.BaseAction;
@@ -98,6 +102,39 @@ public class ReceivableAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String team_number;
+	@Autowired
+	private OrderService orderService;
+
+	@Autowired
+	private ReceivedService receivedService;
+
+	/**
+	 * 判断是否能申请fly
+	 * 
+	 * @return
+	 */
+	public String canApplyFly() {
+
+		OrderDto order = orderService.selectByTeamNumber(team_number);
+		if (null == order || null == order.getFy() || order.getFy().intValue() == 0) {
+			resultStr = "noexist";
+			return SUCCESS;
+		}
+
+		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+		option.setTeam_number(team_number);
+		option.setType(ResourcesConstants.RECEIVED_TYPE_FLY);
+		List<ClientReceivedDetailBean> details = receivedService.selectByParam(option);
+		if (null != details && details.size() > 0) {
+			resultStr = "already";
+			return SUCCESS;
+		}
+		resultStr = order.getFy().toString();
+		return SUCCESS;
+
+	}
+
 	private String client_employee_pk;
 	private BigDecimal balance;
 
@@ -160,5 +197,13 @@ public class ReceivableAction extends BaseAction {
 
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 }

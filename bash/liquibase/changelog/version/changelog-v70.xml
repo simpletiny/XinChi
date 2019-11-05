@@ -272,6 +272,388 @@
 			<comment>ALTER TABLE waiting_for_paid</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE TABLE base_data (
+					  name VARCHAR(10) NOT NULL COMMENT '名称',
+					  code VARCHAR(10) NULL COMMENT '代号',
+					  type VARCHAR(10) NOT NULL COMMENT '数据类型',
+					  order_index INT NOT NULL DEFAULT 999 COMMENT '排序号',
+					  level INT NOT NULL DEFAULT 1 COMMENT '层级',
+					  father_level_pk CHAR(22) NULL COMMENT '父层级pk',
+					  ext1 VARCHAR(45) NULL COMMENT '扩展1',
+					  ext2 VARCHAR(45) NULL COMMENT '扩展2',
+					  ext3 VARCHAR(45) NULL COMMENT '扩展3',
+					  delete_flg CHAR(1) NOT NULL DEFAULT 'N' COMMENT '停用标识',
+					  can_edit CHAR(1) NOT NULL DEFAULT 'Y' COMMENT '是否能编辑标识',
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '基础数据表';
+             ]]>
+			<comment>CREATE TABLE base_data</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE budget_standard_order 
+					ADD INDEX team_number (team_number ASC);
+					ALTER TABLE budget_non_standard_order 
+					ADD INDEX team_number (team_number ASC);
+					ALTER TABLE receivable 
+					ADD INDEX team_number (team_number ASC);
+             ]]>
+			<comment>ALTER TABLE budget_standard_order,budget_non_standard_order,receivable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 DROP VIEW IF EXISTS received_detail;
+					CREATE VIEW received_detail AS
+					    SELECT 
+					        team_number AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type <> 'SUM') 
+					    UNION SELECT 
+					        group_concat(team_number) AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type = 'SUM')
+					    GROUP BY related_pk;
+             ]]>
+			<comment>ALTER VIEW received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_order_count;
+				CREATE VIEW view_order_count AS
+				    SELECT 
+				        A.client_employee_pk AS client_employee_pk,
+				        COUNT(A.pk) AS order_count,
+				        COUNT(IF(A.departure_date >= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 20 DAY),
+				                    '%Y-%m-%d'),
+				            1,
+				            NULL)) AS day21_count,
+				        MAX(A.departure_date) AS last_confirm_date,
+				        MIN(A.departure_date) AS first_confirm_date
+				    FROM
+				        budget_order_view A
+				            LEFT JOIN
+				        client_employee B ON A.client_employee_pk = B.pk
+				    GROUP BY A.client_employee_pk;
+             ]]>
+			<comment>ALTER VIEW view_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order 
+					ADD COLUMN lock_flg CHAR(1) NULL DEFAULT 'N' COMMENT '锁定标识' AFTER product_value;
+				ALTER TABLE budget_non_standard_order 
+					ADD COLUMN lock_flg CHAR(1) NULL DEFAULT 'N' COMMENT '锁定标识' AFTER product_cost;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and TABLE budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order 
+					ADD COLUMN name_confirm_status CHAR(1) NULL DEFAULT '1' COMMENT '1,未确认，2：产品提示待确认，3：产品确认，4：票务提示待确认，5票务确认（最终确认）' AFTER lock_flg;
+				ALTER TABLE budget_non_standard_order 
+					ADD COLUMN name_confirm_status CHAR(1) NULL DEFAULT '1' COMMENT '1,未确认，2：产品提示待确认，3：产品确认，4：票务提示待确认，5票务确认（最终确认）' AFTER lock_flg;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order and TABLE budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+				CREATE VIEW budget_order_view AS
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            A.lock_flg,
+                            A.name_confirm_status,
+                            substring_index(A.name_list,':',1) AS passenger_captain,
+                            '' AS receivable_comment,
+                            '' AS treat_comment,
+                            '' AS client_name,
+                            '' AS ticket_number,
+                            '' AS start_city,
+                            '' AS start_airport,
+                            '' AS end_city,
+                            '' AS end_airport,
+                            '' AS off_time,
+                            '' AS land_time,
+                            '' AS next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							0 AS product_value
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            A.lock_flg,
+                            A.name_confirm_status,
+                            A.passenger_captain,
+                            A.receivable_comment,
+                            A.treat_comment,
+                            F.client_short_name AS client_name,
+                            A.ticket_number,
+                            A.start_city,
+                            A.start_airport,
+                            A.end_city,
+                            A.end_airport,
+                            A.off_time,
+                            A.land_time,
+                            A.next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							A.product_value
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+       				LEFT JOIN client F ON D.financial_body_pk = F.pk;
+             ]]>
+			<comment>ALTER VIEW budget_order_view </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS air_ticket_need;
+					 CREATE VIEW air_ticket_need AS
+					 SELECT 
+						    A.confirm_flg,
+						    A.operate_flg,
+						    A.standard_flg,
+						    A.pk AS sale_order_pk,
+						    A.passenger_captain AS passenger,
+						    A.product_manager_number AS ticket_client_number,
+                            B.comment,
+						    CASE
+						        WHEN ISNULL(A.departure_date) OR ISNULL(B.pk) THEN NULL
+						        ELSE DATE_ADD(A.departure_date,
+						            INTERVAL C.start_day - 1 DAY)
+						    END AS first_ticket_date,
+						    CASE
+						        WHEN ISNULL(C.pk) THEN NULL
+						        ELSE CONCAT(C.start_city,'--',C.end_city)
+						    END AS first_from_to,
+						    (IF(ISNULL(A.adult_count),
+						        0,
+						        A.adult_count) + IF(ISNULL(A.special_count),
+						        0,
+						        A.special_count)) AS people_count,
+						    A.team_number,
+						    IF(D.pk IS NULL, 'N', 'Y') AS ordered
+						FROM
+						    budget_order_view A
+						        LEFT JOIN
+						    product_order_air_base B ON B.team_number = A.team_number
+						        LEFT JOIN
+						    product_order_air_info C ON B.pk = C.base_pk
+						        AND C.flight_index = 1
+						        LEFT JOIN
+						    air_ticket_order D ON A.team_number = D.team_number
+						WHERE
+						    (A.operate_flg = 'I' OR A.operate_flg = 'A')
+						        AND A.confirm_date >= '2019-10-15';
+             ]]>
+			<comment>ALTER VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE air_leg 
+					ADD INDEX HOT_FLG (hot_flg DESC);
+             ]]>
+			<comment>ALTER TABLE air_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		DROP VIEW IF EXISTS air_ticket_need;
+					 CREATE VIEW air_ticket_need AS
+					 SELECT 
+					    A.confirm_flg,
+					    A.operate_flg,
+					    A.standard_flg,
+					    A.pk AS sale_order_pk,
+					    A.passenger_captain AS passenger,
+					    A.product_manager_number AS ticket_client_number,
+					    B.comment,
+					    A.product_name,
+					    A.departure_date,
+					    CASE
+					        WHEN ISNULL(A.departure_date) OR ISNULL(B.pk) THEN NULL
+					        ELSE DATE_ADD(A.departure_date,
+					            INTERVAL C.start_day - 1 DAY)
+					    END AS first_ticket_date,
+					    CASE
+					        WHEN ISNULL(C.pk) THEN NULL
+					        ELSE CONCAT(C.start_city, '--', C.end_city)
+					    END AS first_from_to,
+					    (IF(ISNULL(A.adult_count),
+					        0,
+					        A.adult_count) + IF(ISNULL(A.special_count),
+					        0,
+					        A.special_count)) AS people_count,
+					    A.team_number,
+					    IF(D.pk IS NULL, 'N', 'Y') AS ordered
+					FROM
+					    budget_order_view A
+					        LEFT JOIN
+					    product_order_air_base B ON B.team_number = A.team_number
+					        LEFT JOIN
+					    product_order_air_info C ON B.pk = C.base_pk AND C.flight_index = 1
+					        LEFT JOIN
+					    air_ticket_order D ON A.team_number = D.team_number
+					WHERE
+					    (A.operate_flg = 'I'
+					        OR A.operate_flg = 'A')
+					        AND A.confirm_date >= '2019-10-15';
+             ]]>
+			<comment>ALTER VIEW air_ticket_need</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

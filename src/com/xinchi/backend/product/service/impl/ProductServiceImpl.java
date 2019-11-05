@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
+import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductDelayDAO;
 import com.xinchi.backend.product.dao.ProductLocalDAO;
@@ -21,9 +23,11 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.dao.FlightDAO;
 import com.xinchi.backend.ticket.dao.FlightInfoDAO;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.FlightInfoBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
@@ -776,6 +780,52 @@ public class ProductServiceImpl implements ProductService {
 			plDao.insert(pl);
 
 		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private OrderDAO orderDao;
+
+	@Autowired
+	private BudgetNonStandardOrderDAO bnsoDao;
+
+	@Override
+	public String unlockOrders(List<String> team_numbers) {
+		for (String team_number : team_numbers) {
+			OrderDto order = orderDao.selectByTeamNumber(team_number);
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+				bso.setPk(order.getPk());
+				bso.setLock_flg("N");
+				bsoDao.update(bso);
+			} else {
+				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+				bnso.setPk(order.getPk());
+				bnso.setLock_flg("N");
+				bnsoDao.update(bnso);
+			}
+		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String tipSalesConfirmName(List<String> team_numbers) {
+		for (String team_number : team_numbers) {
+			OrderDto order = orderDao.selectByTeamNumber(team_number);
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+				bso.setPk(order.getPk());
+				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
+				bsoDao.update(bso);
+			} else {
+				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+				bnso.setPk(order.getPk());
+				bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
+				bnsoDao.update(bnso);
+			}
+		}
+
 		return SUCCESS;
 	}
 

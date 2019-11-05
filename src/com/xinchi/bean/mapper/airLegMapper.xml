@@ -156,7 +156,7 @@
 				and to_city like concat('%', #{params.bo.to_city,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.city != null and params.bo.city !=''">
-				and(from_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%') OR to_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%'))
+				and (from_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%') OR to_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
 		ORDER BY hot_flg DESC

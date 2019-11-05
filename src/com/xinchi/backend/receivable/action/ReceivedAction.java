@@ -12,11 +12,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.google.common.base.Joiner;
+import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.PayApprovalService;
+import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.payable.dao.PaidDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayApprovalBean;
+import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
@@ -191,7 +196,10 @@ public class ReceivedAction extends BaseAction {
 			String r = obj.getString("received");
 			detail.setTeam_number(t);
 			detail.setPk(pks[i]);
-
+			
+			OrderDto order = orderService.selectByTeamNumber(t);
+			detail.setClient_employee_pk(order.getClient_employee_pk());
+			
 			if (!SimpletinyString.isEmpty(r)) {
 				detail.setReceived(new BigDecimal(r).negate());
 			}
@@ -285,8 +293,19 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private OrderService orderService;
+
 	// 返佣申请
 	public String applyFly() {
+		// 如果金额不相符
+		OrderDto order = orderService.selectByTeamNumber(detail.getTeam_number());
+		if (order.getFy().compareTo(detail.getReceived()) != 0) {
+			resultStr = "nomatch";
+			return SUCCESS;
+		}
+		
+		detail.setClient_employee_pk(order.getClient_employee_pk());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_FLY);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 
@@ -297,7 +316,7 @@ public class ReceivedAction extends BaseAction {
 		detail.setReceived(detail.getReceived().negate());
 
 		receivedService.insert(detail);
-		receivableService.updateReceivableReceived(detail);
+		//receivableService.updateReceivableReceived(detail);
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -360,6 +379,15 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String related_pk;
+	private PaymentDetailBean payment;
+	@Autowired
+	private AccPaidService accPaidService;
+
+	public String searchFlyVoucherInfo() {
+		return SUCCESS;
+	}
+
 	public ClientReceivedDetailBean getDetail() {
 		return detail;
 	}
@@ -414,6 +442,22 @@ public class ReceivedAction extends BaseAction {
 
 	public void setStrike_in_json(String strike_in_json) {
 		this.strike_in_json = strike_in_json;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
+	}
+
+	public PaymentDetailBean getPayment() {
+		return payment;
+	}
+
+	public void setPayment(PaymentDetailBean payment) {
+		this.payment = payment;
 	}
 
 }

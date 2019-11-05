@@ -5,7 +5,13 @@ var ProductContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.allCharges = [ "PRODUCT", "SALE", "NONE" ];
 	self.chosenCharge = ko.observable();
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	self.locations = ko.observableArray();
+
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -285,7 +291,6 @@ var ProductContext = function() {
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
-
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
 				function(data) {
 					self.products(data.products);

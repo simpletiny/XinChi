@@ -106,10 +106,19 @@
 		<action name="applyFly" class="receivedAction" method="applyFly">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="canApplyFly" class="receivableAction" method="canApplyFly">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="rollBackReceived" class="receivedAction" method="rollBackReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="searchReceivedByPage" class="receivedAction" method="searchReceivedByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchFlyVoucherInfo" class="receivedAction" method="searchFlyVoucherInfo">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

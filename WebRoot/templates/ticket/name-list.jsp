@@ -41,7 +41,7 @@
 	margin-top: 10px;
 	background: #fff;
 	position: fixed;
-	right: 8%;
+	right: 3%;
 	z-index: 100;
 }
 
@@ -56,7 +56,7 @@
 	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 15%;
+	right: 5%;
 	top: 200px;
 	margin-left: 10px;
 	z-index: 100;
@@ -127,7 +127,7 @@
 							<tr style="overflow: hidden;">
 								<!--  onclick="showDetail(this)" -->
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id}, checked: $root.chosenPassengers" /></td>
+									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_name"></td>

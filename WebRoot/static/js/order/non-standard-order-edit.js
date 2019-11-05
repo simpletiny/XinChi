@@ -16,7 +16,7 @@ var OrderContext = function() {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bnsOrder);
-		
+		console.log(data.passengers);
 		$(data.passengers).each(function(idx, passenger) {
 			passenger.age = ko.observable();
 			var birthYear = passenger.id.substring(6, 10);

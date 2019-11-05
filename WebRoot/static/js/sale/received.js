@@ -52,7 +52,7 @@ var ReceivedContext = function() {
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("I");
-	self.allStatus = [ 'I', 'Y','N', 'E' ];
+	self.allStatus = [ 'I', 'Y', 'N', 'E' ];
 
 	self.statusMapping = {
 		'I' : '待确认',
@@ -262,7 +262,7 @@ var ReceivedContext = function() {
 		$("#img-pic").attr("src", "");
 		budgetConfirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看确认件', '' ],
+			title : [ '查看凭证', '' ],
 			maxmin : false,
 			closeBtn : [ 1, true ],
 			shadeClose : false,
@@ -276,7 +276,6 @@ var ReceivedContext = function() {
 				console.log("Done");
 			}
 		});
-		console.log(received_time)
 		var subFolder = received_time.substring(0, 4) + "/"
 				+ received_time.substring(5, 7);
 
@@ -286,6 +285,42 @@ var ReceivedContext = function() {
 						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder="
 						+ subFolder);
 	};
+
+	self.checkFlyVoucherPic = function(related_pk) {
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'sale/searchFlyVoucherInfo',
+			data : "related_pk=" + related_pk,
+			success : function(data) {
+				var accountId = data.detail.account_pk;
+				var voucherFileName = data.detail.voucher_file_name;
+
+				$("#img-pic").attr("src", "");
+				budgetConfirmCheckLayer = $.layer({
+					type : 1,
+					title : [ '查看凭证', '' ],
+					maxmin : false,
+					closeBtn : [ 1, true ],
+					shadeClose : false,
+					area : [ '600px', '650px' ],
+					offset : [ '50px', '' ],
+					scrollbar : true,
+					page : {
+						dom : '#pic-check'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+
+				$("#img-pic").attr(
+						"src",
+						self.apiurl + 'file/getFileStream?fileFileName='
+								+ voucherFileName
+								+ "&fileType=VOUCHER&subFolder=" + accountId);
+			}
+		});
+	}
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

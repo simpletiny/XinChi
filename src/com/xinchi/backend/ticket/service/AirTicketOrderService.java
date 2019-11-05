@@ -48,4 +48,6 @@ public interface AirTicketOrderService extends BaseService{
 	public String createOrder(String team_number, String json);
 
 	public List<AirTicketOrderLegBean> selectAirTicketOrderLegByOrderPk(String order_pk);
+
+	public String lockAirTicketOrder(List<String> airTicketOrderPks);
 }

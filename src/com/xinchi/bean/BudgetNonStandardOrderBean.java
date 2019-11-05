@@ -42,6 +42,8 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String update_user;
 
+	private String lock_flg;
+	private String name_confirm_status;
 	private String confirm_flg;
 
 	private String confirm_date;
@@ -275,6 +277,22 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setProduct_cost(BigDecimal product_cost) {
 		this.product_cost = product_cost;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
+	}
+
+	public String getName_confirm_status() {
+		return name_confirm_status;
+	}
+
+	public void setName_confirm_status(String name_confirm_status) {
+		this.name_confirm_status = name_confirm_status;
 	}
 
 }

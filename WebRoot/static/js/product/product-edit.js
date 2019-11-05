@@ -2,7 +2,15 @@ var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.product = ko.observable({});
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	
+	self.locations = ko.observableArray();
+
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
+	
 	self.product_pk = $("#key").val();
 	self.productSuppliers = ko.observableArray([]);
 

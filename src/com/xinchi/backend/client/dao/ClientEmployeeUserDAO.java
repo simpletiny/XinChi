@@ -36,4 +36,6 @@ public interface ClientEmployeeUserDAO {
 
 	public List<ClientEmployeeUserBean> selectByParam(ClientEmployeeUserBean option);
 
+	public void insertWithoutLogin(ClientEmployeeUserBean ceub);
+
 }

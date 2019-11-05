@@ -19,6 +19,8 @@ public interface ClientRelationDAO {
 
 	public List<ClientRelationBean> selectByPage(Page page);
 
+	public List<ClientRelationBean> selectNeedPublic();
+
 	public String selectClientCount(String sales_name);
 
 	public String selectWeekOrderCount(String sales_name);
@@ -52,7 +54,7 @@ public interface ClientRelationDAO {
 	public WorkOrderDto selectWorkOrderData(String user_pk);
 
 	public AccurateSaleDto selectAccurateSaleData(String user_pk);
-	
+
 	public IncomingCountDto selectIncomingData(String user_pk);
 
 	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);

@@ -35,16 +35,16 @@ var PaidContext = function() {
 	self.chosenStatus = ko.observableArray([ 'I' ]);
 	self.allStatus = [ 'I', 'N', 'Y' ];
 
-	self.items = ko.observableArray([ 'D', 'X', 'B', 'C', 'P', 'J', 'G', 'Q' ]);
+	self.items = ko.observableArray([ 'D', 'X', 'B', 'P', 'J', 'G', 'Q', 'T' ]);
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
 		'B' : '办公费用',
-		'C' : '产品费用',
 		'P' : '票务费用',
-		'J' : '交通垫付',
+		'J' : '产品费用',
 		'G' : '工资费用',
 		'Q' : '其他支出',
+		'T' : '投诉赔偿',
 		'M' : '多付返款',
 		'F' : 'FLY'
 	};

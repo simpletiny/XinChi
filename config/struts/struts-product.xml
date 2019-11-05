@@ -88,6 +88,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="unlockOrders" class="productAction" method="unlockOrders">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="tipSalesConfirmName" class="productAction" method="tipSalesConfirmName">
+			<result name="success" type="str">resultStr</result>
+		</action>
 
 		<!-- 产品维护操作 start -->
 		<!-- 上传组团确认模板 -->

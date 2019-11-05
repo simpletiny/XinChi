@@ -99,8 +99,8 @@
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoCaculate()"  data-bind="value: order().other_cost" placeholder="其他费用"
-									name="bsOrder.other_cost" />
+								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoPrice()"
+									data-bind="value: order().other_cost" placeholder="其他费用" name="bsOrder.other_cost" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -108,7 +108,7 @@
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-adult-count" data-bind="text:order().adult_count"></p>
 								<input type="hidden" class="ip- auto-1" id="auto-adult-count" data-bind="value: order().adult_count"
-									placeholder="成人数" name="bsOrder.adult_count" />
+									name="bsOrder.adult_count" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -171,10 +171,11 @@
 										<th style="width: 12.5%">机场</th>
 										<th style="width: 7.5%">起飞时间</th>
 										<th style="width: 7.5%">抵达时间</th>
-										<!-- ko if:order().next_day!=0 -->	
-										<th style="width: 10%">隔天达&nbsp;<input type="checkbox" checked="checked" id="chk-next-day" onclick="nextDay()" /></th>
+										<!-- ko if:order().next_day!=0 -->
+										<th style="width: 10%">隔天达&nbsp;<input type="checkbox" checked="checked" id="chk-next-day"
+											onclick="nextDay()" /></th>
 										<!-- /ko -->
-										<!-- ko if:order().next_day==0 -->	
+										<!-- ko if:order().next_day==0 -->
 										<th style="width: 10%">隔天达&nbsp;<input type="checkbox" id="chk-next-day" onclick="nextDay()" /></th>
 										<!-- /ko -->
 										<th style="width: 10%">飞行时间</th>
@@ -183,24 +184,27 @@
 								<tbody>
 									<tr>
 										<td>首航段：</td>
-										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().ticket_number" name="bsOrder.ticket_number" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_city" name="bsOrder.start_city"
-											data-bind="value:airInfo().start_city" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_airport" name="bsOrder.start_airport" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_city" name="bsOrder.end_city"
-											data-bind="value:airInfo().end_city" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_airport" name="bsOrder.end_airport" /></td>
-										<td><input type="text" style="width: 90%" class="isTime" id="txt-off-time" data-bind="value:order().off_time" name="bsOrder.off_time"
-											maxlength="5" onkeyup="caculate_fly_time()" /></td>
-										<td><input type="text" style="width: 90%" class="isTime" data-bind="value:order().land_time" id="txt-land-time" name="bsOrder.land_time"
-											maxlength="5" onkeyup="caculate_fly_time()" /></td>
-										<!-- ko if:order().next_day==0 -->	
+										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().ticket_number"
+											name="bsOrder.ticket_number" /></td>
+										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_city"
+											name="bsOrder.start_city" data-bind="value:airInfo().start_city" /></td>
+										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().start_airport"
+											name="bsOrder.start_airport" /></td>
+										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_city"
+											name="bsOrder.end_city" data-bind="value:airInfo().end_city" /></td>
+										<td><input type="text" style="width: 90%" maxlength="10" data-bind="value:order().end_airport"
+											name="bsOrder.end_airport" /></td>
+										<td><input type="text" style="width: 90%" class="isTime" id="txt-off-time"
+											data-bind="value:order().off_time" name="bsOrder.off_time" maxlength="5" onkeyup="caculate_fly_time()" /></td>
+										<td><input type="text" style="width: 90%" class="isTime" data-bind="value:order().land_time"
+											id="txt-land-time" name="bsOrder.land_time" maxlength="5" onkeyup="caculate_fly_time()" /></td>
+										<!-- ko if:order().next_day==0 -->
 										<td><input type="number" style="width: 90%" name="bsOrder.next_day" maxlength="2" min="1"
 											id="txt-next-day" value="1" onkeyup="caculate_fly_time()" disabled="disabled" /></td>
 										<!-- /ko -->
-										<!-- ko if:order().next_day!=0 -->	
-										<td><input type="number" style="width: 90%" data-bind="value:order().next_day" name="bsOrder.next_day" maxlength="2" min="1"
-											id="txt-next-day" onkeyup="caculate_fly_time()"/></td>
+										<!-- ko if:order().next_day!=0 -->
+										<td><input type="number" style="width: 90%" data-bind="value:order().next_day" name="bsOrder.next_day"
+											maxlength="2" min="1" id="txt-next-day" onkeyup="caculate_fly_time()" /></td>
 										<!-- /ko -->
 										<td id="txt-fly-time"></td>
 									</tr>
@@ -239,7 +243,9 @@
 											<th style="width: 10%">分房组</th>
 											<th style="width: 9%"></th>
 											<th style="width: 9%"></th>
+											<!-- ko if:order().lock_flg=='N' -->
 											<th style="width: 3%"></th>
+											<!-- /ko -->
 										</tr>
 									</thead>
 									<tbody data-bind="foreach: passengers">
@@ -256,24 +262,28 @@
 											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate()" style="width: 90%" st="id" /></td>
-											<td><input type="text" style="width: 90%" st="price" onblur="autoCaculate()"
-												data-bind="value:$data.price" /></td>
+											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();autoPrice();"
+												style="width: 90%" st="id" /></td>
+											<td><input type="text" style="width: 90%" st="price" onblur="autoPrice()" data-bind="value:$data.price" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
 											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
+											<!-- ko if:$root.order().lock_flg=='N' -->
 											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
+											<!-- /ko -->
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
+						<!-- ko if:order().lock_flg=='N' -->
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
 								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 						</div>
+						<!-- /ko -->
 					</div>
 					<hr />
 					<hr />

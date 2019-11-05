@@ -4,15 +4,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.xinchi.backend.order.service.OrderNameListService;
+import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
@@ -22,9 +24,9 @@ import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
 import com.xinchi.bean.OrderAirInfoBean;
+import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.ProductOrderAirBaseBean;
-import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
 
@@ -93,9 +95,6 @@ public class TicketAction extends BaseAction {
 	private List<String> airTicketOrderPks;
 
 	@Autowired
-	private OrderNameListService orderNameListService;
-
-	@Autowired
 	private AirTicketNameListService airTicketNameListService;
 	private List<AirTicketNameListBean> airTicketNameList;
 
@@ -105,30 +104,9 @@ public class TicketAction extends BaseAction {
 	 * @return
 	 */
 	public String lockAirTicketOrder() {
-		List<AirTicketOrderBean> ticketOrders = airTicketOrderService.selectByPks(airTicketOrderPks);
-		airTicketNameList = new ArrayList<AirTicketNameListBean>();
 
-		for (AirTicketOrderBean order : ticketOrders) {
-			List<SaleOrderNameListBean> nameList = new ArrayList<SaleOrderNameListBean>();
-			nameList = orderNameListService.selectByTeamNumber(order.getTeam_number());
+		resultStr = airTicketOrderService.lockAirTicketOrder(airTicketOrderPks);
 
-			for (SaleOrderNameListBean name : nameList) {
-				AirTicketNameListBean nn = new AirTicketNameListBean();
-				nn.setTeam_number(order.getTeam_number());
-				nn.setClient_number(order.getClient_number());
-				nn.setFirst_ticket_date(order.getFirst_ticket_date());
-				nn.setFirst_start_city(order.getFirst_start_city());
-				nn.setFirst_end_city(order.getFirst_end_city());
-				nn.setTicket_order_pk(order.getPk());
-				nn.setName(name.getName());
-				nn.setId(name.getId());
-				airTicketNameList.add(nn);
-			}
-			order.setStatus("Y");
-			airTicketOrderService.update(order);
-		}
-
-		resultStr = airTicketNameListService.insertList(airTicketNameList);
 		return SUCCESS;
 	}
 
@@ -200,6 +178,7 @@ public class TicketAction extends BaseAction {
 					compares.remove(k);
 				}
 			}
+			compares.sort(PassengerAllotDto.Comparators.DATE);
 			ta.setAirLegs(compares);
 
 		}
@@ -232,6 +211,35 @@ public class TicketAction extends BaseAction {
 	 */
 	public String checkSameAirLeg() {
 		resultStr = passengerTicketInfoService.checkSameAirLeg(passenger_pks);
+		return SUCCESS;
+	}
+
+	private List<String> team_numbers;
+
+	@Autowired
+	private OrderService orderService;
+
+	/**
+	 * 检查销售是否已经确认名单信息
+	 * 
+	 * @return
+	 */
+	public String checkSaleConfirm() {
+		Set<String> ts = new HashSet<String>();
+		for (String team_number : team_numbers) {
+			OrderDto order = orderService.selectByTeamNumber(team_number);
+			if (Integer.valueOf(order.getName_confirm_status()) < 5) {
+				ts.add(team_number);
+			}
+		}
+		if (ts.size() > 0) {
+			resultStr = "";
+			for (String t : ts) {
+				resultStr += t + ",";
+			}
+		} else {
+			resultStr = SUCCESS;
+		}
 		return SUCCESS;
 	}
 
@@ -377,6 +385,14 @@ public class TicketAction extends BaseAction {
 
 	public void setAir_base(ProductOrderAirBaseBean air_base) {
 		this.air_base = air_base;
+	}
+
+	public List<String> getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(List<String> team_numbers) {
+		this.team_numbers = team_numbers;
 	}
 
 }

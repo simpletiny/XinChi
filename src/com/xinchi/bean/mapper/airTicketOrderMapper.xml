@@ -23,6 +23,8 @@
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="cost_done_flg" property="cost_done_flg" jdbcType="CHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -269,7 +271,9 @@
 		A.update_time,
 		A.cost_done_flg,
 		C.passenger_captain AS
-		passenger
+		passenger,
+		C.product_name,
+		C.departure_date
 		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
 		LEFT JOIN budget_order_view C
 		ON A.team_number = C.team_number
@@ -282,6 +286,15 @@
 			</if>
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status = #{params.bo.status,jdbcType=VARCHAR}
+			</if>
+				<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and C.product_name like CONCAT('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and C.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and C.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 		</where>
 		order by A.first_ticket_date

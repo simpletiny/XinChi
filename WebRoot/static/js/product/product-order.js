@@ -19,6 +19,22 @@ var OrderContext = function() {
 		'Y' : '已操作',
 		'A' : '票务'
 	};
+	self.standardMapping = {
+		"Y" : "标",
+		"N" : "非标"
+	}
+
+	self.lockMapping = {
+		"Y" : "是",
+		"N" : "否"
+	}
+	self.nameMapping = {
+		"1" : "未确认",
+		"2" : "待确认",
+		"3" : "已确认",
+		"4" : "待确认",
+		"5" : "已确认"
+	}
 
 	// 获取用户信息
 	self.users = ko.observableArray([]);
@@ -34,10 +50,11 @@ var OrderContext = function() {
 	self.totalAdult = ko.observable();
 	self.totalSpecial = ko.observable();
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var totalAdult = 0;
 		var totalSpecial = 0;
-		var param = $('form').serialize();
-		param += "&order_option.operate_flg=N";
+		var param = $('#form-search').serialize();
+		param += "&order_option.operate_flgs=N&order_option.operate_flgs=A";
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param,
@@ -56,6 +73,8 @@ var OrderContext = function() {
 
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
+
+					endLoadingIndicator();
 				});
 	};
 
@@ -142,21 +161,106 @@ var OrderContext = function() {
 		layer.close(operateLayer);
 	};
 
+	self.unlockOrder = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else {
+			$.layer({
+				area : [ 'auto', 'auto' ],
+				dialog : {
+					msg : "解锁后销售能对名单数量进行修改，确认要解锁订单吗？",
+					btns : 2,
+					type : 4,
+					btn : [ '确认', '取消' ],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("解锁中...");
+						var param = "";
+						for (var i = 0; i < self.chosenOrders().length; i++) {
+							var inner_data = self.chosenOrders()[i].split(";");
+							var team_number = inner_data[2];
+							param += "team_numbers=" + team_number + "&";
+						}
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'product/unlockOrders',
+							data : param
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenOrders.removeAll();
+							} else {
+								fail_msg("解锁失败，请联系管理员！");
+							}
+						});
+
+					}
+				}
+			});
+
+		}
+	}
+
+	self.tipSales = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else {
+			startLoadingIndicator("操作中...");
+			var param = "";
+			for (var i = 0; i < self.chosenOrders().length; i++) {
+				var inner_data = self.chosenOrders()[i].split(";");
+				var team_number = inner_data[2];
+				param += "team_numbers=" + team_number + "&";
+			}
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'product/tipSalesConfirmName',
+				data : param
+			}).success(function(str) {
+				endLoadingIndicator();
+				if (str == "success") {
+					self.refresh();
+					self.chosenOrders.removeAll();
+					success_msg("提示成功，请等待销售确认后操作。")
+				} else {
+					fail_msg("操作失败，请联系管理员！");
+				}
+			});
+		}
+	}
+
 	self.flight = ko.observable({});
 	self.operateAir = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个订单！");
-			return;
-		} else if (self.chosenOrders().length == 1) {
+		} else {
+			// 判断是否是相同产品
 			var data = self.chosenOrders()[0].split(";");
 			var product_pk = data[1];
-			var operate_flg = data[3];
-			if (operate_flg == "A") {
-				fail_msg("请选择未操作订单！");
-				return;
+			for (var i = 0; i < self.chosenOrders().length; i++) {
+				var inner_data = self.chosenOrders()[i].split(";");
+				var inner_product_pk = inner_data[1];
+				var inner_operate_flg = inner_data[3];
+				var inner_name_confirm_status = inner_data[4];
+
+				if (product_pk != inner_product_pk) {
+					fail_msg("只能选择产品相同的订单！");
+					return;
+				}
+
+				if (inner_operate_flg == "A") {
+					fail_msg("请选择未操作订单！");
+					return;
+				}
+
+				if (inner_name_confirm_status < 3) {
+					fail_msg("销售未确认名单，不能操作！请提示销售进行名单确认！");
+					return;
+				}
 			}
 
 			if (product_pk == "undefined") {
@@ -221,14 +325,18 @@ var OrderContext = function() {
 						type : 4,
 						btn : [ '确认', '取消' ],
 						yes : function(index) {
-							layer.close(index);
+							layer.close(airLayer);
 							startLoadingIndicator("保存中...");
-
-							var temp = self.chosenOrders()[0].split(";");
-							var team_number = temp[2];
-
+							layer.close(index);
+							var team_numbers = "";
+							for (var i = 0; i < self.chosenOrders().length; i++) {
+								var temp = self.chosenOrders()[i].split(";");
+								team_numbers += temp[2] + ",";
+							}
+							team_numbers = team_numbers.substring(0,
+									team_numbers.length - 1);
 							var data = $("#form-air").serialize();
-							data += "&air_base.team_number=" + team_number;
+							data += "&team_numbers=" + team_numbers;
 
 							var json = '[';
 							var allTrs = tbody.children();
@@ -279,8 +387,9 @@ var OrderContext = function() {
 											}).success(function(str) {
 										endLoadingIndicator();
 										if (str == "success") {
-											layer.close(airLayer);
+
 											self.refresh();
+											self.chosenOrders.removeAll();
 										} else {
 											fail_msg("提交失败，请联系管理员！");
 										}

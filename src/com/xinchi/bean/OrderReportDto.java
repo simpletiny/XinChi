@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -31,8 +32,10 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String departure_date_to;
 	private String confirm_date_from;
 	private String confirm_date_to;
-	
+
 	private String product_manager_number;
+
+	private List<String> order_types;
 
 	public String getTeam_number() {
 		return team_number;
@@ -216,5 +219,13 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setProduct_manager_number(String product_manager_number) {
 		this.product_manager_number = product_manager_number;
+	}
+
+	public List<String> getOrder_types() {
+		return order_types;
+	}
+
+	public void setOrder_types(List<String> order_types) {
+		this.order_types = order_types;
 	}
 }

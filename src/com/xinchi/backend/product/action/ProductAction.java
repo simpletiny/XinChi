@@ -234,6 +234,28 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<String> team_numbers;
+
+	/**
+	 * 解锁订单
+	 * 
+	 * @return
+	 */
+	public String unlockOrders() {
+		resultStr = service.unlockOrders(team_numbers);
+		return SUCCESS;
+	}
+
+	/**
+	 * 提示销售确认名单
+	 * 
+	 * @return
+	 */
+	public String tipSalesConfirmName() {
+		resultStr = service.tipSalesConfirmName(team_numbers);
+		return SUCCESS;
+	}
+
 	private String ticket_charge;
 
 	@Autowired
@@ -534,5 +556,13 @@ public class ProductAction extends BaseAction {
 
 	public void setProductLocals(List<ProductLocalBean> productLocals) {
 		this.productLocals = productLocals;
+	}
+
+	public List<String> getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(List<String> team_numbers) {
+		this.team_numbers = team_numbers;
 	}
 }

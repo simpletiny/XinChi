@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -20,31 +19,34 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				编辑非标订单<span data-bind="text:independent_msg"></span><a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				编辑非标订单<span data-bind="text:independent_msg"></span><a href="javascript:void(0)"
+					onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
-		
+
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
-				<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input>
-				<input type="hidden"  data-bind="value:order().independent_flg" name="bnsOrder.independent_flg"></input>
-				<input type="hidden"  data-bind="value:order().confirm_flg" name="bnsOrder.confirm_flg"></input>
-				<input type="hidden"  data-bind="value:order().team_number" name="bnsOrder.team_number" id="team-number"></input>
+					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input> <input type="hidden"
+						data-bind="value:order().independent_flg" name="bnsOrder.independent_flg"></input> <input type="hidden"
+						data-bind="value:order().confirm_flg" name="bnsOrder.confirm_flg"></input> <input type="hidden"
+						data-bind="value:order().team_number" name="bnsOrder.team_number" id="team-number"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">客户</label>
 							<div class="ip">
-								<input type="text" id="txt-client-employee-name" disabled="disabled" class="ip-" data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" required="required" />
+								<input type="text" id="txt-client-employee-name" disabled="disabled" class="ip-"
+									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" required="required" />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk" style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk"
-								required="required" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
+								style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk" required="required" />
 						</div>
 						<div class="col-md-6">
 							<label class="l">产品名称</label>
 							<div class="ip">
-								<input type="text" class="ip-" placeholder="产品名称" maxlength="20" data-bind="value: order().product_name" name="bnsOrder.product_name" />
+								<input type="text" class="ip-" placeholder="产品名称" maxlength="20" data-bind="value: order().product_name"
+									name="bnsOrder.product_name" />
 							</div>
 						</div>
 					</div>
@@ -52,7 +54,8 @@
 						<div class="col-md-6">
 							<label class="l">出团日期</label>
 							<div class="ip">
-								<input type="text" id="departure" class="ip- date-picker" data-bind="value: order().departure_date" placeholder="出团日期" name="bnsOrder.departure_date" />
+								<input type="text" id="departure" class="ip- date-picker" data-bind="value: order().departure_date"
+									placeholder="出团日期" name="bnsOrder.departure_date" />
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -66,7 +69,8 @@
 						<div class="col-md-6">
 							<label class="l">总团款</label>
 							<div class="ip">
-								<input type="number" class="ip-" data-bind="value: order().receivable" placeholder="总团款" name="bnsOrder.receivable" />
+								<input type="number" class="ip-" data-bind="value: order().receivable" placeholder="总团款"
+									name="bnsOrder.receivable" />
 							</div>
 						</div>
 					</div>
@@ -74,19 +78,23 @@
 						<div class="col-md-6">
 							<label class="l">成人</label>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_count" placeholder="人数" name="bnsOrder.adult_count" />
+								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_count" placeholder="人数"
+									name="bnsOrder.adult_count" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_cost" placeholder="费用" name="bnsOrder.adult_cost" />
+								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_cost" placeholder="费用"
+									name="bnsOrder.adult_cost" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">特殊</label>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_count" placeholder="人数" name="bnsOrder.special_count" />
+								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_count" placeholder="人数"
+									name="bnsOrder.special_count" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_cost" placeholder="费用" name="bnsOrder.special_cost" />
+								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_cost" placeholder="费用"
+									name="bnsOrder.special_cost" />
 							</div>
 						</div>
 					</div>
@@ -102,13 +110,15 @@
 						<div class="col-md-6">
 							<label class="l">其他费用</label>
 							<div class="ip">
-								<input type="number" data-bind="value:order().other_cost" name="bnsOrder.other_cost" class="ip-" placeholder="其他费用" />
+								<input type="number" data-bind="value:order().other_cost" name="bnsOrder.other_cost" class="ip-"
+									placeholder="其他费用" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">费用说明</label>
 							<div class="ip">
-								<input type="text" class="ip-" maxlength="50" data-bind="value: order().other_cost_comment" name="bnsOrder.other_cost_comment" placeholder="费用说明" />
+								<input type="text" class="ip-" maxlength="50" data-bind="value: order().other_cost_comment"
+									name="bnsOrder.other_cost_comment" placeholder="费用说明" />
 							</div>
 						</div>
 					</div>
@@ -116,11 +126,13 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: order().comment" name="bnsOrder.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: order().comment"
+									name="bnsOrder.comment" placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
 					</div>
 					<hr />
+					<!-- ko if:$root.order().lock_flg=='N' -->
 					<h3>名单</h3>
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
@@ -129,9 +141,12 @@
 								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" data-bind="value: order().name_list"
 									name="bnsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
 							</div>
+
 							<a type="submit" class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
+
 						</div>
 					</div>
+					<!-- /ko -->
 					<div id="air-ticket-check">
 						<div class="input-row clearfloat">
 							<div class="col-md-12">
@@ -149,7 +164,9 @@
 											<th style="width: 10%">分房组</th>
 											<th style="width: 10%"></th>
 											<th style="width: 10%"></th>
+											<!-- ko if:order().lock_flg=='N' -->
 											<th style="width: 5%"></th>
+											<!-- /ko -->
 										</tr>
 									</thead>
 									<tbody data-bind="foreach: passengers">
@@ -172,20 +189,25 @@
 												type="hidden" name="bsOrder.confirm_file" /></td>
 											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
 												type="hidden" name="bsOrder.confirm_file" /></td>
+											<!-- ko if:$root.order().lock_flg=='N' -->
 											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
+											<!-- /ko -->
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
+						<!-- ko if:order().lock_flg=='N' -->
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 						</div>
+						<!-- /ko -->
 					</div>
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file"  name="file" /></a> <input type="hidden" id="txt-confirm-file"  data-bind="value:order().confirm_file" name="bnsOrder.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" /></a> <input type="hidden"
+								id="txt-confirm-file" data-bind="value:order().confirm_file" name="bnsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -244,7 +266,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product-box").addClass("current").children("ol").css("display", "block");
+		$(".product-box").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

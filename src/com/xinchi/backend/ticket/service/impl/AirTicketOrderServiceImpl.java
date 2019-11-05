@@ -1,21 +1,29 @@
 package com.xinchi.backend.ticket.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
+import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderLegDAO;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
+import com.xinchi.bean.BudgetNonStandardOrderBean;
+import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
 import net.sf.json.JSONArray;
@@ -168,12 +176,61 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 		return SUCCESS;
 	}
-	
-	
+
 	@Override
 	public List<AirTicketOrderLegBean> selectAirTicketOrderLegByOrderPk(String order_pk) {
-		
+
 		return airTicketOrderLegDao.selectByOrderPk(order_pk);
+	}
+
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
+	@Autowired
+	private BudgetStandardOrderDAO bsoDao;
+
+	@Autowired
+	private BudgetNonStandardOrderDAO bnsoDao;
+
+	@Override
+	public String lockAirTicketOrder(List<String> airTicketOrderPks) {
+
+		List<AirTicketOrderBean> ticketOrders = dao.selectByPks(airTicketOrderPks);
+		for (AirTicketOrderBean order : ticketOrders) {
+			List<SaleOrderNameListBean> nameList = new ArrayList<SaleOrderNameListBean>();
+			nameList = orderNameListDao.selectByTeamNumber(order.getTeam_number());
+
+			for (SaleOrderNameListBean name : nameList) {
+				AirTicketNameListBean nn = new AirTicketNameListBean();
+				nn.setTeam_number(order.getTeam_number());
+				nn.setClient_number(order.getClient_number());
+				nn.setFirst_ticket_date(order.getFirst_ticket_date());
+				nn.setFirst_start_city(order.getFirst_start_city());
+				nn.setFirst_end_city(order.getFirst_end_city());
+				nn.setTicket_order_pk(order.getPk());
+				nn.setName(name.getName());
+				nn.setId(name.getId());
+				airTicketNameListDao.insert(nn);
+			}
+			order.setStatus("Y");
+			dao.update(order);
+
+//			// 更新销售待确认名单
+//			OrderDto saleOrder = orderDao.selectByTeamNumber(order.getTeam_number());
+//			if (saleOrder.getStandard_flg().equals("Y")) {
+//				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+//				bso.setPk(saleOrder.getPk());
+//				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_TICKETING);
+//				bsoDao.update(bso);
+//			} else {
+//				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+//				bnso.setPk(saleOrder.getPk());
+//				bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_TICKETING);
+//				bnsoDao.update(bnso);
+//			}
+		}
+
+		return SUCCESS;
 	}
 
 }

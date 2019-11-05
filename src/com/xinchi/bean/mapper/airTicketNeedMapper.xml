@@ -7,6 +7,8 @@
 		<result column="ticket_client_name" property="ticket_client_name" jdbcType="VARCHAR" />
 		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
 		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="people_count" property="people_count" jdbcType="BIGINT" />
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="product_pk" property="product_pk" jdbcType="VARCHAR" />
@@ -47,6 +49,8 @@
 		sale_order_pk,
 		air_ticket_cost,
 		standard_flg,
+		product_name,
+		departure_date,
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -73,13 +77,14 @@
 		A.standard_flg,
 		A.passenger,
 		A.ordered,
-		A.comment
+		A.comment,
+		A.product_name,
+		A.departure_date
 		FROM
 		air_ticket_need A
-		LEFT JOIN
+		LEFT
+		JOIN
 		user_base B ON A.ticket_client_number = B.user_number
-		LEFT JOIN
-		air_ticket_order C ON A.team_number = C.team_number
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%', #{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -90,9 +95,16 @@
 			<if test="params.bo.ordered != null and params.bo.ordered !=''">
 				and A.ordered = #{params.bo.ordered,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and A.product_name like CONCAT('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
 		</where>
-		<!-- <where> <if test="params.bo.status != null and params.bo.status !=''"> and A.confirm_flg in <foreach item="item" index="index" 
-			collection="params.bo.status" open="(" separator="," close=")"> #{params.bo.status[${index}]} </foreach> </if> </where> -->
 	</select>
 	<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -126,7 +138,8 @@
 		WHEN ISNULL(departure_date) THEN NULL
 		ELSE
 		DATE_ADD(departure_date,
-		INTERVAL day_index - 1 DAY)
+		INTERVAL
+		day_index - 1 DAY)
 		END AS air_date,
 		team_number,
 		product_manager_number,

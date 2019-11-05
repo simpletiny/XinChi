@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.Comparator;
+
 import com.xinchi.common.SupperBO;
 
 public class PassengerAllotDto extends SupperBO implements Serializable {
@@ -21,6 +23,15 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 	private String ticket_order_pk;
 
 	private String is_allot;
+
+	public static class Comparators {
+		public static Comparator<PassengerAllotDto> DATE = new Comparator<PassengerAllotDto>() {
+			@Override
+			public int compare(PassengerAllotDto o1, PassengerAllotDto o2) {
+				return o1.date.compareTo(o2.date);
+			}
+		};
+	}
 
 	public String getPassenger_pk() {
 		return passenger_pk;

@@ -35,13 +35,18 @@
 		product_cost,
 		departure_date,
 		pk,
-		'budget' AS order_type,
-		(adult_count+if(ISNULL(special_count),0,special_count)) AS people_count,
+		confirm_flg AS order_type,
+		(adult_count+if(ISNULL(special_count),0,special_count)) AS
+		people_count,
 		update_user,
 		create_user_number AS sale_number,
 		create_user AS sale_name,
-		receivable - if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy) AS gross_profit,
-		(receivable - if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy))/(adult_count+if(ISNULL(special_count),0,special_count)) AS per_profit,
+		receivable -
+		if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy)
+		AS gross_profit,
+		(receivable -
+		if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy))/(adult_count+if(ISNULL(special_count),0,special_count))
+		AS per_profit,
 		confirm_flg,
 		create_time,
 		update_time,
@@ -72,7 +77,12 @@
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
 			</if>
-			and confirm_flg='Y'
+			<if test="params.bo.order_types != null and params.bo.order_types !=''">
+				and confirm_flg in
+				<foreach item="item" index="index" collection="params.bo.order_types" open="(" separator="," close=")">
+					#{params.bo.order_types[${index}]} </foreach>
+			</if>
+			and (confirm_flg='Y' or confirm_flg='F')
 		</where>
 		ORDER BY departure_date DESC
 	</select>

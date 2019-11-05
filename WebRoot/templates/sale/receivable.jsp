@@ -285,7 +285,7 @@
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ridTail() }">抹零</button>
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { collect()}">代收</button>
 					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive()}">收入</button>
-					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { tail98()}">98清尾</button>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { tail98()}">立款98</button>
 				</div>
 			</div>
 

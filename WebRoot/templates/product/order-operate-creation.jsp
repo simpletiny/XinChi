@@ -214,10 +214,10 @@
 									<tr>
 										<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
 										<td class="r">接：</td>
-										<td><input checked="checked" name="radio-jie-0" st="radio-jie-0" type="radio" value="0"
+										<td><input checked="checked" data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-0" type="radio" value="0"
 											onclick="changeJieSongType(this)" />航段</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-0" /></td>
-										<td><input name="radio-jie-0" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
@@ -228,10 +228,10 @@
 									<tr>
 										<td><input type="button" value="+" onclick="addRow(this)" /></td>
 										<td class="r">送：</td>
-										<td><input name="radio-song-0" checked="checked" st="radio-song-0" type="radio" value="0"
+										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" checked="checked" st="radio-song-0" type="radio" value="0"
 											onclick="changeJieSongType(this)" />航段</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-0" /></td>
-										<td><input name="radio-song-0" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>

@@ -29,4 +29,6 @@ public interface OrderDAO {
 	String selectMaxConfirmDateByEmployeePk(String employee_pk);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
+
+	public List<OrderDto> selectConfirmingOrders(OrderDto orderOption);
 }

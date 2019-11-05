@@ -5,8 +5,13 @@ var ProductContext = function() {
 		first_air_start : "哈尔滨"
 	});
 	self.supplierEmployees = ko.observable({});
+	self.locations = ko.observableArray();
 
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
 	self.createProduct = function() {
 		if (!$("form").valid()) {
 			return;

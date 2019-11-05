@@ -35,4 +35,8 @@ public interface OrderService extends BaseService {
 
 	public List<OrderDto> selectByParam(OrderDto order);
 
+	public List<OrderDto> selectConfirmingOrders();
+
+	public String confirmNameList(String team_number);
+
 }

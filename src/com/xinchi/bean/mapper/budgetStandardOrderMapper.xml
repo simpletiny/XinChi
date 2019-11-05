@@ -41,6 +41,8 @@
 		<result column="land_time" property="land_time" jdbcType="VARCHAR" />
 		<result column="next_day" property="next_day" jdbcType="INTEGER" />
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -83,7 +85,9 @@
 		off_time,
 		land_time,
 		next_day,
-		product_value
+		product_value,
+		lock_flg,
+		name_confirm_status
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -226,6 +230,12 @@
 			<if test="product_value != null">
 				product_value,
 			</if>
+			<if test="lock_flg != null">
+				lock_flg,
+			</if>
+			<if test="name_confirm_status != null">
+				name_confirm_status,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -344,6 +354,12 @@
 			</if>
 			<if test="product_value != null">
 				#{product_value,jdbcType=INTEGER},
+			</if>
+			<if test="lock_flg != null">
+				#{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="name_confirm_status != null">
+				#{name_confirm_status,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -465,6 +481,12 @@
 			</if>
 			<if test="product_value != null">
 				product_value = #{product_value,jdbcType=INTEGER},
+			</if>
+			<if test="lock_flg != null">
+				lock_flg = #{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="name_confirm_status != null">
+				name_confirm_status = #{name_confirm_status,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

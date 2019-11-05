@@ -77,4 +77,8 @@ public interface ProductService extends BaseService {
 	public String updateProductLocal(String json);
 
 	public String createProduct(ProductBean product);
+
+	public String unlockOrders(List<String> team_numbers);
+
+	public String tipSalesConfirmName(List<String> team_numbers);
 }

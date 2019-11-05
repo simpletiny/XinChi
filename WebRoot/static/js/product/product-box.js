@@ -3,7 +3,14 @@ var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+//	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	self.locations = ko.observableArray();
+	
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
 	self.saleMapping = {
 		'N' : "未上架",
 		'Y' : "已上架"
@@ -78,6 +85,7 @@ var ProductBoxContext = function() {
 		items : []
 	});
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize() + "&product.sale_flg=Y";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchOnSaleProducts', param, function(data) {
@@ -85,6 +93,8 @@ var ProductBoxContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
 		});
 	};
 	// start pagination

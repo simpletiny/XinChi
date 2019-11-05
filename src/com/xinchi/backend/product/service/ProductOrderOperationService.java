@@ -49,5 +49,5 @@ public interface ProductOrderOperationService extends BaseService{
 
 	public void deleteOrderSupplier(String order_pk);
 
-	public String operateOrderAirTicket(ProductOrderAirBaseBean air_base, String json);
+	public String operateOrderAirTicket(ProductOrderAirBaseBean air_base, String json, String team_numbers);
 }

@@ -18,7 +18,7 @@ public interface BudgetNonStandardOrderService extends BaseService {
 	 * 修改
 	 * 
 	 * @param bean
-	 * @param json 
+	 * @param json
 	 */
 	public String update(BudgetNonStandardOrderBean bean, String json);
 
@@ -47,7 +47,7 @@ public interface BudgetNonStandardOrderService extends BaseService {
 
 	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number);
 
-	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bnsOrder);
+	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bnsOrder, String json);
 
 	public String rollBackCOrder(String order_pk);
 }

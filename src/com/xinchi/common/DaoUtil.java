@@ -259,7 +259,7 @@ public class DaoUtil {
 	 * @return
 	 */
 	public List<SupperBO> selectBySql(String sql) {
-		List<SupperBO> listBo = sqlSession.selectList("commonMapper.findRecords", sql);
+		List<SupperBO> listBo = sqlSession.selectList("commonMapper.selectRecords", sql);
 		return listBo;
 	}
 
@@ -289,6 +289,7 @@ public class DaoUtil {
 		if (null != ub) {
 			supperBO.setUpdate_user(ub.getUser_number());
 		}
+		
 		return sqlSession.update(mapper, supperBO);
 	}
 

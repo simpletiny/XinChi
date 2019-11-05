@@ -41,11 +41,11 @@ var ClientContext = function() {
 	self.sortTypeMapping = {
 		'1' : '账期倒序',
 		'2' : '交流日期',
-		'3' : '订单排序',
-		'4' : '年单排序'
+		'3' : '签单期间',
+		'4' : '年单'
 	};
 
-	self.chosenSortType = ko.observable('1');
+	self.chosenSortType = ko.observable('3');
 
 	self.changeSortType = function() {
 		self.refresh();

@@ -97,7 +97,7 @@
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoCaculate()" data-bind="value: order().other_cost" placeholder="其他费用"
+								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoPrice()" data-bind="value: order().other_cost" placeholder="其他费用"
 									name="bsOrder.other_cost" />
 							</div>
 						</div>
@@ -234,7 +234,7 @@
 											<td><input type="text" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" style="width: 90%" st="cellphone_B" /></td>
 											<td><input type="text" style="width: 90%" onblur="autoPrice();autoCaculate()" st="id" /></td>
-											<td><input type="text" style="width: 90%" onblur="autoCaculate()"
+											<td><input type="text" style="width: 90%" onblur="autoPrice()"
 												data-bind="value:product().adult_price-product().business_profit_substract" st="price" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input

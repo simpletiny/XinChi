@@ -9,13 +9,17 @@ var ClientContext = function() {
 		month:''
 	});
 	
-	self.item = [ 'X', 'J', 'Q' ];
+	self.item = [ 'X', 'J', 'Q' ,'T'];
 	self.itemMapping = ko.observableArray([ {
 		"key" : "X",
 		"value" : "销售费用"
 	}, {
 		"key" : "J",
-		"value" : "交通垫付"
+//		"value" : "交通垫付"
+		"value" : "产品费用"
+	}, {
+		"key" : "T",
+		"value" : "投诉赔偿"
 	}, {
 		"key" : "Q",
 		"value" : "其他支出"

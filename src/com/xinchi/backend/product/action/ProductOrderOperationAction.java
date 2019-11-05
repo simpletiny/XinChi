@@ -111,7 +111,7 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String operateOrderAirTicket() {
-		resultStr = service.operateOrderAirTicket(air_base, json);
+		resultStr = service.operateOrderAirTicket(air_base, json, team_numbers);
 
 		return SUCCESS;
 	}
@@ -189,12 +189,12 @@ public class ProductOrderOperationAction extends BaseAction {
 			if (standard_flg.equals("Y")) {
 				BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order_pk);
 				bsOrder.setProduct_cost(BigDecimal.ZERO);
-				bsOrder.setOperate_flg("N");
+				bsOrder.setOperate_flg("A");
 				bsoService.updateComment(bsOrder);
 			} else {
 				BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
 				bnsOrder.setProduct_cost(BigDecimal.ZERO);
-				bnsOrder.setOperate_flg("N");
+				bnsOrder.setOperate_flg("A");
 				bnsoService.updateComment(bnsOrder);
 			}
 

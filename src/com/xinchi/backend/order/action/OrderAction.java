@@ -72,7 +72,8 @@ public class OrderAction extends BaseAction {
 	public String searchTbcOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -94,7 +95,8 @@ public class OrderAction extends BaseAction {
 	public String searchCOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setCreate_user(sessionBean.getUser_number());
@@ -141,7 +143,8 @@ public class OrderAction extends BaseAction {
 	public String searchFOrdersByPage() {
 		if (null == option)
 			option = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setSale_number(sessionBean.getUser_number());
@@ -285,7 +288,7 @@ public class OrderAction extends BaseAction {
 	}
 
 	public String updateConfirmedNonStandardOrder() {
-		resultStr = bnsoService.updateConfirmedNonStandardOrder(bnsOrder);
+		resultStr = bnsoService.updateConfirmedNonStandardOrder(bnsOrder, json);
 		return SUCCESS;
 	}
 
@@ -378,6 +381,18 @@ public class OrderAction extends BaseAction {
 
 	public String selectOrderByTeamNumber() {
 		option = service.selectByTeamNumber(team_number);
+		return SUCCESS;
+	}
+
+	private List<OrderDto> orders;
+
+	public String searchConfirmingOrders() {
+		orders = service.selectConfirmingOrders();
+		return SUCCESS;
+	}
+
+	public String confirmNameList() {
+		resultStr = service.confirmNameList(team_number);
 		return SUCCESS;
 	}
 
@@ -475,5 +490,13 @@ public class OrderAction extends BaseAction {
 
 	public void setOrder(OrderDto order) {
 		this.order = order;
+	}
+
+	public List<OrderDto> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<OrderDto> orders) {
+		this.orders = orders;
 	}
 }

@@ -227,7 +227,7 @@ var OrderContext = function() {
 					self.tailMoney(current.budget_balance);
 				}
 			}
-			
+
 			if (Math.ceil(receivable * 0.02) < self.tailMoney()) {
 				check_result = false;
 				fail_msg("尾款太多！");
@@ -242,7 +242,7 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 			tail98Layer = $.layer({
 				type : 1,
-				title : [ '98清尾', '' ],
+				title : [ '立款98', '' ],
 				maxmin : false,
 				closeBtn : [ 1, true ],
 				shadeClose : false,
@@ -686,55 +686,43 @@ var OrderContext = function() {
 		} else {
 			var current = self.chosenOrders()[0];
 			var team_number = current.team_number;
-			$
-					.getJSON(
-							self.apiurl + 'order/selectOrderByTeamNumber',
-							{
-								team_number : team_number
-							},
-							function(data) {
-								if (data.option) {
-									self.order(data.option);
-									if (data.option.fy == null
-											|| data.option.fy == 0) {
-										fail_msg("不存在fly信息，不能申请！	");
-										return;
-									} else {
-										self.nextDay(tomorrow
-												.Format("yyyy-MM-dd")
-												+ " 23:59");
-										self.team_number(current.team_number);
-										self
-												.client_employee_name(current.client_employee_name);
-										self
-												.financial_body_name(current.financial_body_name);
-										self.flyMoney(data.option.fy);
-										$(".rmb").formatCurrency();
-										flyLayer = $.layer({
-											type : 1,
-											title : [ 'fly申请', '' ],
-											maxmin : false,
-											closeBtn : [ 1, true ],
-											shadeClose : false,
-											area : [ '920px', '400px' ],
-											offset : [ '', '' ],
-											scrollbar : true,
-											page : {
-												dom : '#fly-submit'
-											},
-											end : function() {
-												console.log("Done");
-											}
-										});
-									}
-
-								} else {
-									fail_msg("不存在相关订单，请联系管理员！");
-								}
-							}).fail(function(reason) {
-						fail_msg(reason.responseText);
+			var data = "team_number=" + team_number;
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/canApplyFly',
+				data : data
+			}).success(function(str) {
+				if (str == "noexist") {
+					fail_msg("不存在fly信息，不能申请！	");
+					return;
+				} else if (str == "already") {
+					fail_msg("已经申请fly！");
+					return;
+				} else {
+					self.nextDay(tomorrow.Format("yyyy-MM-dd") + " 23:59");
+					self.team_number(current.team_number);
+					self.client_employee_name(current.client_employee_name);
+					self.financial_body_name(current.financial_body_name);
+					self.flyMoney(str);
+					$(".rmb").formatCurrency();
+					flyLayer = $.layer({
+						type : 1,
+						title : [ 'fly申请', '' ],
+						maxmin : false,
+						closeBtn : [ 1, true ],
+						shadeClose : false,
+						area : [ '920px', '400px' ],
+						offset : [ '', '' ],
+						scrollbar : true,
+						page : {
+							dom : '#fly-submit'
+						},
+						end : function() {
+							console.log("Done");
+						}
 					});
-
+				}
+			});
 		}
 	};
 
@@ -752,11 +740,13 @@ var OrderContext = function() {
 			data : data,
 			success : function(str) {
 				endLoadingIndicator();
-				if (str != "success") {
-					fail_msg("申请失败，请联系管理员");
-				} else {
+				if (str == "nomatch") {
+					fail_msg("申请金额于订单填报不符！");
+				} else if (str == "success") {
 					self.chosenOrders.removeAll();
 					self.search();
+				} else {
+					fail_msg("申请失败，请联系管理员");
 				}
 			}
 		});
@@ -784,7 +774,7 @@ var OrderContext = function() {
 		var totalBudgetBalance = 0;
 		var totalBalance = 0;
 		var totalFinalBalance = 0;
-
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -826,6 +816,7 @@ var OrderContext = function() {
 
 			$(".rmb").formatCurrency();
 			self.changeType();
+			endLoadingIndicator();
 		});
 	};
 

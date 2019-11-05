@@ -346,7 +346,7 @@
 		</where>
 	</select>
 	<select id="selectWeekOrder" parameterType="java.lang.String" resultType="java.lang.String">
-		select count(A.pk) from budget_order A left JOIN user_base B on A.create_user = B.user_number
+		select count(A.pk) from budget_order_view A left JOIN user_base B on A.create_user = B.user_number
 		<where>
 			and A.confirm_date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
 			and A.confirm_date
@@ -359,7 +359,7 @@
 	</select>
 
 	<select id="selectMonthOrder" parameterType="java.lang.String" resultType="java.lang.String">
-		select count(A.pk) from budget_order A left JOIN user_base B on A.create_user = B.user_number
+		select count(A.pk) from budget_order_view A left JOIN user_base B on A.create_user = B.user_number
 		<where>
 			and LEFT(A.confirm_date,7)=DATE_FORMAT(NOW(),'%Y-%m')
 			<if test="_parameter != null and _parameter !=''">

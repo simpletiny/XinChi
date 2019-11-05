@@ -75,7 +75,7 @@
 							<label class="l">产品线</label>
 							<div class="ip fix-width">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,value:product().location, optionsCaption: '--请选择--'" name="product.location"
+									data-bind="options: locations,optionsText: 'name', optionsValue: 'name',value:product().location, optionsCaption: '--请选择--'" name="product.location"
 									required="required"></select>
 							</div>
 						</div>

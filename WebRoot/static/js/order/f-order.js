@@ -7,7 +7,6 @@ var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 	self.chosenOrders = ko.observableArray([]);
 	self.statusMapping = {
 		"I" : "决算中",

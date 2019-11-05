@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -11,6 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -49,6 +49,25 @@
 								<input type="text" class="form-control" placeholder="团号" name="airTicketOrder.team_number" />
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="产品" name="airTicketOrder.product_name" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">出团日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="airTicketOrder.date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="airTicketOrder.date_to" />
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
@@ -64,6 +83,8 @@
 								<th>首段日期</th>
 								<th>首航段</th>
 								<th>人数</th>
+								<th>产品</th>
+								<th>出团日期</th>
 								<th>航段信息</th>
 								<th>乘机人信息</th>
 								<th>需求备注</th>
@@ -78,6 +99,8 @@
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
 								<td data-bind="text: $data.people_count"></td>
+								<td data-bind="text: $data.product_name"></td>
+								<td data-bind="text: $data.departure_date"></td>
 								<!-- ko if: $data.first_ticket_date==null -->
 								<td></td>
 								<!-- /ko -->
@@ -88,7 +111,8 @@
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
-								<td><a href="javascript:void(0)" data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
 								<!-- /ko -->
 								<td></td>
 								<td data-bind="text: $data.team_number"></td>
@@ -160,6 +184,8 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/ticket/ticket-order.js"></script>
 </body>
 </html>

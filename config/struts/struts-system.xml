@@ -10,7 +10,6 @@
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
-
 			</result>
 		</action>
 		<action name="searchOneSystemGuide" class="systemGuideAction" method="searchOneSystemGuide">
@@ -22,5 +21,31 @@
 		<action name="deleteSystemGuide" class="systemGuideAction" method="deleteSystemGuide">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 基础数据 -->
+		<!-- 根据数据类型进行搜索 -->
+		<action name="searchByType" class="baseDataAction" method="searchByType">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 对产品线数据进行排序 -->
+		<action name="sortProductLine" class="baseDataAction" method="sortProductLine">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		
+		<!-- 创建基础数据 -->
+		<action name="createBaseData" class="baseDataAction" method="createBaseData">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 更新基础数据 -->
+		<action name="updateBaseData" class="baseDataAction" method="updateBaseData">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 删除基础数据 -->
+		<action name="deleteBaseData" class="baseDataAction" method="deleteBaseData">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 	</package>
 </struts>

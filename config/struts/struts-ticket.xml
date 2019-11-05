@@ -106,5 +106,11 @@
 				resultStr
 			</result>
 		</action>
+		<!-- 检查是否销售已经确认名单 -->
+		<action name="checkSaleConfirm" class="ticketAction" method="checkSaleConfirm">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 	</package>
 </struts>

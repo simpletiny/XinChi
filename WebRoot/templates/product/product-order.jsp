@@ -60,12 +60,14 @@
 
 		<div class="main-container">
 			<div class="main-box">
-				<form class="form-horizontal search-panel">
+				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { operateAir() }">票务处理</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { tipSales() }">提示销售确认</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { unlockOrder() }">解锁</button>
 							</div>
 						</div>
 					</div>
@@ -134,13 +136,15 @@
 								<th>航班信息</th>
 								<th>销售</th>
 								<th>接待特请</th>
-								<th>接待特请</th>
+								<th>销售锁定</th>
+								<th>名单确认</th>
+								<th>标/非标</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg}, checked: $root.chosenOrders" /></td>
+									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text:$root.statusMapping[$data.operate_flg]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
@@ -152,7 +156,18 @@
 								<td data-bind="text: $data.air_info"></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
-								<td data-bind="text: $data.standard_flg"></td>
+								<td data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
+								
+								<!-- ko if:$data.name_confirm_status=="1" -->
+								<td style="color:red" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.name_confirm_status=="2" -->
+								<td  data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.name_confirm_status=="3" -->
+								<td style="color:green" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
+								<!-- /ko -->
+								<td data-bind="text: $root.standardMapping[$data.standard_flg]"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">

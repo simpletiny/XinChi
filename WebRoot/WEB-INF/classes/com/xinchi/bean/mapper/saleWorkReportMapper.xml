@@ -30,14 +30,14 @@
 
 		from
 		(select A.date,A.client_employee_pk,B.confirm_date,B.order_count from (select A.date,A.client_employee_pk from
-		(select confirm_date AS date,client_employee_pk from budget_order group by client_employee_pk,confirm_date
+		(select confirm_date AS date,client_employee_pk from budget_order_view group by client_employee_pk,confirm_date
 		union all
 		select date,client_employee_pk from client_visit where type='VISIT' group by client_employee_pk,date
 		union All
 		select date,client_employee_pk from accurate_sale group by client_employee_pk,date
 		)A group by A.client_employee_pk,A.date) A
 		LEFT JOIN
-		(select confirm_date,count(pk) AS order_count,client_employee_pk from budget_order group by confirm_date,client_employee_pk) B
+		(select confirm_date,count(pk) AS order_count,client_employee_pk from budget_order_view group by confirm_date,client_employee_pk) B
 		ON A.date = B.confirm_date and A.client_employee_pk=B.client_employee_pk) A LEFT JOIN client_employee B ON A.client_employee_pk=B.PK
 		LEFT JOIN
 		user_base C ON B.sales=C.pk

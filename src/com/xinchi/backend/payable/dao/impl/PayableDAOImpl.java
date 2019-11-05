@@ -85,4 +85,9 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 
 	}
 
+	@Override
+	public PayableBean selectByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableMapper.selectByTeamNumber", team_number);
+	}
+
 }

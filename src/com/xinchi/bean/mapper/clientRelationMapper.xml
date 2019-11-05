@@ -308,4 +308,10 @@
 		<include refid="Base_Column_List" />
 		from client_relation
 	</select>
+	<select id="selectNeedPublic" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from client_relation
+		where last_order_period>63 and relation_level='忽略级'
+	</select>
 </mapper>

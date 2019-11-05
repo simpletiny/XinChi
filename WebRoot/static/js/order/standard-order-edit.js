@@ -54,7 +54,8 @@ var OrderContext = function() {
 	});
 
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val()+"&employee.review_flg=Y";
+		var param = "employee.name=" + $("#client_name").val()
+				+ "&employee.review_flg=Y";
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
@@ -253,7 +254,7 @@ var OrderContext = function() {
 				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
 				+ '<td><input type="text" style="width: 90%" onblur="autoPrice();autoCaculate()" st="id" /></td>'
-				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate()" value="'
+				+ '<td><input type="text" style="width: 90%" onblur="autoPrice()" value="'
 				+ (self.product().adult_price - self.product().business_profit_substract)
 				+ '" st="price" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
@@ -340,7 +341,7 @@ function changeAutoType(v) {
 function cancelBat() {
 	layer.close(passengerBatLayer);
 }
-function autoCaculate() {
+function autoPrice() {
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
 	var sumMoney = 0;
@@ -364,7 +365,7 @@ function autoCaculate() {
 	}
 }
 
-function autoPrice() {
+function autoCaculate() {
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
 	var adultCnt = 0;
@@ -374,10 +375,13 @@ function autoPrice() {
 		var tr = trs[i];
 		var td_id = $(tr).find("[st='id']");
 		var td_price = $(tr).find("[st='price']");
+		var td_sex = $(tr).find("[st='sex']");
 		var id = $(td_id).val();
 
 		if (id.length < 18)
 			continue;
+		var lastSecond = id.charAt(16);
+		$(td_sex).val(lastSecond % 2 == 0 ? "F" : "M");
 
 		var birthday = id.substring(6, 14);
 		if (isChild(birthday)) {
@@ -532,7 +536,14 @@ var removeName = function(btn) {
 		var td_radio = $(target).find("[name='team_chairman']");
 		$(target).remove();
 		refreshNameIndex();
+		
+		if ($(td_radio).is(":checked")) {
+			var next_chair = $("input[name='team_chairman']:eq(0)");
+			$(next_chair).prop("checked", true);
+		}
 	}
+	autoPrice();
+	autoCaculate();
 
 };
 var refreshNameIndex = function() {

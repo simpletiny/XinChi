@@ -54,7 +54,7 @@
 
 						<div class="span6" style="text-align: center">
 							<div class="col-md-3">
-								<input value="budget" type="checkbox" name="option.order_type" />预算 <input value="final" type="checkbox" name="option.order_type" />决算
+								<input value="Y" type="checkbox" name="option.order_types" />预算 <input value="F" type="checkbox" name="option.order_types" />决算
 							</div>
 						</div>
 						<div class="span6">
@@ -93,7 +93,7 @@
 								<th>人数</th>
 								<th>总团款</th>
 								<th>机票</th>
-								<th>火车票</th>
+								<!-- <th>火车票</th> -->
 								<th>产品成本</th>
 								<th>其他费用</th>
 								<th>FLY</th>
@@ -112,7 +112,7 @@
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.receivable" class="rmb"></td>
 								<td data-bind="text: $data.air_ticket_cost" class="rmb"></td>
-								<td data-bind="text: $data.train_ticket_cost" class="rmb"></td>
+								<!-- <td data-bind="text: $data.train_ticket_cost" class="rmb"></td> -->
 								<td data-bind="text: $data.product_cost" class="rmb"></td>
 								<td data-bind="text: $data.other_cost" class="rmb"></td>
 								<td data-bind="text: $data.fy" class="rmb"></td>

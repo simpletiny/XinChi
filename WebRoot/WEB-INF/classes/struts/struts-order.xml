@@ -65,6 +65,17 @@
 		<action name="cancelCOrder" class="orderAction" method="cancelCOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 搜索待确认名单的订单 -->
+		<action name="searchConfirmingOrders" class="orderAction" method="searchConfirmingOrders">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 确认名单信息 -->
+		<action name="confirmNameList" class="orderAction" method="confirmNameList">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 决算标准预算单 -->
 		<!-- <action name="finalBudgetStandardOrder" class="orderAction" method="finalBudgetStandardOrder"> <result name="success" 
 			type="str">resultStr</result> </action> -->

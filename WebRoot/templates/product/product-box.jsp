@@ -49,8 +49,8 @@ tr td {
 							<div class="col-md-6">
 								<div data-bind="foreach: locations" style="padding-top: 4px;">
 									<em class="small-box"> <input type="checkbox"
-										data-bind="attr: {'value': $data},click:function(){$root.refresh();return true;}" name="product.locations" /><label
-										data-bind="text: $data"></label>
+										data-bind="value: $data.name,click:function(){$root.refresh();return true;}" name="product.locations" /><label
+										data-bind="text: $data.name"></label>
 									</em>
 								</div>
 							</div>

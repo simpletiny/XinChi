@@ -3,7 +3,6 @@ var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 	self.chosenOrders = ko.observableArray([]);
 	// 销售信息
 	self.sales = ko.observableArray([]);
@@ -98,7 +97,7 @@ var ProductBoxContext = function() {
 	self.orders = ko.observable({});
 
 	self.refresh = function() {
-
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
 
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
@@ -107,6 +106,8 @@ var ProductBoxContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
 		});
 	};
 	// 查看身份证图片

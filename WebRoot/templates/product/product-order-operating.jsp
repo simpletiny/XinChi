@@ -54,7 +54,7 @@ tr td {
 					<div class="form-group">
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">编辑</button>
+								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">编辑</button> -->
 								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperation() }">确认</button>
 							    <button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
 							</div>

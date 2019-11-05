@@ -151,7 +151,7 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 
 	@Override
 	public List<ClientRelationBean> selectByParam(ClientRelationBean option) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectByParam", option);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientRelationMapper.selectByParam", option);
 	}
 
 	@Override
@@ -198,6 +198,11 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk) {
 		return daoUtil.selectOneValueByParam(
 				"com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectSummaryByEmployeePk", employee_pk);
+	}
+
+	@Override
+	public List<ClientRelationBean> selectNeedPublic() {
+		return daoUtil.selectAll("com.xinchi.bean.mapper.ClientRelationMapper.selectNeedPublic");
 	}
 
 }

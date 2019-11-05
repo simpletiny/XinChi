@@ -75,7 +75,7 @@
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
-		from client_received_detail A left join budget_order B on
+		from client_received_detail A left join budget_order_view B on
 		A.team_number=B.team_number
 		LEFT JOIN
 		client_employee C ON B.client_employee_pk = C.pk
@@ -105,7 +105,7 @@
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
-		from client_received_detail A left join budget_order B on
+		from client_received_detail A left join budget_order_view B on
 		A.team_number=B.team_number
 		LEFT JOIN
 		client_employee C ON B.client_employee_pk = C.pk
@@ -372,10 +372,12 @@
 		D.name AS client_employee_name,
 		B.client_employee_pk,
 		A.voucher_file
-		from received_detail A
+		from
+		received_detail A
 		left join
-		budget_order B on A.team_number=B.team_number
-		LEFT JOIN user_base C ON A.create_user=C.user_number
+		budget_order_view B on A.team_number=B.team_number
+		LEFT JOIN user_base C ON
+		A.create_user=C.user_number
 		LEFT JOIN
 		client_employee D ON B.client_employee_pk = D.pk
 		<where>
@@ -415,6 +417,9 @@
 			<if test="params.bo.type != null and params.bo.type !=''">
 				and A.type= #{params.bo.type,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like concat('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
 			ORDER BY A.create_time DESC, A.received_time
 		</where>
 	</select>
@@ -442,7 +447,7 @@
 		A.update_time,
 		B.client_employee_name,
 		B.client_employee_pk
-		from received_detail A left join budget_order B on
+		from received_detail A left join budget_order_view B on
 		A.team_number=B.team_number
 		LEFT JOIN user_base C ON A.create_user=C.user_number
 		where A.related_pk =

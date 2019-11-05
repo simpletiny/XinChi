@@ -93,7 +93,7 @@ tr td {
 							<label class="col-md-1 control-label">产品线</label>
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
+									data-bind="options: locations,optionsText:'name',optionsValue:'name',value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
 									name="product.location"></select>
 							</div>
 						</div>
@@ -167,8 +167,10 @@ tr td {
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
 								<td
 									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
-								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}" ></a></td>
-								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}" ></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}"></a></td>
 
 								<!-- ko if: $data.air_ticket_charge=='NO' -->
 								<td>未绑定</td>

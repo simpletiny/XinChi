@@ -14,6 +14,8 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 	private String ticket_client_number;
 	private String ticket_client_name;
 
+	private String product_name;
+	private String departure_date;
 	private String first_ticket_date;
 
 	private String first_from_to;
@@ -164,6 +166,22 @@ public class AirTicketNeedBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public String getDeparture_date() {
+		return departure_date;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
+
+	public void setDeparture_date(String departure_date) {
+		this.departure_date = departure_date;
 	}
 
 }

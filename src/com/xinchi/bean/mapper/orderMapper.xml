@@ -65,6 +65,8 @@
 		<result column="budget_receivable" property="budget_receivable" jdbcType="DECIMAL" />
 		<result column="final_receivable" property="final_receivable" jdbcType="DECIMAL" />
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -73,6 +75,55 @@
 		<result column="sum_people" property="sum_people" jdbcType="INTEGER" />
 		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
 	</resultMap>
+
+	<resultMap id="NameResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderDto">
+		<collection column="team_number" property="name_list" ofType="com.xinchi.bean.SaleOrderNameListBean"
+			select="selectNamesByTeamNumber">
+			<result column="team_number" property="team_number" jdbcType="VACHAR" />
+			<result column="name" property="name" jdbcType="VACHAR" />
+			<result column="id" property="id" jdbcType="VACHAR" />
+			<result column="sex" property="sex" jdbcType="VACHAR" />
+			<result column="cellphone_A" property="cellphone_A" jdbcType="VACHAR" />
+			<result column="cellphone_B" property="cellphone_B" jdbcType="VACHAR" />
+			<result column="id_file" property="id_file" jdbcType="VACHAR" />
+			<result column="passport_file" property="passport_file" jdbcType="VACHAR" />
+			<result column="chairman" property="chairman" jdbcType="VACHAR" />
+			<result column="order_pk" property="order_pk" jdbcType="VACHAR" />
+			<result column="price" property="price" jdbcType="DECIMAL" />
+			<result column="name_index" property="name_index" jdbcType="INTEGER" />
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<select id="selectNamesByTeamNumber" parameterType="java.lang.String" resultType="com.xinchi.bean.SaleOrderNameListBean">
+		select * from
+		sale_order_name_list
+		where
+		team_number = #{team_number,jdbcType=CHAR}
+		order by name_index
+	</select>
+
+	<select id="selectConfirmingOrders" resultMap="NameResultMap" parameterType="com.xinchi.bean.OrderDto">
+		select
+		team_number,
+		client_employee_name,
+		product_name,
+		departure_date,
+		confirm_date,
+		adult_count+IFNULL(special_count,0) AS people_count
+		from budget_order_view
+		<where>
+			<if test="create_user != null and create_user !=''">
+				and create_user_number= #{create_user,jdbcType=VARCHAR}
+			</if>
+			and name_confirm_status in('2','4')
+		</where>
+	</select>
+
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
 		where
@@ -95,7 +146,8 @@
 		B.user_name AS sale_name,
 		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
 		FROM budget_standard_order A
-		LEFT JOIN user_base B on A.create_user = B.user_number
+		LEFT JOIN user_base B on
+		A.create_user = B.user_number
 		<where>
 			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
@@ -112,11 +164,12 @@
 		ORDER by score DESC
 	</select>
 	<select id="searchBackMoneyScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
-		select 
+		select
 		B.user_name AS sale_name,
-		sum(A.product_point)*0.1 AS score  
+		sum(A.product_point)*0.1 AS score
 		from view_back_money_balance A
-		LEFT JOIN user_base B ON A.user_number = B.user_number 
+		LEFT JOIN user_base B ON
+		A.user_number = B.user_number
 		<where>
 			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
@@ -128,7 +181,7 @@
 				and A.confirm_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.discount != null and params.bo.discount !=''">
-				and  A.balance &lt;= (A.receivable-A.receivable*#{params.bo.discount})
+				and A.balance &lt;= (A.receivable-A.receivable*#{params.bo.discount})
 			</if>
 		</where>
 		group by A.user_number
@@ -142,7 +195,8 @@
 		B.user_name AS sale_name,
 		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
 		FROM budget_standard_order A
-		LEFT JOIN user_base B on A.create_user = B.user_number
+		LEFT JOIN user_base B on
+		A.create_user = B.user_number
 		<where>
 			<if test="confirm_month != null and confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
@@ -201,14 +255,14 @@
 			</if>
 		</where>
 	</select>
-	
-	 <select id="selectMaxConfirmDateByEmployeePk"  parameterType="java.lang.String" resultType="java.lang.String">
-     	select max(confirm_date) from budget_order_view
-     	<where>
-     	client_employee_pk=#{employee_pk,jdbcType=CHAR}
-     	</where>
-     	
-   </select>
+
+	<select id="selectMaxConfirmDateByEmployeePk" parameterType="java.lang.String" resultType="java.lang.String">
+		select max(confirm_date) from budget_order_view
+		<where>
+			client_employee_pk=#{employee_pk,jdbcType=CHAR}
+		</where>
+
+	</select>
 
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -251,7 +305,9 @@
 		A.treat_comment,
 		A.receivable_comment,
 		B.budget_balance AS balance,
-		A.product_value
+		A.product_value,
+		A.lock_flg,
+		A.name_confirm_status
 		from
 		budget_order_view A LEFT JOIN
 		receivable B ON A.team_number = B.team_number
@@ -292,11 +348,15 @@
 			and confirm_flg='Y'
 		</where>
 		ORDER BY
-		IF(TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) in (-1,-2,-3),A.departure_date,'2999-01-01'),
-		IF(A.departure_date&lt;=DATE_FORMAT(NOW(), '%Y-%m-%d') and date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(),
+		IF(TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d')) in
+		(-1,-2,-3),A.departure_date,'2999-01-01'),
+		IF(A.departure_date&lt;=DATE_FORMAT(NOW(), '%Y-%m-%d') and
+		date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(),
 		'%Y-%m-%d'),TIMESTAMPDIFF(day,A.departure_date,now())-days,-99999) DESC,
-		IF(date_add(A.departure_date,INTERVAL A.days-1 DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d'))
-		- days + 2,0) DESC,
+		IF(date_add(A.departure_date,INTERVAL A.days-1
+		DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d'))
+		- days +
+		2,0) DESC,
 		A.departure_date
 
 	</select>

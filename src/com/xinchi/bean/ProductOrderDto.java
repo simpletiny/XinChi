@@ -30,6 +30,9 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 	private String air_info;
 	private String product_model;
 
+	private String standard_flg;
+	private String lock_flg;
+	private String name_confirm_status;
 	private String date_from;
 	private String date_to;
 
@@ -197,6 +200,30 @@ public class ProductOrderDto extends SupperBO implements Serializable {
 
 	public void setProduct_model(String product_model) {
 		this.product_model = product_model;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
+	}
+
+	public String getStandard_flg() {
+		return standard_flg;
+	}
+
+	public void setStandard_flg(String standard_flg) {
+		this.standard_flg = standard_flg;
+	}
+
+	public String getName_confirm_status() {
+		return name_confirm_status;
+	}
+
+	public void setName_confirm_status(String name_confirm_status) {
+		this.name_confirm_status = name_confirm_status;
 	}
 
 }

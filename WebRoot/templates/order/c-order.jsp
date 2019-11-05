@@ -52,11 +52,12 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="width: 35%; float: right">
+						<div style="width: 42%; float: right">
 							<div>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmNameList() }">名单确认</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { writeFirstAir() }">写入首航段</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">微调</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">变更</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changeOrder() }">变更</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { cancelOrder() }">取消</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finalOrder() }">决算</button>
 							</div>
@@ -168,11 +169,12 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
+								<th>锁定</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.standard_flg+';'+$data.status}, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.standard_flg+';'+$data.status+';'+$data.lock_flg}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
@@ -204,6 +206,7 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>
 								</s:if>
+								<td data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
 							</tr>
 						</tbody>
 					</table>

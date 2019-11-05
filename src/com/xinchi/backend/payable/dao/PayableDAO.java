@@ -24,4 +24,6 @@ public interface PayableDAO {
 
 	public void deleteByPk(String pk);
 
+	public PayableBean selectByTeamNumber(String team_number);
+
 }

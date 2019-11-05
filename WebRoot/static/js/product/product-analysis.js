@@ -4,7 +4,14 @@ var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCharge = ko.observable();
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	// self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	self.locations = ko.observableArray();
+
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -111,7 +118,7 @@ var ProductContext = function() {
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
 				function(data) {
 					self.products(data.products);
-					
+
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 				});

@@ -4,8 +4,8 @@ var ProductBoxContext = function() {
 
 	self.reports = ko.observable({});
 	self.orderTypeMapping = ({
-		'budget' : '预',
-		'final' : '决'
+		'Y' : '预',
+		'F' : '决'
 	});
 	// 销售信息
 	self.sales = ko.observableArray([]);
@@ -16,15 +16,17 @@ var ProductBoxContext = function() {
 
 		var param = $("form").serialize();
 
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'order/searchOrderReportByPage', param, function(data) {
-			self.reports(data.reports);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'order/searchOrderReportByPage', param,
+				function(data) {
+					self.reports(data.reports);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
 
-			$(".rmb").formatCurrency();
-		});
+					$(".rmb").formatCurrency();
+				});
 	};
 
 	// start pagination
@@ -61,9 +63,10 @@ var ProductBoxContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

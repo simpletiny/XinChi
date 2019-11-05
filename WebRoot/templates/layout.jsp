@@ -24,11 +24,10 @@
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	-webkit-appearance: none !important;
 }
-.fa-users1:before {
-    content: url("<%=basePath%>/templates/favicon.png");	
-}
-	
 
+.fa-users1:before {
+	content: url("<%=basePath%>/templates/favicon.png");
+}
 </style>
 </head>
 <body>
@@ -38,8 +37,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 		<div class="header-min-width" style="text-align: center">
 			<%-- <img src="<%=basePath%>/static/img/head.jpg"></img>  --%>
-			<div style="display:block;">
-				<font size="4" color="white">为组团社服务永无止境!&nbsp;&nbsp;&nbsp;以奋斗者为本,与优秀者为伍!&nbsp;&nbsp;&nbsp;创造价值,合作共赢!&nbsp;&nbsp;&nbsp;做世界一流旅游运营商!</font>
+			<div style="display: block;">
+				<font size="4" color="white">让组团收客多快好省。&nbsp;&nbsp;&nbsp;以价值创造为核心：开放、透明、坦诚、共赢。&nbsp;&nbsp;&nbsp;做世界一流旅游运营商。&nbsp;&nbsp;&nbsp;以奋斗者为本，与优秀者为伍。</font>
 			</div>
 			<div class="user-status">
 
@@ -205,15 +204,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已操作名单</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
-						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
-<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
+						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
+						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
 			</s:if>
@@ -239,7 +238,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-				<li class="user"><a href="<%=basePath%>templates/users/user-approve.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>用户管理</a>
+				<li class="user"><a href="<%=basePath%>templates/users/user-approve.jsp"><i
+						class="fa fa-users1 fa-lg fa-fw"></i>用户管理</a>
 			</s:if>
 			<s:else>
 				<li class="user"><a href="<%=basePath%>templates/users/user-center.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>用户管理</a>
@@ -271,6 +271,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					class="fa fa-users1 fa-lg fa-fw"></i>系统相关</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/system/system-guide.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>系统使用手册</a></li>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+						<li><a href="<%=basePath%>templates/system/base-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>基础数据</a></li>
+					</s:if>
 					<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
 				</ol></li>
 

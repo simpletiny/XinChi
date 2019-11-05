@@ -251,4 +251,19 @@ public class ResourcesConstants {
 	public static String FILE_TYPE_OUT_NOTICE = "A";
 	// 出团通知
 	public static String FILE_TYPE_CLIENT_CONFIRM = "B";
+
+	// ************************* 基础数据 类型*********************************
+	// 产品线
+	public static String BASE_DATA_TYPE_LINE = "LINE";
+
+	// 未确认
+	public static String NAME_CONFIRM_STATUS_NO = "1";
+	// 产品待确认中
+	public static String NAME_CONFIRM_STATUS_PRODUCTING = "2";
+	// 产品已确认
+	public static String NAME_CONFIRM_STATUS_PRODUCTYES = "3";
+	// 机票待确认中
+	public static String NAME_CONFIRM_STATUS_TICKETING = "4";
+	// 最终确认
+	public static String NAME_CONFIRM_STATUS_YES = "5";
 }

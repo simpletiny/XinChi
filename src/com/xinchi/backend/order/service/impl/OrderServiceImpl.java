@@ -25,6 +25,8 @@ import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 
 @Service
@@ -508,7 +510,7 @@ public class OrderServiceImpl implements OrderService {
 	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page) {
 		return dao.searchSaleScore(page);
 	}
-	
+
 	@Override
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page) {
 		return dao.searchBackMoneyScoreByPage(page);
@@ -522,5 +524,39 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderDto> selectByParam(OrderDto order) {
 		return dao.selectByParam(order);
+	}
+
+	@Override
+	public List<OrderDto> selectConfirmingOrders() {
+		OrderDto orderOption = new OrderDto();
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			orderOption.setCreate_user(sessionBean.getUser_number());
+		}
+
+		return dao.selectConfirmingOrders(orderOption);
+	}
+
+	@Override
+	public String confirmNameList(String team_number) {
+		OrderDto order = dao.selectByTeamNumber(team_number);
+		if (order.getStandard_flg().equals("Y")) {
+			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+			bso.setPk(order.getPk());
+
+			int old = Integer.valueOf(order.getName_confirm_status());
+			bso.setName_confirm_status(String.valueOf(old + 1));
+
+			bsoDao.update(bso);
+		} else {
+			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+			bnso.setPk(order.getPk());
+			int old = Integer.valueOf(order.getName_confirm_status());
+			bnso.setName_confirm_status(String.valueOf(old + 1));
+			bnsoDao.update(bnso);
+		}
+		return SUCCESS;
 	}
 }

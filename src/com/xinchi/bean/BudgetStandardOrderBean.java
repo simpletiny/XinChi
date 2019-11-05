@@ -39,7 +39,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String pk;
-
+	private String lock_flg;
+	private String name_confirm_status;
 	private String independent_flg;
 
 	private String confirm_flg;
@@ -62,7 +63,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String treat_comment;
 	private String receivable_comment;
 
-	//航段信息
+	// 航段信息
 	private String ticket_number;
 	private String start_city;
 	private String start_airport;
@@ -374,6 +375,22 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setProduct_value(BigDecimal product_value) {
 		this.product_value = product_value;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
+	}
+
+	public String getName_confirm_status() {
+		return name_confirm_status;
+	}
+
+	public void setName_confirm_status(String name_confirm_status) {
+		this.name_confirm_status = name_confirm_status;
 	}
 
 }

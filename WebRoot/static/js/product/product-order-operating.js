@@ -32,6 +32,7 @@ var OrderContext = function() {
 	self.totalPeopleCount = ko.observable();
 	self.totalSupplierCost = ko.observable();
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var total_people_count = 0;
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
@@ -61,6 +62,7 @@ var OrderContext = function() {
 							self.totalCount(Math.ceil(data.page.total
 									/ self.perPage));
 							self.setPageNums(self.currentPage());
+							endLoadingIndicator();
 						});
 	};
 
@@ -136,7 +138,7 @@ var OrderContext = function() {
 			$.layer({
 				area : [ 'auto', 'auto' ],
 				dialog : {
-					msg : '删除会将关联的操作订单一并删除，并将产品订单设置为未操作状态！',
+					msg : '打回会将关联的操作订单一并打回，并将产品订单设置为票务状态！',
 					btns : 2,
 					type : 4,
 					btn : [ '确认', '取消' ],

@@ -61,7 +61,7 @@ var PaidContext = function() {
 		var totalPayable = 0;
 		var totalProfit = 0;
 		var totalPerProfit = 0;
-
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
@@ -85,6 +85,7 @@ var PaidContext = function() {
 			self.setPageNums(self.currentPage());
 
 			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 		});
 	};
 	self.reimbursement = function() {

@@ -69,6 +69,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 				PayApprovalBean pa = payApprovalDao.selectByBackPk(detail.getRelated_pk());
 				payApprovalDao.delete(pa.getPk());
 				dao.deleteByPk(detail.getPk());
+//				doRollBack(detail);
 			} else {
 				doRollBack(detail);
 			}

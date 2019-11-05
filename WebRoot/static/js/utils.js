@@ -279,6 +279,17 @@ Date.prototype.Format = function(fmt) { // author: meizz
 			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 	return fmt;
 };
+/**
+ * 字符串占位符替换{0}{1}{2}
+ */
+String.prototype.format = function(){
+	if(arguments.length==0)
+		return this;
+	for(var s=this,i=0;i<arguments.length;i++){
+		s=s.replace(new RegExp("\\{"+i+"\\}","g"),arguments[i]);
+	}
+	return s;
+}
 Date.prototype.addDate = function(days) {
 	var x = this.valueOf();
 	x = x + days * 24 * 60 * 60 * 1000;

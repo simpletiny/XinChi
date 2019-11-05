@@ -6,7 +6,8 @@ var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	// self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+
 	self.chosenOrders = ko.observableArray([]);
 	self.confirmDates = ([ {
 		"en" : "today",
@@ -24,6 +25,10 @@ var ProductBoxContext = function() {
 		"yes" : "出团中",
 		"back" : "待决算"
 	};
+	self.lockMapping = {
+		"N" : "否",
+		"Y" : "是"
+	}
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
@@ -53,6 +58,15 @@ var ProductBoxContext = function() {
 
 		}
 	};
+
+	/**
+	 * 跳转到名单确认页面
+	 */
+	self.confirmNameList = function() {
+		window.location.href = self.apiurl
+				+ "templates/order/confirm-name-list.jsp";
+	}
+
 	// 取消订单
 	self.cancelOrder = function() {
 		if (self.chosenOrders().length == 0) {
@@ -94,6 +108,35 @@ var ProductBoxContext = function() {
 			}
 		}
 	};
+
+	self.changeOrder = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单！");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个订单！");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var data = self.chosenOrders()[0].split(";");
+			var order_pk = data[0];
+			var standard_flg = data[1];
+			var lock_flg = data[3];
+
+			if (lock_flg == "Y") {
+				fail_msg("订单已锁定，请联系相关产品进行解锁后变更。");
+				return;
+			}
+			if (standard_flg == "Y") {
+				window.location.href = self.apiurl
+						+ "templates/order/standard-order-edit.jsp?key="
+						+ order_pk;
+			} else if (standard_flg == "N") {
+				window.location.href = self.apiurl
+						+ "templates/order/non-standard-order-edit.jsp?key="
+						+ order_pk;
+			}
+		}
+	}
 	// 打回订单到未确认状态
 	self.rollBackOrder = function() {
 		if (self.chosenOrders().length == 0) {
@@ -368,7 +411,7 @@ var ProductBoxContext = function() {
 	self.orders = ko.observable({});
 
 	self.refresh = function() {
-		startLoadingIndicator("加载中");
+		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -377,7 +420,7 @@ var ProductBoxContext = function() {
 			self.orders(data.tbcOrders);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
-			
+
 			endLoadingIndicator();
 		});
 	};
@@ -423,8 +466,10 @@ var ProductBoxContext = function() {
 		var X = $(label).offset().top;
 		var Y = $(label).offset().left;
 		var div = $('<div></div>');
-		var departure_notice = $('<a href="' + self.apiurl
-				+ 'file/downloadProductFile?team_number=' + team_number
+		var departure_notice = $('<a href="'
+				+ self.apiurl
+				+ 'file/downloadProductFile?team_number='
+				+ team_number
 				+ '&fileType=A" style="cursor:pointer;margin-right:10px">出团通知</a>');
 		var supplier_confirm = $('<a href="' + self.apiurl
 				+ 'file/downloadProductFile?team_number=' + team_number

@@ -33,6 +33,7 @@ var OrderContext = function() {
 	self.totalPeopleCount = ko.observable();
 	self.totalSupplierCost = ko.observable();
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var total_people_count = 0;
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
@@ -51,6 +52,8 @@ var OrderContext = function() {
 			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
 		});
 	};
 
