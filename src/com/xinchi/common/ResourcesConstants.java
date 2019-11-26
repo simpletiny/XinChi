@@ -251,6 +251,8 @@ public class ResourcesConstants {
 	public static String FILE_TYPE_OUT_NOTICE = "A";
 	// 出团通知
 	public static String FILE_TYPE_CLIENT_CONFIRM = "B";
+	// 地接确认
+	public static String FILE_TYPE_SUPPLIER_CONFIRM = "C";
 
 	// ************************* 基础数据 类型*********************************
 	// 产品线

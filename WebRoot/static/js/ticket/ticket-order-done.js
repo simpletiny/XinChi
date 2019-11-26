@@ -16,12 +16,12 @@ var OrderContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确定要生成操作名单 吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '知道了', '再等等' ],
+					btn : ['知道了', '再等等'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("生成中...");
@@ -59,12 +59,12 @@ var OrderContext = function() {
 			self.airTickets(data.air_tickets);
 			airTicketCheckLayer = $.layer({
 				type : 1,
-				title : [ '航段信息', '' ],
+				title : ['航段信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#air-ticket-check'
@@ -90,12 +90,12 @@ var OrderContext = function() {
 			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '乘客信息', '' ],
+				title : ['乘客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -109,15 +109,27 @@ var OrderContext = function() {
 		total : 0,
 		items : []
 	});
-
+	self.totalPeople = ko.observable();
+	self.totalCost = ko.observable();
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
+
+		var totalPeople = 0;
+		var totalCost = 0;
+
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage + "&airTicketOrder.status=Y";
 		$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderByPage', param,
 				function(data) {
 					self.orders(data.airTicketOrders);
+
+					$(self.orders()).each(function(idx, data) {
+						totalPeople += data.people_count - 0;
+						totalCost += data.ticket_cost - 0;
+					});
+					self.totalPeople(totalPeople);
+					self.totalCost(totalCost.toFixed(2));
 
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());

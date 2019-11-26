@@ -8,7 +8,7 @@ var OrderContext = function() {
 
 	self.chosenOrders = ko.observableArray([]);
 
-	self.status = [ 'N', 'I', 'Y' ];
+	self.status = ['N', 'I', 'Y'];
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("N");
@@ -142,12 +142,12 @@ var OrderContext = function() {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '游客信息', '' ],
+				title : ['游客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -167,12 +167,12 @@ var OrderContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : "解锁后销售能对名单数量进行修改，确认要解锁订单吗？",
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("解锁中...");
@@ -202,7 +202,9 @@ var OrderContext = function() {
 
 		}
 	}
-
+	/**
+	 * 提示销售确认名单
+	 */
 	self.tipSales = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择产品订单！");
@@ -266,12 +268,12 @@ var OrderContext = function() {
 			if (product_pk == "undefined") {
 				airLayer = $.layer({
 					type : 1,
-					title : [ '票务信息', '' ],
+					title : ['票务信息', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '550px' ],
-					offset : [ '', '' ],
+					area : ['800px', '550px'],
+					offset : ['', ''],
 					page : {
 						dom : '#air-ticket-edit'
 					},
@@ -286,12 +288,12 @@ var OrderContext = function() {
 					self.flight(data.flight);
 					airLayer = $.layer({
 						type : 1,
-						title : [ '票务信息', '' ],
+						title : ['票务信息', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '800px', '550px' ],
-						offset : [ '', '' ],
+						area : ['800px', '550px'],
+						offset : ['', ''],
 						page : {
 							dom : '#air-ticket-edit'
 						},
@@ -318,12 +320,12 @@ var OrderContext = function() {
 		}
 		$
 				.layer({
-					area : [ 'auto', 'auto' ],
+					area : ['auto', 'auto'],
 					dialog : {
 						msg : msg,
 						btns : 2,
 						type : 4,
-						btn : [ '确认', '取消' ],
+						btn : ['确认', '取消'],
 						yes : function(index) {
 							layer.close(airLayer);
 							startLoadingIndicator("保存中...");
@@ -538,12 +540,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'

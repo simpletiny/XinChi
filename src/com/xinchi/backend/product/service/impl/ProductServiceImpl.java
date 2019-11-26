@@ -813,9 +813,13 @@ public class ProductServiceImpl implements ProductService {
 	public String tipSalesConfirmName(List<String> team_numbers) {
 		for (String team_number : team_numbers) {
 			OrderDto order = orderDao.selectByTeamNumber(team_number);
+
+			if (order.getName_confirm_status().equals("3") || order.getName_confirm_status().equals("5"))
+				continue;
 			if (order.getStandard_flg().equals("Y")) {
 				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 				bso.setPk(order.getPk());
+
 				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
 				bsoDao.update(bso);
 			} else {

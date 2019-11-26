@@ -337,7 +337,7 @@
 				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY A.pick_date,A.team_number,A.operate_index DESC
+		ORDER BY A.team_number,A.operate_index,A.pick_date DESC
 	</select>
 
 

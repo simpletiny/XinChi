@@ -139,15 +139,17 @@
 	</select>
 
 	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
-		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
 		A.create_user AS sale_number,
 		B.user_name AS sale_name,
-		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
+		sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
 		A.create_user = B.user_number
+		LEFT JOIN final_standard_order C ON
+		A.team_number = C.team_number
 		<where>
 			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
@@ -158,9 +160,8 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.confirm_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
-			and A.confirm_flg !='N'
 		</where>
-		GROUP by LEFT(confirm_date,7),create_user
+		GROUP by LEFT(A.confirm_date,7),A.create_user
 		ORDER by score DESC
 	</select>
 	<select id="searchBackMoneyScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
@@ -188,15 +189,17 @@
 		ORDER by score DESC
 	</select>
 	<select id="searchSaleScoreByParam" parameterType="com.xinchi.bean.SaleScoreDto" resultMap="SaleScoreMap">
-		SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
 		A.create_user AS sale_number,
 		B.user_name AS sale_name,
-		SUM(IFNULL(adult_count,0)+IFNULL(special_count,0)) AS sum_people
+		sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
 		A.create_user = B.user_number
+		LEFT JOIN final_standard_order C ON
+		A.team_number = C.team_number
 		<where>
 			<if test="confirm_month != null and confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
@@ -204,9 +207,8 @@
 			<if test="sale_number != null and sale_number !=''">
 				and A.create_user= #{sale_number,jdbcType=VARCHAR}
 			</if>
-			and A.confirm_flg !='N'
 		</where>
-		GROUP by LEFT(confirm_date,7),create_user
+		GROUP by LEFT(A.confirm_date,7),A.create_user
 	</select>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

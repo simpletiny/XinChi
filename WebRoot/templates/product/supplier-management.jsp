@@ -212,6 +212,7 @@
 								<div class="ip">
 									<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)" /></a> <input
 										type="hidden" st="confirm-file-templet" />
+										<span style="color: blue">默认模板</span>
 								</div>
 							</div>
 						</div>
@@ -286,6 +287,7 @@
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
+	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
 	<script src="<%=basePath%>static/js/product/supplier-management.js"></script>
 </body>
 </html>

@@ -137,7 +137,7 @@ tr td {
 						</thead>
 						<tbody data-bind="foreach: operations">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.team_number}, checked: $root.chosenOperations" /></td>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_cost}, checked: $root.chosenOperations" /></td>
 								<td data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count"></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.supplier_name"></td>
@@ -314,7 +314,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

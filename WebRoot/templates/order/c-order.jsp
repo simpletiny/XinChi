@@ -164,6 +164,7 @@ tr td {
 								<th>尾款</th>
 								<th>确认件</th>
 								<th>备注</th>
+								<th>接待备注</th>
 								<th>产品经理</th>
 								<th>文件下载</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -197,11 +198,12 @@ tr td {
 								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)" data-bind="text: $data.comment,click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.treat_comment==null || $data.treat_comment==''-->
-								<td data-bind="text:$data.product_manager"></td>
+								<td data-bind="text:$data.treat_comment"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.treat_comment!=null && $data.treat_comment!=''-->
-								<td><a href="javascript:void(0)" data-bind="text: $data.product_manager,click:function() {msg($data.treat_comment)}"></a></td>
+								<td><a href="javascript:void(0)" data-bind="text: $data.treat_comment,click:function() {msg($data.treat_comment)}"></a></td>
 								<!-- /ko -->
+								<td data-bind="text:$data.product_manager"></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>
@@ -228,7 +230,7 @@ tr td {
 	</div>
 
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

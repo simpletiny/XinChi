@@ -348,5 +348,14 @@
 		select
 		<include refid="Base_Column_List" />
 		from product_supplier
+		
+		<where>
+			<if test="product_pk != null and product_pk !=''">
+				and product_pk = #{product_pk,jdbcType=CHAR}
+			</if>
+			<if test="supplier_employee_pk != null and supplier_employee_pk !=''">
+				and supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
+			</if>
+		</where>
 	</select>
 </mapper>

@@ -218,6 +218,9 @@
 			<if test="ticket_order_pk != null and ticket_order_pk !='' ">
 				and ticket_order_pk = #{ticket_order_pk,jdbcType=CHAR}
 			</if>
+			<if test="team_number != null and team_number !='' ">
+				and team_number = #{team_number,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

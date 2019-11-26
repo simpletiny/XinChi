@@ -75,9 +75,22 @@ public class FileAction extends BaseAction {
 		// 地接确认文件
 		if (viewType.endsWith("sc")) {
 			fileFolder = PropertiesUtil.getProperty("supplierConfirmTempletFolder");
-
-		} else if (viewType.equals("")) {
-
+		}
+		// 组团确认文件
+		else if (viewType.equals("cc")) {
+			fileFolder = PropertiesUtil.getProperty("clientConfirmTempletFolder");
+		}
+		// 出团通知文件
+		else if (viewType.equals("on")) {
+			fileFolder = PropertiesUtil.getProperty("outNoticeTempletFolder");
+		}
+		// 本地维护文件
+		else if (viewType.equals("os")) {
+			fileFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
+		}
+		// 临时上传文件
+		else if (viewType.equals("temp")) {
+			fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		}
 		resultStr = SimpletinyWord.Word2003ToHtml(fileFolder + File.separator + fileName);
 		return SUCCESS;

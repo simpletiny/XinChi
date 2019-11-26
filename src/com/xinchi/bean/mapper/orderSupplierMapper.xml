@@ -279,5 +279,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from order_supplier
+		<where>
+			<if test="order_pk != null and order_pk != ''">
+				order_pk = #{order_pk,jdbcType=CHAR}
+			</if>
+			<if test="supplier_employee_pk != null and supplier_employee_pk != ''">
+				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
+			</if>
+		</where>
 	</select>
 </mapper>

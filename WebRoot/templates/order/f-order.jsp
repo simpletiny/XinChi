@@ -190,7 +190,7 @@ tr td {
 	</div>
 
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

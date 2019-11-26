@@ -123,14 +123,10 @@ tr td {
 								<th>产品名称</th>
 								<th>人数</th>
 								<th>接团日期</th>
-							<!-- 	<th>接团方式</th>
-								<th>接团联系</th> -->
 								<th>送团日期</th>
-								<!-- <th>送团方式</th> -->
-								<th>接待详情</th>
 								<th>游客信息</th>
-								<th>联系方式</th>
 								<th>备注</th>
+								<th>下载</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -144,11 +140,9 @@ tr td {
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
 								<td data-bind="text: $data.send_date"></td>
-								<td></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td></td>
-								<td></td>
-								
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -159,8 +153,6 @@ tr td {
 							<td data-bind="text:totalSupplierCost"></td>
 							<td></td>
 							<td data-bind="text:totalPeopleCount"></td>
-							<td></td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>

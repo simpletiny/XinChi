@@ -9,7 +9,7 @@ var ProductBoxContext = function() {
 	// self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
 
 	self.chosenOrders = ko.observableArray([]);
-	self.confirmDates = ([ {
+	self.confirmDates = ([{
 		"en" : "today",
 		"cn" : "今天"
 	}, {
@@ -18,7 +18,7 @@ var ProductBoxContext = function() {
 	}, {
 		"en" : "lastweek",
 		"cn" : "上周"
-	} ]);
+	}]);
 
 	self.statusMapping = {
 		"no" : "未出团",
@@ -78,6 +78,12 @@ var ProductBoxContext = function() {
 		} else if (self.chosenOrders().length == 1) {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
+			var lock_flg = data[3];
+
+			if (lock_flg == "Y") {
+				fail_msg("订单已锁定，请联系相关产品进行解锁后取消。");
+				return;
+			}
 
 			window.location.href = self.apiurl
 					+ "templates/order/c-order-cancel.jsp?key=" + order_pk;
@@ -151,12 +157,12 @@ var ProductBoxContext = function() {
 			var standard_flg = data[1];
 
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要打回此订单吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("打回中！");
@@ -204,12 +210,12 @@ var ProductBoxContext = function() {
 
 			commentLayer = $.layer({
 				type : 1,
-				title : [ '备注', '' ],
+				title : ['备注', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '500px', '300px' ],
-				offset : [ '50px', '' ],
+				area : ['500px', '300px'],
+				offset : ['50px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#comment-edit'
@@ -251,12 +257,12 @@ var ProductBoxContext = function() {
 				caculate_fly_time();
 				firstAirLayer = $.layer({
 					type : 1,
-					title : [ '首航段信息', '' ],
+					title : ['首航段信息', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '1300px', '200px' ],
-					offset : [ '', '' ],
+					area : ['1300px', '200px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#first-air'
@@ -353,12 +359,12 @@ var ProductBoxContext = function() {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '游客信息', '' ],
+				title : ['游客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -429,12 +435,12 @@ var ProductBoxContext = function() {
 		$("#img-pic").attr("src", "");
 		confirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看确认件', '' ],
+			title : ['查看确认件', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'

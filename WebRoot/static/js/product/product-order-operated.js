@@ -67,6 +67,8 @@ var OrderContext = function() {
 			fail_msg("只能选择一个！");
 			return;
 		}else if (self.chosenOperations().length ==1) {
+			var cost = self.chosenOperations()[0].split(";")[2];
+			$("#final-supplier-cost").val(cost);
 			finalLayser = $.layer({
 				type : 1,
 				title : [ '决算', '' ],
@@ -180,7 +182,8 @@ var OrderContext = function() {
 				var current = self.chosenOperations()[i].split(";");
 				operatePks.push(current[0]);
 			}
-//			window.location.href = self.apiurl +"file/batDownloadSupplierConfirm?operate_pks="+operatePks;
+// window.location.href = self.apiurl
+// +"file/batDownloadSupplierConfirm?operate_pks="+operatePks;
 			
 		}
 	}

@@ -4,7 +4,6 @@ import static com.xinchi.common.SimpletinyString.isEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,15 +24,20 @@ import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.product.service.ProductOrderSupplierService;
 import com.xinchi.backend.product.service.ProductService;
-import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
 import com.xinchi.backend.user.service.UserService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
-import com.xinchi.bean.FlightBean;
-import com.xinchi.bean.FlightInfoBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderSupplierBean;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.ProductBean;
+import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.common.BaseAction;
@@ -57,6 +61,7 @@ public class ProductFileAction extends BaseAction {
 
 	private String team_number;
 
+	private String supplier_employee_pk;
 	@Autowired
 	private OrderService orderService;
 
@@ -67,10 +72,13 @@ public class ProductFileAction extends BaseAction {
 	private OrderNameListService nameService;
 
 	@Autowired
-	private FlightService flightService;
+	private UserService userService;
 
 	@Autowired
-	private UserService userService;
+	private ProductOrderSupplierService posService;
+
+	@Autowired
+	private ProductSupplierService psService;
 
 	public String downloadProductFile() throws IOException {
 
@@ -137,13 +145,13 @@ public class ProductFileAction extends BaseAction {
 					src_file_path = outNoticeTempletFolder + File.separator + product.getOut_notice_templet();
 				}
 				Map<String, String> name_data = getNameData(order.getPk());
-				Map<String, String> ticket_data = getTicketData(product, order);
+				Map<String, String> ticket_data = getTicketData(team_number);
 
 				data.putAll(name_data);
 				data.putAll(ticket_data);
 			}
 			// 组团社确认
-			else if (fileType.equalsIgnoreCase(ResourcesConstants.FILE_TYPE_CLIENT_CONFIRM)) {
+			else if (fileType.equals(ResourcesConstants.FILE_TYPE_CLIENT_CONFIRM)) {
 
 				if (product.getClient_confirm_templet().equals("default")
 						|| product.getClient_confirm_templet().equals("no")) {
@@ -158,6 +166,51 @@ public class ProductFileAction extends BaseAction {
 				Map<String, String> client_data = getClientData(order);
 				data.putAll(name_data);
 				data.putAll(client_data);
+			}
+			// 地接确认件
+			else if (fileType.equals(ResourcesConstants.FILE_TYPE_SUPPLIER_CONFIRM)) {
+				// 调用默认模板
+				src_file_path = defaultTempletFolder + File.separator + fileType + ".doc";
+
+				// 查找要下载的地接社信息
+				OrderSupplierBean option = new OrderSupplierBean();
+				option.setOrder_pk(order.getPk());
+				option.setSupplier_employee_pk(supplier_employee_pk);
+				List<OrderSupplierBean> suppliers = posService.selectByParam(option);
+				if (null == suppliers || suppliers.size() == 0)
+					return INPUT;
+
+				OrderSupplierBean supplier = suppliers.get(0);
+
+				// 如果没有操作模板，则用产品上传的模板
+				if (supplier.getConfirm_file_templet().equals("default")) {
+					// 查找要下载的产品地接社信息
+					ProductSupplierBean psOption = new ProductSupplierBean();
+					psOption.setProduct_pk(product_pk);
+					psOption.setSupplier_employee_pk(supplier_employee_pk);
+					List<ProductSupplierBean> pSuppliers = psService.selectByParam(psOption);
+
+					if (null != pSuppliers && pSuppliers.size() > 0) {
+						ProductSupplierBean pSupplier = pSuppliers.get(0);
+						if (!pSupplier.getConfirm_file_templet().equals("default")) {
+							// 产品地接确认模板
+							String supplierConfirmTempletFolder = PropertiesUtil
+									.getProperty("supplierConfirmTempletFolder");
+
+							src_file_path = supplierConfirmTempletFolder + File.separator
+									+ pSupplier.getConfirm_file_templet();
+						}
+					}
+
+				} else {
+					String supplierConfirmTempletFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
+					src_file_path = supplierConfirmTempletFolder + File.separator + supplier.getConfirm_file_templet();
+				}
+				Map<String, String> name_data = getNameData(order.getPk());
+				Map<String, String> ticket_data = getTicketData(team_number);
+
+				data.putAll(name_data);
+				data.putAll(ticket_data);
 			}
 		}
 
@@ -232,21 +285,35 @@ public class ProductFileAction extends BaseAction {
 		return data;
 	}
 
-	private Map<String, String> getTicketData(ProductBean product, OrderDto order) {
-		Map<String, String> data = new HashMap<String, String>();
-		String ticket = "";
-		String departure_date = order.getDeparture_date();
-		// 获取航班信息
-		if (product.getAir_ticket_upkeep_flg().equals("Y")) {
-			FlightBean flight = flightService.selectByProductPk(product.getPk());
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
 
-			for (FlightInfoBean info : flight.getInfos()) {
-				String fly_date = DateUtil.addDate(departure_date, info.getStart_day() - 1);
-				String city = info.getStart_city() + "--" + info.getEnd_city();
-				String flight_number = (isEmpty(info.getFlight_number()) ? "" : info.getFlight_number());
-				ticket += fly_date + "   " + city + "   " + flight_number + "；" + (char) 11;
+	@Autowired
+	private PassengerTicketInfoDAO passengerTicketInfoDao;
+
+	private Map<String, String> getTicketData(String team_number) {
+		Map<String, String> data = new HashMap<String, String>();
+
+		AirTicketNameListBean option = new AirTicketNameListBean();
+		option.setTeam_number(team_number);
+		List<AirTicketNameListBean> names = airTicketNameListDao.selectByParam(option);
+		String ticket = "";
+
+		if (null != names && names.size() > 0) {
+			AirTicketNameListBean name = names.get(0);
+			List<PassengerTicketInfoBean> infos = passengerTicketInfoDao.selectByPassengerPk(name.getPk());
+			if (null != infos && infos.size() > 0) {
+				for (PassengerTicketInfoBean info : infos) {
+					ticket += info.getTicket_date() + "   " + info.getFrom_to_time() + "   " + info.getTicket_number()
+							+ "   " + info.getFrom_to_city() + "   " + info.getFrom_airport() + "--"
+							+ info.getTo_airport() + "   " + "；" + (char) 11;
+				}
+
+				data.put("ticket", ticket);
+			} else {
+				data.put("ticket", "");
 			}
-			data.put("ticket", ticket);
+
 		} else {
 			data.put("ticket", "");
 		}
@@ -377,5 +444,13 @@ public class ProductFileAction extends BaseAction {
 
 	public void setOperate_pks(List<String> operate_pks) {
 		this.operate_pks = operate_pks;
+	}
+
+	public String getSupplier_employee_pk() {
+		return supplier_employee_pk;
+	}
+
+	public void setSupplier_employee_pk(String supplier_employee_pk) {
+		this.supplier_employee_pk = supplier_employee_pk;
 	}
 }

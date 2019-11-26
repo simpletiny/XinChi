@@ -5,17 +5,17 @@ var ClientContext = function() {
 	self.visit = ko.observable({});
 	self.clientEmployees = ko.observable({});
 	self.reibursement = ko.observable({
-		date:'',
-		month:''
+		date : '',
+		month : ''
 	});
-	
-	self.item = [ 'X', 'J', 'Q' ,'T'];
-	self.itemMapping = ko.observableArray([ {
+
+	self.item = ['X', 'J', 'Q', 'T'];
+	self.itemMapping = ko.observableArray([{
 		"key" : "X",
 		"value" : "销售费用"
 	}, {
 		"key" : "J",
-//		"value" : "交通垫付"
+		// "value" : "交通垫付"
 		"value" : "产品费用"
 	}, {
 		"key" : "T",
@@ -23,13 +23,16 @@ var ClientContext = function() {
 	}, {
 		"key" : "Q",
 		"value" : "其他支出"
-	} ]);
+	}, {
+		"key" : "G",
+		"value" : "个人工资"
+	}]);
 	var x = new Date();
 	self.reibursement().date = ko.observable();
 	self.reibursement().month = ko.observable();
 	self.reibursement().date(x.Format("yyyy-MM-dd"));
 	self.reibursement().month(x.Format("yyyy-MM"));
-	
+
 	self.save = function() {
 		if (!$("form").valid()) {
 			return;
@@ -42,7 +45,7 @@ var ClientContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				window.history.go(-1);
-			}else{
+			} else {
 				fail_msg(str);
 				endLoadingIndicator();
 			}

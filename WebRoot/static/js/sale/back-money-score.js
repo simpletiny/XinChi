@@ -7,7 +7,7 @@ var OrderContext = function() {
 	self.confirm_month(x.Format("yyyy-MM"));
 	self.refresh = function() {
 		if ($("#txt-discount").val().trim() == "") {
-			$("#txt-discount").val(1);
+			$("#txt-discount").val(0.98);
 		}
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="

@@ -216,30 +216,27 @@ tr td {
 	</div>
 	<div id="c-c-t" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="D"
 					onclick="changeCctRadio(this)" /> <label>无模板</label>
 				</em>
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="height: 40px">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="Y"
 					onclick="changeCctRadio(this)" /> <label>上传</label>
-				</em> <a href="javascript:;" id="c-c-t-a" style="display: none" class="a-upload">上传模板<input type="file" name="cct" />
-
-				</a> <input type="hidden" id="cct_file" />
-
+				</em>
+				<a href="javascript:;" id="c-c-t-a" style="display: none" class="a-upload">上传模板<input type="file" name="cct" /></a>
+				<input type="hidden" id="cct_file" />
+			<!-- ko if: clientConfirmTemplet() == "default" || clientConfirmTemplet()=="no" -->
+			<span style="color: blue">默认模板</span>
+			<!-- /ko -->
+			<!-- ko if: clientConfirmTemplet() != "default" && clientConfirmTemplet()!="" &&clientConfirmTemplet() != "no" -->
+			<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+				data-bind="click:function(){viewTemplet('cc',clientConfirmTemplet());}">预览</a></span>
+			<!-- /ko -->
 			</div>
-		</div>
-		<div class="input-row clearfloat" style="padding-left: 220px">
-			<!-- ko if: clientConfirmTemplet() == "default" -->
-			<label style="color: blue">默认模板</label>
-			<!-- /ko -->
-			<!-- ko if: clientConfirmTemplet() != "default" && clientConfirmTemplet()!="" -->
-			<label style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
-				data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></label>
-			<!-- /ko -->
 		</div>
 		<div class="input-row clearfloat">
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:cancelCCT">取消</button>
@@ -248,28 +245,26 @@ tr td {
 	</div>
 	<div id="o-n-t" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<em class="small-box"> <input type="radio" name="ontradio" data-bind="checked:outNoticeType()" value="D"
 					onclick="changeOntRadio(this)" /> <label>无模板</label>
 				</em>
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="height: 40px">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<em class="small-box"> <input type="radio" name="ontradio" value="Y" data-bind="checked:outNoticeType()"
 					onclick="changeOntRadio(this)" /> <label>上传</label>
 				</em> <a id="o-n-t-a" style="display: none" href="javascript:;" class="a-upload">上传模板<input type="file" name="ont" /></a>
 				<input type="hidden" id="ont_file" />
+			<!-- ko if: outNoticeTemplet() == "default" || outNoticeTemplet()=="no" -->
+			<span style="color: blue">默认模板</span>
+			<!-- /ko -->
+			<!-- ko if: outNoticeTemplet() != "default" && outNoticeTemplet()!="" &&outNoticeTemplet() != "no" -->
+			<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+				data-bind="click:function(){viewTemplet('on',outNoticeTemplet());}">预览</a></span>
+			<!-- /ko -->
 			</div>
-		</div>
-		<div class="input-row clearfloat" style="padding-left: 220px">
-			<!-- ko if: outNoticeTemplet() == "default" -->
-			<label style="color: blue">默认模板</label>
-			<!-- /ko -->
-			<!-- ko if: outNoticeTemplet() != "default" && outNoticeTemplet()!="" -->
-			<label style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
-				data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></label>
-			<!-- /ko -->
 		</div>
 		<div class="input-row clearfloat">
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:cancelONT">取消</button>
@@ -314,6 +309,7 @@ tr td {
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
+	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
 	<script src="<%=basePath%>static/js/product/product-upkeep.js"></script>
 </body>
 </html>

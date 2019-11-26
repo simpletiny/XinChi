@@ -56,6 +56,8 @@
 		<include refid="Base_Column_List" />
 		from passenger_ticket_info
 		where passenger_pk = #{passenger_pk,jdbcType=CHAR}
+		
+		order by ticket_index
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

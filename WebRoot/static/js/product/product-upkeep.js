@@ -7,7 +7,7 @@ var ontLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.allCharges = [ "PRODUCT", "SALE", "NONE" ];
+	self.allCharges = ["PRODUCT", "SALE", "NONE"];
 	self.chosenCharge = ko.observable();
 	self.locations = ko.observableArray();
 
@@ -16,7 +16,7 @@ var ProductContext = function() {
 	}, function(data) {
 		self.locations(data.datas);
 	});
-	
+
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -27,7 +27,7 @@ var ProductContext = function() {
 		'SALE' : '销售包票',
 		'NONE' : '无机票'
 	};
-	self.status = [ 'N', 'Y', 'D' ];
+	self.status = ['N', 'Y', 'D'];
 	self.saleMapping = {
 		'N' : "架下",
 		'Y' : "架上",
@@ -57,19 +57,19 @@ var ProductContext = function() {
 			}, function(data) {
 				self.chosenProduct(data.product);
 				var t = self.chosenProduct().client_confirm_templet;
+				self.clientConfirmTemplet(t);
 				if (t != "no") {
 					self.clientConfirmType("Y");
-					self.clientConfirmTemplet(t);
 					$("#c-c-t-a").show();
 				}
 				ctLayer = $.layer({
 					type : 1,
-					title : [ '上传组团确认模板', '' ],
+					title : ['上传组团确认模板', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '500px', '240px' ],
-					offset : [ '', '' ],
+					area : ['500px', '240px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#c-c-t'
@@ -131,20 +131,20 @@ var ProductContext = function() {
 			}, function(data) {
 				self.chosenProduct(data.product);
 				var t = self.chosenProduct().out_notice_templet;
+				self.outNoticeTemplet(t);
 				if (t != "no") {
 					self.outNoticeType("Y");
-					self.outNoticeTemplet(t);
 					$("#o-n-t-a").show();
 				}
 
 				ontLayer = $.layer({
 					type : 1,
-					title : [ '上传出团通知模板', '' ],
+					title : ['上传出团通知模板', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '500px', '240px' ],
-					offset : [ '', '' ],
+					area : ['500px', '240px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#o-n-t'
@@ -318,12 +318,12 @@ var ProductContext = function() {
 				self.airTickets(data.air_tickets);
 				airTicketLayer = $.layer({
 					type : 1,
-					title : [ '添加机票信息', '' ],
+					title : ['添加机票信息', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '500px' ],
-					offset : [ '', '' ],
+					area : ['800px', '500px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#air-ticket'
@@ -346,12 +346,12 @@ var ProductContext = function() {
 					self.airTickets(data.air_tickets);
 					airTicketCheckLayer = $.layer({
 						type : 1,
-						title : [ '机票信息', '' ],
+						title : ['机票信息', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '800px', '500px' ],
-						offset : [ '', '' ],
+						area : ['800px', '500px'],
+						offset : ['', ''],
 						scrollbar : true,
 						page : {
 							dom : '#air-ticket-check'
@@ -437,53 +437,6 @@ $(document).ready(function() {
 		changeFile(this);
 	});
 });
-
-function changeFile(thisx) {
-	var file = thisx.files[0];
-	var inputName = thisx.name;
-	name_check = file.name;
-	size = file.size;
-	type = file.type;
-
-	if (type.indexOf("msword") < 0) {
-		fail_msg("请上传word文档");
-		return;
-	}
-	if (size > 1048576) {
-		fail_msg("文件大于1MB");
-		return;
-	}
-
-	var fileNameInput = $(thisx).parent().next();
-	var formData = new FormData();
-	formData.append("file", file);
-
-	var url = ctx.apiurl + 'file/fileUpload';
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', url, true);
-	xhr.responseType = "blob";
-
-	xhr.onload = function() {
-		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(
-					";")[1].split("=")[1];
-			var blob = this.response;
-			fileNameInput.val(fileName);
-			success_msg("上传成功！请点击保存按钮以保存。");
-		} else {
-			fail_msg("上传失败，请重试或联系管理员！");
-		}
-	};
-	xhr.send(formData);
-}
-function updateProgress(e, progress) {
-	if (e.lengthComputable) {
-		$(progress).attr({
-			value : e.loaded,
-			max : e.total
-		});
-	}
-}
 
 function changeCctRadio(rad) {
 	var v = $(rad).val();

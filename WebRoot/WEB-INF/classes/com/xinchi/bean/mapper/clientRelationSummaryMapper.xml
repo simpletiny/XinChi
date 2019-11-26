@@ -284,11 +284,13 @@
 
 		SUM(A.tel_count) AS all_tel_count,
 		SUM(IF(A.relation_level='主力级',A.tel_count,NULL)) AS main_tel_count,
-		SUM(IF(A.relation_level='市场级',A.tel_count,NULL)) AS market_tel_count,
+		SUM(IF(A.relation_level='市场级',A.tel_count,NULL)) AS
+		market_tel_count,
 		SUM(IF(A.relation_level='尝试级',A.tel_count,NULL))
 		AS try_tel_count,
 		SUM(IF(A.relation_level='忽略级',A.tel_count,NULL)) AS ignore_tel_count,
-		SUM(IF(A.relation_level='新增级',A.tel_count,NULL)) AS new_tel_count
+		SUM(IF(A.relation_level='新增级',A.tel_count,NULL))
+		AS new_tel_count
 		from view_incoming_count A
 		LEFT JOIN
 		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
@@ -542,19 +544,22 @@
 		GROUP BY A.create_user,A.date
 	</select>
 	<select id="selectEnableBackPointByParam" parameterType="com.xinchi.bean.BackPointDto" resultMap="BackPointMap">
-		select
+		SELECT
 		A.team_number,
 		A.user_number,
 		A.confirm_date,
 		B.pk AS user_pk,
 		A.product_point
-		from view_enable_back_point A
+		FROM
+		view_back_money_balance A
 		LEFT JOIN
 		user_base B ON A.user_number = B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
+			and LEFT(A.confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+			and A.balance &lt;= (A.receivable-A.receivable*0.98)
 		</where>
 	</select>
 </mapper>	

@@ -270,7 +270,7 @@
 									<!-- /ko -->
 									<!-- ko if: $data.confirm_file_templet != "default" && $data.confirm_file_templet!="" -->
 									<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
-										data-bind="click:function(){$root.viewTemplet($data.confirm_file_templet);}">预览</a></span>
+										data-bind="click:function(){viewTemplet('sc',$data.confirm_file_templet);}">预览</a></span>
 									<!-- /ko -->
 								</div>
 							</div>
@@ -367,6 +367,7 @@
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
+	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
 	<script src="<%=basePath%>static/js/product/order-operate-creation.js"></script>
 </body>
 </html>

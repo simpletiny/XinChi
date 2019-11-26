@@ -21,6 +21,7 @@ import com.xinchi.backend.product.dao.ProductOrderOperationDAO;
 import com.xinchi.backend.product.dao.ProductOrderSupplierDAO;
 import com.xinchi.backend.product.dao.ProductOrderSupplierInfoDAO;
 import com.xinchi.backend.product.service.ProductOrderOperationService;
+import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
@@ -30,6 +31,7 @@ import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.ProductOrderAirInfoBean;
 import com.xinchi.bean.ProductOrderOperationBean;
+import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -109,6 +111,9 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	@Autowired
 	private PaidDAO paidDao;
 
+	@Autowired
+	private ProductSupplierService psService;
+
 	@Override
 	public String createOrderOperation(String json) {
 
@@ -155,8 +160,20 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 							: order_supplier_templet);
 
 			if (!osb.getConfirm_file_templet().equals("default")) {
+				String copy_type = "new";
+				ProductSupplierBean option = new ProductSupplierBean();
+				option.setProduct_pk(order.getProduct_pk());
+				option.setSupplier_employee_pk(supplier_pk);
+				List<ProductSupplierBean> pss = psService.selectByParam(option);
+
+				if (null != pss && pss.size() > 0) {
+					ProductSupplierBean ps = pss.get(0);
+					if (confirm_file_templet.equals(ps.getConfirm_file_templet())) {
+						copy_type = "old";
+					}
+				}
 				// 保存地接社确认模板文件
-				saveSupplierConfirmTemplet(confirm_file_templet, order_supplier_templet);
+				saveSupplierConfirmTemplet(confirm_file_templet, order_supplier_templet, copy_type);
 			}
 
 			String order_supplier_pk = posDao.insert(osb);
@@ -290,11 +307,18 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 		return SUCCESS;
 	}
 
-	private void saveSupplierConfirmTemplet(String confirm_file_templet, String order_supplier_templet) {
+	private void saveSupplierConfirmTemplet(String confirm_file_templet, String order_supplier_templet,
+			String copy_type) {
 		if (SimpletinyString.isEmpty(confirm_file_templet))
 			return;
 
-		String fileFolder = PropertiesUtil.getProperty("supplierConfirmTempletFolder");
+		String fileFolder = "";
+		if (copy_type.equals("new")) {
+			fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		} else {
+			fileFolder = PropertiesUtil.getProperty("supplierConfirmTempletFolder");
+		}
+
 		String destFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
 
 		File sourceFile = new File(fileFolder + File.separator + confirm_file_templet);
@@ -302,6 +326,9 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 		try {
 			FileUtils.copyFile(sourceFile, destfile);
+			if (copy_type.equals("new")) {
+				sourceFile.delete();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

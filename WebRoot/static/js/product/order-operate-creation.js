@@ -16,7 +16,7 @@ var ProductContext = function() {
 	}, function(data) {
 		self.order(data.order);
 		self.productSuppliers(data.productSuppliers);
-		if(self.productSuppliers().length==0){
+		if (self.productSuppliers().length == 0) {
 			addSupplier();
 		}
 	});
@@ -258,12 +258,12 @@ var ProductContext = function() {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '游客信息', '' ],
+				title : ['游客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -332,12 +332,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -510,7 +510,7 @@ function addSupplier() {
 			+ '</div>'
 			+ '<div class="col-md-3">'
 			+ '<div class="ip">'
-			+ '<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)"/></a> <input type="hidden" st="confirm-file-templet"/>'
+			+ '<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)"/></a> <input type="hidden" st="confirm-file-templet"/><span style="color: blue">默认模板</span>'
 			+ '</div></div></div><hr /></div>');
 	$('#div-supplier').append(div_supplier);
 }
@@ -555,42 +555,4 @@ function caculateOtherCost() {
 
 	$("#local-adult-cost").val(sum);
 	caculateGrossProfit();
-}
-function changeFile(thisx) {
-	var file = thisx.files[0];
-	var inputName = thisx.name;
-	name_check = file.name;
-	size = file.size;
-	type = file.type;
-
-	if (type.indexOf("msword") < 0) {
-		fail_msg("请上传word文档");
-		return;
-	}
-	if (size > 1048576) {
-		fail_msg("文件大于1MB");
-		return;
-	}
-
-	var fileNameInput = $(thisx).parent().next();
-	var formData = new FormData();
-	formData.append("file", file);
-
-	var url = ctx.apiurl + 'file/fileUpload';
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', url, true);
-	xhr.responseType = "blob";
-
-	xhr.onload = function() {
-		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(
-					";")[1].split("=")[1];
-			var blob = this.response;
-			fileNameInput.val(fileName);
-			success_msg("上传成功！请点击保存按钮以保存。");
-		} else {
-			fail_msg("上传失败，请重试或联系管理员！");
-		}
-	};
-	xhr.send(formData);
 }

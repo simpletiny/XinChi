@@ -24,12 +24,12 @@ var NeedContext = function() {
 				endLoadingIndicator();
 				createLayer = $.layer({
 					type : 1,
-					title : [ '生成订单', '' ],
+					title : ['生成订单', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '500px' ],
-					offset : [ '', '' ],
+					area : ['800px', '500px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#order-create'
@@ -87,12 +87,12 @@ var NeedContext = function() {
 		legJson += ']';
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : confirm_msg,
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
@@ -135,12 +135,12 @@ var NeedContext = function() {
 			endLoadingIndicator();
 			airTicketCheckLayer = $.layer({
 				type : 1,
-				title : [ '航段信息', '' ],
+				title : ['航段信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#air-ticket-check'
@@ -165,12 +165,12 @@ var NeedContext = function() {
 			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '乘客信息', '' ],
+				title : ['乘客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -184,9 +184,10 @@ var NeedContext = function() {
 		total : 0,
 		items : []
 	});
-
+	self.totalPeople = ko.observable();
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
+		var totalPeople = 0;
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -195,6 +196,11 @@ var NeedContext = function() {
 				function(data) {
 
 					self.needs(data.airTicketNeeds);
+
+					$(self.needs()).each(function(idx, data) {
+						totalPeople += data.people_count - 0;
+					});
+					self.totalPeople(totalPeople);
 
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
@@ -346,12 +352,12 @@ function choseAirLeg(event) {
 	ctx.searchAirLeg();
 	airLegLayer = $.layer({
 		type : 1,
-		title : [ '选择票务航段', '' ],
+		title : ['选择票务航段', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '', '' ],
+		area : ['600px', '650px'],
+		offset : ['', ''],
 		scrollbar : true,
 		page : {
 			dom : '#air-leg-pick'

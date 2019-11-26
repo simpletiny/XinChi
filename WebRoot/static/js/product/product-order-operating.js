@@ -7,7 +7,7 @@ var OrderContext = function() {
 
 	self.chosenOperations = ko.observableArray([]);
 
-	self.status = [ 'N', 'I', 'Y' ];
+	self.status = ['N', 'I', 'Y'];
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("N");
@@ -51,7 +51,8 @@ var OrderContext = function() {
 									.each(
 											function(idx, data) {
 												total_people_count += data.people_count - 0;
-												total_supplier_cost += data.supplier_cost == null ? 0
+												total_supplier_cost += data.supplier_cost == null
+														? 0
 														: data.supplier_cost;
 											});
 
@@ -75,12 +76,12 @@ var OrderContext = function() {
 		} else if (self.chosenOperations().length > 0) {
 			$
 					.layer({
-						area : [ 'auto', 'auto' ],
+						area : ['auto', 'auto'],
 						dialog : {
 							msg : '是否要确认此订单！',
 							btns : 2,
 							type : 4,
-							btn : [ '确认', '取消' ],
+							btn : ['确认', '取消'],
 							yes : function(index) {
 								layer.close(index);
 								var operate_pks = "";
@@ -136,12 +137,12 @@ var OrderContext = function() {
 
 			var data = "team_numbers=" + team_numbers;
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '打回会将关联的操作订单一并打回，并将产品订单设置为票务状态！',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中...");
@@ -182,12 +183,12 @@ var OrderContext = function() {
 				self.productSuppliers(data.operations);
 				operateLayer = $.layer({
 					type : 1,
-					title : [ '供应商信息', '' ],
+					title : ['供应商信息', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '1400px', '500px' ],
-					offset : [ '', '' ],
+					area : ['1400px', '500px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#supplier-info'
@@ -288,12 +289,12 @@ var OrderContext = function() {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '游客信息', '' ],
+				title : ['游客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -303,6 +304,13 @@ var OrderContext = function() {
 			});
 		});
 	};
+
+	self.downloadSc = function(team_number, supplier_employee_pk) {
+		window.location.href = self.apiurl
+				+ "file/downloadProductFile?team_number=" + team_number
+				+ "&supplier_employee_pk=" + supplier_employee_pk
+				+ "&fileType=C";
+	}
 	self.productSuppliers = ko.observableArray([]);
 
 	// start pagination
@@ -437,12 +445,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'

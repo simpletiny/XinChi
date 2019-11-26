@@ -28,9 +28,29 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .fa-users1:before {
 	content: url("<%=basePath%>/templates/favicon.png");
 }
+
+.floatPanel {
+	position: fixed;
+	top: 70%;
+	right: 0;
+	z-index: 9999999;
+}
+
+.timer {
+	text-align:center;
+	border:solid 1px;
+	width: 100px;
+	height: 80px;
+	display: block;
+	background: white;
+}
 </style>
 </head>
 <body>
+<!-- 	<div class="floatPanel timer">
+		<label>重启倒计时</label>
+		<h3><b id="reboot-timer">05:00</b></h3>
+	</div> -->
 	<!-- head start -->
 	<input type="hidden" id="hidden_apiurl" value="<%=basePath%>" />
 	<div class="main-header">
@@ -292,6 +312,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
 	<script src="<%=basePath%>static/js/utils.js"></script>
+	<script src="<%=basePath%>static/js/layout.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 </body>

@@ -288,6 +288,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public String rollBackFinalOrder(String order_pk, String standard_flg) {
+		// TODO 打回需要处理应收款
 
 		if (standard_flg.equals("N")) {
 			FinalNonStandardOrderBean final_order = fnsoDao.selectByPrimaryKey(order_pk);
