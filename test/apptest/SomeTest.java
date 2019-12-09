@@ -17,9 +17,7 @@ public class SomeTest {
 	private static final int BUFFER_SIZE = 2 * 1024;
 
 	public static void main(String[] args) throws Exception {
-		String a = "a";
-		String b = "A";
-		System.out.println(a.equals(b));
+		System.out.println("" + 31);
 	}
 
 	public static int countLine(File f, int n) throws Exception {

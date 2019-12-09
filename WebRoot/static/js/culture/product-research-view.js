@@ -19,18 +19,18 @@ var ViewContext = function() {
 			self.labels(data.labels);
 			if (self.labels != null && self.labels().length > 0) {
 				self.chosenLabel(self.labels()[0].label_name);
+				self.refresh();
 			}
 		});
 	}
-	self.searchLabels();
 	self.refresh = function() {
-		var param = "view.label="+self.chosenLabel();
+		var param = "view.label=" + self.chosenLabel();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'culture/searchProductResearchViewByPage',
 				param, function(data) {
 					self.views(data.views);
-					
+
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 				});
@@ -54,12 +54,12 @@ var ViewContext = function() {
 		} else if (self.chosenViews().length == 1) {
 			$
 					.layer({
-						area : [ 'auto', 'auto' ],
+						area : ['auto', 'auto'],
 						dialog : {
 							msg : '确认要删除这篇文章吗？',
 							btns : 2,
 							type : 4,
-							btn : [ '确认', '取消' ],
+							btn : ['确认', '取消'],
 							yes : function(index) {
 								$
 										.ajax(
@@ -88,12 +88,12 @@ var ViewContext = function() {
 
 		headCheckLayer = $.layer({
 			type : 1,
-			title : [ '标签（拖动排序）', '' ],
+			title : ['标签（拖动排序）', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '500px', '400px' ],
-			offset : [ '', '' ],
+			area : ['500px', '400px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#label-manager'
@@ -103,7 +103,6 @@ var ViewContext = function() {
 			}
 		});
 	}
-
 
 	self.createLabel = function() {
 		var label = $("#txt-label").val().trim();
@@ -232,7 +231,7 @@ var ctx = new ViewContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
-	ctx.refresh();
+	ctx.searchLabels();
 
 	new Sortable(labelGrid, {
 		animation : 150,

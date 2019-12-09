@@ -24,6 +24,8 @@
 		<result column="days" property="days" jdbcType="INTEGER" />
 		<result column="tourist_info" property="tourist_info" jdbcType="VARCHAR" />
 		<result column="confirm_file_templet" property="confirm_file_templet" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.ProductSupplierBean">
@@ -88,7 +90,8 @@
 	<select id="selectByProductPk" resultMap="InfoResultMap" parameterType="java.lang.String">
 		select
 		A.product_pk,
-		C.name AS product_name,
+		C.name AS
+		product_name,
 		A.supplier_employee_pk,
 		A.supplier_index,
 		A.supplier_product_name,
@@ -104,7 +107,8 @@
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		B.name AS
+		B.name
+		AS
 		supplier_employee_name,
 		A.adult_cost,
 		A.child_cost,
@@ -345,16 +349,24 @@
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
 	<select id="selectByParam" parameterType="com.xinchi.bean.ProductSupplierBean" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from product_supplier
-		
+		SELECT
+		A.*,
+		B.name AS supplier_employee_name,
+		C.supplier_name AS suppler_name,
+		C.supplier_short_name AS
+		supplier_short_name
+		FROM
+		product_supplier A
+		LEFT JOIN
+		supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN
+		supplier C ON B.financial_body_pk = C.pk
 		<where>
 			<if test="product_pk != null and product_pk !=''">
-				and product_pk = #{product_pk,jdbcType=CHAR}
+				and A.product_pk = #{product_pk,jdbcType=CHAR}
 			</if>
 			<if test="supplier_employee_pk != null and supplier_employee_pk !=''">
-				and supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
+				and A.supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
 			</if>
 		</where>
 	</select>

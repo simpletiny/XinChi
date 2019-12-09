@@ -47,10 +47,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 </style>
 </head>
 <body>
-<!-- 	<div class="floatPanel timer">
+<!--  	<div class="floatPanel timer">
 		<label>重启倒计时</label>
 		<h3><b id="reboot-timer">05:00</b></h3>
-	</div> -->
+	</div> 
+	 -->
 	<!-- head start -->
 	<input type="hidden" id="hidden_apiurl" value="<%=basePath%>" />
 	<div class="main-header">

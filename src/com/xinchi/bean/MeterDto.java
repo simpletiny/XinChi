@@ -12,6 +12,12 @@ public class MeterDto implements Serializable {
 	private BigDecimal sum_reimbursement = BigDecimal.ZERO;
 	private BigDecimal point_money_deduct = BigDecimal.ZERO;
 	private BigDecimal month_reimbursement = BigDecimal.ZERO;
+	private BigDecimal bad = BigDecimal.ZERO;
+	private BigDecimal month_dead = BigDecimal.ZERO;
+	private BigDecimal sum_dead = BigDecimal.ZERO;
+	private BigDecimal day_hold = BigDecimal.ZERO;
+	private BigDecimal bad_interest = BigDecimal.ZERO;
+
 	private float back_score = 0;
 	private int score = 0;
 	private int month_score = 0;
@@ -78,6 +84,46 @@ public class MeterDto implements Serializable {
 
 	public void setMonth_reimbursement(BigDecimal month_reimbursement) {
 		this.month_reimbursement = month_reimbursement;
+	}
+
+	public BigDecimal getBad() {
+		return bad;
+	}
+
+	public BigDecimal getMonth_dead() {
+		return month_dead;
+	}
+
+	public void setBad(BigDecimal bad) {
+		this.bad = bad;
+	}
+
+	public void setMonth_dead(BigDecimal month_dead) {
+		this.month_dead = month_dead;
+	}
+
+	public BigDecimal getSum_dead() {
+		return sum_dead;
+	}
+
+	public void setSum_dead(BigDecimal sum_dead) {
+		this.sum_dead = sum_dead;
+	}
+
+	public BigDecimal getDay_hold() {
+		return day_hold;
+	}
+
+	public void setDay_hold(BigDecimal day_hold) {
+		this.day_hold = day_hold;
+	}
+
+	public BigDecimal getBad_interest() {
+		return bad_interest;
+	}
+
+	public void setBad_interest(BigDecimal bad_interest) {
+		this.bad_interest = bad_interest;
 	}
 
 }

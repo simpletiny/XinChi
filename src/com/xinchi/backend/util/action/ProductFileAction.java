@@ -35,6 +35,7 @@ import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderSupplierBean;
+import com.xinchi.bean.OrderSupplierInfoBean;
 import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductSupplierBean;
@@ -126,6 +127,38 @@ public class ProductFileAction extends BaseAction {
 				Map<String, String> client_data = getClientData(order);
 				data.putAll(name_data);
 				data.putAll(client_data);
+			} else if (fileType.equals(ResourcesConstants.FILE_TYPE_SUPPLIER_CONFIRM)) {
+				// 查找要下载的地接社信息
+				OrderSupplierBean option = new OrderSupplierBean();
+				option.setOrder_pk(order.getPk());
+				option.setSupplier_employee_pk(supplier_employee_pk);
+				List<OrderSupplierBean> suppliers = posService.selectByParam(option);
+				if (null == suppliers || suppliers.size() == 0)
+					return INPUT;
+
+				OrderSupplierBean supplier = suppliers.get(0);
+
+				// 如果没有操作模板，则用产品上传的模板
+				if (!supplier.getConfirm_file_templet().equals("default")) {
+					String supplierConfirmTempletFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
+					src_file_path = supplierConfirmTempletFolder + File.separator + supplier.getConfirm_file_templet();
+				}
+
+				data.put("sename", supplier.getSupplier_employee_name());
+				data.put("suppliername", supplier.getSupplier_name());
+				data.put("suppliershortname", supplier.getSupplier_short_name());
+				data.put("supplierproduct", supplier.getSupplier_product_name());
+				data.put("spdays", supplier.getDays().toString());
+				data.put("suppliercost", supplier.getSupplier_cost().toString());
+
+				Map<String, String> pick_send_data = getPsData(supplier);
+
+				Map<String, String> name_data = getNameData(order.getPk());
+				Map<String, String> ticket_data = getTicketData(team_number);
+
+				data.putAll(name_data);
+				data.putAll(ticket_data);
+				data.putAll(pick_send_data);
 			}
 		}
 		// 标准订单
@@ -199,18 +232,35 @@ public class ProductFileAction extends BaseAction {
 
 							src_file_path = supplierConfirmTempletFolder + File.separator
 									+ pSupplier.getConfirm_file_templet();
+
 						}
+						// data.put("sename", pSupplier.getSupplier_employee_name());
+						// data.put("suppliername", pSupplier.getSupplier_name());
+						// data.put("suppliershortname", pSupplier.getSupplier_short_name());
+						// data.put("supplierproduct", pSupplier.getProduct_name());
+
 					}
 
 				} else {
 					String supplierConfirmTempletFolder = PropertiesUtil.getProperty("orderSupplierTempletFolder");
 					src_file_path = supplierConfirmTempletFolder + File.separator + supplier.getConfirm_file_templet();
 				}
+
+				data.put("sename", supplier.getSupplier_employee_name());
+				data.put("suppliername", supplier.getSupplier_name());
+				data.put("suppliershortname", supplier.getSupplier_short_name());
+				data.put("supplierproduct", supplier.getSupplier_product_name());
+				data.put("spdays", supplier.getDays().toString());
+				data.put("suppliercost", supplier.getSupplier_cost().toString());
+
+				Map<String, String> pick_send_data = getPsData(supplier);
+
 				Map<String, String> name_data = getNameData(order.getPk());
 				Map<String, String> ticket_data = getTicketData(team_number);
 
 				data.putAll(name_data);
 				data.putAll(ticket_data);
+				data.putAll(pick_send_data);
 			}
 		}
 
@@ -225,10 +275,16 @@ public class ProductFileAction extends BaseAction {
 		}
 		// 组团社确认
 		else if (fileType.equals(ResourcesConstants.FILE_TYPE_CLIENT_CONFIRM)) {
-			_fileName = data.get("clientshort") + data.get("departuredate") + data.get("chairman") + people_cnt
-					+ "人确认件.doc";
+			_fileName = null == data.get("clientshort") ? data.get("client")
+					: data.get("clientshort") + data.get("departuredate") + data.get("chairman") + people_cnt
+							+ "人确认件.doc";
 		}
-
+		// 地接确认
+		else if (fileType.equals(ResourcesConstants.FILE_TYPE_SUPPLIER_CONFIRM)) {
+			_fileName = null == data.get("suppliershortname") ? data.get("suppliername")
+					: data.get("suppliershortname") + data.get("pickdate") + data.get("chairman") + people_cnt
+							+ "人确认件.doc";
+		}
 		fileName = new String(_fileName.getBytes(), "ISO8859-1");
 		fips = new FileInputStream(dest);
 		return SUCCESS;
@@ -280,6 +336,31 @@ public class ProductFileAction extends BaseAction {
 			data.put("employeetel", employeeTel);
 			data.put("employeeinfo", employeeName + "：" + employeeTel);
 
+		}
+
+		return data;
+	}
+
+	private Map<String, String> getPsData(OrderSupplierBean supplier) {
+
+		Map<String, String> data = new HashMap<String, String>();
+		if (supplier.getInfos().size() == 1) {
+			OrderSupplierInfoBean info = supplier.getInfos().get(0);
+			// 接机段
+			data.put("pickleg", info.getPick_leg());
+			data.put("pickdate", DateUtil.addDate(supplier.getDeparture_date(), info.getPick_day() - 1));
+			data.put("picktime", info.getPick_time());
+			data.put("picktraffic", info.getPick_traffic());
+			data.put("pickcity", info.getPick_city());
+			data.put("pickplace", info.getPick_place());
+
+			// 送机段
+			data.put("sendleg", info.getSend_leg());
+			data.put("senddate", DateUtil.addDate(supplier.getDeparture_date(), info.getSend_day() - 1));
+			data.put("sendtime", info.getSend_time());
+			data.put("sendtraffic", info.getSend_traffic());
+			data.put("sendcity", info.getSend_city());
+			data.put("sendplace", info.getSend_place());
 		}
 
 		return data;
@@ -367,7 +448,7 @@ public class ProductFileAction extends BaseAction {
 			while (iter.hasNext()) {
 				String k = iter.next();
 				String source = "${" + k + "}";
-				range.replaceText(source, k_v.get(k));
+				range.replaceText(source, null == k_v.get(k) ? "" : k_v.get(k));
 			}
 
 			OutputStream os = new FileOutputStream(destFile);

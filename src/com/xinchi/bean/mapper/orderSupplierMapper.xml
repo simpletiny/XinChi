@@ -23,8 +23,39 @@
 		<result column="confirm_file_templet" property="confirm_file_templet" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderSupplierBean">
+		<collection column="pk" property="infos" ofType="com.xinchi.bean.OrderSupplierInfoBean" select="selectOrderSupplierInfoByOSPk">
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="order_supplier_pk" property="order_supplier_pk" jdbcType="CHAR" />
+			<result column="info_index" property="info_index" jdbcType="INTEGER" />
+			<result column="pick_type" property="pick_type" jdbcType="CHAR" />
+			<result column="pick_leg" property="pick_leg" jdbcType="VARCHAR" />
+			<result column="pick_other" property="pick_other" jdbcType="VARCHAR" />
+			<result column="pick_day" property="pick_day" jdbcType="INTEGER" />
+			<result column="pick_traffic" property="pick_traffic" jdbcType="VARCHAR" />
+			<result column="pick_time" property="pick_time" jdbcType="VARCHAR" />
+			<result column="pick_city" property="pick_city" jdbcType="VARCHAR" />
+			<result column="pick_place" property="pick_place" jdbcType="VARCHAR" />
+			<result column="send_type" property="send_type" jdbcType="CHAR" />
+			<result column="send_leg" property="send_leg" jdbcType="VARCHAR" />
+			<result column="send_other" property="send_other" jdbcType="VARCHAR" />
+			<result column="send_day" property="send_day" jdbcType="INTEGER" />
+			<result column="send_traffic" property="send_traffic" jdbcType="VARCHAR" />
+			<result column="send_time" property="send_time" jdbcType="VARCHAR" />
+			<result column="send_city" property="send_city" jdbcType="VARCHAR" />
+			<result column="send_place" property="send_place" jdbcType="VARCHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
 	<sql id="Base_Column_List">
 
 		order_pk,
@@ -72,6 +103,12 @@
 		where order_pk = #{order_pk,jdbcType=CHAR}
 	</delete>
 
+	<select id="selectOrderSupplierInfoByOSPk" parameterType="java.lang.String" resultType="com.xinchi.bean.OrderSupplierInfoBean">
+		select * from
+		order_supplier_info
+		where order_supplier_pk = #{pk,jdbcType=CHAR}
+		order by info_index
+	</select>
 	<insert id="insert" parameterType="com.xinchi.bean.OrderSupplierBean">
 
 		insert into order_supplier
@@ -275,16 +312,29 @@
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
-	<select id="selectByParam" parameterType="com.xinchi.bean.OrderSupplierBean" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from order_supplier
+	<select id="selectByParam" parameterType="com.xinchi.bean.OrderSupplierBean" resultMap="InfoResultMap">
+		SELECT
+		A.*,
+		B.name AS supplier_employee_name,
+		C.supplier_name AS supplier_name,
+		C.supplier_short_name AS
+		supplier_short_name,
+		D.departure_date AS departure_date
+		FROM
+		order_supplier A
+		LEFT JOIN
+		supplier_employee B ON
+		A.supplier_employee_pk = B.pk
+		LEFT JOIN
+		supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN budget_order_view D ON
+		A.order_pk = D.pk
 		<where>
 			<if test="order_pk != null and order_pk != ''">
-				order_pk = #{order_pk,jdbcType=CHAR}
+				and A.order_pk = #{order_pk,jdbcType=CHAR}
 			</if>
 			<if test="supplier_employee_pk != null and supplier_employee_pk != ''">
-				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
+				and A.supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR}
 			</if>
 		</where>
 	</select>

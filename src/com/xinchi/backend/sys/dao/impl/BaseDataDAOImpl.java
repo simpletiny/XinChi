@@ -54,4 +54,9 @@ public class BaseDataDAOImpl extends SqlSessionDaoSupport implements BaseDataDAO
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.BaseDataMapper.selectByFatherLevelPk", father_level_pk);
 	}
 
+	@Override
+	public void sysUpdateByPK(BaseDataBean cleanDay) {
+		daoUtil.sysUpdateByPK("com.xinchi.bean.mapper.BaseDataMapper.updateByPrimaryKey", cleanDay);
+	}
+
 }

@@ -1,6 +1,11 @@
+var clearLayer;
 var DataContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
+
+	var x = new Date();
+	self.today = ko.observable();
+	self.today(x.Format("yyyy-MM-dd"));
 
 	self.locations = ko.observableArray();
 	self.refreshLocations = function() {
@@ -37,12 +42,12 @@ var DataContext = function() {
 			fail_msg("“" + old_name + "”是系统自带产品线，不允许删除！");
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : "确定要删除“" + old_name + "”产品线吗？",
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
@@ -77,12 +82,12 @@ var DataContext = function() {
 			fail_msg("“" + old_name + "”是系统自带产品线，不允许修改！");
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : "更新会将系统中当前产品线下的产品信息一并修改。",
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("更新中！");
@@ -158,6 +163,148 @@ var DataContext = function() {
 		});
 	}
 
+	// 呆账设置
+	self.badDenominator = ko.observableArray();
+	var txtArray = ['一分之', '十分之', '百分之', '千分之', '万分之', '十万分之'];
+	for (var i = 5; i >= 0; i--) {
+		var denominator = new Object();
+		denominator.value = Math.pow(10, i);
+		denominator.text = txtArray[i];
+		self.badDenominator.push(denominator);
+	}
+	self.chosenDenominator = ko.observable();
+	self.changeDenominator = function() {
+		var denominator = self.chosenDenominator();
+		var numerator = $("#txt-bad-numerator").val().trim();
+		$("#l-bad-rate").text(numerator / denominator);
+	}
+
+	self.days = ko.observableArray();
+	for (var i = 0; i < 28; i++) {
+		var day = new Object();
+		day.value = i + 1;
+		day.text = (i + 1) + "日";
+		self.days.push(day);
+	}
+	self.chosenDay = ko.observable();
+	self.badConfig = ko.observable();
+	self.badNumerator = ko.observable();
+	self.isAuto = ko.observable();
+
+	self.refreshBadConfig = function() {
+		var param = "type=BAD";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.badConfig(data.datas[0]);
+			self.chosenDay(self.badConfig().ext3);
+			self.chosenDenominator(self.badConfig().ext1);
+			self.badNumerator(self.badConfig().ext2);
+			self.isAuto(self.badConfig().code == "AUTO" ? true : false);
+			self.changeDenominator();
+		});
+	};
+
+	self.cleanBadPunishment = function() {
+		clearLayer = $.layer({
+			type : 1,
+			title : ['立即清除', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['400px', '240px'],
+			offset : ['150px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#div-clear'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	}
+	self.confirmCleanBadInterest = function() {
+		var date = $("#txt-clean-date").val();
+		if (date.length != 10)
+			return;
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : "确认立即清除" + date + "(含)之前的呆账罚息累计数据吗？",
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+
+					startLoadingIndicator("清除中...");
+					var pk = 'pk_clean_bad';
+					var ext1 = date;
+					var data = "baseData.type=BAD&baseData.pk=" + pk
+							+ "&baseData.ext1=" + ext1;
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'system/updateBaseData',
+						data : data
+
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							layer.close(index);
+							// self.refreshBadConfig();
+							layer.close(clearLayer);
+						}
+					});
+				}
+			}
+		});
+
+	}
+	self.cancelCleanBadInterest = function() {
+		layer.close(clearLayer);
+	};
+	self.saveBadConfig = function() {
+		var can_edit = self.badConfig().can_edit;
+		if (can_edit == "N") {
+			fail_msg("不允许修改！请联系管理员！");
+		} else {
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : "更新后不会影响之前的呆账罚息！",
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("更新中！");
+						var pk = self.badConfig().pk;
+						var code = $("#chk-isauto").is(':checked')
+								? "AUTO"
+								: "HUM";
+						var ext1 = self.chosenDenominator();
+						var ext2 = $("#txt-bad-numerator").val().trim();
+						var ext3 = self.chosenDay();
+
+						var data = "baseData.type=BAD&baseData.pk=" + pk
+								+ "&baseData.ext1=" + ext1 + "&baseData.ext2="
+								+ ext2 + "&baseData.ext3=" + ext3
+								+ "&baseData.code=" + code;
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'system/updateBaseData',
+							data : data
+
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refreshBadConfig();
+							}
+						});
+					}
+				}
+			});
+
+		}
+	}
+
 };
 
 var ctx = new DataContext();
@@ -165,6 +312,7 @@ var ctx = new DataContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refreshLocations();
+
 	new Sortable(lineGrid, {
 		animation : 150,
 		ghostClass : 'blue-background-class',
@@ -172,4 +320,5 @@ $(document).ready(function() {
 			ctx.sortProductLine();
 		}
 	});
+	ctx.refreshBadConfig();
 });

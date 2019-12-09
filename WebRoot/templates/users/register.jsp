@@ -135,7 +135,7 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传身份证复印件<input type="file" name="file" required="required"
+							<a href="javascript:;" class="a-upload">上传身份证证件照<input type="file" name="file" required="required"
 								id="upload" /></a> <input type="hidden" name="uib.id_file_name" id="file-name" />
 						</div>
 						<div class="col-md-6" id="progress"></div>

@@ -19,6 +19,8 @@ public class ResourcesConstants {
 
 	public static String LOGIN_SESSION_KEY = "user";
 
+	public static String REBOOT_TIMER_KEY = "reboot";
+
 	// 定时任务列表
 	public static List<TaskBean> ARRAY_TASK = new ArrayList<TaskBean>();
 
@@ -257,6 +259,8 @@ public class ResourcesConstants {
 	// ************************* 基础数据 类型*********************************
 	// 产品线
 	public static String BASE_DATA_TYPE_LINE = "LINE";
+	// 呆账罚息设置
+	public static String BASE_DATA_TYPE_BAD_CONFIG = "BAD";
 
 	// 未确认
 	public static String NAME_CONFIRM_STATUS_NO = "1";

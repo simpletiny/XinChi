@@ -121,7 +121,8 @@ var OrderContext = function() {
 		xhr.send(formData);
 	};
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val()+"&employee.review_flg=Y";
+		var param = "employee.name=" + $("#client_name").val()
+				+ "&employee.review_flg=Y";
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
@@ -141,12 +142,12 @@ var OrderContext = function() {
 		$("#txt-client-employee-name").blur();
 		clientEmployeeLayer = $.layer({
 			type : 1,
-			title : [ '选择客户操作', '' ],
+			title : ['选择客户操作', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#client-pick'
@@ -167,6 +168,16 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
+
+		var x = new Date();
+		var maxDate = new Date(x.Format("yyyy-MM-dd"));
+		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+		var confirm_date = new Date($(".date-picker-confirm-date").val());
+		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
+			fail_msg("请选择允许的时间范围！");
+			return;
+		}
+
 		var confirm_file = $("#txt-confirm-file").val();
 		if (confirm_file == "") {
 			fail_msg("请上传确认件！");
@@ -297,6 +308,20 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+
+	var x = new Date();
+	var maxDate = x.Format("yyyy/MM/dd");
+	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
+	$(".date-picker-confirm-date").datetimepicker({
+		format : 'Y-m-d',
+		timepicker : false,
+		scrollInput : false,
+		defaultDate : new Date(),
+		lang : 'zh',
+
+		minDate : minDate,
+		maxDate : maxDate,
+	})
 });
 function formatNameList() {
 	nameList = $("#txt-name-list").val();

@@ -74,6 +74,7 @@ import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.solr.service.SimpletinySolr;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -809,6 +810,21 @@ public class SimpletinyAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private int reboot_min;
+
+	/**
+	 * 重启倒计时
+	 * 
+	 * @return
+	 */
+	public String rebootTimer() {
+		String nowTime = DateUtil.getDateStr(DateUtil.YYYY_MM_DD_HH_MM_SS);
+		String endTime = DateUtil.addMin(nowTime, reboot_min);
+
+		XinChiApplicationContext.setSession(ResourcesConstants.REBOOT_TIMER_KEY, endTime);
+		return SUCCESS;
+	}
+
 	public List<PayableBean> getPayables() {
 		return payables;
 	}
@@ -831,5 +847,13 @@ public class SimpletinyAction extends BaseAction {
 
 	public void setAccount_name(String account_name) {
 		this.account_name = account_name;
+	}
+
+	public int getReboot_min() {
+		return reboot_min;
+	}
+
+	public void setReboot_min(int reboot_min) {
+		this.reboot_min = reboot_min;
 	}
 }

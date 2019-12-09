@@ -172,6 +172,15 @@ var OrderContext = function() {
 			return;
 		}
 
+		var x = new Date();
+		var maxDate = new Date(x.Format("yyyy-MM-dd"));
+		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+		var confirm_date = new Date($(".date-picker-confirm-date").val());
+		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
+			fail_msg("请选择允许的时间范围！");
+			return;
+		}
+
 		/* 判断名单是否有误 */
 		var tbody = $("#name-table").find("tbody");
 		var ids = $(tbody).find("[st='id']");
@@ -354,6 +363,19 @@ $(document).ready(function() {
 		changeAutoType($(this).val());
 	});
 	changeAutoType("Y");
+	var x = new Date();
+	var maxDate = x.Format("yyyy/MM/dd");
+	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
+	$(".date-picker-confirm-date").datetimepicker({
+		format : 'Y-m-d',
+		timepicker : false,
+		scrollInput : false,
+		defaultDate : new Date(),
+		lang : 'zh',
+
+		minDate : minDate,
+		maxDate : maxDate,
+	})
 });
 function changeAutoType(v) {
 	if (v == "Y") {

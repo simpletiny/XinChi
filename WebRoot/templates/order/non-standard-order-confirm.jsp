@@ -127,7 +127,7 @@
 							<label class="l">确认日期</label>
 							<div class="ip">
 								<input type="text" data-bind="value:confirm_date" name="bnsOrder.confirm_date" required="required"
-									class="ip- date-picker" placeholder="确认日期" />
+									class="ip- date-picker-confirm-date" placeholder="确认日期" />
 							</div>
 						</div>
 						<div class="col-md-6 required">

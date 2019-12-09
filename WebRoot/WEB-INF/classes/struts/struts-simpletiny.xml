@@ -49,5 +49,8 @@
 		<action name="fixFly" class="simpletinyAction" method="fixFly">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="rebootTimer" class="simpletinyAction" method="rebootTimer">
+			<result name="success" type="redirect">/</result>
+		</action>
 	</package>
 </struts>

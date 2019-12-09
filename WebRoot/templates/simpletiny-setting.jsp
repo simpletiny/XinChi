@@ -16,7 +16,7 @@
 			<form action="<%=basePath%>simpletiny/autoFixBalance">
 				<input type="text" name="account_name"></input> <input type="submit" value="修正银行流水"></input>
 			</form>
-		<%-- 	<a href="<%=basePath%>simpletiny/autoUpdateClientUser">修复公开客户对应关系</a> --%>
+			<%-- 	<a href="<%=basePath%>simpletiny/autoUpdateClientUser">修复公开客户对应关系</a> --%>
 			<a href="<%=basePath%>simpletiny/autoUpdateClientRelationConnect">修复客户关系交流信息</a>
 			<%-- <a href="<%=basePath%>simpletiny/fixClientRelation" >修复FLY</a> --%>
 			<%-- <form action="<%=basePath%>simpletiny/updateProductDetail">
@@ -34,6 +34,10 @@
 		<div class="main-container">
 			<canvas id="userChart" width="1000" height="400"></canvas>
 		</div>
+
+		<form action="<%=basePath%>simpletiny/rebootTimer">
+			<input type="number" name="reboot_min"></input> <input type="submit" value="重启倒计时"></input>
+		</form>
 	</div>
 </body>
 </html>

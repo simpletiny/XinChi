@@ -124,6 +124,8 @@ public class BaseDataServiceImpl implements BaseDataService {
 			commonDao.exeBySql(sql);
 			dao.update(baseData);
 
+		} else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_BAD_CONFIG)) {
+			dao.update(baseData);
 		}
 
 		return SUCCESS;

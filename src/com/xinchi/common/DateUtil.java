@@ -187,6 +187,19 @@ public class DateUtil {
 		return sdf3.format(c.getTime());
 	}
 
+	public static String addMin(String date, int num) {
+		try {
+			Date d = sdf4.parse(date);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			c.add(Calendar.MINUTE, num);
+			return sdf4.format(c.getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 	public static String getThisWeekFirstDay() {
 		Calendar cal = Calendar.getInstance();
 

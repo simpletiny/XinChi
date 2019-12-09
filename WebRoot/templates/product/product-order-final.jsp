@@ -135,6 +135,7 @@ tr td {
 								<th>游客信息</th>
 								<th>联系方式</th>
 								<th>备注</th>
+								<th>下载</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -156,6 +157,7 @@ tr td {
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td></td>
 								<td></td>
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">

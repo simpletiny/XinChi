@@ -8,7 +8,7 @@ var OrderContext = function() {
 
 	self.chosenOperations = ko.observableArray([]);
 
-	self.status = [ 'N', 'I', 'Y' ];
+	self.status = ['N', 'I', 'Y'];
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("N");
@@ -39,24 +39,42 @@ var OrderContext = function() {
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=F";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
-			self.operations(data.operations);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$
+				.getJSON(
+						self.apiurl
+								+ 'product/searchProductOrderOperationByPage',
+						param,
+						function(data) {
+							self.operations(data.operations);
 
-			$(self.operations()).each(function(idx, data) {
-				total_people_count += data.people_count - 0;
-				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
-			});
+							$(self.operations())
+									.each(
+											function(idx, data) {
+												total_people_count += data.people_count - 0;
+												total_supplier_cost += data.supplier_cost == null
+														? 0
+														: data.supplier_cost;
+											});
 
-			self.totalPeopleCount(total_people_count);
-			self.totalSupplierCost(total_supplier_cost);
-			$(".detail").showDetail();
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-			
-			endLoadingIndicator();
-		});
+							self.totalPeopleCount(total_people_count);
+							self.totalSupplierCost(total_supplier_cost);
+							$(".detail").showDetail();
+							self.totalCount(Math.ceil(data.page.total
+									/ self.perPage));
+							self.setPageNums(self.currentPage());
+
+							endLoadingIndicator();
+						});
 	};
+
+	self.downloadSc = function(team_number, supplier_employee_pk) {
+		window.location.href = self.apiurl
+				+ "file/downloadProductFile?team_number=" + team_number
+				+ "&supplier_employee_pk=" + supplier_employee_pk
+				+ "&fileType=C";
+	}
 
 	self.productSuppliers = ko.observableArray([]);
 	// 打回重新决算
@@ -72,12 +90,12 @@ var OrderContext = function() {
 			var operate_pk = current[0];
 			var data = "operate_pk=" + operate_pk;
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要打回到未决算状态吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("打回中...");
@@ -113,12 +131,12 @@ var OrderContext = function() {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
 				type : 1,
-				title : [ '游客信息', '' ],
+				title : ['游客信息', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '500px' ],
-				offset : [ '', '' ],
+				area : ['800px', '500px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
@@ -162,9 +180,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -178,13 +197,17 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
-			
-			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
-			self.setPageNums1(self.currentPage1());
-		});
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
+
+					self
+							.totalCount1(Math.ceil(data.page.total
+									/ self.perPage1));
+					self.setPageNums1(self.currentPage1());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -230,9 +253,10 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
+				.totalCount1();
 		var pageNums1 = [];
-		for ( var i = startPage1; i <= endPage1; i++) {
+		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
 		}
 		self.pageNums1(pageNums1);
@@ -246,7 +270,7 @@ var OrderContext = function() {
 
 var ctx = new OrderContext();
 $(document).ready(function() {
-	
+
 	ko.applyBindings(ctx);
 	ctx.refresh();
 
@@ -256,12 +280,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -294,7 +318,7 @@ function deleteRow(btn) {
 function refreshIndex() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		$(tr).find("td[st='index']").html(i + 1);
 	}

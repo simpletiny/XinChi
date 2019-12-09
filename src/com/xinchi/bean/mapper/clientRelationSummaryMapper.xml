@@ -96,6 +96,11 @@
 		<result column="month_score" property="month_score" jdbcType="INTEGER" />
 		<result column="sum_reimbursement" property="sum_reimbursement" jdbcType="DECIMAL" />
 		<result column="month_reimbursement" property="month_reimbursement" jdbcType="DECIMAL" />
+		<result column="bad" property="bad" jdbcType="DECIMAL" />
+		<result column="sum_dead" property="sum_dead" jdbcType="DECIMAL" />
+		<result column="month_dead" property="month_dead" jdbcType="DECIMAL" />
+		<result column="day_hold" property="day_hold" jdbcType="DECIMAL" />
+		<result column="bad_interest" property="bad_interest" jdbcType="DECIMAL" />
 	</resultMap>
 	<resultMap id="ConnectMap" type="com.xinchi.bean.ConnectDto">
 		<result column="connect_date" property="connect_date" jdbcType="VARCHAR" />
@@ -303,26 +308,35 @@
 	</select>
 	<!-- 搜索仪表盘数据 -->
 	<select id="selectMeterData" parameterType="java.lang.String" resultMap="MeterMap">
-		select
-		SUM(A.score) AS score,
-		SUM(A.month_score) AS month_score,
-		SUM(B.receivable) AS receivable,
-		SUM(B.warning) AS
-		warning,
-		SUM(C.sum_reimbursement) AS sum_reimbursement,
-		SUM(D.sum_reimbursement) AS
-		month_reimbursement
-		from view_score A
-		LEFT JOIN view_receivable_meter B ON A.user_pk = B.user_pk
-		LEFT JOIN
-		view_sum_reimbursement C ON A.user_number =
-		C.apply_user
-		LEFT JOIN
-		view_month_reimbursement D ON A.user_number =
-		D.apply_user
+		SELECT 
+		    SUM(A.score) AS score,
+		    SUM(A.month_score) AS month_score,
+		    SUM(B.receivable) AS receivable,
+		    SUM(B.warning) AS warning,
+		    SUM(C.sum_reimbursement) AS sum_reimbursement,
+		    SUM(D.sum_reimbursement) AS month_reimbursement,
+		    SUM(B.bad) AS bad,
+		    SUM(B.month_dead) AS month_dead,
+		    SUM(B.sum_dead) AS sum_dead,
+		    SUM(IF(E.day_hold IS NULL, 0, E.day_hold)) AS day_hold,
+		    SUM(IF(F.bad_interest IS NULL,0,F.bad_interest)) AS bad_interest
+		FROM
+			user_base X 
+            LEFT JOIN 
+		    view_score A ON A.user_number = X.user_number
+		        LEFT JOIN
+		    view_receivable_meter B ON X.pk = B.user_pk
+		        LEFT JOIN
+		    view_sum_reimbursement C ON X.user_number = C.apply_user
+		        LEFT JOIN
+		    view_month_reimbursement D ON X.user_number = D.apply_user
+		        LEFT JOIN
+		    view_accumulate_balance E ON X.user_number = E.user_number
+		    	LEFT JOIN
+		    view_bad_interest F ON X.user_number = F.user_number
 		<where>
 			<if test="_parameter != null and _parameter !=''">
-				and A.user_pk = #{_parameter,jdbcType=VARCHAR}
+				and X.pk = #{_parameter,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

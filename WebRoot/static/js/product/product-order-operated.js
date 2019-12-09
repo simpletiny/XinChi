@@ -57,6 +57,14 @@ var OrderContext = function() {
 		});
 	};
 
+	
+	self.downloadSc = function(team_number, supplier_employee_pk) {
+		window.location.href = self.apiurl
+				+ "file/downloadProductFile?team_number=" + team_number
+				+ "&supplier_employee_pk=" + supplier_employee_pk
+				+ "&fileType=C";
+	}
+	
 	self.productSuppliers = ko.observableArray([]);
 
 	self.finalOperate = function() {

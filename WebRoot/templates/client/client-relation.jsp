@@ -25,7 +25,9 @@
 .detail {
 	color: blue;
 }
-
+.warning{
+	color:red;
+}
 #table-relations tr td {
 	text-overflow: ellipsis; /* for IE */
 	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
@@ -150,9 +152,8 @@
 								<th>资金费用</th>
 								<th>应收款</th>
 								<th>预警</th>
-								<th>呆账</th>
-								<th>罚息</th>
-								<th>坏账</th>
+								<th>本月呆账</th>
+								<th>本月罚息</th>
 							</tr>
 						</thead>
 						<tbody id="tbody-data">
@@ -166,13 +167,12 @@
 								<td data-bind="text:accurateSale().all_accurate"></td>
 								<td data-bind="text:incomingCount().all_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().all_wechat"></td>
-								<td></td>
+								<td data-bind="text:meter().day_hold" class="rmb"></td>
 								<td></td>
 								<td data-bind="text:meter().receivable" class="rmb"></td>
-								<td data-bind="text:meter().warning" class="rmb"></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td data-bind="text:meter().warning" class="rmb warning"></td>
+								<td data-bind="text:meter().bad" class="rmb warning"></td>
+								<td data-bind="text:meter().bad_interest" class="rmb warning"></td>
 							</tr>
 							<tr>
 								<td>主力</td>
@@ -189,7 +189,6 @@
 								<th>累计费用</th>
 								<th>业务资金</th>
 								<th>勤点扣款</th>
-								<th></th>
 								<th></th>
 							</tr>
 							<tr>
@@ -208,7 +207,6 @@
 								<td></td>
 								<td data-bind="text:meter().point_money_deduct" class="rmb"></td>
 								<td></td>
-								<td></td>
 							</tr>
 
 							<tr>
@@ -224,9 +222,8 @@
 								<th>收客分值</th>
 								<th>回款分值</th>
 								<th>当月分值</th>
-								<th></th>
-								<th></th>
-								<th></th>
+								<th>本月坏账</th>
+								<th>累计坏账</th>
 								<th></th>
 							</tr>
 							<tr>
@@ -242,9 +239,8 @@
 								<td data-bind="text:meter().month_score"></td>
 								<td data-bind="text:meter().back_score"></td>
 								<td data-bind="text:meter().month_score+meter().back_score"></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td data-bind="text:meter().month_dead" class="rmb warning"></td>
+								<td data-bind="text:meter().sum_dead" class="rmb warning"></td>
 								<td></td>
 							</tr>
 							<tr>
@@ -257,7 +253,6 @@
 								<td data-bind="text:accurateSale().new_accurate"></td>
 								<td data-bind="text:incomingCount().new_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().new_wechat"></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -312,7 +307,7 @@
 								<td data-bind="text: $root.connectTypeMapping[$data.type]"></td>
 								<td><a
 									data-bind="text: $data.extra_info,click:function(){$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
-								<td data-bind="text: $data.receivable"></td>
+								<td class="rmb" data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.last_receivable_period"></td>
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>

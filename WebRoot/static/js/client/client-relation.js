@@ -15,16 +15,16 @@ var ClientContext = function() {
 	});
 	// 维度
 	// self.level = [ '新增级', '忽略级', '尝试级', '市场级', '朋友级', '主力级', '核心级' ];
-	self.level = [ '主力级', '市场级', '尝试级', '忽略级', '新增级' ];
+	self.level = ['主力级', '市场级', '尝试级', '忽略级', '新增级'];
 	// 关系度
-	self.relationLevel = [ '主力级', '市场级', '尝试级', '忽略级', '新增级' ];
+	self.relationLevel = ['主力级', '市场级', '尝试级', '忽略级', '新增级'];
 
 	// 市场力
 	// self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
-	self.marketLevel = [ '电话级', '微信级', '广告级' ];
+	self.marketLevel = ['电话级', '微信级', '广告级'];
 	// 回款誉
-	self.backLevel = [ '未知', '提前', '及时', '定期', '拖拉', '费劲', '垃圾' ];
-	self.chosenLevel = ko.observableArray([ '关系度' ]);
+	self.backLevel = ['未知', '提前', '及时', '定期', '拖拉', '费劲', '垃圾'];
+	self.chosenLevel = ko.observableArray(['关系度']);
 
 	self.connectTypeMapping = {
 		"ORDER" : "订单",
@@ -37,7 +37,7 @@ var ClientContext = function() {
 	self.chosenBackLevel = ko.observableArray([]);
 	self.chosenMarketLevel = ko.observableArray([]);
 
-	self.sortTypes = [ '1', '2', '3', '4' ];
+	self.sortTypes = ['1', '2', '3', '4'];
 	self.sortTypeMapping = {
 		'1' : '账期倒序',
 		'2' : '交流日期',
@@ -57,12 +57,12 @@ var ClientContext = function() {
 
 		queryLayer = $.layer({
 			type : 1,
-			title : [ '系统客户查询', '' ],
+			title : ['系统客户查询', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '200px' ],
-			offset : [ '', '' ],
+			area : ['600px', '200px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#query-sys-client'
@@ -131,8 +131,7 @@ var ClientContext = function() {
 		} else if (self.chosenEmployee().length == 1) {
 			var employeePk = self.chosenEmployee()[0].split(";")[0];
 			window.location.href = self.apiurl
-					+ "templates/client/employee-edit.jsp?key="
-					+ employeePk;
+					+ "templates/client/employee-edit.jsp?key=" + employeePk;
 		}
 	};
 
@@ -163,7 +162,12 @@ var ClientContext = function() {
 		receivable : 0,
 		warning : 0,
 		score : 0,
-		month : 0
+		month : 0,
+		bad : 0,
+		month_ : 0,
+		sum_dead : 0,
+		day_hold : 0,
+		bad_interest : 0,
 	});
 	self.workOrder = ko.observable({});
 	self.accurateSale = ko.observable({});
@@ -252,19 +256,19 @@ var ClientContext = function() {
 		sales : []
 	});
 	self.setClientLevel = function() {
-
+		console.log(self.chosenEmployee());
 		if (self.chosenEmployee().length == 0) {
 			fail_msg("请选择客户");
 			return;
-		} else if (self.chosenEmployee().length > 1) {
+		} else if (self.chosenEmployee().length > 0) {
 			levelLayer = $.layer({
 				type : 1,
-				title : [ '市场力调整', '' ],
+				title : ['市场力调整', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '300px', '150px' ],
-				offset : [ '', '' ],
+				area : ['300px', '150px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#client-market-level'
@@ -319,12 +323,12 @@ var ClientContext = function() {
 		$("#client_employee_pk").val(pk);
 		todoLayer = $.layer({
 			type : 1,
-			title : [ '新增待办', '' ],
+			title : ['新增待办', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '400px', '200px' ],
-			offset : [ '', '' ],
+			area : ['400px', '200px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#todo-create'
@@ -366,7 +370,7 @@ var ClientContext = function() {
 
 	self.quit = ko.observable({});
 
-	self.reasons = [ '效果不佳', '精力不够', '客户离职' ];
+	self.reasons = ['效果不佳', '精力不够', '客户离职'];
 	/**
 	 * 放弃维护
 	 */
@@ -396,12 +400,12 @@ var ClientContext = function() {
 
 									quitLayer = $.layer({
 										type : 1,
-										title : [ '放弃维护', '' ],
+										title : ['放弃维护', ''],
 										maxmin : false,
-										closeBtn : [ 1, true ],
+										closeBtn : [1, true],
 										shadeClose : false,
-										area : [ '400px', '200px' ],
-										offset : [ '', '' ],
+										area : ['400px', '200px'],
+										offset : ['', ''],
 										scrollbar : true,
 										page : {
 											dom : '#quit-connect'
@@ -420,12 +424,12 @@ var ClientContext = function() {
 	 */
 	self.doQuit = function() {
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认要放弃维护吗？',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					var data = $("#form-quit").serialize();
@@ -459,12 +463,12 @@ var ClientContext = function() {
 
 	self.upToFriend = function(pk, client_employee_pk) {
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认将此客户升级为朋友级吗？',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					var data = "clientRelation.pk=" + pk
@@ -495,12 +499,12 @@ var ClientContext = function() {
 
 	self.downToMarket = function(pk, client_employee_pk) {
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认将此客户降级为市场级吗？',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					var data = "clientRelation.pk=" + pk
@@ -537,12 +541,12 @@ var ClientContext = function() {
 
 		connectInfoLayer = $.layer({
 			type : 1,
-			title : [ '交流信息', '' ],
+			title : ['交流信息', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '800px', '700px' ],
-			offset : [ '', '' ],
+			area : ['800px', '700px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#connect-info'
@@ -576,12 +580,12 @@ var ClientContext = function() {
 			self.clientEmployee(data.employee);
 			commentLayer = $.layer({
 				type : 1,
-				title : [ '备注', '' ],
+				title : ['备注', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '500px', '300px' ],
-				offset : [ '', '' ],
+				area : ['500px', '300px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#comment-edit'
@@ -625,12 +629,12 @@ var ClientContext = function() {
 		$("#img-pic").attr("src", "");
 		headCheckLayer = $.layer({
 			type : 1,
-			title : [ '头像', '' ],
+			title : ['头像', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '320px', '355px' ],
-			offset : [ '', '' ],
+			area : ['320px', '355px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'

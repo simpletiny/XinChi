@@ -48,6 +48,9 @@ public class ProductSupplierBean extends SupperBO implements Serializable {
 	private String supplier_employee_name;
 	private List<ProductSupplierInfoBean> infos;
 
+	private String supplier_short_name;
+	private String supplier_name;
+
 	public String getProduct_pk() {
 		return product_pk;
 	}
@@ -230,6 +233,22 @@ public class ProductSupplierBean extends SupperBO implements Serializable {
 
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
+	}
+
+	public String getSupplier_short_name() {
+		return supplier_short_name;
+	}
+
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+
+	public void setSupplier_short_name(String supplier_short_name) {
+		this.supplier_short_name = supplier_short_name;
+	}
+
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
 	}
 
 }

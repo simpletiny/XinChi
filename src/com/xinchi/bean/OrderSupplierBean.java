@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class OrderSupplierBean extends SupperBO implements Serializable {
@@ -43,6 +45,12 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 	private String tourist_info;
 
 	private String confirm_file_templet;
+
+	private String supplier_short_name;
+	private String supplier_employee_name;
+	private String supplier_name;
+	private String departure_date;
+	private List<OrderSupplierInfoBean> infos;
 
 	public String getOrder_pk() {
 		return order_pk;
@@ -194,6 +202,46 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 
 	public void setConfirm_file_templet(String confirm_file_templet) {
 		this.confirm_file_templet = confirm_file_templet;
+	}
+
+	public String getSupplier_short_name() {
+		return supplier_short_name;
+	}
+
+	public String getSupplier_employee_name() {
+		return supplier_employee_name;
+	}
+
+	public String getSupplier_name() {
+		return supplier_name;
+	}
+
+	public void setSupplier_short_name(String supplier_short_name) {
+		this.supplier_short_name = supplier_short_name;
+	}
+
+	public void setSupplier_employee_name(String supplier_employee_name) {
+		this.supplier_employee_name = supplier_employee_name;
+	}
+
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
+	}
+
+	public List<OrderSupplierInfoBean> getInfos() {
+		return infos;
+	}
+
+	public void setInfos(List<OrderSupplierInfoBean> infos) {
+		this.infos = infos;
+	}
+
+	public String getDeparture_date() {
+		return departure_date;
+	}
+
+	public void setDeparture_date(String departure_date) {
+		this.departure_date = departure_date;
 	}
 
 }

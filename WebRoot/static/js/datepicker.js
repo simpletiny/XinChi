@@ -4,8 +4,8 @@ if ($('.date-picker').datetimepicker != null) {
 		timepicker : false,
 		scrollInput : false,
 		defaultDate : new Date(),
-		lang : 'zh'
-	});
+		lang : 'zh',
+	})
 }
 
 if ($('.datetime-picker').datetimepicker != null) {

@@ -18,4 +18,6 @@ public interface BaseDataDAO {
 
 	public List<BaseDataBean> selectByFatherLevelPk(String father_level_pk);
 
+	public void sysUpdateByPK(BaseDataBean cleanDay);
+
 }
