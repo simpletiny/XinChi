@@ -655,6 +655,6 @@
 			</if>
 		</where>
 
-		order by A.name,A.product_model
+		order by A.product_value DESC,A.name,A.product_model
 	</select>
 </mapper>

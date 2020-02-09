@@ -18,7 +18,7 @@ public class AutoRecordAccumulate {
 		String sql1 = "insert into accumulate_balance(user_pk,date,receivable_balance,user_number) SELECT"
 				+ "	C.pk AS user_pk,LEFT(NOW(), 10) AS date,SUM(IF(final_flg = 'N',budget_balance,final_balance)) AS receivable_balance,"
 				+ "sales AS user_number FROM receivable A LEFT JOIN budget_order_view B ON A.team_number = B.team_number"
-				+ " LEFT JOIN user_base C ON A.sales=C.user_number WHERE B.confirm_date = LEFT(NOW(), 10)"
+				+ " LEFT JOIN user_base C ON A.sales=C.user_number WHERE B.confirm_date <= LEFT(NOW(), 10)"
 				+ "GROUP BY sales having receivable_balance >0;";
 		SqlBean ss = new SqlBean();
 		ss.setSql(sql1);

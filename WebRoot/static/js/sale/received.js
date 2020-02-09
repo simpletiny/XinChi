@@ -52,7 +52,7 @@ var ReceivedContext = function() {
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("I");
-	self.allStatus = [ 'I', 'Y', 'N', 'E' ];
+	self.allStatus = ['I', 'Y', 'N', 'E'];
 
 	self.statusMapping = {
 		'I' : '待确认',
@@ -67,13 +67,14 @@ var ReceivedContext = function() {
 	}
 	self.chosenReceivedType = ko.observable();
 	self.chosenReceivedType("RECEIVED");
-	self.receivedTypes = ko.observableArray([ new receivedType('TAIL', '抹零'),
-			new receivedType('SUM', '合账'), new receivedType('STRIKE', '冲账'),
-			new receivedType('RECEIVED', '收入'), new receivedType('PAY', '支出'),
+	self.receivedTypes = ko.observableArray([new receivedType('TAIL', '抹零'),
+			new receivedType('STRIKE', '冲账'),
+			new receivedType('RECEIVED', '收入&合账'),
+			new receivedType('PAY', '支出'),
 			new receivedType('STRIKEOUT', '冲账/出'),
 			new receivedType('STRIKEIN', '冲账/入'),
 			new receivedType('COLLECT', '代收'), new receivedType('FLY', 'FLY'),
-			new receivedType('TAIL98', '98清尾') ]);
+			new receivedType('TAIL98', '98清尾')]);
 
 	self.typeMapping = {
 		'TAIL' : '抹零',
@@ -105,6 +106,12 @@ var ReceivedContext = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
+
+		if ((self.chosenReceivedType() == "RECEIVED")) {
+			param += "&detail.types=RECEIVED&detail.types=SUM"
+		} else {
+			param += "&detail.types=" + self.chosenReceivedType();
+		};
 
 		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
 				data) {
@@ -151,12 +158,12 @@ var ReceivedContext = function() {
 			return;
 		}
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认要打回重报吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					startLoadingSimpleIndicator("操作中");
 					layer.close(index);
@@ -204,12 +211,12 @@ var ReceivedContext = function() {
 						endLoadingIndicator();
 						viewCommentLayer = $.layer({
 							type : 1,
-							title : [ '摘要详情', '' ],
+							title : ['摘要详情', ''],
 							maxmin : false,
-							closeBtn : [ 1, true ],
+							closeBtn : [1, true],
 							shadeClose : false,
-							area : [ '700px', 'auto' ],
-							offset : [ '150px', '' ],
+							area : ['700px', 'auto'],
+							offset : ['150px', ''],
 							scrollbar : true,
 							page : {
 								dom : '#comment'
@@ -240,12 +247,12 @@ var ReceivedContext = function() {
 
 					viewDetailLayer = $.layer({
 						type : 1,
-						title : [ '合账详情', '' ],
+						title : ['合账详情', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '800px', 'auto' ],
-						offset : [ '150px', '' ],
+						area : ['800px', 'auto'],
+						offset : ['150px', ''],
 						scrollbar : true,
 						page : {
 							dom : '#sum_detail'
@@ -262,12 +269,12 @@ var ReceivedContext = function() {
 		$("#img-pic").attr("src", "");
 		budgetConfirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看凭证', '' ],
+			title : ['查看凭证', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -298,12 +305,12 @@ var ReceivedContext = function() {
 				$("#img-pic").attr("src", "");
 				budgetConfirmCheckLayer = $.layer({
 					type : 1,
-					title : [ '查看凭证', '' ],
+					title : ['查看凭证', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '600px', '650px' ],
-					offset : [ '50px', '' ],
+					area : ['600px', '650px'],
+					offset : ['50px', ''],
 					scrollbar : true,
 					page : {
 						dom : '#pic-check'

@@ -63,7 +63,7 @@ tr td {
 							<div class="col-md-2">
 								<select class="form-control" style="height: 34px" id="select-sales"
 									data-bind="options: receivedTypes,  optionsText: 'value', optionsValue: 'key',value:chosenReceivedType,event:{change:refresh}, optionsCaption: '--全部--'"
-									name="detail.type"></select>
+									id="sel-type"></select>
 							</div>
 						</div>
 					</div>

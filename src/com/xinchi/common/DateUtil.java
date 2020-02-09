@@ -303,6 +303,25 @@ public class DateUtil {
 		return count;
 	}
 
+	/**
+	 * 获取当月有多少天
+	 * 
+	 * @return
+	 */
+	public static int getMaxDay(String month, String... format) {
+		Date d = null;
+		if (format.length > 0) {
+			d = castStr2Date(month, format[0]);
+		} else {
+			d = castStr2Date(month, "yyyy-MM");
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(d);
+
+		return cal.getActualMaximum(Calendar.DATE);
+	}
+
 	public static void main(String[] args) {
 		String d1 = "2018-03-22";
 		String d2 = "2018-03-21";

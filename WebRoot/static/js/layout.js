@@ -83,3 +83,7 @@
 // }
 //
 // });
+function click_menu(li) {
+	// console.log(li);
+	// console.log("test");
+}

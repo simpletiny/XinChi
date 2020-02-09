@@ -62,6 +62,8 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 	private BigDecimal money;
 	private String confirm_time_end;
 
+	private List<String> types;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -308,6 +310,14 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setConfirm_time_end(String confirm_time_end) {
 		this.confirm_time_end = confirm_time_end;
+	}
+
+	public List<String> getTypes() {
+		return types;
+	}
+
+	public void setTypes(List<String> types) {
+		this.types = types;
 	}
 
 }

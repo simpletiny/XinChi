@@ -1,3 +1,4 @@
+
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
@@ -37,8 +38,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 
 .timer {
-	text-align:center;
-	border:solid 1px;
+	text-align: center;
+	border: solid 1px;
 	width: 100px;
 	height: 80px;
 	display: block;
@@ -47,7 +48,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 </style>
 </head>
 <body>
-<!--  	<div class="floatPanel timer">
+	<!--  	<div class="floatPanel timer">
 		<label>重启倒计时</label>
 		<h3><b id="reboot-timer">05:00</b></h3>
 	</div> 
@@ -74,11 +75,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		</div>
 	</div>
 	<!-- head end -->
-
+	`
 	<!-- sidebar start -->
 	<div class="main-sidebar">
 		<ul class="menu-tree" style="padding-top: 30px;">
-			<li class="culture"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
+			<li class="culture" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
 					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>企业文化</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
@@ -143,7 +144,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				</ol></li> --%>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="order-box"><a href="<%=basePath%>templates/order/tbc-order.jsp"><i
+				<li class="order-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
@@ -257,6 +258,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 			</s:if>
 
+			<s:if test="#session.user.user_roles.contains('ADMIN')">
+				<li class="data"><a href="<%=basePath%>templates/data/order-data.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>数据分析</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/data/order-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单数据</a></li>
+					</ol></li>
+			</s:if>
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 				<li class="user"><a href="<%=basePath%>templates/users/user-approve.jsp"><i
@@ -275,6 +282,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li><a href="<%=basePath%>templates/users/user-center.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>个人中心</a></li>
 			</ol>
 			</li>
+
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 				<li class="manager"><a href="<%=basePath%>templates/sale/sale-work-report.jsp"><i

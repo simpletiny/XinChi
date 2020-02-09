@@ -3,7 +3,7 @@ var airTickeChecktLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.allCharges = [ "PRODUCT", "SALE", "NONE" ];
+	self.allCharges = ["PRODUCT", "SALE", "NONE"];
 	self.chosenCharge = ko.observable();
 	self.locations = ko.observableArray();
 
@@ -22,14 +22,13 @@ var ProductContext = function() {
 		'SALE' : '销售包票',
 		'NONE' : '无机票'
 	};
-	self.status = [ 'N', 'Y', 'D' ];
+	self.status = ['N', 'Y', 'D'];
 	self.saleMapping = {
 		'N' : "架下",
 		'Y' : "架上",
 		'D' : "废弃"
 	};
 	self.chosenStatuses = ko.observableArray([]);
-	self.chosenStatuses.push("N");
 	self.chosenStatuses.push("Y");
 
 	// 新建产品
@@ -91,12 +90,12 @@ var ProductContext = function() {
 				msg += "下架当日不能重新上架！";
 			}
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : msg,
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("保存中！");
@@ -126,12 +125,12 @@ var ProductContext = function() {
 		msg += "强制下架会将待确认订单一并删除！！是否要强制下架？";
 		data += "&force_flg=Y"
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : msg,
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中！");
@@ -173,12 +172,12 @@ var ProductContext = function() {
 					return;
 				}
 				$.layer({
-					area : [ 'auto', 'auto' ],
+					area : ['auto', 'auto'],
 					dialog : {
 						msg : '确认要废弃此产品吗？',
 						btns : 2,
 						type : 4,
-						btn : [ '确认', '取消' ],
+						btn : ['确认', '取消'],
 						yes : function(index) {
 							layer.close(index);
 							startLoadingIndicator("保存中！");
@@ -238,12 +237,12 @@ var ProductContext = function() {
 				self.airTickets(data.air_tickets);
 				airTicketLayer = $.layer({
 					type : 1,
-					title : [ '添加机票信息', '' ],
+					title : ['添加机票信息', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '500px' ],
-					offset : [ '', '' ],
+					area : ['800px', '500px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#air-ticket'
@@ -267,12 +266,12 @@ var ProductContext = function() {
 					self.airTickets(data.air_tickets);
 					airTicketCheckLayer = $.layer({
 						type : 1,
-						title : [ '机票信息', '' ],
+						title : ['机票信息', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '800px', '500px' ],
-						offset : [ '', '' ],
+						area : ['800px', '500px'],
+						offset : ['', ''],
 						scrollbar : true,
 						page : {
 							dom : '#air-ticket-check'

@@ -7,6 +7,8 @@ import java.io.LineNumberReader;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import com.xinchi.common.DateUtil;
+
 /**
  * 
  * @author Administrator 通过aop拦截后执行具体操作
@@ -17,7 +19,8 @@ public class SomeTest {
 	private static final int BUFFER_SIZE = 2 * 1024;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("" + 31);
+		System.out.println(DateUtil.todayOfMonth());
+
 	}
 
 	public static int countLine(File f, int n) throws Exception {

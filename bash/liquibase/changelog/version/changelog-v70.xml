@@ -834,6 +834,105 @@
 			<comment>CREATE VIEW view_bad_interest</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		DROP VIEW if exists view_back_money_balance;
+				CREATE VIEW view_back_money_balance AS
+				    SELECT 
+				        A.team_number AS team_number,
+				        A.create_user AS user_number,
+				        IF((A.confirm_flg = 'Y'
+				                OR A.confirm_flg = 'F')
+				                AND (D.final_type IS NULL
+				                OR D.final_type != 4),
+				            (A.adult_count + IFNULL(A.special_count, 0)) * A.product_value,
+				            0) AS product_point,
+				        D.final_type,
+				        A.confirm_date AS confirm_date,
+				        A.receivable AS receivable,
+				        C.status,
+				        SUM(C.received) AS received,
+				        receivable - SUM(C.received) AS balance
+				    FROM
+				        budget_standard_order A
+				            LEFT JOIN
+				        final_order_view D ON A.team_number = D.team_number
+				            LEFT JOIN
+				        receivable B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        client_received_detail C ON A.team_number = C.team_number
+				            AND LEFT(C.received_time, 10) <= (A.confirm_date + INTERVAL 1 DAY)
+				    WHERE
+				        C.team_number IS NOT NULL
+				    GROUP BY A.team_number
+				    HAVING product_point != 0;
+             ]]>
+			<comment>ALTER VIEW view_back_money_balance</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		  	DROP VIEW if exists view_back_money_balance;
+					CREATE VIEW view_back_money_balance AS
+					    SELECT 
+					        A.team_number AS team_number,
+					        A.create_user AS user_number,
+					        IF((A.confirm_flg = 'Y'
+					                OR A.confirm_flg = 'F')
+					                AND (D.final_type IS NULL
+					                OR D.final_type != 4),
+					            (A.adult_count + IFNULL(A.special_count, 0)) * A.product_value,
+					            0) AS product_point,
+					        D.final_type,
+					        A.confirm_date AS confirm_date,
+					        A.receivable AS receivable,
+					        C.status,
+					        SUM(C.received) AS received,
+					        receivable - SUM(C.received) AS balance
+					    FROM
+					        budget_standard_order A
+					            LEFT JOIN
+					        final_order_view D ON A.team_number = D.team_number
+					            LEFT JOIN
+					        receivable B ON A.team_number = B.team_number
+					            LEFT JOIN
+					        client_received_detail C ON A.team_number = C.team_number
+					            AND LEFT(C.received_time, 10) <= (A.confirm_date + INTERVAL 1 DAY)
+					            AND C.type != 'TAIL98'
+					    WHERE
+					        C.team_number IS NOT NULL
+					    GROUP BY A.team_number
+					    HAVING product_point != 0;
+             ]]>
+			<comment>ALTER VIEW view_back_money_balance</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		  	CREATE VIEW view_data_order_count AS
+					    SELECT 
+					        COUNT(A.pk) AS order_cnt,
+					        A.adult_count + IF(A.special_count IS NULL,
+					            0,
+					            A.special_count) AS people_cnt,
+					        A.confirm_date,
+					        MONTH(confirm_date) AS month,
+					        DAYOFMONTH(confirm_date) AS dayofm,
+					        DAYOFWEEK(A.confirm_date) - 1 AS dayofw,
+					        A.create_user,
+					        A.create_user_number
+					    FROM
+					        budget_order_view A
+					    WHERE
+					        confirm_date IS NOT NULL
+					    GROUP BY A.create_user , A.confirm_date;
+             ]]>
+			<comment>CREATE VIEW view_data_order_count</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

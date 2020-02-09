@@ -287,26 +287,9 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 		option.setUser_pk(user_pk);
 		List<BackPointDto> enableBackPoints = dao.selectEnableBackPointByParam(option);
 
-		// ClientReceivedDetailBean rOption = new ClientReceivedDetailBean();
-
 		if (null != enableBackPoints) {
 			for (BackPointDto bp : enableBackPoints) {
-				// rOption.setTeam_number(bp.getTeam_number());
-				// rOption.setConfirm_time_end(DateUtil.addDate(bp.getConfirm_date(), 1));
-				// List<ClientReceivedDetailBean> crdbs = receivedDao.selectByParam(rOption);
-				//
-				// if (null == crdbs || crdbs.size() == 0)
-				// continue;
-				// boolean flg = true;
-				// for (ClientReceivedDetailBean crdb : crdbs) {
-				// if (!crdb.getStatus().equals("E")) {
-				// flg = false;
-				// continue;
-				// }
-				// }
-				// if (flg) {
 				point += bp.getProduct_point() * 0.1;
-				// }
 			}
 		}
 

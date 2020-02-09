@@ -414,8 +414,11 @@
 				and if(A.type='SUM', A.allot_received = #{params.bo.money,jdbcType=DECIMAL},A.received =
 				#{params.bo.money,jdbcType=DECIMAL})
 			</if>
-			<if test="params.bo.type != null and params.bo.type !=''">
-				and A.type= #{params.bo.type,jdbcType=VARCHAR}
+			<if test="params.bo.types != null and params.bo.types !=''">
+				and A.type in
+				<foreach item="item" index="index" collection="params.bo.types" open="(" separator="," close=")">
+					#{params.bo.types[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.team_number != null and params.bo.team_number !=''">
 				and A.team_number like concat('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')

@@ -28,8 +28,11 @@ public class AutoCleanBadInterest {
 			return;
 
 		BaseDataBean config = bds.get(0);
-		Calendar cal = Calendar.getInstance();
+		if (!config.getCode().equals("AUTO")) {
+			return;
+		}
 
+		Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int configDay = Integer.valueOf(config.getExt3());
 

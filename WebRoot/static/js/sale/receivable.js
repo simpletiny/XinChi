@@ -15,12 +15,12 @@ var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenOrders = ko.observableArray([]);
-	self.teamStatus = [ '未出团', '已出团', '已回团' ];
-	self.types = [ '预算', '决算' ];
+	self.teamStatus = ['未出团', '已出团', '已回团'];
+	self.types = ['预算', '决算'];
 	self.chosenTypes = ko.observableArray([]);
 	self.recsum = ko.observable({});
 	self.chosenSales = ko.observable();
-	self.sortTypes = [ '正序', '倒序' ];
+	self.sortTypes = ['正序', '倒序'];
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
@@ -82,12 +82,12 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
-				title : [ '抹零申请', '' ],
+				title : ['抹零申请', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '1120px', '300px' ],
-				offset : [ '150px', '' ],
+				area : ['1120px', '300px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#tail_submit'
@@ -109,7 +109,7 @@ var OrderContext = function() {
 			url : self.apiurl + 'sale/applyRidTail',
 			data : data,
 			success : function(str) {
-				if (str != "OK") {
+				if (str != "success") {
 					fail_msg("申请失败，请联系管理员");
 				}
 				layer.close(tailLayer);
@@ -155,12 +155,12 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
-				title : [ '代收申请', '' ],
+				title : ['代收申请', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '1120px', '750px' ],
-				offset : [ '150px', '' ],
+				area : ['1120px', '600px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#collect-submit'
@@ -242,12 +242,12 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 			tail98Layer = $.layer({
 				type : 1,
-				title : [ '立款98', '' ],
+				title : ['立款98', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '1120px', '450px' ],
-				offset : [ '150px', '' ],
+				area : ['1120px', '450px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#tail98-clear'
@@ -308,12 +308,12 @@ var OrderContext = function() {
 			caculateSumBack();
 			payLayer = $.layer({
 				type : 1,
-				title : [ '退反申请', '' ],
+				title : ['退反申请', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '920px', '800px' ],
-				offset : [ '150px', '' ],
+				area : ['920px', '600px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#pay-sumbit'
@@ -429,12 +429,12 @@ var OrderContext = function() {
 
 			strikeLayer = $.layer({
 				type : 1,
-				title : [ '冲账申请', '' ],
+				title : ['冲账申请', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '900px', '780px' ],
-				offset : [ '150px', '' ],
+				area : ['900px', '780px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#strike-submit'
@@ -545,12 +545,12 @@ var OrderContext = function() {
 
 			receiveLayer = $.layer({
 				type : 1,
-				title : [ '收入', '' ],
+				title : ['收入', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '1000px', '700px' ],
-				offset : [ '150px', '' ],
+				area : ['1000px', '600px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#receive_submit'
@@ -584,12 +584,12 @@ var OrderContext = function() {
 
 			receiveLayer = $.layer({
 				type : 1,
-				title : [ '收入', '' ],
+				title : ['收入', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '1200px', '800px' ],
-				offset : [ '150px', '' ],
+				area : ['1200px', '600px'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#receive_sum_submit'
@@ -617,7 +617,7 @@ var OrderContext = function() {
 				data : data,
 				success : function(str) {
 					endLoadingIndicator();
-					if (str != "OK") {
+					if (str != "success") {
 						fail_msg("申请失败，请联系管理员");
 					} else {
 						self.chosenOrders.removeAll();
@@ -663,7 +663,7 @@ var OrderContext = function() {
 				success : function(str) {
 					endLoadingIndicator();
 					layer.close(receiveLayer);
-					if (str != "OK") {
+					if (str != "success") {
 						fail_msg("申请失败，请联系管理员");
 					} else {
 						self.search();
@@ -707,12 +707,12 @@ var OrderContext = function() {
 					$(".rmb").formatCurrency();
 					flyLayer = $.layer({
 						type : 1,
-						title : [ 'fly申请', '' ],
+						title : ['fly申请', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '920px', '400px' ],
-						offset : [ '', '' ],
+						area : ['920px', '400px'],
+						offset : ['', ''],
 						scrollbar : true,
 						page : {
 							dom : '#fly-submit'

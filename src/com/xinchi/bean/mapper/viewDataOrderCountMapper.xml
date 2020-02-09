@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ViewDataOrderCountMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.DataOrderCountDto">
+		<result column="order_cnt" property="order_cnt" jdbcType="BIGINT" />
+		<result column="people_cnt" property="people_cnt" jdbcType="BIGINT" />
+		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="month" property="month" jdbcType="INTEGER" />
+		<result column="dayofm" property="dayofm" jdbcType="INTEGER" />
+		<result column="dayofw" property="dayofw" jdbcType="INTEGER" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="create_user_number" property="create_user_number" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		order_cnt,
+		people_cnt,
+		confirm_date,
+		month,
+		dayofm,
+		dayofw,
+		create_user,
+		create_user_number,
+	</sql>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.DataOrderCountDto" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_data_order_count
+	</select>
+	<select id="selectMonthOrderCount" parameterType="com.xinchi.bean.DataOrderCountDto" resultMap="BaseResultMap">
+		SELECT
+		SUM(order_cnt) AS order_cnt,
+		SUM(people_cnt) AS people_cnt,
+		LEFT(confirm_date, 7) AS confirm_date,
+		month,
+		create_user,
+		create_user_number
+		FROM
+		view_data_order_count
+		<where>
+			<if test="date_from != null and date_from !=''">
+				and confirm_date >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and confirm_date &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+		GROUP BY create_user , LEFT(confirm_date, 7)
+	</select>
+	<select id="selectDayOrderCount" parameterType="com.xinchi.bean.DataOrderCountDto" resultMap="BaseResultMap">
+		SELECT
+		SUM(order_cnt) AS order_cnt,
+		SUM(people_cnt) AS people_cnt,
+		confirm_date AS confirm_date,
+		dayofm,
+		create_user,
+		create_user_number
+		FROM
+		view_data_order_count
+		<where>
+			<if test="date_from != null and date_from !=''">
+				and confirm_date >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and confirm_date &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY create_user ,confirm_date
+	</select>
+	<select id="selectWeekOrderCount" parameterType="com.xinchi.bean.DataOrderCountDto" resultMap="BaseResultMap">
+		SELECT
+		SUM(order_cnt) AS order_cnt,
+		SUM(people_cnt) AS people_cnt,
+		confirm_date AS confirm_date,
+		dayofw,
+		create_user,
+		create_user_number
+		FROM
+		view_data_order_count
+		<where>
+			<if test="date_from != null and date_from !=''">
+				and confirm_date >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and confirm_date &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY create_user ,dayofw
+	</select>
+</mapper>

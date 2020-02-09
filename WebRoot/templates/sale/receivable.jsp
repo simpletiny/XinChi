@@ -72,14 +72,7 @@
 									name="receivable.team_status"></select>
 							</div>
 						</div>
-						<div class="span6">
-							<div data-bind="foreach: types">
-								<em class="small-box"> <input type="checkbox" required="required"
-									data-bind="attr: {'value': $data}, checked: $root.chosenTypes,event:{click:$root.changeType}" /><label
-									data-bind="text: $data"></label>
-								</em>
-							</div>
-						</div>
+
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -105,13 +98,13 @@
 							</div>
 						</s:if>
 						<div class="span6">
-							<label class="col-md-1 control-label">按出团日期</label>
-							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sortTypes"
-									name="receivable.sort_type"></select>
+							<div data-bind="foreach: types">
+								<em class="small-box"> <input type="checkbox" required="required"
+									data-bind="attr: {'value': $data}, checked: $root.chosenTypes,event:{click:$root.changeType}" /><label
+									data-bind="text: $data"></label>
+								</em>
 							</div>
 						</div>
-
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -120,9 +113,19 @@
 								<input type="checkbox" value="Y" name="receivable.zero_flg" data-bind="event:{click:zeroBalance}" />
 							</div>
 						</div>
-						<div style="padding-top: 3px; float: right">
-							<button st="btn-search" type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
+						<div class="span6">
+							<label class="col-md-1 control-label">按出团日期</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px" data-bind="options: sortTypes,event{change:search}"
+									name="receivable.sort_type"></select>
+							</div>
 						</div>
+						<div class="span6">
+							<div class="col-md-2">
+								<button st="btn-search" type="submit" class="btn btn-green" data-bind="click: search">搜索</button>
+							</div>
+						</div>
+
 					</div>
 				</form>
 				<div class="list-result">
@@ -334,7 +337,7 @@
 		</form>
 	</div>
 	<!-- 代收申请 -->
-	<div id="collect-submit" style="display: none; width: 1100px; height: 700px; padding-top: 30px; overflow: auto">
+	<div id="collect-submit" style="display: none; width: 1100px; height: 550px; padding-top: 30px; overflow: auto">
 		<form id="form-collect">
 			<div class="input-row clearfloat">
 				<div class="col-md-3">
@@ -470,7 +473,7 @@
 	</div>
 
 	<!-- 退反申请 -->
-	<div id="pay-sumbit" style="display: none; width: 900px; height: 700px; overflow: auto; padding-top: 30px;">
+	<div id="pay-sumbit" style="display: none; width: 900px; height: 550px; overflow: auto; padding-top: 30px;">
 		<form id="form-pay">
 			<div class="input-row clearfloat">
 				<div class="col-md-4 required">
@@ -713,7 +716,7 @@
 	</div>
 
 	<!-- 收入申请 -->
-	<div id="receive_submit" style="display: none; width: 1000px; height: 650px; padding-top: 30px; overflow: auto">
+	<div id="receive_submit" style="display: none; width: 1000px; height: 550px; padding-top: 30px; overflow: auto">
 		<form id="form-receive">
 			<div class="input-row clearfloat">
 				<div class="col-md-4">
@@ -776,7 +779,7 @@
 			</div>
 		</form>
 	</div>
-	<div id="receive_sum_submit" style="display: none; width: 1200px; height: 700px; overflow: auto; padding-top: 30px;">
+	<div id="receive_sum_submit" style="display: none; width: 1200px; height: 550px; overflow: auto; padding-top: 30px;">
 		<form id="form-receive-sum">
 			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
@@ -898,13 +901,14 @@
 				<div class="col-md-3">
 					<label class="l" style="width: 30%">FLY金额</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default rmb" data-bind="text:flyMoney()" ></p>
+						<p class="ip-default rmb" data-bind="text:flyMoney()"></p>
 					</div>
 				</div>
 				<div class="col-md-3 required">
 					<label class="l" style="width: 40%">支付金额</label>
 					<div class="ip" style="width: 60%">
-						<input type="number" name="detail.received" data-bind="value:flyMoney()" min="0" class="form-control" required="required" />
+						<input type="number" name="detail.received" data-bind="value:flyMoney()" min="0" class="form-control"
+							required="required" />
 					</div>
 				</div>
 			</div>

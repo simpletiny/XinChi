@@ -1,7 +1,5 @@
 package com.xinchi.backend.receivable.action;
 
-import java.io.File;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,30 +9,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.google.common.base.Joiner;
-import com.xinchi.backend.accounting.service.AccPaidService;
-import com.xinchi.backend.accounting.service.PayApprovalService;
-import com.xinchi.backend.order.service.OrderService;
-import com.xinchi.backend.payable.dao.PaidDAO;
-import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
-import com.xinchi.bean.OrderDto;
-import com.xinchi.bean.PayApprovalBean;
-import com.xinchi.bean.PaymentDetailBean;
-import com.xinchi.bean.ReceivableBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.DBCommonUtil;
-import com.xinchi.common.DateUtil;
-import com.xinchi.common.FileFolder;
-import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -46,25 +26,13 @@ public class ReceivedAction extends BaseAction {
 	@Autowired
 	private ReceivedService receivedService;
 
-	@Autowired
-	private ReceivableService receivableService;
-
 	/**
 	 * 抹零申请
 	 * 
 	 * @return
 	 */
 	public String applyRidTail() {
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setReceived_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
-		detail.setClient_employee_pk(receivable.getClient_employee_pk());
-
-		receivedService.insert(detail);
-		receivableService.updateReceivableReceived(detail);
-
-		resultStr = OK;
+		resultStr = receivedService.applyRidTail(detail);
 		return SUCCESS;
 	}
 
@@ -74,20 +42,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyCollect() {
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_COLLECT);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-
-		detail.setClient_employee_pk(receivable.getClient_employee_pk());
-		receivedService.insert(detail);
-		receivableService.updateReceivableReceived(detail);
-
-		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
-		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
-
-		resultStr = SUCCESS;
+		resultStr = receivedService.applyCollect(detail);
 		return SUCCESS;
 	}
 
@@ -97,35 +52,13 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyTail98() {
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setClient_employee_pk(receivable.getClient_employee_pk());
-		detail.setReceived_time(DateUtil.today());
-		detail.setCollecter("98清尾");
-		receivedService.insert(detail);
-		receivableService.updateReceivableReceived(detail);
-
-		resultStr = SUCCESS;
+		resultStr = receivedService.applyTail98(detail);
 		return SUCCESS;
 	}
 
 	// 收入申请
 	public String applyReceive() {
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		String pk = DBCommonUtil.genPk();
-		detail.setPk(pk);
-		detail.setRelated_pk(pk);
-
-		receivedService.insertWithPk(detail);
-		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
-		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
-		receivableService.updateReceivableReceived(detail);
-
-		resultStr = OK;
+		resultStr = receivedService.applyReceive(detail);
 		return SUCCESS;
 	}
 
@@ -137,39 +70,9 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applySum() {
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_SUM);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-
-		JSONArray array = JSONArray.fromObject(allot_json);
-
-		String[] pks = DBCommonUtil.genPks(array.size());
-		detail.setRelated_pk(Joiner.on(",").join(pks));
-
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = JSONObject.fromObject(array.get(i));
-			String t = obj.getString("team_number");
-			String r = obj.getString("received");
-			detail.setTeam_number(t);
-			detail.setPk(pks[i]);
-
-			if (!SimpletinyString.isEmpty(r)) {
-				detail.setReceived(new BigDecimal(r));
-			}
-
-			receivedService.insertWithPk(detail);
-			receivableService.updateReceivableReceived(detail);
-		}
-		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
-		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
-
-		resultStr = OK;
+		resultStr = receivedService.applySum(detail, allot_json);
 		return SUCCESS;
 	}
-
-	@Autowired
-	private PayApprovalService payApprovalService;
 
 	/**
 	 * 单笔多付返还支付申请
@@ -177,59 +80,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyIfMorePay() {
-
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_PAY);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-
-		JSONArray array = JSONArray.fromObject(allot_json);
-
-		String[] pks = DBCommonUtil.genPks(array.size());
-		String related_pk = DBCommonUtil.genPk();
-		detail.setRelated_pk(related_pk);
-
-		detail.setReceived_time(DateUtil.getMinStr());
-		detail.setAllot_received(detail.getAllot_received().negate());
-
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = JSONObject.fromObject(array.get(i));
-			String t = obj.getString("team_number");
-			String r = obj.getString("received");
-			detail.setTeam_number(t);
-			detail.setPk(pks[i]);
-			
-			OrderDto order = orderService.selectByTeamNumber(t);
-			detail.setClient_employee_pk(order.getClient_employee_pk());
-			
-			if (!SimpletinyString.isEmpty(r)) {
-				detail.setReceived(new BigDecimal(r).negate());
-			}
-
-			receivedService.insertWithPk(detail);
-			receivableService.updateReceivableReceived(detail);
-		}
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-
-		// 生成支付审批数据
-		PayApprovalBean pa = new PayApprovalBean();
-		pa.setReceiver(detail.getReceiver());
-		pa.setMoney(detail.getAllot_received().negate());
-		pa.setItem(ResourcesConstants.PAY_TYPE_MORE_BACK);
-		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
-		pa.setReceiver_card_number(detail.getReceiver_card_number());
-		pa.setReceiver_bank(detail.getReceiver_bank());
-
-		pa.setRelated_pk(related_pk);
-
-		pa.setComment(detail.getComment());
-		pa.setApply_user(sessionBean.getUser_number());
-		pa.setBack_pk(related_pk);
-		pa.setApply_time(DateUtil.getTimeMillis());
-		pa.setLimit_time(detail.getLimit_time());
-
-		payApprovalService.insert(pa);
-
-		resultStr = SUCCESS;
+		resultStr = receivedService.applyIfMorePay(detail, allot_json);
 		return SUCCESS;
 	}
 
@@ -242,105 +93,13 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyStrike() {
-		JSONArray out_array = JSONArray.fromObject(strike_out_json);
-
-		String related_pk = DBCommonUtil.genPk();
-
-		for (int i = 0; i < out_array.size(); i++) {
-			ClientReceivedDetailBean current = new ClientReceivedDetailBean();
-			current.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT);
-			current.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-			current.setReceived_time(DateUtil.getMinStr());
-			current.setRelated_pk(related_pk);
-
-			JSONObject obj = JSONObject.fromObject(out_array.get(i));
-			String t = obj.getString("team_number");
-			String r = obj.getString("received");
-			current.setTeam_number(t);
-
-			if (!SimpletinyString.isEmpty(r)) {
-				current.setReceived(new BigDecimal(r).negate());
-			}
-			current.setComment(detail.getComment());
-			receivedService.insert(current);
-			receivableService.updateReceivableReceived(current);
-		}
-		JSONArray in_array = JSONArray.fromObject(strike_in_json);
-
-		for (int i = 0; i < in_array.size(); i++) {
-			ClientReceivedDetailBean current = new ClientReceivedDetailBean();
-			current.setType(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN);
-			current.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-			current.setReceived_time(DateUtil.getMinStr());
-			current.setRelated_pk(related_pk);
-
-			JSONObject obj = JSONObject.fromObject(in_array.get(i));
-			String t = obj.getString("team_number");
-			String r = obj.getString("received");
-			current.setTeam_number(t);
-
-			if (!SimpletinyString.isEmpty(r)) {
-				current.setReceived(new BigDecimal(r));
-			}
-
-			current.setComment(detail.getComment());
-
-			receivedService.insert(current);
-			receivableService.updateReceivableReceived(current);
-		}
-
-		resultStr = SUCCESS;
+		resultStr = receivedService.applyStrike(detail, strike_out_json, strike_in_json);
 		return SUCCESS;
 	}
 
-	@Autowired
-	private OrderService orderService;
-
 	// 返佣申请
 	public String applyFly() {
-		// 如果金额不相符
-		OrderDto order = orderService.selectByTeamNumber(detail.getTeam_number());
-		if (order.getFy().compareTo(detail.getReceived()) != 0) {
-			resultStr = "nomatch";
-			return SUCCESS;
-		}
-		
-		detail.setClient_employee_pk(order.getClient_employee_pk());
-		detail.setType(ResourcesConstants.RECEIVED_TYPE_FLY);
-		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-
-		String related_pk = DBCommonUtil.genPk();
-		detail.setRelated_pk(related_pk);
-
-		detail.setReceived_time(DateUtil.getMinStr());
-		detail.setReceived(detail.getReceived().negate());
-
-		receivedService.insert(detail);
-		//receivableService.updateReceivableReceived(detail);
-
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-
-		// 生成支付审批数据
-		PayApprovalBean pa = new PayApprovalBean();
-		pa.setReceiver(detail.getReceiver());
-		pa.setMoney(detail.getReceived().negate());
-		pa.setItem(ResourcesConstants.PAY_TYPE_FLY);
-		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
-		pa.setReceiver_card_number(detail.getReceiver_card_number());
-		pa.setReceiver_bank(detail.getReceiver_bank());
-
-		pa.setRelated_pk(related_pk);
-
-		pa.setComment(detail.getTeam_number() + "订单fly");
-		pa.setApply_user(sessionBean.getUser_number());
-		pa.setBack_pk(related_pk);
-		pa.setApply_time(DateUtil.getTimeMillis());
-		pa.setLimit_time(detail.getLimit_time());
-
-		payApprovalService.insert(pa);
-
-		resultStr = SUCCESS;
+		resultStr = receivedService.applyFly(detail);
 		return SUCCESS;
 	}
 
@@ -378,11 +137,6 @@ public class ReceivedAction extends BaseAction {
 
 		return SUCCESS;
 	}
-
-	private String related_pk;
-	private PaymentDetailBean payment;
-	@Autowired
-	private AccPaidService accPaidService;
 
 	public String searchFlyVoucherInfo() {
 		return SUCCESS;
@@ -442,22 +196,6 @@ public class ReceivedAction extends BaseAction {
 
 	public void setStrike_in_json(String strike_in_json) {
 		this.strike_in_json = strike_in_json;
-	}
-
-	public String getRelated_pk() {
-		return related_pk;
-	}
-
-	public void setRelated_pk(String related_pk) {
-		this.related_pk = related_pk;
-	}
-
-	public PaymentDetailBean getPayment() {
-		return payment;
-	}
-
-	public void setPayment(PaymentDetailBean payment) {
-		this.payment = payment;
 	}
 
 }

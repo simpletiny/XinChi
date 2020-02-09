@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="data" extends="default" namespace="/data">
+		<action name="fetchOrderCountData" class="dataAction" method="fetchOrderCountData">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="stopUseCard" class="cardAction" method="stopUseCard">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchCardsByPurpose" class="cardAction" method="searchCardsByPurpose">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+	</package>
+
+</struts>
