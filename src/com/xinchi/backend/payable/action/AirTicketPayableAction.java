@@ -11,22 +11,16 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.xinchi.backend.accounting.service.AccPaidService;
-import com.xinchi.backend.finance.service.CardService;
-import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
-import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
-import com.xinchi.bean.PaymentDetailBean;
-import com.xinchi.bean.WaitingForPaidBean;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
-import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
-import com.xinchi.common.SimpletinyUser;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -67,112 +61,11 @@ public class AirTicketPayableAction extends BaseAction {
 
 	private String paidJson;
 	private String payableJson;
-
-	@Autowired
-	private PaymentDetailService pds;
-	@Autowired
-	private CardService cardService;
-
-	@Autowired
-	private NumberService numberService;
-
-	@Autowired
-	private AccPaidService accPaidService;
 	private BigDecimal allot_money;
 
 	// 支付机票款
 	public String payAirTicket() {
-		SimpletinyUser su = new SimpletinyUser();
-		// 生成申请信息，并更新应付款“已付款”内容
-		JSONArray payableArray = JSONArray.fromObject(payableJson);
-
-		String related_pk = DBCommonUtil.genPk();
-		BigDecimal sumPaid = BigDecimal.ZERO;
-
-		for (int i = 0; i < payableArray.size(); i++) {
-			JSONObject obj = JSONObject.fromObject(payableArray.get(i));
-
-			String payable_pk = obj.getString("payable_pk");
-			String this_paid = obj.getString("this_paid");
-			AirTicketPayableBean airTicketPayable = service.selectByPrimaryKey(payable_pk);
-
-			String supplier_employee_pk = airTicketPayable.getSupplier_employee_pk();
-			String base_pk = airTicketPayable.getPk();
-			String PNR = airTicketPayable.getPNR();
-
-			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
-
-			currentDetail.setAllot_money(allot_money);
-			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
-			currentDetail.setBase_pk(base_pk);
-			currentDetail.setPNR(PNR);
-			currentDetail.setType(ResourcesConstants.PAID_TYPE_PAID);
-			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
-			currentDetail.setRelated_pk(related_pk);
-
-			if (!SimpletinyString.isEmpty(this_paid)) {
-				sumPaid = new BigDecimal(this_paid);
-			}
-			currentDetail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
-			currentDetail.setMoney(sumPaid);
-			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
-			currentDetail.setApprove_user(su.getUser().getUser_number());
-			airTicketPaidDetailService.insert(currentDetail);
-
-			airTicketPayable.setPaid(airTicketPayable.getPaid().add(sumPaid));
-			airTicketPayable.setBudget_balance(airTicketPayable.getBudget_balance().subtract(sumPaid));
-			if (airTicketPayable.getFinal_flg().equals("Y")) {
-				airTicketPayable.setFinal_balance(airTicketPayable.getFinal_balance().subtract(sumPaid));
-			}
-			service.update(airTicketPayable);
-		}
-
-		JSONArray array = JSONArray.fromObject(paidJson);
-
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = JSONObject.fromObject(array.get(i));
-			String account = obj.getString("account");
-			String time = obj.getString("time");
-			String receiver = obj.getString("receiver");
-			BigDecimal balance = new BigDecimal(cardService.getAccountBalance(account));
-			BigDecimal money = new BigDecimal(obj.getString("money"));
-			String voucher_file_name = obj.getString("voucherFile");
-
-			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
-					ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
-
-			PaymentDetailBean detail = new PaymentDetailBean();
-			detail.setVoucher_number(voucher_number);
-			detail.setAccount(account);
-			detail.setTime(time);
-			detail.setReceiver(receiver);
-			detail.setMoney(money);
-			detail.setBalance(balance.subtract(money));
-			detail.setType("支出");
-			detail.setComment(receiver + ",凭证号：" + voucher_number);
-			detail.setVoucher_file_name(voucher_file_name);
-
-			resultStr = pds.insert(detail);
-			if (!resultStr.equals(SUCCESS)) {
-				return SUCCESS;
-			}
-
-			// 生成待支付数据并直接写入为已支付状态
-			WaitingForPaidBean waiting = new WaitingForPaidBean();
-			waiting.setPay_number(voucher_number);
-
-			waiting.setItem(ResourcesConstants.PAY_TYPE_PIAOWU);
-			waiting.setReceiver(receiver);
-			waiting.setMoney(money);
-			waiting.setApply_user(su.getUser().getUser_number());
-			waiting.setApproval_user(su.getUser().getUser_number());
-			waiting.setRelated_pk(related_pk);
-			waiting.setStatus(ResourcesConstants.PAY_STATUS_YES);
-			waiting.setPay_user(su.getUser().getUser_number());
-
-			accPaidService.insert(waiting);
-		}
-		resultStr = SUCCESS;
+		resultStr = service.payAirTicket(paidJson, payableJson, allot_money);
 		return SUCCESS;
 	}
 
@@ -220,6 +113,32 @@ public class AirTicketPayableAction extends BaseAction {
 		}
 
 		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
+	private List<AirTicketNameListBean> passengers;
+
+	private String payable_pk;
+
+	/**
+	 * 搜索机票应付款涉及到的名单
+	 * 
+	 * @return
+	 */
+	public String searchPayablePassengersByPayablePk() {
+		passengers = service.searchPayablePassengersByPayablePk(payable_pk);
+		return SUCCESS;
+	}
+
+	private List<PassengerTicketInfoBean> ptInfos;
+
+	/**
+	 * 搜索机票应付款涉及到的名单
+	 * 
+	 * @return
+	 */
+	public String searchTicketInfoByPayablePk() {
+		ptInfos = service.searchTicketInfoByPayablePk(payable_pk);
 		return SUCCESS;
 	}
 
@@ -285,5 +204,29 @@ public class AirTicketPayableAction extends BaseAction {
 
 	public void setAllot_money(BigDecimal allot_money) {
 		this.allot_money = allot_money;
+	}
+
+	public List<AirTicketNameListBean> getPassengers() {
+		return passengers;
+	}
+
+	public void setPassengers(List<AirTicketNameListBean> passengers) {
+		this.passengers = passengers;
+	}
+
+	public String getPayable_pk() {
+		return payable_pk;
+	}
+
+	public void setPayable_pk(String payable_pk) {
+		this.payable_pk = payable_pk;
+	}
+
+	public List<PassengerTicketInfoBean> getPtInfos() {
+		return ptInfos;
+	}
+
+	public void setPtInfos(List<PassengerTicketInfoBean> ptInfos) {
+		this.ptInfos = ptInfos;
 	}
 }

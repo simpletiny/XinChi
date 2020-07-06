@@ -1,7 +1,7 @@
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.type = [ '收入', '支出','内转' ];
+	self.type = ['收入', '支出', '内转'];
 	self.chosenDetails = ko.observableArray([]);
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
@@ -15,7 +15,8 @@ var DetailContext = function() {
 	});
 
 	self.createDetail = function(type) {
-		window.location.href = self.apiurl + "templates/finance/" + type + "-detail-creation.jsp";
+		window.location.href = self.apiurl + "templates/finance/" + type
+				+ "-detail-creation.jsp";
 	};
 
 	self.details = ko.observable({
@@ -24,8 +25,10 @@ var DetailContext = function() {
 	});
 	self.refresh = function() {
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(
+				data) {
 			self.details(data.details);
 			$(".rmb").formatCurrency();
 
@@ -42,31 +45,225 @@ var DetailContext = function() {
 			fail_msg("只能选择一条明细");
 		} else if (len == 1) {
 			var detailId = self.chosenDetails()[0];
-			$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
-				if (data.detail) {
-					var detail = data.detail;
-					if (detail.finance_flg == "Y") {
-						if (detail.type == "收入") {
-							window.location.href = self.apiurl + "templates/finance/receive-detail-edit.jsp?key=" + self.chosenDetails()[0];
-						} else {
-							window.location.href = self.apiurl + "templates/finance/pay-detail-edit.jsp?key=" + self.chosenDetails()[0];
-						}
-					} else if (detail.finance_flg == "N") {
-						if (detail.type == "收入") {
-							window.location.href = self.apiurl + "templates/finance/normal-receive-detail-edit.jsp?key=" + self.chosenDetails()[0];
-						} else {
-							window.location.href = self.apiurl + "templates/finance/pay-detail-edit.jsp?key=" + self.chosenDetails()[0];
-						}
-					}
-				} else {
-					fail_msg("不存的明细");
-				}
-			}).fail(function(reason) {
-				fail_msg(reason.responseText);
-			});
+			$
+					.getJSON(
+							self.apiurl + 'finance/searchDetailByPk',
+							"detailId=" + detailId,
+							function(data) {
+								if (data.detail) {
+									var detail = data.detail;
+									if (detail.finance_flg == "Y") {
+										if (detail.type == "收入") {
+											window.location.href = self.apiurl
+													+ "templates/finance/receive-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										} else {
+											window.location.href = self.apiurl
+													+ "templates/finance/pay-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										}
+									} else if (detail.finance_flg == "N") {
+										if (detail.type == "收入") {
+											window.location.href = self.apiurl
+													+ "templates/finance/normal-receive-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										} else {
+											window.location.href = self.apiurl
+													+ "templates/finance/pay-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										}
+									}
+								} else {
+									fail_msg("不存的明细");
+								}
+							}).fail(function(reason) {
+						fail_msg(reason.responseText);
+					});
 
 		}
 	};
+
+	self.modify_temp = function() {
+		var len = self.chosenDetails().length;
+		if (len < 1) {
+			fail_msg("请选择明细");
+		} else if (len > 1) {
+			fail_msg("只能选择一条明细");
+		} else if (len == 1) {
+			var detailId = self.chosenDetails()[0];
+			$
+					.getJSON(
+							self.apiurl + 'finance/searchDetailByPk',
+							"detailId=" + detailId,
+							function(data) {
+								if (data.detail) {
+									var detail = data.detail;
+									if (detail.finance_flg == "Y") {
+										if (detail.type == "收入") {
+											window.location.href = self.apiurl
+													+ "templates/finance/receive-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										} else {
+											window.location.href = self.apiurl
+													+ "templates/finance/pay-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										}
+									} else if (detail.finance_flg == "N") {
+										if (detail.type == "收入") {
+											var match_flg = detail.match_flg;
+											if (match_flg == 'Y') {
+												fail_msg("收入已匹配，不能修改！");
+												return;
+											}
+											var create_time = new Date(
+													detail.create_time - 0)
+											var diff = dateDiff(create_time,
+													new Date());
+											var diff_day = diff.substring(0,
+													diff.indexOf("天")) - 0;
+											if (diff_day >= 3) {
+												fail_msg("只能修改三天以内记录的收入！")
+												return;
+											}
+
+											window.location.href = self.apiurl
+													+ "templates/finance/normal-receive-detail-edit.jsp?key="
+													+ self.chosenDetails()[0];
+										} else {
+											fail_msg("支出不能修改！");
+										}
+									}
+								} else {
+									fail_msg("不存的明细");
+								}
+							}).fail(function(reason) {
+						fail_msg(reason.responseText);
+					});
+
+		}
+	}
+
+	self.deleteDetail_temp = function() {
+		var len = self.chosenDetails().length;
+		if (len < 1) {
+			fail_msg("请选择明细");
+		} else if (len > 1) {
+			fail_msg("只能选择一条明细");
+		} else if (len == 1) {
+			var detailId = self.chosenDetails()[0];
+
+			$
+					.layer({
+						area : ['auto', 'auto'],
+						dialog : {
+							msg : '确认要删除此条明细吗?',
+							btns : 2,
+							type : 4,
+							btn : ['确认', '取消'],
+							yes : function(index) {
+								layer.close(index);
+								$
+										.getJSON(
+												self.apiurl
+														+ 'finance/searchDetailByPk',
+												"detailId=" + detailId,
+												function(data) {
+													if (data.detail) {
+														var detail = data.detail;
+														if (detail.finance_flg == "Y") {
+															startLoadingSimpleIndicator("删除中");
+															$
+																	.ajax(
+																			{
+																				type : "POST",
+																				url : self.apiurl
+																						+ 'finance/deleteDetail',
+																				data : "detailId="
+																						+ detailId
+																			})
+																	.success(
+																			function(
+																					str) {
+
+																				if (str == "success") {
+																					success_msg("删除成功！");
+																					self.chosenDetails
+																							.removeAll();
+																				} else if (str == "forbidden") {
+																					fail_msg("只能删除财务收支！");
+																				} else {
+																					fail_msg("删除失败，请联系管理员");
+																				}
+																				self
+																						.search();
+																				endLoadingIndicator();
+																			});
+														} else if (detail.finance_flg == "N") {
+															if (detail.type == "收入") {
+																var match_flg = detail.match_flg;
+																if (match_flg == 'Y') {
+																	fail_msg("收入已匹配，不能删除！");
+																	return;
+																}
+																var create_time = new Date(
+																		detail.create_time - 0)
+																var diff = dateDiff(
+																		create_time,
+																		new Date());
+																var diff_day = diff
+																		.substring(
+																				0,
+																				diff
+																						.indexOf("天")) - 0;
+																if (diff_day >= 3) {
+																	fail_msg("只能删除三天以内记录的收入！")
+																	return;
+																}
+																startLoadingSimpleIndicator("删除中");
+																$
+																		.ajax(
+																				{
+																					type : "POST",
+																					url : self.apiurl
+																							+ 'finance/deleteDetail',
+																					data : "detailId="
+																							+ detailId
+																				})
+																		.success(
+																				function(
+																						str) {
+
+																					if (str == "success") {
+																						success_msg("删除成功！");
+																						self.chosenDetails
+																								.removeAll();
+																					} else if (str == "forbidden") {
+																						fail_msg("只能删除财务收支！");
+																					} else {
+																						fail_msg("删除失败，请联系管理员");
+																					}
+																					self
+																							.search();
+																					endLoadingIndicator();
+																				});
+
+															} else {
+																fail_msg("支出不能删除！");
+															}
+														}
+													} else {
+														fail_msg("不存的明细");
+													}
+												}).fail(function(reason) {
+											fail_msg(reason.responseText);
+										});
+
+							}
+						}
+					});
+		}
+	}
+
 	self.deleteDetail = function() {
 		var len = self.chosenDetails().length;
 		if (len < 1) {
@@ -76,12 +273,12 @@ var DetailContext = function() {
 		} else if (len == 1) {
 			var detailId = self.chosenDetails()[0];
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要删除此条明细吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						startLoadingSimpleIndicator("删除中");
 						$.ajax({
@@ -152,9 +349,10 @@ var DetailContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

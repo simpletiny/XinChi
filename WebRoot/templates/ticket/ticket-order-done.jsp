@@ -29,13 +29,16 @@
 
 		<div class="main-container">
 			<div class="main-box">
-				<form class="form-horizontal search-panel">
-					<div class="form-group">
-					<!-- 	<div style="width: 30%; float: right">
+				<!-- 	<div style="width: 30%; float: right">
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">锁定操作</button>
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
 						</div> -->
-					</div>
+				<form class="form-horizontal search-panel">
+					<!-- <div class="form-group">
+						<div style="width: 30%; float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
+						</div>
+					</div> -->
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -44,9 +47,28 @@
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
+							<label class="col-md-1 control-label">订单号</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="airTicketOrder.team_number" />
+								<input type="text" class="form-control" placeholder="订单号" name="airTicketOrder.order_number" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="产品" name="airTicketOrder.product_name" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">出团日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="airTicketOrder.date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="airTicketOrder.date_to" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -67,7 +89,7 @@
 								<th>航段信息</th>
 								<th>乘机人信息</th>
 								<th>需求备注</th>
-								<th>团号</th>
+								<th>订单号</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -75,10 +97,10 @@
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.client_name"></td>
 								<!-- ko if: $data.cost_done_flg=="N" -->
-								<td style="color:red" data-bind="text: $data.ticket_cost"></td>
+								<td style="color: red" data-bind="text: $data.ticket_cost"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.cost_done_flg=="Y" -->
-								<td style="color:green" data-bind="text: $data.ticket_cost"></td>
+								<td style="color: green" data-bind="text: $data.ticket_cost"></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
@@ -94,10 +116,10 @@
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
 								<td><a href="javascript:void(0)"
-									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
+									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.order_number)}">查看</a></td>
 								<!-- /ko -->
 								<td></td>
-								<td data-bind="text: $data.team_number"></td>
+								<td data-bind="text: $data.order_number"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -129,7 +151,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="air-ticket-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
+	<div id="air-ticket-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -166,7 +188,7 @@
 					</thead>
 					<tbody data-bind="foreach:passengers">
 						<tr>
-							<td data-bind="text:$data.index"></td>
+							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 						</tr>

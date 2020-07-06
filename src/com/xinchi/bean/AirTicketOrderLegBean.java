@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class AirTicketOrderLegBean extends SupperBO implements Serializable {
@@ -17,6 +18,13 @@ public class AirTicketOrderLegBean extends SupperBO implements Serializable {
 	private String from_city;
 
 	private String to_city;
+
+	private String start_time;
+	private String end_time;
+	private String start_place;
+	private String end_place;
+	private String add_day_flg;
+	private String ticket_number;
 
 	private String create_user;
 
@@ -84,6 +92,54 @@ public class AirTicketOrderLegBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getStart_time() {
+		return start_time;
+	}
+
+	public String getEnd_time() {
+		return end_time;
+	}
+
+	public String getStart_place() {
+		return start_place;
+	}
+
+	public String getEnd_place() {
+		return end_place;
+	}
+
+	public String getAdd_day_flg() {
+		return add_day_flg;
+	}
+
+	public String getTicket_number() {
+		return ticket_number;
+	}
+
+	public void setStart_time(String start_time) {
+		this.start_time = start_time;
+	}
+
+	public void setEnd_time(String end_time) {
+		this.end_time = end_time;
+	}
+
+	public void setStart_place(String start_place) {
+		this.start_place = start_place;
+	}
+
+	public void setEnd_place(String end_place) {
+		this.end_place = end_place;
+	}
+
+	public void setAdd_day_flg(String add_day_flg) {
+		this.add_day_flg = add_day_flg;
+	}
+
+	public void setTicket_number(String ticket_number) {
+		this.ticket_number = ticket_number;
 	}
 
 }

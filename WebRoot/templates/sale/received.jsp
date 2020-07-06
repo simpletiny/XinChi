@@ -61,7 +61,7 @@ tr td {
 						<div class="span6">
 							<label class="col-md-1 control-label">类型</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales"
+								<select class="form-control" style="height: 34px"
 									data-bind="options: receivedTypes,  optionsText: 'value', optionsValue: 'key',value:chosenReceivedType,event:{change:refresh}, optionsCaption: '--全部--'"
 									id="sel-type"></select>
 							</div>
@@ -190,12 +190,12 @@ tr td {
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='E' -->
-									<!-- ko if:$data.type=='FLY' || $data.type=='PAY' -->
-									<td data-bind="text: moment($data.confirm_time-0).format('YYYY-MM-DD')"></td>
-									<!-- /ko -->
-									<!-- ko if:$data.type!='FLY'&& $data.type!='PAY' -->
-									<td data-bind="text: moment($data.confirm_time).format('YYYY-MM-DD')"></td>
-									<!-- /ko -->
+								<!-- ko if:$data.type=='FLY' || $data.type=='PAY' -->
+								<td data-bind="text: moment($data.confirm_time-0).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type!='FLY'&& $data.type!='PAY' -->
+								<td data-bind="text: moment($data.confirm_time).format('YYYY-MM-DD')"></td>
+								<!-- /ko -->
 								<!-- /ko -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.user_name"></td>

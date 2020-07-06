@@ -24,6 +24,7 @@
 		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="voucher_number" property="voucher_number" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		supplier_employee_pk,
@@ -44,7 +45,8 @@
 		base_pk,
 		PNR,
 		create_time,
-		update_time
+		update_time,
+		voucher_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -54,8 +56,30 @@
 	</select>
 	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from air_ticket_paid_detail
+		B.financial_body_pk,
+		C.supplier_name AS financial_body_name,
+		A.money,
+		A.allot_money,
+		A.sum_money,
+		A.status,
+		A.type,
+		A.time,
+		A.limit_time,
+		A.confirm_time,
+		A.approve_user,
+		A.related_pk,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.base_pk,
+		A.PNR,
+		A.create_time,
+		A.update_time,
+		A.voucher_number
+
+		from air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
 		where related_pk = #{related_pk,jdbcType=CHAR}
 	</select>
 
@@ -80,7 +104,8 @@
 		A.base_pk,
 		A.PNR,
 		A.create_time,
-		A.update_time
+		A.update_time,
+		A.voucher_number
 
 		from view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
@@ -155,6 +180,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="voucher_number != null">
+				voucher_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
@@ -213,6 +241,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_number != null">
+				#{voucher_number,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -274,6 +305,9 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_number != null">
+				voucher_number = #{voucher_number,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

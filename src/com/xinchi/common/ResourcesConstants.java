@@ -186,7 +186,7 @@ public class ResourcesConstants {
 	 */
 	// 支付单号计数
 	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
-	public static String COUNT_TYPE_PRODUCT_ORDER = "PRODUCT_NUMBER";
+	public static String COUNT_TYPE_PRODUCT = "PRODUCT_NUMBER";
 
 	// ************************* 支付种类 *************************
 	// 地接款
@@ -272,4 +272,15 @@ public class ResourcesConstants {
 	public static String NAME_CONFIRM_STATUS_TICKETING = "4";
 	// 最终确认
 	public static String NAME_CONFIRM_STATUS_YES = "5";
+
+	/** 销售订单操作状态 start **/
+	// 未操作
+	public static String ORDER_OPERATE_STATUS_NO = "N";
+	// 票务状态（老数据）
+	public static String ORDER_OPERATE_STATUS_AIR = "A";
+	// 操作中
+	public static String ORDER_OPERATE_STATUS_YES = "I";
+	// 产品订单状态
+	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
+	/** 销售订单操作状态 end **/
 }

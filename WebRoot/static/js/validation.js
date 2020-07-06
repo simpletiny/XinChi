@@ -133,9 +133,6 @@ $(".time").each(function() {
 		isTime : true
 	});
 });
-// $(".different").each(function(){
-// $(this).rules("add", { isDifferent: true});
-// });
 $("#c_password").each(function() {
 	$(this).rules("add", {
 		required : true,

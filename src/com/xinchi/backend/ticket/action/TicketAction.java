@@ -15,10 +15,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.supplier.service.SupplierEmployeeService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
+import com.xinchi.backend.ticket.service.TicketService;
+import com.xinchi.bean.AirTicketChangeLogBean;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
@@ -26,7 +29,9 @@ import com.xinchi.bean.AirTicketOrderLegBean;
 import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.ProductOrderAirBaseBean;
+import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
 
@@ -37,6 +42,9 @@ import net.sf.json.JSONObject;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class TicketAction extends BaseAction {
 	private static final long serialVersionUID = 8539114712921019353L;
+
+	@Autowired
+	private TicketService service;
 
 	@Autowired
 	private AirTicketNeedService airTicketNeedService;
@@ -78,6 +86,21 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String product_order_number;
+
+	public String selectOrderAirInfoByProductOrderNumber() {
+		order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(product_order_number);
+		return SUCCESS;
+	}
+
+	private List<AirTicketNameListBean> name_list;
+	private String order_number;
+
+	public String searchAirTicketNameListByOrderNumber() {
+		name_list = airTicketNameListService.selectByOrderNumber(order_number);
+		return SUCCESS;
+	}
+
 	private String sale_order_pk;
 	private BigDecimal air_ticket_cost;
 	private String standard_flg;
@@ -86,9 +109,7 @@ public class TicketAction extends BaseAction {
 	private AirTicketOrderService airTicketOrderService;
 
 	public String createTicketOrder() {
-
-		resultStr = airTicketOrderService.createOrder(team_number, json);
-
+		resultStr = airTicketOrderService.createOrder(json);
 		return SUCCESS;
 	}
 
@@ -119,6 +140,16 @@ public class TicketAction extends BaseAction {
 
 		page.setParams(params);
 		airTicketNameList = airTicketNameListService.selectByPage(page);
+		return SUCCESS;
+	}
+
+	public String searchAirTicketDoneNameListByPage() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("bo", passenger);
+
+		page.setParams(params);
+		airTicketNameList = airTicketNameListService.selectDoneByPage(page);
 		return SUCCESS;
 	}
 
@@ -240,6 +271,61 @@ public class TicketAction extends BaseAction {
 		} else {
 			resultStr = SUCCESS;
 		}
+		return SUCCESS;
+	}
+
+	private String passenger_pks_str;
+
+	@Autowired
+	private SupplierEmployeeService supplierEmployeeService;
+
+	private List<SupplierEmployeeBean> ticket_sources;
+
+	/**
+	 * 搜索航变的乘客信息
+	 * 
+	 * @return
+	 */
+	public String searchFlightChangeDataByPassengerPks() {
+		String[] pks = passenger_pks_str.split(",");
+		airTicketNameList = airTicketNameListService.selectByPks(pks);
+
+		Set<String> ticket_source_pks = new HashSet<String>();
+
+		for (String pk : pks) {
+			List<PassengerTicketInfoBean> infos = passengerTicketInfoService.selectByPassengerPk(pk);
+
+			for (PassengerTicketInfoBean info : infos) {
+				ticket_source_pks.add(info.getTicket_source_pk());
+			}
+		}
+
+		ticket_sources = new ArrayList<SupplierEmployeeBean>();
+
+		for (String ticket_source_pk : ticket_source_pks) {
+			SupplierEmployeeBean se = supplierEmployeeService.selectByPrimaryKey(ticket_source_pk);
+			ticket_sources.add(se);
+		}
+
+		return SUCCESS;
+	}
+
+	/**
+	 * 航变处理
+	 * 
+	 * @return
+	 */
+	public String changeFlight() {
+		resultStr = service.changFlight(json);
+		return SUCCESS;
+	}
+
+	private AirTicketChangeLogBean changeLog;
+
+	private String passenger_pk;
+
+	public String searchFlightChangeLogByPassengerPk() {
+		changeLog = service.searchFlightChangeLogByPassengerPk(passenger_pk);
 		return SUCCESS;
 	}
 
@@ -393,6 +479,62 @@ public class TicketAction extends BaseAction {
 
 	public void setTeam_numbers(List<String> team_numbers) {
 		this.team_numbers = team_numbers;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
+	}
+
+	public List<AirTicketNameListBean> getName_list() {
+		return name_list;
+	}
+
+	public void setName_list(List<AirTicketNameListBean> name_list) {
+		this.name_list = name_list;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public String getPassenger_pks_str() {
+		return passenger_pks_str;
+	}
+
+	public void setPassenger_pks_str(String passenger_pks_str) {
+		this.passenger_pks_str = passenger_pks_str;
+	}
+
+	public List<SupplierEmployeeBean> getTicket_sources() {
+		return ticket_sources;
+	}
+
+	public void setTicket_sources(List<SupplierEmployeeBean> ticket_sources) {
+		this.ticket_sources = ticket_sources;
+	}
+
+	public AirTicketChangeLogBean getChangeLog() {
+		return changeLog;
+	}
+
+	public void setChangeLog(AirTicketChangeLogBean changeLog) {
+		this.changeLog = changeLog;
+	}
+
+	public String getPassenger_pk() {
+		return passenger_pk;
+	}
+
+	public void setPassenger_pk(String passenger_pk) {
+		this.passenger_pk = passenger_pk;
 	}
 
 }

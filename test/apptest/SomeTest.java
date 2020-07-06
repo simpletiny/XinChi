@@ -3,11 +3,12 @@ package apptest;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-
-import com.xinchi.common.DateUtil;
 
 /**
  * 
@@ -19,7 +20,17 @@ public class SomeTest {
 	private static final int BUFFER_SIZE = 2 * 1024;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(DateUtil.todayOfMonth());
+		Set<String> aa = new HashSet<String>();
+
+		aa.add("a");
+		aa.add("a");
+		aa.add("b");
+		aa.add("a");
+		aa.add("c");
+		Iterator b = aa.iterator();
+		while (b.hasNext()) {
+			System.out.println(b.next());
+		}
 
 	}
 

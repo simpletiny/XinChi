@@ -109,7 +109,7 @@ var ReceivedContext = function() {
 
 		if ((self.chosenReceivedType() == "RECEIVED")) {
 			param += "&detail.types=RECEIVED&detail.types=SUM"
-		} else {
+		} else if ((self.chosenReceivedType() != null)) {
 			param += "&detail.types=" + self.chosenReceivedType();
 		};
 
@@ -146,7 +146,7 @@ var ReceivedContext = function() {
 		var pks = new Array();
 		var check = true;
 		$(self.chosenReceiveds()).each(function(idx, data) {
-			if (data.split(";")[1] == 'Y') {
+			if (data.split(";")[1] == 'Y' || data.split(";")[1] == "E") {
 				check = false;
 				return false;
 			} else {

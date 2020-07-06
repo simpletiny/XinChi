@@ -1,6 +1,5 @@
 package com.xinchi.backend.accounting.action;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import com.xinchi.backend.payable.service.PaidService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.AirTicketPaidDetailBean;
-import com.xinchi.bean.CardBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PaymentDetailBean;
@@ -33,7 +31,6 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
-import com.xinchi.tools.PropertiesUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -167,9 +164,6 @@ public class AccPaidAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	@Autowired
-	private CardService cardService;
-
 	/**
 	 * 将已支付打回到待支付状态
 	 * 
@@ -177,61 +171,7 @@ public class AccPaidAction extends BaseAction {
 	 */
 	public String rollBackPay() {
 
-		// 删除银行流水支出单,删除上传的凭证
-		List<PaymentDetailBean> details = pds.selectByVoucherNumber(voucher_number);
-		for (PaymentDetailBean detail : details) {
-			String voucher_file = detail.getVoucher_file_name();
-
-			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
-			CardBean card = cardService.selectByAccount(detail.getAccount());
-			File destfile = new File(fileFolder + File.separator + card.getPk() + File.separator + voucher_file);
-			destfile.delete();
-
-			pds.deleteDetail(detail.getPk());
-
-		}
-
-		// 更新待支付状态
-		wfp = service.selectByPayNumber(voucher_number);
-		wfp.setStatus(ResourcesConstants.PAY_STATUS_ING);
-		wfp.setPay_user("");
-		service.update(wfp);
-
-		String related_pk = wfp.getRelated_pk();
-
-		// 更新申请状态
-		if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
-			List<SupplierPaidDetailBean> supplierDetails = paidService.selectByRelatedPk(related_pk);
-			for (SupplierPaidDetailBean detail : supplierDetails) {
-				detail.setTime("");
-				detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
-				paidService.update(detail);
-			}
-		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
-			List<AirTicketPaidDetailBean> paids = airTicketPaidDetailService.selectByRelatedPk(related_pk);
-			for (AirTicketPaidDetailBean paid : paids) {
-				paid.setStatus(ResourcesConstants.PAID_STATUS_YES);
-				paid.setTime(DateUtil.getDateStr(""));
-				airTicketPaidDetailService.update(paid);
-			}
-		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
-			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
-			detail.setConfirm_time(DateUtil.getTimeMillis());
-			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
-			receivedService.update(detail);
-		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
-			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
-			detail.setConfirm_time(DateUtil.getTimeMillis());
-			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
-			receivedService.update(detail);
-		} else {
-			ReimbursementBean reim = reimService.selectByPk(related_pk);
-			reim.setPay_user("");
-			reim.setPay_time("");
-			reim.setStatus(ResourcesConstants.PAID_STATUS_YES);
-			reimService.update(reim);
-		}
-		resultStr = SUCCESS;
+		resultStr = service.rollBackPay(voucher_number);
 		return SUCCESS;
 	}
 

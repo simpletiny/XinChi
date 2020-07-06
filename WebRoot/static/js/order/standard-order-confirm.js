@@ -407,10 +407,8 @@ function autoPrice() {
 		sumMoney += price;
 	}
 	sumMoney += otherCost;
-	if (sumMoney != 0) {
-		$("#txt-auto-sum-money").text(sumMoney);
-		$("#auto-sum-money").val(sumMoney);
-	}
+	$("#txt-auto-sum-money").text(sumMoney);
+	$("#auto-sum-money").val(sumMoney);
 }
 
 function autoCaculate() {

@@ -9,7 +9,7 @@ var OrderContext = function() {
 		'1' : '已锁定'
 	};
 
-	// 锁定操作
+	// 生成代操作名单
 	self.lockOrder = function() {
 		if (self.chosenOrders().length < 1) {
 			fail_msg("请选择订单！");
@@ -77,16 +77,17 @@ var OrderContext = function() {
 
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(team_number) {
+	self.checkPassengers = function(order_number) {
 		self.passengers.removeAll();
+
 		startLoadingIndicator("加载中...");
-		var url = "order/selectSaleOrderNameListByTeamNumber";
+		var url = "ticket/searchAirTicketNameListByOrderNumber";
 
 		$.getJSON(self.apiurl + url, {
-			team_number : team_number
+			order_number : order_number
 		}, function(data) {
 
-			self.passengers(data.passengers);
+			self.passengers(data.name_list);
 			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,

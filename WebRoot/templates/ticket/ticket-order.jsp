@@ -31,11 +31,11 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<div style="width: 30%; float: right">
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
 						</div>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -44,9 +44,9 @@
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
+							<label class="col-md-1 control-label">订单号</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="airTicketOrder.team_number" />
+								<input type="text" class="form-control" placeholder="订单号" name="airTicketOrder.order_number" />
 							</div>
 						</div>
 						<div class="span6">
@@ -78,8 +78,8 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>订单号</th>
 								<th>客户</th>
-								<th>机票款</th>
 								<th>首段日期</th>
 								<th>首航段</th>
 								<th>人数</th>
@@ -88,14 +88,14 @@
 								<th>航段信息</th>
 								<th>乘机人信息</th>
 								<th>需求备注</th>
-								<th>团号</th>
+
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr style="overflow: hidden">
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
+								<td data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.client_name"></td>
-								<td data-bind="text: $data.ticket_cost"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
 								<td data-bind="text: $data.people_count"></td>
@@ -112,17 +112,16 @@
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
 								<td><a href="javascript:void(0)"
-									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
+									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.order_number,$data.team_number)}">查看</a></td>
 								<!-- /ko -->
-								<td></td>
-								<td data-bind="text: $data.team_number"></td>
+								<td data-bind="text:$data.comment"></td>
+
 							</tr>
 						</tbody>
 						<tr id="total-row">
 							<td></td>
 							<td></td>
-							<td></td>
-							<td></td>
+							<td></td> 
 							<td>汇总</td>
 							<td data-bind="text:totalPeople"></td>
 							<td></td>
@@ -173,7 +172,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -186,7 +185,7 @@
 					</thead>
 					<tbody data-bind="foreach:passengers">
 						<tr>
-							<td data-bind="text:$data.index"></td>
+							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 						</tr>

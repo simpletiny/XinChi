@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class OrderAirInfoBean extends SupperBO implements Serializable {
@@ -13,18 +14,20 @@ public class OrderAirInfoBean extends SupperBO implements Serializable {
 	private int air_index;
 	private int day_index;
 	private String from_to_place;
-	private String product_manager_number;
-	private String standard_flg;
+	private String ticket_client_number;
 	private String departure_date;
-	private String operate_flg;
-	private String confirm_date;
-	private String confirm_flg;
 
+	private String product_order_number;
+	private String need_pk;
 	// dto
 	private String air_date;
 
 	public String getTeam_number() {
 		return team_number;
+	}
+
+	public String getAir_leg() {
+		return air_leg;
 	}
 
 	public String getFrom_to_city() {
@@ -47,32 +50,28 @@ public class OrderAirInfoBean extends SupperBO implements Serializable {
 		return from_to_place;
 	}
 
-	public String getProduct_manager_number() {
-		return product_manager_number;
-	}
-
-	public String getStandard_flg() {
-		return standard_flg;
+	public String getTicket_client_number() {
+		return ticket_client_number;
 	}
 
 	public String getDeparture_date() {
 		return departure_date;
 	}
 
-	public String getOperate_flg() {
-		return operate_flg;
+	public String getNeed_pk() {
+		return need_pk;
 	}
 
-	public String getConfirm_date() {
-		return confirm_date;
-	}
-
-	public String getConfirm_flg() {
-		return confirm_flg;
+	public String getAir_date() {
+		return air_date;
 	}
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public void setAir_leg(String air_leg) {
+		this.air_leg = air_leg;
 	}
 
 	public void setFrom_to_city(String from_to_city) {
@@ -95,44 +94,28 @@ public class OrderAirInfoBean extends SupperBO implements Serializable {
 		this.from_to_place = from_to_place;
 	}
 
-	public void setProduct_manager_number(String product_manager_number) {
-		this.product_manager_number = product_manager_number;
-	}
-
-	public void setStandard_flg(String standard_flg) {
-		this.standard_flg = standard_flg;
+	public void setTicket_client_number(String ticket_client_number) {
+		this.ticket_client_number = ticket_client_number;
 	}
 
 	public void setDeparture_date(String departure_date) {
 		this.departure_date = departure_date;
 	}
 
-	public void setOperate_flg(String operate_flg) {
-		this.operate_flg = operate_flg;
-	}
-
-	public void setConfirm_date(String confirm_date) {
-		this.confirm_date = confirm_date;
-	}
-
-	public void setConfirm_flg(String confirm_flg) {
-		this.confirm_flg = confirm_flg;
-	}
-
-	public String getAir_leg() {
-		return air_leg;
-	}
-
-	public void setAir_leg(String air_leg) {
-		this.air_leg = air_leg;
-	}
-
-	public String getAir_date() {
-		return air_date;
+	public void setNeed_pk(String need_pk) {
+		this.need_pk = need_pk;
 	}
 
 	public void setAir_date(String air_date) {
 		this.air_date = air_date;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
 	}
 
 }

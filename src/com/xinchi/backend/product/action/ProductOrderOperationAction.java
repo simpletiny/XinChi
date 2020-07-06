@@ -1,6 +1,7 @@
 package com.xinchi.backend.product.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.product.service.ProductOrderOperationService;
+import com.xinchi.backend.product.service.ProductOrderTeamNumberService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
@@ -24,6 +26,7 @@ import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.ProductOrderOperationBean;
+import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -68,10 +71,43 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	private OrderDto order;
 
+	private List<OrderDto> orders;
+
+	private int adult_count;
+	private int special_count;
+
+	private String product_order_number;
+
+	@Autowired
+	private ProductOrderTeamNumberService productOrderNumberService;
+
 	public String searchProductDataForOrder() {
-		order = orderService.selectByTeamNumber(team_number);
-		if (order != null) {
-			productSuppliers = productSupplierService.selectByProductPk(order.getProduct_pk());
+		List<ProductOrderTeamNumberBean> potns = productOrderNumberService.selectByOrderNumber(product_order_number);
+
+		List<String> t_ns = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			t_ns.add(potn.getTeam_number());
+		}
+
+		orders = orderService.selectByTeamNumbers(t_ns);
+
+		BigDecimal adult_price = BigDecimal.ZERO;
+		BigDecimal special_price = BigDecimal.ZERO;
+
+		productSuppliers = productSupplierService.selectByProductPk(product_pk);
+
+		for (ProductSupplierBean psb : productSuppliers) {
+			adult_price = adult_price.add(psb.getAdult_cost());
+			special_price = special_price.add(psb.getChild_cost() == null ? BigDecimal.ZERO : psb.getChild_cost());
+		}
+
+		for (OrderDto o : orders) {
+			BigDecimal product_cost = BigDecimal.ZERO;
+			product_cost = product_cost.add(adult_price.multiply(new BigDecimal(o.getAdult_count())).add(
+					special_price.multiply(new BigDecimal(o.getSpecial_count() == null ? 0 : o.getSpecial_count()))));
+			o.setProduct_cost(product_cost);
+			adult_count += o.getAdult_count();
+			special_count += o.getSpecial_count() == null ? 0 : o.getSpecial_count();
 		}
 		return SUCCESS;
 	}
@@ -104,17 +140,6 @@ public class ProductOrderOperationAction extends BaseAction {
 	}
 
 	private ProductOrderAirBaseBean air_base;
-
-	/**
-	 * 产品订单票务处理
-	 * 
-	 * @return
-	 */
-	public String operateOrderAirTicket() {
-		resultStr = service.operateOrderAirTicket(air_base, json, team_numbers);
-
-		return SUCCESS;
-	}
 
 	/**
 	 * 生成订单操作
@@ -173,39 +198,12 @@ public class ProductOrderOperationAction extends BaseAction {
 	private String team_numbers;
 
 	/**
-	 * 删除操作订单
+	 * 打回操作中的订单
 	 * 
 	 * @return
 	 */
 	public String deleteOperation() {
-		String[] t_ns = team_numbers.split(",");
-		for (String t_n : t_ns) {
-			operations = service.selectByTeamNumber(t_n);
-			OrderDto order = orderService.selectByTeamNumber(t_n);
-
-			String standard_flg = order.getStandard_flg();
-			String order_pk = order.getPk();
-
-			if (standard_flg.equals("Y")) {
-				BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order_pk);
-				bsOrder.setProduct_cost(BigDecimal.ZERO);
-				bsOrder.setOperate_flg("A");
-				bsoService.updateComment(bsOrder);
-			} else {
-				BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
-				bnsOrder.setProduct_cost(BigDecimal.ZERO);
-				bnsOrder.setOperate_flg("A");
-				bnsoService.updateComment(bnsOrder);
-			}
-
-			service.deleteByTeamNumber(t_n);
-			// 删除订单地接维护信息
-			service.deleteOrderSupplier(order_pk);
-			// 删除应付款
-			payableService.deletePayableByTeamNumber(t_n);
-
-		}
-		resultStr = SUCCESS;
+		resultStr = service.deleteOperation(team_numbers);
 		return SUCCESS;
 	}
 
@@ -495,5 +493,37 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setAir_base(ProductOrderAirBaseBean air_base) {
 		this.air_base = air_base;
+	}
+
+	public List<OrderDto> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<OrderDto> orders) {
+		this.orders = orders;
+	}
+
+	public int getAdult_count() {
+		return adult_count;
+	}
+
+	public int getSpecial_count() {
+		return special_count;
+	}
+
+	public void setAdult_count(int adult_count) {
+		this.adult_count = adult_count;
+	}
+
+	public void setSpecial_count(int special_count) {
+		this.special_count = special_count;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
 	}
 }

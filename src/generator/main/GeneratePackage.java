@@ -18,9 +18,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class GeneratePackage {
-	public static final String clazzName = "flightInfo";
+	public static final String clazzName = "SeasonTicketInfo";
 	public static final String desc = "航班信息";
-	public static final String voName = "FlightInfoBean";
+	public static final String voName = "SeasonTicketInfoBean";
 	public static final String baseFolder = "src/com/xinchi/backend/ticket";
 	public static final String basePackage = "com.xinchi.backend.ticket";
 
@@ -33,7 +33,8 @@ public class GeneratePackage {
 		new File(baseFolder + "/action/" + StringUtils.capitalize(clazzName) + "Action.java").createNewFile();
 		new File(baseFolder + "/service/impl/").mkdirs();
 		new File(baseFolder + "/service/" + StringUtils.capitalize(clazzName) + "Service.java").createNewFile();
-		new File(baseFolder + "/service/impl/" + StringUtils.capitalize(clazzName) + "ServiceImpl.java").createNewFile();
+		new File(baseFolder + "/service/impl/" + StringUtils.capitalize(clazzName) + "ServiceImpl.java")
+				.createNewFile();
 		new File(baseFolder + "/dao/impl").mkdirs();
 		new File(baseFolder + "/dao/" + StringUtils.capitalize(clazzName) + "DAO.java").createNewFile();
 		new File(baseFolder + "/dao/impl/" + StringUtils.capitalize(clazzName) + "DAOImpl.java").createNewFile();
@@ -47,11 +48,15 @@ public class GeneratePackage {
 		// // //生成action
 		getAction(clazzName, map, "action.ftl");
 		// //SERVICE
-		generateFile2(map, StringUtils.capitalize(clazzName) + "Service.java", "service.ftl", getClzssPath(), baseFolder + "/service/");
-		generateFile2(map, StringUtils.capitalize(clazzName) + "ServiceImpl.java", "serviceImpl.ftl", getClzssPath(), baseFolder + "/service/impl/");
+		generateFile2(map, StringUtils.capitalize(clazzName) + "Service.java", "service.ftl", getClzssPath(),
+				baseFolder + "/service/");
+		generateFile2(map, StringUtils.capitalize(clazzName) + "ServiceImpl.java", "serviceImpl.ftl", getClzssPath(),
+				baseFolder + "/service/impl/");
 		// DAO
-		generateFile2(map, StringUtils.capitalize(clazzName) + "Dao.java", "dao.ftl", getClzssPath(), baseFolder + "/dao/");
-		generateFile2(map, StringUtils.capitalize(clazzName) + "DaoImpl.java", "daoImpl.ftl", getClzssPath(), baseFolder + "/dao/impl/");
+		generateFile2(map, StringUtils.capitalize(clazzName) + "Dao.java", "dao.ftl", getClzssPath(),
+				baseFolder + "/dao/");
+		generateFile2(map, StringUtils.capitalize(clazzName) + "DaoImpl.java", "daoImpl.ftl", getClzssPath(),
+				baseFolder + "/dao/impl/");
 
 	}
 
@@ -61,8 +66,9 @@ public class GeneratePackage {
 		generateFile2(map, StringUtils.capitalize(clazzName) + "Action.java", ftl, path, modelPackage);
 	}
 
-	private static void generateFile2(Map<String, String> rootMap, String fileName, String ftl, String path, String modelPackage) throws IOException,
-			UnsupportedEncodingException, FileNotFoundException, TemplateException {
+	private static void generateFile2(Map<String, String> rootMap, String fileName, String ftl, String path,
+			String modelPackage)
+			throws IOException, UnsupportedEncodingException, FileNotFoundException, TemplateException {
 		File file = new File(path);
 		Configuration cfg = new Configuration();
 		cfg.setDirectoryForTemplateLoading(file);

@@ -51,6 +51,16 @@
 		from passenger_ticket_info
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT 
+		    *
+		FROM
+		    passenger_ticket_info 
+		WHERE
+		    base_pk = #{base_pk,jdbcType=CHAR}
+		GROUP BY ticket_index
+		ORDER BY ticket_index
+	</select>
 	<select id="selectByPassengerPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />

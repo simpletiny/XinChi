@@ -59,6 +59,7 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScore", page);
 	}
+
 	@Override
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchBackMoneyScore", page);
@@ -73,14 +74,26 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	public List<OrderDto> selectByParam(OrderDto order) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectByParam", order);
 	}
+
 	@Override
 	public String selectMaxConfirmDateByEmployeePk(String employee_pk) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk", employee_pk);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk",
+				employee_pk);
 	}
 
 	@Override
 	public List<OrderDto> selectConfirmingOrders(OrderDto order) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectConfirmingOrders", order);
+	}
+
+	@Override
+	public List<OrderDto> selectByTeamNumbers(List<String> team_numbers) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectByTeamNumbers", team_numbers);
+	}
+
+	@Override
+	public List<OrderDto> selectWithProductByParam(OrderDto order) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectWithProductByParam", order);
 	}
 
 }

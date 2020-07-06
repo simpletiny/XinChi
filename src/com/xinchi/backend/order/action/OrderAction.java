@@ -1,5 +1,7 @@
 package com.xinchi.backend.order.action;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -379,6 +381,22 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String team_numbers;
+
+	public String selectSaleOrderNameListByTeamNumbers() {
+		List<String> t_ns = new ArrayList<String>();
+		t_ns.addAll(Arrays.asList(team_numbers.split(",")));
+		passengers = orderNameListService.selectByTeamNumbers(t_ns);
+		return SUCCESS;
+	}
+
+	private String need_pk;
+
+	public String selectSaleOrderNameListByAirNeedPk() {
+		passengers = orderNameListService.selectByAirNeedPk(need_pk);
+		return SUCCESS;
+	}
+
 	public String selectOrderByTeamNumber() {
 		option = service.selectByTeamNumber(team_number);
 		return SUCCESS;
@@ -498,5 +516,21 @@ public class OrderAction extends BaseAction {
 
 	public void setOrders(List<OrderDto> orders) {
 		this.orders = orders;
+	}
+
+	public String getNeed_pk() {
+		return need_pk;
+	}
+
+	public void setNeed_pk(String need_pk) {
+		this.need_pk = need_pk;
+	}
+
+	public String getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(String team_numbers) {
+		this.team_numbers = team_numbers;
 	}
 }

@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
@@ -35,7 +36,16 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private String first_from_to;
 	private String client_name;
 
+	private String order_number;
+	private String comment;
+
 	private String status;
+
+	private String name_confirm_status;
+
+	private BigDecimal ticket_cost;
+
+	private String change_pk;
 
 	public String getTeam_number() {
 		return team_number;
@@ -155,6 +165,46 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getName_confirm_status() {
+		return name_confirm_status;
+	}
+
+	public void setName_confirm_status(String name_confirm_status) {
+		this.name_confirm_status = name_confirm_status;
+	}
+
+	public BigDecimal getTicket_cost() {
+		return ticket_cost;
+	}
+
+	public void setTicket_cost(BigDecimal ticket_cost) {
+		this.ticket_cost = ticket_cost;
+	}
+
+	public String getChange_pk() {
+		return change_pk;
+	}
+
+	public void setChange_pk(String change_pk) {
+		this.change_pk = change_pk;
 	}
 
 }

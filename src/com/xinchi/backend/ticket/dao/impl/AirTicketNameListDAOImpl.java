@@ -72,16 +72,37 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 
 	@Override
 	public List<PassengerAllotDto> selectPassengerAllotByPassengerPk(String passenger_pk) {
-		List<PassengerAllotDto> list = daoUtil.selectListByParam(
-				"com.xinchi.bean.mapper.PassengerAllotMapper.selectByPassengerPk", passenger_pk);
+		List<PassengerAllotDto> list = daoUtil
+				.selectListByParam("com.xinchi.bean.mapper.PassengerAllotMapper.selectByPassengerPk", passenger_pk);
 		return list;
 	}
 
 	@Override
 	public List<PassengerAllotDto> selectPassengerAllotByOrderPk(String order_pk) {
-		List<PassengerAllotDto> list = daoUtil.selectListByParam(
-				"com.xinchi.bean.mapper.PassengerAllotMapper.selectByOrderPk", order_pk);
+		List<PassengerAllotDto> list = daoUtil
+				.selectListByParam("com.xinchi.bean.mapper.PassengerAllotMapper.selectByOrderPk", order_pk);
 		return list;
+	}
+
+	@Override
+	public List<AirTicketNameListBean> selectByPayablePk(String payable_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByPayablePk", payable_pk);
+	}
+
+	@Override
+	public List<AirTicketNameListBean> selectByTeamNumber(String team_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByTeamNumber", team_number);
+	}
+
+	@Override
+	public List<AirTicketNameListBean> selectByOrderNumber(String order_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByOrderNumber",
+				order_number);
+	}
+
+	@Override
+	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectDoneByPage", page);
 	}
 
 }

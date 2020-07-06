@@ -32,8 +32,14 @@ public class AirTicketNeedServiceImpl implements AirTicketNeedService {
 
 	@Override
 	public List<OrderAirInfoBean> selectOrderAirInfoByTeamNumber(String team_number) {
-		
+
 		return dao.selectOrderAirInfoByTeamNumber(team_number);
+	}
+
+	@Override
+	public List<OrderAirInfoBean> selectOrderAirInfoByProductOrderNumber(String order_number) {
+
+		return dao.selectOrderAirInfoByProductOrderNumber(order_number);
 	}
 
 }

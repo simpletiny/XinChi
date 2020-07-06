@@ -124,28 +124,27 @@
 								<table class="table-ticket">
 									<thead>
 										<tr class="required">
-											<th></th>
+											
 											<th style="width: 10%">航班日期</th>
 											<th style="width: 10%">航班号</th>
 											<th style="width: 20%">起降时刻</th>
 											<th style="width: 20%">起降城市</th>
-											<th style="width: 10%">起飞机场</th>
-											<th style="width: 10%">降落机场</th>
-											<th style="width: 10%">航站楼</th>
+											<th style="width: 18%">起飞地</th>
+											<th style="width: 18%">降落地</th>
+											<th style="width: 4%"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<s:set name="legs" value='#ta.airLegs'></s:set>
 										<s:iterator value="#legs" id="leg">
 										<tr>
-											<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
 											<td><s:property value="#leg.date" /><input type="hidden" st="ticket-date" value='<s:property value="#leg.date"/>'/></td>
-											<td><input st="ticket-number" maxlength="10" type="text" /></td>
-											<td><input st="from-to-time" maxlength="20" type="text" /></td>
+											<td><input st="ticket-number" maxlength="10" type="text" value='<s:property value="#leg.ticket_number"/>'/></td>
+											<td><input st="from-to-time" maxlength="20" type="text" value='<s:property value="#leg.start_time"/>--<s:property value="#leg.end_time"/>' /></td>
 											<td><s:property value="#leg.from_city"/>--<s:property value="#leg.to_city"/><input st="from-to-city" type="hidden"  value='<s:property value="#leg.from_city"/>--<s:property value="#leg.to_city"/>'/></td>
-											<td><input st="from-airport"  maxlength="10" type="text" /></td>
-											<td><input st="to-airport"  maxlength="10" type="text" /></td>
-											<td><input st="terminal"  maxlength="10" type="text" /></td>
+											<td><input st="start-place"  maxlength="20" type="text" value='<s:property value="#leg.start_place"/>' /></td>
+											<td><input st="end-place"  maxlength="20" type="text"  value='<s:property value="#leg.end_place"/>'/></td>
+											<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
 										</tr>
 										</s:iterator>
 									</tbody>
@@ -154,10 +153,10 @@
 							<div class="input-row clearfloat">
 								<div class="col-md-12">
 									<h3>名单：</h3>
-									<div class="ip">
+									<div>
 										<s:set name="passengers" value='#ta.passengers'></s:set>
 										<s:iterator value="#passengers" id="passenger">
-											<em class="small-box"> <a href="#"><s:property value="#passenger.name" />：<s:property value="#passenger.id" />;</a> <input type="hidden" st="passenger-pk" value='<s:property value="#passenger.pk"/>' />
+											<em class="small-box" style="width:260px !important"><s:property value="#passenger.name" />：<s:property value="#passenger.id" />; <input type="hidden" st="passenger-pk" value='<s:property value="#passenger.pk"/>' />
 											</em>
 										</s:iterator>
 									</div>

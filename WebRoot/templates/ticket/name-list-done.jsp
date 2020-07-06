@@ -68,13 +68,17 @@
 	margin-top: 5px;
 	display: block;
 }
+
+.error {
+	color: red;
+}
 </style>
 </head>
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>已操作名单</h2>
+			<h2>已出票名单</h2>
 		</div>
 		<!-- 	<div class="fixed">
 			<div style="width: 30%; float: right">
@@ -85,8 +89,8 @@
 			<div class="main-box" id="div-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="padding-top: 3px;float:right" >
-							<button type="button" class="btn btn-green">退票</button>
+						<div style="padding-top: 3px; float: right">
+							<button type="button" class="btn btn-green" data-bind="click:flightChange">航变</button>
 							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
@@ -120,25 +124,35 @@
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>乘机人</th>
+								<th>订单号</th>
 								<th>团号</th>
 								<th>客户</th>
 								<th>首段日期</th>
 								<th>首航段</th>
 								<th>身份证号</th>
+								<th>价格</th>
+								<th>状态</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
-							<tr style="overflow: hidden;">
-								<!--  onclick="showDetail(this)" -->
+							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id}, checked: $root.chosenPassengers" /></td>
+									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status+':'+$data.status}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.name"></td>
+								<td st="order-number" data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-
 								<td data-bind="text: $data.id"></td>
+								<td data-bind="text: $data.ticket_cost" class="rmb"></td>
+								<!-- ko if:$data.status=='Y' -->
+								<td data-bind="text:$root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='C' -->
+								<td><a href="javascript:void(0)" style="color: red"
+									data-bind="text:$root.statusMapping[$data.status],click:function(){$root.checkChange($data.pk);}"></a></td>
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>
@@ -163,68 +177,105 @@
 			</div>
 		</div>
 	</div>
-	<div id="source-pick" style="display: none; width: 300px">
 
-		<div class="form-group">
-			<label class="col-md-3 control-label" style="float: left">票源</label>
-			<div style="width: 70%; float: left">
-				<select class="form-control" style="height: 34px" id="select-ticket-source"
-					data-bind="options: existsSources,optionsText:'name',optionsValue:'index', optionsCaption: '新增'"></select>
+	<div id="div-flight-change" style="display: none; width: 800px; height: 700px; overflow: auto">
+		<form class="form-box info-form" id="form-change">
+			<div class="input-row clearfloat" id="air-ticket">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">价格</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:changeNames">
+						<tr>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.ticket_cost"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		</div>
-		<div class="form-group" style="float: right; margin-top: 10px">
-			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pickTicketSource() }">确认</button>
-		</div>
-	</div>
 
-	<div id="supplier-pick" style="display: none;">
-		<div class="main-container">
-			<div class="main-box" style="width: 600px">
-				<div class="form-group">
-					<div class="span8">
-						<label class="col-md-2 control-label">姓名</label>
-						<div class="col-md-6">
-							<input type="text" id="supplier_name" class="form-control" placeholder="姓名" />
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">航变原因</label>
+					<div class="ip">
+						<input class="form-control" maxlength="10" placeholder="10个字以内" name="change-reason" required />
+					</div>
+				</div>
+				<div class="col-md-6 required">
+					<label class="l" style="width: 25%">航变成本</label>
+					<div class="ip">
+						<input class="form-control" type="number" placeholder="增加的费用，负数即有退款" name="change-cost" required />
+					</div>
+				</div>
+			</div>
+
+			<hr></hr>
+			<div id="div-allot">
+				<!-- ko foreach:changeTicketSources -->
+				<div class="input-row clearfloat">
+					<div class="col-md-6">
+						<p class="ip-default" data-bind="text:$data.name"></p>
+					</div>
+					<div class="col-md-6 required">
+						<label class="l" style="width: 25%">分配成本</label>
+						<div class="ip">
+							<input type="hidden" st="ticket-source-pk" data-bind="value:$data.pk" /> <input class="form-control"
+								type="number" st="money" placeholder="分配成本" />
 						</div>
 					</div>
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchSupplierEmployee }">搜索</button>
+				</div>
+				<!-- /ko -->
+			</div>
+			<hr></hr>
+			<div class="input-row clearfloat">
+				<div class="col-md-12 required">
+					<label class="l">航变备注</label>
+					<div class="ip">
+						<textarea type="text" class="ip-default comment" name="comment" rows="5" maxlength="200" placeholder="需要备注说明的信息"
+							required></textarea>
 					</div>
 				</div>
-				<div class="list-result">
-					<table class="table table-striped table-hover">
-						<thead>
-							<tr role="row">
-								<th>姓名</th>
-								<th>财务主体</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: supplierEmployees">
-							<tr data-bind="event: {click: function(){ $parent.pickSupplierEmployee($data.name,$data.pk)}}">
-								<td data-bind="text: $data.name"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="pagination clearfloat">
-						<a data-bind="click: previousPage1, enable: currentPage1() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums1 -->
-						<!-- ko if: $data == $root.currentPage1() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage1() -->
-						<a data-bind="text: $data, click: $root.turnPage1"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
-					</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="text-align: right">
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doFlightChange();}">提交</a> <a
+						type="submit" class="btn btn-green btn-r" data-bind="click: cancelChange()">取消</a>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div id="div-check-change" style="display: none; width: 800px; height: 300px; overflow: auto">
+
+		<div class="input-row clearfloat">
+			<div class="col-md-6 ">
+				<label class="l" style="width: 25%">航变原因</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text:changeLog().change_reason"></p>
+				</div>
+			</div>
+			<div class="col-md-6 ">
+				<label class="l" style="width: 25%">航变成本</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text:changeLog().change_cost"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12 ">
+				<label class="l">航变备注</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text:changeLog().comment"></p>
 				</div>
 			</div>
 		</div>
 	</div>
-	<form id="data-form" method="post" action="<%=basePath%>ticket/operatePassengers" style="display: none">
-		<input name="json" id="json-data" />
-	</form>
+
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>

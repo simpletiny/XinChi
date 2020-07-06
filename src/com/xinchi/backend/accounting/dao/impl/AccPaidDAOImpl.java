@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -37,28 +38,41 @@ public class AccPaidDAOImpl extends SqlSessionDaoSupport implements AccPaidDAO {
 	@Override
 	public WaitingForPaidBean selectByPk(String pk) {
 
-		return (WaitingForPaidBean) daoUtil.selectByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.selectByPrimaryKey", pk);
+		return (WaitingForPaidBean) daoUtil.selectByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.selectByPrimaryKey",
+				pk);
 	}
 
 	@Override
 	public WaitingForPaidBean selectByPayNumber(String pay_number) {
 
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectByPayNumber", pay_number);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectByPayNumber",
+				pay_number);
 	}
 
 	@Override
 	public void update(WaitingForPaidBean wfp) {
-	daoUtil.updateByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.updateByPrimaryKey", wfp);
+		daoUtil.updateByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.updateByPrimaryKey", wfp);
 	}
 
 	@Override
 	public PaidDetailSummary selectPaidSummaryByPayNumber(String voucher_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectPaidSummaryByPayNumber", voucher_number);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectPaidSummaryByPayNumber",
+				voucher_number);
 	}
 
 	@Override
 	public void deleteByPk(String pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.WaitingForPaidMapper.deleteByPrimaryKey", pk);
-		
+
+	}
+
+	@Override
+	public List<WaitingForPaidBean> selectByRelatedPk(String related_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.WaitingForPaidMapper.selectByRelatedPk", related_pk);
+	}
+
+	@Override
+	public BigDecimal selectSumWFP() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.WaitingForPaidMapper.selectSumWFP");
 	}
 }

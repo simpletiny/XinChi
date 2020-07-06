@@ -14,6 +14,7 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
+import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
@@ -128,6 +129,12 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 	@Autowired
 	private BudgetNonStandardOrderDAO bnsoDao;
 
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
+	@Autowired
+	private AirNeedTeamNumberDAO airNeedTeamNumberDao;
+
 	@Override
 	public String allotTicket(String json) {
 		JSONArray arr = JSONArray.fromObject(json);
@@ -155,7 +162,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 							: BigDecimal.ZERO);
 			airTicketPayable.setPaid(BigDecimal.ZERO);
 
-			airTicketPayableDao.insert(airTicketPayable);
+			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(pkkk[0]);
+			airTicketPayable.setPassenger(passenger.getName());
 
 			BigDecimal cost = new BigDecimal(ticket_cost);
 			JSONArray ticket_info = obj.getJSONArray("ticket_info");
@@ -169,7 +177,12 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 				String from_to_city = info.getString("from_to_city");
 				String from_airport = info.getString("from_airport");
 				String to_airport = info.getString("to_airport");
-				String terminal = info.getString("terminal");
+
+				if (ticket_index == 1) {
+					airTicketPayable.setFrom_to_city(from_to_city);
+					airTicketPayable.setFirst_date(ticket_date);
+					airTicketPayableDao.insert(airTicketPayable);
+				}
 
 				for (String pk : pkkk) {
 					if (SimpletinyString.isEmpty(pk))
@@ -187,7 +200,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					pti.setFrom_to_city(from_to_city);
 					pti.setFrom_airport(from_airport);
 					pti.setTo_airport(to_airport);
-					pti.setTerminal(terminal);
+
 					pti.setPassenger_pk(pk);
 					pti.setBase_pk(airTicketPayable.getPk());
 					dao.insert(pti);
@@ -216,8 +229,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 						airTicketNameListDAO.update(atnl);
 					}
 				}
-
 			}
+
 		}
 
 		// 验证ticketorder 是否完成所有乘客的出票
@@ -234,21 +247,31 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			// 如果完成了出票，更新order状态，并更新产品订单机票款项
 			if (done) {
 				order.setCost_done_flg("Y");
+				order.setStatus("Y");
 				airTicketOrderDao.update(order);
-				OrderDto sale_order = orderDao.selectByTeamNumber(order.getTeam_number());
+				if (SimpletinyString.isEmpty(order.getOrder_number())) {
+					OrderDto sale_order = orderDao.selectByTeamNumber(order.getTeam_number());
 
-				if (sale_order.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
-					standardOrder.setAir_ticket_cost(order.getTicket_cost());
-					bsoDao.update(standardOrder);
+					if (sale_order.getStandard_flg().equals("Y")) {
+						BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
+						standardOrder.setAir_ticket_cost(order.getTicket_cost());
+						bsoDao.update(standardOrder);
+					} else {
+						BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
+						nonStandardOrder.setAir_ticket_cost(order.getTicket_cost());
+						bnsoDao.update(nonStandardOrder);
+					}
 				} else {
-					BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
-					nonStandardOrder.setAir_ticket_cost(order.getTicket_cost());
-					bnsoDao.update(nonStandardOrder);
 				}
+
 			}
 		}
 		return SUCCESS;
+	}
+
+	@Override
+	public List<PassengerTicketInfoBean> selectByPassengerPk(String passenger_pk) {
+		return dao.selectByPassengerPk(passenger_pk);
 	}
 
 }

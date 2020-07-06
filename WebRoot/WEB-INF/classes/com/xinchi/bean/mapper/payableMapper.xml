@@ -27,6 +27,11 @@
 		<result column="pick_date" property="pick_date" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<resultMap id="KeyMap" type="com.xinchi.bean.KeyValueDto">
+		<result column="key_key" property="key_key" jdbcType="VARCHAR" />
+		<result column="value_value" property="value_value" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 
 		team_number,
@@ -358,8 +363,10 @@
 		from payable A LEFT JOIN supplier_employee B on
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN user_base C ON A.sales = C.user_number
-		LEFT JOIN supplier D ON B.financial_body_pk = D.pk
-		LEFT JOIN product_order_operation E ON A.team_number= E.team_number and A.supplier_employee_pk = E.supplier_employee_pk
+		LEFT JOIN supplier D ON
+		B.financial_body_pk = D.pk
+		LEFT JOIN product_order_operation E ON A.team_number= E.team_number and
+		A.supplier_employee_pk = E.supplier_employee_pk
 		<where>
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name LIKE CONCAT('%', #{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
@@ -392,7 +399,7 @@
 				and A.return_date &lt;= #{params.bo.return_to,jdbcType=VARCHAR}
 			</if>
 			<if test='params.bo.zero_flg == null or params.bo.zero_flg !="Y"'>
-				and if(final_flg='N',budget_balance!=0,final_balance!=0)
+				and if(A.final_flg='N',A.budget_balance!=0,A.final_balance!=0)
 			</if>
 		</where>
 
@@ -402,5 +409,29 @@
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="Z"'>
 			ORDER BY pick_date ASC
 		</if>
+	</select>
+	<select id="selectSumPayable" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(IF(final_flg = 'Y',
+		final_balance,
+		budget_balance))
+		FROM
+		payable;
+	</select>
+	<select id="selectPayableWithArea" resultMap="KeyMap">
+	SELECT 
+	    SUM(IF(A.final_flg = 'Y',
+	        A.final_balance,
+	        A.budget_balance)) AS value_value,
+	    C.supplier_provice AS key_key
+	FROM
+	    payable A
+	        LEFT JOIN
+	    supplier_employee B ON A.supplier_employee_pk = B.pk
+	        LEFT JOIN
+	    supplier C ON B.financial_body_pk = C.pk
+	GROUP BY C.supplier_provice
+	HAVING value_value > 0
+	ORDER BY value_value DESC;
 	</select>
 </mapper>

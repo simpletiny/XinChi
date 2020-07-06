@@ -2,6 +2,28 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 	<package name="culture" extends="default" namespace="/culture">
+		<!-- 欣驰历史 -->
+		<action name="createHistoryView" class="historyViewAction" method="createHistoryView">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchHistoryViewByPage" class="historyViewAction" method="searchHistoryViewByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+
+			</result>
+		</action>
+		<action name="searchOneHistoryView" class="historyViewAction" method="searchOneHistoryView">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateHistoryView" class="historyViewAction" method="updateHistoryView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteHistoryView" class="historyViewAction" method="deleteHistoryView">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 		<!-- 世界观 -->
 		<action name="createWorldView" class="worldViewAction" method="createWorldView">
 			<result name="success" type="str">resultStr
@@ -45,7 +67,28 @@
 		<action name="deleteValueView" class="valueViewAction" method="deleteValueView">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		
+		<!--团质进化-->
+		<action name="createTeamEvolution" class="teamEvolutionAction" method="createTeamEvolution">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchTeamEvolutionByPage" class="teamEvolutionAction" method="searchTeamEvolutionByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 
+			</result>
+		</action>
+		<action name="searchOneTeamEvolution" class="teamEvolutionAction" method="searchOneTeamEvolution">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateTeamEvolution" class="teamEvolutionAction" method="updateTeamEvolution">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteTeamEvolution" class="teamEvolutionAction" method="deleteTeamEvolution">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 通用制度 -->
 		<action name="createRuleView" class="ruleViewAction" method="createRuleView">
 			<result name="success" type="str">resultStr

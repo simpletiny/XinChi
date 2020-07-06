@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.common.SupperBO;
@@ -16,6 +17,7 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	private String financial_body_pk;
 	private String financial_body_name;
+	private String supplier_employee_name;
 	private java.math.BigDecimal money;
 
 	private java.math.BigDecimal allot_money;
@@ -48,10 +50,13 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	private String PNR;
 
+	private String voucher_number;
+
 	// search options
-	private String date_from;
-	private String date_to;
 	private List<String> statuses;
+	private BigDecimal money_from;
+	private BigDecimal money_to;
+	private String receiver;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -189,22 +194,6 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 		PNR = pNR;
 	}
 
-	public String getDate_from() {
-		return date_from;
-	}
-
-	public void setDate_from(String date_from) {
-		this.date_from = date_from;
-	}
-
-	public String getDate_to() {
-		return date_to;
-	}
-
-	public void setDate_to(String date_to) {
-		this.date_to = date_to;
-	}
-
 	public List<String> getStatuses() {
 		return statuses;
 	}
@@ -227,6 +216,46 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	public void setFinancial_body_name(String financial_body_name) {
 		this.financial_body_name = financial_body_name;
+	}
+
+	public String getVoucher_number() {
+		return voucher_number;
+	}
+
+	public void setVoucher_number(String voucher_number) {
+		this.voucher_number = voucher_number;
+	}
+
+	public String getSupplier_employee_name() {
+		return supplier_employee_name;
+	}
+
+	public void setSupplier_employee_name(String supplier_employee_name) {
+		this.supplier_employee_name = supplier_employee_name;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
+	}
+
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 
 }

@@ -54,4 +54,10 @@ public class OrderNameListDAOImpl extends SqlSessionDaoSupport implements OrderN
 
 	}
 
+	@Override
+	public List<SaleOrderNameListBean> selectByTeamNumbers(List<String> team_numbers) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SaleOrderNameListMapper.selectByTeamNumbers",
+				team_numbers);
+	}
+
 }

@@ -19,26 +19,31 @@ var ReportContext = function() {
 	self.totalAdult = ko.observable();
 	self.totalSpecial = ko.observable();
 	self.refresh = function() {
+		startLoadingIndicator("加载中...");
 		var totalAdult = 0;
 		var totalSpecial = 0;
 		var param = $('form').serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductReportByPage', param, function(data) {
-			self.reports(data.reports);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductReportByPage', param,
+				function(data) {
+					self.reports(data.reports);
 
-			$(self.reports()).each(function(idx, data) {
-				totalAdult += data.adult_count - 0;
-				if (data.special_count != null) {
-					totalSpecial += data.special_count - 0;
-				}
-			});
+					$(self.reports()).each(function(idx, data) {
+						totalAdult += data.adult_count - 0;
+						if (data.special_count != null) {
+							totalSpecial += data.special_count - 0;
+						}
+					});
 
-			self.totalAdult(totalAdult);
-			self.totalSpecial(totalSpecial);
+					self.totalAdult(totalAdult);
+					self.totalSpecial(totalSpecial);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+
+					endLoadingIndicator();
+				});
 	};
 
 	// start pagination
@@ -75,9 +80,10 @@ var ReportContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

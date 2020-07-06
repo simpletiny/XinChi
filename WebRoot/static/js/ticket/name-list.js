@@ -11,6 +11,14 @@ var PassengerContext = function() {
 	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
 			'TICKET'];
 
+	self.confirmStatusMapping = {
+		"1" : "未确认",
+		"2" : "待确认",
+		"3" : "产品确认",
+		"4" : "待确认",
+		"5" : "已确认",
+
+	}
 	self.roleMapping = {
 		'MANAGER' : '经理',
 		'ADMIN' : '管理员',
@@ -25,25 +33,16 @@ var PassengerContext = function() {
 			fail_msg("请选择乘客！");
 			return;
 		} else {
-			// // 判断销售是否已经进行名单确认
-			// startLoadingSimpleIndicator("检查中...");
-			// var checkParam = "";
-			// for (var i = 0; i < self.chosenPassengers().length; i++) {
-			// var team_number = self.chosenPassengers()[i].split(":")[3];
-			// checkParam += "team_numbers=" + team_number + "&";
-			// }
-			//		
-			// $
-			// .ajax({
-			// type : "POST",
-			// url : self.apiurl + 'ticket/checkSaleConfirm',
-			// async : false,
-			// data : checkParam
-			// })
-			// .success(
-			// function(str) {
-			// endLoadingIndicator();
-			// if (str == "success") {
+			// 判断名单是否确认
+			for (var i = 0; i < self.chosenPassengers().length; i++) {
+				var d = self.chosenPassengers()[i];
+				var cd = d.split(":");
+				var s = cd[5];
+				if (s == "4") {
+					fail_msg("请选择销售已确认的名单！");
+					return;
+				}
+			}
 
 			var sources = $(".txt-ticket-source");
 			self.existsSources.removeAll();
@@ -91,7 +90,7 @@ var PassengerContext = function() {
 						$("#div-table").animate({
 							width : '70%'
 						}, "slow", function() {
-							$(this).css("float", "left");
+							// $(this).css("float", "left");
 							$(this).addClass("already");
 							$(".right-div").css("display", "block");
 							self.addTicketSource();
@@ -204,7 +203,7 @@ var PassengerContext = function() {
 	};
 	// 添加票源
 	self.addTicketSource = function() {
-		var sourceDiv = $('<div style="border: solid 1px black;width:100%;margin-top:10px" class="source-div"></div>');
+		var sourceDiv = $('<div style="display:block;border: solid 1px black;width:100%;margin-top:10px" class="source-div"></div>');
 		var deleteDiv = $('<div class="deleteDiv"></div>');
 		$(deleteDiv).click(function() {
 			self.deleteSource(this);
@@ -251,6 +250,15 @@ var PassengerContext = function() {
 	};
 	self.deleteSource = function(div) {
 		$(div).parent().remove();
+		var all = $('.source-div');
+		if (all.length < 1) {
+			$(".right-div").css("display", "none");
+			$("#div-table").animate({
+				width : '100%'
+			}, "slow", function() {
+				$(this).removeClass("already");
+			});
+		}
 	};
 
 	self.addDeletePassenger = function(label) {
@@ -280,13 +288,14 @@ var PassengerContext = function() {
 		$(label).parent().remove();
 	};
 	self.refresh = function() {
+
+		startLoadingIndicator("加载中...");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage + "&passenger.status=I";
 		$.getJSON(self.apiurl + 'ticket/searchAirTicketNameListByPage', param,
 				function(data) {
 					self.passengers(data.airTicketNameList);
-
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 					$("#chk-all").attr('checked', false);
@@ -297,12 +306,14 @@ var PassengerContext = function() {
 					for (var i = 0; i < trs.length; i++) {
 						var tr = $(trs[i]);
 						if (i == 0) {
-							current_no = $(tr.find('td')[2]).html();
+							current_no = $(tr).find("td[st='order-number']")
+									.text();
 						}
-						var team_number = $(tr.find('td')[2]).html();
+						var order_number = $(tr).find("td[st='order-number']")
+								.text();
 
-						if (team_number != current_no) {
-							current_no = team_number;
+						if (order_number != current_no) {
+							current_no = order_number;
 							current_index += 1;
 						}
 						tr.find("td").css(
@@ -310,6 +321,8 @@ var PassengerContext = function() {
 								"background:" + self.colors[current_index % 4]
 										+ " !important");
 					}
+
+					endLoadingIndicator();
 				});
 	};
 
@@ -560,13 +573,40 @@ function checkAll(chk) {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
 			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":"
-					+ passenger.id + ":" + passenger.team_number)
+					+ passenger.id + ":" + passenger.team_number + ":"
+					+ passenger.order_number + ":"
+					+ passenger.name_confirm_status)
 		}
 	} else {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
 			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name
-					+ ":" + passenger.id + ":" + passenger.team_number)
+					+ ":" + passenger.id + ":" + passenger.team_number + ":"
+					+ passenger.order_number + ":"
+					+ passenger.name_confirm_status)
 		}
 	}
+}
+
+function checkSameOrderNumber(tr) {
+	var order_number = $(tr).find("td[st='order-number']").text();
+	for (var i = 0; i < ctx.passengers().length; i++) {
+		var passenger = ctx.passengers()[i];
+
+		if (passenger.order_number == order_number) {
+			var xxstr = passenger.pk + ":" + passenger.name + ":"
+					+ passenger.id + ":" + passenger.team_number + ":"
+					+ passenger.order_number + ":"
+					+ passenger.name_confirm_status;
+
+			if (ctx.chosenPassengers().contains(xxstr)) {
+				ctx.chosenPassengers.remove(xxstr);
+			} else {
+				ctx.chosenPassengers.push(xxstr);
+			}
+
+		}
+
+	}
+
 }

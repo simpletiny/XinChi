@@ -17,4 +17,6 @@ public interface OrderNameListDAO {
 	public void deleteByOrderPk(String pk);
 
 	public void update(SaleOrderNameListBean name);
+
+	public List<SaleOrderNameListBean> selectByTeamNumbers(List<String> team_numbers);
 }

@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.PaidDetailSummary;
@@ -18,7 +19,11 @@ public interface AccPaidDAO {
 	public void update(WaitingForPaidBean wfp);
 
 	public PaidDetailSummary selectPaidSummaryByPayNumber(String voucher_number);
-	
-	
+
 	public void deleteByPk(String wfp_pk);
+
+	public List<WaitingForPaidBean> selectByRelatedPk(String related_pk);
+
+	public BigDecimal selectSumWFP();
+
 }

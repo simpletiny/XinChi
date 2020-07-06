@@ -19,6 +19,11 @@
 		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="change_pk" property="change_pk" jdbcType="CHAR" />
+		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="VARCHAR" />
+		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -37,7 +42,10 @@
 		update_user,
 		create_time,
 		update_time,
-		status
+		status,
+		order_number,
+		comment,
+		change_pk
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -46,11 +54,60 @@
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
 
+	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		B.*
+		FROM
+		passenger_ticket_info A
+		LEFT
+		JOIN
+		air_ticket_name_list B ON A.passenger_pk = B.pk
+		WHERE
+		A.base_pk = #{payable_pk,jdbcType=CHAR}
+		AND A.ticket_index = 1
+	</select>
+	<select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		*
+		FROM
+		air_ticket_name_list
+		where
+		team_number = #{team_number,jdbcType=CHAR}
+	</select>
+	<select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		*
+		FROM
+		air_ticket_name_list
+		where
+		order_number = #{order_number,jdbcType=CHAR}
+	</select>
+
 	<select id="selectByPks" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from air_ticket_name_list
-		where pk in
+		A.team_number,
+		A.client_number,
+		A.first_ticket_date,
+		A.first_start_city,
+		A.first_end_city,
+		A.ticket_order_pk,
+		A.name,
+		A.id,
+		A.sale_product_pk,
+		A.create_user,
+		A.pk,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		A.status,
+		A.order_number,
+		A.comment,
+		B.ticket_cost,
+		A.change_pk
+		from air_ticket_name_list A
+		LEFT JOIN
+		view_sum_ticket_cost B ON A.pk= B.passenger_pk
+		where A.pk in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
 			#{item}
 		</foreach>
@@ -111,6 +168,12 @@
 			<if test="status != null">
 				status,
 			</if>
+			<if test="order_number != null">
+				order_number,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -157,6 +220,12 @@
 			</if>
 			<if test="status != null">
 				#{status,jdbcType=CHAR},
+			</if>
+			<if test="order_number != null">
+				#{order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -207,6 +276,15 @@
 			<if test="status != null">
 				status = #{status,jdbcType=CHAR},
 			</if>
+			<if test="order_number != null">
+				order_number = #{order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="change_pk != null">
+				change_pk = #{change_pk,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -227,6 +305,8 @@
 		select
 		A.team_number,
 		A.client_number,
+		A.order_number,
+		A.comment,
 		B.user_name AS client_name,
 		CONCAT(A.first_start_city,'--',A.first_end_city) AS
 		first_from_to,
@@ -242,15 +322,23 @@
 		A.update_user,
 		A.create_time,
 		A.update_time,
-		A.status
+		A.status,
+		C.name_confirm_status
+
 		from air_ticket_name_list A LEFT JOIN
-		user_base B ON A.client_number= B.user_number
+		user_base B ON A.client_number=
+		B.user_number
+		LEFT JOIN budget_order_view C ON
+		A.team_number=C.team_number
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.team_number != null and params.bo.team_number !=''">
 				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
@@ -259,7 +347,57 @@
 				and A.status=#{params.bo.status,jdbcType=CHAR}
 			</if>
 		</where>
-		ORDER BY team_number,ticket_order_pk,first_ticket_date
+		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date
+	</select>
+	<select id="selectDoneByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.team_number,
+		A.client_number,
+		A.order_number,
+		A.comment,
+		B.user_name AS client_name,
+		CONCAT(A.first_start_city,'--',A.first_end_city) AS
+		first_from_to,
+		A.first_ticket_date,
+		A.first_start_city,
+		A.first_end_city,
+		A.ticket_order_pk,
+		A.name,
+		A.id,
+		A.sale_product_pk,
+		A.create_user,
+		A.pk,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		A.status,
+		C.name_confirm_status,
+		D.ticket_cost,
+		A.change_pk
+
+		from air_ticket_name_list A LEFT JOIN
+		user_base B ON A.client_number=
+		B.user_number
+		LEFT JOIN budget_order_view C ON
+		A.team_number=C.team_number
+		LEFT JOIN
+		view_sum_ticket_cost D ON A.pk= D.passenger_pk
+		<where>
+			and A.status in ('Y','C')
+			<if test="params.bo.client_name != null and params.bo.client_name !=''">
+				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date
 	</select>
 
 	<select id="selectTicketOrderPksByPassengerPks" resultType="java.lang.String">

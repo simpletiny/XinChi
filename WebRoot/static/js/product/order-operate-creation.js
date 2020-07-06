@@ -5,20 +5,33 @@ var ProductContext = function() {
 
 	self.supplierEmployees = ko.observable({});
 
-	self.team_number = $("#key").val();
+	self.product_pk = $("#product_pk").val();
+	self.order_number = $("#order_number").val();
+
 	self.order = ko.observable({});
+	self.orders = ko.observableArray([]);
+
+	self.adult_count = ko.observable();
+	self.special_count = ko.observable();
 
 	// 产品包含的供应商信息
 	self.productSuppliers = ko.observableArray([]);
 
+	startLoadingSimpleIndicator("加载中...")
 	$.getJSON(self.apiurl + 'product/searchProductDataForOrder', {
-		team_number : self.team_number
+		product_order_number : self.order_number,
+		product_pk : self.product_pk
 	}, function(data) {
-		self.order(data.order);
+		self.orders(data.orders);
 		self.productSuppliers(data.productSuppliers);
+		self.adult_count(data.adult_count);
+		self.special_count(data.special_count);
+
 		if (self.productSuppliers().length == 0) {
 			addSupplier();
 		}
+
+		endLoadingIndicator();
 	});
 
 	self.isD = function(t) {
@@ -35,6 +48,7 @@ var ProductContext = function() {
 		if (!self.checkForm()) {
 			return;
 		}
+		startLoadingIndicator("保存中...")
 		var json = self.getJson();
 
 		var data = "json=" + json;
@@ -54,13 +68,34 @@ var ProductContext = function() {
 				});
 
 	}
-
+	var normal_td_len = 4;
 	// 获取页面json
 	self.getJson = function() {
-		var json = '{';
+		var json = '{"order_number":"' + self.order_number + '",';
 
-		var order_pk = self.order().pk;
-		json += '"order_pk":"' + order_pk + '","json":[';
+		json += '"orderJson":['
+		var trs = $("#table-order tbody tr");
+		var tdlen = $("#table-order tr:eq(0) th").length;
+		for (var i = 0; i < trs.length; i++) {
+
+			var tr = $(trs[i]);
+			var team_number = tr.find("td:eq(0)").html();
+
+			var cost = "";
+
+			for (var j = normal_td_len; j < tdlen; j++) {
+				cost += tr.find("td:eq(" + j + ") input").val() + ";";
+			}
+
+			cost = cost.RTrim(";");
+
+			json += '{"team_number":"' + team_number + '","cost":"' + cost
+					+ '"},';
+		}
+
+		json = json.RTrim(",") + ']';
+
+		json += ',"json":[';
 
 		var max_div = $("#div-supplier");
 
@@ -196,7 +231,6 @@ var ProductContext = function() {
 		}
 
 		json += one_json + ']}';
-
 		return json;
 	}
 	// 查验表单
@@ -215,8 +249,38 @@ var ProductContext = function() {
 				$(all).removeAttr("style");
 				fail_msg("请填写不能为空的项目！");
 			}, 500);
+			return result;
 		}
 
+		// 检查金额是否合账
+		// 计算订单地接款合计
+		var sum_money = new Array();
+		var tdlen = $("#table-order tr:eq(0) th").length;
+		var trlen = $("#table-order tr").length;
+
+		for (var i = 4; i < tdlen; i++) {
+			var sum = 0;
+			for (j = 1; j < trlen; j++) {
+				sum += $("#table-order tr:eq(" + j + ") td:eq(" + i + ") input")
+						.val() - 0;
+			}
+			sum_money.push(sum);
+		}
+
+		var max_div = $("#div-supplier");
+		var all_divs = $(max_div).children();
+		for (var i = 0; i < all_divs.length; i++) {
+			var current_div = all_divs[i];
+			var supplier_cost = $(current_div).find(
+					':input[st="supplier-cost"]').val() - 0;
+
+			if (supplier_cost != sum_money[i]) {
+
+				fail_msg("地接社" + (i + 1) + "的订单合计金额：" + sum_money[i] + "与结算价格："
+						+ supplier_cost + "不符！")
+				return result;
+			}
+		}
 		return result;
 	}
 
@@ -246,10 +310,9 @@ var ProductContext = function() {
 
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(data, event) {
+	self.checkPassengers = function(team_number) {
 		self.passengers.removeAll();
 
-		var team_number = data.team_number;
 		var url = "order/selectSaleOrderNameListByTeamNumber";
 
 		$.getJSON(self.apiurl + url, {
@@ -513,6 +576,17 @@ function addSupplier() {
 			+ '<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)"/></a> <input type="hidden" st="confirm-file-templet"/><span style="color: blue">默认模板</span>'
 			+ '</div></div></div><hr /></div>');
 	$('#div-supplier').append(div_supplier);
+
+	// 添加订单结算价格信息
+	var tdlen = $("#table-order tr:eq(0) th").length;
+	var trlen = $("#table-order tr").length;
+	var c_th = $("<th>地接" + (tdlen - 3) + "</th>");
+	$("#table-order tr:eq(0)").append(c_th);
+
+	for (var i = 1; i < trlen; i++) {
+		var c_td = $('<td><input type="number" class="required intdtext" st="supplier-cost" /></td>');
+		$("#table-order tr:eq(" + i + ")").append(c_td);
+	}
 }
 function deleteSupplier() {
 	var div_suppliers = $("#div-supplier");
@@ -520,6 +594,17 @@ function deleteSupplier() {
 	var index = children.length;
 	if (index > 1) {
 		children[index - 1].remove();
+
+		// 删除订单信息
+		var tdlen = $("#table-order tr:eq(0) th").length;
+		var trlen = $("#table-order tr").length;
+		var c_th = $("#table-order tr:eq(0) th:eq(" + (tdlen - 1) + ")");
+		$(c_th).remove();
+		for (var i = 1; i < trlen; i++) {
+			var c_td = $("#table-order tr:eq(" + i + ") td:eq(" + (tdlen - 1)
+					+ ")");
+			$(c_td).remove();
+		}
 	}
 }
 function changeJieSongType(ra) {

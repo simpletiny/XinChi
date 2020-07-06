@@ -8,6 +8,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.common.DaoUtil;
@@ -86,5 +87,20 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	public BigDecimal fetchEmployeeBalance(String client_employee_pk) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ReceivableMapper.selectBalanceByClientEmployeePk",
 				client_employee_pk);
+	}
+
+	@Override
+	public BigDecimal selectSumReceivable() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.ReceivableMapper.selectSumReceivable");
+	}
+
+	@Override
+	public List<KeyValueDto> selectReceivableWithClient() {
+		return daoUtil.selectAll("com.xinchi.bean.mapper.ReceivableMapper.selectReceivableWithClient");
+	}
+
+	@Override
+	public List<KeyValueDto> selectReceivableWithSales() {
+		return daoUtil.selectAll("com.xinchi.bean.mapper.ReceivableMapper.selectReceivableWithSales");
 	}
 }

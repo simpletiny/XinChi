@@ -3,6 +3,7 @@
 <mapper namespace="com.xinchi.bean.mapper.AirTicketOrderMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketOrderBean">
 		<result column="client_number" property="client_number" jdbcType="VARCHAR" />
+		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
 		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
 		<result column="first_start_city" property="first_start_city" jdbcType="VARCHAR" />
@@ -25,6 +26,11 @@
 		<result column="cost_done_flg" property="cost_done_flg" jdbcType="CHAR" />
 		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="need_pk" property="need_pk" jdbcType="CHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="special_price" property="special_price" jdbcType="DECIMAL" />
+		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -42,7 +48,15 @@
 		update_user,
 		create_time,
 		update_time,
-		cost_done_flg
+		cost_done_flg,
+		order_number,
+		need_pk,
+		price,
+		special_price,
+		passenger_captain,
+		product_name,
+		departure_date,
+		comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -101,6 +115,15 @@
 			<if test="team_number != null">
 				team_number,
 			</if>
+			<if test="passenger_captain != null">
+				passenger_captain,
+			</if>
+			<if test="product_name != null">
+				product_name,
+			</if>
+			<if test="departure_date != null">
+				departure_date,
+			</if>
 			<if test="tour_product_pk != null">
 				tour_product_pk,
 			</if>
@@ -131,6 +154,21 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="order_number != null">
+				order_number,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="need_pk != null">
+				need_pk,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="special_price != null">
+				special_price,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="client_number != null">
@@ -153,6 +191,15 @@
 			</if>
 			<if test="team_number != null">
 				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_captain != null">
+				#{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="product_name != null">
+				#{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="departure_date != null">
+				#{departure_date,jdbcType=VARCHAR},
 			</if>
 			<if test="tour_product_pk != null">
 				#{tour_product_pk,jdbcType=CHAR},
@@ -184,6 +231,21 @@
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="order_number != null">
+				#{order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="need_pk != null">
+				#{need_pk,jdbcType=CHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="special_price != null">
+				#{special_price,jdbcType=DECIMAL},
+			</if>
 		</trim>
 	</insert>
 
@@ -211,6 +273,15 @@
 			</if>
 			<if test="team_number != null">
 				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_captain != null">
+				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="product_name != null">
+				product_name = #{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="departure_date != null">
+				departure_date = #{departure_date,jdbcType=VARCHAR},
 			</if>
 			<if test="tour_product_pk != null">
 				tour_product_pk = #{tour_product_pk,jdbcType=CHAR},
@@ -242,6 +313,21 @@
 			<if test="cost_done_flg != null">
 				cost_done_flg = #{cost_done_flg,jdbcType=CHAR},
 			</if>
+			<if test="order_number != null">
+				order_number = #{order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="need_pk != null">
+				need_pk = #{need_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="special_price != null">
+				special_price = #{special_price,jdbcType=DECIMAL},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -253,6 +339,7 @@
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.client_number,
+		A.order_number,
 		B.user_name AS client_name,
 		A.ticket_cost,
 		A.first_ticket_date,
@@ -270,31 +357,37 @@
 		A.create_time,
 		A.update_time,
 		A.cost_done_flg,
-		C.passenger_captain AS
+		A.passenger_captain AS
 		passenger,
-		C.product_name,
-		C.departure_date
+		A.product_name,
+		A.departure_date,
+		A.price,
+		A.special_price,
+		A.need_pk,
+		A.comment
 		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
-		LEFT JOIN budget_order_view C
-		ON A.team_number = C.team_number
+
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.team_number != null and params.bo.team_number !=''">
-				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status = #{params.bo.status,jdbcType=VARCHAR}
 			</if>
 				<if test="params.bo.product_name != null and params.bo.product_name !=''">
-				and C.product_name like CONCAT('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
+				and A.product_name like CONCAT('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.date_from != null and params.bo.date_from !=''">
-				and C.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+				and A.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
-				and C.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 		</where>
 		order by A.first_ticket_date

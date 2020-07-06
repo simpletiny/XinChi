@@ -20,6 +20,11 @@
 		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
 		<result column="delete_flg" property="delete_flg" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="KeyMap" type="com.xinchi.bean.KeyValueDto">
+		<result column="key_key" property="key_key" jdbcType="VARCHAR" />
+		<result column="value_value" property="value_value" jdbcType="VARCHAR" />
+	</resultMap>
+	
 	<sql id="Base_Column_List">
 		account,
 		number,
@@ -63,6 +68,21 @@
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+
+	<select id="selectUsedBalance" resultType="java.math.BigDecimal">
+		select sum(balance) from card where delete_flg='N' and account!='建行机票'; 
+	</select>
+
+	<select id="selectDetailBalance"  resultMap="KeyMap">
+		SELECT
+		SUM(IF(balance > 0, balance, 0)) AS key_key,
+		SUM(IF(balance &lt; 0,
+		balance, 0)) AS value_value
+		FROM
+		card
+		WHERE
+		delete_flg = 'N' and account!='建行机票';
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

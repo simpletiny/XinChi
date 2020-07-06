@@ -54,6 +54,15 @@
 		from waiting_for_paid
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from waiting_for_paid
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
+	<select id="selectSumWFP" resultType="java.math.BigDecimal">
+		select sum(money) from waiting_for_paid where status='I';
+	</select>
 	<select id="selectPaidSummaryByPayNumber" resultMap="PaidDetailSummaryResultMap" parameterType="java.lang.String">
 		SELECT
 		B.money as

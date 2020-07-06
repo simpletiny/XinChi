@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductNeedMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductNeedDto">
+		<result column="product_number" property="product_number" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="air_info" property="air_info" jdbcType="VARCHAR" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
+		<result column="standard_flg" property="standard_flg" jdbcType="CHAR" />
+	</resultMap>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		IF(ISNULL(B.product_number),'非标',B.product_number) AS product_number,
+		A.product_name,
+		IF(ISNULL(B.product_model),'非标',B.product_model) AS product_model,
+		CASE WHEN A.confirm_flg ='Y' THEN '已确认'
+		WHEN
+		A.confirm_flg = 'N' THEN '待确认'
+		end AS status,
+		A.team_number,
+		A.departure_date,
+		A.adult_count,
+		A.special_count,
+		A.create_user AS sale_name,
+		A.product_manager_number,
+		A.operate_flg,
+		C.user_name AS product_manager,
+		B.pk AS product_pk,
+		B.product_number AS product_number,
+		A.pk AS pk,
+		CASE WHEN A.standard_flg='N' THEN
+		substring_index(A.name_list,':',1)
+		ELSE
+		A.passenger_captain
+		END AS passenger,
+		A.treat_comment,
+		A.lock_flg,
+		A.name_confirm_status,
+		A.standard_flg,
+		CONCAT(A.start_city,'-',A.end_city) AS
+		air_info
+
+		from budget_order_view A
+		LEFT JOIN product B ON A.product_pk=B.pk
+		LEFT
+		JOIN user_base C ON A.product_manager_number =
+		C.user_number
+		<where>
+			and A.confirm_flg in ('Y','F')
+			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
+				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.product_model!= null and params.bo.product_model !=''">
+				and B.product_model like CONCAT('%',#{params.bo.product_model,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_name != null and params.bo.product_name!=''">
+				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.operate_flgs != null and params.bo.operate_flgs!=''">
+				and A.operate_flg in
+				<foreach item="item" index="index" collection="params.bo.operate_flgs" open="(" separator="," close=")">
+					#{params.bo.operate_flgs[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.departure_date >= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY departure_date DESC
+	</select>
+</mapper>

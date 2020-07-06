@@ -68,9 +68,9 @@ tr td {
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
+							<label class="col-md-1 control-label">操作单号</label>
 							<div class="col-md-2">
-								<input class="form-control" name="operate_option.team_number" placeholder="团号"></input>
+								<input class="form-control" name="operate_option.team_number" placeholder="操作单号"></input>
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -140,7 +140,7 @@ tr td {
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
 								<td data-bind="text: $data.send_date"></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td></td>
 								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
 							</tr>

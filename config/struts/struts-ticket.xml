@@ -20,7 +20,19 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchAirTicketDoneNameListByPage" class="ticketAction" method="searchAirTicketDoneNameListByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOrderAirInfoByTeamNumber" class="ticketAction" method="searchOrderAirInfoByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="selectOrderAirInfoByProductOrderNumber" class="ticketAction" method="selectOrderAirInfoByProductOrderNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -46,7 +58,27 @@
 				resultStr
 			</result>
 		</action>
+		<!-- 航变 -->
+		<action name="changeFlight" class="ticketAction" method="changeFlight">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 查询航变信息 -->
+		<action name="searchFlightChangeLogByPassengerPk" class="ticketAction" method="searchFlightChangeLogByPassengerPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchAirTicketOrderLegByOrderPk" class="ticketAction" method="searchAirTicketOrderLegByOrderPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 搜索航变的乘客信息 -->
+		<action name="searchFlightChangeDataByPassengerPks" class="ticketAction" method="searchFlightChangeDataByPassengerPks">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -59,6 +91,7 @@
 				resultStr
 			</result>
 		</action>
+
 		<action name="searchFlightByPage" class="flightAction" method="searchFlightByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -110,6 +143,25 @@
 		<action name="checkSaleConfirm" class="ticketAction" method="checkSaleConfirm">
 			<result name="success" type="str">
 				resultStr
+			</result>
+		</action>
+		<!-- 查看乘客名单 -->
+		<action name="searchAirTicketNameListByOrderNumber" class="ticketAction" method="searchAirTicketNameListByOrderNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 套票管理 -->
+		<action name="createSeasonTicket" class="seasonTicketAction" method="createSeasonTicket">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<action name="searchSeasonTicketByPage" class="seasonTicketAction" method="searchSeasonTicketByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 	</package>

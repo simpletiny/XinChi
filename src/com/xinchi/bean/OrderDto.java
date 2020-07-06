@@ -16,6 +16,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String client_employee_name;
 	private String product_pk;
 	private String product_name;
+	private String product_model;
 
 	private String departure_date;
 
@@ -61,7 +62,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String confirm_file;
 
 	private String lock_flg;
-	
+
 	private String name_confirm_status;
 
 	private String departure_date_from;
@@ -111,6 +112,8 @@ public class OrderDto extends SupperBO implements Serializable {
 	private BigDecimal final_receivable;
 
 	private List<SaleOrderNameListBean> name_list;
+
+	private List<String> confirm_flgs;
 
 	public String getTeam_number() {
 		return team_number;
@@ -686,6 +689,22 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setName_confirm_status(String name_confirm_status) {
 		this.name_confirm_status = name_confirm_status;
+	}
+
+	public String getProduct_model() {
+		return product_model;
+	}
+
+	public void setProduct_model(String product_model) {
+		this.product_model = product_model;
+	}
+
+	public List<String> getConfirm_flgs() {
+		return confirm_flgs;
+	}
+
+	public void setConfirm_flgs(List<String> confirm_flgs) {
+		this.confirm_flgs = confirm_flgs;
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.PayApprovalService;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.bean.PayApprovalBean;
@@ -30,18 +31,23 @@ public class PayApprovalAction extends BaseAction {
 
 	private PayApprovalBean option;
 	private List<PayApprovalBean> payApprovals;
-	
+	@Autowired
+	private AccPaidService accPaidService;
 	@Autowired
 	private CardService cardService;
 	private BigDecimal sum_balance;
 	private BigDecimal sum_card_balance;
-	public String searchPaidApplyByPage() throws Exception{
+	private BigDecimal sum_waiting_for_paid;
+
+	public String searchPaidApplyByPage() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", option);
 		page.setParams(params);
 
 		payApprovals = service.selectByPage(page);
 		sum_balance = service.selectSumBalance();
+
+		sum_waiting_for_paid = accPaidService.selectSumWFP();
 		String basePath = this.getClass().getClassLoader().getResource("").getPath();
 		InputStreamReader config = new InputStreamReader(
 				new FileInputStream(basePath + File.separator + "hot" + File.separator + "accountSumConfig.txt"),
@@ -53,7 +59,7 @@ public class PayApprovalAction extends BaseAction {
 			r += line;
 		}
 		br.close();
-		
+
 		List<String> accounts = Arrays.asList(r.split(","));
 		sum_card_balance = cardService.selectSumBalance(accounts);
 		return SUCCESS;
@@ -89,5 +95,13 @@ public class PayApprovalAction extends BaseAction {
 
 	public void setSum_card_balance(BigDecimal sum_card_balance) {
 		this.sum_card_balance = sum_card_balance;
+	}
+
+	public BigDecimal getSum_waiting_for_paid() {
+		return sum_waiting_for_paid;
+	}
+
+	public void setSum_waiting_for_paid(BigDecimal sum_waiting_for_paid) {
+		this.sum_waiting_for_paid = sum_waiting_for_paid;
 	}
 }

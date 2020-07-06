@@ -115,6 +115,19 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="selectSaleOrderNameListByTeamNumbers" class="orderAction" method="selectSaleOrderNameListByTeamNumbers">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据票务需求pk -->
+		<action name="selectSaleOrderNameListByAirNeedPk" class="orderAction" method="selectSaleOrderNameListByAirNeedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 根据团号搜索订单信息 -->
 		<action name="selectOrderByTeamNumber" class="orderAction" method="selectOrderByTeamNumber">
 			<result name="success" type="json">

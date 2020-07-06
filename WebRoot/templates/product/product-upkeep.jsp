@@ -61,7 +61,7 @@ tr td {
 								data-bind="click: function() { uploadClientConfirmTemplet() }">组团确认</button>
 							<button type="submit" class="btn btn-green col-md-1"
 								data-bind="click: function() { uploadOutNoticeConfirmTemplet() }">出团通知</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { flightManagement() }">机票维护</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { ticketManagement() }">机票维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { supplierManagement() }">地接维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { localManagement() }">本地维护</button>
 						</div>
@@ -226,16 +226,15 @@ tr td {
 			<div class="col-md-12">
 				<em class="small-box"> <input type="radio" name="cctradio" data-bind="checked:clientConfirmType()" value="Y"
 					onclick="changeCctRadio(this)" /> <label>上传</label>
-				</em>
-				<a href="javascript:;" id="c-c-t-a" style="display: none" class="a-upload">上传模板<input type="file" name="cct" /></a>
+				</em> <a href="javascript:;" id="c-c-t-a" style="display: none" class="a-upload">上传模板<input type="file" name="cct" /></a>
 				<input type="hidden" id="cct_file" />
-			<!-- ko if: clientConfirmTemplet() == "default" || clientConfirmTemplet()=="no" -->
-			<span style="color: blue">默认模板</span>
-			<!-- /ko -->
-			<!-- ko if: clientConfirmTemplet() != "default" && clientConfirmTemplet()!="" &&clientConfirmTemplet() != "no" -->
-			<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
-				data-bind="click:function(){viewTemplet('cc',clientConfirmTemplet());}">预览</a></span>
-			<!-- /ko -->
+				<!-- ko if: clientConfirmTemplet() == "default" || clientConfirmTemplet()=="no" -->
+				<span style="color: blue">默认模板</span>
+				<!-- /ko -->
+				<!-- ko if: clientConfirmTemplet() != "default" && clientConfirmTemplet()!="" &&clientConfirmTemplet() != "no" -->
+				<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+					data-bind="click:function(){viewTemplet('cc',clientConfirmTemplet());}">预览</a></span>
+				<!-- /ko -->
 			</div>
 		</div>
 		<div class="input-row clearfloat">
@@ -257,13 +256,13 @@ tr td {
 					onclick="changeOntRadio(this)" /> <label>上传</label>
 				</em> <a id="o-n-t-a" style="display: none" href="javascript:;" class="a-upload">上传模板<input type="file" name="ont" /></a>
 				<input type="hidden" id="ont_file" />
-			<!-- ko if: outNoticeTemplet() == "default" || outNoticeTemplet()=="no" -->
-			<span style="color: blue">默认模板</span>
-			<!-- /ko -->
-			<!-- ko if: outNoticeTemplet() != "default" && outNoticeTemplet()!="" &&outNoticeTemplet() != "no" -->
-			<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
-				data-bind="click:function(){viewTemplet('on',outNoticeTemplet());}">预览</a></span>
-			<!-- /ko -->
+				<!-- ko if: outNoticeTemplet() == "default" || outNoticeTemplet()=="no" -->
+				<span style="color: blue">默认模板</span>
+				<!-- /ko -->
+				<!-- ko if: outNoticeTemplet() != "default" && outNoticeTemplet()!="" &&outNoticeTemplet() != "no" -->
+				<span style="color: green">已上传&nbsp;&nbsp;<a href="javascript:void(0)"
+					data-bind="click:function(){viewTemplet('on',outNoticeTemplet());}">预览</a></span>
+				<!-- /ko -->
 			</div>
 		</div>
 		<div class="input-row clearfloat">
@@ -271,40 +270,59 @@ tr td {
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:saveONT">保存</button>
 		</div>
 	</div>
-	<div id="air-ticket-check" style="display: none; width: 800px">
+	<div id="air-ticket" style="display: none; width: 600px;height:430px;overflow-y:auto ">
 		<div class="input-row clearfloat">
-			<div style="width: 100%">
-				<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <label class="l">产品编号</label>
-				<label class="l" data-bind="text:product().product_number"></label> <label class="l"
-					data-bind="text:chargeMapping[product().air_ticket_charge]"></label>
-			</div>
-			<div style="margin-top: 60px; height: 300px">
-				<table style="width: 100%" class="table table-striped table-hover">
+			<form id="form-ticket">
+				<div style="width: 100%">
+					<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <input type="hidden"
+						data-bind="value:product().pk" name="product_pk" /> <label class="l">产品编号</label> <label class="l"
+						data-bind="text:product().product_number"></label>
+				</div>
+			</form>
+			<div style="margin-top: 20px; " id="div-ticket">
+				<table style="width: 100%" id="table-ticket">
 					<thead>
-						<tr>
-							<th style="width: 10%">航段</th>
-							<th style="width: 10%">天次</th>
-							<th style="width: 30%">起飞城市</th>
-							<th style="width: 10%">天次</th>
-							<th style="width: 30%">抵达城市</th>
-							<th style="width: 20%">航班号</th>
+						<tr class="required">
+							<th class="r" style="width: 10%">航段</th>
+							<th class="r" style="width: 10%">天次</th>
+							<th class="r" style="width: 30%">起飞城市</th>
+							<th class="r" style="width: 30%">抵达城市</th>
 						</tr>
 					</thead>
+					<!-- ko if:airTickets().length>0 -->
 					<tbody data-bind="foreach:airTickets">
 						<tr>
-							<td data-bind="text:$data.ticket_index"></td>
-							<td data-bind="text:$data.start_day"></td>
-							<td data-bind="text:$data.start_city"></td>
-							<td data-bind="text:$data.end_day"></td>
-							<td data-bind="text:$data.end_city"></td>
-							<td data-bind="text:$data.ticket_number"></td>
+							<td st="index" data-bind="text:$data.ticket_index"></td>
+							<td><input st="start-day" type="text" data-bind="value:$data.start_day" /></td>
+							<td><input st="start-city" type="text" data-bind="value:$data.start_city" /></td>
+							<td><input st="end-city" type="text" data-bind="value:$data.end_city" /></td>
 						</tr>
 					</tbody>
+					<!-- /ko -->
+					<!-- ko if:airTickets().length<1 -->
+					<tbody>
+						<tr>
+							<td st="index">1</td>
+							<td><input st="start-day" type="text" /></td>
+							<td><input st="start-city" type="text" /></td>
+							<td><input st="end-city" type="text" /></td>
+						</tr>
+					</tbody>
+					<!-- /ko -->
+
 				</table>
+				<div style="margin-top: 20px; float: right">
+					<input type="button" value="-" onclick="deleteRow()""></input> <input type="button" value="+" onclick="addRow()"></input>
+				</div>
+			</div>
+
+			<div style="margin-top: 50px; width: 700px; float: right">
+				<button type="submit" style="float: right" class="btn btn-green col-md-1" onclick="cancelTicket()">取消</button>
+				<button type="submit" style="float: right" class="btn btn-green col-md-1" onclick="saveTicket()">保存</button>
 			</div>
 		</div>
-	</div>
 
+	</div>
 	<script>
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");

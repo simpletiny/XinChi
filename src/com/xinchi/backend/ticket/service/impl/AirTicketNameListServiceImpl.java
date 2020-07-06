@@ -67,4 +67,19 @@ public class AirTicketNameListServiceImpl implements AirTicketNameListService {
 		return dao.selectByPassengerPks(pks);
 	}
 
+	@Override
+	public List<AirTicketNameListBean> selectByOrderNumber(String order_number) {
+		if (order_number.startsWith("N")) {
+			return dao.selectByTeamNumber(order_number);
+		} else if (order_number.startsWith("A")) {
+			return dao.selectByOrderNumber(order_number);
+		}
+		return null;
+	}
+
+	@Override
+	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page) {
+		return dao.selectDoneByPage(page);
+	}
+
 }

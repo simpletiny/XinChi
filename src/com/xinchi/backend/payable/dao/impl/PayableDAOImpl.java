@@ -6,18 +6,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.xinchi.backend.payable.dao.PayableDAO;
-import com.xinchi.bean.PayableBean;
-import com.xinchi.bean.PayableSummaryBean;
+import com.xinchi.backend.payable.dao.PayableOrderDAO;
+import com.xinchi.bean.PayableOrderBean;
 import com.xinchi.common.DaoUtil;
-import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
-import com.xinchi.common.UserSessionBean;
-import com.xinchi.common.XinChiApplicationContext;
-import com.xinchi.tools.Page;
 
 @Repository
-public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
+public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableOrderDAO {
 	private SqlSession sqlSession;
 	private DaoUtil daoUtil;
 
@@ -29,65 +23,29 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 	}
 
 	@Override
-	public void insert(PayableBean payable) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.PayableMapper.insert", payable);
+	public void insert(PayableOrderBean payable) {
+		daoUtil.insertBO("com.xinchi.bean.mapper.PayableOrderMapper.insert", payable);
 	}
 
 	@Override
-	public List<PayableBean> selectByParam(PayableBean payable) {
-
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableMapper.selectByParam", payable);
+	public List<PayableOrderBean> selectByParam(PayableOrderBean payable) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableOrderMapper.selectByParam", payable);
 	}
 
 	@Override
-	public void update(PayableBean payable) {
-		daoUtil.updateByPK("com.xinchi.bean.mapper.PayableMapper.updateByPrimaryKey", payable);
-	}
-
-	@Override
-	public PayableSummaryBean selectPayableSummary(String sales) {
-
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String roles = sessionBean.getUser_roles();
-		String user_number = sessionBean.getUser_number();
-
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableSummaryMapper.selectByUserNumber", user_number);
-		} else {
-			if (!SimpletinyString.isEmpty(sales)) {
-				return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableSummaryMapper.selectByUserNumber", sales);
-			} else {
-				return daoUtil.selectOneValue("com.xinchi.bean.mapper.PayableSummaryMapper.selectPayableSummary");
-			}
-
-		}
-	}
-
-	@Override
-	public List<PayableBean> selectAllPayableWithSupplier() {
-		return daoUtil.selectAll("com.xinchi.bean.mapper.PayableMapper.selectAllWithSupplier");
-	}
-
-	@Override
-	public void deleteByTeamNumber(String team_number) {
-		daoUtil.deleteByParam("com.xinchi.bean.mapper.PayableMapper.deleteByTeamNumber", team_number);
-
-	}
-
-	@Override
-	public List<PayableBean> selectByPage(Page<PayableBean> page) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableMapper.selectByPage", page);
+	public void update(PayableOrderBean payable) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.PayableOrderMapper.updateByPrimaryKey", payable);
 	}
 
 	@Override
 	public void deleteByPk(String pk) {
-		daoUtil.deleteByPK("com.xinchi.bean.mapper.PayableMapper.deleteByPrimaryKey", pk);
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.PayableOrderMapper.deleteByPrimaryKey", pk);
 
 	}
 
 	@Override
-	public PayableBean selectByTeamNumber(String team_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableMapper.selectByTeamNumber", team_number);
+	public void deleteByTeamNumber(String team_number) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.PayableOrderMapper.deleteTeamNumber", team_number);
 	}
 
 }

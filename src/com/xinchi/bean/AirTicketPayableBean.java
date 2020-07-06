@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class AirTicketPayableBean extends SupperBO implements Serializable {
@@ -15,6 +16,10 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 	private java.math.BigDecimal payable;
 
 	private String PNR;
+
+	private String passenger;
+	private String from_to_city;
+	private String first_date;
 
 	private java.math.BigDecimal budget_payable;
 
@@ -33,6 +38,12 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String final_flg;
+
+	private String zero_flg;
+
+	private String order_number;
+
+	private String comment;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -144,6 +155,54 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 
 	public void setFinal_flg(String final_flg) {
 		this.final_flg = final_flg;
+	}
+
+	public String getZero_flg() {
+		return zero_flg;
+	}
+
+	public void setZero_flg(String zero_flg) {
+		this.zero_flg = zero_flg;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public String getFrom_to_city() {
+		return from_to_city;
+	}
+
+	public String getFirst_date() {
+		return first_date;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
+	}
+
+	public void setFrom_to_city(String from_to_city) {
+		this.from_to_city = from_to_city;
+	}
+
+	public void setFirst_date(String first_date) {
+		this.first_date = first_date;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

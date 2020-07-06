@@ -90,12 +90,13 @@
 								<th>航段信息</th>
 								<th>乘机人信息</th>
 								<th>需求备注</th>
-								<th>团号</th>
+								<th>产品单号</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: needs">
 							<tr style="overflow: hidden">
-								<td><input type="checkbox" data-bind="attr: {'value': $data.team_number}, checked: $root.chosenNeeds" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value':$data.pk+';'+ $data.product_order_number }, checked: $root.chosenNeeds" /></td>
 								<td data-bind="text: $data.ticket_client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
@@ -106,17 +107,18 @@
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.first_ticket_date!=null -->
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketPart($data.team_number)}">查看</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkTicketPart($data.product_order_number)}">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count==0 -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
 								<td><a href="javascript:void(0)"
-									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.team_number)}">查看</a></td>
+									data-bind="text:$data.passenger_captain,click:function(){$root.checkPassengers($data.pk)}">查看</a></td>
 								<!-- /ko -->
 								<td data-bind="text:$data.comment"></td>
-								<td data-bind="text: $data.team_number"></td>
+								<td data-bind="text: $data.product_order_number"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -162,7 +164,7 @@
 					</thead>
 					<tbody data-bind="foreach:airTickets">
 						<tr>
-							<td data-bind="text:$data.air_leg"></td>
+							<td data-bind="text:$data.info_index"></td>
 							<td data-bind="text:$data.air_date"></td>
 							<td data-bind="text:$data.from_to_city"></td>
 						</tr>
@@ -171,7 +173,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -193,32 +195,55 @@
 			</div>
 		</div>
 	</div>
-	<div id="order-create" style="display: none; width: 800px">
+	<div id="order-create" style="display: none; width: 1200px">
 		<div class="input-row clearfloat">
-			<h2>确认航段信息</h2>
-			<div style="margin-top: 60px; height: 300px">
-
-				<table style="width: 100%" id="leg-table" class="table table-striped table-hover">
+			<h2>票务信息</h2>
+			<div style="margin-top: 20px; height: 300px">
+				<div class="input-row clearfloat">
+					<div class="col-md-4 required">
+						<label class="l" style="width: 25%">成人</label>
+						<div class="ip" style="width: 50%">
+							<input type="number" class="ip-" id="txt-ticket-price" placeholder="成人单价" required="required" />
+						</div>
+					</div> 
+					<div class="col-md-4 required">
+						<label class="l" style="width: 25%">儿童</label>
+						<div class="ip" style="width: 50%">
+							<input type="number" class="ip-" id="txt-ticket-special-price"  placeholder="儿童单价" required="required" />
+						</div>
+					</div>
+					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { chooseSeasonTicket() }">选择套票</button>
+				</div>
+				<table id="leg-table" class="table table-striped table-hover" style="margin-top: 20px">
 					<thead>
 						<tr>
-							<th style="width: 10%">航段</th>
-							<th style="width: 15%">日期</th>
-							<th style="width: 15%">城市对</th>
-							<th style="width: 15%; color: red">票务航段</th>
-							<th style="width: 15%">操作</th>
+							<th style="width: 5%">航段</th>
+							<th style="width: 10%">日期</th>
+							<th style="width: 13%">城市对</th>
+							<th style="width: 8%">航班号</th>
+							<th style="width: 13%; color: red">票务航段</th>
+							<th style="width: 7%">起飞时间</th>
+							<th style="width: 7%">降落时间</th>
+							<th style="width: 7%"></th>
+							<th style="width: 15%">起飞机场</th>
+							<th style="width: 15%">降落机场</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:airTickets">
 						<tr>
-
-
-							<td data-bind="text:$data.air_leg"></td>
+							<td data-bind="text:$data.info_index"></td>
 							<td data-bind="text:$data.air_date"></td>
 							<td data-bind="text:$data.from_to_city"></td>
-							<td><input type="text" class="ticket-air-leg" onclick="choseAirLeg(event)" /> <input type="hidden"
-								data-bind="value:$index()+1" st="leg-index" /> <input type="hidden" data-bind="value:$data.air_date"
-								st="leg-date" /> <input type="hidden" st="leg-from-city" /> <input type="hidden" st="leg-to-city" /></td>
-							<td><a href="javascript:void(0)" data-bind="click:$root.deleteAirInfo">删除</a></td>
+							<td><input type="text" st="ticket-number" /></td>
+							<td><input type="text" class="ticket-air-leg" st="ticket-air-leg" onclick="choseAirLeg(event)" /> <input
+								type="hidden" data-bind="value:$index()+1" st="leg-index" /> <input type="hidden"
+								data-bind="value:$data.air_date" st="leg-date" /> <input type="hidden" st="leg-from-city" /> <input
+								type="hidden" st="leg-to-city" /></td>
+							<td><input type="text" st="start-time" /></td>
+							<td><input type="text" st="end-time" /></td>
+							<td><input st="is-add-day" type="checkbox" />+1</td>
+							<td><input type="text" st="start-place" /></td>
+							<td><input type="text" st="end-place" /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -268,6 +293,61 @@
 						<!-- /ko -->
 						<!-- /ko -->
 						<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="season-ticket-pick" style="display: none;">
+		<div class="main-container">
+			<div class="main-box" style="width: 800px">
+				<div class="form-group">
+					<div class="span6">
+						<label class="col-md-1 control-label">名称</label>
+						<div class="col-md-3">
+							<input type="text" id="ticket-name" class="form-control" placeholder="名称" />
+						</div>
+					</div>
+					<div class="span6">
+						<label class="col-md-1 control-label">编号</label>
+						<div class="col-md-3">
+							<input type="text" id="ticket-model" class="form-control" placeholder="编号" />
+						</div>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:refreshSeasonTicket }">搜索</button>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>名称</th>
+								<th>编号</th>
+								<th>票源</th>
+								<th>价格</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: seasonTickets">
+							<tr data-bind="event: {click: function(){ $parent.pickSeasonTicket($data)}}">
+								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.model"></td>
+								<td data-bind="text: $data.supplier_employee_name"></td>
+								<td data-bind="text: $data.price"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPageSeason, enable: currentPageSeason() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNumsSeason -->
+						<!-- ko if: $data == $root.currentPageSeason() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPageSeason() -->
+						<a data-bind="text: $data, click: $root.turnPageSeason"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPageSeason, enable: currentPageSeason() < pageNumsSeason().length" class="next">Next</a>
 					</div>
 				</div>
 			</div>

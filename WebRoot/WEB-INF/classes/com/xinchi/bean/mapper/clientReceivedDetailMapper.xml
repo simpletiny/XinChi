@@ -414,7 +414,7 @@
 				and if(A.type='SUM', A.allot_received = #{params.bo.money,jdbcType=DECIMAL},A.received =
 				#{params.bo.money,jdbcType=DECIMAL})
 			</if>
-			<if test="params.bo.types != null and params.bo.types !=''">
+			<if test="params.bo.types != null and params.bo.types.size >0">
 				and A.type in
 				<foreach item="item" index="index" collection="params.bo.types" open="(" separator="," close=")">
 					#{params.bo.types[${index}]}

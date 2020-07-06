@@ -8,6 +8,11 @@
 		<result column="date" property="date" jdbcType="VARCHAR" />
 		<result column="from_city" property="from_city" jdbcType="VARCHAR" />
 		<result column="to_city" property="to_city" jdbcType="VARCHAR" />
+		<result column="start_time" property="start_time" jdbcType="VARCHAR" />
+		<result column="end_time" property="end_time" jdbcType="VARCHAR" />
+		<result column="start_place" property="start_place" jdbcType="VARCHAR" />
+		<result column="end_place" property="end_place" jdbcType="VARCHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
 		<result column="ticket_order_pk" property="ticket_order_pk" jdbcType="CHAR" />
 		<result column="is_allot" property="is_allot" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -21,6 +26,11 @@
 		date,
 		from_city,
 		to_city,
+		start_time,
+		end_time,
+		start_place,
+		end_place,
+		ticket_number,
 		ticket_order_pk,
 		is_allot
 	</sql>

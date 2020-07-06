@@ -7,9 +7,17 @@ import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.tools.Page;
 
 public interface AirTicketNeedDAO {
+	public AirTicketNeedBean selectByPk(String pk);
+
 	public List<AirTicketNeedBean> selectByPage(Page<AirTicketNeedBean> page);
 
 	public List<AirTicketNeedBean> selectOrderByPage(Page page);
 
 	public List<OrderAirInfoBean> selectOrderAirInfoByTeamNumber(String team_number);
+
+	public String insert(AirTicketNeedBean atn);
+
+	public List<OrderAirInfoBean> selectOrderAirInfoByProductOrderNumber(String order_number);
+
+	public void update(AirTicketNeedBean atn);
 }

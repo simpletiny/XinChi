@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.PaidDetailSummary;
@@ -35,4 +36,8 @@ public interface AccPaidService extends BaseService {
 	public PaidDetailSummary selectPaidDetailSummaryByPayNumber(String voucher_number);
 
 	public String rollBackWfp(String wfp_pk);
+
+	public String rollBackPay(String voucher_number);
+
+	public BigDecimal selectSumWFP();
 }

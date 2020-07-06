@@ -2,25 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.AirTicketNeedMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketNeedBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="confirm_flg" property="confirm_flg" jdbcType="CHAR" />
 		<result column="ticket_client_number" property="ticket_client_number" jdbcType="VARCHAR" />
 		<result column="ticket_client_name" property="ticket_client_name" jdbcType="VARCHAR" />
 		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
 		<result column="first_from_to" property="first_from_to" jdbcType="VARCHAR" />
+		<result column="product_order_number" property="product_order_number" jdbcType="VARCHAR" />
 		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
-		<result column="people_count" property="people_count" jdbcType="BIGINT" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="adult_cnt" property="adult_cnt" jdbcType="INTEGER" />
+		<result column="special_cnt" property="special_cnt" jdbcType="INTEGER" />
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
-		<result column="product_pk" property="product_pk" jdbcType="VARCHAR" />
-		<result column="sale_order_pk" property="sale_order_pk" jdbcType="VARCHAR" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
-		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
-		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
 		<result column="ordered" property="ordered" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="OrderAirInfoMap" type="com.xinchi.bean.OrderAirInfoBean">
-		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="product_order_number" property="product_order_number" jdbcType="CHAR" />
+		<result column="need_pk" property="need_pk" jdbcType="CHAR" />
 		<result column="air_leg" property="air_leg" jdbcType="VARCHAR" />
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
@@ -28,29 +34,28 @@
 		<result column="air_index" property="air_index" jdbcType="INTEGER" />
 		<result column="day_index" property="day_index" jdbcType="INTEGER" />
 		<result column="from_to_place" property="from_to_place" jdbcType="VARCHAR" />
-		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
-		<result column="operate_flg" property="operate_flg" jdbcType="VARCHAR" />
-		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
-		<result column="confirm_flg" property="confirm_flg" jdbcType="VARCHAR" />
 		<result column="air_date" property="air_date" jdbcType="VARCHAR" />
-		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="ticket_client_number" property="ticket_client_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-
-		confirm_flg,
+		pk,
+		passenger_captain,
 		ticket_client_number,
-		first_ticket_date,
-		first_from_to,
-		people_count,
-		team_number,
-		product_pk,
-		sale_order_pk,
-		air_ticket_cost,
-		standard_flg,
+		product_order_number,
+		comment,
 		product_name,
 		departure_date,
+		first_ticket_date,
+		first_from_to,
+		adult_cnt,
+		special_cnt,
+		ordered,
+		create_user,
+		create_time,
+		update_user,
+		update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -66,20 +71,18 @@
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		SELECT
-		A.confirm_flg,
+		A.pk,
 		A.ticket_client_number,
 		B.user_name AS ticket_client_name,
 		A.first_ticket_date,
 		A.first_from_to,
-		A.people_count,
-		A.team_number,
-		A.sale_order_pk,
-		A.standard_flg,
-		A.passenger,
+		A.adult_cnt+A.special_cnt AS people_count,
+		A.passenger_captain,
 		A.ordered,
 		A.comment,
 		A.product_name,
-		A.departure_date
+		A.departure_date,
+		A.product_order_number
 		FROM
 		air_ticket_need A
 		LEFT
@@ -88,9 +91,6 @@
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%', #{params.bo.client_name,jdbcType=VARCHAR},'%')
-			</if>
-			<if test="params.bo.team_number != null and params.bo.team_number !=''">
-				and A.team_number like CONCAT('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.ordered != null and params.bo.ordered !=''">
 				and A.ordered = #{params.bo.ordered,jdbcType=VARCHAR}
@@ -126,10 +126,9 @@
 		user_base B ON A.ticket_client_number = B.user_number
 		where A.air_ticket_cost is not null
 	</select>
-
 	<select id="selectOrderAirInfoByTeamNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select
-		pk,
+		base_pk,
 		air_leg,
 		info_index,
 		day_index,
@@ -141,19 +140,193 @@
 		INTERVAL
 		day_index - 1 DAY)
 		END AS air_date,
-		team_number,
-		product_manager_number,
-		standard_flg,
-		departure_date,
-		operate_flg,
-		confirm_flg,
-		confirm_date
+		ticket_client_number,
+		departure_date
 		from
 		view_order_air_info
 		where team_number =
 		#{team_number,jdbcType=CHAR}
 		ORDER BY info_index
 	</select>
+	<select id="selectOrderAirInfoByProductOrderNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
+		select
+		product_order_number,
+		air_leg,
+		info_index,
+		day_index,
+		from_to_city,
+		CASE
+		WHEN ISNULL(departure_date) THEN NULL
+		ELSE
+		DATE_ADD(departure_date,
+		INTERVAL
+		day_index - 1 DAY)
+		END AS air_date,
+		ticket_client_number,
+		departure_date
+		from
+		view_order_air_info
+		where product_order_number =
+		#{product_order_number,jdbcType=CHAR}
+		ORDER BY info_index
+	</select>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNeedBean">
+
+		insert into air_ticket_need
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="passenger_captain != null">
+				passenger_captain,
+			</if>
+			<if test="ticket_client_number != null">
+				ticket_client_number,
+			</if>
+			<if test="product_order_number != null">
+				product_order_number,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="product_name != null">
+				product_name,
+			</if>
+			<if test="departure_date != null">
+				departure_date,
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date,
+			</if>
+			<if test="first_from_to != null">
+				first_from_to,
+			</if>
+			<if test="adult_cnt != null">
+				adult_cnt,
+			</if>
+			<if test="special_cnt != null">
+				special_cnt,
+			</if>
+			<if test="ordered != null">
+				ordered,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="passenger_captain != null">
+				#{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_client_number != null">
+				#{ticket_client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="product_order_number != null">
+				#{product_order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="product_name != null">
+				#{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="departure_date != null">
+				#{departure_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_ticket_date != null">
+				#{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_from_to != null">
+				#{first_from_to,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_cnt != null">
+				#{adult_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="special_cnt != null">
+				#{special_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="ordered != null">
+				#{ordered,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
 
 
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirTicketNeedBean">
+		update air_ticket_need
+		<set>
+			<if test="passenger_captain != null">
+				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_client_number != null">
+				ticket_client_number = #{ticket_client_number,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="product_name != null">
+				product_name = #{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="departure_date != null">
+				departure_date = #{departure_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_ticket_date != null">
+				first_ticket_date = #{first_ticket_date,jdbcType=VARCHAR},
+			</if>
+			<if test="first_from_to != null">
+				first_from_to = #{first_from_to,jdbcType=VARCHAR},
+			</if>
+			<if test="adult_cnt != null">
+				adult_cnt = #{adult_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="special_cnt != null">
+				special_cnt = #{special_cnt,jdbcType=INTEGER},
+			</if>
+			<if test="ordered != null">
+				ordered = #{ordered,jdbcType=CHAR},
+			</if>
+			<if test="product_order_number != null">
+				product_order_number = #{product_order_number,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
 </mapper>

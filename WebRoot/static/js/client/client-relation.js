@@ -545,7 +545,7 @@ var ClientContext = function() {
 			maxmin : false,
 			closeBtn : [1, true],
 			shadeClose : false,
-			area : ['800px', '700px'],
+			area : ['800px', '760px'],
 			offset : ['', ''],
 			scrollbar : true,
 			page : {

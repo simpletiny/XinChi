@@ -11,8 +11,7 @@ import com.xinchi.common.DaoUtil;
 
 @Repository
 @Scope("prototype")
-public class TeamNumberDAOImpl extends SqlSessionDaoSupport implements
-		TeamNumberDAO {
+public class TeamNumberDAOImpl extends SqlSessionDaoSupport implements TeamNumberDAO {
 
 	private SqlSession sqlSession;
 	private DaoUtil daoUtil;
@@ -31,17 +30,12 @@ public class TeamNumberDAOImpl extends SqlSessionDaoSupport implements
 
 	@Override
 	public void update(TeamNumberBean bo) {
-		daoUtil.updateByPK(
-				"com.xinchi.bean.mapper.TeamNumberMapper.updateByPrimaryKey",
-				bo);
+		daoUtil.updateByPK("com.xinchi.bean.mapper.TeamNumberMapper.updateByPrimaryKey", bo);
 	}
 
 	@Override
-	public TeamNumberBean selectTeamNumberBySalePk(String salePk) {
-		return daoUtil
-				.selectOneValueByParam(
-						"com.xinchi.bean.mapper.TeamNumberMapper.selectTeamNumberBySalePk",
-						salePk);
+	public TeamNumberBean selectNextNumber(TeamNumberBean option) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.TeamNumberMapper.selectByParam", option);
 	}
 
 }

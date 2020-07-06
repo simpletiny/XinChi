@@ -37,10 +37,10 @@
 	display: none;
 	width: 25%;
 	float: left;
-	margin-left: 10px;
-	margin-top: 10px;
+	padding-left: 10px;
+	padding-top: 10px;
 	background: #fff;
-	position: fixed;
+	/*position: fixed;*/
 	right: 3%;
 	z-index: 100;
 }
@@ -74,7 +74,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>待操作名单</h2>
+			<h2>待出票名单</h2>
 		</div>
 		<div class="fixed">
 			<div style="width: 30%; float: right">
@@ -82,7 +82,7 @@
 			</div>
 		</div>
 		<div class="main-container">
-			<div class="main-box" id="div-box">
+			<div class="main-box" id="div-box" style="overflow:hidden">
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
@@ -110,31 +110,36 @@
 						</div>
 					</div>
 				</form>
-				<div class="list-result" id="div-table">
+
+				<div class="list-result" id="div-table" style="float:left;width:100%" > 
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>乘机人</th>
+								<th>订单号</th>
 								<th>团号</th>
 								<th>客户</th>
 								<th>首段日期</th>
 								<th>首航段</th>
 								<th>身份证号</th>
+								<th>确认</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
-							<tr style="overflow: hidden;">
-								<!--  onclick="showDetail(this)" -->
+							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
+						
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number}, checked: $root.chosenPassengers" /></td>
+									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.name"></td>
+								<td st="order-number" data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
 								<td data-bind="text: $data.first_from_to"></td>
 
 								<td data-bind="text: $data.id"></td>
+								<td data-bind="text:$root.confirmStatusMapping[$data.name_confirm_status]"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -150,13 +155,15 @@
 						<!-- /ko -->
 						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
 					</div>
+
 				</div>
 				<div class="right-div">
-					<div style="float: right; display: block; padding-top: 10px">
+					<div style=" display: block; padding-bottom: 20px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finishChosen() }">确认</button>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 	<div id="source-pick" style="display: none; width: 300px">

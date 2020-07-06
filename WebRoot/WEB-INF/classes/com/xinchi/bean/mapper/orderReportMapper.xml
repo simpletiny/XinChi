@@ -23,67 +23,84 @@
 	</resultMap>
 
 	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-		select
-		team_number,
-		product_name,
-		client_employee_pk,
-		client_employee_name,
-		other_cost,
-		fy,
-		receivable,
-		air_ticket_cost,
-		product_cost,
-		departure_date,
-		pk,
-		confirm_flg AS order_type,
-		(adult_count+if(ISNULL(special_count),0,special_count)) AS
-		people_count,
-		update_user,
-		create_user_number AS sale_number,
-		create_user AS sale_name,
-		receivable -
-		if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy)
-		AS gross_profit,
-		(receivable -
-		if(isnull(air_ticket_cost),0,air_ticket_cost)-if(isnull(other_cost),0,other_cost)-if(isnull(product_cost),0,product_cost)-if(isnull(fy),0,fy))/(adult_count+if(ISNULL(special_count),0,special_count))
-		AS per_profit,
-		confirm_flg,
-		create_time,
-		update_time,
-		confirm_date
-		from budget_order_view
+		SELECT
+		A.team_number,
+		A.product_name,
+		A.client_employee_pk,
+		A.client_employee_name,
+		A.other_cost,
+		A.fy,
+		IF(B.final_flg = 'Y',
+		final_receivable,
+		budget_receivable) AS receivable,
+		A.air_ticket_cost,
+		C.payable AS product_cost,
+		A.departure_date,
+		A.pk,
+		A.confirm_flg AS order_type,
+		(A.adult_count + IF(ISNULL(A.special_count),
+		0,
+		A.special_count)) AS people_count,
+		A.update_user,
+		A.create_user_number AS sale_number,
+		A.create_user AS sale_name,
+		IF(B.final_flg = 'Y',
+		final_receivable,
+		budget_receivable) - IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable),
+		0,
+		C.payable) - IF(ISNULL(A.fy), 0, A.fy) AS gross_profit,
+		(IF(B.final_flg = 'Y',
+		final_receivable,
+		budget_receivable) - IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable),
+		0,
+		C.payable) - IF(ISNULL(A.fy), 0, A.fy)) / (A.adult_count + IF(ISNULL(A.special_count),
+		0,
+		A.special_count)) AS per_profit,
+		A.confirm_flg,
+		A.create_time,
+		A.update_time,
+		A.confirm_date
+		FROM
+		budget_order_view A
+		LEFT JOIN
+		receivable B ON A.team_number = B.team_number
+		LEFT JOIN view_team_payable C ON A.team_number= C.team_number
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
-				and create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
+				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.team_number != null and params.bo.team_number !=''">
-				and team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
-				and product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
-				and departure_date &gt;= #{params.bo.departure_date_from,jdbcType=VARCHAR}
+				and A.departure_date &gt;= #{params.bo.departure_date_from,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.departure_date_to != null and params.bo.departure_date_to !=''">
-				and departure_date &lt;= #{params.bo.departure_date_to,jdbcType=VARCHAR}
+				and A.departure_date &lt;= #{params.bo.departure_date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.confirm_date_from != null and params.bo.confirm_date_from !=''">
-				and confirm_date &gt;= #{params.bo.confirm_date_from,jdbcType=VARCHAR}
+				and A.confirm_date &gt;= #{params.bo.confirm_date_from,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
-				and confirm_date &lt;= #{params.bo.confirm_date_to,jdbcType=VARCHAR}
+				and A.confirm_date &lt;= #{params.bo.confirm_date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
-				and product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
+				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
 			</if>
-			<if test="params.bo.order_types != null and params.bo.order_types !=''">
-				and confirm_flg in
-				<foreach item="item" index="index" collection="params.bo.order_types" open="(" separator="," close=")">
-					#{params.bo.order_types[${index}]} </foreach>
-			</if>
+
 			and (confirm_flg='Y' or confirm_flg='F')
 		</where>
-		ORDER BY departure_date DESC
+		ORDER BY A.departure_date DESC
 	</select>
 </mapper>

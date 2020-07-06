@@ -460,7 +460,7 @@ public class SimpletinyAction extends BaseAction {
 
 				airTicketOrder.setFirst_start_city(firstTicketInfo.getStart_city());
 				airTicketOrder.setFirst_end_city(firstTicketInfo.getEnd_city());
-				airTicketOrder.setPeople_count(need.getPeople_count());
+				// airTicketOrder.setPeople_count(need.getPeople_count());
 				airTicketOrder.setTeam_number(need.getTeam_number());
 				airTicketOrder.setTour_product_pk(saleProduct.getPk());
 				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
@@ -468,7 +468,7 @@ public class SimpletinyAction extends BaseAction {
 			} else {
 				airTicketOrder.setClient_number(need.getTicket_client_number());
 				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());
-				airTicketOrder.setPeople_count(need.getPeople_count());
+				// airTicketOrder.setPeople_count(need.getPeople_count());
 				airTicketOrder.setTeam_number(need.getTeam_number());
 				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
 			}

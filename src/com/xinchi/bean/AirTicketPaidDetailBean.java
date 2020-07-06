@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
@@ -43,6 +44,8 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 	private String base_pk;
 
 	private String PNR;
+
+	private String voucher_number;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -202,6 +205,14 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setFinancial_body_name(String financial_body_name) {
 		this.financial_body_name = financial_body_name;
+	}
+
+	public String getVoucher_number() {
+		return voucher_number;
+	}
+
+	public void setVoucher_number(String voucher_number) {
+		this.voucher_number = voucher_number;
 	}
 
 }

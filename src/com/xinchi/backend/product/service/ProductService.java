@@ -81,4 +81,6 @@ public interface ProductService extends BaseService {
 	public String unlockOrders(List<String> team_numbers);
 
 	public String tipSalesConfirmName(List<String> team_numbers);
+
+	public String saveAirTicket(String product_pk, String ticket_json);
 }

@@ -1,9 +1,10 @@
 var payLayer;
+var passengerCheckLayer;
 var PayableContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenPayables = ko.observableArray([]);
-	self.types = [ '预算', '决算' ];
+	self.types = ['预算', '决算'];
 	self.chosenTypes = ko.observableArray([]);
 
 	self.payables = ko.observable({
@@ -63,28 +64,11 @@ var PayableContext = function() {
 					if (data.isSame == "NOT") {
 						fail_msg("供应商不属于同一财务主体");
 					} else {
-						window.location.href = self.apiurl + "templates/ticket/air-ticket-paid.jsp?key=" + payable_pks;
+						window.location.href = self.apiurl
+								+ "templates/ticket/air-ticket-paid.jsp?key="
+								+ payable_pks;
 
-						// self.supplier_name(data.supplier.supplier_short_name);
-						// self.totalPay(totalPay);
-						// payLayer = $.layer({
-						// type : 1,
-						// title : [ '支付申请', '' ],
-						// maxmin : false,
-						// closeBtn : [ 1, true ],
-						// shadeClose : false,
-						// area : [ '1000px', '800px' ],
-						// offset : [ '150px', '' ],
-						// scrollbar : true,
-						// page : {
-						// dom : '#pay'
-						// },
-						// end : function() {
-						// console.log("Done");
-						// }
-						// });
 					}
-					// endLoadingIndicator();
 				}
 			});
 		}
@@ -105,13 +89,14 @@ var PayableContext = function() {
 		var data = $("#form-pay").serialize();
 		var allot_json = '[';
 		var allot = $("[st='pay_allot']");
-		for ( var i = 0; i < allot.length; i++) {
+		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
 			var r = $(current).find("[st='paid']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
 			var base_pk = $(current).find("[st='base-pk']").val();
 			var PNR = $(current).find("[st='PNR']").val();
-			allot_json += '{"paid":"' + r + '",' + '"base_pk":"' + base_pk + '","PNR":"' + PNR + '",' + '"supplier_employee_pk":"' + p;
+			allot_json += '{"paid":"' + r + '",' + '"base_pk":"' + base_pk
+					+ '","PNR":"' + PNR + '",' + '"supplier_employee_pk":"' + p;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -145,85 +130,124 @@ var PayableContext = function() {
 
 	// 计算合计
 	self.totalBudgetPayable = ko.observable(0);
-	self.totalPayable = ko.observable(0);
-	self.totalFinalPayable = ko.observable(0);
-
 	self.totalPaid = ko.observable(0);
-
 	self.totalBudgetBalance = ko.observable(0);
-	self.totalBalance = ko.observable(0);
-	self.totalFinalBalance = ko.observable(0);
 
 	var pages = new Array();
 	self.refresh = function() {
 		var totalBudgetPayable = 0;
-		var totalPayable = 0;
-		var totalFinalPayable = 0;
 		var totalPaid = 0;
 		var totalBudgetBalance = 0;
-		var totalBalance = 0;
-		var totalFinalBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
-		$.getJSON(self.apiurl + 'payable/searchAirTicketPayableByPage', param, function(data) {
-			self.payables(data.payables);
-			if (!pages.contains(self.currentPage())) {
-				self.store(self.store().concat(self.payables()));
-				pages.push(self.currentPage());
-			}
-			// 计算合计
-			$(self.payables()).each(function(idx, data) {
-				totalBudgetPayable += data.budget_payable;
-				totalBudgetBalance += data.budget_balance;
-				if (data.final_flg == "Y") {
-					totalFinalPayable += data.final_payable;
-					totalFinalBalance += data.final_balance;
-					totalPayable += data.final_payable;
-					totalBalance += data.final_balance;
-				} else {
-					totalPayable += data.budget_payable;
-					totalBalance += data.budget_balance;
-				}
-				totalPaid += data.paid;
+		$.getJSON(self.apiurl + 'payable/searchAirTicketPayableByPage', param,
+				function(data) {
+					self.payables(data.payables);
+					if (!pages.contains(self.currentPage())) {
+						self.store(self.store().concat(self.payables()));
+						pages.push(self.currentPage());
+					}
+					// 计算合计
+					$(self.payables()).each(function(idx, data) {
+						totalBudgetPayable += data.budget_payable;
+						totalBudgetBalance += data.budget_balance;
+						totalPaid += data.paid;
 
-			});
+					});
 
-			self.totalBudgetPayable(totalBudgetPayable);
-			self.totalPayable(totalPayable);
-			self.totalFinalPayable(totalFinalPayable);
-			self.totalPaid(totalPaid);
+					self.totalBudgetPayable(totalBudgetPayable);
+					self.totalPaid(totalPaid);
 
-			self.totalBudgetBalance(totalBudgetBalance);
-			self.totalBalance(totalBalance);
-			self.totalFinalBalance(totalFinalBalance);
+					self.totalBudgetBalance(totalBudgetBalance);
 
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
 
-			$(".rmb").formatCurrency();
-			self.changeType();
-		});
+					$(".rmb").formatCurrency();
+				});
 	};
 
-	self.changeType = function() {
-		if (self.chosenTypes().length == 0 || self.chosenTypes().length == 2) {
-			$("[st='all']").show();
-			$("[st='budget']").hide();
-			$("[st='final']").hide();
-		} else if (self.chosenTypes()[0] == "预算") {
-			$("[st='all']").hide();
-			$("[st='budget']").show();
-			$("[st='final']").hide();
-		} else {
-			$("[st='all']").hide();
-			$("[st='budget']").hide();
-			$("[st='final']").show();
-		}
-
+	self.zeroBalance = function() {
+		self.refresh();
 		return true;
 	};
+
+	self.passengers = ko.observableArray([]);
+	// 查看乘客信息
+	self.checkPassengers = function(data, event) {
+		self.passengers.removeAll();
+		var pk = data.pk;
+		var url = "payable/searchPayablePassengersByPayablePk";
+		$.getJSON(self.apiurl + url, {
+			payable_pk : pk
+		}, function(data) {
+			self.passengers(data.passengers);
+			console.log(data.passengers);
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : ['名单信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+	self.infos = ko.observableArray([]);
+	// 航班信息
+	self.checkTicketInfo = function(data, event) {
+		self.passengers.removeAll();
+		var pk = data.pk;
+		var url = "payable/searchTicketInfoByPayablePk";
+
+		$.getJSON(self.apiurl + url, {
+			payable_pk : pk
+		}, function(data) {
+			self.infos(data.ptInfos);
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : ['航班信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#infos-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+	// self.changeType = function() {
+	// if (self.chosenTypes().length == 0 || self.chosenTypes().length == 2) {
+	// $("[st='all']").show();
+	// $("[st='budget']").hide();
+	// $("[st='final']").hide();
+	// } else if (self.chosenTypes()[0] == "预算") {
+	// $("[st='all']").hide();
+	// $("[st='budget']").show();
+	// $("[st='final']").hide();
+	// } else {
+	// $("[st='all']").hide();
+	// $("[st='budget']").hide();
+	// $("[st='final']").show();
+	// }
+	//
+	// return true;
+	// };
 
 	self.search = function() {
 		self.refresh();
@@ -267,9 +291,10 @@ var PayableContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -287,4 +312,3 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.search();
 });
-

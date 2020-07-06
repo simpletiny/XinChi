@@ -933,6 +933,373 @@
 			<comment>CREATE VIEW view_data_order_count</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		  	ALTER TABLE air_ticket_payable 
+					ADD COLUMN passenger VARCHAR(10) NULL AFTER update_time,
+					ADD COLUMN from_to_city VARCHAR(50) NULL AFTER passenger,
+					ADD COLUMN first_date VARCHAR(10) NULL AFTER from_to_city;
+             ]]>
+			<comment>ALTER TABLE air_ticket_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		  	ALTER TABLE air_ticket_paid_detail 
+					ADD COLUMN voucher_number VARCHAR(170) NULL COMMENT '支付的凭证号，用逗号分隔' AFTER PNR;
+             ]]>
+			<comment>ALTER TABLE air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists view_air_ticket_paid_detail;
+          		CREATE VIEW view_air_ticket_paid_detail AS 
+				SELECT * FROM air_ticket_paid_detail WHERE type LIKE '%STRIKE%'
+				union all
+				SELECT * FROM air_ticket_paid_detail WHERE type NOT LIKE '%STRIKE%' 
+				GROUP BY related_pk
+             ]]>
+			<comment>ALTER VIEW view_air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP view if exists air_ticket_need;
+            	CREATE TABLE air_ticket_need (
+				  passenger_captain VARCHAR(10) NULL,
+				  ticket_client_number VARCHAR(10) NULL,
+				  comment VARCHAR(200) NULL,
+				  product_name VARCHAR(10) NOT NULL,
+				  departure_date VARCHAR(10) NULL,
+				  first_ticket_date VARCHAR(10) NULL,
+				  first_from_to VARCHAR(20) NULL,
+				  adult_cnt INT NULL,
+				  special_cnt INT NULL,
+				  ordered CHAR(1) NULL DEFAULT 'N' ,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '票务需求列表';
+				
+				CREATE TABLE air_need_team_number (
+					  need_pk CHAR(22) NOT NULL,
+					  team_number VARCHAR(10) NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '票务需求和团号对应表';
+             ]]>
+			<comment>CREATE TABLE air_ticket_need and air_need_team_number</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE order_other_money (
+				  team_number VARCHAR(10) NOT NULL,
+				  type CHAR(1) NOT NULL COMMENT '类型：I for income 收入，P for payment 支出',
+				  money DECIMAL(12,2) NOT NULL,
+				  comment VARCHAR(200) NOT NULL COMMENT '备注',
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '订单其他收支表';
+             ]]>
+			<comment>CREATE TABLE order_other_money</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE product_order_air_team_number (
+				  base_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品订单机票和团号对应表';
+             ]]>
+			<comment>CREATE TABLE product_order_air_team_number</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            					
+				ALTER TABLE product_order_air_base 
+				CHANGE COLUMN number number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL COMMENT '航班编号' ,
+				CHANGE COLUMN team_number team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL ;
+             ]]>
+			<comment>ALTER TABLE product_order_air_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE air_ticket_need 
+			ADD COLUMN product_order_base_pk CHAR(22) NULL AFTER ticket_client_number;
+             ]]>
+			<comment>ALTER TABLE product_order_air_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+             DROP VIEW IF EXISTS view_order_air_info;
+				CREATE VIEW view_order_air_info AS
+					   SELECT 
+					        A.pk AS base_pk,
+					        B.flight_leg AS air_leg,
+					        B.flight_index AS info_index,
+							B.start_day AS day_index,
+					        CONCAT(B.start_city,'--',B.end_city) AS from_to_city,
+                            C.pk AS need_pk,
+					        C.ticket_client_number,
+					        C.departure_date
+					    FROM
+					        product_order_air_base A
+					            LEFT JOIN
+					        product_order_air_info B ON A.pk = B.base_pk
+                            LEFT JOIN
+                            air_ticket_need C ON A.pk = C.product_order_base_pk
+             ]]>
+			<comment>ALTER VIEW view_order_air_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+             CREATE TABLE season_ticket_base (
+				  name VARCHAR(10) NOT NULL COMMENT '名称',
+				  model VARCHAR(10) NOT NULL COMMENT '型号',
+				  supplier_employee_pk CHAR(22) NOT NULL COMMENT '票源id',
+				  price DECIMAL(12,2) NULL COMMENT '价格',
+				  comment VARCHAR(200) NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '套票基础表';
+             ]]>
+			<comment>CREATE TABLE season_ticket_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+             CREATE TABLE season_ticket_info (
+				  ticket_index INT NOT NULL COMMENT '序号',
+				  index_leg VARCHAR(10) NOT NULL COMMENT '航段编号',
+				  start_day INT NOT NULL COMMENT '天次',
+				  ticket_number VARCHAR(10) NULL COMMENT '航班号',
+				  ticket_leg VARCHAR(20) NOT NULL COMMENT '票务航段',
+				  start_time VARCHAR(5) NULL COMMENT '起飞时间',
+				  end_time VARCHAR(5) NULL COMMENT '降落时间',
+				  add_day_flg CHAR(1) NULL COMMENT '降落是否加1天',
+				  start_place VARCHAR(20) NULL COMMENT '起飞机场',
+				  end_place VARCHAR(20) NULL COMMENT '降落机场',
+				  base_pk CHAR(22) NULL COMMENT '基础表ID',
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '套表信息表';
+             ]]>
+			<comment> CREATE TABLE season_ticket_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+             ALTER TABLE product_order_air_base 
+				CHANGE COLUMN name name VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL COMMENT '航班名称' ,
+				CHANGE COLUMN adult_price adult_price DECIMAL(12,2) NULL DEFAULT '0.00' ,
+				CHANGE COLUMN child_price child_price DECIMAL(12,2) NULL DEFAULT '0.00' ;
+			ALTER TABLE product_order_air_info 
+				CHANGE COLUMN flight_leg flight_leg VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL COMMENT '航段名' ,
+				CHANGE COLUMN end_day end_day TINYINT(4) NULL COMMENT '降落天次' ;
+             ]]>
+			<comment>ALTER TABLE product_order_air_base and product_order_air_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE air_ticket_order 
+				ADD COLUMN order_number VARCHAR(10) NULL COMMENT '票务订单号' FIRST;
+             ]]>
+			<comment> ALTER TABLE air_ticket_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE air_ticket_order_leg 
+				ADD COLUMN start_time VARCHAR(5) NULL AFTER to_city,
+				ADD COLUMN end_time VARCHAR(5) NULL AFTER start_time,
+				ADD COLUMN start_place VARCHAR(20) NULL AFTER end_time,
+				ADD COLUMN end_place VARCHAR(20) NULL AFTER start_place,
+				ADD COLUMN add_day_flg CHAR(1) NULL DEFAULT 'N' AFTER end_place,
+				ADD COLUMN ticket_number VARCHAR(10) NULL AFTER add_day_flg;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+           ALTER TABLE air_ticket_order 
+				ADD COLUMN need_pk CHAR(22) NULL COMMENT '需求pk' AFTER cost_done_flg,
+				ADD COLUMN price DECIMAL(12,2) NULL COMMENT '机票单价' AFTER need_pk;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+           CREATE TABLE history_view (
+			  title VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  content MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  PRIMARY KEY (pk))
+			ENGINE = InnoDB
+			DEFAULT CHARACTER SET = utf8
+			COLLATE = utf8_bin
+			COMMENT = '欣驰历史';
+             ]]>
+			<comment>CREATE TABLE history_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+           CREATE TABLE team_evolution (
+			  title VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  content MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+			  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+			  PRIMARY KEY (pk))
+			ENGINE = InnoDB
+			DEFAULT CHARACTER SET = utf8
+			COLLATE = utf8_bin
+			COMMENT = '团质进化';
+             ]]>
+			<comment>CREATE TABLE team_evolution</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+        		ALTER TABLE air_ticket_need 
+					DROP COLUMN product_order_base_pk,
+					ADD COLUMN product_order_number VARCHAR(10) NULL COMMENT '产品订单号' AFTER ticket_client_number;
+        		ALTER TABLE product_order_air_info 
+					CHANGE COLUMN base_pk base_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL COMMENT '航班pk' ,
+					ADD COLUMN product_order_number VARCHAR(10) NULL COMMENT '产品订单号' AFTER update_time;
+        		ALTER TABLE product_order_air_team_number 
+					DROP COLUMN base_pk,
+					ADD COLUMN product_order_number VARCHAR(10) NULL COMMENT '产品订单号' FIRST, 
+					COMMENT = '产品订单和团号对应表' , RENAME TO  product_order_team_number ;
+        		
+             ]]>
+			<comment>ALTER TABLE air_ticket_need,product_order_air_info,product_order_air_team_number(rename to product_order_team_number)</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+        		CREATE TABLE product_order (
+					  order_number VARCHAR(10) NOT NULL COMMENT '产品订单号',
+					  single_flg CHAR(1) NULL DEFAULT 'Y' COMMENT '合单还是单独flg，Y单独，N合单',
+					  status CHAR(1) NULL DEFAULT 'N' COMMENT '状态，目前有操作和未操作两种，Y已生成操作，N未生成操作',
+					  product_name VARCHAR(20) NULL,
+					  product_model VARCHAR(6) NULL,
+					  departure_date VARCHAR(10) NULL,
+					  adult_count INT NULL,
+					  special_count INT NULL,
+					  air_comment VARCHAR(200) NULL COMMENT '票务需求',
+					  comment VARCHAR(200) NULL COMMENT '备注',
+					  product_manager_number VARCHAR(10) NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '产品订单表';
+             ]]>
+			<comment>CREATE TABLE product_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+        		ALTER TABLE team_number 
+					CHANGE COLUMN sale_pk user_pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL ,
+					ADD COLUMN type CHAR(1) NULL DEFAULT 'T' COMMENT '类型，T团号，P产品订单号，A票务订单号' AFTER create_time;
+             ]]>
+			<comment>ALTER TABLE team_number </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+        		ALTER TABLE product_order 
+					ADD COLUMN passenger_captain VARCHAR(10) NULL COMMENT '名单代表' AFTER special_count;
+             ]]>
+			<comment>ALTER TABLE product_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

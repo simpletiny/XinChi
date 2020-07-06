@@ -75,7 +75,6 @@
 							<label class="l">票源</label>
 							<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
 						</div>
-						<!-- ko if:$data.final_flg=="N" -->
 						<div class="col-md-4">
 							<label class="l">应付款</label>
 							<p class="ip-default" data-bind="text: $data.budget_balance"></p>
@@ -84,18 +83,7 @@
 							<label class="l">此次付款</label> <input type="number" st="this-paid" data-bind="value:$data.budget_balance" onkeyup="caculateSumMoney()" style="width: 50%" class="ip-" placeholder="此次付款"
 								required="required" />
 						</div>
-						<!-- /ko -->
-						<!-- ko if:$data.final_flg=="Y" -->
-						<div class="col-md-4">
-							<label class="l">应付款</label>
-							<p class="ip-default" data-bind="text: $data.final_balance"></p>
-						</div>
-						<div class="col-md-4 required">
-							<label class="l">此次付款</label> <input type="number" st="this-paid" data-bind="value:$data.final_balance" onkeyup="caculateSumMoney()" style="width: 50%" class="ip-" placeholder="此次付款"
-								required="required" />
-						</div>
-						<!-- /ko -->
-					</div>
+					</div> 
 					<!-- /ko -->
 				</div>
 				<h3>支付信息</h3>
@@ -120,13 +108,13 @@
 							<div class="col-md-6 required">
 								<label class="l">支出账户</label>
 								<div class="ip">
-									<select class="form-control" name="account1" data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'" required="required"></select>
+									<select class="form-control" name="account" data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'" required="required"></select>
 								</div>
 							</div>
 							<div class="col-md-6 required">
 								<label class="l">支出时间</label>
 								<div class="ip">
-									<input type="text" name="time1" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
+									<input type="text" name="time" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
 								</div>
 							</div>
 						</div>
@@ -135,19 +123,19 @@
 							<div class="col-md-6 required">
 								<label class="l">收款方账户名</label>
 								<div class="ip">
-									<input type="text" name="receiver1" class="ip-" placeholder="收款方账户名" required="required" />
+									<input type="text" name="receiver" class="ip-" placeholder="收款方账户名" required="required" />
 								</div>
 							</div>
 							<div class="col-md-6 required">
 								<label class="l">支付金额</label>
 								<div class="ip">
-									<input type="number" name="money1" class="ip-" placeholder="支付金额" required="required" />
+									<input type="number" name="money" class="ip-" placeholder="支付金额" required="required" />
 								</div>
 							</div>
 						</div>
 						<div class="input-row clearfloat">
 							<div class="col-md-6">
-								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file1" /></a> <input type="hidden" name="voucherFile1" />
+								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input type="hidden" name="voucherFile" />
 							</div>
 							<div class="col-md-6"></div>
 						</div>
@@ -174,7 +162,7 @@
 				<div class="col-md-6 required">
 					<label class="l">支出账户</label>
 					<div class="ip">
-						<select class="form-control" name="account" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" required="required"></select>
+						<select class="form-control" name="account" data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'" required="required"></select>
 					</div>
 				</div>
 				<div class="col-md-6 required">

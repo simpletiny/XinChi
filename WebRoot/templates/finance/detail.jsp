@@ -45,6 +45,10 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify() }">修改</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail() }">删除</button>
 								</s:if>
+								<s:if test="#session.user.user_roles.contains('FINANCE')">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify_temp() }">修改</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail_temp() }">删除</button>
+								</s:if>
 							</div>
 						</div>
 					</div>

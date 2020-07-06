@@ -26,9 +26,13 @@ public interface OrderDAO {
 
 	public List<OrderDto> selectByParam(OrderDto order);
 
+	public List<OrderDto> selectWithProductByParam(OrderDto order);
+
 	String selectMaxConfirmDateByEmployeePk(String employee_pk);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
 	public List<OrderDto> selectConfirmingOrders(OrderDto orderOption);
+
+	public List<OrderDto> selectByTeamNumbers(List<String> team_numbers);
 }

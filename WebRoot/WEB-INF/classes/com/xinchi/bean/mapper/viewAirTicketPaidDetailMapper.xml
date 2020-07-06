@@ -3,6 +3,7 @@
 <mapper namespace="com.xinchi.bean.mapper.ViewAirTicketPaidDetailMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketPaidDto">
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
 		<result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
 		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
 		<result column="money" property="money" jdbcType="DECIMAL" />
@@ -23,6 +24,7 @@
 		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="voucher_number" property="voucher_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -45,12 +47,14 @@
 		base_pk,
 		PNR,
 		create_time,
-		update_time
+		update_time,
+		voucher_number
 	</sql>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		B.financial_body_pk,
 		C.supplier_name AS financial_body_name,
+		B.name AS supplier_employee_name,
 		A.money,
 		A.allot_money,
 		A.sum_money,
@@ -67,11 +71,13 @@
 		A.update_user,
 		A.base_pk,
 		A.PNR,
+		A.voucher_number,
 		A.create_time,
 		A.update_time
 		from
 		view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN supplier C ON
+		B.financial_body_pk = C.pk
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in
@@ -80,10 +86,19 @@
 				</foreach>
 			</if>
 			<if test="params.bo.date_from != null and params.bo.date_from !=''">
-				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+				and LEFT(A.time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
-				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+				and LEFT(A.time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.allot_money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.allot_money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.receiver != null and params.bo.receiver !=''">
+				and C.supplier_name like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%') 
 			</if>
 		</where>
 	</select>

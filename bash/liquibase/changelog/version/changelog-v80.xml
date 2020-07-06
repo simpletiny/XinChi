@@ -1,0 +1,272 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE product_order 
+						ADD COLUMN standard_flg CHAR(1) NULL DEFAULT 'Y' COMMENT '是否为标准订单，Y是，N不是。' AFTER pk;
+             ]]>
+			<comment>ALTER TABLE product_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE product_order 
+					ADD COLUMN product_pk CHAR(22) NULL COMMENT '产品pk，如果有则填写' AFTER standard_flg;
+             ]]>
+			<comment>ALTER TABLE product_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE product_order 
+					ADD COLUMN days INT NULL COMMENT '游玩天数' AFTER product_pk;
+             ]]>
+			<comment>ALTER TABLE product_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE TABLE payable_order (
+					  team_number VARCHAR(10) NOT NULL,
+					  supplier_employee_pk CHAR(22) NOT NULL,
+					  final_flg CHAR(1) NULL DEFAULT 'N',
+					  budget_payable DECIMAL(12,2) NULL,
+					  final_payable DECIMAL(12,2) NULL,
+					  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '每个订单涉及到的应付款';
+             ]]>
+			<comment>CREATE TABLE payable_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_order_air_info;
+				CREATE VIEW view_order_air_info AS
+				   SELECT 				
+				   		A.product_order_number,
+				        A.flight_leg AS air_leg,
+				        A.flight_index AS info_index,
+						A.start_day AS day_index,
+				        CONCAT(A.start_city,'--',A.end_city) AS from_to_city,
+                           B.pk AS need_pk,
+				        B.ticket_client_number,
+				        B.departure_date
+				    FROM
+				        product_order_air_info A 
+                           LEFT JOIN
+                           air_ticket_need B ON A.product_order_number = B.product_order_number;
+             ]]>
+			<comment>ALTER VIEW view_order_air_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE season_ticket_base 
+					ADD COLUMN special_price DECIMAL(12,2) NULL COMMENT '儿童价格' AFTER update_user;
+             ]]>
+			<comment>ALTER TABLE season_ticket_base</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_order 
+				ADD COLUMN special_price DECIMAL(12,2) NULL COMMENT '儿童价格' AFTER price;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_name_list 
+					CHANGE COLUMN team_number team_number VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ,
+					CHANGE COLUMN status status CHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT 'I' COMMENT 'I待出票，Y已出票，T航变' ,
+					ADD COLUMN order_number VARCHAR(10) NULL COMMENT '票务订单号' AFTER status,
+					ADD COLUMN comment VARCHAR(200) NULL COMMENT '备注' AFTER order_number;
+             ]]>
+			<comment>ALTER TABLE air_ticket_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP view if exists view_passenger_allot;
+			CREATE VIEW view_passenger_allot AS
+				    SELECT 
+				        A.pk AS passenger_pk,
+				        A.id,
+				        A.name,
+				        B.date,
+				        B.from_city,
+				        B.to_city,
+                        B.start_time,
+                        B.end_time,
+                        B.start_place,
+                        B.end_place,
+                        B.ticket_number,
+				        A.ticket_order_pk,
+				        IF(C.pk IS NULL, 'N', 'Y') AS is_allot
+				    FROM
+				        air_ticket_name_list A
+				            LEFT JOIN
+				        air_ticket_order_leg B ON A.ticket_order_pk = B.ticket_order_pk
+				            LEFT JOIN
+				        passenger_ticket_info C ON A.pk = C.passenger_pk
+				            AND C.from_to_city = CONCAT(B.from_city, '--', B.to_city);
+             ]]>
+			<comment>ALTER VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE product_order_operation 
+					ADD COLUMN passenger_captain VARCHAR(10) NULL COMMENT '游客队长' AFTER off_day;
+             ]]>
+			<comment>ALTER TABLE product_order_operation</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE VIEW view_team_payable AS
+				    SELECT 
+				        team_number,
+				        GROUP_CONCAT(final_flg) AS final_flg,
+				        SUM(IF(final_flg = 'Y',
+				            final_payable,
+				            budget_payable)) AS payable
+				    FROM
+				        payable
+				    GROUP BY team_number;
+             ]]>
+			<comment>CREATE VIEW view_team_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE air_ticket_order 
+					ADD COLUMN passenger_captain VARCHAR(10) NULL AFTER special_price,
+					ADD COLUMN product_name VARCHAR(8) NULL AFTER passenger_captain,
+					ADD COLUMN departure_date VARCHAR(10) NULL AFTER product_name,
+					ADD COLUMN comment VARCHAR(200) NULL AFTER departure_date;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE air_ticket_order 
+					CHANGE COLUMN product_name product_name VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL ;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		DROP VIEW IF EXISTS view_team_payable;
+				CREATE VIEW view_team_payable AS
+				    SELECT 
+				        team_number,
+				        GROUP_CONCAT(final_flg) AS final_flg,
+				        SUM(IF(final_flg = 'Y',
+				            final_payable,
+				            budget_payable)) AS payable
+				    FROM
+				        payable_order
+				    GROUP BY team_number;
+             ]]>
+			<comment>ALTER VIEW view_team_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE VIEW view_passenger_ticket_cost AS
+				SELECT DISTINCT
+				    base_pk AS payable_pk,
+				    ticket_source_pk,
+				    ticket_cost,
+				    passenger_pk
+				FROM
+				    passenger_ticket_info;
+             ]]>
+			<comment>CREATE VIEW view_passenger_ticket_cost</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE VIEW view_sum_ticket_cost AS
+				    SELECT 
+				        passenger_pk, SUM(ticket_cost) AS ticket_cost
+				    FROM
+				        view_passenger_ticket_cost
+				    GROUP BY passenger_pk;
+             ]]>
+			<comment>CREATE VIEW view_sum_ticket_cost</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE air_ticket_name_list 
+					ADD COLUMN change_pk CHAR(22) NULL COMMENT '航变信息pk，如果有航变才会有值' AFTER comment;
+             ]]>
+			<comment>ALTER TABLE air_ticket_name_list</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		CREATE TABLE air_ticket_change_log (
+				  change_reason VARCHAR(10) NOT NULL,
+				  change_cost DECIMAL(12,2) NOT NULL,
+				  comment VARCHAR(200) NULL,
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '航变记录表';
+             ]]>
+			<comment>CREATE TABLE air_ticket_change_log</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+          		ALTER TABLE air_ticket_payable 
+					ADD COLUMN comment VARCHAR(20) NULL COMMENT '订单号' AFTER first_date;
+             ]]>
+			<comment>ALTER TABLE air_ticket_payable </comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>
+
+
+

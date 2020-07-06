@@ -51,10 +51,15 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	private String supplier_name;
 	private String supplier_pk;
-	
+
 	private String pick_month;
-	
+
 	private String passenger;
+
+	private String passenger_captain;
+
+	private String single_flg;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -253,6 +258,22 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setPassenger(String passenger) {
 		this.passenger = passenger;
+	}
+
+	public String getPassenger_captain() {
+		return passenger_captain;
+	}
+
+	public void setPassenger_captain(String passenger_captain) {
+		this.passenger_captain = passenger_captain;
+	}
+
+	public String getSingle_flg() {
+		return single_flg;
+	}
+
+	public void setSingle_flg(String single_flg) {
+		this.single_flg = single_flg;
 	}
 
 }

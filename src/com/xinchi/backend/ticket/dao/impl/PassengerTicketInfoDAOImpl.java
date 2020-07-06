@@ -57,4 +57,11 @@ public class PassengerTicketInfoDAOImpl extends SqlSessionDaoSupport implements 
 				.selectByParam("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByPassengerPk", passenger_pk);
 		return list;
 	}
+
+	@Override
+	public List<PassengerTicketInfoBean> selectByPayablePk(String payable_pk) {
+		List<PassengerTicketInfoBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.PassengerTicketInfoMapper.selectByPayablePk", payable_pk);
+		return list;
+	}
 }

@@ -560,4 +560,15 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return SUCCESS;
 	}
+
+	@Override
+	public List<OrderDto> selectByTeamNumbers(List<String> team_numbers) {
+
+		return dao.selectByTeamNumbers(team_numbers);
+	}
+
+	@Override
+	public List<OrderDto> selectWithProductByParam(OrderDto order) {
+		return dao.selectWithProductByParam(order);
+	}
 }

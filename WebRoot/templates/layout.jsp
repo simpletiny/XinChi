@@ -82,8 +82,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<li class="culture" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
 					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>企业文化</a>
 				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/culture/history-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰历史</a></li>
 					<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
 					<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
+					<li><a href="<%=basePath%>templates/culture/team-evolution.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>团质进化</a></li>
 					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
 						<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
@@ -183,9 +185,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-				<li class="order-operate"><a href="<%=basePath%>templates/product/product-order.jsp"><i
+				<li class="order-operate"><a href="<%=basePath%>templates/product/product-need.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>产品操作</a>
 					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/product/product-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品需求</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品订单</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-operating.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>操作中</a></li>
@@ -224,8 +227,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作订单</a></li>
-						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作名单</a></li>
-						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已操作名单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票名单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已出票名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
@@ -233,6 +236,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
+						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
 						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
 						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
@@ -262,6 +266,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li class="data"><a href="<%=basePath%>templates/data/order-data.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>数据分析</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/data/order-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>订单数据</a></li>
+						<li><a href="<%=basePath%>templates/data/finance-summary.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务汇总</a></li>
 					</ol></li>
 			</s:if>
 

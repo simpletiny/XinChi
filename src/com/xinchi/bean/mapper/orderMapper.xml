@@ -24,6 +24,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
 		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 		<result column="create_user_number" property="create_user_number" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -114,7 +115,8 @@
 		product_name,
 		departure_date,
 		confirm_date,
-		adult_count+IFNULL(special_count,0) AS people_count
+		adult_count+IFNULL(special_count,0) AS
+		people_count
 		from budget_order_view
 		<where>
 			<if test="create_user != null and create_user !=''">
@@ -138,13 +140,25 @@
 		#{order_pk,jdbcType=CHAR}
 	</select>
 
+	<select id="selectByTeamNumbers" resultMap="BaseResultMap">
+		select * from budget_order_view
+		where
+		team_number in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
 	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
-		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
+		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
 		A.create_user AS sale_number,
 		B.user_name AS sale_name,
-		sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
+		sum(IF(
+		A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
 		A.create_user = B.user_number
@@ -190,12 +204,15 @@
 		ORDER by score DESC
 	</select>
 	<select id="searchSaleScoreByParam" parameterType="com.xinchi.bean.SaleScoreDto" resultMap="SaleScoreMap">
-		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
+		SELECT sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
 		A.create_user AS sale_number,
 		B.user_name AS sale_name,
-		sum(IF( A.confirm_flg!='N' AND(C.final_type is null OR C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
+		sum(IF(
+		A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
 		A.create_user = B.user_number
@@ -255,6 +272,34 @@
 			</if>
 			<if test="create_user_number != null and create_user_number !=''">
 				and create_user_number =#{create_user_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectWithProductByParam" parameterType="com.xinchi.bean.OrderDto" resultMap="BaseResultMap">
+		select A.team_number,A.departure_date,A.product_name,B.product_model,B.pk AS product_pk
+		from budget_order_view A LEFT
+		JOIN product B ON A.product_pk = B.pk
+		<where>
+			<if test="product_name != null and product_name !=''">
+				and A.product_name =#{product_name,jdbcType=VARCHAR}
+			</if>
+			<if test="product_model != null and product_model !=''">
+				and B.product_model =#{product_model,jdbcType=VARCHAR}
+			</if>
+			<if test="departure_date != null and departure_date !=''">
+				and A.departure_date =#{departure_date,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and A.product_manager_number =#{product_manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_flg != null and confirm_flg !=''">
+				and A.confirm_flg =#{confirm_flg,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_flgs != null and confirm_flgs.size()>0">
+				and A.confirm_flg in
+				<foreach item="item" index="index" collection="confirm_flgs" open="(" separator="," close=")">
+					#{item}
+				</foreach>
 			</if>
 		</where>
 	</select>

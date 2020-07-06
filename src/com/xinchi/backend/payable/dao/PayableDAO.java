@@ -1,7 +1,9 @@
 package com.xinchi.backend.payable.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
 import com.xinchi.tools.Page;
@@ -25,5 +27,9 @@ public interface PayableDAO {
 	public void deleteByPk(String pk);
 
 	public PayableBean selectByTeamNumber(String team_number);
+
+	public BigDecimal selectSumPayable();
+
+	public List<KeyValueDto> selectPayableWithArea();
 
 }

@@ -13,6 +13,7 @@ var ProductBoxContext = function() {
 		self.sales(data.users);
 	});
 	self.refresh = function() {
+		startLoadingIndicator("加载中...");
 
 		var param = $("form").serialize();
 
@@ -26,6 +27,8 @@ var ProductBoxContext = function() {
 					self.setPageNums(self.currentPage());
 
 					$(".rmb").formatCurrency();
+
+					endLoadingIndicator();
 				});
 	};
 

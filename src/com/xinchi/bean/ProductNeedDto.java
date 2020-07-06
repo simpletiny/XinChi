@@ -11,7 +11,7 @@ import com.xinchi.common.SupperBO;
  * @author simpletiny
  * 
  */
-public class ProductOrderDto extends SupperBO implements Serializable {
+public class ProductNeedDto extends SupperBO implements Serializable {
 	private static final long serialVersionUID = -7962499125160752763L;
 
 	private String product_number;

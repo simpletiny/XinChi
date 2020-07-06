@@ -1,5 +1,6 @@
 package com.xinchi.backend.data.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -12,7 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.data.dao.OrderCountDAO;
 import com.xinchi.backend.data.service.DataService;
+import com.xinchi.backend.finance.dao.CardDAO;
+import com.xinchi.backend.payable.dao.PayableDAO;
+import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.common.DateUtil;
 
 @Service
@@ -220,5 +226,50 @@ public class DataServiceImpl implements DataService {
 		}
 
 		return result;
+	}
+
+	@Autowired
+	private CardDAO carddao;
+
+	@Autowired
+	private PayableDAO payableDao;
+
+	@Autowired
+	private ReceivableDAO receivableDao;
+
+	@Override
+	public DataFinanceSummaryDto fetchFinanceSummary() throws Exception {
+		DataFinanceSummaryDto dfsd = new DataFinanceSummaryDto();
+
+		// 获取现金
+		BigDecimal cash = carddao.selectSumBalance();
+		dfsd.setCash(cash);
+
+		// 获取现金明细
+		KeyValueDto kv = carddao.selectDetailBalance();
+		dfsd.setPositive_cash(new BigDecimal(kv.getKey_key()));
+		dfsd.setNegative_cash(new BigDecimal(kv.getValue_value()));
+
+		// 获取应收款总额
+		BigDecimal receivable = receivableDao.selectSumReceivable();
+		dfsd.setReceivable(receivable);
+
+		// 获取应收款明细(地区应收款)
+		List<KeyValueDto> receivables = receivableDao.selectReceivableWithClient();
+		dfsd.setAreaReceivable(receivables);
+
+		// 获取应收款明细(销售应收款)
+		List<KeyValueDto> sale_receivables = receivableDao.selectReceivableWithSales();
+		dfsd.setSalesReceivable(sale_receivables);
+
+		// 获取应付款总额
+		BigDecimal payable = payableDao.selectSumPayable();
+		dfsd.setPayable(payable);
+
+		// 获取应付款明细
+		List<KeyValueDto> payables = payableDao.selectPayableWithArea();
+		dfsd.setAreaPayable(payables);
+
+		return dfsd;
 	}
 }

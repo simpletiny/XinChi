@@ -24,27 +24,33 @@ public class NumberServiceImpl implements NumberService {
 	@Override
 	public String generateTeamNumber() {
 		String team_number = "";
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
-		String sale_pk = sessionBean.getPk();
+		String user_pk = sessionBean.getPk();
 		String user_number = sessionBean.getUser_number();
 
 		String prefix = "N" + user_number.substring(user_number.length() - 2, user_number.length());
-		TeamNumberBean tb = dao.selectTeamNumberBySalePk(sale_pk);
+
+		TeamNumberBean option = new TeamNumberBean();
+		option.setUser_pk(user_pk);
+		option.setType("T");
+
+		TeamNumberBean tb = dao.selectNextNumber(option);
 
 		String next = "";
+		String source = source_team_number;
 		if (null == tb) {
-			team_number = prefix + first;
-			next = addOne(first);
-
+			team_number = prefix + first_team_number;
+			next = addOne(first_team_number, source);
 			tb = new TeamNumberBean();
-			tb.setSale_pk(sale_pk);
+			tb.setUser_pk(user_pk);
 			tb.setTeam_number(next);
 			dao.insert(tb);
 		} else {
 			String current = tb.getTeam_number();
 			team_number = prefix + current;
-			next = addOne(current);
+			next = addOne(current, source);
 
 			tb.setTeam_number(next);
 			dao.update(tb);
@@ -72,7 +78,8 @@ public class NumberServiceImpl implements NumberService {
 		return number;
 	}
 
-	private String addOne(String value) {
+	private String addOne(String value, String source) {
+
 		if (null == value || value.equals(""))
 			return "";
 		int strLength = value.length();
@@ -80,7 +87,7 @@ public class NumberServiceImpl implements NumberService {
 		String first = value.substring(0, strLength - 1);
 		int nextCharIndex = source.indexOf(last) + 1;
 		if (nextCharIndex >= 36) {
-			String result = addOne(first) + "G";
+			String result = addOne(first, source) + "G";
 			if (result.equals("GGGG")) {
 				return "YOU ARE RICH!";
 			} else {
@@ -99,12 +106,12 @@ public class NumberServiceImpl implements NumberService {
 		String result = "";
 		int mod = (now + index) % 36;
 		int z = ((now + index)) / 36;
-		String newC = String.valueOf(source.charAt(mod));
+		String newC = String.valueOf(source_team_number.charAt(mod));
 		if (z > 0) {
 			now--;
 			result = doIndex(z, now) + newC;
 		} else {
-			result = source.substring(0, now) + newC;
+			result = source_team_number.substring(0, now) + newC;
 		}
 		return result;
 	}
@@ -112,11 +119,88 @@ public class NumberServiceImpl implements NumberService {
 	@Override
 	public String generateProductNumber() {
 		String product_number = "";
-		EveryoneCountBean count = countDao.selectCountByType(ResourcesConstants.COUNT_TYPE_PRODUCT_ORDER);
+		EveryoneCountBean count = countDao.selectCountByType(ResourcesConstants.COUNT_TYPE_PRODUCT);
 		product_number = getByIndex(count.getCount());
 		count.setCount(count.getCount() + 1);
 		countDao.update(count);
 		return product_number;
 	}
 
+	@Override
+	public String generateTicketOrderNumber() {
+		String order_number = "";
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		String user_pk = sessionBean.getPk();
+		String user_number = sessionBean.getUser_number();
+
+		String prefix = "A" + user_number.substring(user_number.length() - 2, user_number.length());
+
+		TeamNumberBean option = new TeamNumberBean();
+		option.setUser_pk(user_pk);
+		option.setType("A");
+		TeamNumberBean tb = dao.selectNextNumber(option);
+
+		String source = source_ticket_order_number;
+		String next = "";
+		if (null == tb) {
+			order_number = prefix + first_ticket_order_number;
+			next = addOne(first_ticket_order_number, source);
+
+			tb = new TeamNumberBean();
+			tb.setUser_pk(user_pk);
+			tb.setType("A");
+			tb.setTeam_number(next);
+			dao.insert(tb);
+		} else {
+			String current = tb.getTeam_number();
+			order_number = prefix + current;
+			next = addOne(current, source);
+
+			tb.setTeam_number(next);
+			dao.update(tb);
+		}
+
+		return order_number;
+	}
+
+	@Override
+	public String generateProductOrderNumber() {
+		String order_number = "";
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		String user_pk = sessionBean.getPk();
+		String user_number = sessionBean.getUser_number();
+
+		String prefix = "P" + user_number.substring(user_number.length() - 2, user_number.length());
+
+		TeamNumberBean option = new TeamNumberBean();
+		option.setUser_pk(user_pk);
+		option.setType("P");
+		TeamNumberBean tb = dao.selectNextNumber(option);
+
+		String source = source_product_order_number;
+		String next = "";
+		if (null == tb) {
+			order_number = prefix + first_product_order_number;
+			next = addOne(first_product_order_number, source);
+
+			tb = new TeamNumberBean();
+			tb.setUser_pk(user_pk);
+			tb.setType("P");
+			tb.setTeam_number(next);
+			dao.insert(tb);
+		} else {
+			String current = tb.getTeam_number();
+			order_number = prefix + current;
+			next = addOne(current, source);
+
+			tb.setTeam_number(next);
+			dao.update(tb);
+		}
+
+		return order_number;
+	}
 }

@@ -75,7 +75,7 @@
 			</result>
 		</action>
 		<!-- 产品订单 -->
-		<action name="searchProductOrderByPage" class="productAction" method="searchProductOrderByPage">
+		<action name="searchProductNeedByPage" class="productAction" method="searchProductNeedByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -147,8 +147,38 @@
 		</action>
 		<!-- 产品维护操作 end -->
 
+		<!-- 产品需求操作 start -->
+		<!-- 检查是否还有同团期同产品的订单 -->
+		<action name="checkSameNeedOrder" class="productNeedAction" method="checkSameNeedOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 产品需求操作 end -->
 
 		<!-- 产品订单操作 start -->
+
+		<!-- 搜索产品订单 -->
+		<action name="searchProductOrderByPage" class="productOrderAction" method="searchProductOrderByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据订单编号查找销售订单 -->
+		<action name="searchSaleOrderByProductOrderNumber" class="productOrderAction" method="searchSaleOrderByProductOrderNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据订单编号查找乘客信息 -->
+		<action name="searchSaleOrderNameListByProductOrderNumber" class="productOrderAction" method="searchSaleOrderNameListByProductOrderNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!-- 搜索产品供应商信息 -->
 		<action name="searchProductDataForOrder" class="productOrderOperationAction" method="searchProductDataForOrder">
@@ -168,44 +198,51 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="operateOrderAirTicket" class="productOrderOperationAction" method="operateOrderAirTicket">
+
+
+		<!-- 产品订单操作 start -->
+		<action name="createProductOrder" class="productOrderAction" method="createProductOrder">
 			<result name="success" type="str">
 				resultStr
 			</result>
 		</action>
-		<!-- 生成产品订单 -->
+
+		<!-- 产品订单操作 end -->
+
+
+		<!-- 生成产品操作 -->
 		<action name="createOrderOperation" class="productOrderOperationAction" method="createOrderOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>
 		</action>
-		<!-- 确认产品订单 -->
+		<!-- 确认产品操作 -->
 		<action name="confirmOperation" class="productOrderOperationAction" method="confirmOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>
 		</action>
-		<!-- 决算产品订单 -->
+		<!-- 决算产品操作 -->
 		<action name="finalOperation" class="productOrderOperationAction" method="finalOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>
 		</action>
-		<!-- 搜索操作订单 -->
+		<!-- 搜索操作单子 -->
 		<action name="searchProductOrderOperationByPage" class="productOrderOperationAction" method="searchProductOrderOperationByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 通过团号搜索操作订单 -->
+		<!-- 通过团号搜索操作 -->
 		<action name="searchOperationByTeamNumber" class="productOrderOperationAction" method="searchOperationByTeamNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 通过团号搜索操作订单 -->
+		<!-- 通过团号搜索操作 -->
 		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
 			<result name="success" type="str">
 				resultStr

@@ -20,16 +20,13 @@ import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
-import com.xinchi.bean.ProductOrderDto;
+import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -202,24 +199,24 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private ProductOrderDto order_option;
+	private ProductNeedDto order_option;
 
 	@Autowired
 	private ProductOrderService productOrderService;
 
-	private List<ProductOrderDto> productOrders;
+	private List<ProductNeedDto> productOrders;
 
 	/**
 	 * 搜索产品订单
 	 * 
 	 * @return
 	 */
-	public String searchProductOrderByPage() {
+	public String searchProductNeedByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == order_option)
-			order_option = new ProductOrderDto();
+			order_option = new ProductNeedDto();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			order_option.setProduct_manager_number(sessionBean.getUser_number());
@@ -230,7 +227,7 @@ public class ProductAction extends BaseAction {
 		params.put("bo", order_option);
 		page.setParams(params);
 
-		productOrders = productOrderService.selectByPage(page);
+		productOrders = productOrderService.selectNeedByPage(page);
 		return SUCCESS;
 	}
 
@@ -256,8 +253,6 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private String ticket_charge;
-
 	@Autowired
 	private ProductAirTicketService productAirTicketService;
 
@@ -269,41 +264,7 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String saveAirTicket() {
-		// 删除已有的机票信息
-		productAirTicketService.deleteByProductPk(product_pk);
-
-		if (!ticket_charge.equals("NONE")) {
-			JSONArray arr = JSONArray.fromObject(ticket_json);
-			for (int i = 0; i < arr.size(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-
-				int index = obj.getInt("index");
-				int start_day = obj.getInt("start_day");
-				String start_city = obj.getString("start_city");
-				int end_day = obj.getInt("end_day");
-				String end_city = obj.getString("end_city");
-				String ticket_number = obj.getString("ticket_number");
-
-				ProductAirTicketBean ticket = new ProductAirTicketBean();
-
-				ticket.setProduct_pk(product_pk);
-				ticket.setTicket_index(index);
-				ticket.setStart_day(start_day);
-				ticket.setStart_city(start_city);
-				ticket.setEnd_day(end_day);
-				ticket.setEnd_city(end_city);
-				ticket.setTicket_number(ticket_number);
-				productAirTicketService.insert(ticket);
-
-			}
-		}
-
-		product = new ProductBean();
-		product.setAir_ticket_charge(ticket_charge);
-		product.setPk(product_pk);
-		service.updateStraight(product);
-
-		resultStr = SUCCESS;
+		resultStr = service.saveAirTicket(product_pk, ticket_json);
 		return SUCCESS;
 	}
 
@@ -470,14 +431,6 @@ public class ProductAction extends BaseAction {
 		this.report_option = report_option;
 	}
 
-	public String getTicket_charge() {
-		return ticket_charge;
-	}
-
-	public void setTicket_charge(String ticket_charge) {
-		this.ticket_charge = ticket_charge;
-	}
-
 	public String getTicket_json() {
 		return ticket_json;
 	}
@@ -494,19 +447,19 @@ public class ProductAction extends BaseAction {
 		this.air_tickets = air_tickets;
 	}
 
-	public ProductOrderDto getOrder_option() {
+	public ProductNeedDto getOrder_option() {
 		return order_option;
 	}
 
-	public void setOrder_option(ProductOrderDto order_option) {
+	public void setOrder_option(ProductNeedDto order_option) {
 		this.order_option = order_option;
 	}
 
-	public List<ProductOrderDto> getProductOrders() {
+	public List<ProductNeedDto> getProductOrders() {
 		return productOrders;
 	}
 
-	public void setProductOrders(List<ProductOrderDto> productOrders) {
+	public void setProductOrders(List<ProductNeedDto> productOrders) {
 		this.productOrders = productOrders;
 	}
 

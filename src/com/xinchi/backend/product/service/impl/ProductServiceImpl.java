@@ -19,6 +19,7 @@ import com.xinchi.backend.product.dao.ProductDelayDAO;
 import com.xinchi.backend.product.dao.ProductLocalDAO;
 import com.xinchi.backend.product.dao.ProductSupplierDAO;
 import com.xinchi.backend.product.dao.ProductSupplierInfoDAO;
+import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.dao.FlightDAO;
 import com.xinchi.backend.ticket.dao.FlightInfoDAO;
@@ -28,6 +29,7 @@ import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.FlightInfoBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
@@ -193,9 +195,9 @@ public class ProductServiceImpl implements ProductService {
 		// 如果是上架产品
 		if (sale_flg.equals("Y")) {
 			for (ProductBean product : products) {
-				if (product.getAir_ticket_charge().equals("NO")) {
-					return "请绑定产品：" + product.getProduct_number() + "机票信息";
-				}
+				// if (product.getAir_ticket_charge().equals("NO")) {
+				// return "请绑定产品：" + product.getProduct_number() + "机票信息";
+				// }
 				// 如果没有产品编号（即新建产品，创建你妈的产品编号）
 				if (SimpletinyString.isEmpty(product.getProduct_number())) {
 					String product_number = numberService.generateProductNumber();
@@ -829,6 +831,41 @@ public class ProductServiceImpl implements ProductService {
 				bnsoDao.update(bnso);
 			}
 		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ProductAirTicketService productAirTicketService;
+
+	@Override
+	public String saveAirTicket(String product_pk, String ticket_json) {
+		// 删除已有的机票信息
+		productAirTicketService.deleteByProductPk(product_pk);
+		JSONArray arr = JSONArray.fromObject(ticket_json);
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject obj = arr.getJSONObject(i);
+
+			int index = obj.getInt("index");
+			int start_day = obj.getInt("start_day");
+			String start_city = obj.getString("start_city");
+			String end_city = obj.getString("end_city");
+
+			ProductAirTicketBean ticket = new ProductAirTicketBean();
+
+			ticket.setProduct_pk(product_pk);
+			ticket.setTicket_index(index);
+			ticket.setStart_day(start_day);
+			ticket.setStart_city(start_city);
+			ticket.setEnd_city(end_city);
+			productAirTicketService.insert(ticket);
+
+		}
+
+		ProductBean product = new ProductBean();
+		product.setPk(product_pk);
+		product.setAir_ticket_upkeep_flg("Y");
+		dao.update(product);
 
 		return SUCCESS;
 	}

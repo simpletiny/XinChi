@@ -75,12 +75,12 @@ var OrderContext = function() {
 		$("#txt-client-employee-name").blur();
 		clientEmployeeLayer = $.layer({
 			type : 1,
-			title : [ '选择客户操作', '' ],
+			title : ['选择客户操作', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#client-pick'
@@ -221,12 +221,12 @@ var OrderContext = function() {
 	self.batName = function() {
 		passengerBatLayer = $.layer({
 			type : 1,
-			title : [ '批量导入名单', '' ],
+			title : ['批量导入名单', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '300px' ],
-			offset : [ '', '' ],
+			area : ['600px', '300px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#bat-passenger'
@@ -359,10 +359,10 @@ function autoPrice() {
 		sumMoney += price;
 	}
 	sumMoney += otherCost;
-	if (sumMoney != 0) {
-		$("#txt-auto-sum-money").text(sumMoney);
-		$("#auto-sum-money").val(sumMoney);
-	}
+
+	$("#txt-auto-sum-money").text(sumMoney);
+	$("#auto-sum-money").val(sumMoney);
+
 }
 
 function autoCaculate() {
@@ -536,7 +536,7 @@ var removeName = function(btn) {
 		var td_radio = $(target).find("[name='team_chairman']");
 		$(target).remove();
 		refreshNameIndex();
-		
+
 		if ($(td_radio).is(":checked")) {
 			var next_chair = $("input[name='team_chairman']:eq(0)");
 			$(next_chair).prop("checked", true);

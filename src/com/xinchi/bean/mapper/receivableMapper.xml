@@ -25,7 +25,10 @@
 		<result column="financial_body_pk" property="financial_body_pk" jdbcType="VARCHAR" />
 		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
 	</resultMap>
-
+	<resultMap id="KeyMap" type="com.xinchi.bean.KeyValueDto">
+		<result column="key_key" property="key_key" jdbcType="VARCHAR" />
+		<result column="value_value" property="value_value" jdbcType="VARCHAR" />
+	</resultMap>
 	<sql id="Base_Column_List">
 
 		team_number,
@@ -55,10 +58,12 @@
 		from receivable
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectBalanceByClientEmployeePk" resultType="java.math.BigDecimal" parameterType="java.lang.String">
-		select SUM(IF(final_flg='N',budget_balance,final_balance)) from receivable
-		where client_employee_pk = #{client_employee_pk,jdbcType=CHAR}
+		select
+		SUM(IF(final_flg='N',budget_balance,final_balance)) from receivable
+		where client_employee_pk =
+		#{client_employee_pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectReceivableByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -98,7 +103,8 @@
 	</delete>
 	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
 		delete from receivable
-		where team_number = #{team_number,jdbcType=CHAR}
+		where team_number =
+		#{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ReceivableBean">
@@ -357,7 +363,8 @@
 		financial_body_name
 		from receivable A
 		LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
-		LEFT JOIN user_base C ON A.sales = C.user_number
+		LEFT JOIN user_base C ON
+		A.sales = C.user_number
 		LEFT JOIN client D ON B.financial_body_pk = D.pk
 		<where>
 			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
@@ -397,5 +404,50 @@
 			ORDER BY A.departure_date ASC
 		</if>
 
+	</select>
+	<select id="selectSumReceivable" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(IF(final_flg = 'Y',
+		final_balance,
+		budget_balance))
+		FROM
+		receivable;
+	</select>
+	<select id="selectReceivableWithClient" resultMap="KeyMap">
+		SELECT
+		SUM(IF(A.final_flg = 'Y',
+		A.final_balance,
+		A.budget_balance)) AS value_value,
+		C.client_area AS key_key
+		FROM
+		receivable A
+		LEFT JOIN
+		client_employee B ON
+		A.client_employee_pk = B.pk
+		LEFT JOIN
+		client C ON B.financial_body_pk = C.pk
+		GROUP BY C.client_area
+		HAVING value_value > 0
+		and key_key is not null
+		ORDER BY
+		value_value DESC;
+	</select>
+	<select id="selectReceivableWithSales" resultMap="KeyMap">
+		SELECT
+		SUM(IF(A.final_flg = 'Y',
+		A.final_balance,
+		A.budget_balance)) AS value_value,
+		D.user_name AS key_key
+		FROM
+		receivable A
+		LEFT JOIN
+		client_employee B ON A.client_employee_pk = B.pk
+		LEFT JOIN
+		client C ON B.financial_body_pk = C.pk
+		LEFT JOIN
+		user_base D ON A.sales = D.user_number
+		GROUP BY A.sales
+		HAVING value_value > 0 AND key_key IS NOT NULL
+		ORDER BY value_value DESC;
 	</select>
 </mapper>

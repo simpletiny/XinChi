@@ -45,4 +45,27 @@ public class AirTicketNeedDAOImpl extends SqlSessionDaoSupport implements AirTic
 				team_number);
 	}
 
+	@Override
+	public List<OrderAirInfoBean> selectOrderAirInfoByProductOrderNumber(String order_number) {
+		return daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.AirTicketNeedMapper.selectOrderAirInfoByProductOrderNumber", order_number);
+	}
+
+	@Override
+	public String insert(AirTicketNeedBean atn) {
+		return daoUtil.insertBO("com.xinchi.bean.mapper.AirTicketNeedMapper.insert", atn);
+	}
+
+	@Override
+	public AirTicketNeedBean selectByPk(String pk) {
+		return (AirTicketNeedBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketNeedMapper.selectByPrimaryKey",
+				pk);
+	}
+
+	@Override
+	public void update(AirTicketNeedBean atn) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.AirTicketNeedMapper.updateByPrimaryKey", atn);
+
+	}
+
 }

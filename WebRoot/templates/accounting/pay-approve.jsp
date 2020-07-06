@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -36,7 +35,8 @@
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input name="option.statuses" type="checkbox" data-bind="value:$data, checked: $root.chosenStatus,click:function(){$root.refresh();return true;}" /><label
+								<em class="small-box"> <input name="option.statuses" type="checkbox"
+									data-bind="value:$data, checked: $root.chosenStatus,click:function(){$root.refresh();return true;}" /><label
 									data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
@@ -53,15 +53,21 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">待支付总额</label>
-							<div class="col-md-2">
-								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
+							<label class="col-md-1 control-label">总余额</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sumCardBalance()"></p>
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">总余额</label>
-							<div class="col-md-2">
-								<p class="ip-default rmb" data-bind="text:sumCardBalance()"></p>
+							<label class="col-md-1 control-label">待支付</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sum_waiting_for_paid()"></p>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">待审批</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
 							</div>
 						</div>
 					</div>
@@ -84,7 +90,8 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
@@ -105,8 +112,8 @@
 								<td data-bind="text: $data.apply_user"></td>
 
 								<!-- ko if:$data.status=='I' -->
-								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.agree($data)}}">同意</a> <a href="javascript:void(0)" data-bind="event:{click:function(){$root.reject($data)}}">驳回</a>
-								</td>
+								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.agree($data)}}">同意</a> <a
+									href="javascript:void(0)" data-bind="event:{click:function(){$root.reject($data)}}">驳回</a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='Y' -->
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
@@ -244,7 +251,8 @@
 	</div>
 
 	<script>
-		$(".manager").addClass("current").children("ol").css("display", "block");
+		$(".manager").addClass("current").children("ol")
+				.css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

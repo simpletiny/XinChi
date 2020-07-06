@@ -33,5 +33,30 @@
 		<action name="payAirTicket" class="airTicketPayableAction" method="payAirTicket">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 查询应付款涉及到的名单-->
+		<action name="searchPayablePassengersByPayablePk" class="airTicketPayableAction" method="searchPayablePassengersByPayablePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 查询应付款涉及到的机票信息 -->
+		<action name="searchTicketInfoByPayablePk" class="airTicketPayableAction" method="searchTicketInfoByPayablePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 查询机票往来详表的支付详情-->
+		<action name="searchPaidDetailByRelatedPk" class="airTicketPaidDetailAction" method="searchPaidDetailByRelatedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 打回票务支出 -->
+		<action name="rollBackTicketPayApply" class="airTicketPaidDetailAction" method="rollBackTicketPayApply">
+			<result name="success" type="str">resultStr</result>
+		</action>
 	</package>
 </struts>

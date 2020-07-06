@@ -13,4 +13,8 @@ public interface OrderNameListService extends BaseService {
 
 	public List<SaleOrderNameListBean> selectByOrderPk(String order_pk);
 
+	public List<SaleOrderNameListBean> selectByAirNeedPk(String need_pk);
+
+	public List<SaleOrderNameListBean> selectByTeamNumbers(List<String> t_ns);
+
 }

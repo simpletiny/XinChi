@@ -1,3 +1,4 @@
+var count = 1;
 var AgencyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -52,9 +53,12 @@ var AgencyContext = function() {
 		fail_msg(reason.responseText);
 	});
 
-	self.count = 1;
 	self.add = function() {
-		self.count += 1;
+		if (count >= 10) {
+			fail_msg("最多只能有10个支付信息！");
+			return;
+		}
+		count += 1;
 		$("#div_add").before($("#div_mod").html());
 		if ($('.datetime-picker').datetimepicker != null) {
 			$('.datetime-picker').datetimepicker({
@@ -65,17 +69,20 @@ var AgencyContext = function() {
 				lang : 'zh'
 			});
 		}
-		var prev = $("#div_add").prev();
-		$(prev).find("[name='account']").attr("name", "account" + self.count);
-		$(prev).find("[name='time']").attr("name", "time" + self.count);
-		$(prev).find("[name='receiver']").attr("name", "receiver" + self.count);
-		$(prev).find("[name='money']").attr("name", "money" + self.count);
-		$(prev).find("[name='file']").attr("name", "file" + self.count);
-		$(prev).find("[name='voucherFile']").attr("name", "voucherFile" + self.count);
+		// var prev = $("#div_add").prev();
+		// $(prev).find("[name='account']").attr("name", "account" + count);
+		// $(prev).find("[name='time']").attr("name", "time" + count);
+		// $(prev).find("[name='receiver']").attr("name", "receiver" + count);
+		// $(prev).find("[name='money']").attr("name", "money" + count);
+		// $(prev).find("[name='file']").attr("name", "file" + count);
+		// $(prev).find("[name='voucherFile']")
+		// .attr("name", "voucherFile" + count);
 
 		$(':file').change(function() {
 			changeFile(this);
 		});
+
+		console.log(count);
 	};
 	self.finish = function() {
 
@@ -89,7 +96,7 @@ var AgencyContext = function() {
 
 		var payableJson = '[';
 		var allPayables = $("#div-payable").children();
-		for ( var i = 0; i < allPayables.length; i++) {
+		for (var i = 0; i < allPayables.length; i++) {
 			var current = allPayables[i];
 			var payable_pk = $(current).find("[st^='payable-pk']").val();
 			var this_paid = $(current).find("[st^='this-paid']").val();
@@ -99,7 +106,8 @@ var AgencyContext = function() {
 				retrun;
 			}
 
-			payableJson += '{"payable_pk":"' + payable_pk + '","this_paid":"' + this_paid + '"';
+			payableJson += '{"payable_pk":"' + payable_pk + '","this_paid":"'
+					+ this_paid + '"';
 
 			if (i == allPayables.length - 1) {
 				payableJson += '}';
@@ -108,18 +116,20 @@ var AgencyContext = function() {
 			}
 		}
 		payableJson += ']';
-
+		startLoadingIndicator("保存中");
 		var paidJson = '[';
 		var allAccount = $("form").find("select[name^='account']");
 
-		for ( var i = 0; i < allAccount.length; i++) {
+		for (var i = 0; i < allAccount.length; i++) {
 			var current = $(allAccount[i]).parent().parent().parent().parent();
 			var account = $(allAccount[i]).val();
 			var time = $(current).find("[name^='time']").val();
 			var receiver = $(current).find("[name^='receiver']").val();
 			var money = $(current).find("[name^='money']").val();
 			var voucherFile = $(current).find("[name^='voucherFile']").val();
-			paidJson += '{"account":+"' + account + '","time":"' + time + '","receiver":"' + receiver + '","money":"' + money + '","voucherFile":"' + voucherFile + '"';
+			paidJson += '{"account":+"' + account + '","time":"' + time
+					+ '","receiver":"' + receiver + '","money":"' + money
+					+ '","voucherFile":"' + voucherFile + '"';
 
 			if (i == allAccount.length - 1) {
 				paidJson += '}';
@@ -130,33 +140,35 @@ var AgencyContext = function() {
 
 		paidJson += ']';
 
-		startLoadingSimpleIndicator("保存中");
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'payable/payAirTicket',
-			data : "paidJson=" + paidJson + "&payableJson=" + payableJson + "&allot_money=" + sumMoney
-		}).success(function(str) {
-			if (str == "success") {
-				window.location.href = self.apiurl + "templates/ticket/payable.jsp";
-			} else if (str == "time") {
-				fail_msg("同一账户在同一时间下已存在支出！");
-				endLoadingIndicator();
-			}
-		});
+		$.ajax(
+				{
+					type : "POST",
+					url : self.apiurl + 'payable/payAirTicket',
+					data : "paidJson=" + paidJson + "&payableJson="
+							+ payableJson + "&allot_money=" + sumMoney
+				}).success(
+				function(str) {
+					if (str == "success") {
+						window.location.href = self.apiurl
+								+ "templates/ticket/payable.jsp";
+					} else if (str == "time") {
+						fail_msg("同一账户在同一时间下已存在支出！");
+						endLoadingIndicator();
+					}
+				});
 	};
 
 	self.caculateSum = function() {
 		var allMoney = $("form").find("[name^='money']");
 		var sum = 0;
-		for ( var i = 0; i < allMoney.length; i++) {
+		for (var i = 0; i < allMoney.length; i++) {
 			sum += ($(allMoney[i]).val() - 0);
 		}
 		if (sum == sumMoney) {
 			return true;
 		} else {
 			return false;
-		}
-		;
+		};
 	};
 };
 
@@ -203,7 +215,8 @@ function changeFile(thisx) {
 	};
 	xhr.onload = function() {
 		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
+			var fileName = this.getResponseHeader("Content-Disposition").split(
+					";")[1].split("=")[1];
 			var blob = this.response;
 			var deleteButton = $("<div class='delete'>删除</div>");
 
@@ -223,11 +236,14 @@ function changeFile(thisx) {
 					img.width = initWidth;
 				}
 
-				$(img).mouseenter(function() {
-					deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
-					deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
-					deleteButton.show();
-				});
+				$(img).mouseenter(
+						function() {
+							deleteButton.css("top", $(img).offset().top
+									+ img.height / 2 - 25);
+							deleteButton.css("left", $(img).offset().left
+									+ img.width / 2 - 50);
+							deleteButton.show();
+						});
 				$(img).mouseout(function() {
 					deleteButton.hide();
 				});
@@ -266,6 +282,8 @@ function deleteImage(deleteButton, inputFile, img, fileNameInput, fileName) {
 }
 function remove(div) {
 	$(div).parent().remove();
+	count -= 1;
+	console.log(count);
 }
 var sumMoney = 0;
 /**
@@ -274,10 +292,18 @@ var sumMoney = 0;
 function caculateSumMoney() {
 	sumMoney = 0;
 	var payables = $("#div-payable").children();
-	for ( var i = 0; i < payables.length; i++) {
+	for (var i = 0; i < payables.length; i++) {
 		var current = payables[i];
 		sumMoney += $(current).find("[st^='this-paid']").val() - 0;
 	}
 
 	$("#sum-money").text(sumMoney);
+}
+
+function sleep(d) {
+	var t = Date.now();
+	console.log(d);
+	while (Date.now() - t <= d) {
+		console.log("dew");
+	};
 }

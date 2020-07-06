@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.common.DaoUtil;
 
 @Repository
@@ -76,6 +77,16 @@ public class CardDAOImpl extends SqlSessionDaoSupport implements CardDAO {
 
 	@Override
 	public BigDecimal selectSumBalance(List<String> accounts) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.CardMapper.selectSumBalance",accounts);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.CardMapper.selectSumBalance", accounts);
+	}
+
+	@Override
+	public BigDecimal selectSumBalance() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.CardMapper.selectUsedBalance");
+	}
+
+	@Override
+	public KeyValueDto selectDetailBalance() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.CardMapper.selectDetailBalance");
 	}
 }

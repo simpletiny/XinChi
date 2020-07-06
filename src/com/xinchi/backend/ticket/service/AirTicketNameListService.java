@@ -51,4 +51,8 @@ public interface AirTicketNameListService extends BaseService {
 	public List<AirTicketNameListBean> selectByPks(String[] pks);
 
 	public List<PassengerAllotDto> selectPassengerAllotByPassengerPks(List<String> pks);
+
+	public List<AirTicketNameListBean> selectByOrderNumber(String order_number);
+
+	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page);
 }

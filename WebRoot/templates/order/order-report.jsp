@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -17,13 +16,20 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<!-- tbc for to be confirmed -->
 			<h2>单团核算单</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
+					<div class="form-group">
+						<div style="float: right">
+							<div>
+								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">添加支出</button>
+								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">添加收入</button>
+							</div>
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">团号</label>
@@ -38,14 +44,17 @@
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked name="radio-date" />出团日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked
+								name="radio-date" />出团日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
+									name="option.departure_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
+									name="option.departure_date_to" />
 							</div>
 						</div>
 					</div>
@@ -54,25 +63,28 @@
 
 						<div class="span6" style="text-align: center">
 							<div class="col-md-3">
-								<input value="Y" type="checkbox" name="option.order_types" />预算 <input value="F" type="checkbox" name="option.order_types" />决算
 							</div>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">销售</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
+								<select class="form-control" style="height: 34px" id="select-sales"
+									data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
 									name="option.sale_number"></select>
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" name="radio-date" />确认日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)"
+								name="radio-date" />确认日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from" name="option.confirm_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from"
+									name="option.confirm_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="to" name="option.confirm_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="to"
+									name="option.confirm_date_to" />
 							</div>
 						</div>
 						<div style="float: right">
@@ -86,6 +98,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
+								<th></th>
 								<th>团号</th>
 								<th>预/决</th>
 								<th>出团日期</th>
@@ -93,9 +106,9 @@
 								<th>人数</th>
 								<th>总团款</th>
 								<th>机票</th>
-								<!-- <th>火车票</th> -->
-								<th>产品成本</th>
-								<th>其他费用</th>
+								<th>地接成本</th>
+								<th>其他支出</th>
+								<th>其他收入</th>
 								<th>FLY</th>
 								<th>毛利润</th>
 								<th>人均毛利</th>
@@ -105,16 +118,22 @@
 						</thead>
 						<tbody data-bind="foreach: reports">
 							<tr>
+								<td><input type="checkbox" /></td>
 								<td data-bind="text: $data.team_number"></td>
+								<!-- ko if:$data.order_type=="Y" -->
 								<td data-bind="text: $root.orderTypeMapping[$data.order_type]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.order_type=="F" -->
+								<td style="color:red" data-bind="text: $root.orderTypeMapping[$data.order_type]"></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.receivable" class="rmb"></td>
 								<td data-bind="text: $data.air_ticket_cost" class="rmb"></td>
-								<!-- <td data-bind="text: $data.train_ticket_cost" class="rmb"></td> -->
 								<td data-bind="text: $data.product_cost" class="rmb"></td>
 								<td data-bind="text: $data.other_cost" class="rmb"></td>
+								<td data-bind="text: $data.other_receive" class="rmb"></td>
 								<td data-bind="text: $data.fy" class="rmb"></td>
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
 								<td data-bind="text: $data.per_profit" class="rmb"></td>
@@ -140,7 +159,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

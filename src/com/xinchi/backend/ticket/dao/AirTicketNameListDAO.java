@@ -52,4 +52,12 @@ public interface AirTicketNameListDAO {
 	public List<PassengerAllotDto> selectPassengerAllotByPassengerPk(String passenger_pk);
 
 	public List<PassengerAllotDto> selectPassengerAllotByOrderPk(String order_pk);
+
+	public List<AirTicketNameListBean> selectByPayablePk(String payable_pk);
+
+	public List<AirTicketNameListBean> selectByTeamNumber(String team_number);
+
+	public List<AirTicketNameListBean> selectByOrderNumber(String order_number);
+
+	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page);
 }

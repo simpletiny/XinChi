@@ -1,5 +1,7 @@
 package com.xinchi.backend.accounting.service.impl;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +12,23 @@ import com.xinchi.backend.accounting.dao.AccPaidDAO;
 import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
+import com.xinchi.backend.accounting.service.ReimbursementService;
+import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.dao.PaidDAO;
+import com.xinchi.backend.payable.service.PaidService;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PayApprovalBean;
+import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -123,6 +132,89 @@ public class AccPaidServiceImpl implements AccPaidService {
 
 		dao.deleteByPk(wfp_pk);
 		return SUCCESS;
+	}
+
+	@Autowired
+	private PaymentDetailService pds;
+
+	@Autowired
+	private PaidService paidService;
+
+	@Autowired
+	private ReceivedService receivedService;
+
+	@Autowired
+	private ReimbursementService reimService;
+
+	public String rollBackPay(String voucher_number) {
+		// 更新待支付状态
+		WaitingForPaidBean wfp = dao.selectByPayNumber(voucher_number);
+
+		if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+			return "不允许打回票务支出！";
+		}
+
+		// 删除银行流水支出单,删除上传的凭证
+		List<PaymentDetailBean> details = pds.selectByVoucherNumber(voucher_number);
+		for (PaymentDetailBean detail : details) {
+			String voucher_file = detail.getVoucher_file_name();
+
+			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+			File destfile = new File(
+					fileFolder + File.separator + detail.getAccount_pk() + File.separator + voucher_file);
+			destfile.delete();
+
+			pds.deleteDetail(detail.getPk());
+
+		}
+
+		wfp.setStatus(ResourcesConstants.PAY_STATUS_ING);
+		wfp.setPay_user("");
+		dao.update(wfp);
+
+		String related_pk = wfp.getRelated_pk();
+
+		// 更新申请状态
+		if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
+			List<SupplierPaidDetailBean> supplierDetails = paidService.selectByRelatedPk(related_pk);
+			for (SupplierPaidDetailBean detail : supplierDetails) {
+				detail.setTime("");
+				detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
+				paidService.update(detail);
+			}
+		}
+		// else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+		// List<AirTicketPaidDetailBean> paids =
+		// airTicketPaidDetailService.selectByRelatedPk(related_pk);
+		// for (AirTicketPaidDetailBean paid : paids) {
+		// paid.setStatus(ResourcesConstants.PAID_STATUS_YES);
+		// paid.setTime(DateUtil.getDateStr(""));
+		// airTicketPaidDetailService.update(paid);
+		// }
+		// }
+		else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			receivedService.update(detail);
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			receivedService.update(detail);
+		} else {
+			ReimbursementBean reim = reimService.selectByPk(related_pk);
+			reim.setPay_user("");
+			reim.setPay_time("");
+			reim.setStatus(ResourcesConstants.PAID_STATUS_YES);
+			reimService.update(reim);
+		}
+		return SUCCESS;
+	}
+
+	@Override
+	public BigDecimal selectSumWFP() {
+		return dao.selectSumWFP();
 	}
 
 }

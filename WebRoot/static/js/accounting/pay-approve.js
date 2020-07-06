@@ -33,7 +33,7 @@ var PaidContext = function() {
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
-	self.allStatus = [ 'I', 'N', 'Y' ];
+	self.allStatus = ['I', 'N', 'Y'];
 	self.chosenStatus.push('I');
 
 	self.statusMapping = {
@@ -63,7 +63,7 @@ var PaidContext = function() {
 
 	self.sumBalance = ko.observable();
 	self.sumCardBalance = ko.observable();
-
+	self.sum_waiting_for_paid = ko.observable();
 	self.refresh = function() {
 		var totalPeople = 0;
 		var totalReceivable = 0;
@@ -76,11 +76,15 @@ var PaidContext = function() {
 				+ self.perPage;
 
 		$
-				.getJSON(self.apiurl + 'accounting/searchPaidApplyByPage',
-						param, function(data) {
+				.getJSON(
+						self.apiurl + 'accounting/searchPaidApplyByPage',
+						param,
+						function(data) {
 							self.paids(data.payApprovals);
 							self.sumBalance(data.sum_balance);
 							self.sumCardBalance(data.sum_card_balance);
+							self
+									.sum_waiting_for_paid(data.sum_waiting_for_paid);
 							// 计算合计
 							$(self.paids()).each(function(idx, data) {
 								totalPeople += data.people_count;
@@ -113,12 +117,12 @@ var PaidContext = function() {
 			data = "item=" + paid.item + "&pk=" + paid.pk;
 		}
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认同意此申请吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingSimpleIndicator("提交中");
@@ -146,12 +150,12 @@ var PaidContext = function() {
 			data = "item=" + paid.item + "&pk=" + paid.pk;
 		}
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认拒绝此申请吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingSimpleIndicator("提交中");
@@ -195,12 +199,12 @@ var PaidContext = function() {
 						endLoadingIndicator();
 						viewCommentLayer = $.layer({
 							type : 1,
-							title : [ '摘要详情', '' ],
+							title : ['摘要详情', ''],
 							maxmin : false,
-							closeBtn : [ 1, true ],
+							closeBtn : [1, true],
 							shadeClose : false,
-							area : [ '700px', 'auto' ],
-							offset : [ '150px', '' ],
+							area : ['700px', 'auto'],
+							offset : ['150px', ''],
 							scrollbar : true,
 							page : {
 								dom : '#comment'
@@ -232,12 +236,12 @@ var PaidContext = function() {
 
 					viewDetailLayer = $.layer({
 						type : 1,
-						title : [ '合账详情', '' ],
+						title : ['合账详情', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '800px', 'auto' ],
-						offset : [ '150px', '' ],
+						area : ['800px', 'auto'],
+						offset : ['150px', ''],
 						scrollbar : true,
 						page : {
 							dom : '#sum_detail'

@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class ProductOrderAirInfoBean extends SupperBO implements Serializable {
@@ -28,6 +29,8 @@ public class ProductOrderAirInfoBean extends SupperBO implements Serializable {
 	private String create_user;
 
 	private String update_user;
+
+	private String product_order_number;
 
 	public String getPk() {
 		return pk;
@@ -115,6 +118,14 @@ public class ProductOrderAirInfoBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
 	}
 
 }

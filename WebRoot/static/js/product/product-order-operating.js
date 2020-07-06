@@ -121,7 +121,7 @@ var OrderContext = function() {
 		}
 	};
 
-	// 删除订单操作
+	// 打回操作中订单
 	self.deleteOperation = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
@@ -145,7 +145,7 @@ var OrderContext = function() {
 					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
-						startLoadingSimpleIndicator("删除中...");
+						startLoadingSimpleIndicator("打回中...");
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'product/deleteOperation',
@@ -281,10 +281,11 @@ var OrderContext = function() {
 		self.passengers.removeAll();
 
 		var team_number = data.team_number;
-		var url = "order/selectSaleOrderNameListByTeamNumber";
+		console.log(team_number)
+		var url = "product/searchSaleOrderNameListByProductOrderNumber";
 
 		$.getJSON(self.apiurl + url, {
-			team_number : team_number
+			order_number : team_number
 		}, function(data) {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({

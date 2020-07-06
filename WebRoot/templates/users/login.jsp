@@ -20,7 +20,7 @@
 	<s:hidden id="login_result" value="%{#request.login_result}"></s:hidden>
 	<!-- head start -->
 	<div class="main-header">
-		<div class="header-min-width" ><p style="padding-top: 20px;padding-left: 20px;color:white">黑ICP备19007355号</p></div>
+		<div class="header-min-width" ><a style="padding-top: 20px;padding-left: 20px;color:white" href="http://www.beian.miit.gov.cn/">黑ICP备19007355号</a></div>
 	</div>
 	<!-- head end -->
 	<input type="hidden" id="hidden_apiurl" value="<%=basePath%>" />

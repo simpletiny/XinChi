@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.data.service.DataService;
+import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -47,6 +48,18 @@ public class DataAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private DataFinanceSummaryDto dfsd;
+
+	/**
+	 * 获取财务汇总数据
+	 * 
+	 * @return
+	 */
+	public String fetchFinanceSummary() throws Exception {
+		dfsd = service.fetchFinanceSummary();
+		return SUCCESS;
+	}
+
 	public DataOrderCountDto getOrder_count() {
 		return order_count;
 	}
@@ -69,5 +82,13 @@ public class DataAction extends BaseAction {
 
 	public void setxAxis(List<String> xAxis) {
 		this.xAxis = xAxis;
+	}
+
+	public DataFinanceSummaryDto getDfsd() {
+		return dfsd;
+	}
+
+	public void setDfsd(DataFinanceSummaryDto dfsd) {
+		this.dfsd = dfsd;
 	}
 }

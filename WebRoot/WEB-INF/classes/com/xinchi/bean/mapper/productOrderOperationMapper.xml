@@ -27,6 +27,8 @@
 		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 		<result column="supplier_pk" property="supplier_pk" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="single_flg" property="single_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -52,7 +54,8 @@
 		picker,
 		off_day,
 		create_time,
-		update_time
+		update_time,
+		passenger_captain
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -139,6 +142,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="passenger_captain != null">
+				passenger_captain,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -203,6 +209,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="passenger_captain != null">
+				#{passenger_captain,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -274,6 +283,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="passenger_captain != null">
+				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -309,11 +321,12 @@
 		A.off_day,
 		C.supplier_short_name AS supplier_name,
 		C.pk AS supplier_pk,
-	 	IF(D.passenger_captain='',substring_index(D.name_list,':',1),D.passenger_captain) AS passenger
+	 	A.passenger_captain,
+	 	if(D.single_flg is null,'Y',D.single_flg) AS single_flg
 		from product_order_operation A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
-		LEFT JOIN budget_order_view D ON A.team_number = D.team_number
+		LEFT JOIN product_order D ON A.team_number=D.order_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
@@ -337,7 +350,7 @@
 				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY A.team_number,A.operate_index,A.pick_date DESC
+		ORDER BY A.pick_date DESC,A.team_number,A.operate_index 
 	</select>
 
 
@@ -365,7 +378,8 @@
 		A.status,
 		A.picker,
 		A.land_day,
-		A.off_day
+		A.off_day,
+		A.passenger_captain
 		from
 		product_order_operation A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		where A.team_number =

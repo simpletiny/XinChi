@@ -28,15 +28,19 @@ public interface OrderService extends BaseService {
 	public String cancelOrder(OrderDto order);
 
 	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page);
-	
+
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
 
 	public List<OrderDto> selectByParam(OrderDto order);
 
+	public List<OrderDto> selectWithProductByParam(OrderDto order);
+
 	public List<OrderDto> selectConfirmingOrders();
 
 	public String confirmNameList(String team_number);
+
+	public List<OrderDto> selectByTeamNumbers(List<String> asList);
 
 }

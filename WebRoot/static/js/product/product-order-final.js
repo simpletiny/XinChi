@@ -19,7 +19,10 @@ var OrderContext = function() {
 		'Y' : '已操作',
 		'F' : '已决算',
 	};
-
+	self.singleMapping = {
+		'N' : "合",
+		'Y' : "单"
+	};
 	// 获取用户信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -123,10 +126,11 @@ var OrderContext = function() {
 		self.passengers.removeAll();
 
 		var team_number = data.team_number;
-		var url = "order/selectSaleOrderNameListByTeamNumber";
+		console.log(team_number)
+		var url = "product/searchSaleOrderNameListByProductOrderNumber";
 
 		$.getJSON(self.apiurl + url, {
-			team_number : team_number
+			order_number : team_number
 		}, function(data) {
 			self.passengers(data.passengers);
 			passengerCheckLayer = $.layer({
@@ -140,6 +144,68 @@ var OrderContext = function() {
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+
+	// 查看订单详情
+	self.sale_orders = ko.observableArray([]);
+	self.checkOrders = function(order_number) {
+		if (order_number.startsWith("N")) {
+			success_msg("老数据所见即订单详情！")
+			return;
+		}
+		startLoadingSimpleIndicator("加载中...");
+
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/searchSaleOrderByProductOrderNumber',
+			data : "order_number=" + order_number
+		}).success(function(data) {
+			self.sale_orders(data.sale_orders);
+			orderCheckLayer = $.layer({
+				type : 1,
+				title : ['合单信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-check-order'
+				},
+				end : function() {
+				}
+			});
+
+			endLoadingIndicator();
+		});
+	}
+	// 订单详情查看乘客信息
+	self.innerCheckPassengers = function(data, event) {
+		self.passengers.removeAll();
+		var team_number = data.team_number;
+		var url = "order/selectSaleOrderNameListByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.passengers(data.passengers);
+			innerPassengerCheckLayer = $.layer({
+				type : 1,
+				title : ['游客信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['600px', '600px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check-inner'
 				},
 				end : function() {
 				}

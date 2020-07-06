@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.SeasonTicketInfoMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.SeasonTicketInfoBean">
+		<result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
+		<result column="index_leg" property="index_leg" jdbcType="VARCHAR" />
+		<result column="start_day" property="start_day" jdbcType="INTEGER" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="ticket_leg" property="ticket_leg" jdbcType="VARCHAR" />
+		<result column="start_time" property="start_time" jdbcType="VARCHAR" />
+		<result column="end_time" property="end_time" jdbcType="VARCHAR" />
+		<result column="add_day_flg" property="add_day_flg" jdbcType="CHAR" />
+		<result column="start_place" property="start_place" jdbcType="VARCHAR" />
+		<result column="end_place" property="end_place" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ticket_index,
+		index_leg,
+		start_day,
+		ticket_number,
+		ticket_leg,
+		start_time,
+		end_time,
+		add_day_flg,
+		start_place,
+		end_place,
+		base_pk,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from season_ticket_info
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from season_ticket_info
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.SeasonTicketInfoBean">
+
+		insert into season_ticket_info
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ticket_index != null">
+				ticket_index,
+			</if>
+			<if test="index_leg != null">
+				index_leg,
+			</if>
+			<if test="start_day != null">
+				start_day,
+			</if>
+			<if test="ticket_number != null">
+				ticket_number,
+			</if>
+			<if test="ticket_leg != null">
+				ticket_leg,
+			</if>
+			<if test="start_time != null">
+				start_time,
+			</if>
+			<if test="end_time != null">
+				end_time,
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg,
+			</if>
+			<if test="start_place != null">
+				start_place,
+			</if>
+			<if test="end_place != null">
+				end_place,
+			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ticket_index != null">
+				#{ticket_index,jdbcType=INTEGER},
+			</if>
+			<if test="index_leg != null">
+				#{index_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_day != null">
+				#{start_day,jdbcType=INTEGER},
+			</if>
+			<if test="ticket_number != null">
+				#{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_leg != null">
+				#{ticket_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_time != null">
+				#{start_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_time != null">
+				#{end_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				#{add_day_flg,jdbcType=CHAR},
+			</if>
+			<if test="start_place != null">
+				#{start_place,jdbcType=VARCHAR},
+			</if>
+			<if test="end_place != null">
+				#{end_place,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SeasonTicketInfoBean">
+		update season_ticket_info
+		<set>
+			<if test="ticket_index != null">
+				ticket_index = #{ticket_index,jdbcType=INTEGER},
+			</if>
+			<if test="index_leg != null">
+				index_leg = #{index_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_day != null">
+				start_day = #{start_day,jdbcType=INTEGER},
+			</if>
+			<if test="ticket_number != null">
+				ticket_number = #{ticket_number,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_leg != null">
+				ticket_leg = #{ticket_leg,jdbcType=VARCHAR},
+			</if>
+			<if test="start_time != null">
+				start_time = #{start_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_time != null">
+				end_time = #{end_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg = #{add_day_flg,jdbcType=CHAR},
+			</if>
+			<if test="start_place != null">
+				start_place = #{start_place,jdbcType=VARCHAR},
+			</if>
+			<if test="end_place != null">
+				end_place = #{end_place,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.SeasonTicketInfoBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from season_ticket_info
+	</select>
+</mapper>

@@ -5,7 +5,8 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 
-	String key = request.getParameter("key");
+	String product_pk = request.getParameter("product_pk");
+	String order_number = request.getParameter("order_number");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -61,6 +62,9 @@
 .hr-big {
 	border-top: 1px solid black !important;
 }
+.intdtext{
+	width:100px !important;
+}
 </style>
 </head>
 <body>
@@ -72,42 +76,40 @@
 					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
-		<input type="hidden" id="key" value="<%=key%>" />
+		<input type="hidden" id="product_pk" value="<%=product_pk%>" /> <input type="hidden" id="order_number"
+			value="<%=order_number%>" />
 
 		<div class="main-container">
 			<div class="main-box">
-
-				<div class="form-box info-form">
-
+			
+				<div class="form-box info-form" >
 					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">产品</label>
-							<div class="ip">
-								<p class="ip-default" data-bind="text: order().product_name"></p>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label class="l">团号</label>
-							<div class="ip">
-								<p class="ip-default" data-bind="text: order().team_number"></p>
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">销售</label>
-							<div class="ip">
-								<p class="ip-default" data-bind="text: order().create_user"></p>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label class="l">游客</label>
-							<div class="ip">
-								<p class="ip-default">
-									<a href="javascript:void(0)" style="color: blue"
-										data-bind="click:checkPassengers,text: order().passenger_captain"></a>
-								</p>
-							</div>
+						<div class="col-md-12">
+							<table style="width: 100%" class="table table-striped table-hover" id="table-order">
+								<thead>
+									<tr>
+										<th style="width: 8%">团号</th>
+										<th style="width: 8%">销售</th>
+										<th style="width: 5%">人数</th>
+										<th style="width: 10%">游客</th>
+										<!-- ko foreach:productSuppliers -->
+										<th  data-bind='text:"地接"+($index()+1)'></th> 
+										<!-- /ko -->
+									</tr>
+								</thead> 
+								<tbody data-bind="foreach:orders">
+									<tr>
+										<td data-bind="text:$data.team_number"></td>
+										<td data-bind="text:$data.create_user"></td>
+										<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
+										<td><a href="javascript:void(0)" style="color: blue"
+										data-bind="click:function(){$root.checkPassengers($data.team_number);},text: $data.passenger_captain"></a></td>
+										<!-- ko foreach:{data:$root.productSuppliers,as:'supplier'} -->
+										<td><input type="number" class="required intdtext" data-bind="value:supplier.adult_cost*$parent.adult_count+supplier.child_cost*($parent.special_count==null?0:$parent.special_count)" st="supplier-cost" /></td>
+										<!-- /ko --> 
+									</tr>  
+								</tbody> 
+							</table>
 						</div>
 					</div>
 				</div>
@@ -139,7 +141,9 @@
 							<div class="col-md-2 required">
 								<label class="l" style="width: 70px !important">结算价格</label>
 								<div class="ip" style="width: 50% !important">
-									<input type="number" class="ip- required" data-bind="value:$data.adult_cost*$root.order().adult_count+$data.child_cost*($root.order().special_count==null?0:$root.order().special_count)" st="supplier-cost" />
+									<input type="number" class="ip- required"
+										data-bind="value:$data.adult_cost*$root.adult_count()+$data.child_cost*$root.special_count()"
+										st="supplier-cost" />
 								</div>
 							</div>
 						</div>
@@ -214,10 +218,11 @@
 									<tr>
 										<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
 										<td class="r">接：</td>
-										<td><input checked="checked" data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-0" type="radio" value="0"
-											onclick="changeJieSongType(this)" />航段</td>
+										<td><input checked="checked" data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-0"
+											type="radio" value="0" onclick="changeJieSongType(this)" />航段</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-0" /></td>
-										<td><input data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input data-bind="attr:{name:'radio-jie-'+ $index()+'-0'}" st="radio-jie-1" type="radio" value="1"
+											onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
@@ -228,10 +233,11 @@
 									<tr>
 										<td><input type="button" value="+" onclick="addRow(this)" /></td>
 										<td class="r">送：</td>
-										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" checked="checked" st="radio-song-0" type="radio" value="0"
-											onclick="changeJieSongType(this)" />航段</td>
+										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" checked="checked" st="radio-song-0"
+											type="radio" value="0" onclick="changeJieSongType(this)" />航段</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-0" /></td>
-										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
+										<td><input data-bind="attr:{name:'radio-song-'+ $index()+'-0'}" st="radio-song-1" type="radio" value="1"
+											onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
@@ -288,8 +294,8 @@
 				</div>
 				<hr class="hr-big" />
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrderOperation">保存</a> <a type="submit" class="btn btn-green btn-r"
-						onclick="javascript:history.go(-1);return false;">放弃</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrderOperation">保存</a> <a type="submit"
+						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
 		</div>
@@ -343,7 +349,7 @@
 	<!-- 查看乘客信息 -->
 	<div id="passengers-check" style="display: none; width: 800px">
 		<div class="input-row clearfloat">
-			<div style="margin-top: 60px; height: 300px">
+			<div style="margin-top: 60px; height: 300px; overflow-y: auto">
 				<table style="width: 100%" class="table table-striped table-hover">
 					<thead>
 						<tr>
@@ -364,7 +370,7 @@
 		</div>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display",
+		$(".order-operate").addClass("current").children("ol").css("display",
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>

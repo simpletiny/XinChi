@@ -309,7 +309,7 @@ var dateDiff = function(date1,date2){
 	var leave3=leave2%(60*1000); 
 	var seconds=Math.round(leave3/1000);
 	
-	return (days==0?"":days+"天")+(hours==0?"":hours+"小时")+(minutes==0?"":minutes+"分钟 ")+(seconds==0?"":seconds+"秒 ");
+	return (days==0?"":days+"天")+(hours==0?"":hours+"小时")+(minutes==0?"":minutes+"分钟")+(seconds==0?"":seconds+"秒");
 };
 String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
@@ -398,7 +398,14 @@ String.prototype.format = function(){
         function(m,i){    
             return args[i];    
         });   
-} 
+}
+String.prototype.addDate = function(days){
+	var str = this.replace(/-/g, '/');
+	var date = new Date(str);
+	date.setDate(date.getDate() + days);
+	
+	return date.Format("yyyy-MM-dd");
+}
 
 document.onkeydown=function(event){
     var e = event || window.event || arguments.callee.caller.arguments[0];

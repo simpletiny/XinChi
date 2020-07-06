@@ -10,7 +10,7 @@
 		<result column="end_day" property="end_day" jdbcType="INTEGER" />
 		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
 		<result column="flight_number" property="flight_number" jdbcType="VARCHAR" />
-		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="product_order_number" property="product_order_number" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -27,7 +27,7 @@
 		end_day,
 		end_city,
 		flight_number,
-		base_pk,
+		product_order_number,
 		create_user,
 		update_user,
 		create_time,
@@ -79,8 +79,8 @@
 			<if test="flight_number != null">
 				flight_number,
 			</if>
-			<if test="base_pk != null">
-				base_pk,
+			<if test="product_order_number != null">
+				product_order_number,
 			</if>
 			<if test="create_user != null">
 				create_user,
@@ -120,8 +120,8 @@
 			<if test="flight_number != null">
 				#{flight_number,jdbcType=VARCHAR},
 			</if>
-			<if test="base_pk != null">
-				#{base_pk,jdbcType=CHAR},
+			<if test="product_order_number != null">
+				#{product_order_number,jdbcType=VARCHAR},
 			</if>
 			<if test="create_user != null">
 				#{create_user,jdbcType=VARCHAR},
@@ -166,8 +166,8 @@
 			<if test="flight_number != null">
 				flight_number = #{flight_number,jdbcType=VARCHAR},
 			</if>
-			<if test="base_pk != null">
-				base_pk = #{base_pk,jdbcType=CHAR},
+			<if test="product_order_number != null">
+				product_order_number = #{product_order_number,jdbcType=CHAR},
 			</if>
 			<if test="create_user != null">
 				create_user = #{create_user,jdbcType=VARCHAR},

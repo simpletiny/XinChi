@@ -1,5 +1,4 @@
 var airTicketLayer;
-var airTickeChecktLayer;
 // 组团确认模板上传layer
 var ctLayer;
 // 出团通知模板上传layer
@@ -22,21 +21,6 @@ var ProductContext = function() {
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
 		self.users(data.users);
 	});
-	self.chargeMapping = {
-		'PRODUCT' : '产品包票',
-		'SALE' : '销售包票',
-		'NONE' : '无机票'
-	};
-	self.status = ['N', 'Y', 'D'];
-	self.saleMapping = {
-		'N' : "架下",
-		'Y' : "架上",
-		'D' : "废弃"
-	};
-	self.chosenStatuses = ko.observableArray([]);
-	self.chosenStatuses.push("N");
-	self.chosenStatuses.push("Y");
-
 	self.chosenProducts = ko.observableArray([]);
 
 	self.chosenProduct = ko.observable();
@@ -253,41 +237,10 @@ var ProductContext = function() {
 		}
 	}
 
-	// 机票维护
-	self.flightManagement = function() {
-		if (self.chosenProducts().length == 0) {
-			fail_msg("请选择产品！");
-			return;
-		} else if (self.chosenProducts().length > 1) {
-			fail_msg("只能选择一个产品！");
-			return;
-		} else if (self.chosenProducts().length == 1) {
-
-			$
-					.getJSON(
-							self.apiurl + 'product/searchProductByPk',
-							{
-								product_pk : self.chosenProducts()[0]
-							},
-							function(data) {
-								if (data.product.air_ticket_upkeep_flg == "Y") {
-									window.location.href = self.apiurl
-											+ 'templates/product/flight-management-edit.jsp?key='
-											+ self.chosenProducts()[0];
-								} else {
-									window.location.href = self.apiurl
-											+ 'templates/product/flight-management.jsp?key='
-											+ self.chosenProducts()[0];
-								}
-							});
-
-		}
-	}
-
 	self.product = ko.observable({});
 	self.airTickets = ko.observableArray([]);
 	// 绑定机票
-	self.bindingTicket = function() {
+	self.ticketManagement = function() {
 		if (self.chosenProducts().length == 0) {
 			fail_msg("请选择产品！");
 			return;
@@ -305,15 +258,6 @@ var ProductContext = function() {
 					fail_msg("请选择未上架产品！");
 					return;
 				}
-				var ticket_charge = self.product().air_ticket_charge;
-
-				if (ticket_charge == "NO") {
-					self.chosenCharge("PRODUCT");
-				} else {
-					self.chosenCharge(ticket_charge);
-				}
-
-				changeCharge(self.chosenCharge());
 
 				self.airTickets(data.air_tickets);
 				airTicketLayer = $.layer({
@@ -322,7 +266,7 @@ var ProductContext = function() {
 					maxmin : false,
 					closeBtn : [1, true],
 					shadeClose : false,
-					area : ['800px', '500px'],
+					area : ['600px', '500px'],
 					offset : ['', ''],
 					scrollbar : true,
 					page : {
@@ -333,33 +277,6 @@ var ProductContext = function() {
 				});
 			});
 		}
-	};
-
-	self.checkAirTicket = function(product_pk) {
-		$.getJSON(
-				self.apiurl + 'product/searchProductAirTicketInfoByProductPk',
-				{
-					product_pk : product_pk
-				}, function(data) {
-					self.product(data.product);
-
-					self.airTickets(data.air_tickets);
-					airTicketCheckLayer = $.layer({
-						type : 1,
-						title : ['机票信息', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', '500px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#air-ticket-check'
-						},
-						end : function() {
-						}
-					});
-				});
 	};
 
 	self.products = ko.observable({
@@ -453,4 +370,69 @@ function changeOntRadio(rad) {
 	} else if (v == "Y") {
 		$("#o-n-t-a").show();
 	}
+}
+function addRow() {
+	var tbody = $("#table-ticket tbody");
+	var index = tbody.children().length + 1;
+	var tr = $('<tr><td st="index">1</td><td><input st="start-day" type="text" /></td><td><input st="start-city" type="text" /></td><td><input st="end-city" type="text" /></td></tr>');
+	$(tr).find("td[st='index']").html(index);
+	tbody.append(tr);
+}
+
+function deleteRow() {
+	var tbody = $("#table-ticket tbody");
+	var index = tbody.children().length - 1;
+	if (index > 0) {
+		$(tbody.children()[index]).remove();
+	}
+}
+function saveTicket() {
+	var data = $("#form-ticket").serialize();
+	var ticketJson = '[';
+	var tbody = $("#table-ticket tbody");
+	var allTickets = tbody.children();
+	for (var i = 0; i < allTickets.length; i++) {
+		var current = allTickets[i];
+		var index = i + 1;
+		var start_day = $(current).find("[st='start-day']").val();
+		var start_city = $(current).find("[st='start-city']").val();
+		var end_city = $(current).find("[st='end-city']").val();
+
+		if (start_day.trim() == "" || start_city.trim() == ""
+				|| end_city.trim() == "") {
+			fail_msg("请填写第" + index + "行非空项目！");
+			return;
+		}
+
+		ticketJson += '{"index":"' + index + '","start_day":"' + start_day
+				+ '","start_city":"' + start_city + '","end_city":"' + end_city
+				+ '"';
+
+		if (i == allTickets.length - 1) {
+			ticketJson += '}';
+		} else {
+			ticketJson += '},';
+		}
+	}
+
+	ticketJson += ']';
+	data += "&ticket_json=" + ticketJson;
+	layer.close(airTicketLayer);
+	startLoadingIndicator("保存中！");
+	$.ajax({
+		type : "POST",
+		url : ctx.apiurl + 'product/saveAirTicket',
+		data : data
+	}).success(function(str) {
+		endLoadingIndicator();
+		if (str == "success") {
+			ctx.refresh();
+			ctx.chosenProducts.removeAll();
+		} else {
+			fail_msg(str);
+		}
+	});
+}
+function cancelTicket() {
+	layer.close(airTicketLayer);
 }

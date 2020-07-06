@@ -56,16 +56,15 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<div style="width: 50%; float: right">
+						<div style="width: 45%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { create() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { clone() }">克隆</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { bindingTicket() }">机票</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">删除</button>
 						</div>
-					</div>
+					</div> 
 					<div class="form-group">
 						<div class="col-md-6">
 							<div data-bind="foreach: status" style="padding-top: 4px;">

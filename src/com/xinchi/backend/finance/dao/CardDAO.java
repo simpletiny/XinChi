@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.KeyValueDto;
 
 public interface CardDAO {
 	/**
@@ -30,4 +31,8 @@ public interface CardDAO {
 	public List<CardBean> selectByPurpose(String purpose);
 
 	public BigDecimal selectSumBalance(List<String> accounts);
+
+	public BigDecimal selectSumBalance();
+
+	public KeyValueDto selectDetailBalance();
 }

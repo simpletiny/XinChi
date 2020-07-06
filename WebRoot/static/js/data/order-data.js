@@ -72,6 +72,7 @@ var CardContext = function() {
 		// serie.smooth = true;
 		// series.push(serie);
 		var type = $("#sel-vertical").val();
+		startLoadingSimpleIndicator("加载中...");
 		$.getJSON(self.apiurl + 'data/fetchOrderCountData', param, function(
 				data) {
 			var legend = [];
@@ -94,6 +95,7 @@ var CardContext = function() {
 
 				series.push(serie);
 			}
+			endLoadingIndicator();
 
 			self.createChart(title, legend, xAxis, series);
 		});

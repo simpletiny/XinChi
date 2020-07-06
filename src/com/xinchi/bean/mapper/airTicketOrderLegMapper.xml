@@ -8,6 +8,12 @@
 		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
 		<result column="from_city" property="from_city" jdbcType="VARCHAR" />
 		<result column="to_city" property="to_city" jdbcType="VARCHAR" />
+		<result column="start_time" property="start_time" jdbcType="VARCHAR" />
+		<result column="end_time" property="end_time" jdbcType="VARCHAR" />
+		<result column="start_place" property="start_place" jdbcType="VARCHAR" />
+		<result column="end_place" property="end_place" jdbcType="VARCHAR" />
+		<result column="add_day_flg" property="add_day_flg" jdbcType="CHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -22,6 +28,12 @@
 		sort_index,
 		from_city,
 		to_city,
+		start_time,
+		end_time,
+		start_place,
+		end_place,
+		add_day_flg,
+		ticket_number,
 		create_user,
 		update_user,
 		create_time,
@@ -82,6 +94,24 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="start_time != null">
+				start_time,
+			</if>
+			<if test="end_time != null">
+				end_time,
+			</if>
+			<if test="start_place != null">
+				start_place,
+			</if>
+			<if test="end_place != null">
+				end_place,
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg,
+			</if>
+			<if test="ticket_number != null">
+				ticket_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="pk != null">
@@ -113,6 +143,24 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="start_time != null">
+				#{start_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_time != null">
+				#{end_time,jdbcType=VARCHAR},
+			</if>
+			<if test="start_place != null">
+				#{start_place,jdbcType=VARCHAR},
+			</if>
+			<if test="end_place != null">
+				#{end_place,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				#{add_day_flg,jdbcType=CHAR},
+			</if>
+			<if test="ticket_number != null">
+				#{ticket_number,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -148,6 +196,24 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="start_time != null">
+				start_time = #{start_time,jdbcType=VARCHAR},
+			</if>
+			<if test="end_time != null">
+				end_time = #{end_time,jdbcType=VARCHAR},
+			</if>
+			<if test="start_place != null">
+				start_place = #{start_place,jdbcType=VARCHAR},
+			</if>
+			<if test="end_place != null">
+				end_place = #{end_place,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg = #{add_day_flg,jdbcType=CHAR},
+			</if>
+			<if test="ticket_number != null">
+				ticket_number = #{ticket_number,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -156,7 +222,7 @@
 		<include refid="Base_Column_List" />
 		from air_ticket_order_leg
 	</select>
-	
+
 	<select id="selectAirLegByOrderPks" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
