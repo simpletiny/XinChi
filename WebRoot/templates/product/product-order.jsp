@@ -10,6 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
 #table-ticket th, #table-ticket td {
 	text-align: center;
@@ -56,9 +57,8 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group" style="float: right">
-						<div style="width: 45%; ">
-							<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
-						</div>
+						<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
+						<button type="submit" class="btn btn-green" data-bind="click: function() { rollBack() }">打回订单</button>
 					</div>
 					<div class="form-group">
 						<div class="col-md-6">
@@ -91,6 +91,17 @@ tr td {
 						</div>
 					</div>
 					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">出团日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="order.date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="order.date_to" />
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
@@ -144,12 +155,12 @@ tr td {
 									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.order_number)}"></a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.status == "Y" -->
-								<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.status == "N" -->
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
-								
+
 								<td data-bind="text: $data.product_name"></td>
 								<!-- ko if: $data.standard_flg == "Y" -->
 								<td data-bind="text: $data.product_model"></td>
@@ -187,7 +198,7 @@ tr td {
 		</div>
 	</div>
 
-	<div id="div-check-order" style="display: none; width: 800px">
+	<div id="div-check-order" style="display: none; width: 1000px">
 		<div class="list-result">
 			<table class="table table-striped table-hover">
 				<thead>
@@ -199,6 +210,9 @@ tr td {
 						<th>儿童</th>
 						<th>游客信息</th>
 						<th>销售</th>
+						<th>接待特情</th>
+						<th>订单状态</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody data-bind="foreach: sale_orders">
@@ -210,6 +224,22 @@ tr td {
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
 						<td data-bind="text:$data.create_user"></td>
+						<td><a href="javascript:void(0)"
+							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td> 
+						<!-- ko if: $data.lock_flg == "Y" -->
+						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg == "N" -->
+						<td style="color: red" data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg == "Y" -->
+						<td><a href="javascript:void(0)" data-bind="click:function(){$root.lockOrder($data.team_number,'N');}">解锁</a></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg == "N" -->
+						<td><a href="javascript:void(0)" data-bind="click:function(){$root.lockOrder($data.team_number,'Y');}">锁定</a></td>
+						<!-- /ko -->
+
+
 					</tr>
 				</tbody>
 			</table>
@@ -267,6 +297,8 @@ tr td {
 		$(".order-operate").addClass("current").children("ol").css("display",
 				"block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-order.js"></script>
 </body>
 </html>

@@ -56,4 +56,11 @@ public class ProductOrderAirInfoDAOImpl extends SqlSessionDaoSupport implements 
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ProductOrderAirInfoMapper.deleteByBasePk", base_pk);
 	}
 
+	@Override
+	public List<ProductOrderAirInfoBean> selectByOrderNumber(String order_number) {
+		List<ProductOrderAirInfoBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ProductOrderAirInfoMapper.selectByOrderNumber", order_number);
+		return list;
+	}
+
 }

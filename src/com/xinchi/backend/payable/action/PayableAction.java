@@ -1,7 +1,5 @@
 package com.xinchi.backend.payable.action;
 
-import static com.xinchi.common.SimpletinyString.isEmpty;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +34,13 @@ public class PayableAction extends BaseAction {
 
 	private String sales_name;
 
+	private String sales_number;
+
+	private String create_user;
+
 	public String searchPayableSummary() {
 
-		String user_number = "";
-
-		if (!isEmpty(sales_name)) {
-			user_number = String.valueOf(ResourcesConstants.MAP_USER_NAME.get(sales_name));
-		}
-
-		summary = payableService.searchPayableSummary(user_number);
+		summary = payableService.searchPayableSummary(create_user);
 
 		if (null == summary)
 			summary = new PayableSummaryBean();
@@ -56,13 +52,14 @@ public class PayableAction extends BaseAction {
 	private List<PayableBean> payables;
 
 	public String searchPayableByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			payable.setSales(sessionBean.getUser_number());
+			// payable.setSales(sessionBean.getUser_number());
 			payable.setCreate_user(sessionBean.getUser_number());
 		}
-		
+
 		String team_status = payable.getTeam_status();
 		String departure_from = "";
 		String departure_to = "";
@@ -168,5 +165,21 @@ public class PayableAction extends BaseAction {
 
 	public void setIsSame(String isSame) {
 		this.isSame = isSame;
+	}
+
+	public String getSales_number() {
+		return sales_number;
+	}
+
+	public void setSales_number(String sales_number) {
+		this.sales_number = sales_number;
+	}
+
+	public String getCreate_user() {
+		return create_user;
+	}
+
+	public void setCreate_user(String create_user) {
+		this.create_user = create_user;
 	}
 }

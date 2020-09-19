@@ -7,8 +7,8 @@ var CardContext = function() {
 		window.location.href = self.apiurl
 				+ "templates/finance/card-creation.jsp";
 	};
-
-	self.cardPurposes = [ {
+	self.cardType = ['借记卡', '信用卡', '公帐', '微信', '支付宝'];
+	self.cardPurposes = [{
 		data_key : 'NONE',
 		data_value : '无'
 	}, {
@@ -17,7 +17,7 @@ var CardContext = function() {
 	}, {
 		data_key : 'OTHER',
 		data_value : '其他'
-	} ];
+	}];
 
 	self.cardPurposeMapping = {
 		'NONE' : '无',
@@ -33,7 +33,8 @@ var CardContext = function() {
 	self.sumBalance = ko.observable();
 
 	self.refresh = function() {
-		$.getJSON(self.apiurl + 'finance/searchCard', {}, function(data) {
+		var param = $("form").serialize();
+		$.getJSON(self.apiurl + 'finance/searchCard', param, function(data) {
 			self.cards(data.cards);
 			self.sumBalance(data.sum_balance);
 			$(".rmb").formatCurrency();
@@ -55,12 +56,12 @@ var CardContext = function() {
 		} else if (self.chosenCards().length > 0) {
 			purposeLayer = $.layer({
 				type : 1,
-				title : [ '指定用途', '' ],
+				title : ['指定用途', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '900px', '200px' ],
-				offset : [ '', '' ],
+				area : ['900px', '200px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#card-purpose'
@@ -106,12 +107,12 @@ var CardContext = function() {
 		} else if (self.chosenCards().length > 0) {
 
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认停用账户吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						var card_pks = "";
 						for (var i = 0; i < self.chosenCards().length; i++) {

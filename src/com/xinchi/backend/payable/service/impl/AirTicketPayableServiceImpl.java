@@ -114,7 +114,7 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 
 		JSONArray array = JSONArray.fromObject(paidJson);
 		String concat_voucher_number = "";
-
+		String msg = SUCCESS;
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = JSONObject.fromObject(array.get(i));
 			String account = obj.getString("account");
@@ -140,8 +140,11 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 			detail.setComment(receiver + ",凭证号：" + voucher_number);
 			detail.setVoucher_file_name(voucher_file_name);
 
-			paymentDetailService.insert(detail);
+			msg = paymentDetailService.insert(detail);
 
+			if (!msg.equals(SUCCESS)) {
+				return msg;
+			}
 			// 生成待支付数据并直接写入为已支付状态
 			WaitingForPaidBean waiting = new WaitingForPaidBean();
 			waiting.setPay_number(voucher_number);

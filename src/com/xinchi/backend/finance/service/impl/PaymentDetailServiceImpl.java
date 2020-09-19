@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -443,11 +444,10 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		return details;
 	}
 
-	@SuppressWarnings({ "deprecation", "static-access" })
 	private String getValue(HSSFCell hssfCell) {
-		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
+		if (hssfCell.getCellType() == CellType.BOOLEAN) {
 			return String.valueOf(hssfCell.getBooleanCellValue());
-		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
+		} else if (hssfCell.getCellType() == CellType.NUMERIC) {
 			return String.valueOf(hssfCell.getNumericCellValue());
 		} else {
 			return String.valueOf(hssfCell.getStringCellValue());

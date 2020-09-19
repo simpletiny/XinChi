@@ -57,4 +57,9 @@ public class AirNeedTeamNumberDAOImpl extends SqlSessionDaoSupport implements Ai
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirNeedTeamNumberMapper.selectByNeedPk", need_pk);
 	}
 
+	@Override
+	public void deleteByNeedPk(String need_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.AirNeedTeamNumberMapper.deleteByNeedPk", need_pk);
+	}
+
 }

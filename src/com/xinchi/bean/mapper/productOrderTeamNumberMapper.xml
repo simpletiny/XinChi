@@ -32,11 +32,12 @@
 		from product_order_team_number
 		where product_order_number = #{order_number,jdbcType=CHAR}
 	</select>
-	
-	<select id="selectTeamNumbersByOrderNumber" parameterType="java.lang.String">
+
+	<select id="selectTeamNumbersByOrderNumber" resultType="java.lang.String" parameterType="java.lang.String">
 		select
 		team_number
-		from product_order_team_number
+		from
+		product_order_team_number
 		where
 		product_order_number = #{order_number,jdbcType=CHAR}
 	</select>
@@ -45,6 +46,11 @@
 		delete from product_order_team_number
 		where pk =
 		#{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByOrderNumber" parameterType="java.lang.String">
+		delete from product_order_team_number
+		where product_order_number =
+		#{order_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderTeamNumberBean">

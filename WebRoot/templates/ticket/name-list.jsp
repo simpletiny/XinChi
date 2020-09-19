@@ -10,6 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -82,7 +83,7 @@
 			</div>
 		</div>
 		<div class="main-container">
-			<div class="main-box" id="div-box" style="overflow:hidden">
+			<div class="main-box" id="div-box" style="overflow: hidden">
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
@@ -104,6 +105,20 @@
 								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
 							</div>
 						</div>
+					</div>
+
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">首航日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="passenger.date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="passenger.date_to" />
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
@@ -111,7 +126,7 @@
 					</div>
 				</form>
 
-				<div class="list-result" id="div-table" style="float:left;width:100%" > 
+				<div class="list-result" id="div-table" style="float: left; width: 100%">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
@@ -128,7 +143,7 @@
 						</thead>
 						<tbody data-bind="foreach: passengers">
 							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
-						
+
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $data.name"></td>
@@ -158,7 +173,7 @@
 
 				</div>
 				<div class="right-div">
-					<div style=" display: block; padding-bottom: 20px">
+					<div style="display: block; padding-bottom: 20px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { finishChosen() }">确认</button>
 					</div>
 				</div>
@@ -231,6 +246,8 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/ticket/name-list.js"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>

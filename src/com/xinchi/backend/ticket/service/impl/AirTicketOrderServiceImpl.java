@@ -15,6 +15,7 @@ import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderLegDAO;
+import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirNeedTeamNumberBean;
@@ -22,6 +23,7 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.tools.Page;
 
@@ -233,6 +235,58 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 		atn.setOrdered("Y");
 		airTicketNeedDao.update(atn);
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private PassengerTicketInfoDAO passengerTicketInfoDao;
+
+	@Override
+	public String rollBackOrder(String order_pk) {
+		// 票务订单
+		AirTicketOrderBean order = dao.selectByPrimaryKey(order_pk);
+
+		// 查看该票务订单下是否有出票的名单
+		// 该订单下的名单
+		List<AirTicketNameListBean> names = airTicketNameListDao.selectByOrderNumber(order.getOrder_number());
+		for (AirTicketNameListBean name : names) {
+
+			List<PassengerTicketInfoBean> infos = passengerTicketInfoDao.selectByPassengerPk(name.getPk());
+			if (infos != null && infos.size() > 0) {
+				return "namelock";
+			}
+		}
+
+		// 更新票务需求状态
+		AirTicketNeedBean atn = airTicketNeedDao.selectByPk(order.getNeed_pk());
+		atn.setOrdered("N");
+		airTicketNeedDao.update(atn);
+
+		// 删除待出票名单
+		for (AirTicketNameListBean name : names) {
+			airTicketNameListDao.delete(name.getPk());
+		}
+
+		// 更新销售订单到产品确认状态
+		List<AirNeedTeamNumberBean> ants = airNeedTeamNumberDao.selectByNeedPk(order.getNeed_pk());
+		List<String> team_numbers = new ArrayList<String>();
+		for (AirNeedTeamNumberBean ant : ants) {
+			team_numbers.add(ant.getTeam_number());
+		}
+
+		for (String team_number : team_numbers) {
+			orderService.rollBackConfirmNameList(team_number);
+		}
+
+		// 删除航段信息
+		List<AirTicketOrderLegBean> legs = airTicketOrderLegDao.selectByOrderPk(order_pk);
+		for (AirTicketOrderLegBean leg : legs) {
+			airTicketOrderLegDao.delete(leg.getPk());
+		}
+
+		// 删除票务订单
+		dao.delete(order_pk);
 
 		return SUCCESS;
 	}

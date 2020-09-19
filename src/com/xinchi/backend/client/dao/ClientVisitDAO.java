@@ -8,14 +8,15 @@ import com.xinchi.tools.Page;
 public interface ClientVisitDAO {
 
 	public void insert(ClientVisitBean visit);
-	
+
 	public void update(ClientVisitBean visit);
 
 	public List<ClientVisitBean> selectByPage(Page page);
-	
+
 	public List<ClientVisitBean> selectByParam(ClientVisitBean visit);
 
 	public String selectMaxVisitDateByEmployeePk(String employee_pk);
-	
+
+	public void delete(String pk);
 
 }

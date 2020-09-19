@@ -41,7 +41,8 @@ public class AccurateSaleDAOImpl extends SqlSessionDaoSupport implements Accurat
 
 	@Override
 	public AccurateSaleBean selectByPrimaryKey(String id) {
-		return (AccurateSaleBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AccurateSaleMapper.selectByPrimaryKey", id);
+		return (AccurateSaleBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AccurateSaleMapper.selectByPrimaryKey",
+				id);
 	}
 
 	@Override

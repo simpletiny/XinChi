@@ -36,16 +36,10 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="width: 30%; float: right">
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">删除</button>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
-							</div>
+						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">删除</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
 						</div>
 					</div>
 					<div class="form-group">

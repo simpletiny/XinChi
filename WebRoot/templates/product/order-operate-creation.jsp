@@ -7,6 +7,7 @@
 
 	String product_pk = request.getParameter("product_pk");
 	String order_number = request.getParameter("order_number");
+	String standard_flg = request.getParameter("standard_flg");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -62,8 +63,9 @@
 .hr-big {
 	border-top: 1px solid black !important;
 }
-.intdtext{
-	width:100px !important;
+
+.intdtext {
+	width: 100px !important;
 }
 </style>
 </head>
@@ -77,12 +79,11 @@
 			</h2>
 		</div>
 		<input type="hidden" id="product_pk" value="<%=product_pk%>" /> <input type="hidden" id="order_number"
-			value="<%=order_number%>" />
-
+			value="<%=order_number%>" /> <input type="hidden" id="standard_flg" value="<%=standard_flg%>" />
 		<div class="main-container">
 			<div class="main-box">
-			
-				<div class="form-box info-form" >
+
+				<div class="form-box info-form">
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<table style="width: 100%" class="table table-striped table-hover" id="table-order">
@@ -93,22 +94,24 @@
 										<th style="width: 5%">人数</th>
 										<th style="width: 10%">游客</th>
 										<!-- ko foreach:productSuppliers -->
-										<th  data-bind='text:"地接"+($index()+1)'></th> 
+										<th data-bind='text:"地接"+($index()+1)'></th>
 										<!-- /ko -->
 									</tr>
-								</thead> 
+								</thead>
 								<tbody data-bind="foreach:orders">
 									<tr>
 										<td data-bind="text:$data.team_number"></td>
 										<td data-bind="text:$data.create_user"></td>
 										<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
 										<td><a href="javascript:void(0)" style="color: blue"
-										data-bind="click:function(){$root.checkPassengers($data.team_number);},text: $data.passenger_captain"></a></td>
+											data-bind="click:function(){$root.checkPassengers($data.team_number);},text: $data.passenger_captain"></a></td>
 										<!-- ko foreach:{data:$root.productSuppliers,as:'supplier'} -->
-										<td><input type="number" class="required intdtext" data-bind="value:supplier.adult_cost*$parent.adult_count+supplier.child_cost*($parent.special_count==null?0:$parent.special_count)" st="supplier-cost" /></td>
-										<!-- /ko --> 
-									</tr>  
-								</tbody> 
+										<td><input type="number" class="required intdtext"
+											data-bind="value:supplier.adult_cost*$parent.adult_count+supplier.child_cost*($parent.special_count==null?0:$parent.special_count)"
+											st="supplier-cost" /></td>
+										<!-- /ko -->
+									</tr>
+								</tbody>
 							</table>
 						</div>
 					</div>

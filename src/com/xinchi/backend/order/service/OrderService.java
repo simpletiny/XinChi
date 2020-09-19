@@ -41,6 +41,8 @@ public interface OrderService extends BaseService {
 
 	public String confirmNameList(String team_number);
 
+	public String rollBackConfirmNameList(String team_number);
+
 	public List<OrderDto> selectByTeamNumbers(List<String> asList);
 
 }

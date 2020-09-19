@@ -55,4 +55,6 @@ public interface AirTicketOrderService extends BaseService {
 	public List<AirTicketOrderLegBean> selectAirTicketOrderLegByOrderPk(String order_pk);
 
 	public String lockAirTicketOrder(List<String> airTicketOrderPks);
+
+	public String rollBackOrder(String order_pk);
 }

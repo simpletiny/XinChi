@@ -210,15 +210,16 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 				ant.setTeam_number(team_number);
 				airNeedTeamNumberDao.insert(ant);
 
-				// 生成产品订单票务信息和团号对应关系表
-				ProductOrderTeamNumberBean aoatn = new ProductOrderTeamNumberBean();
-
-				aoatn.setProduct_order_number(product_order_number);
-				aoatn.setTeam_number(team_number);
-				productOrderTeamNumberDao.insert(aoatn);
 			}
 		}
+		for (String team_number : ts) {
+			// 生成产品订单订单号和团号对应关系表
+			ProductOrderTeamNumberBean aoatn = new ProductOrderTeamNumberBean();
 
+			aoatn.setProduct_order_number(product_order_number);
+			aoatn.setTeam_number(team_number);
+			productOrderTeamNumberDao.insert(aoatn);
+		}
 		// 更新销售订单操作标识
 		for (OrderDto order : orders) {
 
@@ -232,6 +233,59 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 				bnsoDao.update(bnsOrder);
 			}
 		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String rollBackOrder(String order_number) {
+		ProductOrderBean product_order = dao.selectByOrderNumber(order_number);
+		// 检测票务是否已经操作
+		AirTicketNeedBean atn = airTicketNeedDao.selectByProductOrderNumber(order_number);
+
+		// 如果票务已经生成票务订单，则不能打回。
+		if (atn != null && atn.getOrdered().equals("Y")) {
+			return "airlock";
+		}
+
+		// 团号信息
+		List<String> team_numbers = productOrderTeamNumberDao.selectTeamNumbersByOrderNumber(order_number);
+		// 更新销售订单操作标识
+
+		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
+
+		for (OrderDto order : orders) {
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
+				bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO);
+				bsoDao.update(bsOrder);
+			} else {
+				BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
+				bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO);
+				bnsoDao.update(bnsOrder);
+			}
+		}
+
+		// 删除产品订单号和团号对应关系
+		productOrderTeamNumberDao.deleteByOrderNumber(order_number);
+
+		// 如果存在票务需求
+		if (atn != null) {
+
+			// 删除票务需求和团号之间的对应关系
+			airNeedTeamNumberDao.deleteByNeedPk(atn.getPk());
+			// 删除票务需求
+			airTicketNeedDao.delete(atn.getPk());
+		}
+
+		// 删除产品订单航班信息
+		List<ProductOrderAirInfoBean> airInfos = airInfoDao.selectByOrderNumber(order_number);
+		for (ProductOrderAirInfoBean aif : airInfos) {
+			airInfoDao.delete(aif.getPk());
+		}
+
+		// 删除产品订单
+		dao.delete(product_order.getPk());
 
 		return SUCCESS;
 	}
@@ -277,5 +331,52 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		}
 
 		return orderNameListDao.selectByTeamNumbers(team_numbers);
+	}
+
+	@Override
+	public String changeOrderLock(String team_number, String lock_flg) {
+		OrderDto order = orderDao.selectByTeamNumber(team_number);
+		if (order.getStandard_flg().equals("Y")) {
+			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+			bso.setPk(order.getPk());
+			bso.setLock_flg(lock_flg);
+			bsoDao.update(bso);
+		} else {
+			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+			bnso.setPk(order.getPk());
+			bnso.setLock_flg(lock_flg);
+			bnsoDao.update(bnso);
+		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String isAllOrdersLocked(String order_number) {
+		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
+		potns = productOrderTeamNumberDao.selectByOrderNumber(order_number);
+
+		if (null == potns || potns.size() == 0)
+			return "yes";
+
+		List<String> team_numbers = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			team_numbers.add(potn.getTeam_number());
+		}
+
+		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
+
+		for (OrderDto order : orders) {
+			if (order.getLock_flg().equals("N")) {
+				return "no";
+			}
+		}
+
+		return "yes";
+	}
+
+	@Override
+	public ProductOrderBean selectByOrderNumber(String order_number) {
+		return dao.selectByOrderNumber(order_number);
 	}
 }

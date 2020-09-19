@@ -571,4 +571,25 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderDto> selectWithProductByParam(OrderDto order) {
 		return dao.selectWithProductByParam(order);
 	}
+
+	@Override
+	public String rollBackConfirmNameList(String team_number) {
+		OrderDto order = dao.selectByTeamNumber(team_number);
+		if (order.getStandard_flg().equals("Y")) {
+			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+			bso.setPk(order.getPk());
+
+			int old = Integer.valueOf(order.getName_confirm_status());
+			bso.setName_confirm_status(String.valueOf(old - 1));
+
+			bsoDao.update(bso);
+		} else {
+			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+			bnso.setPk(order.getPk());
+			int old = Integer.valueOf(order.getName_confirm_status());
+			bnso.setName_confirm_status(String.valueOf(old - 1));
+			bnsoDao.update(bnso);
+		}
+		return SUCCESS;
+	}
 }

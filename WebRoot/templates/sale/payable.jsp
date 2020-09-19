@@ -94,10 +94,10 @@
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
-								<label class="col-md-1 control-label">销售</label>
+								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales_name, optionsCaption: '全部',value:chosenSales,event:{change:fetchSummary}"
-										name="payable.sales_name"></select>
+									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:chosenSales,event:{change:function(){fetchSummary();search();}}"
+										name="payable.create_user"></select>
 								</div>
 							</div>
 						</s:if>
@@ -180,7 +180,7 @@
 								<th>应付款</th>
 
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>销售</th>
+									<th>产品经理</th>
 								</s:if>
 							</tr>
 						</thead>
@@ -230,7 +230,7 @@
 								<td st="all" data-bind="text:$data.budget_balance" class="rmb"></td>
 								<!-- /ko -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.sales_name"></td>
+									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
 							</tr>
 						</tbody>

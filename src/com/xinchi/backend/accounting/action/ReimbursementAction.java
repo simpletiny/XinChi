@@ -1,5 +1,9 @@
 package com.xinchi.backend.accounting.action;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -19,12 +23,41 @@ public class ReimbursementAction extends BaseAction {
 	@Autowired
 	private ReimbursementService service;
 	private ReimbursementBean reimbursement;
-	
+
 	public String saveReimbursement() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		reimbursement.setApply_user(sessionBean.getUser_number());
 
 		resultStr = service.save(reimbursement);
+		return SUCCESS;
+	}
+
+	private List<ReimbursementBean> reimbursements;
+
+	/**
+	 * 搜索费用填报
+	 * 
+	 * @return
+	 */
+	public String searchReimbursementByPage() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		if (null == reimbursement) {
+			reimbursement = new ReimbursementBean();
+		}
+
+		if (!sessionBean.getUser_roles().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			reimbursement.setApply_user(sessionBean.getUser_number());
+		}
+
+		params.put("bo", reimbursement);
+		page.setParams(params);
+
+		reimbursements = service.selectByPage(page);
 		return SUCCESS;
 	}
 
@@ -34,5 +67,13 @@ public class ReimbursementAction extends BaseAction {
 
 	public void setReimbursement(ReimbursementBean reimbursement) {
 		this.reimbursement = reimbursement;
+	}
+
+	public List<ReimbursementBean> getReimbursements() {
+		return reimbursements;
+	}
+
+	public void setReimbursements(List<ReimbursementBean> reimbursements) {
+		this.reimbursements = reimbursements;
 	}
 }

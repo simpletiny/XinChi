@@ -3,6 +3,7 @@ package com.xinchi.backend.ticket.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,6 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
-import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
@@ -132,9 +132,6 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 	@Autowired
 	private AirTicketNameListDAO airTicketNameListDao;
 
-	@Autowired
-	private AirNeedTeamNumberDAO airNeedTeamNumberDao;
-
 	@Override
 	public String allotTicket(String json) {
 		JSONArray arr = JSONArray.fromObject(json);
@@ -238,34 +235,59 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			AirTicketOrderBean order = airTicketOrderDao.selectByPrimaryKey(order_pk);
 			List<PassengerAllotDto> passenger_allots = airTicketNameListDAO.selectPassengerAllotByOrderPk(order_pk);
 			boolean done = true;
+			Set<String> unDoneTns = new HashSet<String>();
+			Set<String> tns = new HashSet<String>();
 			for (PassengerAllotDto pad : passenger_allots) {
+				tns.add(pad.getTeam_number());
 				if (pad.getIs_allot().equals("N")) {
 					done = false;
-					break;
+					unDoneTns.add(pad.getTeam_number());
 				}
 			}
-			// 如果完成了出票，更新order状态，并更新产品订单机票款项
+
+			// 如果完成了出票，更新票务order状态，并更新产品订单机票款项
 			if (done) {
 				order.setCost_done_flg("Y");
 				order.setStatus("Y");
 				airTicketOrderDao.update(order);
-				if (SimpletinyString.isEmpty(order.getOrder_number())) {
-					OrderDto sale_order = orderDao.selectByTeamNumber(order.getTeam_number());
+			}
 
-					if (sale_order.getStandard_flg().equals("Y")) {
-						BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
-						standardOrder.setAir_ticket_cost(order.getTicket_cost());
-						bsoDao.update(standardOrder);
-					} else {
-						BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
-						nonStandardOrder.setAir_ticket_cost(order.getTicket_cost());
-						bnsoDao.update(nonStandardOrder);
+			// 更新已经完成出票的销售订单
+			for (String unTn : unDoneTns) {
+				Iterator<String> it = tns.iterator();
+				while (it.hasNext()) {
+					if (it.next().equals(unTn)) {
+						it.remove();
+						break;
 					}
-				} else {
+
+				}
+			}
+			for (String tn : tns) {
+				BigDecimal airTicketCost = BigDecimal.ZERO;
+
+				OrderDto sale_order = orderDao.selectByTeamNumber(tn);
+				List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(tn);
+				for (AirTicketNameListBean name : names) {
+					List<PassengerTicketInfoBean> ptis = dao.selectByPassengerPk(name.getPk());
+					if (ptis != null && ptis.size() > 0) {
+						airTicketCost = airTicketCost.add(ptis.get(0).getTicket_cost());
+					}
 				}
 
+				if (sale_order.getStandard_flg().equals("Y")) {
+					BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
+					standardOrder.setAir_ticket_cost(airTicketCost);
+					bsoDao.update(standardOrder);
+				} else {
+					BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
+					nonStandardOrder.setAir_ticket_cost(airTicketCost);
+					bnsoDao.update(nonStandardOrder);
+				}
 			}
+
 		}
+
 		return SUCCESS;
 	}
 

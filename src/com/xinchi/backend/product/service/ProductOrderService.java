@@ -21,4 +21,12 @@ public interface ProductOrderService extends BaseService {
 
 	public List<SaleOrderNameListBean> searchSaleOrderNameListByProductOrderNumber(String order_number);
 
+	public String rollBackOrder(String order_number);
+
+	public String changeOrderLock(String team_number, String lock_flg);
+
+	public String isAllOrdersLocked(String order_number);
+
+	public ProductOrderBean selectByOrderNumber(String order_number);
+
 }

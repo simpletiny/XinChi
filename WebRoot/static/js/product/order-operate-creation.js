@@ -7,6 +7,7 @@ var ProductContext = function() {
 
 	self.product_pk = $("#product_pk").val();
 	self.order_number = $("#order_number").val();
+	self.standard_flg = $("#standard_flg").val();
 
 	self.order = ko.observable({});
 	self.orders = ko.observableArray([]);
@@ -18,21 +19,28 @@ var ProductContext = function() {
 	self.productSuppliers = ko.observableArray([]);
 
 	startLoadingSimpleIndicator("加载中...")
-	$.getJSON(self.apiurl + 'product/searchProductDataForOrder', {
-		product_order_number : self.order_number,
-		product_pk : self.product_pk
-	}, function(data) {
-		self.orders(data.orders);
-		self.productSuppliers(data.productSuppliers);
-		self.adult_count(data.adult_count);
-		self.special_count(data.special_count);
 
-		if (self.productSuppliers().length == 0) {
-			addSupplier();
+	self.refresh = function() {
+		var param = "standard_flg=" + self.standard_flg
+				+ "&product_order_number=" + self.order_number;
+
+		if (self.standard_flg == "Y") {
+			param += "&product_pk=" + self.product_pk;
 		}
+		$.getJSON(self.apiurl + 'product/searchProductDataForOrder', param,
+				function(data) {
+					self.orders(data.orders);
+					self.productSuppliers(data.productSuppliers);
+					self.adult_count(data.adult_count);
+					self.special_count(data.special_count);
 
-		endLoadingIndicator();
-	});
+					if (self.productSuppliers().length == 0) {
+						addSupplier();
+					}
+
+					endLoadingIndicator();
+				});
+	}
 
 	self.isD = function(t) {
 
@@ -389,6 +397,7 @@ var ProductContext = function() {
 var ctx = new ProductContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	ctx.refresh();
 });
 var currentSupplier;
 var supplierEmployeeLayer;

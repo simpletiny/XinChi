@@ -1,6 +1,9 @@
 package com.xinchi.backend.accounting.dao;
 
+import java.util.List;
+
 import com.xinchi.bean.ReimbursementBean;
+import com.xinchi.tools.Page;
 
 public interface ReimbursementDAO {
 
@@ -11,5 +14,7 @@ public interface ReimbursementDAO {
 	public void update(ReimbursementBean reimbursement);
 
 	public void deleteByPk(String pk);
+
+	public List<ReimbursementBean> selectByPage(Page page);
 
 }

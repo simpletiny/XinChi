@@ -60,4 +60,6 @@ public interface AirTicketNameListDAO {
 	public List<AirTicketNameListBean> selectByOrderNumber(String order_number);
 
 	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page);
+
+	public List<AirTicketNameListBean> selectByTeamNumbers(List<String> t_ns);
 }

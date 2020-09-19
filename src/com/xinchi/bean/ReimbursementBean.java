@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class ReimbursementBean extends SupperBO implements Serializable {
@@ -10,7 +11,7 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String item;
 
 	private String date;
-	
+
 	private String month;
 
 	private java.math.BigDecimal money;
@@ -24,6 +25,11 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String approval_user;
 
 	private String pay_user;
+	private String apply_name;
+
+	private String approval_name;
+
+	private String pay_name;
 
 	private String approval_time;
 
@@ -36,6 +42,9 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String create_user;
+
+	private String money_from;
+	private String money_to;
 
 	public String getItem() {
 		return item;
@@ -155,6 +164,46 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setMonth(String month) {
 		this.month = month;
+	}
+
+	public String getApply_name() {
+		return apply_name;
+	}
+
+	public String getApproval_name() {
+		return approval_name;
+	}
+
+	public String getPay_name() {
+		return pay_name;
+	}
+
+	public void setApply_name(String apply_name) {
+		this.apply_name = apply_name;
+	}
+
+	public void setApproval_name(String approval_name) {
+		this.approval_name = approval_name;
+	}
+
+	public void setPay_name(String pay_name) {
+		this.pay_name = pay_name;
+	}
+
+	public String getMoney_from() {
+		return money_from;
+	}
+
+	public String getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_from(String money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(String money_to) {
+		this.money_to = money_to;
 	}
 
 }

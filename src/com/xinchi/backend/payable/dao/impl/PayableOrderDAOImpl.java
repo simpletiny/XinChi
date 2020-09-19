@@ -47,7 +47,7 @@ public class PayableOrderDAOImpl extends SqlSessionDaoSupport implements Payable
 	}
 
 	@Override
-	public PayableSummaryBean selectPayableSummary(String sales) {
+	public PayableSummaryBean selectPayableSummary(String create_user) {
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -58,9 +58,9 @@ public class PayableOrderDAOImpl extends SqlSessionDaoSupport implements Payable
 			return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableSummaryMapper.selectByUserNumber",
 					user_number);
 		} else {
-			if (!SimpletinyString.isEmpty(sales)) {
+			if (!SimpletinyString.isEmpty(create_user)) {
 				return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PayableSummaryMapper.selectByUserNumber",
-						sales);
+						create_user);
 			} else {
 				return daoUtil.selectOneValue("com.xinchi.bean.mapper.PayableSummaryMapper.selectPayableSummary");
 			}

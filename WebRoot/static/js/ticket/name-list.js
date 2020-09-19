@@ -38,7 +38,7 @@ var PassengerContext = function() {
 				var d = self.chosenPassengers()[i];
 				var cd = d.split(":");
 				var s = cd[5];
-				if (s == "4") {
+				if (s != "5") {
 					fail_msg("请选择销售已确认的名单！");
 					return;
 				}

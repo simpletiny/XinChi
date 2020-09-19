@@ -37,6 +37,10 @@
 		delete from air_need_team_number
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByNeedPk" parameterType="java.lang.String">
+		delete from air_need_team_number
+		where need_pk = #{need_pk,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.AirNeedTeamNumberBean">
 

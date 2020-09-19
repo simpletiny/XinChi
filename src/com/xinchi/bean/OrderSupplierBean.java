@@ -9,7 +9,9 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 3724419480074644051L;
 
 	private String order_pk;
-
+	private String cellphone;
+	private String fax;
+	private String telephone;
 	private String supplier_employee_pk;
 
 	private Integer supplier_index;
@@ -242,6 +244,30 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 
 	public void setDeparture_date(String departure_date) {
 		this.departure_date = departure_date;
+	}
+
+	public String getCellphone() {
+		return cellphone;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setCellphone(String cellphone) {
+		this.cellphone = cellphone;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 
 }

@@ -42,4 +42,6 @@ public interface ProductOrderAirInfoDAO {
 	public List<ProductOrderAirInfoBean> selectByParam(ProductOrderAirInfoBean bean);
 
 	public void deleteByBasePk(String base_pk);
+
+	public List<ProductOrderAirInfoBean> selectByOrderNumber(String order_number);
 }

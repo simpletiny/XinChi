@@ -63,6 +63,17 @@
 		from air_ticket_need
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByProductOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_need
+		where product_order_number = #{order_number,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_ticket_need
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
 
 	<select id="selectByParam" parameterType="com.xinchi.bean.AirTicketNeedBean" resultMap="BaseResultMap">
 		select

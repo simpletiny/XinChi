@@ -50,6 +50,49 @@ var OrderContext = function() {
 		}
 	};
 
+	// 打回订单
+	self.rollBack = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单！");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个订单！");
+			return;
+		} else {
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '确定要打回订单到票务需求状态吗？',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("打回中...");
+						var data = "order_pk=" + self.chosenOrders();
+
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'ticket/rollBackTicketOrder',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+
+							if (str == "success") {
+								self.refresh();
+								self.chosenOrders.removeAll();
+							} else if (str == "namelock") {
+								fail_msg("该订单下已有出票名单，请先处理之后再进行打回！")
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
 	self.airTickets = ko.observable();
 	// 查看航段信息
 	self.checkTicketPart = function(ticket_order_pk) {

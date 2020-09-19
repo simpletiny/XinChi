@@ -95,6 +95,11 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 	}
 
 	@Override
+	public List<AirTicketNameListBean> selectByTeamNumbers(List<String> t_ns) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByTeamNumbers", t_ns);
+	}
+
+	@Override
 	public List<AirTicketNameListBean> selectByOrderNumber(String order_number) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByOrderNumber",
 				order_number);

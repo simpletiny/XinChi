@@ -24,7 +24,7 @@
 		<result column="key_key" property="key_key" jdbcType="VARCHAR" />
 		<result column="value_value" property="value_value" jdbcType="VARCHAR" />
 	</resultMap>
-	
+
 	<sql id="Base_Column_List">
 		account,
 		number,
@@ -71,13 +71,15 @@
 	</select>
 
 	<select id="selectUsedBalance" resultType="java.math.BigDecimal">
-		select sum(balance) from card where delete_flg='N' and account!='建行机票'; 
+		select sum(balance) from card where delete_flg='N' and
+		account!='建行机票';
 	</select>
 
-	<select id="selectDetailBalance"  resultMap="KeyMap">
+	<select id="selectDetailBalance" resultMap="KeyMap">
 		SELECT
 		SUM(IF(balance > 0, balance, 0)) AS key_key,
-		SUM(IF(balance &lt; 0,
+		SUM(IF(balance &lt;
+		0,
 		balance, 0)) AS value_value
 		FROM
 		card
@@ -245,7 +247,16 @@
 		from card
 		<where>
 			<if test="account !=null and account !=''">
-				account= #{account,jdbcType=VARCHAR}
+				and account like concat('%', #{account,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="number !=null and number !=''">
+				and number like concat('%', #{number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="purpose !=null and purpose !=''">
+				and purpose= #{purpose,jdbcType=VARCHAR}
+			</if>
+			<if test="type !=null and type !=''">
+				and type= #{type,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY delete_flg,sort_index

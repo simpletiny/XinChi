@@ -18,6 +18,7 @@ var OrderContext = function() {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bsOrder);
+		reloadDatePicker();
 
 		$(data.passengers).each(function(idx, passenger) {
 			passenger.age = ko.observable();
@@ -51,6 +52,7 @@ var OrderContext = function() {
 			fail_msg(reason.responseText);
 		});
 		self.loadFiles();
+
 	});
 
 	self.refreshClient = function() {
@@ -315,6 +317,7 @@ var OrderContext = function() {
 		self.searchClientEmployee();
 	};
 	// end pagination
+
 };
 
 var ctx = new OrderContext();
@@ -328,7 +331,9 @@ $(document).ready(function() {
 		changeAutoType($(this).val());
 	});
 	changeAutoType("Y");
+
 });
+
 function changeAutoType(v) {
 	if (v == "Y") {
 		$(".auto-2").attr("disabled", "disabled")

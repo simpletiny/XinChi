@@ -20,4 +20,8 @@ public interface AirTicketNeedDAO {
 	public List<OrderAirInfoBean> selectOrderAirInfoByProductOrderNumber(String order_number);
 
 	public void update(AirTicketNeedBean atn);
+
+	public AirTicketNeedBean selectByProductOrderNumber(String order_number);
+
+	public void delete(String pk);
 }

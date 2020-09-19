@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,8 +35,8 @@ public class CardAction extends BaseAction {
 	private BigDecimal sum_balance;
 
 	public String searchCard() throws Exception {
-		cards = cardService.getAllCardsByParam(null);
-		
+		cards = cardService.getAllCardsByParam(card);
+
 		String basePath = this.getClass().getClassLoader().getResource("").getPath();
 		InputStreamReader config = new InputStreamReader(
 				new FileInputStream(basePath + File.separator + "hot" + File.separator + "accountSumConfig.txt"),
@@ -49,7 +48,7 @@ public class CardAction extends BaseAction {
 			r += line;
 		}
 		br.close();
-		
+
 		List<String> accounts = Arrays.asList(r.split(","));
 		sum_balance = cardService.selectSumBalance(accounts);
 		return SUCCESS;

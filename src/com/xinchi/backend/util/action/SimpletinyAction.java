@@ -40,11 +40,14 @@ import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.util.service.SimpletinyService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
@@ -63,6 +66,7 @@ import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
@@ -822,6 +826,60 @@ public class SimpletinyAction extends BaseAction {
 		String endTime = DateUtil.addMin(nowTime, reboot_min);
 
 		XinChiApplicationContext.setSession(ResourcesConstants.REBOOT_TIMER_KEY, endTime);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
+	@Autowired
+	private PassengerTicketInfoDAO passengerTicketInfoDao;
+
+	/**
+	 * 修正单团核算单
+	 * 
+	 * @return
+	 */
+	public String autoUpdateProductReport() {
+		OrderDto option = new OrderDto();
+		option.setConfirm_year("2020");
+
+		List<OrderDto> orders = orderDao.selectByParam(option);
+
+		for (OrderDto order : orders) {
+			List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(order.getTeam_number());
+			boolean done = true;
+			for (AirTicketNameListBean name : names) {
+				if (!name.getStatus().equals("Y")) {
+					done = false;
+					break;
+				}
+			}
+
+			if (done) {
+
+				BigDecimal ticketCost = BigDecimal.ZERO;
+				for (AirTicketNameListBean name : names) {
+
+					List<PassengerTicketInfoBean> ptis = passengerTicketInfoDao.selectByPassengerPk(name.getPk());
+					if (null != ptis && ptis.size() > 0) {
+						ticketCost = ticketCost.add(ptis.get(0).getTicket_cost());
+					}
+				}
+
+				if (order.getStandard_flg().equals("Y")) {
+					BudgetStandardOrderBean standardOrder = bsoService.selectByPrimaryKey(order.getPk());
+					standardOrder.setAir_ticket_cost(ticketCost);
+					bsoService.updateComment(standardOrder);
+				} else {
+					BudgetNonStandardOrderBean nonStandardOrder = bnsoService.selectByPrimaryKey(order.getPk());
+					nonStandardOrder.setAir_ticket_cost(ticketCost);
+					bnsoService.updateComment(nonStandardOrder);
+				}
+			}
+
+		}
+
 		return SUCCESS;
 	}
 

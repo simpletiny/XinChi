@@ -26,6 +26,9 @@
 		<action name="autoUpdateClientRelationConnect" class="simpletinyAction" method="autoUpdateClientRelationConnect">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="autoUpdateProductReport" class="simpletinyAction" method="autoUpdateProductReport">
+			<result name="success" type="redirect">/</result>
+		</action>
 
 		<action name="currentDate" class="STDateAction" method="currentDate">
 			<result name="success" type="json"></result>

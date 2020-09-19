@@ -49,14 +49,37 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span8">
-							<label class="col-md-1 control-label">关键字</label>
-							<div class="col-md-6">
-								<input type="text" class="form-control" placeholder="关键字">
+						<div class="span6">
+							<label class="col-md-1 control-label">账户</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="账户" name="card.account" />
 							</div>
 						</div>
-						<div>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); search() }">搜索</button>
+						<div class="span6">
+							<label class="col-md-1 control-label">卡号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="卡号" name="card.number" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">用途</label>
+							<div class="col-md-2">
+								<select class="form-control"
+									data-bind="options: cardPurposes, optionsText: 'data_value', optionsValue: 'data_key', optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="card.purpose" required="required"></select>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">种类</label>
+							<div class="col-md-2">
+								<select class="form-control" data-bind="options: cardType,optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="card.type" required="required"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click:refresh">搜索</button>
 						</div>
 					</div>
 				</form>

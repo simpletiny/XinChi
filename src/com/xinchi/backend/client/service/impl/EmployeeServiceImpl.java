@@ -240,19 +240,35 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public String deleteClientEmployeeReally(String employee_pk) {
+		ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
+		boolean candelete = employee.getReview_flg().equals("N");
+
 		// 检测当前客户员工是否存在有效拜访
 		ClientVisitBean option1 = new ClientVisitBean();
 		option1.setClient_employee_pk(employee_pk);
 		List<ClientVisitBean> results1 = clientVisitDao.selectByParam(option1);
 		if (null != results1 && results1.size() > 0) {
-			return "exist_visit";
+			if (candelete) {
+				for (ClientVisitBean visit : results1) {
+					clientVisitDao.delete(visit.getPk());
+				}
+			} else {
+				return "exist_visit";
+			}
 		}
 		// 检测当前客户员工是否存在有效沟通
 		AccurateSaleBean option2 = new AccurateSaleBean();
 		option2.setClient_employee_pk(employee_pk);
 		List<AccurateSaleBean> results2 = accurateSaleDao.selectByParam(option2);
 		if (null != results2 && results2.size() > 0) {
-			return "exist_accurate";
+			if (candelete) {
+				for (AccurateSaleBean as : results2) {
+					accurateSaleDao.delete(as.getPk());
+				}
+			} else {
+				return "exist_accurate";
+			}
+
 		}
 		// 检测是否存在订单
 		OrderDto option3 = new OrderDto();
@@ -478,8 +494,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		File fullImg = new File(fileFolder + File.separator + fileName);
 		File minImg = new File(minFolder + File.separator + fileName);
 
-		fullImg.delete();
-		minImg.delete();
+		if (fullImg.exists()) {
+			fullImg.delete();
+		}
+
+		if (minImg.exists()) {
+			minImg.delete();
+		}
 	}
 
 	@Override

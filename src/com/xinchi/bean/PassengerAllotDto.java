@@ -27,6 +27,8 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 	private String ticket_number;
 	private String ticket_order_pk;
 
+	private String team_number;
+
 	private String is_allot;
 
 	public static class Comparators {
@@ -140,6 +142,14 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 
 	public void setTicket_number(String ticket_number) {
 		this.ticket_number = ticket_number;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 
 }

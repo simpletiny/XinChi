@@ -113,6 +113,16 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 打回票务订单
+	 * 
+	 * @return
+	 */
+	public String rollBackTicketOrder() {
+		resultStr = airTicketOrderService.rollBackOrder(order_pk);
+		return SUCCESS;
+	}
+
 	private List<String> airTicketOrderPks;
 
 	@Autowired

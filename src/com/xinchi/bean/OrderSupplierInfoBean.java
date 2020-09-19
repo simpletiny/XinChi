@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class OrderSupplierInfoBean extends SupperBO implements Serializable {

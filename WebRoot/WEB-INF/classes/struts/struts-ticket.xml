@@ -43,6 +43,12 @@
 				resultStr
 			</result>
 		</action>
+		<!-- 打回票务订单 -->
+		<action name="rollBackTicketOrder" class="ticketAction" method="rollBackTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder">
 			<result name="success" type="str">
 				resultStr

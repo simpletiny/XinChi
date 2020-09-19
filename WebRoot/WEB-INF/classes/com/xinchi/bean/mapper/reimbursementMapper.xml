@@ -10,8 +10,11 @@
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="CHAR" />
 		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="apply_name" property="apply_name" jdbcType="VARCHAR" />
 		<result column="approval_user" property="approval_user" jdbcType="VARCHAR" />
+		<result column="approval_name" property="approval_name" jdbcType="VARCHAR" />
 		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+		<result column="pay_name" property="pay_name" jdbcType="VARCHAR" />
 		<result column="approval_time" property="approval_time" jdbcType="VARCHAR" />
 		<result column="pay_time" property="pay_time" jdbcType="VARCHAR" />
 		<result column="pay_number" property="pay_number" jdbcType="CHAR" />
@@ -225,5 +228,60 @@
 		select
 		<include refid="Base_Column_List" />
 		from reimbursement
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.item,
+		A.date,
+		A.month,
+		A.money,
+		A.comment,
+		A.status,
+		A.apply_user,
+		B.user_name AS apply_name,
+		A.approval_user,
+		C.user_name AS approval_name,
+		A.pay_user,
+		D.user_name AS pay_name,
+		A.approval_time,
+		A.pay_time,
+		A.pay_number,
+		A.update_user,
+		A.pk,
+		A.create_user,
+		A.create_time,
+		A.update_time
+		from reimbursement A
+		LEFT JOIN
+		user_base B ON
+		A.apply_user=B.user_number
+		LEFT JOIN
+		user_base C ON A.approval_user=C.user_number
+		LEFT JOIN
+		user_base D ON
+		A.pay_user=D.user_number
+		<where>
+			<if test="params.bo.apply_user != null and params.bo.apply_user !=''">
+				and A.apply_user = #{params.bo.apply_user,jdbcType=VARCHAR}
+			</if>
+
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.date > #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.money > #{params.bo.money_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.money &lt;= #{params.bo.money_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.item != null and params.bo.item !=''">
+				and A.item = #{params.bo.item,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY A.date DESC
 	</select>
 </mapper>

@@ -45,4 +45,6 @@ public interface ProductOrderTeamNumberDAO {
 
 	public List<String> selectTeamNumbersByOrderNumber(String order_number);
 
+	public void deleteByOrderNumber(String order_number);
+
 }

@@ -518,4 +518,5 @@ public class ProductAction extends BaseAction {
 	public void setTeam_numbers(List<String> team_numbers) {
 		this.team_numbers = team_numbers;
 	}
+
 }

@@ -39,6 +39,12 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String rollBackProductOrder() {
+
+		resultStr = service.rollBackOrder(order_number);
+		return SUCCESS;
+	}
+
 	private List<ProductOrderBean> orders;
 
 	private ProductOrderBean order;
@@ -61,6 +67,29 @@ public class ProductOrderAction extends BaseAction {
 		page.setParams(params);
 
 		orders = service.selectByPage(page);
+		return SUCCESS;
+	}
+
+	private String team_number;
+	private String lock_flg;
+
+	/**
+	 * 更改销售订单锁定标识
+	 * 
+	 * @return
+	 */
+	public String changeOrderLock() {
+		resultStr = service.changeOrderLock(team_number, lock_flg);
+		return SUCCESS;
+	}
+
+	/**
+	 * 检验产品订单下的所有销售订单是否已经锁定
+	 * 
+	 * @return
+	 */
+	public String isAllOrdersLocked() {
+		resultStr = service.isAllOrdersLocked(order_number);
 		return SUCCESS;
 	}
 
@@ -126,6 +155,22 @@ public class ProductOrderAction extends BaseAction {
 
 	public void setPassengers(List<SaleOrderNameListBean> passengers) {
 		this.passengers = passengers;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
 	}
 
 }

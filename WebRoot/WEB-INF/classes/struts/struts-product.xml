@@ -91,6 +91,7 @@
 		<action name="unlockOrders" class="productAction" method="unlockOrders">
 			<result name="success" type="str">resultStr</result>
 		</action>
+
 		<action name="tipSalesConfirmName" class="productAction" method="tipSalesConfirmName">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -179,7 +180,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		<!-- 更新销售订单的锁定标识 -->
+		<action name="changeOrderLock" class="productOrderAction" method="changeOrderLock">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 检查产品订单下的销售订单是否全部锁定 -->
+		<action name="isAllOrdersLocked" class="productOrderAction" method="isAllOrdersLocked">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 搜索产品供应商信息 -->
 		<action name="searchProductDataForOrder" class="productOrderOperationAction" method="searchProductDataForOrder">
 			<result name="success" type="json">
@@ -202,6 +210,13 @@
 
 		<!-- 产品订单操作 start -->
 		<action name="createProductOrder" class="productOrderAction" method="createProductOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+	
+		<!-- 产品订单打回 -->
+		<action name="rollBackProductOrder" class="productOrderAction" method="rollBackProductOrder">
 			<result name="success" type="str">
 				resultStr
 			</result>

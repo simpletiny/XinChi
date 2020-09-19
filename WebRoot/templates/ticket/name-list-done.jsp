@@ -10,6 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -111,6 +112,20 @@
 							<label class="col-md-1 control-label">乘机人</label>
 							<div class="col-md-2">
 								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">首航日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="passenger.date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="passenger.date_to" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -279,6 +294,8 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/ticket/name-list-done.js"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>

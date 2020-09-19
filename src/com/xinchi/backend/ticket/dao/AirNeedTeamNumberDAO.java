@@ -43,4 +43,6 @@ public interface AirNeedTeamNumberDAO {
 
 	public List<AirNeedTeamNumberBean> selectByNeedPk(String need_pk);
 
+	public void deleteByNeedPk(String need_pk);
+
 }

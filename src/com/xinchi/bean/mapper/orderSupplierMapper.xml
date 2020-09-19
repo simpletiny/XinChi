@@ -27,6 +27,9 @@
 		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderSupplierBean">
@@ -316,6 +319,9 @@
 		SELECT
 		A.*,
 		B.name AS supplier_employee_name,
+		B.cellphone,
+		B.fax,
+		B.telephone,
 		C.supplier_name AS supplier_name,
 		C.supplier_short_name AS
 		supplier_short_name,
@@ -326,8 +332,9 @@
 		supplier_employee B ON
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN
-		supplier C ON B.financial_body_pk = C.pk
-		LEFT JOIN budget_order_view D ON
+		supplier C ON B.financial_body_pk
+		= C.pk
+		LEFT JOIN product_order D ON
 		A.order_pk = D.pk
 		<where>
 			<if test="order_pk != null and order_pk != ''">

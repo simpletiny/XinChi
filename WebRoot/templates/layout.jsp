@@ -136,6 +136,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<s:else>
 							<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
 						</s:else>
+						<li><a href="<%=basePath%>templates/accounting/reimbursement.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>费用详情</a></li>
 					</ol></li>
 
 			</s:if>

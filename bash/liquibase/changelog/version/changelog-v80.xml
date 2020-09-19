@@ -266,7 +266,201 @@
 			<comment>ALTER TABLE air_ticket_payable </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP view if exists view_passenger_allot;
+			CREATE VIEW view_passenger_allot AS
+				    SELECT 
+				        A.pk AS passenger_pk,
+				        A.id,
+				        A.name,
+				        B.date,
+				        B.from_city,
+				        B.to_city,
+                        B.start_time,
+                        B.end_time,
+                        B.start_place,
+                        B.end_place,
+                        B.ticket_number,
+				        A.ticket_order_pk,
+				        IF(C.pk IS NULL, 'N', 'Y') AS is_allot,
+                        A.team_number
+				    FROM
+				        air_ticket_name_list A
+				            LEFT JOIN
+				        air_ticket_order_leg B ON A.ticket_order_pk = B.ticket_order_pk
+				            LEFT JOIN
+				        passenger_ticket_info C ON A.pk = C.passenger_pk
+				            AND C.from_to_city = CONCAT(B.from_city, '--', B.to_city);
+             ]]>
+			<comment>ALTER VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+            drop view if exists payable_return_date;
+			CREATE VIEW payable_return_date AS
+			    SELECT 
+			        create_user, budget_balance, final_balance, return_date
+			    FROM
+			        payable;
+				
+			drop view if exists payable_a;
+			CREATE VIEW payable_a AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS all_count,
+		        SUM(budget_balance) AS all_budget_balance,
+		        SUM(final_balance) AS all_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS all_balance
+		    FROM
+		        payable
+		    GROUP BY create_user;
+				
+                
+            drop view if exists payable_b;
+			CREATE VIEW payable_b AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS current_month_count,
+		        SUM(budget_balance) AS current_month_budget_balance,
+		        SUM(final_balance) AS current_month_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS current_month_balance
+		    FROM
+		        payable_return_date
+		    WHERE
+		        LEFT(return_date, 7) = DATE_FORMAT(CURDATE(), '%Y-%m')
+		    GROUP BY create_user;
+				
+			drop view if exists payable_c;
+			CREATE VIEW payable_c AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS one_month_count,
+		        SUM(budget_balance) AS one_month_budget_balance,
+		        SUM(final_balance) AS one_month_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS one_month_balance
+		    FROM
+		        payable_return_date
+		    WHERE
+		        LEFT(return_date, 7) = DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - 1 MONTH),
+		                '%Y-%m')
+		    GROUP BY create_user;
+				
+            drop view if exists payable_d;
+			CREATE VIEW payable_d AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS two_month_count,
+		        SUM(budget_balance) AS two_month_budget_balance,
+		        SUM(final_balance) AS two_month_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS two_month_balance
+		    FROM
+		        payable_return_date
+		    WHERE
+		        LEFT(return_date, 7) = DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - 2 MONTH),
+		                '%Y-%m')
+		    GROUP BY create_user;
+				
+            drop view if exists payable_e;
+			CREATE VIEW payable_e AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS three_month_count,
+		        SUM(budget_balance) AS three_month_budget_balance,
+		        SUM(final_balance) AS three_month_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS three_month_balance
+		    FROM
+		        payable_return_date
+		    WHERE
+		        LEFT(return_date, 7) = DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - 3 MONTH),
+		                '%Y-%m')
+		    GROUP BY create_user;
+    
+			drop view if exists payable_f;
+			CREATE VIEW payable_f AS
+		    SELECT 
+		        create_user,
+		        COUNT(*) AS earlier_month_count,
+		        SUM(budget_balance) AS earlier_month_budget_balance,
+		        SUM(final_balance) AS earlier_month_final_balance,
+		        SUM(CASE
+		            WHEN ISNULL(final_balance) THEN budget_balance
+		            ELSE final_balance
+		        END) AS earlier_month_balance
+		    FROM
+		        payable_return_date
+		    WHERE
+		        LEFT(return_date, 7) < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL - 3 MONTH),
+		                '%Y-%m')
+		    GROUP BY create_user;
+				
+			drop view if exists payable_summary;
+			CREATE VIEW payable_summary AS
+		    SELECT 
+		        A.user_number,
+		        A.user_name,
+		        B.all_count,
+		        B.all_budget_balance,
+		        B.all_final_balance,
+		        B.all_balance,
+		        C.current_month_count,
+		        C.current_month_budget_balance,
+		        C.current_month_final_balance,
+		        C.current_month_balance,
+		        D.one_month_count,
+		        D.one_month_budget_balance,
+		        D.one_month_final_balance,
+		        D.one_month_balance,
+		        E.two_month_count,
+		        E.two_month_budget_balance,
+		        E.two_month_final_balance,
+		        E.two_month_balance,
+		        F.three_month_count,
+		        F.three_month_budget_balance,
+		        F.three_month_final_balance,
+		        F.three_month_balance,
+		        G.earlier_month_count,
+		        G.earlier_month_budget_balance,
+		        G.earlier_month_final_balance,
+		        G.earlier_month_balance
+		    FROM
+		        user_number A
+		            LEFT JOIN
+		        payable_a B ON A.user_number = B.create_user
+		            LEFT JOIN
+		        payable_b C ON A.user_number = C.create_user
+		            LEFT JOIN
+		        payable_c D ON A.user_number = D.create_user
+		            LEFT JOIN
+		        payable_d E ON A.user_number = E.create_user
+		            LEFT JOIN
+		        payable_e F ON A.user_number = F.create_user
+		            LEFT JOIN
+		        payable_f G ON A.user_number = G.create_user;
+             ]]>
+			<comment>ALTER VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
+
 
 
 

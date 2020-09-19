@@ -11,19 +11,19 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.exception.BusinessException;
 
-
 public class BusinessInterceptor extends AbstractInterceptor {
 
 	private static final long serialVersionUID = 608013227508765392L;
 
-	private Logger logger=Logger.getLogger(BusinessInterceptor.class);
+	private Logger logger = Logger.getLogger(BusinessInterceptor.class);
+
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		
+
 		before(invocation);
 
 		String result = "";
-		
+
 		try {
 			result = invocation.invoke();
 		} catch (DataAccessException ex) {
@@ -66,49 +66,53 @@ public class BusinessInterceptor extends AbstractInterceptor {
 			this.logException(invocation, ex);
 			throw new BusinessException("程序内部错误，操作失败！");
 		}
-		
+
 		after(invocation, result);
-		
-		return result ;
+
+		return result;
 	}
-	
+
 	/**
 	 * @param invocation
 	 * @return
 	 * @throws Exception
 	 */
 	public void before(ActionInvocation invocation) throws Exception {
-//		String actionName=invocation.getProxy().getAction().toString();
-//		String methodName=invocation.getProxy().getMethod();
-//		String user_id=SeentaoApplicationContext.getCurrentUser();
-//		logger.info(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求开始");
+		// String actionName=invocation.getProxy().getAction().toString();
+		// String methodName=invocation.getProxy().getMethod();
+		// String user_id=SeentaoApplicationContext.getCurrentUser();
+		// logger.info(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求开始");
 	}
-	
+
 	/**
 	 * 记录日志等...
+	 * 
 	 * @param invocation
 	 * @return
 	 * @throws Exception
 	 */
-	public void after(ActionInvocation invocation,String result) throws Exception{
-//		String actionName=invocation.getProxy().getAction().toString();
-//		String methodName=invocation.getProxy().getMethod();
-//		String user_id=SeentaoApplicationContext.getCurrentUser();
-//		logger.info(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求结束");
-	}	
-	
-	public void logException(ActionInvocation invocation,Exception ex) throws Exception{
-		String actionName=invocation.getProxy().getAction().toString();
-		String methodName=invocation.getProxy().getMethod();
-		String user_id=XinChiApplicationContext.getCurrentUser();
-		logger.error(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求异常:"+ex);
-	}	
-	
-	public void logError(ActionInvocation invocation,Error ex) throws Exception{
-		String actionName=invocation.getProxy().getAction().toString();
-		String methodName=invocation.getProxy().getMethod();
-		String user_id=XinChiApplicationContext.getCurrentUser();
-		logger.error(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求错误:"+ex);
-	}	
-	
+	public void after(ActionInvocation invocation, String result) throws Exception {
+		// String actionName=invocation.getProxy().getAction().toString();
+		// String methodName=invocation.getProxy().getMethod();
+		// String user_id=SeentaoApplicationContext.getCurrentUser();
+		// logger.info(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求结束");
+	}
+
+	public void logException(ActionInvocation invocation, Exception ex) throws Exception {
+		String actionName = invocation.getProxy().getAction().toString();
+		String methodName = invocation.getProxy().getMethod();
+		String user_id = XinChiApplicationContext.getCurrentUser();
+		// logger.error(Thread.currentThread()+":用户"+user_id+":"+actionName+"."+methodName+"请求异常:"+ex);
+		ex.printStackTrace();
+	}
+
+	public void logError(ActionInvocation invocation, Error ex) throws Exception {
+		String actionName = invocation.getProxy().getAction().toString();
+		String methodName = invocation.getProxy().getMethod();
+		String user_id = XinChiApplicationContext.getCurrentUser();
+		// logger.error(Thread.currentThread() + ":用户" + user_id + ":" + actionName +
+		// "." + methodName + "请求错误:" + ex);
+		ex.printStackTrace();
+	}
+
 }

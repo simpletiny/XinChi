@@ -74,6 +74,18 @@
 		where
 		team_number = #{team_number,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectByTeamNumbers" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_name_list
+		where team_number in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by team_number
+	</select>
+	
 	<select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT
 		*
@@ -299,6 +311,9 @@
 			<if test="team_number != null and team_number !='' ">
 				and team_number = #{team_number,jdbcType=VARCHAR}
 			</if>
+			<if test="order_number != null and order_number !='' ">
+				and order_number = #{order_number,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -346,6 +361,12 @@
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status=#{params.bo.status,jdbcType=CHAR}
 			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.first_ticket_date>=#{params.bo.date_from,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
+			</if>
 		</where>
 		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date
 	</select>
@@ -376,7 +397,8 @@
 		A.change_pk
 
 		from air_ticket_name_list A LEFT JOIN
-		user_base B ON A.client_number=
+		user_base B
+		ON A.client_number=
 		B.user_number
 		LEFT JOIN budget_order_view C ON
 		A.team_number=C.team_number
@@ -395,6 +417,12 @@
 			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.first_ticket_date>=#{params.bo.date_from,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
 		</where>
 		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date

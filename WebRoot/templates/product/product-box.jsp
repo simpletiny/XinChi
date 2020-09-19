@@ -31,17 +31,13 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="width: 30%; float: right">
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
-							</div>
+						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
 							<!-- <div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
 							</div> -->
-							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
-							</div>
-						</div>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
+						</div> 
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -69,7 +65,8 @@ tr td {
 								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
-						<label class="col-md-1 fix-width1 control-label"><input name="product.high_value_flg" data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />只看高分</label>
+						<label class="col-md-1 fix-width1 control-label"><input name="product.high_value_flg"
+							data-bind="click:function(){refresh();return true;}" value="yes" type="checkbox" />只看高分</label>
 					</div>
 					<div class="form-group">
 						<div style="width: 30%; float: right">
@@ -116,8 +113,10 @@ tr td {
 								<td data-bind="text: $data.child_price"></td>
 								<td data-bind="text: $data.business_profit_substract"></td>
 								<td data-bind="text: $data.max_profit_substract"></td>
-								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}" ></a></td>
-								<td><a href="javascript:void(0)"  data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}" ></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}"></a></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>

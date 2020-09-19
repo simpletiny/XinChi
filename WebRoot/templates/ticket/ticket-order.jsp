@@ -68,8 +68,9 @@
 								<input type="text" class="form-control date-picker" placeholder="to" name="airTicketOrder.date_to" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
+						<div style="padding-top: 3px;float:right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回订单</button>
 						</div>
 					</div>
 				</form>

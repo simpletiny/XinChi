@@ -117,6 +117,7 @@ tr td {
 							<tr role="row">
 								<th></th>
 								<th>操作单号</th>
+								<th>单/合</th>
 								<th>供应商</th>
 								<th>主体</th>
 								<th>总成本</th>
@@ -131,8 +132,17 @@ tr td {
 						</thead>
 						<tbody data-bind="foreach: operations">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.team_number}, checked: $root.chosenOperations" /></td>
-								<td data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count"></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_cost}, checked: $root.chosenOperations" /></td>
+								<td ><a data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}" ></a></td>
+								<!-- ko if: $data.single_flg == "N" -->
+								<td><a href="javascript:void(0)"
+									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.team_number)}"></a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.single_flg == "Y" -->
+								<td><a href="javascript:void(0)" style="color: red"
+									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.team_number)}"></a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.supplier_cost"></td>
@@ -289,6 +299,58 @@ tr td {
 	</div>
 	<!-- 查看乘客信息 -->
 	<div id="passengers-check" style="display: none; width: 800px">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:passengers">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- 查看订单详情 -->
+	<div id="div-check-order" style="display: none; width: 800px">
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>团号</th>
+						<th>出团日期</th>
+						<th>产品名称</th>
+						<th>成人</th>
+						<th>儿童</th>
+						<th>游客信息</th>
+						<th>销售</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: sale_orders">
+					<tr>
+						<td data-bind="text: $data.team_number"></td>
+						<td data-bind="text: $data.departure_date"></td>
+						<td data-bind="text: $data.product_name"></td>
+						<td data-bind="text: $data.adult_count"></td>
+						<td data-bind="text: $data.special_count"></td>
+						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
+						<td data-bind="text:$data.create_user"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 订单详情查看乘客信息 -->
+	<div id="passengers-check-inner" style="display: none; width: 600px; height: 550px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

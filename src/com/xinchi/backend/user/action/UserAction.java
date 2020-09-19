@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.annotations.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +20,6 @@ import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.Utils;
-import com.xinchi.tools.PropertiesUtil;
 
 @Controller
 @Scope("prototype")
@@ -110,6 +106,13 @@ public class UserAction extends BaseAction {
 
 	public String searchAllSales() {
 		users = userService.getAllUsersByRole(ResourcesConstants.USER_ROLE_SALES);
+		return SUCCESS;
+	}
+
+	private String role;
+
+	public String searchByRole() {
+		users = userService.getAllUsersByRole(role);
 		return SUCCESS;
 	}
 
@@ -244,6 +247,14 @@ public class UserAction extends BaseAction {
 
 	public void setUcb(UserCommonBean ucb) {
 		this.ucb = ucb;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

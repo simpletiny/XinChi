@@ -78,6 +78,8 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	private String product_order_number;
 
+	private String standard_flg;
+
 	@Autowired
 	private ProductOrderTeamNumberService productOrderNumberService;
 
@@ -94,11 +96,15 @@ public class ProductOrderOperationAction extends BaseAction {
 		BigDecimal adult_price = BigDecimal.ZERO;
 		BigDecimal special_price = BigDecimal.ZERO;
 
-		productSuppliers = productSupplierService.selectByProductPk(product_pk);
+		if (standard_flg.equals("Y")) {
+			productSuppliers = productSupplierService.selectByProductPk(product_pk);
 
-		for (ProductSupplierBean psb : productSuppliers) {
-			adult_price = adult_price.add(psb.getAdult_cost());
-			special_price = special_price.add(psb.getChild_cost() == null ? BigDecimal.ZERO : psb.getChild_cost());
+			for (ProductSupplierBean psb : productSuppliers) {
+				adult_price = adult_price.add(psb.getAdult_cost());
+				special_price = special_price.add(psb.getChild_cost() == null ? BigDecimal.ZERO : psb.getChild_cost());
+			}
+		} else {
+			productSuppliers = new ArrayList<ProductSupplierBean>();
 		}
 
 		for (OrderDto o : orders) {
@@ -525,5 +531,13 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setProduct_order_number(String product_order_number) {
 		this.product_order_number = product_order_number;
+	}
+
+	public String getStandard_flg() {
+		return standard_flg;
+	}
+
+	public void setStandard_flg(String standard_flg) {
+		this.standard_flg = standard_flg;
 	}
 }

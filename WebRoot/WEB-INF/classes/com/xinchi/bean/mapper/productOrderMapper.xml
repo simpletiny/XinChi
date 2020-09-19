@@ -290,7 +290,7 @@
 		product_order A
 		LEFT JOIN
 		user_base B ON A.product_manager_number = B.user_number
-		
+
 		<where>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
@@ -304,12 +304,18 @@
 			<if test="params.bo.order_number != null and params.bo.order_number !=''">
 				and A.order_number like concat('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
 			</if>
-			 <if test="params.bo.statuses != null and params.bo.statuses !=''">
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and A.departure_date >=#{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and A.departure_date &lt;=#{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in
 				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
 					#{params.bo.statuses[${index}]}
 				</foreach>
-			</if> 
+			</if>
 		</where>
 		order by A.departure_date DESC
 	</select>

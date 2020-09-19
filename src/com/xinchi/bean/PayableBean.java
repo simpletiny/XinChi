@@ -48,6 +48,8 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	private String create_user;
 
+	private String product_manager;
+
 	private String back_days;
 	// search condition
 	private String departure_month;
@@ -308,6 +310,14 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setSend_date(String send_date) {
 		this.send_date = send_date;
+	}
+
+	public String getProduct_manager() {
+		return product_manager;
+	}
+
+	public void setProduct_manager(String product_manager) {
+		this.product_manager = product_manager;
 	}
 
 }
