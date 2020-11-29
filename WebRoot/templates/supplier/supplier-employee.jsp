@@ -41,7 +41,7 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">编辑</button>
 							</div>
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee() }">删除</button>
 							</div>
 						</div>
 					</div>

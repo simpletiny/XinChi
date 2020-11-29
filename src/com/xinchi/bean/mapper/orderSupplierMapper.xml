@@ -95,6 +95,12 @@
 		from order_supplier
 		where order_pk = #{order_pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByEmployeePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from order_supplier
+		where supplier_employee_pk = #{employee_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from order_supplier
@@ -334,7 +340,8 @@
 		LEFT JOIN
 		supplier C ON B.financial_body_pk
 		= C.pk
-		LEFT JOIN product_order D ON
+		LEFT JOIN
+		product_order D ON
 		A.order_pk = D.pk
 		<where>
 			<if test="order_pk != null and order_pk != ''">

@@ -250,7 +250,7 @@
 											<th style="width: 10%">分房组</th>
 											<th style="width: 9%"></th>
 											<th style="width: 9%"></th>
-											<!-- ko if:order().lock_flg=="N" && order().operate_flg=="N" -->
+											<!-- ko if: order().lock_flg=="N" && order().operate_flg=="N" -->
 											<th style="width: 3%"></th>
 											<!-- /ko -->
 										</tr>
@@ -277,7 +277,7 @@
 												type="hidden" /></td>
 											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
-											<!-- ko if:order().lock_flg=="N" && order().operate_flg=="N" -->
+											<!-- ko if:$root.order().lock_flg=="N" && $root.order().operate_flg=="N" -->
 											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
 											<!-- /ko -->
 										</tr>

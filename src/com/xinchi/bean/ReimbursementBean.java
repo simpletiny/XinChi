@@ -45,6 +45,7 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	private String money_from;
 	private String money_to;
+	private String delete_flg;
 
 	public String getItem() {
 		return item;
@@ -204,6 +205,14 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setMoney_to(String money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
 	}
 
 }

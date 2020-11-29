@@ -760,3 +760,16 @@ $(document).ready(function() {
 	});
 
 });
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.payables().length; i++) {
+			var payable = ctx.payables()[i];
+			ctx.chosenOrders.push(payable);
+		}
+	} else {
+		for (var i = 0; i < ctx.payables().length; i++) {
+			var payable = ctx.payables()[i];
+			ctx.chosenOrders.remove(payable);
+		}
+	}
+}

@@ -23,6 +23,9 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="limit_time" property="limit_time" jdbcType="VARCHAR" />
 		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
+		<result column="paid_user" property="paid_user" jdbcType="VARCHAR" />
+		<result column="approve_user_name" property="approve_user_name" jdbcType="VARCHAR" />
+		<result column="paid_user_name" property="paid_user_name" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -46,7 +49,8 @@
 		create_time,
 		update_time,
 		limit_time,
-		approve_user
+		approve_user,
+		paid_user
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -267,6 +271,9 @@
 			<if test="approve_user != null">
 				approve_user = #{approve_user,jdbcType=VARCHAR},
 			</if>
+			<if test="paid_user != null">
+				paid_user = #{paid_user,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -298,7 +305,7 @@
 		B.financial_body_name as supplier_employee_name,
 		B.financial_body_pk as supplier_employee_pk,
 		A.money,
-		LEFT(A.time,10) AS time,
+		A.time AS time,
 		A.type,
 		A.confirm_time,
 		A.status,
@@ -313,9 +320,14 @@
 		A.pk,
 		A.create_time,
 		A.update_time,
-		A.limit_time
+		A.limit_time,
+		A.approve_user,
+		A.paid_user,
+		C.user_name AS approve_user_name,
+		D.user_name As paid_user_name
 		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
-
+		LEFT JOIN user_base C ON A.approve_user = C.user_number
+		LEFT JOIN user_base D ON A.paid_user = D.user_number
 		where A.related_pk = #{related_pk,jdbcType=VARCHAR}
 	</select>
 

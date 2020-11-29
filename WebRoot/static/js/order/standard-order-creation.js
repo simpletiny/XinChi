@@ -112,6 +112,9 @@ var OrderContext = function() {
 			var id = $(tr).find("[st='id']").val();
 			var price = $(tr).find("[st='price']").val();
 
+			if (name.trim() == "" || id.trim() == "") {
+				continue;
+			}
 			json += '{"chairman":"' + teamChairman + '","index":"' + index
 					+ '","name":"' + name + '","sex":"' + sex
 					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"'
@@ -295,6 +298,12 @@ function autoCaculate() {
 		var td_price = $(tr).find("[st='price']");
 		var id = $(td_id).val();
 		var td_sex = $(tr).find("[st='sex']");
+		var td_age = $(tr).find("[st='age']");
+		var d = new Date();
+		var year_now = d.getFullYear();
+		var birthYear = id.substring(6, 10);
+		$(td_age).val(year_now - birthYear);
+
 		if (id.length < 18)
 			continue;
 
@@ -395,40 +404,46 @@ function formatNameList() {
 		nameObj.id = passenger[1];
 		nameObjs.push(nameObj);
 	}
-	var d = new Date();
-	var year_now = d.getFullYear();
 
 	for (var i = 0; i < nameObjs.length; i++) {
 		var nameObj = nameObjs[i];
-		var birthYear = nameObj.id.substring(6, 10);
-
-		var lastSecond = nameObj.id.charAt(16);
-
 		if (isRepeatId(nameObj.id))
 			continue;
-		var tbody = $("#name-table").find("tbody");
-		var trs = $(tbody).children();
-		if (nameObjs.length > trs.length)
-			ctx.addName();
-
-		var tbody = $("#name-table").find("tbody");
-		var trs = $(tbody).children();
-		var tr = trs[i];
-		var name = $(tr).find("[st='name']");
-		var sex = $(tr).find("[st='sex']");
-		var age = $(tr).find("[st='age']");
-		var id = $(tr).find("[st='id']");
-
-		$(name).val(nameObj.name);
-		$(sex).val(lastSecond % 2 == 0 ? "F" : "M");
-		$(age).val(year_now - birthYear);
-		$(id).val(nameObj.id);
+		writeName(nameObj);
 	}
 
 	$("#txt-name-list").val(newNameList);
 	layer.close(passengerBatLayer);
 	autoPrice();
 	autoCaculate();
+}
+
+var writeName = function(nameObj) {
+
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	var done = false;
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+
+		if ($(tr).find("[st='name']").val().trim() == ""
+				&& $(tr).find("[st='id']").val().trim() == "") {
+
+			var name = $(tr).find("[st='name']");
+			var id = $(tr).find("[st='id']");
+
+			$(name).val(nameObj.name);
+			$(id).val(nameObj.id);
+
+			done = true;
+		}
+	}
+
+	if (!done) {
+		ctx.addName();
+		writeName(nameObj);
+	}
+
 }
 // 判断是否已经存在重复的id乘客
 var isRepeatId = function(id) {

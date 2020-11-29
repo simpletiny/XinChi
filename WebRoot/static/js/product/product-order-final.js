@@ -201,7 +201,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['600px', '600px'],
+				area : ['800px', '600px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {

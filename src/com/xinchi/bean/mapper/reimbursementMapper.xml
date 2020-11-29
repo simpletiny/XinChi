@@ -23,6 +23,7 @@
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -43,7 +44,8 @@
 		pk,
 		create_user,
 		create_time,
-		update_time
+		update_time,
+		delete_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -221,6 +223,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -262,6 +267,7 @@
 		user_base D ON
 		A.pay_user=D.user_number
 		<where>
+			and A.delete_flg='N' 
 			<if test="params.bo.apply_user != null and params.bo.apply_user !=''">
 				and A.apply_user = #{params.bo.apply_user,jdbcType=VARCHAR}
 			</if>

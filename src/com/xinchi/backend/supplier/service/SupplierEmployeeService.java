@@ -3,9 +3,10 @@ package com.xinchi.backend.supplier.service;
 import java.util.List;
 
 import com.xinchi.bean.SupplierEmployeeBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
-public interface SupplierEmployeeService {
+public interface SupplierEmployeeService extends BaseService {
 
 	/**
 	 * 新增
@@ -50,4 +51,6 @@ public interface SupplierEmployeeService {
 	public List<SupplierEmployeeBean> getAllSupplierEmployeeByPage(Page<SupplierEmployeeBean> page);
 
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
+
+	public String deleteEmployee(String employee_pk);
 }

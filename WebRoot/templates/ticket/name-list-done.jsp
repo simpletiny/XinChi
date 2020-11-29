@@ -93,6 +93,7 @@
 						<div style="padding-top: 3px; float: right">
 							<button type="button" class="btn btn-green" data-bind="click:flightChange">航变</button>
 							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
+							<button type="button" class="btn btn-green" data-bind="click:rollBack">打回重出</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -138,14 +139,17 @@
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
+								<th>序号</th>
 								<th>乘机人</th>
+								<th>身份证号</th>
 								<th>订单号</th>
 								<th>团号</th>
-								<th>客户</th>
 								<th>首段日期</th>
+								<th>天数</th>
+								<th>客户</th>
 								<th>首航段</th>
-								<th>身份证号</th>
 								<th>价格</th>
+								<th>需求备注</th>
 								<th>状态</th>
 							</tr>
 						</thead>
@@ -153,14 +157,17 @@
 							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status+':'+$data.status}, checked: $root.chosenPassengers" /></td>
+								<td data-bind="text: $index()+1"></td>
 								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.id"></td>
 								<td st="order-number" data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.team_number"></td>
-								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
+								<td data-bind="text: $data.days"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-								<td data-bind="text: $data.id"></td>
 								<td data-bind="text: $data.ticket_cost" class="rmb"></td>
+								<td data-bind="text: $data.need_comment"></td>
 								<!-- ko if:$data.status=='Y' -->
 								<td data-bind="text:$root.statusMapping[$data.status]"></td>
 								<!-- /ko -->

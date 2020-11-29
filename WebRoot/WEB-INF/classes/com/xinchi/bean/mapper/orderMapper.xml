@@ -107,6 +107,30 @@
 		team_number = #{team_number,jdbcType=CHAR}
 		order by name_index
 	</select>
+	<select id="search3MonthScoreByUserNumber" parameterType="java.lang.String" resultMap="SaleScoreMap">
+		SELECT sum(IF(
+		A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0)) AS score,
+		LEFT(A.confirm_date,7) as
+		confirm_month,
+		A.create_user AS sale_number,
+		B.user_name AS sale_name,
+		sum(IF(
+		A.confirm_flg!='N' AND(C.final_type is null OR
+		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
+		FROM budget_standard_order A
+		LEFT JOIN user_base B on
+		A.create_user = B.user_number
+		LEFT JOIN final_standard_order C ON
+		A.team_number = C.team_number
+		where
+		LEFT(A.confirm_date,7) in (date_format(now(),'%Y-%m'),date_format(date_sub(now(),interval 1
+		month),'%Y-%m'),date_format(date_sub(now(),interval 2 month),'%Y-%m'))
+		and A.create_user
+		=#{user_number,jdbcType=VARCHAR}
+		GROUP by LEFT(A.confirm_date,7)
+		ORDER by LEFT(A.confirm_date,7) DESC
+	</select>
 
 	<select id="selectConfirmingOrders" resultMap="NameResultMap" parameterType="com.xinchi.bean.OrderDto">
 		select
@@ -178,6 +202,7 @@
 		GROUP by LEFT(A.confirm_date,7),A.create_user
 		ORDER by score DESC
 	</select>
+
 	<select id="searchBackMoneyScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
 		select
 		B.user_name AS sale_name,

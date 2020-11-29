@@ -177,7 +177,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>团号</th>
 								<th>回团天数</th>
 								<th>决否</th>

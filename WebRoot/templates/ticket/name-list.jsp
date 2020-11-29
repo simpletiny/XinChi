@@ -131,13 +131,16 @@
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
+								<th>序号</th>
 								<th>乘机人</th>
+								<th>身份证号</th>
 								<th>订单号</th>
 								<th>团号</th>
-								<th>客户</th>
 								<th>首段日期</th>
+								<th>天数</th>
+								<th>客户</th>
 								<th>首航段</th>
-								<th>身份证号</th>
+								<th>票务需求</th>
 								<th>确认</th>
 							</tr>
 						</thead>
@@ -146,14 +149,16 @@
 
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status}, checked: $root.chosenPassengers" /></td>
+								<td data-bind="text: $index()+1"></td>
 								<td data-bind="text: $data.name"></td>
+								<td data-bind="text: $data.id"></td>
 								<td st="order-number" data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.team_number"></td>
-								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>
+								<td data-bind="text: $data.days"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-
-								<td data-bind="text: $data.id"></td>
+								<td data-bind="text: $data.need_comment"></td> 
 								<td data-bind="text:$root.confirmStatusMapping[$data.name_confirm_status]"></td>
 							</tr>
 						</tbody>

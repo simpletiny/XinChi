@@ -29,6 +29,9 @@
 		<action name="createEmployee" class="supplierEmployeeAction" method="createEmployee">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="deleteEmployee" class="supplierEmployeeAction" method="deleteEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchEmployee" class="supplierEmployeeAction" method="searchEmployee">
 			<result name="success" type="json"></result>
 		</action>

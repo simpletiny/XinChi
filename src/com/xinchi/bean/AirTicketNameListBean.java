@@ -47,6 +47,10 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	private String change_pk;
 
+	private int days;
+
+	private String need_comment;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -205,6 +209,22 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setChange_pk(String change_pk) {
 		this.change_pk = change_pk;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
+	public String getNeed_comment() {
+		return need_comment;
+	}
+
+	public void setNeed_comment(String need_comment) {
+		this.need_comment = need_comment;
 	}
 
 }

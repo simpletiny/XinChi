@@ -384,6 +384,19 @@ $(document).ready(function() {
 	ctx.refresh();
 });
 
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.receiveds().length; i++) {
+			var received = ctx.receiveds()[i];
+			ctx.chosenReceiveds.push(received.pk + ";" + received.status);
+		}
+	} else {
+		for (var i = 0; i < ctx.receiveds().length; i++) {
+			var received = ctx.receiveds()[i];
+			ctx.chosenReceiveds.remove(received.pk + ";" + received.status);
+		}
+	}
+}
 function baseMonth(txt) {
 	if ($(txt).val().trim() != '') {
 		$('.date-picker').val("");

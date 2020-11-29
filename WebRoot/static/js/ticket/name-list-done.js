@@ -159,12 +159,10 @@ var PassengerContext = function() {
 
 			var current = divs[i];
 			var ticket_source_pk = $(current).find(
-					"input[st='ticket-source-pk']").val() - 0;
+					"input[st='ticket-source-pk']").val();
 
 			var money = $(current).find("input[st='money']").val() - 0;
-
 			sumMoney += money;
-
 			allotJson += ',{"ticket_source_pk":"' + ticket_source_pk
 					+ '","money":"' + money + '"}';
 		}
@@ -237,6 +235,61 @@ var PassengerContext = function() {
 
 	self.cancelChange = function() {
 		layer.close(changeLayer);
+	}
+	/**
+	 * 将已出票名单打回到出票状态
+	 */
+	self.rollBack = function() {
+		if (self.chosenPassengers().length < 1) {
+			fail_msg("请选择需要打回的名单！");
+		} else {
+			$
+					.layer({
+						area : ['auto', 'auto'],
+						dialog : {
+							msg : "确认要将这些名单打回至待出票状态吗？",
+							btns : 2,
+							type : 4,
+							btn : ['确认', '取消'],
+							yes : function(index) {
+								layer.close(index);
+								startLoadingIndicator("打回中...");
+								var param = "";
+								for (var i = 0; i < self.chosenPassengers().length; i++) {
+									var data = self.chosenPassengers()[i]
+											.split(":");
+
+									var status = data[6];
+									console.log(status);
+									if (status == "C") {
+										layer.close(index);
+										fail_msg("不能选择已经有航变的乘客！");
+										return;
+									}
+									var pk = data[0];
+									param += "passenger_pks=" + pk + "&";
+								}
+
+								$
+										.ajax(
+												{
+													type : "POST",
+													url : self.apiurl
+															+ 'ticket/rollBackNameDone',
+													data : param
+												}).success(function(str) {
+											endLoadingIndicator();
+											if (str == "success") {
+												self.refresh();
+											} else {
+												fail_msg("打回失败，请联系管理员！");
+											}
+										});
+
+							}
+						}
+					});
+		}
 	}
 	self.search = function() {
 

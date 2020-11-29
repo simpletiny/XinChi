@@ -47,6 +47,9 @@ public class ProductOrderBean extends SupperBO implements Serializable {
 
 	private int days;
 
+	// search options
+	private String team_number;
+
 	public String getOrder_number() {
 		return order_number;
 	}
@@ -205,6 +208,14 @@ public class ProductOrderBean extends SupperBO implements Serializable {
 
 	public void setDays(int days) {
 		this.days = days;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 
 }

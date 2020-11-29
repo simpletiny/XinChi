@@ -71,7 +71,8 @@
 
 	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
 		delete from product_order_operation
-		where team_number = #{team_number,jdbcType=CHAR}
+		where team_number =
+		#{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderOperationBean">
@@ -321,12 +322,17 @@
 		A.off_day,
 		C.supplier_short_name AS supplier_name,
 		C.pk AS supplier_pk,
-	 	A.passenger_captain,
-	 	if(D.single_flg is null,'Y',D.single_flg) AS single_flg
+		A.passenger_captain,
+		if(D.single_flg is null,'Y',D.single_flg) AS single_flg,
+		group_concat(E.team_number) AS team_numbers
 		from product_order_operation A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
-		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN
+		supplier C ON B.financial_body_pk = C.pk
 		LEFT JOIN product_order D ON A.team_number=D.order_number
+		LEFT JOIN
+		product_order_team_number E ON A.team_number=E.product_order_number
+
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
@@ -350,7 +356,11 @@
 				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY A.pick_date DESC,A.team_number,A.operate_index 
+		group by A.team_number,A.operate_index
+		<if test="params.bo.team_number1 != null and params.bo.team_number1 !=''">
+			HAVING team_numbers like CONCAT('%',#{params.bo.team_number1,jdbcType=VARCHAR},'%')
+		</if>
+		ORDER BY A.pick_date DESC,A.team_number,A.operate_index
 	</select>
 
 
@@ -382,7 +392,8 @@
 		A.passenger_captain
 		from
 		product_order_operation A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		where A.team_number =
+		where
+		A.team_number =
 		#{team_number,jdbcType=CHAR}
 		ORDER BY
 		A.operate_index

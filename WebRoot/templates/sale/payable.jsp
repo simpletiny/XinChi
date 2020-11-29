@@ -96,7 +96,7 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:chosenSales,event:{change:function(){fetchSummary();search();}}"
+									<select class="form-control" style="height: 34px" data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:chosenSales,event:{change:function(){fetchSummary();search();}}"
 										name="payable.create_user"></select>
 								</div>
 							</div>
@@ -107,7 +107,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">按出团日期</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" id="select-sales" data-bind="options: sortTypes" name="payable.sort_type"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: sortTypes" name="payable.sort_type"></select>
 							</div>
 						</div>
 					</div>
@@ -166,7 +166,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>供应商</th>
 								<th>主体</th>
 								<th>回团天数</th>

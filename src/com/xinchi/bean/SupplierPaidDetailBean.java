@@ -46,6 +46,12 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	private String approve_user;
 
+	private String paid_user;
+
+	private String paid_user_name;
+	private String approve_user_name;
+
+	private String voucher_file_name;
 	// options
 	private List<String> statuses;
 	private String supplier_name;
@@ -216,6 +222,38 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setSupplier_name(String supplier_name) {
 		this.supplier_name = supplier_name;
+	}
+
+	public String getPaid_user() {
+		return paid_user;
+	}
+
+	public void setPaid_user(String paid_user) {
+		this.paid_user = paid_user;
+	}
+
+	public String getPaid_user_name() {
+		return paid_user_name;
+	}
+
+	public String getApprove_user_name() {
+		return approve_user_name;
+	}
+
+	public void setPaid_user_name(String paid_user_name) {
+		this.paid_user_name = paid_user_name;
+	}
+
+	public void setApprove_user_name(String approve_user_name) {
+		this.approve_user_name = approve_user_name;
+	}
+
+	public String getVoucher_file_name() {
+		return voucher_file_name;
+	}
+
+	public void setVoucher_file_name(String voucher_file_name) {
+		this.voucher_file_name = voucher_file_name;
 	}
 
 }

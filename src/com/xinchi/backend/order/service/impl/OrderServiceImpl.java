@@ -548,15 +548,19 @@ public class OrderServiceImpl implements OrderService {
 			bso.setPk(order.getPk());
 
 			int old = Integer.valueOf(order.getName_confirm_status());
-			bso.setName_confirm_status(String.valueOf(old + 1));
 
-			bsoDao.update(bso);
+			if (old < 5) {
+				bso.setName_confirm_status(String.valueOf(old + 1));
+				bsoDao.update(bso);
+			}
 		} else {
 			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 			bnso.setPk(order.getPk());
 			int old = Integer.valueOf(order.getName_confirm_status());
-			bnso.setName_confirm_status(String.valueOf(old + 1));
-			bnsoDao.update(bnso);
+			if (old < 5) {
+				bnso.setName_confirm_status(String.valueOf(old + 1));
+				bnsoDao.update(bnso);
+			}
 		}
 		return SUCCESS;
 	}
@@ -591,5 +595,11 @@ public class OrderServiceImpl implements OrderService {
 			bnsoDao.update(bnso);
 		}
 		return SUCCESS;
+	}
+
+	@Override
+	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number) {
+
+		return dao.search3MonthScoreByUserNumber(user_number);
 	}
 }

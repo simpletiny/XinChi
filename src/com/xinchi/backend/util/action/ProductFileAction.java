@@ -490,7 +490,7 @@ public class ProductFileAction extends BaseAction {
 
 		data.put("name", allName);
 		data.put("id", allId);
-		data.put("tel", chairman + "：" + allTel);
+		data.put("tel", allTel);
 		data.put("nameid", allNameId);
 		data.put("chairman", chairman);
 		return data;

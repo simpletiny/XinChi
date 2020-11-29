@@ -60,6 +60,9 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	private String single_flg;
 
+	// search option
+	private String team_number1;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -274,6 +277,14 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setSingle_flg(String single_flg) {
 		this.single_flg = single_flg;
+	}
+
+	public String getTeam_number1() {
+		return team_number1;
+	}
+
+	public void setTeam_number1(String team_number1) {
+		this.team_number1 = team_number1;
 	}
 
 }

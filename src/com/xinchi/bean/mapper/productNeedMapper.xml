@@ -64,7 +64,7 @@
 		C.user_number
 		LEFT JOIN final_order_view D ON A.team_number=D.team_number
 		<where>
-			and A.confirm_flg in ('Y','F') and D.final_type!=4
+			and A.confirm_flg in ('Y','F') and (D.final_type is null or D.final_type!=4)
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
 			</if>

@@ -217,4 +217,10 @@ public class AccPaidServiceImpl implements AccPaidService {
 		return dao.selectSumWFP();
 	}
 
+	@Override
+	public List<WaitingForPaidBean> selectWfpByRelatedPk(String related_pk) {
+
+		return dao.selectByRelatedPk(related_pk);
+	}
+
 }

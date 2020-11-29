@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -22,26 +24,34 @@ public class SaleDashBoardAction extends BaseAction {
 	private OrderService orderService;
 
 	private List<SaleScoreDto> scores;
-	
+
 	private SaleScoreDto score;
-	
+
 	public String searchSaleScoreByPage() {
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", score);
 		page.setParams(params);
-		
+
 		scores = orderService.searchSaleScoreByPage(page);
 		return SUCCESS;
 	}
-	
+
 	public String searchBackMoneyScoreByPage() {
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bo", score);
 		page.setParams(params);
-		
+
 		scores = orderService.searchBackMoneyScoreByPage(page);
+		return SUCCESS;
+	}
+
+	public String search3MonthSaleScore() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String user_number = sessionBean.getUser_number();
+		scores = orderService.search3MonthScoreByUserNumber(user_number);
 		return SUCCESS;
 	}
 

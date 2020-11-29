@@ -133,6 +133,7 @@ public class AccPaidAction extends BaseAction {
 			for (SupplierPaidDetailBean detail : details) {
 				detail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
 				detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+				detail.setPaid_user(sessionBean.getUser_number());
 				paidService.update(detail);
 			}
 		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {

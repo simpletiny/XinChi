@@ -135,6 +135,7 @@ var PayableContext = function() {
 
 	var pages = new Array();
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var totalBudgetPayable = 0;
 		var totalPaid = 0;
 		var totalBudgetBalance = 0;
@@ -167,6 +168,7 @@ var PayableContext = function() {
 					self.setPageNums(self.currentPage());
 
 					$(".rmb").formatCurrency();
+					endLoadingIndicator();
 				});
 	};
 
@@ -251,6 +253,7 @@ var PayableContext = function() {
 
 	self.search = function() {
 		self.refresh();
+		console.log("DDWWO")
 	};
 
 	self.resetPage = function() {
@@ -310,5 +313,5 @@ var ctx = new PayableContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
-	ctx.search();
+	ctx.refresh();
 });

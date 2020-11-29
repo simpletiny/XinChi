@@ -43,6 +43,22 @@ tr td {
 	white-space: nowrap;
 	text-align: left
 }
+
+.info {
+	white-space: pre-line;
+}
+
+.fix-width {
+	width: 45% !important;
+}
+
+.col-md-3 {
+	width: 24% !important;
+}
+
+.col-md-1 {
+	width: 4% !important;
+}
 </style>
 </head>
 <body>
@@ -64,7 +80,7 @@ tr td {
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">删除</button>
 						</div>
-					</div> 
+					</div>
 					<div class="form-group">
 						<div class="col-md-6">
 							<div data-bind="foreach: status" style="padding-top: 4px;">
@@ -77,19 +93,19 @@ tr td {
 					</div>
 					<div class="form-group">
 						<div class="span6">
-							<label class="col-md-1 control-label">产品编号</label>
+							<label class="col-md-1 control-label" style="width:5% !important">产品编号</label>
 							<div class="col-md-2">
 								<input class="form-control" placeholder="产品编号" name="product.product_number"></input>
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">产品名称</label>
+							<label class="col-md-1 control-label" style="width:5% !important">产品名称</label>
 							<div class="col-md-2">
 								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label">产品线</label>
+							<label class="col-md-1 control-label" style="width:5% !important">产品线</label>
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" style="height: 34px"
 									data-bind="options: locations,optionsText:'name',optionsValue:'name',value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
@@ -100,7 +116,7 @@ tr td {
 					<div class="form-group">
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
-								<label class="col-md-1 control-label">产品经理</label>
+								<label class="col-md-1 control-label" style="width:5% !important">产品经理</label>
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px" id="select-sales"
 										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
@@ -119,7 +135,7 @@ tr td {
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>序</th>
 								<th>状态</th>
 								<th>产品编号</th>
@@ -133,7 +149,6 @@ tr td {
 								<th>首段城市对</th>
 								<th>销售注意</th>
 								<th>儿童策略</th>
-								<th>机票</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>产品经理</th>
 								</s:if>
@@ -170,13 +185,6 @@ tr td {
 									data-bind="text: $data.sale_attention, click:function(){msg($data.sale_attention)}"></a></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.sale_strategy, click:function(){msg($data.sale_strategy)}"></a></td>
-
-								<!-- ko if: $data.air_ticket_charge=='NO' -->
-								<td>未绑定</td>
-								<!-- /ko -->
-								<!-- ko if: $data.air_ticket_charge!='NO' -->
-								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkAirTicket($data.pk)} ">查看</a></td>
-								<!-- /ko -->
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
@@ -294,6 +302,154 @@ tr td {
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
+	</div>
+	<div id="product-info" style="display: none; width: 1200px">
+		<div class="input-row clearfloat">
+			<div class="input-row clearfloat">
+				<!-- ko if:product().strict_price_flg=="Y" -->
+				<label class="l" style="width: 170px">严格执行定价（是）</label>
+				<!-- /ko -->
+				
+				<!-- ko if:product().strict_price_flg=="N" -->
+				<label class="l" style="width: 170px">严格执行定价（否）</label>
+				<!-- /ko -->
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-3">
+
+					<label class="l">产品线</label>
+					<div class="ip fix-width">
+						<div class="ip">
+							<p class="ip-default" data-bind="text: product().location"></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 ">
+					<label class="l">产品名称</label>
+					<div class="ip fix-width">
+						<p class="ip-default" data-bind="text: product().name"></p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label class="l">型号</label>
+					<div class="ip fix-width">
+						<p class="ip-default" data-bind="text: product().product_model"></p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label class="l">天数</label>
+					<div class="ip fix-width">
+						<p class="ip-default" data-bind="text: product().days"></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="input-row clearfloat" style="margin-top: 40px">
+				<table style="width: 100%" id="table-product">
+					<tr>
+						<td style="width: 24%"><label class="l">&nbsp;</label>
+							<div class="ip fix-width">
+								<label class="l" style="text-align: center">成人</label>
+							</div></td>
+						<td style="width: 24%">
+							<div class="ip fix-width">
+								<label class="l" style="text-align: center">儿童</label>
+							</div>
+						</td>
+						<td style="width: 24%"></td>
+						<td style="width: 24%"></td>
+					</tr>
+					<tr>
+						<td>
+							<div class="">
+								<label class="l">直客报价</label>
+								<div class="ip fix-width">
+									<p class="ip-default" data-bind="text: product().adult_price"></p>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product().child_price"></p>
+							</div>
+						</td>
+						<td>
+							<div class="">
+								<label class="l">同业返利</label>
+								<div class="ip fix-width">
+									<p class="ip-default" data-bind="text: product().business_profit_substract"></p>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="">
+								<label class="l">最大让利</label>
+								<div class="ip fix-width">
+									<p class="ip-default" data-bind="text: product().max_profit_substract"></p>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td><label class="l">其他成本</label>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product().other_cost"></p>
+							</div></td>
+						<td>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product.other_child_cost"></p>
+							</div>
+						</td>
+						<td><label class="l">首段出港</label>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product().first_air_start"></p>
+							</div></td>
+						<td><label class="l">首段目的</label>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product().first_air_end"></p>
+							</div></td>
+					</tr>
+					<tr>
+						<td>
+							<div class="">
+								<label class="l">产品分值</label>
+								<div class="ip fix-width">
+									<p class="ip-default" data-bind="text: product().product_value"></p>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="ip fix-width">
+								<p class="ip-default" data-bind="text: product().product_child_value"></p>
+							</div>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
+							<div class="ip">
+								<p class="ip-default info" data-bind="text: product().sale_attention"></p>
+							</div></td>
+						<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
+							<div class="ip">
+								<p class="ip-default info" data-bind="text: product().sale_strategy"></p>
+							</div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12">
+					<label class="l">备注</label>
+					<div class="ip">
+						<p class="ip-default info" data-bind="text: product().comment"></p>
+					</div>
+				</div>
+			</div>
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: doOnSale">上架</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: cancelOnSale">取消</a>
 			</div>
 		</div>
 	</div>

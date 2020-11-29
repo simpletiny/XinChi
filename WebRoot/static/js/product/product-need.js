@@ -1,12 +1,9 @@
 var operateLayer;
 var passengerCheckLayer;
 var airLayer;
-var pageChkAll = new Array();
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.order = ko.observable({});
-
 	self.chosenOrders = ko.observableArray([]);
 
 	self.status = ['N', 'I', 'Y'];
@@ -48,7 +45,6 @@ var OrderContext = function() {
 		items : []
 	});
 
-	self.chosenAll = ko.observable(false);
 	self.totalAdult = ko.observable();
 	self.totalSpecial = ko.observable();
 	self.refresh = function() {
@@ -76,7 +72,6 @@ var OrderContext = function() {
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 
-					self.chosenAll(pageChkAll[self.currentPage()]);
 					endLoadingIndicator();
 				});
 	};
@@ -428,29 +423,6 @@ var OrderContext = function() {
 		layer.close(airLayer);
 	}
 
-	self.chkAll = function(data, event) {
-		if ($(event.target).is(":checked")) {
-			pageChkAll[self.currentPage()] = true;
-			$(self.orders()).each(
-					function(idx, data) {
-						var v = data.pk + ';' + data.product_pk + ';'
-								+ data.team_number + ';' + data.operate_flg
-								+ ';' + data.name_confirm_status;
-						self.chosenOrders.push(v);
-					});
-		} else {
-			pageChkAll[self.currentPage()] = false;
-			$(self.orders()).each(
-					function(idx, data) {
-						var v = data.pk + ';' + data.product_pk + ';'
-								+ data.team_number + ';' + data.operate_flg
-								+ ';' + data.name_confirm_status;
-						self.chosenOrders.remove(v);
-					});
-		}
-		return true;
-	}
-
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -578,6 +550,28 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.orders().length; i++) {
+			var order = ctx.orders()[i];
+			ctx.chosenOrders.push(order.pk + ";" + order.product_pk + ";"
+					+ order.team_number + ';' + order.operate_flg + ';'
+					+ order.name_confirm_status + ';' + order.standard_flg
+					+ ';' + order.departure_date + ';' + order.product_name
+					+ ';' + order.product_model);
+		}
+	} else {
+		for (var i = 0; i < ctx.orders().length; i++) {
+			var order = ctx.orders()[i];
+			ctx.chosenOrders.remove(order.pk + ";" + order.product_pk + ";"
+					+ order.team_number + ';' + order.operate_flg + ';'
+					+ order.name_confirm_status + ';' + order.standard_flg
+					+ ';' + order.departure_date + ';' + order.product_name
+					+ ';' + order.product_model);
+		}
+	}
+}
 var currentSupplier;
 var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {

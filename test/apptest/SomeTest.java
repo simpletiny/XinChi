@@ -3,9 +3,13 @@ package apptest;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+
+import com.xinchi.common.DateUtil;
 
 /**
  * 
@@ -17,14 +21,19 @@ public class SomeTest {
 	private static final int BUFFER_SIZE = 2 * 1024;
 
 	public static void main(String[] args) throws Exception {
-		String a = "B^^^D^^^A^^^B^^^D^^^B^^^A^^^B^^^C^^^C^^^D^^^A^^^C^^^A^^^A^^^A^^^A^^^B^^^C^^^B^^^A^^^A^^^B^^^C^^^A^^^C^^^D^^^C^^^D^^^A^^^D^^^D^^^D^^^D^^^A^^^A^^^A^^^ABCD^^^ABC^^^ABCD^^^AB^^^ABCD^^^ABCD^^^ABCD^^^ABC^^^ABD^^^ABCD^^^AC^^^ABC^^^ABCD^^^ABCD^^^ACD^^^ABC^^^AB^^^AD^^^ACD^^^AC^^^ABC^^^ABCD^^^ABCD^^^ABCD^^^AB^^^ABCD^^^ABD^^^ABD^^^ABD^^^B^^^B^^^A^^^A^^^A^^^B^^^B^^^A^^^A^^^A^^^B^^^A^^^B^^^A^^^A^^^A^^^B^^^B^^^B^^^B^^^A^^^A^^^A^^^A^^^A^^^A^^^B^^^B^^^B^^^A^^^B^^^B^^^A^^^A^^^";
+		List<String> months = new ArrayList<String>();
 
-		String b[] = a.split("\\^\\^\\^");
-		int i = 1;
-		for (String x : b) {
+		String today = DateUtil.today();
+		String now_month = today.substring(0, 7);
 
-			System.out.println(i + ":" + x);
-			i++;
+		String last_month = DateUtil.addDate(now_month + "-01", -1).substring(0, 7);
+		String lastlast_month = DateUtil.addDate(last_month + "-01", -1).substring(0, 7);
+
+		months.add(now_month);
+		months.add(last_month);
+		months.add(lastlast_month);
+		for (String m : months) {
+			System.out.println(m);
 		}
 
 		// System.out.println(DateUtil.getTimeMillis());

@@ -73,12 +73,12 @@
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
-						<div align="left">
-							<label class="col-md-1 control-label">产品经理</label>
-							<div class="col-md-1" style="float: left">
-								<input type="text" class="form-control" name="detail.create_user" />
+							<div align="left">
+								<label class="col-md-1 control-label">产品经理</label>
+								<div class="col-md-1" style="float: left">
+									<input type="text" class="form-control" name="detail.create_user" />
+								</div>
 							</div>
-						</div>
 						</s:if>
 						<div style="padding-top: 3px;">
 							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
@@ -96,6 +96,7 @@
 								<th>申请日期</th>
 								<th>入账日期</th>
 								<th>状态</th>
+								<th>详情</th>
 								<th>填报人</th>
 							</tr>
 						</thead>
@@ -124,7 +125,12 @@
 								<!-- ko if:$data.status=='N' -->
 								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
-
+								<!-- ko if:$data.status=='P' -->
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.viewPaidInfo($data.related_pk)} ">查看</a></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status!='P' -->
+								<td>-</td>
+								<!-- /ko -->
 								<td data-bind="text: $data.create_user"></td>
 							</tr>
 						</tbody>
@@ -251,7 +257,46 @@
 			</div>
 		</div>
 	</div>
-
+	<div id="div_view_detail" style="display: none; width: 800px; height:600px; padding-top: 30px;overflow:auto ">
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">审批人</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:detail().approve_user_name"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">审批时间</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:moment(detail().confirm_time-0).format('YYYY-MM-DD HH:mm')"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">付款人</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:detail().paid_user_name"></p> 
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">付款时间</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:detail().time"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6" >
+				<label class="l" style="width: 30%">付款凭证</label>
+				<div data-bind="foreach: imgs" id="voucher-img">
+					<input type="hidden" data-bind="value:$data" st="voucher-file-name"/> 
+						<img style="width:400px;height:400px" src="<%=basePath%>static/img/sorry.jpg" st="img"/>
+				</div>
+				
+			</div> 
+		</div>
+	</div>
 	<script>
 		$(".product").addClass("current").children("ol")
 				.css("display", "block");

@@ -127,7 +127,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th><input type="checkbox" data-bind="checked:chosenAll,event:{click: chkAll}" /></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>状态</th>
 								<th>团号</th>
 								<th>出团日期</th>
@@ -148,7 +148,7 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status+';'+$data.standard_flg+';'+$data.departure_date+';'+$data.product_name+';'+$data.product_model}, checked: $root.chosenOrders" /></td>
-								<td data-bind="text:$root.statusMapping[$data.operate_flg]"></td>
+								<td data-bind="text:$root.statusMapping[$data.operate_flg]"></td> 
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
@@ -263,6 +263,8 @@
 							<th style="width: 10%">序号</th>
 							<th style="width: 10%">姓名</th>
 							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">电话1</th>
+							<th style="width: 10%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -270,6 +272,8 @@
 							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>

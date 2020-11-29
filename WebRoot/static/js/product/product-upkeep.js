@@ -254,10 +254,6 @@ var ProductContext = function() {
 				product_pk : self.chosenProducts()[0]
 			}, function(data) {
 				self.product(data.product);
-				if (self.product().sale_flg == "Y") {
-					fail_msg("请选择未上架产品！");
-					return;
-				}
 
 				self.airTickets(data.air_tickets);
 				airTicketLayer = $.layer({

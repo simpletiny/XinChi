@@ -151,6 +151,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 搜索销售三个月分值 -->
+		<action name="search3MonthSaleScore" class="saleDashBoardAction" method="search3MonthSaleScore">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchBackMoneyScoreByPage" class="saleDashBoardAction" method="searchBackMoneyScoreByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

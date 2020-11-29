@@ -214,7 +214,7 @@
 				resultStr
 			</result>
 		</action>
-	
+
 		<!-- 产品订单打回 -->
 		<action name="rollBackProductOrder" class="productOrderAction" method="rollBackProductOrder">
 			<result name="success" type="str">
@@ -273,6 +273,13 @@
 		<action name="rollBackOperation" class="productOrderOperationAction" method="rollBackOperation">
 			<result name="success" type="str">
 				resultStr
+			</result>
+		</action>
+		<!-- 搜索送机单 -->
+		<action name="searchDropOff" class="productOrderOperationAction" method="searchDropOff">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 		<!-- 产品订单操作 end -->

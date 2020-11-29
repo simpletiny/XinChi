@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ViewDropOffMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.DropOffBean">
+		<result column="first_ticket_date" property="first_ticket_date" jdbcType="VARCHAR" />
+		<result column="client_number" property="client_number" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="first_start_city" property="first_start_city" jdbcType="VARCHAR" />
+		<result column="first_end_city" property="first_end_city" jdbcType="VARCHAR" />
+		<result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
+		<result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
+		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectByParam" parameterType="com.xinchi.bean.DropOffBean" resultMap="BaseResultMap">
+		select
+		A.first_ticket_date,
+		A.client_number,
+		A.name,
+		A.id,
+		A.ticket_number,
+		A.from_to_time,
+		A.from_to_city,
+		A.first_start_city,
+		A.first_end_city,
+		A.from_airport,
+		A.to_airport,
+		B.user_name AS client_name
+		from view_drop_off A LEFT
+		JOIN user_base B ON A.client_number =
+		B.user_number
+		<where>
+			<if test="first_ticket_date != null and first_ticket_date !=''">
+				and A.first_ticket_date = #{first_ticket_date,jdbcType=VARCHAR}
+			</if>
+			<if test="client_number != null and client_number !=''">
+				and A.client_number = #{client_number,jdbcType=VARCHAR}
+			</if>
+			<if test="from_city != null and from_city !=''">
+				and A.first_start_city like CONCAT('%', #{from_city,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+		ORDER BY A.ticket_number
+	</select>
+</mapper>

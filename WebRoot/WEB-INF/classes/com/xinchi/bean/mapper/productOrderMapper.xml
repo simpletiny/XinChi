@@ -285,12 +285,13 @@
 		A.standard_flg,
 		A.product_pk,
 		A.days,
-		B.user_name AS product_manager
+		B.user_name AS product_manager,
+		group_concat(C.team_number) AS team_numbers
 		FROM
 		product_order A
 		LEFT JOIN
 		user_base B ON A.product_manager_number = B.user_number
-
+		left join product_order_team_number C ON A.order_number=C.product_order_number
 		<where>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
@@ -317,6 +318,10 @@
 				</foreach>
 			</if>
 		</where>
+		GROUP BY A.order_number
+		<if test="params.bo.team_number != null and params.bo.team_number !=''">
+			HAVING team_numbers like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+		</if>
 		order by A.departure_date DESC
 	</select>
 </mapper>

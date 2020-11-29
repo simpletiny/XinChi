@@ -227,6 +227,16 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 打回已出票名单到待出票状态
+	 * 
+	 * @return
+	 */
+	public String rollBackNameDone() {
+		resultStr = passengerTicketInfoService.rollBackNameDone(passenger_pks);
+		return SUCCESS;
+	}
+
 	@Autowired
 	private PassengerTicketInfoService passengerTicketInfoService;
 

@@ -47,6 +47,11 @@ public class SupplierEmployeeAction extends BaseAction {
 
 	private String employee_pk;
 
+	public String deleteEmployee() {
+		resultStr = employeeService.deleteEmployee(employee_pk);
+		return SUCCESS;
+	}
+
 	public String searchOneEmployee() {
 		employee = employeeService.selectByPrimaryKey(employee_pk);
 		return SUCCESS;

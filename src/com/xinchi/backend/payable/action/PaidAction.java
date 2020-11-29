@@ -5,25 +5,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.google.common.base.Joiner;
+import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.PayApprovalService;
+import com.xinchi.backend.finance.service.CardService;
+import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.PaidService;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.supplier.service.SupplierEmployeeService;
 import com.xinchi.backend.supplier.service.SupplierService;
-import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.CardBean;
 import com.xinchi.bean.PayApprovalBean;
+import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
+import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -32,6 +34,9 @@ import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -221,7 +226,8 @@ public class PaidAction extends BaseAction {
 
 	public String searchPaidByPage() {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -242,6 +248,43 @@ public class PaidAction extends BaseAction {
 
 	public String rollBackPayApply() {
 		resultStr = paidService.rollBackPayApply(related_pk);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private AccPaidService accPaidService;
+
+	@Autowired
+	private PaymentDetailService paymentDetailService;
+
+	@Autowired
+	private CardService cardService;
+
+	/**
+	 * 查看出纳支付详情
+	 * 
+	 * @return
+	 */
+	public String searchPaidInfo() {
+		detail = paidService.selectPaidDetailByRelatedPk(related_pk);
+		List<WaitingForPaidBean> wfps = accPaidService.selectWfpByRelatedPk(related_pk);
+		if (null == wfps || wfps.size() != 1) {
+			return SUCCESS;
+		}
+		WaitingForPaidBean wfp = wfps.get(0);
+		String voucher_number = wfp.getPay_number();
+		List<PaymentDetailBean> pds = paymentDetailService.selectByVoucherNumber(voucher_number);
+		String voucher_file_name = "";
+		if (null != pds && pds.size() > 0) {
+
+			for (PaymentDetailBean pd : pds) {
+				CardBean card = cardService.selectByAccount(pd.getAccount());
+				voucher_file_name += card.getPk() + "," + pd.getVoucher_file_name() + ";";
+			}
+		}
+
+		voucher_file_name = voucher_file_name.substring(0, voucher_file_name.length() - 1);
+		detail.setVoucher_file_name(voucher_file_name);
 		return SUCCESS;
 	}
 

@@ -21,4 +21,6 @@ public interface ReimbursementService extends BaseService {
 
 	public List<ReimbursementBean> selectByPage(Page page);
 
+	public String deleteReibursement(List<String> reimbursement_pks);
+
 }

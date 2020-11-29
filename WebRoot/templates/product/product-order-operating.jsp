@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -15,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
-#table-supplier th,#table-supplier td {
+#table-supplier th, #table-supplier td {
 	text-align: center;
 }
 
@@ -33,6 +32,7 @@
 	color: red;
 	font-weight: bold;
 }
+
 tr td {
 	text-overflow: ellipsis; /* for IE */
 	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
@@ -56,7 +56,7 @@ tr td {
 							<div>
 								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">编辑</button> -->
 								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperation() }">确认</button>
-							    <button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
 							</div>
 						</div>
 					</div>
@@ -68,16 +68,23 @@ tr td {
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">操作单号</label>
+							<label class="col-md-1 control-label">订单号</label>
 							<div class="col-md-2">
-								<input class="form-control" name="operate_option.team_number" placeholder="操作单号"></input>
+								<input class="form-control" name="operate_option.team_number" placeholder="订单号"></input>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input class="form-control" name="operate_option.team_number1" placeholder="团号"></input>
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px"
+										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
 										name="operate_option.create_user"></select>
 								</div>
 							</div>
@@ -115,7 +122,7 @@ tr td {
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>操作单号</th>
 								<th>单/合</th>
 								<th>供应商</th>
@@ -134,7 +141,8 @@ tr td {
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_cost}, checked: $root.chosenOperations" /></td>
-								<td ><a data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}" ></a></td>
+								<td><a
+									data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}"></a></td>
 								<!-- ko if: $data.single_flg == "N" -->
 								<td><a href="javascript:void(0)"
 									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.team_number)}"></a></td>
@@ -152,7 +160,9 @@ tr td {
 								<td data-bind="text: $data.send_date"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td></td>
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
+									style="cursor: pointer; margin-right: 10px">确认件</a></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -207,9 +217,11 @@ tr td {
 					<tbody data-bind="foreach:productSuppliers">
 						<tr>
 							<td st="index" data-bind="text:$data.operate_index"></td>
-							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name" onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
+							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name"
+								onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
 								data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
-							<td><input class="need" st="supplier-product-name" maxlength="10" data-bind="value:$data.supplier_product_name" type="text" /></td>
+							<td><input class="need" st="supplier-product-name" maxlength="10"
+								data-bind="value:$data.supplier_product_name" type="text" /></td>
 							<td><input class="need" st="supplier-cost" data-bind="value:$data.supplier_cost" type="number" /></td>
 							<td><input class="need" st="land-day" data-bind="value:$data.land_day" type="number" /></td>
 							<td><input st="pick-type" data-bind="value:$data.pick_type" maxlength="50" type="text" /></td>
@@ -225,7 +237,8 @@ tr td {
 					<tbody>
 						<tr>
 							<td st="index">1</td>
-							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input class="need" type="text" st="supplier-pk" style="display: none" /></td>
+							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input class="need"
+								type="text" st="supplier-pk" style="display: none" /></td>
 							<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
 							<td><input class="need" st="supplier-cost" type="number" /></td>
 							<td><input class="need" st="land-day" type="number" /></td>
@@ -305,15 +318,21 @@ tr td {
 					<thead>
 						<tr>
 							<th style="width: 10%">序号</th>
+							<th style="width: 10%">团号</th>
 							<th style="width: 10%">姓名</th>
 							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">电话1</th>
+							<th style="width: 10%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
 						<tr>
 							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.team_number"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -350,7 +369,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 订单详情查看乘客信息 -->
-	<div id="passengers-check-inner" style="display: none; width: 600px; height: 550px; overflow-y: scroll;">
+	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -359,6 +378,8 @@ tr td {
 							<th style="width: 10%">序号</th>
 							<th style="width: 10%">姓名</th>
 							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">电话1</th>
+							<th style="width: 10%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -366,6 +387,8 @@ tr td {
 							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -373,7 +396,8 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display", "block");
+		$(".order-operate").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>

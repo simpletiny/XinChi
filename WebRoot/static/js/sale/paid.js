@@ -1,5 +1,6 @@
 var viewDetailLayer;
 var viewCommentLayer;
+var viewPaidLayer;
 var PaidContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -23,14 +24,16 @@ var PaidContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
+			+ 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
+			+ (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
-	self.allStatus = [ 'I', 'N', 'Y', 'P' ];
+	self.allStatus = ['I', 'N', 'Y', 'P'];
 
 	self.statusMapping = {
 		'I' : '待审批',
@@ -63,7 +66,8 @@ var PaidContext = function() {
 		var totalPerProfit = 0;
 		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
 
 		$.getJSON(self.apiurl + 'sale/searchPaidByPage', param, function(data) {
 			self.paids(data.paids);
@@ -89,7 +93,8 @@ var PaidContext = function() {
 		});
 	};
 	self.reimbursement = function() {
-		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
+		window.location.href = self.apiurl
+				+ "templates/accounting/reimbursement-creation.jsp";
 	};
 	self.rollBack = function() {
 		if (self.chosenPaids().length < 1) {
@@ -110,12 +115,12 @@ var PaidContext = function() {
 		var data = "related_pk=" + sourceData.related_pk;
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认要打回重报吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					startLoadingSimpleIndicator("操作中");
 					layer.close(index);
@@ -155,27 +160,28 @@ var PaidContext = function() {
 		} else {
 			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param, function(data) {
-				self.order(data.order);
-				self.comment(detail.comment);
-				endLoadingIndicator();
-				viewCommentLayer = $.layer({
-					type : 1,
-					title : [ '摘要详情', '' ],
-					maxmin : false,
-					closeBtn : [ 1, true ],
-					shadeClose : false,
-					area : [ '700px', 'auto' ],
-					offset : [ '150px', '' ],
-					scrollbar : true,
-					page : {
-						dom : '#comment'
-					},
-					end : function() {
-						console.log("Done");
-					}
-				});
-			});
+			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param,
+					function(data) {
+						self.order(data.order);
+						self.comment(detail.comment);
+						endLoadingIndicator();
+						viewCommentLayer = $.layer({
+							type : 1,
+							title : ['摘要详情', ''],
+							maxmin : false,
+							closeBtn : [1, true],
+							shadeClose : false,
+							area : ['700px', 'auto'],
+							offset : ['150px', ''],
+							scrollbar : true,
+							page : {
+								dom : '#comment'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					});
 		}
 	};
 	self.sumDetail = ko.observable({
@@ -188,32 +194,101 @@ var PaidContext = function() {
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
+				function(data) {
 
-			self.sumDetails(data.paids);
-			self.sumDetail(self.sumDetails()[0]);
-			$(".rmb").formatCurrency();
+					self.sumDetails(data.paids);
+					self.sumDetail(self.sumDetails()[0]);
+					$(".rmb").formatCurrency();
+					endLoadingIndicator();
+
+					viewDetailLayer = $.layer({
+						type : 1,
+						title : ['合账详情', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['800px', 'auto'],
+						offset : ['150px', ''],
+						scrollbar : true,
+						page : {
+							dom : '#sum_detail'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+
+	};
+	self.detail = ko.observable([]);
+	self.imgs = ko.observableArray();
+	self.viewPaidInfo = function(related_pk) {
+		var param = "related_pk=" + related_pk
+		$.getJSON(self.apiurl + 'sale/searchPaidInfo', param, function(data) {
+
+			self.detail(data.detail);
+
+			self.imgs(data.detail.voucher_file_name.split(";"));
+			self.loadFiles();
+
 			endLoadingIndicator();
-
-			viewDetailLayer = $.layer({
+			viewPaidLayer = $.layer({
 				type : 1,
-				title : [ '合账详情', '' ],
+				title : ['支付详情', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', 'auto' ],
-				offset : [ '150px', '' ],
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
 				scrollbar : true,
 				page : {
-					dom : '#sum_detail'
+					dom : '#div_view_detail'
 				},
 				end : function() {
 					console.log("Done");
 				}
 			});
 		});
+	}
+	// 加载头像
+	self.loadFiles = function() {
+		var imgs = $("#voucher-img").find("input[st='voucher-file-name']");
 
+		for (var i = 0; i < imgs.length; i++) {
+			var img = imgs[i];
+			var container = $(img).next();
+
+			var fileName = $(img).val();
+			self.downFile(fileName, container);
+		}
 	};
+
+	self.downFile = function(fileName, imgContainer) {
+
+		files = fileName.split(",");
+
+		if (files.length < 2)
+			return;
+
+		var formData = new FormData();
+		formData.append("fileFileName", files[1]);
+		formData.append("subFolder", files[0]);
+		formData.append("fileType", "VOUCHER");
+
+		var url = ctx.apiurl + 'file/getFileStream';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+		xhr.responseType = "blob";
+		xhr.onload = function() {
+			if (this.status == 200) {
+				var blob = this.response;
+				imgContainer.attr("src", window.URL.createObjectURL(blob));
+			}
+		};
+		xhr.send(formData);
+	};
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -248,9 +323,10 @@ var PaidContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

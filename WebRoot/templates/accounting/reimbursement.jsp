@@ -54,6 +54,11 @@
 								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="reimbursement.date_to" />
 							</div>
 						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: delete_reimbursement">删除</button> 
+							</div>
+						</div>
 
 					</div>
 					<div class="form-group">
@@ -86,6 +91,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
+								<th></th>
 								<th>日期</th>
 								<th>项目</th>
 								<th>金额</th>
@@ -102,6 +108,7 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: reimbursements">
 							<tr>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenReimbursements" /></td>
 								<td data-bind="text: $data.date"></td>
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>

@@ -33,6 +33,15 @@ public class ReimbursementAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<String> reimbursement_pks;
+
+	public String deleteReibursement() {
+
+		resultStr = service.deleteReibursement(reimbursement_pks);
+
+		return SUCCESS;
+	}
+
 	private List<ReimbursementBean> reimbursements;
 
 	/**
@@ -75,5 +84,13 @@ public class ReimbursementAction extends BaseAction {
 
 	public void setReimbursements(List<ReimbursementBean> reimbursements) {
 		this.reimbursements = reimbursements;
+	}
+
+	public List<String> getReimbursement_pks() {
+		return reimbursement_pks;
+	}
+
+	public void setReimbursement_pks(List<String> reimbursement_pks) {
+		this.reimbursement_pks = reimbursement_pks;
 	}
 }

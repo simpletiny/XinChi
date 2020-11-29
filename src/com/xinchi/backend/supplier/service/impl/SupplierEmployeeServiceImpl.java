@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.product.dao.ProductOrderSupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierEmployeeDAO;
 import com.xinchi.backend.supplier.service.SupplierEmployeeService;
+import com.xinchi.bean.OrderSupplierBean;
 import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.tools.Page;
 
@@ -67,6 +69,20 @@ public class SupplierEmployeeServiceImpl implements SupplierEmployeeService {
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
 
 		return dao.getBodyPksByEmployeePks(employee_pks);
+	}
+
+	@Autowired
+	private ProductOrderSupplierDAO productOrderSupplierDao;
+
+	@Override
+	public String deleteEmployee(String employee_pk) {
+		List<OrderSupplierBean> orderSuppliers = productOrderSupplierDao.selectByEmployeePk(employee_pk);
+		if (null != orderSuppliers && orderSuppliers.size() > 0) {
+			return "existorder";
+		} else {
+			dao.delete(employee_pk);
+			return SUCCESS;
+		}
 	}
 
 }

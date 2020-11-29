@@ -180,7 +180,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					airTicketPayable.setFirst_date(ticket_date);
 					airTicketPayableDao.insert(airTicketPayable);
 				}
-
+				// 保存乘客详细信息
 				for (String pk : pkkk) {
 					if (SimpletinyString.isEmpty(pk))
 						continue;
@@ -289,6 +289,74 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 		}
 
 		return SUCCESS;
+	}
+
+	@Override
+	public String rollBackNameDone(List<String> passenger_pks) {
+
+		for (String passenger_pk : passenger_pks) {
+			AirTicketNameListBean name = airTicketNameListDao.selectByPrimaryKey(passenger_pk);
+
+			List<PassengerTicketInfoBean> infos = dao.selectByPassengerPk(passenger_pk);
+
+			// 乘客机票合计
+			BigDecimal cost = BigDecimal.ZERO;
+
+			if (null != infos && infos.size() > 0) {
+				// 重新核算机票应付款
+				Set<String> payable_pks = new HashSet<String>();
+				for (PassengerTicketInfoBean info : infos) {
+					payable_pks.add(info.getBase_pk());
+				}
+
+				for (String payable_pk : payable_pks) {
+					for (PassengerTicketInfoBean info : infos) {
+						if (payable_pk.equals(info.getBase_pk())) {
+							AirTicketPayableBean payable = airTicketPayableDao.selectByPrimaryKey(payable_pk);
+							payable.setBudget_payable(payable.getBudget_payable().subtract(info.getTicket_cost()));
+							payable.setBudget_balance(payable.getBudget_balance().subtract(info.getTicket_cost()));
+							airTicketPayableDao.update(payable);
+							// 计算乘客机票合计
+							cost = cost.add(info.getTicket_cost());
+							break;
+						}
+					}
+				}
+
+				// 删除详细的乘客信息
+				for (PassengerTicketInfoBean info : infos) {
+					dao.delete(info.getPk());
+				}
+
+				// 更新机票订单机票款
+				AirTicketOrderBean ato = airTicketOrderDao.selectByPrimaryKey(name.getTicket_order_pk());
+				ato.setTicket_cost(ato.getTicket_cost().subtract(cost));
+				ato.setCost_done_flg("N");
+				ato.setStatus("I");
+				airTicketOrderDao.update(ato);
+
+				// 更新名单到待出票状态
+				name.setStatus("I");
+				airTicketNameListDAO.update(name);
+
+				// 销售订单机票款设置为0
+				OrderDto sale_order = orderDao.selectByTeamNumber(name.getTeam_number());
+
+				if (sale_order.getStandard_flg().equals("Y")) {
+					BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
+					standardOrder.setAir_ticket_cost(BigDecimal.ZERO);
+					bsoDao.update(standardOrder);
+				} else {
+					BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
+					nonStandardOrder.setAir_ticket_cost(BigDecimal.ZERO);
+					bnsoDao.update(nonStandardOrder);
+				}
+			}
+
+		}
+
+		return SUCCESS;
+
 	}
 
 	@Override

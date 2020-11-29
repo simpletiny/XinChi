@@ -26,6 +26,7 @@ import com.xinchi.backend.product.service.ProductOrderOperationService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderSupplierBean;
 import com.xinchi.bean.OrderSupplierInfoBean;
@@ -464,6 +465,11 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 		}
 
 		return SUCCESS;
+	}
+
+	@Override
+	public List<DropOffBean> searchDropOff(DropOffBean drop_off) {
+		return dao.selectDropOff(drop_off);
 	}
 
 }

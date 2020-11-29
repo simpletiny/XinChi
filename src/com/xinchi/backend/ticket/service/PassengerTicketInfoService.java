@@ -49,4 +49,6 @@ public interface PassengerTicketInfoService extends BaseService {
 	public String allotTicket(String json);
 
 	public List<PassengerTicketInfoBean> selectByPassengerPk(String passenger_pk);
+
+	public String rollBackNameDone(List<String> passenger_pks);
 }

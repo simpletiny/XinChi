@@ -135,7 +135,7 @@ tr td {
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th></th>
+								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
 								<th>团号</th>
 								<th>金额</th>
 								<th>类型</th>

@@ -7,6 +7,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.product.dao.ProductOrderOperationDAO;
+import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -41,12 +42,14 @@ public class ProductOrderOperationDAOImpl extends SqlSessionDaoSupport implement
 
 	@Override
 	public ProductOrderOperationBean selectByPrimaryKey(String id) {
-		return (ProductOrderOperationBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByPrimaryKey", id);
+		return (ProductOrderOperationBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<ProductOrderOperationBean> selectByParam(ProductOrderOperationBean bean) {
-		List<ProductOrderOperationBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByParam", bean);
+		List<ProductOrderOperationBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByParam", bean);
 		return list;
 	}
 
@@ -57,12 +60,20 @@ public class ProductOrderOperationDAOImpl extends SqlSessionDaoSupport implement
 
 	@Override
 	public List<ProductOrderOperationBean> selectByTeamNumber(String team_number) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByTeamNumber", team_number);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ProductOrderOperationMapper.selectByTeamNumber",
+				team_number);
 	}
 
 	@Override
 	public void deleteByTeamNumber(String team_number) {
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderOperationMapper.deleteByTeamNumber", team_number);
+	}
+
+	@Override
+	public List<DropOffBean> selectDropOff(DropOffBean drop_off) {
+		List<DropOffBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ViewDropOffMapper.selectByParam",
+				drop_off);
+		return list;
 	}
 
 }

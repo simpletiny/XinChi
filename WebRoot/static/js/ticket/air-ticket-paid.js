@@ -146,16 +146,14 @@ var AgencyContext = function() {
 					url : self.apiurl + 'payable/payAirTicket',
 					data : "paidJson=" + paidJson + "&payableJson="
 							+ payableJson + "&allot_money=" + sumMoney
-				}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/ticket/payable.jsp";
-					} else if (str == "time") {
-						fail_msg("同一账户在同一时间下已存在支出！");
-						endLoadingIndicator();
-					}
-				});
+				}).success(function(str) {
+			if (str == "success") {
+				window.history.go(-1);
+			} else if (str == "time") {
+				fail_msg("同一账户在同一时间下已存在支出！");
+				endLoadingIndicator();
+			}
+		});
 	};
 
 	self.caculateSum = function() {

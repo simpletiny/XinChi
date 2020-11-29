@@ -944,6 +944,19 @@ $(document).ready(function() {
 
 });
 
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.receivables().length; i++) {
+			var receivable = ctx.receivables()[i];
+			ctx.chosenOrders.push(receivable);
+		}
+	} else {
+		for (var i = 0; i < ctx.receivables().length; i++) {
+			var receivable = ctx.receivables()[i];
+			ctx.chosenOrders.remove(receivable);
+		}
+	}
+}
 var caculateSumBack = function() {
 	var allot = $("[st='more-back-allot']");
 	var sum = 0;

@@ -89,6 +89,12 @@ tr td {
 								<input class="form-control" placeholder="订单号" name="order.order_number"></input>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">团号</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="团号" name="order.team_number"></input>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div align="left">
@@ -256,6 +262,8 @@ tr td {
 							<th style="width: 10%">团号</th>
 							<th style="width: 10%">姓名</th>
 							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">电话1</th>
+							<th style="width: 10%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -264,6 +272,8 @@ tr td {
 							<td data-bind="text:$data.team_number"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -271,7 +281,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 订单详情查看乘客信息 -->
-	<div id="passengers-check-inner" style="display: none; width: 600px; height: 550px; overflow-y: scroll;">
+	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -280,6 +290,8 @@ tr td {
 							<th style="width: 10%">序号</th>
 							<th style="width: 10%">姓名</th>
 							<th style="width: 10%">身份证号</th>
+							<th style="width: 10%">电话1</th>
+							<th style="width: 10%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -287,6 +299,8 @@ tr td {
 							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
 						</tr>
 					</tbody>
 				</table>

@@ -48,4 +48,6 @@ public interface ProductOrderSupplierDAO {
 	public List<OrderSupplierBean> selectByOrderPk(String order_pk);
 
 	public void deleteByOrderPk(String order_pk);
+
+	public List<OrderSupplierBean> selectByEmployeePk(String employee_pk);
 }

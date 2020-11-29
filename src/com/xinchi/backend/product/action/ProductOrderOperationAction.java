@@ -21,6 +21,7 @@ import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableBean;
@@ -389,6 +390,24 @@ public class ProductOrderOperationAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<DropOffBean> drop_offs;
+
+	private DropOffBean drop_off;
+
+	public String searchDropOff() {
+
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			drop_off.setClient_number(sessionBean.getUser_number());
+		}
+
+		drop_offs = service.searchDropOff(drop_off);
+		return SUCCESS;
+	}
+
 	public String getJson() {
 		return json;
 	}
@@ -539,5 +558,21 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setStandard_flg(String standard_flg) {
 		this.standard_flg = standard_flg;
+	}
+
+	public List<DropOffBean> getDrop_offs() {
+		return drop_offs;
+	}
+
+	public void setDrop_offs(List<DropOffBean> drop_offs) {
+		this.drop_offs = drop_offs;
+	}
+
+	public DropOffBean getDrop_off() {
+		return drop_off;
+	}
+
+	public void setDrop_off(DropOffBean drop_off) {
+		this.drop_off = drop_off;
 	}
 }

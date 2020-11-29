@@ -22,8 +22,10 @@
 		<result column="change_pk" property="change_pk" jdbcType="CHAR" />
 		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="need_comment" property="need_comment" jdbcType="VARCHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="VARCHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="days" property="days" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -338,13 +340,17 @@
 		A.create_time,
 		A.update_time,
 		A.status,
-		C.name_confirm_status
+		C.name_confirm_status,
+		C.days,
+		E.comment AS need_comment
 
 		from air_ticket_name_list A LEFT JOIN
 		user_base B ON A.client_number=
 		B.user_number
 		LEFT JOIN budget_order_view C ON
 		A.team_number=C.team_number
+		 LEFT JOIN
+        air_ticket_order E ON A.ticket_order_pk = E.pk
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -368,7 +374,7 @@
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
 		</where>
-		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date
+		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date
 	</select>
 	<select id="selectDoneByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -394,7 +400,9 @@
 		A.status,
 		C.name_confirm_status,
 		D.ticket_cost,
-		A.change_pk
+		A.change_pk,
+		C.days,
+		E.comment AS need_comment
 
 		from air_ticket_name_list A LEFT JOIN
 		user_base B
@@ -404,6 +412,8 @@
 		A.team_number=C.team_number
 		LEFT JOIN
 		view_sum_ticket_cost D ON A.pk= D.passenger_pk
+		 LEFT JOIN
+        air_ticket_order E ON A.ticket_order_pk = E.pk
 		<where>
 			and A.status in ('Y','C')
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
@@ -425,7 +435,7 @@
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
 		</where>
-		ORDER BY order_number,A.team_number,ticket_order_pk,first_ticket_date
+		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date
 	</select>
 
 	<select id="selectTicketOrderPksByPassengerPks" resultType="java.lang.String">

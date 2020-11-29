@@ -163,6 +163,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchPaidInfo" class="paidAction" method="searchPaidInfo">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="rollBackPayApply" class="paidAction" method="rollBackPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>

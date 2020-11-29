@@ -283,7 +283,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['600px', '600px'],
+				area : ['800px', '600px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {
@@ -416,6 +416,23 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.operations().length; i++) {
+			var operation = ctx.operations()[i];
+			ctx.chosenOperations.push(operation.pk + ';'
+					+ operation.team_number + ';' + operation.supplier_cost);
+		}
+	} else {
+		for (var i = 0; i < ctx.operations().length; i++) {
+			var operation = ctx.operations()[i];
+			ctx.chosenOperations.remove(operation.pk + ';'
+					+ operation.team_number + ';' + operation.supplier_cost);
+		}
+	}
+}
+
 var currentSupplier;
 var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {

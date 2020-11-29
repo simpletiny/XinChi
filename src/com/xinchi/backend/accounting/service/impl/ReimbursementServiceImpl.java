@@ -63,4 +63,17 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		return dao.selectByPage(page);
 	}
 
+	@Override
+	public String deleteReibursement(List<String> reimbursement_pks) {
+		for (String pk : reimbursement_pks) {
+			ReimbursementBean rei = dao.selectByPk(pk);
+			if (null == rei)
+				continue;
+			rei.setDelete_flg("Y");
+			dao.update(rei);
+
+		}
+		return SUCCESS;
+	}
+
 }

@@ -40,4 +40,6 @@ public interface AccPaidService extends BaseService {
 	public String rollBackPay(String voucher_number);
 
 	public BigDecimal selectSumWFP();
+
+	public List<WaitingForPaidBean> selectWfpByRelatedPk(String related_pk);
 }

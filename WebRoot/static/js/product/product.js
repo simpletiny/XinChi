@@ -1,5 +1,6 @@
 var airTicketLayer;
 var airTickeChecktLayer;
+var productInfoLayser;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -66,11 +67,19 @@ var ProductContext = function() {
 					+ self.chosenProducts();
 		}
 	};
+
+	self.product = ko.observable();
 	self.onSale = function(sale_flg) {
 		if (self.chosenProducts().length == 0) {
 			fail_msg("请选择产品！");
 			return;
 		} else if (self.chosenProducts().length > 0) {
+
+			if (sale_flg == "Y" && self.chosenProducts().length > 1) {
+				fail_msg("上架只能选择一个产品！");
+				return;
+			}
+
 			var msg = "确认要";
 			if (sale_flg == "Y") {
 				msg += "上架";
@@ -80,7 +89,6 @@ var ProductContext = function() {
 
 			if (self.chosenProducts().length == 1) {
 				msg += "此";
-
 			} else {
 				msg += "这些";
 			}
@@ -88,39 +96,90 @@ var ProductContext = function() {
 
 			if (sale_flg == "N") {
 				msg += "下架当日不能重新上架！";
-			}
-			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
-						layer.close(index);
-						startLoadingIndicator("保存中！");
-						var data = "sale_flg=" + sale_flg + "&product_pks="
-								+ self.chosenProducts();
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'product/onSaleProduct',
-							data : data
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.refresh();
-								self.chosenProducts.removeAll();
-							} else if (str.split("&&")[0] == "second") {
-								self.secondOff(str.split("&&")[1], data);
-							} else {
-								fail_msg(str);
-							}
-						});
+				$.layer({
+					area : ['auto', 'auto'],
+					dialog : {
+						msg : msg,
+						btns : 2,
+						type : 4,
+						btn : ['确认', '取消'],
+						yes : function(index) {
+							layer.close(index);
+							startLoadingIndicator("保存中！");
+							var data = "sale_flg=" + sale_flg + "&product_pks="
+									+ self.chosenProducts();
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'product/onSaleProduct',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+									self.chosenProducts.removeAll();
+								} else if (str.split("&&")[0] == "second") {
+									self.secondOff(str.split("&&")[1], data);
+								} else {
+									fail_msg(str);
+								}
+							});
+						}
 					}
-				}
-			});
+				});
+			} else {
+				$.ajax({
+					type : "POST",
+					url : self.apiurl + 'product/searchProductByPk',
+					data : "product_pk=" + self.chosenProducts()[0]
+				}).success(function(data) {
+					self.product(data.product);
+					console.log(data);
+					productInfoLayer = $.layer({
+						type : 1,
+						title : ['产品详情', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['1200px', '700px'],
+						offset : ['', ''],
+						scrollbar : true,
+						page : {
+							dom : '#product-info'
+						},
+						end : function() {
+						}
+					});
+				})
+			}
 		}
 	};
+
+	self.doOnSale = function() {
+
+		startLoadingIndicator("上架中！");
+		var data = "sale_flg=Y" + "&product_pks=" + self.chosenProducts();
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/onSaleProduct',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				layer.close(productInfoLayer);
+				self.refresh();
+				self.chosenProducts.removeAll();
+			} else if (str.split("&&")[0] == "second") {
+				self.secondOff(str.split("&&")[1], data);
+			} else {
+				fail_msg(str);
+			}
+		});
+	}
+
+	self.cancelOnSale = function() {
+		layer.close(productInfoLayer);
+	}
+
 	self.secondOff = function(msg, data) {
 		msg += "强制下架会将待确认订单一并删除！！是否要强制下架？";
 		data += "&force_flg=Y"
@@ -352,7 +411,19 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
-
+function checkAll(chk) {
+	if ($(chk).is(":checked")) {
+		for (var i = 0; i < ctx.products().length; i++) {
+			var product = ctx.products()[i];
+			ctx.chosenProducts.push(product.pk);
+		}
+	} else {
+		for (var i = 0; i < ctx.products().length; i++) {
+			var product = ctx.products()[i];
+			ctx.chosenProducts.remove(product.pk);
+		}
+	}
+}
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length + 1;

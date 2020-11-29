@@ -36,6 +36,8 @@ var ProductContext = function() {
 		items : []
 	});
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中...")
+
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
 				+ self.perPage;
@@ -45,6 +47,8 @@ var ProductContext = function() {
 
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
+
+					endLoadingIndicator();
 				});
 	};
 
@@ -277,7 +281,7 @@ var ProductContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['600px', '600px'],
+				area : ['800px', '600px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {

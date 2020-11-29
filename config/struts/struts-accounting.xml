@@ -52,6 +52,9 @@
 		<action name="saveReimbursement" class="reimbursementAction" method="saveReimbursement">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="deleteReibursement" class="reimbursementAction" method="deleteReibursement">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchReimbursementByPage" class="reimbursementAction" method="searchReimbursementByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

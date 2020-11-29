@@ -76,7 +76,7 @@
 							</em>
 						</div>
 						<div style="float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: search">搜索</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 						</div>
 					</div>
 				</form>

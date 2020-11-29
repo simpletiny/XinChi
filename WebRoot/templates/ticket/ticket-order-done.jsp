@@ -10,6 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -118,7 +119,7 @@
 								<td><a href="javascript:void(0)"
 									data-bind="text:$data.passenger,click:function(){$root.checkPassengers($data.order_number)}">查看</a></td>
 								<!-- /ko -->
-								<td></td>
+								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: $data.order_number"></td>
 							</tr>
 						</tbody>
@@ -200,6 +201,8 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/ticket/ticket-order-done.js"></script>
 </body>
 </html>

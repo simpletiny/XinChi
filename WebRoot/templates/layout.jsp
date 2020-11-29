@@ -62,8 +62,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div style="display: block;">
 				<font size="4" color="white">让组团收客多快好省。&nbsp;&nbsp;&nbsp;以价值创造为核心：开放、透明、坦诚、共赢。&nbsp;&nbsp;&nbsp;做世界一流旅游运营商。&nbsp;&nbsp;&nbsp;以奋斗者为本，与优秀者为伍。</font>
 			</div>
-			<div class="user-status">
 
+			<div class="user-status">
+				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
+					style="margin-right: 100px; color: pink; font-size: 150%; text-decoration: none;">名单确认</a>
 				<s:property value="#session.user.nick_name" />
 				（
 				<s:property value="#session.user.user_number" />
@@ -134,9 +136,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 							<li><a href="<%=basePath%>templates/sale/sale-score.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
 						</s:if>
 						<s:else>
-							<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售仪表盘</a></li>
+							<li><a href="<%=basePath%>templates/sale/sale-score-sale.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>分值查询</a></li>
 						</s:else>
-						<li><a href="<%=basePath%>templates/accounting/reimbursement.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>费用详情</a></li>
+						<li><a href="<%=basePath%>templates/accounting/reimbursement.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>费用详情</a></li>
 					</ol></li>
 
 			</s:if>
@@ -197,6 +200,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>已操作</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-final.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
+						<li><a href="<%=basePath%>templates/product/drop-off.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>送机单</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">

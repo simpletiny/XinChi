@@ -342,7 +342,7 @@ function formatTime(txt) {
 }
 function checkTime(txt) {
 	var current = $(txt).val();
-	var time_reg = /[0-2]{1}[0-3]{1}:[0-5]{1}[0-9]{1}/;
+	var time_reg = /([0-1]{1}[0-9]{1}|2[0-3]):[0-5]{1}[0-9]{1}/;
 	if (!time_reg.test(current)) {
 		$(txt).val("");
 	}
