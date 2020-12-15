@@ -15,6 +15,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="fetchProductStatisticsData" class="dataAction" method="fetchProductStatisticsData">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!-- <action name="stopUseCard" class="cardAction" method="stopUseCard"> <result name="success" type="str">resultStr</result> 
 			</action> -->

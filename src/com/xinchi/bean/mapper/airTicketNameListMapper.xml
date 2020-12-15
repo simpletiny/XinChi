@@ -76,18 +76,26 @@
 		where
 		team_number = #{team_number,jdbcType=CHAR}
 	</select>
-	
+	<select id="selectByChangePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		*
+		FROM
+		air_ticket_name_list
+		where
+		change_pk = #{change_pk,jdbcType=CHAR}
+	</select>
+
 	<select id="selectByTeamNumbers" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_name_list
-		where team_number in 
+		where team_number in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 		order by team_number
 	</select>
-	
+
 	<select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT
 		*
@@ -349,8 +357,8 @@
 		B.user_number
 		LEFT JOIN budget_order_view C ON
 		A.team_number=C.team_number
-		 LEFT JOIN
-        air_ticket_order E ON A.ticket_order_pk = E.pk
+		LEFT JOIN
+		air_ticket_order E ON A.ticket_order_pk = E.pk
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
 				and B.user_name like CONCAT('%',#{params.bo.client_name,jdbcType=VARCHAR},'%')
@@ -404,7 +412,8 @@
 		C.days,
 		E.comment AS need_comment
 
-		from air_ticket_name_list A LEFT JOIN
+		from
+		air_ticket_name_list A LEFT JOIN
 		user_base B
 		ON A.client_number=
 		B.user_number
@@ -412,8 +421,8 @@
 		A.team_number=C.team_number
 		LEFT JOIN
 		view_sum_ticket_cost D ON A.pk= D.passenger_pk
-		 LEFT JOIN
-        air_ticket_order E ON A.ticket_order_pk = E.pk
+		LEFT JOIN
+		air_ticket_order E ON A.ticket_order_pk = E.pk
 		<where>
 			and A.status in ('Y','C')
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">

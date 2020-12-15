@@ -186,7 +186,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			String ticket_client_number = "";
 
 			atn.setPassenger_captain(passenger_captain);
-			atn.setComment(comment);
+			atn.setComment(air_comment);
 			atn.setProduct_name(product_name);
 			atn.setDeparture_date(departure_date);
 			atn.setAdult_cnt(adult_count);

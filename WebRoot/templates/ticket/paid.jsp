@@ -162,16 +162,16 @@
 		<!-- /ko -->
 		<div class="input-row clearfloat">
 			<div class="col-md-2">
-				<label class="l" style="width: 100%">支出账户</label>
+				<label class="l" style="width: 100%">收支账户</label>
 			</div>
 			<div class="col-md-3">
-				<label class="l" style="width: 100%">支出时间</label>
+				<label class="l" style="width: 100%">收支时间</label>
 			</div>
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">收款方账户</label>
 			</div>
 			<div class="col-md-2">
-				<label class="l" style="width: 100%">支出金额</label>
+				<label class="l" style="width: 100%">收支金额</label>
 			</div>
 			<div class="col-md-2">
 				<label class="l" style="width: 100%">凭证</label>

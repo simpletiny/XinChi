@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ViewProductProductMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductProductBean">
+		<result column="order_cnt" property="order_cnt" jdbcType="BIGINT" />
+		<result column="score" property="score" jdbcType="DECIMAL" />
+		<result column="sum_people" property="sum_people" jdbcType="INTEGER" />
+		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectProductData" parameterType="com.xinchi.bean.ProductAreaBean" resultMap="BaseResultMap">
+		select
+		sum(order_cnt) AS order_cnt,
+		sum(score) AS score,
+		sum(sum_people) AS sum_people,
+		product_pk,
+		product_name
+		from view_product_product
+		<where>
+			<if test="date_from != null and date_from !=''">
+				and confirm_month >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and confirm_month &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+		group by product_pk
+	</select>
+</mapper>

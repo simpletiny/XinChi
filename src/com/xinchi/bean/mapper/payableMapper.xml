@@ -360,14 +360,12 @@
 		A.update_time,
 		D.supplier_short_name AS supplier_name,
 		B.financial_body_pk as supplier_pk,
-		IF(ISNULL(E.pick_date),A.departure_date,E.pick_date) AS pick_date
+		A.departure_date AS pick_date
 		from payable A LEFT JOIN supplier_employee B on
 		A.supplier_employee_pk = B.pk
 		LEFT JOIN user_base C ON A.create_user = C.user_number
 		LEFT JOIN supplier D ON
 		B.financial_body_pk = D.pk
-		LEFT JOIN product_order_operation E ON A.team_number= E.team_number and
-		A.supplier_employee_pk = E.supplier_employee_pk
 		<where>
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name LIKE CONCAT('%', #{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
@@ -385,7 +383,7 @@
 				and A.team_number LIKE CONCAT('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.departure_month != null and params.bo.departure_month !=''">
-				and LEFT(IF(ISNULL(E.pick_date),A.departure_date,E.pick_date),7) =
+				and LEFT(A.departure_date) =
 				#{params.bo.departure_month,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.departure_from != null and params.bo.departure_from !=''">
@@ -403,10 +401,10 @@
 		</where>
 
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="D"'>
-			ORDER BY pick_date DESC
+			ORDER BY A.departure_date DESC
 		</if>
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="Z"'>
-			ORDER BY pick_date ASC
+			ORDER BY A.departure_date ASC
 		</if>
 	</select>
 	<select id="selectSumPayable" resultType="java.math.BigDecimal">

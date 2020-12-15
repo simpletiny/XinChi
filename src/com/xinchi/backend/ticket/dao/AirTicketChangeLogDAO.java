@@ -3,6 +3,7 @@ package com.xinchi.backend.ticket.dao;
 import java.util.List;
 
 import com.xinchi.bean.AirTicketChangeLogBean;
+import com.xinchi.tools.Page;
 
 public interface AirTicketChangeLogDAO {
 
@@ -40,5 +41,7 @@ public interface AirTicketChangeLogDAO {
 	 * @param bean
 	 */
 	public List<AirTicketChangeLogBean> selectByParam(AirTicketChangeLogBean bean);
+
+	public List<AirTicketChangeLogBean> selectByPage(Page page);
 
 }

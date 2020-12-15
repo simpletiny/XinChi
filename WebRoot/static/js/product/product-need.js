@@ -366,9 +366,11 @@ var OrderContext = function() {
 							startLoadingIndicator("保存中...");
 							layer.close(index);
 							var json = '{"air_comment":"'
-									+ $(".air_comment").val() + '","comment":"'
-									+ $(".comment").val() + '","has_ticket":"'
-									+ hasTicket + '","team_numbers":"'
+									+ $(".air_comment").val().replace(/\n/g,
+											";") + '","comment":"'
+									+ $(".comment").val().replace(/\n/g, ";")
+									+ '","has_ticket":"' + hasTicket
+									+ '","team_numbers":"'
 									+ $("#txt-team-numbers").val()
 									+ '","data":[';
 							var allTrs = tbody.children();

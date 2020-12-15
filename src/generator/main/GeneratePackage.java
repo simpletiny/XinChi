@@ -18,9 +18,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class GeneratePackage {
-	public static final String clazzName = "SeasonTicketInfo";
+	public static final String clazzName = "SupplierDeposit";
 	public static final String desc = "航班信息";
-	public static final String voName = "SeasonTicketInfoBean";
+	public static final String voName = "SupplierDepositBean";
 	public static final String baseFolder = "src/com/xinchi/backend/ticket";
 	public static final String basePackage = "com.xinchi.backend.ticket";
 

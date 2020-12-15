@@ -519,6 +519,166 @@
 			<comment>CREATE view view_drop_off</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE VIEW view_product_area AS
+			    SELECT 
+			        COUNT(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            A.pk,
+			            NULL)) AS order_cnt,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+			            0)) AS score,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+			            0)) AS sum_people,
+			        LEFT(A.confirm_date, 7) AS confirm_month,
+			        A.product_manager_number AS product_manager_number,
+			        C.user_name AS product_manager_name,
+			        E.client_area AS area
+			    FROM
+			        budget_order_view A
+			            LEFT JOIN
+			        final_order_view B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        user_base C ON A.product_manager_number = C.user_number
+			            LEFT JOIN
+			        client_employee D ON A.client_employee_pk = D.pk
+			            LEFT JOIN
+			        client E ON D.financial_body_pk = E.pk
+			    GROUP BY A.product_manager_number , E.client_area , LEFT(A.confirm_date, 7)
+			    HAVING confirm_month IS NOT NULL
+			        AND area IS NOT NULL;
+             ]]>
+			<comment>CREATE view view_product_area</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE view view_product_product AS
+				 SELECT 
+				        COUNT(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            A.pk,
+				            NULL)) AS order_cnt,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+				            0)) AS score,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS sum_people,
+				        LEFT(A.confirm_date, 7) AS confirm_month,
+				        A.product_pk AS product_pk,
+				        C.name AS product_name,
+				        C.product_manager AS product_manager_number,
+				        D.user_name AS product_manager_name
+				    FROM
+				        budget_standard_order A
+				            LEFT JOIN
+				        final_standard_order B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        product C ON A.product_pk = C.pk
+				            LEFT JOIN
+				        user_base D ON C.product_manager = D.user_number
+				    GROUP BY C.product_manager , C.pk , LEFT(A.confirm_date, 7)
+				    HAVING product_manager_number is not null;
+             ]]>
+			<comment>CREATE view view_product_product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE view view_product_sale AS
+				    SELECT 
+				        COUNT(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            A.pk,
+				            NULL)) AS order_cnt,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+				            0)) AS score,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS sum_people,
+				        LEFT(A.confirm_date, 7) AS confirm_month,
+				        A.create_user_number AS sale_number,
+				        C.user_name AS sale_name,
+				        A.product_manager_number AS product_manager_number,
+				        D.user_name AS product_manager_name
+				    FROM
+				        budget_order_view A
+				            LEFT JOIN
+				        final_order_view B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        user_base C ON A.create_user_number = C.user_number
+							LEFT JOIN
+						user_base D ON A.product_manager_number = D.user_number
+				    GROUP BY A.product_manager_number, A.create_user , LEFT(A.confirm_date, 7);
+             ]]>
+			<comment>CREATE view view_product_sale</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE TABLE supplier_deposit (
+					  voucher_number CHAR(16) NOT NULL COMMENT '凭证号，与支出银行流水挂钩',
+					  received_voucher_number CHAR(16) NULL COMMENT '退回凭证号，与收入银行流水或业务冲账挂钩',
+					  account VARCHAR(20) NOT NULL COMMENT '支出账户',
+					  supplier_pk VARCHAR(45) NOT NULL COMMENT '供应商pk',
+					  money DECIMAL(12,2) NOT NULL COMMENT '金额',
+					  received DECIMAL(12,2) NULL COMMENT '已收回',
+					  balance DECIMAL(12,2) NULL COMMENT '还剩',
+					  return_date VARCHAR(10) NULL COMMENT '到期时间(归还时间)',
+					  status CHAR(1) NULL DEFAULT 'N' COMMENT 'N在押有balance就是在押，Y已清',
+					  return_way VARCHAR(3) NULL COMMENT '归还途径，C冲账，T退还，C,T冲账加退还',
+					  deposit_type CHAR(1) NOT NULL DEFAULT 'A' COMMENT '押金用途,A航司押金（后期有别的再添加)',
+					  comment VARCHAR(200) NULL COMMENT '备注',
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  pk CHAR(22) NOT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '供应商押金表';
+             ]]>
+			<comment> CREATE TABLE supplier_deposit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 CREATE TABLE deposit_payment (
+				  deposit_pk CHAR(22) NOT NULL COMMENT '押金账pk',
+				  payment_voucher_number CHAR(16) NOT NULL COMMENT '银行流水押金退反收入voucher_number',
+				  pk CHAR(22) NOT NULL COMMENT '押金账和银行流水押金退反收入对应关系表',
+				  PRIMARY KEY (pk));
+             ]]>
+			<comment> CREATE TABLE deposit_payment</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

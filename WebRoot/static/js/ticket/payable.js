@@ -1,11 +1,26 @@
 var payLayer;
 var passengerCheckLayer;
+var receiveLayer;
 var PayableContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenPayables = ko.observableArray([]);
 	self.types = ['预算', '决算'];
 	self.chosenTypes = ko.observableArray([]);
+
+	self.cards = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {
+
+	}, function(data) {
+		console.log(data);
+		if (data.accounts) {
+			self.cards(data.accounts);
+		} else {
+			fail_msg("不存在账户，无法建立明细账！");
+		}
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
 
 	self.payables = ko.observable({
 		total : 0,
@@ -37,7 +52,7 @@ var PayableContext = function() {
 
 				if (data.final_flg == "Y") {
 					if (data.final_balance == 0) {
-						fail_msg(data.team_number + "尾款已清");
+						fail_msg("第" + (idx + 1) + "个的" + "尾款已清");
 						check_result = false;
 					} else {
 						totalPay += (data.final_balance - 0);
@@ -45,7 +60,7 @@ var PayableContext = function() {
 
 				} else {
 					if (data.budget_balance == 0) {
-						fail_msg(data.team_number + "尾款已清");
+						fail_msg("第" + (idx + 1) + "个的" + "尾款已清");
 						check_result = false;
 					} else {
 						totalPay += (data.budget_balance - 0);
@@ -124,6 +139,124 @@ var PayableContext = function() {
 		});
 	};
 
+	// 返款收入
+	self.totalBack = ko.observable();
+	self.receive = function() {
+		if (self.chosenPayables().length == 0) {
+			fail_msg("请选择订单");
+			return;
+		} else {
+			var supplier_employee_pks = new Array();
+			var totalBack = 0;
+			var check_result = true;
+			$(self.chosenPayables()).each(function(idx, data) {
+				supplier_employee_pks.push(data.supplier_employee_pk);
+
+				if (data.final_flg == "Y") {
+					if (data.final_balance >= 0) {
+						fail_msg("第" + (idx + 1) + "个的" + "尾款为正，不存在返款");
+						check_result = false;
+					} else {
+						totalBack += (data.final_balance - 0);
+					}
+				} else {
+					if (data.budget_balance >= 0) {
+						fail_msg("第" + (idx + 1) + "个的" + "尾款为正，不存在返款");
+						check_result = false;
+					} else {
+						totalBack += (data.budget_balance - 0);
+					}
+				}
+			});
+			if (!check_result)
+				return;
+			$(".rmb").formatCurrency();
+			startLoadingSimpleIndicator("检测中");
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/isSameFinancialBody2',
+				data : "supplier_employee_pks=" + supplier_employee_pks,
+				success : function(data) {
+					if (data.isSame == "NOT") {
+						fail_msg("供应商不属于同一财务主体");
+					} else {
+						self.supplier_name(data.supplier.supplier_short_name);
+						self.totalBack(totalBack * -1);
+						receiveLayer = $.layer({
+							type : 1,
+							title : ['收入', ''],
+							maxmin : false,
+							closeBtn : [1, true],
+							shadeClose : false,
+							area : ['1000px', '700px'],
+							offset : ['150px', ''],
+							scrollbar : true,
+							page : {
+								dom : '#receive'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+						$("#receive").attr("overflow", "yes");
+					}
+					endLoadingIndicator();
+				}
+			});
+		}
+	};
+	// 执行返款收入
+	self.applyReceive = function() {
+		if (!$("#form-receive").valid())
+			return;
+		var sumAllot = 0;
+		$("[st='back_receive']").each(function(idx, data) {
+			sumAllot += $(data).val() - 0;
+		});
+		if (sumAllot != $("[st='sum_received']").val() - 0) {
+			fail_msg("分配金额合计和总金额不匹配");
+			return;
+		}
+
+		var data = $("#form-receive").serialize();
+		var allot_json = '[';
+		var allot = $("[st='back_allot']");
+		for (var i = 0; i < allot.length; i++) {
+			var current = allot[i];
+			var base_pk = $(current).find("[st='base-pk']").val();
+			var r = $(current).find("[st='back_receive']").val();
+			var p = $(current).find("[st='supplier_employee_pk']").val();
+			allot_json += '{"base_pk":"' + base_pk + '",' + '"received":"' + r
+					+ '",' + '"supplier_employee_pk":"' + p;
+			if (i == allot.length - 1) {
+				allot_json += '"}';
+			} else {
+				allot_json += '"},';
+			}
+		}
+		allot_json += ']';
+		layer.close(receiveLayer);
+		startLoadingSimpleIndicator("保存中");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'payable/backRecive',
+			data : data + "&json=" + allot_json,
+			success : function(str) {
+				if (str == "success") {
+					self.search();
+				} else if (str = "time") {
+					fail_msg("此账户在同一时间存在收支！");
+				} else {
+					fail_msg("申请失败，请联系管理员");
+				}
+				endLoadingIndicator();
+			},
+			fail : function(str) {
+				console.log(str);
+			}
+		});
+	};
+
 	self.chosenAll = function(obj) {
 		console.log(obj);
 	};
@@ -136,6 +269,7 @@ var PayableContext = function() {
 	var pages = new Array();
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
+		self.chosenPayables.removeAll();
 		var totalBudgetPayable = 0;
 		var totalPaid = 0;
 		var totalBudgetBalance = 0;
@@ -314,4 +448,12 @@ var ctx = new PayableContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+	$(':file').change(function() {
+		changeFile({
+			input : this,
+			size : 400,
+			width : 400,
+			required : "yes"
+		});
+	});
 });

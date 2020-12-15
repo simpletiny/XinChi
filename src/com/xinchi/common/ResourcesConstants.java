@@ -109,7 +109,7 @@ public class ResourcesConstants {
 	public static String PAID_STATUS_NO = "N";
 	// 已同意
 	public static String PAID_STATUS_YES = "Y";
-	// 已支付
+	// 已入账
 	public static String PAID_STATUS_PAID = "P";
 
 	// 收入状态
@@ -209,6 +209,8 @@ public class ResourcesConstants {
 	public static String PAY_TYPE_MORE_BACK = "M";
 	// FLY
 	public static String PAY_TYPE_FLY = "F";
+	// 航司押金
+	public static String PAY_TYPE_DEPOSIT_AIR = "A";
 
 	public static String PAY_STATUS_ING = "I";
 	public static String PAY_STATUS_YES = "Y";

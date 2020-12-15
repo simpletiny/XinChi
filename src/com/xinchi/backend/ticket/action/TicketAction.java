@@ -349,6 +349,25 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<AirTicketChangeLogBean> changes;
+
+	public String searchTicketChangeByPage() {
+		Map<String, AirTicketChangeLogBean> params = new HashMap<String, AirTicketChangeLogBean>();
+		params.put("bo", changeLog);
+
+		page.setParams(params);
+
+		changes = service.searchTicketChangeByPage(page);
+		return SUCCESS;
+	}
+
+	private String ticket_change_pk;
+
+	public String searchPassengersByChangePk() {
+		airTicketNameList = airTicketNameListService.selectByChangePk(ticket_change_pk);
+		return SUCCESS;
+	}
+
 	public List<AirTicketNeedBean> getAirTicketNeeds() {
 		return airTicketNeeds;
 	}
@@ -555,6 +574,22 @@ public class TicketAction extends BaseAction {
 
 	public void setPassenger_pk(String passenger_pk) {
 		this.passenger_pk = passenger_pk;
+	}
+
+	public List<AirTicketChangeLogBean> getChanges() {
+		return changes;
+	}
+
+	public void setChanges(List<AirTicketChangeLogBean> changes) {
+		this.changes = changes;
+	}
+
+	public String getTicket_change_pk() {
+		return ticket_change_pk;
+	}
+
+	public void setTicket_change_pk(String ticket_change_pk) {
+		this.ticket_change_pk = ticket_change_pk;
 	}
 
 }

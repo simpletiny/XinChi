@@ -13,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/upload.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -30,6 +31,13 @@
 	top: 200px;
 	margin-left: 10px;
 	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
 }
 </style>
 </head>
@@ -140,6 +148,9 @@
 				<div class="fixed">
 					<div style="margin-top: 5px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pay()}">支付</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">收入</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">业务冲抵</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">押金冲抵</button>
 					</div>
 				</div>
 			</div>
@@ -283,6 +294,110 @@
 			</div>
 		</div>
 	</div>
+	<!-- 返款收入 -->
+	<div id="receive" style="display: none; width: 1000px; height: 600px; overflow: auto; padding-top: 30px;">
+		<form id="form-receive">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">供应商</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:supplier_name()"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">应返款总额</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default rmb" data-bind="text:totalBack()"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l" style="width: 30%">收入账户</label>
+					<div class="ip" style="width: 70%">
+						<select class="form-control" data-bind="options: cards, optionsCaption: '-- 请选择 --'" name="detail.account"
+							required="required"></select>
+					</div>
+				</div>
+				<div class="col-md-6 required">
+					<label class="l" style="width: 30%">金额</label>
+					<div class="ip" style="width: 70%">
+						<input type="number" name="detail.allot_money" class="ip-" st="sum_received" data-bind="value:totalBack()"
+							required="required" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l" style="width: 30%">入账时间</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="detail.time" placeholder="请准确填写避免冲突" class="form-control datetime-picker"
+							required="required" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-2">
+					<label class="l" style="width: 100%">供应商</label>
+				</div>
+				<div class="col-md-2">
+					<label class="l" style="width: 100%">应返款</label>
+				</div>
+				<div class="col-md-2 required">
+					<label class="l" style="width: 100%">分配金额</label>
+				</div>
+			</div>
+			<!-- ko foreach:chosenPayables -->
+			<div class="input-row clearfloat" st="back_allot">
+				<input type="hidden" data-bind="value: $data.pk" st="base-pk" />
+				<div class="col-md-2">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" />
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="ip">
+						<!-- ko if:$data.final_flg=="Y" -->
+						<p class="ip-default rmb" data-bind="text:$data.final_balance*-1"></p>
+						<!-- /ko -->
+						<!-- ko if:$data.final_flg=="N" -->
+						<p class="ip-default rmb" data-bind="text:$data.budget_balance*-1"></p>
+						<!-- /ko -->
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="ip">
+						<!-- ko if:$data.final_flg=="Y" -->
+						<input type="number" class="form-control" st="back_receive"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance*-1" required="required" />
+						<!-- /ko -->
+						<!-- ko if:$data.final_flg=="N" -->
+						<input type="number" class="form-control" st="back_receive"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance*-1" required="required" />
+						<!-- /ko -->
+
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required"
+						accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="detail.voucher_file_name" />
+				</div>
+				<div class="col-md-6"></div>
+			</div>
+			<div class="input-row clearfloat"></div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="margin-top: 10px">
+					<div align="right">
+						<a type="button" class="btn btn-green btn-r" data-bind="click: applyReceive">提交</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -293,6 +408,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
+	<script src="<%=basePath%>static/js/file-upload.js"></script>
 	<script src="<%=basePath%>static/js/ticket/payable.js"></script>
 </body>
 </html>

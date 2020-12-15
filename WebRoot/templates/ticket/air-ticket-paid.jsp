@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -60,7 +59,8 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				票款支付<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				票款支付<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -70,7 +70,7 @@
 				<div class="form-box info-form" id="div-payable">
 					<!-- ko foreach: payables -->
 					<div class="input-row clearfloat">
-						<input type="hidden" data-bind="value:$data.pk" st="payable-pk"/>
+						<input type="hidden" data-bind="value:$data.pk" st="payable-pk" />
 						<div class="col-md-4">
 							<label class="l">票源</label>
 							<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
@@ -80,10 +80,10 @@
 							<p class="ip-default" data-bind="text: $data.budget_balance"></p>
 						</div>
 						<div class="col-md-4 required">
-							<label class="l">此次付款</label> <input type="number" st="this-paid" data-bind="value:$data.budget_balance" onkeyup="caculateSumMoney()" style="width: 50%" class="ip-" placeholder="此次付款"
-								required="required" />
+							<label class="l">此次付款</label> <input type="number" st="this-paid" data-bind="value:$data.budget_balance"
+								onkeyup="caculateSumMoney()" style="width: 50%" class="ip-" placeholder="此次付款" required="required" />
 						</div>
-					</div> 
+					</div>
 					<!-- /ko -->
 				</div>
 				<h3>支付信息</h3>
@@ -108,7 +108,9 @@
 							<div class="col-md-6 required">
 								<label class="l">支出账户</label>
 								<div class="ip">
-									<select class="form-control" name="account" data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'" required="required"></select>
+									<select class="form-control" name="account"
+										data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'"
+										required="required"></select>
 								</div>
 							</div>
 							<div class="col-md-6 required">
@@ -135,7 +137,8 @@
 						</div>
 						<div class="input-row clearfloat">
 							<div class="col-md-6">
-								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input type="hidden" name="voucherFile" />
+								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+									type="hidden" name="voucherFile" />
 							</div>
 							<div class="col-md-6"></div>
 						</div>
@@ -162,7 +165,9 @@
 				<div class="col-md-6 required">
 					<label class="l">支出账户</label>
 					<div class="ip">
-						<select class="form-control" name="account" data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'" required="required"></select>
+						<select class="form-control" name="account"
+							data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --'"
+							required="required"></select>
 					</div>
 				</div>
 				<div class="col-md-6 required">
@@ -189,7 +194,8 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input type="hidden" name="voucherFile" />
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+						type="hidden" name="voucherFile" />
 				</div>
 				<div class="col-md-6"></div>
 			</div>

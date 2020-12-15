@@ -82,4 +82,10 @@ public class AirTicketNameListServiceImpl implements AirTicketNameListService {
 		return dao.selectDoneByPage(page);
 	}
 
+	@Override
+	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk) {
+
+		return dao.selectByChangePk(ticket_change_pk);
+	}
+
 }

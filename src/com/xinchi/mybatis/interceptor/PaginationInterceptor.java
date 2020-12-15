@@ -40,20 +40,16 @@ public class PaginationInterceptor implements Interceptor {
 	 * 拦截后要执行的方法
 	 */
 	public Object intercept(Invocation invocation) throws Throwable {
-		StatementHandler statementHandler = (StatementHandler) invocation
-				.getTarget();
+		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 		BoundSql boundSql = statementHandler.getBoundSql();
 		Object obj = boundSql.getParameterObject();
 		// 判断方言
-		MetaObject metaStatementHandler = MetaObject.forObject(
-				statementHandler, new DefaultObjectFactory(),
+		MetaObject metaStatementHandler = MetaObject.forObject(statementHandler, new DefaultObjectFactory(),
 				new DefaultObjectWrapperFactory());
-		Configuration configuration = (Configuration) metaStatementHandler
-				.getValue("delegate.configuration");
+		Configuration configuration = (Configuration) metaStatementHandler.getValue("delegate.configuration");
 		Dialect.Type databaseType = null;
 		try {
-			databaseType = Dialect.Type.valueOf(configuration.getVariables()
-					.getProperty("dialect").toUpperCase());
+			databaseType = Dialect.Type.valueOf(configuration.getVariables().getProperty("dialect").toUpperCase());
 		} catch (Exception e) {
 
 		}
@@ -71,23 +67,17 @@ public class PaginationInterceptor implements Interceptor {
 		case SQLSERVER:
 			break;
 		}
-		String pageSqlId = configuration.getVariables()
-				.getProperty("pageSqlId");
+		String pageSqlId = configuration.getVariables().getProperty("pageSqlId");
 		if (StringUtils.isEmpty(pageSqlId))
 			pageSqlId = ".*ByPage$";
-		MappedStatement mappedStatement = (MappedStatement) metaStatementHandler
-				.getValue("delegate.mappedStatement");
-		if (obj instanceof Page<?>
-				&& mappedStatement.getId().matches(pageSqlId)) {
+		MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
+		if (obj instanceof Page<?> && mappedStatement.getId().matches(pageSqlId)) {
 			Page<?> page = (Page<?>) obj;
-			String originalSql = (String) metaStatementHandler
-					.getValue("delegate.boundSql.sql");
+			String originalSql = (String) metaStatementHandler.getValue("delegate.boundSql.sql");
 			String pageSql = dialect.getLimitString(originalSql, page);
 			metaStatementHandler.setValue("delegate.boundSql.sql", pageSql);
-			metaStatementHandler.setValue("delegate.rowBounds.offset",
-					RowBounds.NO_ROW_OFFSET);
-			metaStatementHandler.setValue("delegate.rowBounds.limit",
-					RowBounds.NO_ROW_LIMIT);
+			metaStatementHandler.setValue("delegate.rowBounds.offset", RowBounds.NO_ROW_OFFSET);
+			metaStatementHandler.setValue("delegate.rowBounds.limit", RowBounds.NO_ROW_LIMIT);
 			// 重设分页参数里的总页数等
 			Connection connection = (Connection) invocation.getArgs()[0];
 			this.setTotalRecord(page, mappedStatement, connection);
@@ -112,21 +102,16 @@ public class PaginationInterceptor implements Interceptor {
 	 * @param connection
 	 *            当前的数据库连接
 	 */
-	private void setTotalRecord(Page<?> page, MappedStatement mappedStatement,
-			Connection connection) {
+	private void setTotalRecord(Page<?> page, MappedStatement mappedStatement, Connection connection) {
 		BoundSql boundSql = mappedStatement.getBoundSql(page);
 		String sql = boundSql.getSql();
 		String countSql = this.getCountSql(sql);
 		// 通过BoundSql获取对应的参数映射
-		List<ParameterMapping> parameterMappings = boundSql
-				.getParameterMappings();
+		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
 		// 利用Configuration、查询记录数的Sql语句countSql、参数映射关系parameterMappings和参数对象page建立查询记录数对应的BoundSql对象。
-		BoundSql countBoundSql = new BoundSql(
-				mappedStatement.getConfiguration(), countSql,
-				parameterMappings, page);
+		BoundSql countBoundSql = new BoundSql(mappedStatement.getConfiguration(), countSql, parameterMappings, page);
 		// 通过mappedStatement、参数对象page和BoundSql对象countBoundSql建立一个用于设定参数的ParameterHandler对象
-		ParameterHandler parameterHandler = new DefaultParameterHandler(
-				mappedStatement, page, countBoundSql);
+		ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, page, countBoundSql);
 		// 通过connection建立一个countSql对应的PreparedStatement对象。
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -166,7 +151,11 @@ public class PaginationInterceptor implements Interceptor {
 		if (index == -1) {
 			index = sql.indexOf("FROM");
 		}
-		return "select count(*) " + sql.substring(index);
+		String result = "select count(*) " + sql.substring(index);
+		if (sql.indexOf("GROUP BY") > -1 || sql.indexOf("group by") > -1) {
+			result = "select count(*) from (" + result + ") AA;";
+		}
+		return result;
 	}
 
 	public void setProperties(Properties arg0) {

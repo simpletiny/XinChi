@@ -33,6 +33,10 @@
 		<action name="payAirTicket" class="airTicketPayableAction" method="payAirTicket">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 支付款退反 -->
+		<action name="backRecive" class="airTicketPaidDetailAction" method="backRecive">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 查询应付款涉及到的名单-->
 		<action name="searchPayablePassengersByPayablePk" class="airTicketPayableAction" method="searchPayablePassengersByPayablePk">
 			<result name="success" type="json">

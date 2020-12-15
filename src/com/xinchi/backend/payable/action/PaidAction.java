@@ -60,7 +60,8 @@ public class PaidAction extends BaseAction {
 		JSONArray array = JSONArray.fromObject(allot_json);
 
 		String[] pks = DBCommonUtil.genPks(array.size());
-		detail.setRelated_pk(Joiner.on(",").join(pks));
+		String related_pk = DBCommonUtil.genPk();
+		detail.setRelated_pk(related_pk);
 
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = JSONObject.fromObject(array.get(i));

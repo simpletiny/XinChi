@@ -110,4 +110,10 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectDoneByPage", page);
 	}
 
+	@Override
+	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk) {
+		return daoUtil.selectListByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByChangePk",
+				ticket_change_pk);
+	}
+
 }

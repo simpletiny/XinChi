@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.data.dao.DataDAO;
 import com.xinchi.backend.data.dao.OrderCountDAO;
 import com.xinchi.backend.data.service.DataService;
 import com.xinchi.backend.finance.dao.CardDAO;
@@ -19,6 +20,9 @@ import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
 import com.xinchi.bean.KeyValueDto;
+import com.xinchi.bean.ProductAreaBean;
+import com.xinchi.bean.ProductProductBean;
+import com.xinchi.bean.ProductSaleBean;
 import com.xinchi.common.DateUtil;
 
 @Service
@@ -27,6 +31,9 @@ public class DataServiceImpl implements DataService {
 
 	@Autowired
 	private OrderCountDAO orderCountDao;
+
+	@Autowired
+	private DataDAO dao;
 
 	@Override
 	public List<DataOrderCountDto> fetchOrderCountData(DataOrderCountDto order_count) {
@@ -271,5 +278,23 @@ public class DataServiceImpl implements DataService {
 		dfsd.setAreaPayable(payables);
 
 		return dfsd;
+	}
+
+	@Override
+	public List<ProductAreaBean> searchProductAreaData(ProductAreaBean productOption) {
+
+		return dao.selectProductAreaData(productOption);
+	}
+
+	@Override
+	public List<ProductProductBean> searchProductProductData(ProductAreaBean productOption) {
+
+		return dao.selectProductProductData(productOption);
+	}
+
+	@Override
+	public List<ProductSaleBean> searchProductSaleData(ProductAreaBean productOption) {
+
+		return dao.selectProductSaleData(productOption);
 	}
 }

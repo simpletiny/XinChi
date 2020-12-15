@@ -12,8 +12,14 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.data.service.DataService;
 import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
+import com.xinchi.bean.ProductAreaBean;
+import com.xinchi.bean.ProductProductBean;
+import com.xinchi.bean.ProductSaleBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -45,6 +51,26 @@ public class DataAction extends BaseAction {
 			xAxis = Arrays.asList(new String[] { "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日", });
 		}
 
+		return SUCCESS;
+	}
+
+	private List<ProductAreaBean> areaData;
+	private List<ProductProductBean> productData;
+	private List<ProductSaleBean> saleData;
+
+	private ProductAreaBean productOption;
+
+	public String fetchProductStatisticsData() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		if (!sessionBean.getUser_roles().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			productOption.setProduct_manager_number(sessionBean.getUser_number());
+		}
+
+		areaData = service.searchProductAreaData(productOption);
+		productData = service.searchProductProductData(productOption);
+		saleData = service.searchProductSaleData(productOption);
 		return SUCCESS;
 	}
 
@@ -90,5 +116,37 @@ public class DataAction extends BaseAction {
 
 	public void setDfsd(DataFinanceSummaryDto dfsd) {
 		this.dfsd = dfsd;
+	}
+
+	public List<ProductAreaBean> getAreaData() {
+		return areaData;
+	}
+
+	public List<ProductProductBean> getProductData() {
+		return productData;
+	}
+
+	public List<ProductSaleBean> getSaleData() {
+		return saleData;
+	}
+
+	public void setAreaData(List<ProductAreaBean> areaData) {
+		this.areaData = areaData;
+	}
+
+	public void setProductData(List<ProductProductBean> productData) {
+		this.productData = productData;
+	}
+
+	public void setSaleData(List<ProductSaleBean> saleData) {
+		this.saleData = saleData;
+	}
+
+	public ProductAreaBean getProductOption() {
+		return productOption;
+	}
+
+	public void setProductOption(ProductAreaBean productOption) {
+		this.productOption = productOption;
 	}
 }

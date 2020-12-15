@@ -210,6 +210,17 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		}
 		dao.updateDetails(afterDetails);
 		dao.delete(detailId);
+
+		// 删除凭证文件，如果有的话
+		if (!SimpletinyString.isEmpty(detail.getVoucher_file_name())) {
+			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+			File destfile = new File(
+					fileFolder + File.separator + card.getPk() + File.separator + detail.getVoucher_file_name());
+			if (destfile.exists()) {
+				destfile.delete();
+			}
+		}
+
 		return "success";
 	}
 

@@ -19,6 +19,7 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	private java.math.BigDecimal sum_money;
 
+	private String account;
 	private String status;
 
 	private String type;
@@ -46,6 +47,9 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 	private String PNR;
 
 	private String voucher_number;
+
+	// DTO
+	private String voucher_file_name;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -213,6 +217,22 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setVoucher_number(String voucher_number) {
 		this.voucher_number = voucher_number;
+	}
+
+	public String getVoucher_file_name() {
+		return voucher_file_name;
+	}
+
+	public void setVoucher_file_name(String voucher_file_name) {
+		this.voucher_file_name = voucher_file_name;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 
 }

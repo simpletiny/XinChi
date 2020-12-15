@@ -19,6 +19,7 @@ import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
+import com.xinchi.bean.CardBean;
 import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
@@ -120,8 +121,11 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 			String account = obj.getString("account");
 			String time = obj.getString("time");
 			String receiver = obj.getString("receiver");
-			BigDecimal balance = new BigDecimal(cardDao.getAccountBalance(account));
 			BigDecimal money = new BigDecimal(obj.getString("money"));
+
+			CardBean card = cardDao.getCardByAccount(account);
+			BigDecimal balance = card.getBalance().subtract(money);
+
 			String voucher_file_name = obj.getString("voucherFile");
 
 			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
@@ -135,7 +139,7 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 			detail.setTime(time);
 			detail.setReceiver(receiver);
 			detail.setMoney(money);
-			detail.setBalance(balance.subtract(money));
+			detail.setBalance(balance);
 			detail.setType("支出");
 			detail.setComment(receiver + ",凭证号：" + voucher_number);
 			detail.setVoucher_file_name(voucher_file_name);
@@ -145,6 +149,7 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 			if (!msg.equals(SUCCESS)) {
 				return msg;
 			}
+
 			// 生成待支付数据并直接写入为已支付状态
 			WaitingForPaidBean waiting = new WaitingForPaidBean();
 			waiting.setPay_number(voucher_number);

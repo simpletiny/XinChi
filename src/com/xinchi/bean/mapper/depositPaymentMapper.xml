@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.DepositPaymentMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.DepositPaymentBean">
+		<result column="deposit_pk" property="deposit_pk" jdbcType="CHAR" />
+		<result column="payment_voucher_number" property="payment_voucher_number" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		deposit_pk,
+		payment_voucher_number,
+		pk
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from deposit_payment
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from deposit_payment
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.DepositPaymentBean">
+
+		insert into deposit_payment
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="deposit_pk != null">
+				deposit_pk,
+			</if>
+			<if test="payment_voucher_number != null">
+				payment_voucher_number,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="deposit_pk != null">
+				#{deposit_pk,jdbcType=CHAR},
+			</if>
+			<if test="payment_voucher_number != null">
+				#{payment_voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.DepositPaymentBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from deposit_payment
+	</select>
+</mapper>

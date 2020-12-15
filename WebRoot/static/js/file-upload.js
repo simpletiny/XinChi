@@ -3,7 +3,8 @@ function changeFile(param) {
 		size : 1024,
 		width : 600,
 		type : "image",
-		required : "no"
+		required : "no",
+		accept:"image/jpeg,image/png"
 	};
 
 	var thisx = param.input;
@@ -11,19 +12,22 @@ function changeFile(param) {
 	var maxSize = param.size == null ? K.size : param.size;
 	var initWidth = param.width == null ? K.width : param.width;
 	var type = param.type == null ? K.type : param.type;
-
+	
+	if(type=="image"){
+		param.accept = K.accept;
+	}
 	var typeMapping = {
 		"image" : "图片"
 	};
 	var file = thisx.files[0];
-	name_check = file.name;
-	size = file.size;
-	type = file.type;
-	if (type.indexOf(type) < 0) {
+	var	name_check = file.name;
+	var file_size = file.size;
+	var fil_type = file.type;
+	if (fil_type.indexOf(type) < 0) {
 		fail_msg("请上传" + typeMapping[type] + "!");
 		return;
 	}
-	if (Math.round(size / 1024 * 100) / 100 > maxSize) {
+	if (Math.round(file_size / 1024 * 100) / 100 > maxSize) {
 		fail_msg("文件不能大于" + maxSize + "KB!");
 		return;
 	}
@@ -99,7 +103,8 @@ function deleteImage(deleteButton, inputFile, img, fileNameInput, fileName, para
 	$(img).remove();
 	var inputName = inputFile.name;
 	var required = param.required == "yes" ? "required='required'" : "";
-	var newInputFile = $("<input type='file' " + required + " name='" + inputName + "'/>");
+	var accept = param.accept;
+	var newInputFile = $("<input type='file' " + required + " name='" + inputName + "' accept='"+accept+"'/>");
 	newInputFile.change(function() {
 		changeFile({
 			input : this,

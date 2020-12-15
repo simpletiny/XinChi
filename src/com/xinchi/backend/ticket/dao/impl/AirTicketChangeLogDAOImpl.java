@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
 import com.xinchi.bean.AirTicketChangeLogBean;
 import com.xinchi.common.DaoUtil;
+import com.xinchi.tools.Page;
 
 @Repository
 public class AirTicketChangeLogDAOImpl extends SqlSessionDaoSupport implements AirTicketChangeLogDAO {
@@ -49,6 +50,11 @@ public class AirTicketChangeLogDAOImpl extends SqlSessionDaoSupport implements A
 		List<AirTicketChangeLogBean> list = daoUtil
 				.selectByParam("com.xinchi.bean.mapper.AirTicketChangeLogMapper.selectByParam", bean);
 		return list;
+	}
+
+	@Override
+	public List<AirTicketChangeLogBean> selectByPage(Page page) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketChangeLogMapper.selectByPage", page);
 	}
 
 }

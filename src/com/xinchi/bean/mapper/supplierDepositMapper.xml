@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.SupplierDepositMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierDepositBean">
+		<result column="voucher_number" property="voucher_number" jdbcType="CHAR" />
+		<result column="received_voucher_number" property="received_voucher_number" jdbcType="CHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="supplier_pk" property="supplier_pk" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="received" property="received" jdbcType="DECIMAL" />
+		<result column="balance" property="balance" jdbcType="DECIMAL" />
+		<result column="return_date" property="return_date" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="return_way" property="return_way" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="deposit_type" property="deposit_type" jdbcType="CHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		voucher_number,
+		account,
+		supplier_pk,
+		money,
+		received,
+		balance,
+		return_date,
+		status,
+		return_way,
+		deposit_type,
+		update_user,
+		create_user,
+		pk,
+		create_time,
+		update_time,
+		comment,
+		received_voucher_number
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_deposit
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from supplier_deposit
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.SupplierDepositBean">
+
+		insert into supplier_deposit
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="voucher_number != null">
+				voucher_number,
+			</if>
+			<if test="account != null">
+				account,
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="received != null">
+				received,
+			</if>
+			<if test="balance != null">
+				balance,
+			</if>
+			<if test="return_date != null">
+				return_date,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="return_way != null">
+				return_way,
+			</if>
+			<if test="deposit_type != null">
+				deposit_type,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="voucher_number != null">
+				#{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="account != null">
+				#{account,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_pk != null">
+				#{supplier_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="received != null">
+				#{received,jdbcType=DECIMAL},
+			</if>
+			<if test="balance != null">
+				#{balance,jdbcType=DECIMAL},
+			</if>
+			<if test="return_date != null">
+				#{return_date,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="return_way != null">
+				#{return_way,jdbcType=VARCHAR},
+			</if>
+			<if test="deposit_type != null">
+				#{deposit_type,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SupplierDepositBean">
+		update supplier_deposit
+		<set>
+			<if test="voucher_number != null">
+				voucher_number = #{voucher_number,jdbcType=CHAR},
+			</if>
+			<if test="account != null">
+				account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk = #{supplier_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="received != null">
+				received = #{received,jdbcType=DECIMAL},
+			</if>
+			<if test="balance != null">
+				balance = #{balance,jdbcType=DECIMAL},
+			</if>
+			<if test="return_date != null">
+				return_date = #{return_date,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="return_way != null">
+				return_way = #{return_way,jdbcType=VARCHAR},
+			</if>
+			<if test="deposit_type != null">
+				deposit_type = #{deposit_type,jdbcType=CHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="received_voucher_number != null">
+				received_voucher_number = #{received_voucher_number,jdbcType=CHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.SupplierDepositBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_deposit
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.voucher_number,
+		A.account,
+		A.supplier_pk,
+		B.supplier_short_name AS supplier_name,
+		A.money,
+		A.received,
+		A.balance,
+		A.return_date,
+		A.status,
+		A.return_way,
+		A.deposit_type,
+		A.update_user,
+		A.create_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.comment,
+		A.received_voucher_number
+		from
+		supplier_deposit A
+		LEFT JOIN supplier B ON A.supplier_pk = B.pk
+		<where>
+			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
+				and B.supplier_short_name like CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.account != null and params.bo.account !=''">
+				and A.account = #{params.bo.account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.statuses!= null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.deposit_type != null and params.bo.deposit_type !=''">
+				and A.deposit_type = #{params.bo.deposit_type,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

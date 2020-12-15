@@ -1,7 +1,10 @@
 package com.xinchi.backend.ticket.service;
 
+import java.util.List;
+
 import com.xinchi.bean.AirTicketChangeLogBean;
 import com.xinchi.common.BaseService;
+import com.xinchi.tools.Page;
 
 public interface TicketService extends BaseService {
 	/**
@@ -13,5 +16,7 @@ public interface TicketService extends BaseService {
 	public String changFlight(String json);
 
 	public AirTicketChangeLogBean searchFlightChangeLogByPassengerPk(String passenger_pk);
+
+	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page);
 
 }

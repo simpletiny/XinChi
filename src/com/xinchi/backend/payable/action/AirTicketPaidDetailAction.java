@@ -73,6 +73,16 @@ public class AirTicketPaidDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String json;
+
+	private AirTicketPaidDetailBean detail;
+
+	// 机票款退反
+	public String backRecive() {
+		resultStr = service.backRecive(detail, json);
+		return SUCCESS;
+	}
+
 	public AirTicketPaidDto getOption() {
 		return option;
 	}
@@ -111,6 +121,22 @@ public class AirTicketPaidDetailAction extends BaseAction {
 
 	public void setPayment_details(List<PaymentDetailBean> payment_details) {
 		this.payment_details = payment_details;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
+	}
+
+	public AirTicketPaidDetailBean getDetail() {
+		return detail;
+	}
+
+	public void setDetail(AirTicketPaidDetailBean detail) {
+		this.detail = detail;
 	}
 
 }

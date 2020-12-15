@@ -49,4 +49,6 @@ public interface AirTicketPaidDetailService extends BaseService {
 	public List<AirTicketPaidDetailBean> selectByRelatedPk(String related_pk);
 
 	public String rollBackPayApply(String related_pk);
+
+	public String backRecive(AirTicketPaidDetailBean detail, String json);
 }

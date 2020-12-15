@@ -62,4 +62,6 @@ public interface AirTicketNameListDAO {
 	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page);
 
 	public List<AirTicketNameListBean> selectByTeamNumbers(List<String> t_ns);
+
+	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk);
 }

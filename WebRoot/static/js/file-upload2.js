@@ -20,14 +20,14 @@ function changeFile(param) {
 		"image" : "图片"
 	};
 	var file = thisx.files[0];
-	name_check = file.name;
-	size = file.size;
-	type = file.type;
-	if (type.indexOf(type) < 0) {
+	var	name_check = file.name;
+	var file_size = file.size;
+	var fil_type = file.type;
+	if (type.indexOf(fil_type) < 0) {
 		fail_msg("请上传" + typeMapping[type] + "!");
 		return;
 	}
-	if (Math.round(size / 1024 * 100) / 100 > maxSize) {
+	if (Math.round(file_size / 1024 * 100) / 100 > maxSize) {
 		fail_msg("文件不能大于" + maxSize + "KB!");
 		return;
 	}

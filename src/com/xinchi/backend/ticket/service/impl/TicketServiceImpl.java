@@ -21,6 +21,7 @@ import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.tools.Page;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -96,9 +97,9 @@ public class TicketServiceImpl implements TicketService {
 				AirTicketPayableBean atp = new AirTicketPayableBean();
 
 				atp.setSupplier_employee_pk(supplier_employee_pk);
+				atp.setBudget_payable(money);
 				atp.setBudget_balance(money);
-				atp.setFinal_balance(money);
-				atp.setFinal_flg("Y");
+				atp.setFinal_flg("N");
 
 				atp.setComment(first_ticket_date + captain + pks.length + "人航变");
 
@@ -131,6 +132,11 @@ public class TicketServiceImpl implements TicketService {
 
 		AirTicketChangeLogBean log = changeLogDao.selectByPrimaryKey(name.getChange_pk());
 		return log;
+	}
+
+	@Override
+	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page) {
+		return changeLogDao.selectByPage(page);
 	}
 
 }

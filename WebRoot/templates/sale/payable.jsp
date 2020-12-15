@@ -60,9 +60,9 @@
 						</div>
 
 						<div class="span6">
-							<label class="col-md-1 control-label">接团月份</label>
+							<label class="col-md-1 control-label">出团月份</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control month-picker-st" placeholder="接团月份" name="payable.departure_month" />
+								<input type="text" class="form-control month-picker-st" placeholder="出团月份" name="payable.departure_month" />
 							</div>
 						</div>
 						<div class="span6">
@@ -171,7 +171,8 @@
 								<th>主体</th>
 								<th>回团天数</th>
 								<th>决否</th>
-								<th>接团日期</th>
+								<!-- <th>接团日期</th> -->
+								<th>出团日期</th>
 								<th>产品</th>
 								<th>人数</th>
 								<th>团号</th>

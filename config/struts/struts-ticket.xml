@@ -26,6 +26,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 查询航变名单 -->
+		<action name="searchPassengersByChangePk" class="ticketAction" method="searchPassengersByChangePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOrderAirInfoByTeamNumber" class="ticketAction" method="searchOrderAirInfoByTeamNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -68,6 +75,13 @@
 		<action name="changeFlight" class="ticketAction" method="changeFlight">
 			<result name="success" type="str">
 				resultStr
+			</result>
+		</action>
+		<!-- 查询航变列表 -->
+		<action name="searchTicketChangeByPage" class="ticketAction" method="searchTicketChangeByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 		<action name="rollBackNameDone" class="ticketAction" method="rollBackNameDone">
