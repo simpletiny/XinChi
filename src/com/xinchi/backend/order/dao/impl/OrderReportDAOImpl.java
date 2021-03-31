@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
 
@@ -28,6 +29,18 @@ public class OrderReportDAOImpl extends SqlSessionDaoSupport implements OrderRep
 	public List<OrderReportDto> selectOrderReportByPage(Page<OrderReportDto> page) {
 
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderReportMapper.selectOrderReportByPage", page);
+	}
+
+	@Override
+	public TeamReportBean selectTeamReportByTn(String team_number) {
+		return (TeamReportBean) daoUtil
+				.selectOneValueByParam("com.xinchi.bean.mapper.TeamReportMapper.selectByTeamNumber", team_number);
+	}
+
+	@Override
+	public void updateTeamReport(TeamReportBean tr) {
+		daoUtil.updateByParam("com.xinchi.bean.mapper.TeamReportMapper.updateByPrimaryKey", tr);
+
 	}
 
 }

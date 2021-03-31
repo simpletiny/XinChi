@@ -83,6 +83,26 @@ public class AirTicketPaidDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 机票往来业务冲账
+	 * 
+	 * @return
+	 */
+	public String businessStrike() {
+		resultStr = service.businessStrike(json);
+		return SUCCESS;
+	}
+
+	/**
+	 * 机票往来押金冲账
+	 * 
+	 * @return
+	 */
+	public String depositStrike() {
+		resultStr = service.depositStrike(json);
+		return SUCCESS;
+	}
+
 	public AirTicketPaidDto getOption() {
 		return option;
 	}

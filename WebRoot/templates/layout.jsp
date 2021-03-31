@@ -269,6 +269,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>待支付</a></li>
 						<li><a href="<%=basePath%>templates/accounting/finished-paid.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已支付</a></li>
+						<li><a href="<%=basePath%>templates/accounting/received-for-accounting.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>收入申报</a></li>
 					</ol></li>
 			</s:if>
 

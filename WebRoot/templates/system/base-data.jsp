@@ -108,6 +108,29 @@
 						</div>
 					</div>
 				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-team">
+					<h3>单团核算相关</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<div class="span6 col-md-6">
+							<label class="col-md-3 control-label">销售费用（元/分）</label>
+							<div class="col-md-2">
+								<input type="number" class="form-control" data-bind="value:saleCost()" maxlength="6" id="txt-sale-cost" />
+							</div>
+							<label class="col-md-3 control-label">后台费用（元/人）</label>
+							<div class="col-md-2">
+								<input type="number" class="form-control" data-bind="value:sysCost()" maxlength="6" id="txt-sys-cost" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6  col-md-6">
+							<div style="padding-top: 3px; float: right">
+								<button type="submit" class="btn btn-green create" data-bind="click: function() {saveTeamConfig() }">保存</button>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -121,7 +144,8 @@
 			<div class="col-md-12" style="margin-top: 20px">
 				<label class="l" style="width: 30%">清除日</label>
 				<div class="ip" style="width: 70%">
-					<input type="text" maxlength="10" data-bind="value:today()" id="txt-clean-date" class="form-control date-picker" required="required" />
+					<input type="text" maxlength="10" data-bind="value:today()" id="txt-clean-date" class="form-control date-picker"
+						required="required" />
 				</div>
 			</div>
 		</div>

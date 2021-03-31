@@ -288,7 +288,7 @@ function choseSupplierEmployee(event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
 var currentAirLeg;
@@ -312,7 +312,7 @@ function choseAirLeg(event) {
 		}
 	});
 
-	currentAirLeg = event.toElement;
+	currentAirLeg = event.target;
 	$(currentAirLeg).blur();
 }
 // 时间格式验算

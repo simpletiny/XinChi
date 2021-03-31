@@ -56,11 +56,11 @@
 				resultStr
 			</result>
 		</action>
-		<action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder">
+<!-- 		<action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder">
 			<result name="success" type="str">
 				resultStr
 			</result>
-		</action>
+		</action> -->
 		<action name="operatePassengers" class="ticketAction" method="operatePassengers">
 			<result name="success">
 				/templates/ticket/operate-name-list.jsp

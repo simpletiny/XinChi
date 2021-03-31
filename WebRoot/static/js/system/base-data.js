@@ -305,6 +305,55 @@ var DataContext = function() {
 		}
 	}
 
+	self.teamConfig = ko.observable();
+	self.saleCost = ko.observable();
+	self.sysCost = ko.observable();
+	// 单团核算相关
+	self.refreshTeamConfig = function() {
+		var param = "type=TEAM";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.teamConfig(data.datas[0]);
+			self.saleCost(self.teamConfig().ext1)
+			self.sysCost(self.teamConfig().ext2)
+		});
+	};
+
+	self.saveTeamConfig = function() {
+
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : "更新不会影响今日之前的数据！",
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("更新中！");
+					var pk = self.teamConfig().pk;
+					var ext1 = $("#txt-sale-cost").val().trim();
+					var ext2 = $("#txt-sys-cost").val().trim();
+
+					var data = "baseData.type=TEAM&baseData.pk=" + pk
+							+ "&baseData.ext1=" + ext1 + "&baseData.ext2="
+							+ ext2;
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'system/updateBaseData',
+						data : data
+
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.refreshTeamConfig();
+							success_msg("更新成功！")
+						}
+					});
+				}
+			}
+		});
+
+	}
 };
 
 var ctx = new DataContext();
@@ -321,4 +370,5 @@ $(document).ready(function() {
 		}
 	});
 	ctx.refreshBadConfig();
+	ctx.refreshTeamConfig();
 });

@@ -24,23 +24,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
                     <div class="col-md-6 required">
                         <label class="l">账户</label>
-                        <div class="ip"><select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --', value: detail().account" name="detail.account" required="required"></select></div>
+                        <div class="ip"><select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --',  value: account()" name="detail.account" required="required"></select></div>
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">发生时间</label>
-                        <div class="ip"><input type="text" id="name" class="ip- datetime-picker"  data-bind="value: detail().time" placeholder="发生时间" name="detail.time" required="required"/></div>
+                        <div class="ip"><input type="text" id="name" class="ip- datetime-picker"   placeholder="发生时间" name="detail.time" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">
 					 <div class="col-md-6 required">
                         <label class="l">收入金额</label>
-                        <div class="ip"><input type="number" id="txt-money" class="ip-" data-bind="value: detail().money" placeholder="收入金额" name="detail.money" required="required"/></div>
+                        <div class="ip"><input type="number" id="txt-money" class="ip-"  placeholder="收入金额" name="detail.money" required="required"/></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">
                     <div class="col-md-12">
                         <label class="l">备注</label>
-                        <div class="ip"><textarea type="text" class="ip-default" rows="15" data-bind="value: detail().comment" name ="detail.comment" placeholder="需要备注说明的信息"></textarea></div>
+                        <div class="ip"><textarea type="text" class="ip-default" rows="15" name ="detail.comment" placeholder="需要备注说明的信息"></textarea></div>
                     </div>
                 </div>
             </form>

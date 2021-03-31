@@ -7,6 +7,14 @@ var ProductBoxContext = function() {
 		'Y' : '预',
 		'F' : '决'
 	});
+	self.chosenStatuses = ko.observableArray([]);
+	self.chosenStatuses.push("N");
+	self.statuses = ['N', 'Y'];
+	self.approvedMapping = ({
+		'Y' : '已审核',
+		'N' : '未审核'
+	});
+
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
@@ -32,6 +40,84 @@ var ProductBoxContext = function() {
 				});
 	};
 
+	// 确认单团核算单
+	self.confirmReport = function(report) {
+		console.log(report)
+		// 检测是否可以审核
+		if (report.order_type != 'F') {
+			fail_msg("销售订单未决算，不能审核！");
+			return;
+		}
+
+		if (report.product_final_flg == null) {
+			fail_msg("产品未操作，不能审核！");
+			return;
+		}
+
+		if (report.product_final_flg.indexOf("N") >= 0) {
+			fail_msg("地接款未决算，不能审核！");
+			return;
+		}
+
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : "&nbsp;&nbsp;&nbsp;&nbsp;确认无误？&nbsp;&nbsp;&nbsp;&nbsp;",
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("确认中...");
+					var data = "team_number=" + report.team_number;
+
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'order/approveTeamReport',
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.refresh();
+						} else {
+							fail_msg("请联系管理员！");
+						}
+					});
+				}
+			}
+		});
+	}
+	// 打回已审核的单团核算单
+	self.rollBackReport = function(report) {
+		$
+				.layer({
+					area : ['auto', 'auto'],
+					dialog : {
+						msg : "&nbsp;&nbsp;&nbsp;&nbsp;确认打回重审吗？&nbsp;&nbsp;&nbsp;&nbsp;",
+						btns : 2,
+						type : 4,
+						btn : ['确认', '取消'],
+						yes : function(index) {
+							layer.close(index);
+							startLoadingIndicator("打回中...");
+							var data = "team_number=" + report.team_number;
+
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'order/rollBackTeamReport',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+								} else {
+									fail_msg("请联系管理员！");
+								}
+							});
+						}
+					}
+				});
+	}
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

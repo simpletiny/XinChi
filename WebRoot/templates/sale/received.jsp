@@ -43,7 +43,7 @@ tr td {
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 30%; float: right">
+						<div style="width: 20%; float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
 							</div>
@@ -51,7 +51,7 @@ tr td {
 					</div>
 					<div class="form-group">
 						<div class="span6">
-							<div data-bind="foreach: allStatus" style="padding-top: 4px;" class="col-md-4">
+							<div data-bind="foreach: allStatus" style="padding-top: 4px; padding-left: 10px" class="col-md-3">
 								<em class="small-box"> <input type="checkbox"
 									data-bind="attr: {'value': $data}, checked: $root.chosenStatus" name="detail.statuses" /><label
 									data-bind="text: $root.statusMapping[$data]"></label>
@@ -64,6 +64,12 @@ tr td {
 								<select class="form-control" style="height: 34px"
 									data-bind="options: receivedTypes,  optionsText: 'value', optionsValue: 'key',value:chosenReceivedType,event:{change:refresh}, optionsCaption: '--全部--'"
 									id="sel-type"></select>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">客户</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="客户" name="detail.client_employee_name" />
 							</div>
 						</div>
 					</div>
@@ -204,6 +210,23 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 							</tr>
 						</tbody>
+						<tr role="row">
+							<td></td>
+							<td>合计</td>
+							<td data-bind="text:totalReceived()" class="rmb"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+								<td></td>
+							</s:if>
+							<td></td>
+						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>

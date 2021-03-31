@@ -2,7 +2,7 @@ var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.product = ko.observable({});
-	
+
 	self.locations = ko.observableArray();
 
 	$.getJSON(self.apiurl + 'system/searchByType', {
@@ -10,7 +10,7 @@ var ProductContext = function() {
 	}, function(data) {
 		self.locations(data.datas);
 	});
-	
+
 	self.product_pk = $("#key").val();
 	self.productSuppliers = ko.observableArray([]);
 
@@ -38,12 +38,12 @@ var ProductContext = function() {
 		var sale_flg = self.product().sale_flg;
 		if (sale_flg == 'Y') {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '架上产品更新，价格信息将于次日凌晨生效！',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						self.updateProduct();
@@ -175,12 +175,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -190,7 +190,7 @@ function choseSupplierEmployee(event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
 function addRow() {

@@ -149,8 +149,8 @@
 					<div style="margin-top: 5px">
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pay()}">支付</button>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">收入</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">业务冲抵</button>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { receive() }">押金冲抵</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { businessStrike() }">业务冲抵</button>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { depositStrike() }">押金冲抵</button>
 					</div>
 				</div>
 			</div>
@@ -158,94 +158,6 @@
 		</div>
 	</div>
 
-	<!-- 支付申请-->
-	<div id="pay" style="display: none; width: 1000px; height: 700px; overflow: auto; padding-top: 30px;">
-		<form id="form-pay">
-			<div class="input-row clearfloat">
-				<div class="col-md-6">
-					<label class="l" style="width: 30%">供应商</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:supplier_name()"></p>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<label class="l" style="width: 30%">应付款总额</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default rmb" data-bind="text:totalPay()"></p>
-					</div>
-				</div>
-			</div>
-			<div class="input-row clearfloat">
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">支付时限</label>
-					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.limit_time" class="form-control date-picker" data-bind="value:today()"
-							required="required" />
-					</div>
-				</div>
-				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">支付总额</label>
-					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.allot_money" class="ip-" st="sum_paid" required="required" />
-					</div>
-				</div>
-			</div>
-			<div class="input-row clearfloat">
-				<div class="col-md-4">
-					<label class="l" style="width: 100%">供应商员工</label>
-				</div>
-				<div class="col-md-4">
-					<label class="l" style="width: 100%">应付款</label>
-				</div>
-				<div class="col-md-4 required">
-					<label class="l" style="width: 100%">支付金额</label>
-				</div>
-			</div>
-			<!-- ko foreach:chosenPayables -->
-			<div class="input-row clearfloat" st="pay_allot">
-				<input type="hidden" data-bind="value: $data.pk" st="base-pk" /> <input type="hidden" data-bind="value: $data.PNR"
-					st="PNR" />
-				<div class="col-md-4">
-					<div class="ip">
-						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
-						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input
-							type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="ip">
-						<!-- ko if:$data.final_flg=="Y" -->
-						<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
-						<!-- /ko -->
-						<!-- ko if:$data.final_flg=="N" -->
-						<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
-						<!-- /ko -->
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="ip">
-						<!-- ko if:$data.final_flg=="Y" -->
-						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
-						<!-- /ko -->
-						<!-- ko if:$data.final_flg=="N" -->
-						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
-						<!-- /ko -->
-
-					</div>
-				</div>
-			</div>
-			<!-- /ko -->
-			<div class="input-row clearfloat">
-				<div class="col-md-12" style="margin-top: 10px">
-					<div align="right">
-						<a type="button" class="btn btn-green btn-r" data-bind="click: applyPay">申请</a>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
 	<!-- 查看乘客信息 -->
 	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
@@ -397,6 +309,242 @@
 				</div>
 			</div>
 		</form>
+	</div>
+
+	<!-- 业务冲账 -->
+	<div id="business-strike" style="display: none; width: 1000px; height: 600px; overflow: auto; padding-top: 30px;">
+		<form id="form-business-strike">
+			<h3 style="margin-left: 100px; color: red">冲出</h3>
+			<div data-bind="foreach:negativePayables()" id="div-strike-out">
+				<div>
+					<input type="hidden" data-bind="value:$data.pk" st="payable-pk" /> <input type="hidden"
+						data-bind="value:$data.budget_balance" st="budget-balance" />
+					<div class="input-row clearfloat">
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">供应商</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default" data-bind="text:$data.financial_body_name"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">应付款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_payable"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">尾款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
+							</div>
+						</div>
+						<div class="col-md-3 required">
+							<label class="l" style="width: 40%">冲出金额</label>
+							<div class="ip" style="width: 60%">
+								<input type="number" data-bind="attr:{'name':'out_money_'+$index()}" min="1" class="ip-" st="strike-out-money"
+									required="required" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr />
+			<h3 style="margin-left: 100px; color: green">冲入</h3>
+			<div data-bind="foreach:positivePayables()" id="div-strike-in">
+				<div>
+					<input type="hidden" data-bind="value:$data.pk" st="payable-pk" /> <input type="hidden"
+						data-bind="value:$data.budget_balance" st="budget-balance" />
+					<div class="input-row clearfloat">
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">供应商</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default" data-bind="text:$data.financial_body_name"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">应付款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_payable"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">尾款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
+							</div>
+						</div>
+						<div class="col-md-3 required">
+							<label class="l" style="width: 40%">冲入金额</label>
+							<div class="ip" style="width: 60%">
+								<input type="number" data-bind="attr:{'name':'in_money_'+$index()}" min="1" class="ip-" st="strike-in-money"
+									required="required" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doBusinessStrike">提交</a> <a type="button"
+						class="btn btn-green btn-r" data-bind="click: cancelBusinessStrike">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 押金冲账 -->
+	<div id="deposit-strike" style="display: none; width: 1000px; height: 600px; overflow: auto; padding-top: 30px;">
+		<form id="form-deposit-strike">
+			<h3 style="margin-left: 100px; color: red">冲出</h3>
+			<div style="min-height: 300px">
+				<div class="input-row clearfloat">
+					<div class="col-md-12">
+						<a type="button" class="btn btn-green btn-r" style="float: right" data-bind="click: chooseDeposit">选择冲出押金</a>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>支出账户</th>
+								<th>收款方</th>
+								<th>金额</th>
+								<th>已退</th>
+								<th>可用冲账</th>
+								<th>到期时间</th>
+								<th>备注</th>
+								<th style="color: red">冲出金额</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: usedDeposits" id="table-deposit-out">
+							<tr>
+
+								<td data-bind="text: $data.account"></td>
+								<td data-bind="text: $data.supplier_name"></td>
+								<td data-bind="text: $data.money" class="rmb"></td>
+								<td data-bind="text: $data.received" class="rmb"></td>
+								<td data-bind="text: $data.balance" class="rmb" style="color: red"></td>
+								<td data-bind="text: $data.return_date"></td>
+								<td data-bind="text: $data.comment"></td>
+								<td><input type="number" data-bind="attr:{'name':'deposit_out_money_'+$index()}" min="1" class="ip-"
+									st="deposit-out-money" required="required" /> <input type="hidden" data-bind="value:$data.pk" st="deposit-pk" />
+									<input type="hidden" data-bind="value:$data.balance" st="deposit-balance" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<hr />
+			<h3 style="margin-left: 100px; color: red">冲入</h3>
+			<div data-bind="foreach:chosenPayables()" id="div-deposit-in">
+				<div>
+					<input type="hidden" data-bind="value:$data.pk" st="payable-pk" /> <input type="hidden"
+						data-bind="value:$data.budget_balance" st="budget-balance" />
+					<div class="input-row clearfloat">
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">供应商</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default" data-bind="text:$data.financial_body_name"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">应付款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_payable"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l" style="width: 30%">尾款</label>
+							<div class="ip" style="width: 70%">
+								<p class="ip-default rmb" data-bind="text:$data.budget_balance"></p>
+							</div>
+						</div>
+						<div class="col-md-3 required">
+							<label class="l" style="width: 40%">冲入金额</label>
+							<div class="ip" style="width: 60%">
+								<input type="number" data-bind="attr:{'name':'deposit_in_money_'+$index()}" min="1" class="ip-"
+									st="deposit-in-money" required="required" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr />
+		</form>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doDepositStrike">提交</a> <a type="button"
+						class="btn btn-green btn-r" data-bind="click: cancelDepositStrike">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 选择航司押金 -->
+	<div id="deposit-pick" style="display: none; width: 890px">
+		<form class="form-horizontal search-panel" id="form-search-deposit">
+			<div class="form-group">
+				<div>
+					<label class="col-md-1 control-label">供应商</label>
+					<div class="col-md-3" style="float: left">
+						<input type="text" class="form-control" name="deposit.supplier_name" />
+					</div>
+				</div>
+				<div>
+					<label class="col-md-1 control-label">支出账户</label>
+					<div class="col-md-3" style="float: left">
+						<select class="form-control" name="deposit.account"
+							data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-green col-md-1" data-bind="click: searchDeposit">搜索</button>
+				<button type="submit" class="btn btn-green col-md-1" data-bind="click: finishChoose">选择</button>
+			</div>
+		</form>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th></th>
+						<th>支出账户</th>
+						<th>收款方</th>
+						<th>金额</th>
+						<th>已退</th>
+						<th>可用冲账</th>
+						<th>到期时间</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: deposits">
+					<tr>
+						<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenDeposits" /></td>
+						<td data-bind="text: $data.account"></td>
+						<td data-bind="text: $data.supplier_name"></td>
+						<td data-bind="text: $data.money" class="rmb"></td>
+						<td data-bind="text: $data.received" class="rmb"></td>
+						<td data-bind="text: $data.balance" class="rmb" style="color: red"></td>
+						<td data-bind="text: $data.return_date"></td>
+						<td data-bind="text: $data.comment"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage1, enable: currentPage1() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums1 -->
+				<!-- ko if: $data == $root.currentPage1() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage1() -->
+				<a data-bind="text: $data, click: $root.turnPage1"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
+			</div>
+		</div>
 	</div>
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");

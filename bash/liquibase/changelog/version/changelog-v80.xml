@@ -679,6 +679,120 @@
 			<comment> CREATE TABLE deposit_payment</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE deposit_ticket_paid (
+					  deposit_pk CHAR(22) NOT NULL COMMENT '押金冲账pk',
+					  related_pk CHAR(22) NOT NULL COMMENT '票务支付详情related_pk',
+					  pk CHAR(22) NOT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '押金和票务支付详情（押金冲账）对应关系';
+             ]]>
+			<comment>CREATE TABLE deposit_ticket_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE team_report (
+					  team_number VARCHAR(10) NOT NULL,
+					  sale_cost DECIMAL(12,2) NULL COMMENT '销售费用',
+					  sys_cost DECIMAL(12,2) NULL COMMENT '后台费用',
+					  discount_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否有立款',
+					  discount_receivable DECIMAL(12,2) NULL COMMENT '立款应收',
+					  approved CHAR(1) NULL DEFAULT 'N' COMMENT '审核标识，产品是否审核',
+					  pk INT NOT NULL AUTO_INCREMENT,
+					  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '单团核算单表';
+             ]]>
+			<comment>CREATE TABLE team_report </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_drop_off;
+            	CREATE view view_drop_off AS
+            	SELECT 
+				    C.product_order_number,
+				    A.team_number,
+				    A.first_ticket_date,
+				    A.client_number,
+				    A.first_start_city,
+				    A.first_end_city,
+				    B.ticket_number,
+				    B.from_to_time,
+				    B.from_to_city,
+				    B.from_airport,
+				    B.to_airport,
+				    GROUP_CONCAT(A.name, ':', A.id, ';') AS name_list
+				FROM
+				    air_ticket_name_list A
+				        LEFT JOIN
+				    passenger_ticket_info B ON A.pk = B.passenger_pk
+				        LEFT JOIN
+				    product_order_team_number C ON A.team_number = C.team_number
+				WHERE
+				    B.ticket_index = 1
+				GROUP BY first_ticket_date,team_number;
+             ]]>
+			<comment>ALTER VIEW view_drop_off </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_name_list 
+				ADD COLUMN cellphone_A VARCHAR(20) NULL DEFAULT NULL AFTER change_pk,
+				ADD COLUMN cellphone_B VARCHAR(20) NULL DEFAULT NULL AFTER cellphone_A,
+				ADD COLUMN chairman CHAR(1) NULL DEFAULT 'N' AFTER cellphone_B;
+             ]]>
+			<comment>ALTER TABLE air_ticket_name_list </comment>
+		</sql>
+	</changeSet>
+		<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_drop_off;
+            	CREATE view view_drop_off AS
+            	SELECT 
+				    C.product_order_number,
+				    A.team_number,
+				    A.first_ticket_date,
+				    A.client_number,
+				    A.first_start_city,
+				    A.first_end_city,
+				    B.ticket_number,
+				    B.from_to_time,
+				    B.from_to_city,
+				    B.from_airport,
+				    B.to_airport,
+				    GROUP_CONCAT(A.name, ':', A.id, ';') AS name_list,
+                    GROUP_CONCAT(if(A.chairman='Y',A.name,''),A.cellphone_A,A.cellphone_B) AS phones
+				FROM
+				    air_ticket_name_list A
+				        LEFT JOIN
+				    passenger_ticket_info B ON A.pk = B.passenger_pk
+				        LEFT JOIN
+				    product_order_team_number C ON A.team_number = C.team_number
+				WHERE
+				    B.ticket_index = 1
+				GROUP BY first_ticket_date,team_number;
+             ]]>
+			<comment>ALTER VIEW view_drop_off </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

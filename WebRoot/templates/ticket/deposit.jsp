@@ -61,8 +61,8 @@
 						<div>
 							<label class="col-md-1 control-label">支出账户</label>
 							<div class="col-md-2" style="float: left">
-								<select class="form-control" name="deposit.account"
-									data-bind="options: accounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
+								<select class="form-control" name="deposit.account" 
+									data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 							</div>
 						</div>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>

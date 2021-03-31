@@ -37,12 +37,13 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 
 	self.refreshClient = function() {
-		var param = "employee.name="+$("#client_name").val();
+		var param = "employee.name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
+				data) {
 			self.clientEmployees(data.employees);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -54,15 +55,16 @@ var OrderContext = function() {
 	};
 
 	self.refreshSupplier = function() {
-		var param = "employee.name="+$("#supplier_name").val();
+		var param = "employee.name=" + $("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
-			
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
+				+ self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
+
+					self.totalCount(Math.ceil(data.page.total / self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 	self.searchSupplierEmployee = function() {
 		currentType = "supplier";
@@ -70,7 +72,7 @@ var OrderContext = function() {
 	};
 
 	self.addSupplier = function(data, event) {
-		$(event.toElement)
+		$(event.target)
 				.parent()
 				.parent()
 				.prev()
@@ -90,12 +92,12 @@ var OrderContext = function() {
 	self.recordNameList = function() {
 		nameListLayer = $.layer({
 			type : 1,
-			title : [ '名单录入', '' ],
+			title : ['名单录入', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#name-list'
@@ -109,12 +111,12 @@ var OrderContext = function() {
 	self.choseClientEmployee = function() {
 		clientEmployeeLayer = $.layer({
 			type : 1,
-			title : [ '选择客户操作', '' ],
+			title : ['选择客户操作', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#client-pick'
@@ -153,7 +155,7 @@ var OrderContext = function() {
 		var supplierArr = new Array();
 		var allSupplierEmployees = $("[st='supplier']");
 		var supplierJson = '[';
-		for ( var i = 0; i < allSupplierEmployees.length; i++) {
+		for (var i = 0; i < allSupplierEmployees.length; i++) {
 			var current = allSupplierEmployees[i];
 			var supplierEmployeeName = $(current).find(
 					"[st='supplierEmployeeName']").val();
@@ -192,7 +194,7 @@ var OrderContext = function() {
 					}
 				});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -201,7 +203,7 @@ var OrderContext = function() {
 	self.startIndex = ko.computed(function() {
 		return (self.currentPage() - 1) * self.perPage;
 	});
-	
+
 	self.resetPage = function() {
 		self.currentPage(1);
 	};
@@ -230,16 +232,16 @@ var OrderContext = function() {
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
 				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
 	};
 
 	self.refreshPage = function() {
-		if(currentType=="supplier"){
+		if (currentType == "supplier") {
 			self.searchSupplierEmployee();
-		}else{
+		} else {
 			self.searchClientEmployee();
 		}
 
@@ -252,12 +254,12 @@ var currentSupplier;
 function choseSupplierEmployee(data, event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -267,7 +269,7 @@ function choseSupplierEmployee(data, event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 }
 $(document).ready(function() {
 	ko.applyBindings(ctx);

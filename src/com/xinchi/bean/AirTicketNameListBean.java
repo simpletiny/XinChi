@@ -50,6 +50,9 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private int days;
 
 	private String need_comment;
+	private String cellphone_A;
+	private String cellphone_B;
+	private String chairman;
 
 	public String getTeam_number() {
 		return team_number;
@@ -225,6 +228,30 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setNeed_comment(String need_comment) {
 		this.need_comment = need_comment;
+	}
+
+	public String getCellphone_A() {
+		return cellphone_A;
+	}
+
+	public String getCellphone_B() {
+		return cellphone_B;
+	}
+
+	public String getChairman() {
+		return chairman;
+	}
+
+	public void setCellphone_A(String cellphone_A) {
+		this.cellphone_A = cellphone_A;
+	}
+
+	public void setCellphone_B(String cellphone_B) {
+		this.cellphone_B = cellphone_B;
+	}
+
+	public void setChairman(String chairman) {
+		this.chairman = chairman;
 	}
 
 }

@@ -62,21 +62,27 @@
 						</div>
 					</div>
 				</form>
-				<div class="list-result">
-					<table class="table table-striped table-hover" style="white-space: pre">
+				<div class="list-result" id="div-table">
+					<table class="table table-striped table-hover" style="white-space: pre-line">
 						<thead>
 							<tr role="row">
-								<th>航班信息</th>
-								<th>名单</th>
+								<th style="width:10%">订单号</th>
+								<th style="width:10%">团号</th>
+								<th style="width:15%">航班信息</th>
+								<th style="width:35%">名单</th>
+								<th style="width:20%">电话</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
-									<th>产品经理</th>
+									<th style="width:10%">产品经理</th>
 								</s:if>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: drop_offs">
-							<tr>
+							<tr style="border-bottom: solid 1px black">
+								<td data-bind="text: $data.product_order_number" st="order-number"></td>
+								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.infos"></td>
-								<td data-bind="text: $data.names"></td>
+								<td data-bind="text: $data.name_list"></td>
+								<td data-bind="text: $data.phones"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
 									<td data-bind="text: $data.client_name"></td>
 								</s:if>
@@ -88,8 +94,8 @@
 		</div>
 	</div>
 	<script>
-		$(".product").addClass("current").children("ol")
-				.css("display", "block");
+		$(".order-operate").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>

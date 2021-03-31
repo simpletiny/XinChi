@@ -20,59 +20,72 @@
 		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
 		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
 		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="discount_receivable" property="discount_receivable" jdbcType="DECIMAL" />
+		<result column="discount_flg" property="discount_flg" jdbcType="CHAR" />
+		<result column="sale_cost" property="sale_cost" jdbcType="DECIMAL" />
+		<result column="sys_cost" property="sys_cost" jdbcType="DECIMAL" />
+		<result column="approved" property="approved" jdbcType="CHAR" />
+		<result column="product_final_flg" property="product_final_flg" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-		SELECT
-		A.team_number,
-		A.product_name,
-		A.client_employee_pk,
-		A.client_employee_name,
-		A.other_cost,
-		A.fy,
-		IF(B.final_flg = 'Y',
-		final_receivable,
-		budget_receivable) AS receivable,
-		A.air_ticket_cost,
-		C.payable AS product_cost,
-		A.departure_date,
-		A.pk,
-		A.confirm_flg AS order_type,
-		(A.adult_count + IF(ISNULL(A.special_count),
-		0,
-		A.special_count)) AS people_count,
-		A.update_user,
-		A.create_user_number AS sale_number,
-		A.create_user AS sale_name,
-		IF(B.final_flg = 'Y',
-		final_receivable,
-		budget_receivable) - IF(ISNULL(A.air_ticket_cost),
-		0,
-		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
-		0,
-		A.other_cost) - IF(ISNULL(C.payable),
-		0,
-		C.payable) - IF(ISNULL(A.fy), 0, A.fy) AS gross_profit,
-		(IF(B.final_flg = 'Y',
-		final_receivable,
-		budget_receivable) - IF(ISNULL(A.air_ticket_cost),
-		0,
-		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
-		0,
-		A.other_cost) - IF(ISNULL(C.payable),
-		0,
-		C.payable) - IF(ISNULL(A.fy), 0, A.fy)) / (A.adult_count + IF(ISNULL(A.special_count),
-		0,
-		A.special_count)) AS per_profit,
-		A.confirm_flg,
-		A.create_time,
-		A.update_time,
-		A.confirm_date
+		SELECT 
+		    X.team_number,
+		    X.discount_receivable,
+		    X.discount_flg,
+		    X.sale_cost,
+		    X.sys_cost,
+		    X.approved,
+		    A.product_name,
+		    A.client_employee_pk,
+		    A.client_employee_name,
+		    A.other_cost,
+		    A.fy,
+		    IF(B.final_flg = 'Y',
+		        final_receivable,
+		        budget_receivable) AS receivable,
+		    A.air_ticket_cost,
+		    C.payable AS product_cost,
+		    A.departure_date,
+		    A.pk,
+		    A.confirm_flg AS order_type,
+		    (A.adult_count + IF(ISNULL(A.special_count),
+		        0,
+		        A.special_count)) AS people_count,
+		    A.update_user,
+		    A.create_user_number AS sale_number,
+		    A.create_user AS sale_name,
+		    IF(X.discount_flg = 'Y',
+		        X.discount_receivable,
+		        IF(B.final_flg = 'Y',
+		            final_receivable,
+		            budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		        0,
+		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+		        0,
+		        A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost-X.sale_cost AS gross_profit,
+		    (IF(X.discount_flg = 'Y',
+		        X.discount_receivable,
+		        IF(B.final_flg = 'Y',
+		            final_receivable,
+		            budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		        0,
+		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+		        0,
+		        A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy)- X.sys_cost-X.sale_cost) / (A.adult_count + IF(ISNULL(A.special_count),
+		        0,
+		        A.special_count)) AS per_profit,
+		    A.confirm_flg,
+		    A.confirm_date,
+		    C.final_flg AS product_final_flg
 		FROM
-		budget_order_view A
-		LEFT JOIN
-		receivable B ON A.team_number = B.team_number
-		LEFT JOIN view_team_payable C ON A.team_number= C.team_number
+		    team_report X
+		        LEFT JOIN
+		    budget_order_view A ON A.team_number = X.team_number
+		        LEFT JOIN
+		    receivable B ON A.team_number = B.team_number
+		        LEFT JOIN
+		    view_team_payable C ON A.team_number = C.team_number
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -98,8 +111,13 @@
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
 			</if>
-
-			and (confirm_flg='Y' or confirm_flg='F')
+			<if test="params.bo.report_statuses != null and params.bo.report_statuses !=''">
+				and X.approved in
+				<foreach item="item" index="index" collection="params.bo.report_statuses" open="(" separator="," close=")">
+					#{params.bo.report_statuses[${index}]}
+				</foreach>
+			</if>
+			and (A.confirm_flg='Y' or A.confirm_flg='F')
 		</where>
 		ORDER BY A.departure_date DESC
 	</select>

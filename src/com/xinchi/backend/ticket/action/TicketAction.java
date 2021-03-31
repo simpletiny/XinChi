@@ -134,12 +134,12 @@ public class TicketAction extends BaseAction {
 	 * 
 	 * @return
 	 */
-	public String lockAirTicketOrder() {
-
-		resultStr = airTicketOrderService.lockAirTicketOrder(airTicketOrderPks);
-
-		return SUCCESS;
-	}
+	// public String lockAirTicketOrder() {
+	//
+	// resultStr = airTicketOrderService.lockAirTicketOrder(airTicketOrderPks);
+	//
+	// return SUCCESS;
+	// }
 
 	private AirTicketNameListBean passenger;
 

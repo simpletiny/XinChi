@@ -6,7 +6,7 @@ var ProductContext = function() {
 	});
 	self.supplierEmployees = ko.observable({});
 
-	self.locations = [ "云南", "华东", "桂林", "张家界", "四川", "其他" ];
+	self.locations = ["云南", "华东", "桂林", "张家界", "四川", "其他"];
 	self.createProduct = function() {
 		if (!$("form").valid()) {
 			return;
@@ -162,12 +162,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -177,7 +177,7 @@ function choseSupplierEmployee(event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
 function addRow(btn) {

@@ -453,7 +453,7 @@ function choseSupplierEmployee(event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
 function addRow() {

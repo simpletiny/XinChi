@@ -97,9 +97,13 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.related_pk}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.related_pk}, checked: $root.chosenPaids" /></td>
+								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' || $data.type=='DSTRIKEIN' -->
+								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type!='STRIKEIN' & $data.type!='STRIKEOUT'& $data.type!='DSTRIKEIN' -->
 								<td data-bind="text: $data.allot_money" class="rmb"></td>
+								<!-- /ko -->
 								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.financial_body_name"></td>

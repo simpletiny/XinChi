@@ -99,6 +99,9 @@ public class ResourcesConstants {
 	// 冲账入
 	public static String PAID_TYPE_STRIKE_IN = "STRIKEIN";
 
+	// 押金冲账
+	public static String PAID_TYPE_DEPOSIT_IN = "DSTRIKEIN";
+
 	// 扣款
 	public static String PAID_TYPE_DEDUCT = "DEDUCT";
 
@@ -263,6 +266,8 @@ public class ResourcesConstants {
 	public static String BASE_DATA_TYPE_LINE = "LINE";
 	// 呆账罚息设置
 	public static String BASE_DATA_TYPE_BAD_CONFIG = "BAD";
+	// 单团核算相关
+	public static String BASE_DATA_TYPE_TEAM_CONFIG = "TEAM";
 
 	// 未确认
 	public static String NAME_CONFIRM_STATUS_NO = "1";

@@ -423,6 +423,9 @@
 			<if test="params.bo.team_number != null and params.bo.team_number !=''">
 				and A.team_number like concat('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
+				and D.name like concat('%', #{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
+			</if>
 			ORDER BY A.create_time DESC, A.received_time
 		</where>
 	</select>

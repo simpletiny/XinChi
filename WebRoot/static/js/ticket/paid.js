@@ -41,7 +41,10 @@ var PaidContext = function() {
 		'BACK' : '返款',
 		'PAID' : '支付',
 		'STRIKE' : '冲账',
-		'DEDUCT' : '扣款'
+		'DEDUCT' : '扣款',
+		'STRIKEOUT' : '冲账/出',
+		'STRIKEIN' : '冲账/入',
+		'DSTRIKEIN' : '押金冲账/入'
 	};
 
 	self.refresh = function() {

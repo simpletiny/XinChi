@@ -243,6 +243,18 @@ public class ProductOrderOperationAction extends BaseAction {
 			payableService.update(payable);
 		}
 
+		// // 更新每个订单的应付款
+		//
+		// for (int j = 0; j < supplier_pks.size(); j++) {
+		// PayableOrderBean pob = new PayableOrderBean();
+		//
+		// pob.setTeam_number(team_number);
+		// pob.setSupplier_employee_pk(supplier_pks.get(j));
+		// pob.setBudget_payable(new BigDecimal(costs[j]));
+		// payableOrderDao.insert(pob);
+		// product_cost = product_cost.add(new BigDecimal(costs[j]));
+		// }
+
 		resultStr = SUCCESS;
 		return SUCCESS;
 	}

@@ -37,7 +37,15 @@
 		<action name="backRecive" class="airTicketPaidDetailAction" method="backRecive">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<!-- 查询应付款涉及到的名单-->
+		<!-- 机票往来业务冲账 -->
+		<action name="businessStrike" class="airTicketPaidDetailAction" method="businessStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 机票往来押金冲账 -->
+		<action name="depositStrike" class="airTicketPaidDetailAction" method="depositStrike">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 查询应付款涉及到的名单 -->
 		<action name="searchPayablePassengersByPayablePk" class="airTicketPayableAction" method="searchPayablePassengersByPayablePk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -51,7 +59,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 查询机票往来详表的支付详情-->
+		<!-- 查询机票往来详表的支付详情 -->
 		<action name="searchPaidDetailByRelatedPk" class="airTicketPaidDetailAction" method="searchPaidDetailByRelatedPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

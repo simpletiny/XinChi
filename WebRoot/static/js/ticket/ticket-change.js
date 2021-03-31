@@ -146,6 +146,6 @@ function choseAirLeg(event) {
 		}
 	});
 
-	currentAirLeg = event.toElement;
+	currentAirLeg = event.target;
 	$(currentAirLeg).blur();
 }

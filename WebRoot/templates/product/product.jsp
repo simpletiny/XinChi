@@ -78,7 +78,7 @@ tr td {
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">删除</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">废弃</button>
 						</div>
 					</div>
 					<div class="form-group">

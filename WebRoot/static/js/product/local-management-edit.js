@@ -67,9 +67,10 @@ var SupplierContext = function() {
 					'textarea[st="service-comment"]').val();
 
 			var tourist_info = '';
-			$(current).find('input[name="chk_tourist"]:checked').each(function(i) {
-				tourist_info += $(this).val() + ";";
-			});
+			$(current).find('input[name="chk_tourist"]:checked').each(
+					function(i) {
+						tourist_info += $(this).val() + ";";
+					});
 
 			json_info += '{"service_type":"' + service_type + '",' + '"cost":"'
 					+ cost + '",' + '"supplier_pk":"' + supplier_pk + '",'
@@ -194,12 +195,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -209,7 +210,7 @@ function choseSupplierEmployee(event) {
 		}
 	});
 
-	currentSupplier = event.toElement;
+	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
 

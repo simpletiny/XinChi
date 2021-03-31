@@ -36,7 +36,8 @@ public class OrderReportAction extends BaseAction {
 	public String searchOrderReportByPage() {
 		if (null == option)
 			option = new OrderReportDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -48,6 +49,28 @@ public class OrderReportAction extends BaseAction {
 		page.setParams(params);
 
 		reports = service.selectOrderReportByPage(page);
+		return SUCCESS;
+	}
+
+	private String team_number;
+
+	/**
+	 * 审核单团核算单
+	 * 
+	 * @return
+	 */
+	public String approveTeamReport() {
+		resultStr = service.apporveTeamReport(team_number);
+		return SUCCESS;
+	}
+
+	/**
+	 * 打回已审核的单团核算单
+	 * 
+	 * @return
+	 */
+	public String rollBackTeamReport() {
+		resultStr = service.rollBackTeamReport(team_number);
 		return SUCCESS;
 	}
 
@@ -65,5 +88,13 @@ public class OrderReportAction extends BaseAction {
 
 	public void setReports(List<OrderReportDto> reports) {
 		this.reports = reports;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 }

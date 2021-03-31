@@ -126,6 +126,8 @@ public class BaseDataServiceImpl implements BaseDataService {
 
 		} else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_BAD_CONFIG)) {
 			dao.update(baseData);
+		} else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_TEAM_CONFIG)) {
+			dao.update(baseData);
 		}
 
 		return SUCCESS;

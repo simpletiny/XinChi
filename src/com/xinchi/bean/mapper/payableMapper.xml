@@ -363,16 +363,16 @@
 		A.departure_date AS pick_date
 		from payable A LEFT JOIN supplier_employee B on
 		A.supplier_employee_pk = B.pk
-		LEFT JOIN user_base C ON A.create_user = C.user_number
+		LEFT JOIN
+		user_base C ON A.create_user = C.user_number
 		LEFT JOIN supplier D ON
 		B.financial_body_pk = D.pk
 		<where>
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name LIKE CONCAT('%', #{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
 			</if>
-			<!-- <if test="params.bo.sales_name != null and params.bo.sales_name !=''">
-				and C.user_name LIKE CONCAT('%', #{params.bo.sales_name,jdbcType=VARCHAR},'%')
-			</if> -->
+			<!-- <if test="params.bo.sales_name != null and params.bo.sales_name !=''"> and C.user_name LIKE CONCAT('%', #{params.bo.sales_name,jdbcType=VARCHAR},'%') 
+				</if> -->
 			<if test="params.bo.create_user !=null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
 			</if>
@@ -383,7 +383,7 @@
 				and A.team_number LIKE CONCAT('%', #{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.departure_month != null and params.bo.departure_month !=''">
-				and LEFT(A.departure_date) =
+				and LEFT(A.departure_date,7) =
 				#{params.bo.departure_month,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.departure_from != null and params.bo.departure_from !=''">
@@ -419,7 +419,8 @@
 		SELECT
 		SUM(IF(A.final_flg = 'Y',
 		A.final_balance,
-		A.budget_balance)) AS value_value,
+		A.budget_balance))
+		AS value_value,
 		C.supplier_provice AS key_key
 		FROM
 		payable A
@@ -429,6 +430,7 @@
 		supplier C ON B.financial_body_pk = C.pk
 		GROUP BY C.supplier_provice
 		HAVING value_value > 0
-		ORDER BY value_value DESC;
+		ORDER BY value_value
+		DESC;
 	</select>
 </mapper>

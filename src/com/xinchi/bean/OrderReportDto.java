@@ -28,6 +28,12 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String sale_name;
 	private String sale_number;
 
+	private String discount_flg;
+	private String discount_receivable;
+	private String sale_cost;
+	private String sys_cost;
+	private String approved;
+
 	private String departure_date_from;
 	private String departure_date_to;
 	private String confirm_date_from;
@@ -36,6 +42,10 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String product_manager_number;
 
 	private List<String> order_types;
+
+	private List<String> report_statuses;
+
+	private String product_final_flg;
 
 	public String getTeam_number() {
 		return team_number;
@@ -227,5 +237,61 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setOrder_types(List<String> order_types) {
 		this.order_types = order_types;
+	}
+
+	public String getDiscount_flg() {
+		return discount_flg;
+	}
+
+	public String getDiscount_receivable() {
+		return discount_receivable;
+	}
+
+	public String getSale_cost() {
+		return sale_cost;
+	}
+
+	public String getSys_cost() {
+		return sys_cost;
+	}
+
+	public String getApproved() {
+		return approved;
+	}
+
+	public void setDiscount_flg(String discount_flg) {
+		this.discount_flg = discount_flg;
+	}
+
+	public void setDiscount_receivable(String discount_receivable) {
+		this.discount_receivable = discount_receivable;
+	}
+
+	public void setSale_cost(String sale_cost) {
+		this.sale_cost = sale_cost;
+	}
+
+	public void setSys_cost(String sys_cost) {
+		this.sys_cost = sys_cost;
+	}
+
+	public void setApproved(String approved) {
+		this.approved = approved;
+	}
+
+	public List<String> getReport_statuses() {
+		return report_statuses;
+	}
+
+	public void setReport_statuses(List<String> report_statuses) {
+		this.report_statuses = report_statuses;
+	}
+
+	public String getProduct_final_flg() {
+		return product_final_flg;
+	}
+
+	public void setProduct_final_flg(String product_final_flg) {
+		this.product_final_flg = product_final_flg;
 	}
 }

@@ -24,6 +24,9 @@
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="need_comment" property="need_comment" jdbcType="VARCHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="VARCHAR" />
+		<result column="cellphone_A" property="cellphone_A" jdbcType="VARCHAR" />
+		<result column="cellphone_B" property="cellphone_B" jdbcType="VARCHAR" />
+		<result column="chairman" property="chairman" jdbcType="CHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
 		<result column="days" property="days" jdbcType="INTEGER" />
 	</resultMap>
@@ -47,7 +50,10 @@
 		status,
 		order_number,
 		comment,
-		change_pk
+		change_pk,
+		cellphone_A,
+		cellphone_B,
+		chairman
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -196,6 +202,15 @@
 			<if test="comment != null">
 				comment,
 			</if>
+			<if test="cellphone_A != null">
+				cellphone_A,
+			</if>
+			<if test="cellphone_B != null">
+				cellphone_B,
+			</if>
+			<if test="chairman != null">
+				chairman,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -248,6 +263,15 @@
 			</if>
 			<if test="comment != null">
 				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone_A != null">
+				#{cellphone_A,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone_B != null">
+				#{cellphone_B,jdbcType=VARCHAR},
+			</if>
+			<if test="chairman != null">
+				#{chairman,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -306,6 +330,15 @@
 			</if>
 			<if test="change_pk != null">
 				change_pk = #{change_pk,jdbcType=CHAR},
+			</if>
+			<if test="cellphone_A != null">
+				cellphone_A = #{cellphone_A,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone_B != null">
+				cellphone_B = #{cellphone_B,jdbcType=VARCHAR},
+			</if>
+			<if test="chairman != null">
+				chairman = #{chairman,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

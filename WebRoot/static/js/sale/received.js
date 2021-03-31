@@ -90,18 +90,11 @@ var ReceivedContext = function() {
 	};
 
 	// 计算合计
-	self.totalPeople = ko.observable(0);
-	self.totalReceivable = ko.observable(0);
-	self.totalPayable = ko.observable(0);
-	self.totalProfit = ko.observable(0);
-	self.totalPerProfit = ko.observable(0);
+	self.totalReceived = ko.observable(0);
 
 	self.refresh = function() {
-		var totalPeople = 0;
-		var totalReceivable = 0;
-		var totalPayable = 0;
-		var totalProfit = 0;
-		var totalPerProfit = 0;
+		var totalReceived = 0;
+
 		startLoadingSimpleIndicator("搜索中");
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
@@ -118,17 +111,10 @@ var ReceivedContext = function() {
 			self.receiveds(data.receiveds);
 			// 计算合计
 			$(self.receiveds()).each(function(idx, data) {
-				totalPeople += data.people_count;
-				totalReceivable += data.receivable;
-				totalPayable += data.payable;
-				totalProfit += data.gross_profit;
+				totalReceived += data.received;
 			});
 
-			self.totalPeople(totalPeople);
-			self.totalReceivable(totalReceivable);
-			self.totalPayable(totalPayable);
-			self.totalProfit(totalProfit);
-			self.totalPerProfit((totalProfit / totalPeople).toFixed(2));
+			self.totalReceived(totalReceived);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());

@@ -282,7 +282,7 @@ var ProductContext = function() {
 	self.refresh = function() {
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+				+ self.perPage + "&product.statuses=N&product.statuses=Y";
 
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
 				function(data) {
