@@ -260,6 +260,23 @@ var ProductContext = function() {
 			return result;
 		}
 
+		// 查验是否添加了相同地接社
+		var max_div = $("#div-supplier");
+		var all_divs = $(max_div).children();
+		var pks = new Array();
+		for (var i = 0; i < all_divs.length; i++) {
+			var current_div = all_divs[i];
+
+			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]')
+					.val();
+			pks.push(supplier_pk);
+		}
+
+		if (pks.isRepeat()) {
+			fail_msg("不能添加相同的供应商！")
+			return false;
+		}
+
 		// 检查金额是否合账
 		// 计算订单地接款合计
 		var sum_money = new Array();
@@ -284,9 +301,9 @@ var ProductContext = function() {
 
 			if (supplier_cost != sum_money[i]) {
 
-				fail_msg("地接社" + (i + 1) + "的订单合计金额：" + sum_money[i] + "与结算价格："
-						+ supplier_cost + "不符！")
-				return result;
+				fail_msg("地接社" + (i + 1) + "的订单合计金额：￥" + sum_money[i]
+						+ "与结算价格：￥" + supplier_cost + "不符！");
+				return false;
 			}
 		}
 		return result;

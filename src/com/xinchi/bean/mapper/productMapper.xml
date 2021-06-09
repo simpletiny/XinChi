@@ -51,6 +51,8 @@
 		<result column="air_ticket_upkeep_flg" property="air_ticket_upkeep_flg" jdbcType="VARCHAR" />
 		<result column="supplier_upkeep_flg" property="supplier_upkeep_flg" jdbcType="VARCHAR" />
 		<result column="local_upkeep_flg" property="local_upkeep_flg" jdbcType="VARCHAR" />
+		<result column="keep_flg" property="keep_flg" jdbcType="CHAR" />
+		<result column="analysis_flg" property="analysis_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -102,7 +104,9 @@
 		out_notice_templet,
 		air_ticket_upkeep_flg,
 		supplier_upkeep_flg,
-		local_upkeep_flg
+		local_upkeep_flg,
+		keep_flg,
+		analysis_flg
 
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -539,6 +543,12 @@
 			<if test="local_upkeep_flg != null">
 				local_upkeep_flg = #{local_upkeep_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="keep_flg != null">
+				keep_flg = #{keep_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="analysis_flg != null">
+				analysis_flg = #{analysis_flg,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -555,6 +565,9 @@
 			</if>
 			<if test="location !=null and location !='' ">
 				and location = #{location,jdbcType=VARCHAR}
+			</if>
+			<if test="keep_flg !=null and keep_flg !='' ">
+				and keep_flg = #{keep_flg,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
@@ -618,7 +631,9 @@
 		A.out_notice_templet,
 		A.air_ticket_upkeep_flg,
 		A.supplier_upkeep_flg,
-		A.local_upkeep_flg
+		A.local_upkeep_flg,
+		A.keep_flg,
+		A.analysis_flg
 		from
 		product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number

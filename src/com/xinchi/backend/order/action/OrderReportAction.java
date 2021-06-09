@@ -1,5 +1,6 @@
 package com.xinchi.backend.order.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.order.service.OrderReportService;
 import com.xinchi.bean.OrderReportDto;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -40,8 +43,14 @@ public class OrderReportAction extends BaseAction {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
+				&& !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
 			option.setProduct_manager_number(sessionBean.getUser_number());
+		}
+
+		if (!SimpletinyString.isEmpty(option.getConfirm_month())) {
+			option.setDeparture_date_from(option.getConfirm_month() + "-01");
+			option.setDeparture_date_to(DateUtil.getLastDay(option.getConfirm_month()));
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -74,6 +83,21 @@ public class OrderReportAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private BigDecimal air_ticket_cost;
+
+	public String fillAirTicketCost() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
+				&& !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
+			return "noright";
+		}
+		resultStr = service.fillAriTicketCost(team_number, air_ticket_cost);
+		return SUCCESS;
+	}
+
 	public OrderReportDto getOption() {
 		return option;
 	}
@@ -96,5 +120,13 @@ public class OrderReportAction extends BaseAction {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public BigDecimal getAir_ticket_cost() {
+		return air_ticket_cost;
+	}
+
+	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
+		this.air_ticket_cost = air_ticket_cost;
 	}
 }

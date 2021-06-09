@@ -87,9 +87,9 @@
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
+							<label class="col-md-1 control-label">订单号</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="payable.team_number" />
+								<input type="text" class="form-control" placeholder="订单号" name="payable.team_number" />
 							</div>
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">

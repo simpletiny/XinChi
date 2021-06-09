@@ -63,7 +63,7 @@ tr td {
 					<div class="form-group">
 						<div class="col-md-6">
 							<div data-bind="foreach: status" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox"
+								<em class="small-box"> <input type="radio"
 									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
 									name="order.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
@@ -140,6 +140,7 @@ tr td {
 								<th>儿童</th>
 								<th>乘客</th>
 								<th>票务需求</th>
+								<th>出票</th>
 								<th>备注</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>产品经理</th>
@@ -180,12 +181,31 @@ tr td {
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.air_comment, click:function(){msg($data.air_comment)}"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfos">查看</a></td>
 								<td><a href="javascript:void(0)" data-bind="text: $data.comment, click:function(){msg($data.comment)}"></a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
 							</tr>
 						</tbody>
+						<tr id="total-row">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>合计</td>
+							<td data-bind="text:adult_cnt"></td>
+							<td data-bind="text:special_cnt"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td> 
+							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+								<td></td>
+							</s:if>
+						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -231,7 +251,7 @@ tr td {
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
 						<td data-bind="text:$data.create_user"></td>
 						<td><a href="javascript:void(0)"
-							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td> 
+							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.lock_flg == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
 						<!-- /ko -->
@@ -301,6 +321,47 @@ tr td {
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- 查看出票信息 -->
+	<div id="ticket-check" style="display: none; width: 1000px; height: 650px; overflow-y: scroll;">
+		<div data-bind="foreach:ticketInfos">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">姓名</label>
+					<div class="">
+						<p class="ip-default" data-bind="text: $data.name"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">证号</label>
+					<p class="ip-default" data-bind="text: $data.id"></p>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">航段</th>
+							<th style="width: 10%">航班号</th>
+							<th style="width: 10%">日期</th>
+							<th style="width: 10%">起降时刻</th>
+							<th style="width: 10%">起降城市</th>
+							<th style="width: 10%">起降机场</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:{ data: $data.ticket_infos,as: 'info' }">
+						<tr>
+							<td data-bind="text:info.ticket_index"></td>
+							<td data-bind="text:info.ticket_number"></td>
+							<td data-bind="text:info.ticket_date"></td>
+							<td data-bind="text:info.from_to_time"></td>
+							<td data-bind="text:info.from_to_city"></td>
+							<td data-bind="text:info.from_airport+'--'+info.to_airport"></td>
 						</tr>
 					</tbody>
 				</table>

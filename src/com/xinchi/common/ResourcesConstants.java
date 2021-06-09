@@ -58,6 +58,8 @@ public class ResourcesConstants {
 	public static String USER_ROLE_SALES = "SALES";
 	public static String USER_ROLE_PRODUCT = "PRODUCT";
 	public static String USER_ROLE_FINANCE = "FINANCE";
+	public static String USER_ROLE_ACCOUNTING = "ACCOUNTING";
+	public static String USER_ROLE_CASHIER = "CASHIER";
 	public static String USER_ROLE_TICKET = "TICKET";
 
 	// 团队状态

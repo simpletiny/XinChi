@@ -23,7 +23,8 @@ function changeFile(param) {
 	var	name_check = file.name;
 	var file_size = file.size;
 	var fil_type = file.type;
-	if (type.indexOf(fil_type) < 0) {
+	
+	if (fil_type.indexOf(type) < 0) {
 		fail_msg("请上传" + typeMapping[type] + "!");
 		return;
 	}

@@ -8,7 +8,7 @@ var OrderContext = function() {
 
 	self.chosenOperations = ko.observableArray([]);
 
-	self.status = [ 'N', 'I', 'Y' ];
+	self.status = ['N', 'I', 'Y'];
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("N");
@@ -17,13 +17,13 @@ var OrderContext = function() {
 		'N' : '未操作',
 		'I' : '操作中',
 		'Y' : '已操作'
-	 };
-	
+	};
+
 	self.singleMapping = {
-			'N' : "合",
-			'Y' : "单"
-     };
-	
+		'N' : "合",
+		'Y' : "单"
+	};
+
 	// 获取用户信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -43,81 +43,137 @@ var OrderContext = function() {
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
-			self.operations(data.operations);
+		param += "&page.start=" + self.startIndex() + "&page.count="
+				+ self.perPage;
+		$
+				.getJSON(
+						self.apiurl
+								+ 'product/searchProductOrderOperationByPage',
+						param,
+						function(data) {
+							self.operations(data.operations);
 
-			$(self.operations()).each(function(idx, data) {
-				total_people_count += data.people_count - 0;
-				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
-			});
+							$(self.operations())
+									.each(
+											function(idx, data) {
+												total_people_count += data.people_count - 0;
+												total_supplier_cost += data.supplier_cost == null
+														? 0
+														: data.supplier_cost;
+											});
 
-			self.totalPeopleCount(total_people_count);
-			self.totalSupplierCost(total_supplier_cost);
-			$(".detail").showDetail();
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-			
-			endLoadingIndicator();
-		});
+							self.totalPeopleCount(total_people_count);
+							self.totalSupplierCost(total_supplier_cost);
+							$(".detail").showDetail();
+							self.totalCount(Math.ceil(data.page.total
+									/ self.perPage));
+							self.setPageNums(self.currentPage());
+
+							endLoadingIndicator();
+						});
 	};
-	
-	
+
 	self.downloadSc = function(team_number, supplier_employee_pk) {
 		window.location.href = self.apiurl
 				+ "file/downloadProductFile?team_number=" + team_number
 				+ "&supplier_employee_pk=" + supplier_employee_pk
 				+ "&fileType=C";
 	}
-	
-	self.productSuppliers = ko.observableArray([]);
 
+	self.productSuppliers = ko.observableArray([]);
+	self.order_number = ko.observable('');
 	self.finalOperate = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
-		}else if(self.chosenOperations().length >1){
+		} else if (self.chosenOperations().length > 1) {
 			fail_msg("只能选择一个！");
 			return;
-		}else if (self.chosenOperations().length ==1) {
+		} else if (self.chosenOperations().length == 1) {
+			startLoadingSimpleIndicator("加载中...");
+			var order_number = self.chosenOperations()[0].split(";")[1];
 			var cost = self.chosenOperations()[0].split(";")[2];
+			var supplier_employee_pk = self.chosenOperations()[0].split(";")[3];
 			$("#final-supplier-cost").val(cost);
-			finalLayser = $.layer({
-				type : 1,
-				title : [ '决算', '' ],
-				maxmin : false,
-				closeBtn : [ 1, true ],
-				shadeClose : false,
-				area : [ '800px', '200px' ],
-				offset : [ '', '' ],
-				scrollbar : true,
-				page : {
-					dom : '#order-final'
-				},
-				end : function() {
-				}
-			});
+
+			self.order_number(order_number);
+
+			var param = "order_number=" + order_number
+					+ "&supplier_employee_pk=" + supplier_employee_pk;
+
+			$.getJSON(self.apiurl
+					+ 'product/searchSaleOrderInfoByProductOrderInfo', param,
+					function(data) {
+						self.sale_orders(data.sale_orders);
+						endLoadingIndicator();
+						finalLayser = $.layer({
+							type : 1,
+							title : ['决算', ''],
+							maxmin : false,
+							closeBtn : [1, true],
+							shadeClose : false,
+							area : ['800px', '600px'],
+							offset : ['', ''],
+							scrollbar : true,
+							page : {
+								dom : '#order-final'
+							},
+							end : function() {
+							}
+						});
+					});
 		}
 	};
-	
+
 	// 确认决算
 	self.doFinal = function() {
+
 		var cost = $("#final-supplier-cost").val();
 		if (cost.trim() == "") {
 			fail_msg("请填写决算总成本！");
-			return
+			return;
 		}
+
 		var current = self.chosenOperations()[0].split(";");
 		var operate_pk = current[0];
-		
+
 		var data = "final_supplier_cost=" + cost + "&operate_pk=" + operate_pk;
+
+		if (self.order_number().indexOf("P") == 0) {
+			var json = '[';
+			var trs = $("#table-order tbody tr");
+			var sum_payable = 0;
+			for (var i = 0; i < trs.length; i++) {
+				var tr = trs[i];
+				var team_number = $(tr).find("input[st='team-number']").val();
+				var team_payable = $(tr).find("input[st='team-payable']").val()
+						.trim();
+
+				if (team_payable == "") {
+					fail_msg("请填写" + team_number + "的决算价格!");
+					return;
+				}
+				sum_payable = sum_payable + (team_payable - 0);
+				var oneJson = '{"team_number":"' + team_number
+						+ '","team_payable":"' + team_payable + '"}';
+				json += oneJson + ',';
+			}
+			json = json.RTrim(',') + ']';
+
+			if (sum_payable != (cost - 0)) {
+				fail_msg("地接总成本与合计不符！");
+				return;
+			}
+			data += "&json=" + json;
+		}
+
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认要决算吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
@@ -147,7 +203,7 @@ var OrderContext = function() {
 			return;
 		} else if (self.chosenOperations().length > 0) {
 			var team_numbers = "";
-			for ( var i = 0; i < self.chosenOperations().length; i++) {
+			for (var i = 0; i < self.chosenOperations().length; i++) {
 				var current = self.chosenOperations()[i].split(";");
 				team_numbers += current[1] + ",";
 			}
@@ -156,12 +212,12 @@ var OrderContext = function() {
 
 			var data = "team_numbers=" + team_numbers;
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '删除会将关联的操作订单一并删除，并将产品订单设置为未操作状态！',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中...");
@@ -183,25 +239,25 @@ var OrderContext = function() {
 			});
 		}
 	};
-	
+
 	// 批量下载地接确认文件
-	self.batDownload = function(){
+	self.batDownload = function() {
 		if (self.chosenOperations().length == 0) {
-			
+
 			fail_msg("请选择产品订单！");
 			return;
 		} else if (self.chosenOperations().length > 0) {
 			var operatePks = [];
-			for ( var i = 0; i < self.chosenOperations().length; i++) {
+			for (var i = 0; i < self.chosenOperations().length; i++) {
 				var current = self.chosenOperations()[i].split(";");
 				operatePks.push(current[0]);
 			}
-// window.location.href = self.apiurl
-// +"file/batDownloadSupplierConfirm?operate_pks="+operatePks;
-			
+			// window.location.href = self.apiurl
+			// +"file/batDownloadSupplierConfirm?operate_pks="+operatePks;
+
 		}
 	}
-	
+
 	self.productSuppliers = ko.observableArray([]);
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
@@ -209,7 +265,6 @@ var OrderContext = function() {
 		self.passengers.removeAll();
 
 		var team_number = data.team_number;
-		console.log(team_number)
 		var url = "product/searchSaleOrderNameListByProductOrderNumber";
 
 		$.getJSON(self.apiurl + url, {
@@ -236,7 +291,7 @@ var OrderContext = function() {
 	// 查看订单详情
 	self.sale_orders = ko.observableArray([]);
 	self.checkOrders = function(order_number) {
-		if(order_number.startsWith("N")){
+		if (order_number.startsWith("N")) {
 			success_msg("老数据所见即订单详情！")
 			return;
 		}
@@ -294,7 +349,7 @@ var OrderContext = function() {
 			});
 		});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -329,9 +384,10 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
+				.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -345,13 +401,17 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
-			self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count="
+				+ self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
 
-			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
-			self.setPageNums1(self.currentPage1());
-		});
+					self
+							.totalCount1(Math.ceil(data.page.total
+									/ self.perPage1));
+					self.setPageNums1(self.currentPage1());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -397,9 +457,10 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
+				.totalCount1();
 		var pageNums1 = [];
-		for ( var i = startPage1; i <= endPage1; i++) {
+		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
 		}
 		self.pageNums1(pageNums1);
@@ -438,12 +499,12 @@ var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
 		type : 1,
-		title : [ '选择供应商操作', '' ],
+		title : ['选择供应商操作', ''],
 		maxmin : false,
-		closeBtn : [ 1, true ],
+		closeBtn : [1, true],
 		shadeClose : false,
-		area : [ '600px', '650px' ],
-		offset : [ '50px', '' ],
+		area : ['600px', '650px'],
+		offset : ['50px', ''],
 		scrollbar : true,
 		page : {
 			dom : '#supplier-pick'
@@ -476,7 +537,7 @@ function deleteRow(btn) {
 function refreshIndex() {
 	var tbody = $("#table-supplier tbody");
 	var trs = $(tbody).children();
-	for ( var i = 0; i < trs.length; i++) {
+	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 		$(tr).find("td[st='index']").html(i + 1);
 	}

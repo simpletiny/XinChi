@@ -19,9 +19,11 @@ import com.xinchi.backend.product.dao.ProductOrderDAO;
 import com.xinchi.backend.product.dao.ProductOrderTeamNumberDAO;
 import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirNeedTeamNumberBean;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -312,6 +314,24 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 	}
 
+	@Override
+	public List<OrderDto> searchSaleOrderInfoByProductOrderInfo(String order_number, String supplier_employee_pk) {
+		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
+		potns = productOrderTeamNumberDao.selectByOrderNumber(order_number);
+		if (null == potns || potns.size() == 0)
+			return null;
+		List<String> team_numbers = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			team_numbers.add(potn.getTeam_number());
+		}
+
+		OrderDto option = new OrderDto();
+		option.setTeam_numbers(team_numbers);
+		option.setSupplier_employee_pk(supplier_employee_pk);
+
+		return orderDao.selectPayableInfoByParam(option);
+	}
+
 	@Autowired
 	private OrderNameListDAO orderNameListDao;
 
@@ -379,4 +399,24 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	public ProductOrderBean selectByOrderNumber(String order_number) {
 		return dao.selectByOrderNumber(order_number);
 	}
+
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
+	@Override
+	public List<AirTicketNameListBean> searchTicketInfoByOrderNumber(String order_number) {
+		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
+		potns = productOrderTeamNumberDao.selectByOrderNumber(order_number);
+
+		if (null == potns || potns.size() == 0)
+			return null;
+
+		List<String> team_numbers = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			team_numbers.add(potn.getTeam_number());
+		}
+
+		return airTicketNameListDao.selectWithInfoByTeamNumbers(team_numbers);
+	}
+
 }

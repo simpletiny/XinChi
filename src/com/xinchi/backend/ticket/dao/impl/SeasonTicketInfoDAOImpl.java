@@ -51,4 +51,9 @@ public class SeasonTicketInfoDAOImpl extends SqlSessionDaoSupport implements Sea
 		return list;
 	}
 
+	@Override
+	public void deleteByBasePk(String base_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.SeasonTicketInfoMapper.deleteByBasePk", base_pk);
+	}
+
 }

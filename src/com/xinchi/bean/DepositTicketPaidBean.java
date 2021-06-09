@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
@@ -10,6 +11,8 @@ public class DepositTicketPaidBean extends SupperBO implements Serializable {
 	private String deposit_pk;
 
 	private String related_pk;
+
+	private BigDecimal money;
 
 	public String getDeposit_pk() {
 		return deposit_pk;
@@ -25,6 +28,14 @@ public class DepositTicketPaidBean extends SupperBO implements Serializable {
 
 	public void setRelated_pk(String related_pk) {
 		this.related_pk = related_pk;
+	}
+
+	public BigDecimal getMoney() {
+		return money;
+	}
+
+	public void setMoney(BigDecimal money) {
+		this.money = money;
 	}
 
 }

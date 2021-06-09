@@ -224,38 +224,8 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String finalOperation() {
-		ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
-		operation.setStatus("F");
-		operation.setFinal_supplier_cost(final_supplier_cost);
 
-		service.update(operation);
-
-		// 更新应付款
-		PayableBean payable_option = new PayableBean();
-		payable_option.setTeam_number(operation.getTeam_number());
-		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
-		List<PayableBean> payables = payableService.selectByParam(payable_option);
-		if (null != payables && payables.size() > 0) {
-			PayableBean payable = payables.get(0);
-			payable.setFinal_flg("Y");
-			payable.setFinal_payable(final_supplier_cost);
-			payable.setFinal_balance(final_supplier_cost.subtract(payable.getPaid()));
-			payableService.update(payable);
-		}
-
-		// // 更新每个订单的应付款
-		//
-		// for (int j = 0; j < supplier_pks.size(); j++) {
-		// PayableOrderBean pob = new PayableOrderBean();
-		//
-		// pob.setTeam_number(team_number);
-		// pob.setSupplier_employee_pk(supplier_pks.get(j));
-		// pob.setBudget_payable(new BigDecimal(costs[j]));
-		// payableOrderDao.insert(pob);
-		// product_cost = product_cost.add(new BigDecimal(costs[j]));
-		// }
-
-		resultStr = SUCCESS;
+		resultStr = service.finalOperation(operate_pk, final_supplier_cost, json);
 		return SUCCESS;
 	}
 
@@ -265,26 +235,7 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String rollBackOperation() {
-		ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
-		operation.setStatus("Y");
-		operation.setFinal_supplier_cost(BigDecimal.ZERO);
-
-		service.update(operation);
-
-		// 更新应付款
-		PayableBean payable_option = new PayableBean();
-		payable_option.setTeam_number(operation.getTeam_number());
-		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
-		List<PayableBean> payables = payableService.selectByParam(payable_option);
-		if (null != payables && payables.size() > 0) {
-			PayableBean payable = payables.get(0);
-			payable.setFinal_flg("N");
-			payable.setFinal_payable(BigDecimal.ZERO);
-			payable.setFinal_balance(BigDecimal.ZERO);
-			payableService.update(payable);
-		}
-		resultStr = SUCCESS;
-
+		resultStr = service.rollBackOperation(operate_pk);
 		return SUCCESS;
 	}
 

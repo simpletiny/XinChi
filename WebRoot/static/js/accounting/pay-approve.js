@@ -10,6 +10,20 @@ var PaidContext = function() {
 		items : []
 	});
 
+	self.items = ko.observableArray(['D', 'X', 'B', 'P', 'J', 'G', 'Q', 'T']);
+	self.itemMapping = {
+		'D' : '地接款',
+		'X' : '销售费用',
+		'B' : '办公费用',
+		'P' : '票务费用',
+		'J' : '产品费用',
+		'G' : '工资费用',
+		'Q' : '其他支出',
+		'T' : '投诉赔偿',
+		'M' : '多付返款',
+		'F' : 'FLY'
+	};
+
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	// var x = new Date();
@@ -23,11 +37,9 @@ var PaidContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
-			+ 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
-			+ (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
@@ -72,47 +84,38 @@ var PaidContext = function() {
 		var totalPerProfit = 0;
 
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$
-				.getJSON(
-						self.apiurl + 'accounting/searchPaidApplyByPage',
-						param,
-						function(data) {
-							self.paids(data.payApprovals);
-							self.sumBalance(data.sum_balance);
-							self.sumCardBalance(data.sum_card_balance);
-							self
-									.sum_waiting_for_paid(data.sum_waiting_for_paid);
-							// 计算合计
-							$(self.paids()).each(function(idx, data) {
-								totalPeople += data.people_count;
-								totalReceivable += data.receivable;
-								totalPayable += data.payable;
-								totalProfit += data.gross_profit;
-							});
+		$.getJSON(self.apiurl + 'accounting/searchPaidApplyByPage', param, function(data) {
+			self.paids(data.payApprovals);
+			self.sumBalance(data.sum_balance);
+			self.sumCardBalance(data.sum_card_balance);
+			self.sum_waiting_for_paid(data.sum_waiting_for_paid);
+			// 计算合计
+			$(self.paids()).each(function(idx, data) {
+				totalPeople += data.people_count;
+				totalReceivable += data.receivable;
+				totalPayable += data.payable;
+				totalProfit += data.gross_profit;
+			});
 
-							self.totalPeople(totalPeople);
-							self.totalReceivable(totalReceivable);
-							self.totalPayable(totalPayable);
-							self.totalProfit(totalProfit);
-							self.totalPerProfit((totalProfit / totalPeople)
-									.toFixed(2));
+			self.totalPeople(totalPeople);
+			self.totalReceivable(totalReceivable);
+			self.totalPayable(totalPayable);
+			self.totalProfit(totalProfit);
+			self.totalPerProfit((totalProfit / totalPeople).toFixed(2));
 
-							self.totalCount(Math.ceil(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-							$(".rmb").formatCurrency();
-						});
+			$(".rmb").formatCurrency();
+		});
 	};
 
 	self.agree = function(paid) {
 		var data;
 		if (paid.item == 'D' || paid.item == 'P') {
-			data = "item=" + paid.item + "&related_pk=" + paid.related_pk
-					+ "&pk=" + paid.pk;
+			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
 		} else {
 			data = "item=" + paid.item + "&pk=" + paid.pk;
 		}
@@ -144,8 +147,7 @@ var PaidContext = function() {
 	self.reject = function(paid) {
 		var data;
 		if (paid.item == 'D') {
-			data = "item=" + paid.item + "&related_pk=" + paid.related_pk
-					+ "&pk=" + paid.pk;
+			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
 		} else {
 			data = "item=" + paid.item + "&pk=" + paid.pk;
 		}
@@ -192,28 +194,27 @@ var PaidContext = function() {
 		} else {
 			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param,
-					function(data) {
-						self.order(data.order);
-						self.comment(detail.comment);
-						endLoadingIndicator();
-						viewCommentLayer = $.layer({
-							type : 1,
-							title : ['摘要详情', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['700px', 'auto'],
-							offset : ['150px', ''],
-							scrollbar : true,
-							page : {
-								dom : '#comment'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					});
+			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param, function(data) {
+				self.order(data.order);
+				self.comment(detail.comment);
+				endLoadingIndicator();
+				viewCommentLayer = $.layer({
+					type : 1,
+					title : ['摘要详情', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['700px', 'auto'],
+					offset : ['150px', ''],
+					scrollbar : true,
+					page : {
+						dom : '#comment'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+			});
 		}
 	};
 	self.sumDetail = ko.observable({
@@ -226,31 +227,30 @@ var PaidContext = function() {
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
-				function(data) {
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
 
-					self.sumDetails(data.paids);
-					self.sumDetail(self.sumDetails()[0]);
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
+			self.sumDetails(data.paids);
+			self.sumDetail(self.sumDetails()[0]);
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 
-					viewDetailLayer = $.layer({
-						type : 1,
-						title : ['合账详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', 'auto'],
-						offset : ['150px', ''],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['合账详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#sum_detail'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		});
 
 	};
 	// start pagination
@@ -287,8 +287,7 @@ var PaidContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

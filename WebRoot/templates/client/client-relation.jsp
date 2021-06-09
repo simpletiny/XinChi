@@ -25,9 +25,11 @@
 .detail {
 	color: blue;
 }
-.warning{
-	color:red;
+
+.warning {
+	color: red;
 }
+
 #table-relations tr td {
 	text-overflow: ellipsis; /* for IE */
 	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
@@ -184,10 +186,10 @@
 								<td data-bind="text:accurateSale().main_accurate"></td>
 								<td data-bind="text:incomingCount().main_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().main_wechat"></td>
-								<th>本月费用</th>
-								<th>本月节余</th>
+								<th>发展基金</th>
+								<th>新增费用</th>
+								<th>新增基金</th>
 								<th>累计费用</th>
-								<th>业务资金</th>
 								<th>勤点扣款</th>
 								<th></th>
 							</tr>
@@ -201,10 +203,11 @@
 								<td data-bind="text:accurateSale().market_accurate"></td>
 								<td data-bind="text:incomingCount().market_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().market_wechat"></td>
+								<td data-bind="text:meter().score * 1.07
+					- meter().sum_reimbursement" class="rmb"></td>
 								<td data-bind="text:meter().month_reimbursement" class="rmb"></td>
-								<td></td>
+								<td data-bind="text:meter().month_score * 1.07" class="rmb"></td>
 								<td data-bind="text:meter().sum_reimbursement" class="rmb"></td>
-								<td></td>
 								<td data-bind="text:meter().point_money_deduct" class="rmb"></td>
 								<td></td>
 							</tr>
@@ -317,7 +320,7 @@
 									data-bind="text: $data.comment,click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sales=='public'-->
-								<td style="color:red" data-bind="text: $data.sales_name"></td>
+								<td style="color: red" data-bind="text: $data.sales_name"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sales!='public'-->
 								<td data-bind="text: $data.sales_name"></td>
@@ -408,7 +411,7 @@
 				<div class="span6">
 					<label class="col-md-3 control-label">微信号</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" maxlength="20" id="txt-wechat" placeholder="微信号（区分大小写）"/>
+						<input type="text" class="form-control" maxlength="20" id="txt-wechat" placeholder="微信号（区分大小写）" />
 					</div>
 				</div>
 			</div>
@@ -416,7 +419,7 @@
 				<div class="span6">
 					<label class="col-md-3 control-label">手机</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" maxlength="11" id="txt-cellphone" placeholder="手机号"/>
+						<input type="text" class="form-control" maxlength="11" id="txt-cellphone" placeholder="手机号" />
 					</div>
 				</div>
 			</div>

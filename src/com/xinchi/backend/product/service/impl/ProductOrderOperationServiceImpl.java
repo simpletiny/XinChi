@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.dao.PayableOrderDAO;
@@ -37,6 +38,7 @@ import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -470,6 +472,129 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	@Override
 	public List<DropOffBean> searchDropOff(DropOffBean drop_off) {
 		return dao.selectDropOff(drop_off);
+	}
+
+	@Override
+	public String finalOperation(String operate_pk, BigDecimal final_supplier_cost, String json) {
+		ProductOrderOperationBean operation = dao.selectByPrimaryKey(operate_pk);
+		operation.setStatus("F");
+		operation.setFinal_supplier_cost(final_supplier_cost);
+
+		dao.update(operation);
+
+		// 更新应付款
+		PayableBean payable_option = new PayableBean();
+		payable_option.setTeam_number(operation.getTeam_number());
+		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+		List<PayableBean> payables = payableDao.selectByParam(payable_option);
+		if (null != payables && payables.size() > 0) {
+			PayableBean payable = payables.get(0);
+			payable.setFinal_flg("Y");
+			payable.setFinal_payable(final_supplier_cost);
+			payable.setFinal_balance(final_supplier_cost.subtract(payable.getPaid()));
+			payableDao.update(payable);
+		}
+		if (operation.getTeam_number().startsWith("P")) {
+
+			// 更新每个订单的应付款
+			JSONArray arr = JSONArray.fromObject(json);
+			for (int i = 0; i < arr.size(); i++) {
+				JSONObject obj = arr.getJSONObject(i);
+				String team_number = obj.getString("team_number");
+				BigDecimal final_payable = new BigDecimal(obj.getString("team_payable"));
+				PayableOrderBean option = new PayableOrderBean();
+				option.setTeam_number(team_number);
+				option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+
+				List<PayableOrderBean> pos = payableOrderDao.selectByParam(option);
+
+				if (pos != null && pos.size() > 0) {
+					PayableOrderBean po = pos.get(0);
+					po.setFinal_payable(final_payable);
+					po.setFinal_flg("Y");
+					payableOrderDao.update(po);
+
+				}
+			}
+
+		} else if (operation.getTeam_number().startsWith("N")) {
+			PayableOrderBean option = new PayableOrderBean();
+			option.setTeam_number(operation.getTeam_number());
+			option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+
+			List<PayableOrderBean> pos = payableOrderDao.selectByParam(option);
+
+			if (pos != null && pos.size() > 0) {
+				PayableOrderBean po = pos.get(0);
+				po.setFinal_payable(final_supplier_cost);
+				po.setFinal_flg("Y");
+				payableOrderDao.update(po);
+
+			}
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private OrderReportDAO orderReportDao;
+
+	@Override
+	public String rollBackOperation(String operate_pk) {
+		ProductOrderOperationBean operation = dao.selectByPrimaryKey(operate_pk);
+
+		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
+		potns = productOrderTeamNumberDao.selectByOrderNumber(operation.getTeam_number());
+
+		for (ProductOrderTeamNumberBean potn : potns) {
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(potn.getTeam_number());
+			if (tr.getApproved().equals("Y")) {
+				return "approved";
+			}
+		}
+		// 检验
+		// 单团是否已审核
+
+		// 更新产品订单操作
+
+		operation.setStatus("Y");
+		operation.setFinal_supplier_cost(BigDecimal.ZERO);
+
+		dao.update(operation);
+
+		// 更新应付款
+		PayableBean payable_option = new PayableBean();
+		payable_option.setTeam_number(operation.getTeam_number());
+		payable_option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+		List<PayableBean> payables = payableDao.selectByParam(payable_option);
+		if (null != payables && payables.size() > 0) {
+			PayableBean payable = payables.get(0);
+			payable.setFinal_flg("N");
+			payable.setFinal_payable(BigDecimal.ZERO);
+			payable.setFinal_balance(BigDecimal.ZERO);
+			payableDao.update(payable);
+		}
+
+		// 更新每个订单的应付款
+
+		if (null == potns || potns.size() == 0)
+			return SUCCESS;
+
+		for (ProductOrderTeamNumberBean potn : potns) {
+			PayableOrderBean option = new PayableOrderBean();
+			option.setTeam_number(potn.getTeam_number());
+			option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
+			List<PayableOrderBean> pos = payableOrderDao.selectByParam(option);
+
+			if (null != pos && pos.size() > 0) {
+				PayableOrderBean po = pos.get(0);
+				po.setFinal_flg("N");
+				po.setFinal_payable(BigDecimal.ZERO);
+				payableOrderDao.update(po);
+			}
+		}
+
+		return SUCCESS;
+
 	}
 
 }

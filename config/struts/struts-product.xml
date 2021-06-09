@@ -41,6 +41,7 @@
 		<action name="createProduct" class="productAction" method="createProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		
 		<action name="updateProduct" class="productAction" method="updateProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -48,6 +49,9 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="updateProductValue" class="productAction" method="updateProductValue">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="searchUrgentCnt" class="productAction" method="searchUrgentCnt">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<action name="onSaleProduct" class="productAction" method="onSaleProduct">
@@ -168,6 +172,19 @@
 		</action>
 		<!-- 根据订单编号查找销售订单 -->
 		<action name="searchSaleOrderByProductOrderNumber" class="productOrderAction" method="searchSaleOrderByProductOrderNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据订单编号和供应商pk查找销售订单及应付款信息 -->
+		<action name="searchSaleOrderInfoByProductOrderInfo" class="productOrderAction" method="searchSaleOrderInfoByProductOrderInfo">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchTicketInfoByOrderNumber" class="productOrderAction" method="searchTicketInfoByOrderNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

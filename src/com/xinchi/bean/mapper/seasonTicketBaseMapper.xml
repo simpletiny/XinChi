@@ -63,6 +63,25 @@
 		from season_ticket_base
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	
+	<select id="selectWithInfoByPrimaryKey" resultMap="InfoResultMap" parameterType="java.lang.String">
+		select
+		A.name,
+		A.model,
+		A.supplier_employee_pk,
+		A.price,
+		A.special_price,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.name AS supplier_employee_name
+		from season_ticket_base A 
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		where A.pk = #{pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from season_ticket_base

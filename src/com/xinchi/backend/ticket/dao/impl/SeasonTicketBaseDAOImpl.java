@@ -57,4 +57,10 @@ public class SeasonTicketBaseDAOImpl extends SqlSessionDaoSupport implements Sea
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.SeasonTicketBaseMapper.selectByPage", page);
 	}
 
+	@Override
+	public SeasonTicketBaseBean selectWithInfoByPrimaryKey(String base_pk) {
+		return (SeasonTicketBaseBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.SeasonTicketBaseMapper.selectWithInfoByPrimaryKey", base_pk);
+	}
+
 }

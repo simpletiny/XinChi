@@ -64,7 +64,7 @@ tr td {
 						</div>
 						<div align="left">
 							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked
-								name="radio-date" />出团日期</label>
+								name="radio_date" />出团日期</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
 									name="option.departure_date_from" />
@@ -99,7 +99,7 @@ tr td {
 						</s:else>
 						<div align="left">
 							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)"
-								name="radio-date" />确认日期</label>
+								name="radio_date" />确认日期</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from"
 									name="option.confirm_date_from" />

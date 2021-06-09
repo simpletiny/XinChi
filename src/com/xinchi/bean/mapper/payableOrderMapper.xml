@@ -39,7 +39,8 @@
 	</delete>
 	<delete id="deleteTeamNumber" parameterType="java.lang.String">
 		delete from payable_order
-		where team_number = #{team_number,jdbcType=CHAR}
+		where team_number =
+		#{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.PayableOrderBean">
@@ -150,5 +151,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from payable_order
+		<where>
+			<if test="team_number != null and team_number !='' ">
+			 	and team_number=#{team_number,jdbcType=VARCHAR}
+			</if>
+			<if test="supplier_employee_pk != null and supplier_employee_pk !='' ">
+			 	and supplier_employee_pk=#{supplier_employee_pk,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 </mapper>

@@ -270,8 +270,10 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 				List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(tn);
 				for (AirTicketNameListBean name : names) {
 					List<PassengerTicketInfoBean> ptis = dao.selectByPassengerPk(name.getPk());
-					if (ptis != null && ptis.size() > 0) {
-						airTicketCost = airTicketCost.add(ptis.get(0).getTicket_cost());
+					for (PassengerTicketInfoBean pti : ptis) {
+						if (pti.getTicket_index() == 1) {
+							airTicketCost = airTicketCost.add(pti.getTicket_cost());
+						}
 					}
 				}
 

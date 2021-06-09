@@ -72,13 +72,16 @@ tr td {
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<div style="width: 45%; float: right">
+						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { create() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { clone() }">克隆</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { edit() }">维护</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">上架</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('Y') }">紧急上架</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { delayOnSale() }">预约上架</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { cancelDelay() }">取消预约</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { onSale('N') }">下架</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { abandon() }">废弃</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { recovery() }">恢复</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -93,19 +96,19 @@ tr td {
 					</div>
 					<div class="form-group">
 						<div class="span6">
-							<label class="col-md-1 control-label" style="width:5% !important">产品编号</label>
+							<label class="col-md-1 control-label" style="width: 5% !important">产品编号</label>
 							<div class="col-md-2">
 								<input class="form-control" placeholder="产品编号" name="product.product_number"></input>
 							</div>
 						</div>
 						<div class="span6">
-							<label class="col-md-1 control-label" style="width:5% !important">产品名称</label>
+							<label class="col-md-1 control-label" style="width: 5% !important">产品名称</label>
 							<div class="col-md-2">
 								<input class="form-control" placeholder="产品名称" name="product.name"></input>
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label" style="width:5% !important">产品线</label>
+							<label class="col-md-1 control-label" style="width: 5% !important">产品线</label>
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" style="height: 34px"
 									data-bind="options: locations,optionsText:'name',optionsValue:'name',value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
@@ -116,7 +119,7 @@ tr td {
 					<div class="form-group">
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
-								<label class="col-md-1 control-label" style="width:5% !important">产品经理</label>
+								<label class="col-md-1 control-label" style="width: 5% !important">产品经理</label>
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px" id="select-sales"
 										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
@@ -156,16 +159,17 @@ tr td {
 						</thead>
 						<tbody data-bind="foreach: products">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenProducts" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.sale_flg}, checked: $root.chosenProducts" /></td>
 								<td data-bind="text:$index()+1"></td>
 								<!-- ko if: $data.sale_flg =='N' && $data.product_number ==null -->
-								<td>新建</td>
+								<td data-bind="text:'新建（'+ $root.keepMapping[$data.keep_flg]+'）'"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sale_flg =='N' && $data.product_number !=null -->
-								<td style="color: grey" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
+								<td style="color: grey" data-bind="text: $root.saleMapping[$data.sale_flg]+'（'+ $root.keepMapping[$data.keep_flg]+'）'"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sale_flg =='Y' -->
-								<td style="color: green" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
+								<td style="color: green" data-bind="text: $root.saleMapping[$data.sale_flg]+'（'+ $root.keepMapping[$data.keep_flg]+'）'"></td>
 								<!-- /ko -->
 								<!-- ko if: $data.sale_flg =='D' -->
 								<td style="color: red" data-bind="text: $root.saleMapping[$data.sale_flg]"></td>
@@ -311,7 +315,7 @@ tr td {
 				<!-- ko if:product().strict_price_flg=="Y" -->
 				<label class="l" style="width: 170px">严格执行定价（是）</label>
 				<!-- /ko -->
-				
+
 				<!-- ko if:product().strict_price_flg=="N" -->
 				<label class="l" style="width: 170px">严格执行定价（否）</label>
 				<!-- /ko -->
@@ -448,8 +452,8 @@ tr td {
 				</div>
 			</div>
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: doOnSale">上架</a> <a type="submit"
-					class="btn btn-green btn-r" data-bind="click: cancelOnSale">取消</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="text:'紧急上架(剩余：'+urgentCnt()+'次)',click: doOnSale"></a> <a
+					type="submit" class="btn btn-green btn-r" data-bind="click: cancelOnSale">取消</a>
 			</div>
 		</div>
 	</div>

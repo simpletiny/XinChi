@@ -37,4 +37,6 @@ public interface OrderDAO {
 	public List<OrderDto> selectByTeamNumbers(List<String> team_numbers);
 
 	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number);
+
+	public List<OrderDto> selectPayableInfoByParam(OrderDto option);
 }

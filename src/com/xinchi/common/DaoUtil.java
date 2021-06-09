@@ -39,7 +39,7 @@ public class DaoUtil {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		
+
 		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY));
 		if (null != ub) {
@@ -48,6 +48,7 @@ public class DaoUtil {
 		sqlSession.insert(mapper, supperBO);
 		return pk;
 	}
+
 	public String insertBOWithCreateTime(String mapper, SupperBO supperBO) {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
@@ -60,14 +61,15 @@ public class DaoUtil {
 		return pk;
 	}
 
-	public String insertWithoutLogin(String mapper,SupperBO supperBO) {
+	public String insertWithoutLogin(String mapper, SupperBO supperBO) {
 		String pk = DBCommonUtil.genPk();
 		supperBO.setPk(pk);
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
-		
+
 		sqlSession.insert(mapper, supperBO);
 		return pk;
 	}
+
 	public String insertBOWithPk(String mapper, SupperBO supperBO) {
 		supperBO.setCreate_time(DateUtil.getTimeMillis());
 		UserSessionBean ub = ((UserSessionBean) XinChiApplicationContext
@@ -131,7 +133,7 @@ public class DaoUtil {
 	 * @param sql
 	 */
 	public void executeBySql(SqlBean sql) {
-		sqlSession.delete("com.xinchi.bean.mapper.CommonMapper.executeBySql", sql);
+		sqlSession.update("com.xinchi.bean.mapper.CommonMapper.executeBySql", sql);
 	}
 
 	/*
@@ -289,7 +291,7 @@ public class DaoUtil {
 		if (null != ub) {
 			supperBO.setUpdate_user(ub.getUser_number());
 		}
-		
+
 		return sqlSession.update(mapper, supperBO);
 	}
 

@@ -142,9 +142,9 @@ var PassengerContext = function() {
 
 		passenger_pks = passenger_pks.LTrim(",");
 
-		var change_reason = $("input[name='change-reason']").val();
-		var cost = $("input[name='change-cost']").val() - 0;
-		var comment = $("textarea[name='comment']").val();
+		var change_reason = $("input[st='change-reason']").val();
+		var cost = $("input[st='change-cost']").val() - 0;
+		var comment = $("textarea[st='comment']").val();
 
 		json += '"team_number":"' + team_number + '","passenger_pks":"'
 				+ passenger_pks + '","change_reason":"' + change_reason

@@ -252,7 +252,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')">
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('ACCOUNTING')">
 				<li class="accounting"><a href="<%=basePath%>templates/finance/received-match.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>会计</a>
 					<ol style="display: none;">
@@ -260,7 +260,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>内转明细</a></li>
 					</ol></li>
 			</s:if>
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('FINANCE')">
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('CASHIER')">
 				<li class="finance"><a href="<%=basePath%>templates/accounting/waiting-for-paid.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>出纳</a>
 					<ol style="display: none;">

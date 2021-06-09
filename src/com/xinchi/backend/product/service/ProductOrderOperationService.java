@@ -1,5 +1,6 @@
 package com.xinchi.backend.product.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.DropOffBean;
@@ -57,5 +58,9 @@ public interface ProductOrderOperationService extends BaseService {
 	public String deleteOperation(String team_numbers);
 
 	public List<DropOffBean> searchDropOff(DropOffBean drop_off);
+
+	public String finalOperation(String operate_pk, BigDecimal final_supplier_cost, String json);
+
+	public String rollBackOperation(String operate_pk);
 
 }

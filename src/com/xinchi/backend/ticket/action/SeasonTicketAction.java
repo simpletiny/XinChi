@@ -43,6 +43,23 @@ public class SeasonTicketAction extends BaseAction {
 
 	}
 
+	private String base_pk;
+
+	public String searchSeasonTicketByBasePk() {
+		base = service.searchByBasePk(base_pk);
+		return SUCCESS;
+	}
+
+	public String deleteSeasonTicket() {
+		resultStr = service.deleteSeasonTicket(base_pk);
+		return SUCCESS;
+	}
+
+	public String updateSeasonTicket() {
+		resultStr = service.updateSeasonTicket(json, base);
+		return SUCCESS;
+	}
+
 	public SeasonTicketBaseBean getBase() {
 		return base;
 	}
@@ -65,5 +82,13 @@ public class SeasonTicketAction extends BaseAction {
 
 	public void setBases(List<SeasonTicketBaseBean> bases) {
 		this.bases = bases;
+	}
+
+	public String getBase_pk() {
+		return base_pk;
+	}
+
+	public void setBase_pk(String base_pk) {
+		this.base_pk = base_pk;
 	}
 }

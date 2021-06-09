@@ -252,6 +252,10 @@ public class OrderServiceImpl implements OrderService {
 				final_order.setReduce_comment(order.getReduce_comment());
 				break;
 			case "3":
+				final_order.setRaise_money(order.getRaise_money());
+				final_order.setRaise_comment(order.getRaise_comment());
+				final_order.setReduce_money(order.getReduce_money());
+				final_order.setReduce_comment(order.getReduce_comment());
 				final_order.setComplain_money(order.getComplain_money());
 				final_order.setComplain_reason(order.getComplain_reason());
 				final_order.setComplain_solution(order.getComplain_solution());

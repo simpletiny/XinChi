@@ -49,6 +49,10 @@
 		delete from season_ticket_info
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByBasePk" parameterType="java.lang.String">
+		delete from season_ticket_info
+		where base_pk = #{base_pk,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.SeasonTicketInfoBean">
 

@@ -4,10 +4,12 @@
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.DepositTicketPaidBean">
 		<result column="deposit_pk" property="deposit_pk" jdbcType="CHAR" />
 		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
+		money,
 		deposit_pk,
 		related_pk,
 		pk
@@ -18,10 +20,24 @@
 		from deposit_ticket_paid
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from deposit_ticket_paid
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from deposit_ticket_paid
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByRelatedPk" parameterType="java.lang.String">
+		delete from deposit_ticket_paid
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</delete>
+	<delete id="selectByDepositPk" parameterType="java.lang.String">
+		delete from deposit_ticket_paid
+		where deposit_pk = #{deposit_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.DepositTicketPaidBean">
@@ -36,6 +52,9 @@
 			<if test="pk != null">
 				pk,
 			</if>
+			<if test="money != null">
+				money,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="deposit_pk != null">
@@ -46,6 +65,9 @@
 			</if>
 			<if test="pk != null">
 				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>

@@ -64,4 +64,6 @@ public interface AirTicketNameListDAO {
 	public List<AirTicketNameListBean> selectByTeamNumbers(List<String> t_ns);
 
 	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk);
+
+	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> t_ns);
 }

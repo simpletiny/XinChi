@@ -3,7 +3,6 @@ var AgencyContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.finish = function() {
 
-		startLoadingSimpleIndicator("保存中");
 		var all = $(".every-count");
 		var json = '[';
 		for (var i = 0; i < all.length; i++) {
@@ -19,7 +18,6 @@ var AgencyContext = function() {
 
 			if (ticket_source == "" || ticket_cost == "") {
 				fail_msg("请填写必填项！");
-				endLoadingIndicator();
 				return;
 			}
 
@@ -33,9 +31,21 @@ var AgencyContext = function() {
 				var ticket_index = j + 1;
 				var ticket_date = $(tr).find("input[st^='ticket-date']").val();
 				var ticket_number = $(tr).find("input[st^='ticket-number']")
-						.val();
+						.val().trim();
+
+				if (ticket_number == "") {
+					fail_msg("请填写航班号！");
+					return;
+				}
+
 				var from_to_time = $(tr).find("input[st^='from-to-time']")
-						.val();
+						.val().trim();
+
+				if (from_to_time == "") {
+					fail_msg("请填写起降时刻！");
+					return;
+				}
+
 				var from_to_city = $(tr).find("input[st^='from-to-city']")
 						.val();
 				var start_place = $(tr).find("input[st^='start-place']").val();
@@ -67,6 +77,7 @@ var AgencyContext = function() {
 			}
 		}
 		json += ']';
+		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'ticket/allotTicket',

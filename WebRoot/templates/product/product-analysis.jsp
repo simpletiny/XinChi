@@ -53,16 +53,15 @@ tr td {
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品分析</h2>
+			<h2>产品分析（本页面只用来进行分析，与实际业务无关！）</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<div style="width: 20%; float: right">
+						<div style=" float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { costEdit() }">成本编辑</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { valueEdit() }">更新分值</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -155,7 +154,7 @@ tr td {
 								<td data-bind="text: $data.gross_profit_rate+'%'"></td>
 								<td data-bind="text: $data.cash_flow"></td>
 								<td data-bind="text: $data.spot_cash"></td>
-								<td data-bind="text: ($data.gross_profit/$data.spot_cash).toFixed(2)*100+'%'"></td>
+								<td data-bind="text: (($data.gross_profit/$data.spot_cash)*100).toFixed(2)+'%'"></td>
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>

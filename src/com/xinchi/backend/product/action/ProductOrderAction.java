@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.product.service.ProductOrderService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.SaleOrderNameListBean;
@@ -102,10 +103,24 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String supplier_employee_pk;
+
+	public String searchSaleOrderInfoByProductOrderInfo() {
+		sale_orders = service.searchSaleOrderInfoByProductOrderInfo(order_number, supplier_employee_pk);
+		return SUCCESS;
+	}
+
 	private List<SaleOrderNameListBean> passengers;
 
 	public String searchSaleOrderNameListByProductOrderNumber() {
 		passengers = service.searchSaleOrderNameListByProductOrderNumber(order_number);
+		return SUCCESS;
+	}
+
+	private List<AirTicketNameListBean> ticket_infos;
+
+	public String searchTicketInfoByOrderNumber() {
+		ticket_infos = service.searchTicketInfoByOrderNumber(order_number);
 		return SUCCESS;
 	}
 
@@ -171,6 +186,22 @@ public class ProductOrderAction extends BaseAction {
 
 	public void setLock_flg(String lock_flg) {
 		this.lock_flg = lock_flg;
+	}
+
+	public String getSupplier_employee_pk() {
+		return supplier_employee_pk;
+	}
+
+	public void setSupplier_employee_pk(String supplier_employee_pk) {
+		this.supplier_employee_pk = supplier_employee_pk;
+	}
+
+	public List<AirTicketNameListBean> getTicket_infos() {
+		return ticket_infos;
+	}
+
+	public void setTicket_infos(List<AirTicketNameListBean> ticket_infos) {
+		this.ticket_infos = ticket_infos;
 	}
 
 }

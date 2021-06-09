@@ -31,6 +31,48 @@
 		<result column="days" property="days" jdbcType="INTEGER" />
 	</resultMap>
 
+	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.AirTicketNameListBean">
+		<collection column="pk" property="ticket_infos" ofType="com.xinchi.bean.PassengerTicketInfoBean" select="selectTicketInfosByPassenger_pk">
+			<result column="ticket_source" property="ticket_source" jdbcType="VARCHAR" />
+			<result column="ticket_source_pk" property="ticket_source_pk" jdbcType="CHAR" />
+			<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+			<result column="PNR" property="PNR" jdbcType="VARCHAR" />
+			<result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
+			<result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
+			<result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
+			<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+			<result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
+			<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+			<result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
+			<result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
+			<result column="terminal" property="terminal" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+			<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		</collection>
+	</resultMap>
+
+	<select id="selectTicketInfosByPassenger_pk" parameterType="java.lang.String" resultType="com.xinchi.bean.PassengerTicketInfoBean">
+		select * from
+		passenger_ticket_info
+		where passenger_pk = #{pk,jdbcType=CHAR}
+		order by ticket_index
+	</select>
+
+	<select id="selectWithInfoByTeamNumbers" resultMap="InfoResultMap">
+		select
+		*
+		from air_ticket_name_list
+		where team_number in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by team_number
+	</select>
+
 	<sql id="Base_Column_List">
 
 		team_number,
@@ -455,7 +497,8 @@
 		LEFT JOIN
 		view_sum_ticket_cost D ON A.pk= D.passenger_pk
 		LEFT JOIN
-		air_ticket_order E ON A.ticket_order_pk = E.pk
+		air_ticket_order E ON
+		A.ticket_order_pk = E.pk
 		<where>
 			and A.status in ('Y','C')
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">

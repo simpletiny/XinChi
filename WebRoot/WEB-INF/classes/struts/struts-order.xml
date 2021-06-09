@@ -151,6 +151,10 @@
 		<action name="rollBackTeamReport" class="orderReportAction" method="rollBackTeamReport">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 填报机票款 -->
+		<action name="fillAirTicketCost" class="orderReportAction" method="fillAirTicketCost">
+			<result name="success" type="str">resultStr</result>
+		</action>
 
 		<!-- 销售仪表盘 -->
 		<action name="searchSaleScoreByPage" class="saleDashBoardAction" method="searchSaleScoreByPage">

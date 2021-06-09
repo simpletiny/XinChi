@@ -97,6 +97,7 @@ public class TicketServiceImpl implements TicketService {
 				AirTicketPayableBean atp = new AirTicketPayableBean();
 
 				atp.setSupplier_employee_pk(supplier_employee_pk);
+				atp.setPaid(BigDecimal.ZERO);
 				atp.setBudget_payable(money);
 				atp.setBudget_balance(money);
 				atp.setFinal_flg("N");

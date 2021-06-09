@@ -115,6 +115,11 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	private List<String> confirm_flgs;
 
+	// product operation dto
+	private BigDecimal payable;
+	private List<String> team_numbers;
+	private String supplier_employee_pk;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -705,6 +710,30 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setConfirm_flgs(List<String> confirm_flgs) {
 		this.confirm_flgs = confirm_flgs;
+	}
+
+	public BigDecimal getPayable() {
+		return payable;
+	}
+
+	public void setPayable(BigDecimal payable) {
+		this.payable = payable;
+	}
+
+	public List<String> getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(List<String> team_numbers) {
+		this.team_numbers = team_numbers;
+	}
+
+	public String getSupplier_employee_pk() {
+		return supplier_employee_pk;
+	}
+
+	public void setSupplier_employee_pk(String supplier_employee_pk) {
+		this.supplier_employee_pk = supplier_employee_pk;
 	}
 
 }

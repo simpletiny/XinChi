@@ -31,7 +31,6 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
@@ -42,6 +41,32 @@
 							</div>
 						</div>
 					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="大于等于" name="option.money_from" />
+							</div>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="小于等于" name="option.money_to" />
+							</div>
+						</div>
+						<div>
+							<label class="col-md-1 control-label">收款方</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control" name="option.receiver" />
+							</div>
+						</div>
+						<div>
+							<label class="col-md-1 control-label">项目</label>
+							<div class="col-md-2">
+								<select class="form-control"
+									data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="option.item" required="required"></select>
+							</div>
+						</div>
+					</div>
+
 					<div class="form-group">
 						<div align="left">
 							<label class="col-md-1 control-label">申请人</label>
@@ -251,8 +276,7 @@
 	</div>
 
 	<script>
-		$(".manager").addClass("current").children("ol")
-				.css("display", "block");
+		$(".manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

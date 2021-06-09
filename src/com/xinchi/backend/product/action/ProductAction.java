@@ -107,6 +107,13 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchUrgentCnt() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		resultStr = service.searchUrgentCnt(sessionBean.getUser_number());
+		return SUCCESS;
+	}
+
 	public String updateProduct() {
 		resultStr = service.update(product, delay);
 
@@ -161,10 +168,11 @@ public class ProductAction extends BaseAction {
 	private String product_pks;
 	private String sale_flg;
 	private String force_flg;
+	private String urgent_flg;
 
 	// 上下架产品
 	public String onSaleProduct() {
-		resultStr = service.onSale(product_pks, sale_flg, force_flg);
+		resultStr = service.onSale(product_pks, sale_flg, force_flg, urgent_flg);
 		return SUCCESS;
 	}
 
@@ -517,6 +525,14 @@ public class ProductAction extends BaseAction {
 
 	public void setTeam_numbers(List<String> team_numbers) {
 		this.team_numbers = team_numbers;
+	}
+
+	public String getUrgent_flg() {
+		return urgent_flg;
+	}
+
+	public void setUrgent_flg(String urgent_flg) {
+		this.urgent_flg = urgent_flg;
 	}
 
 }

@@ -146,8 +146,9 @@ tr td {
 						<tbody data-bind="foreach: operations">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_cost}, checked: $root.chosenOperations" /></td>
-								<td ><a data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}" ></a></td>
+									data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_cost+';'+$data.supplier_employee_pk}, checked: $root.chosenOperations" /></td>
+								<td><a
+									data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}"></a></td>
 								<!-- ko if: $data.single_flg == "N" -->
 								<td><a href="javascript:void(0)"
 									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.team_number)}"></a></td>
@@ -282,7 +283,35 @@ tr td {
 		</div>
 
 	</div>
-	<div id="order-final" style="display: none; width: 800px">
+	<div id="order-final" style="display: none; width: 800px; height: 550px; overflow-y: auto">
+		<!-- ko if:order_number().indexOf('P')==0 -->
+		<div class="input-row clearfloat">
+			<div class="col-md-12">
+				<table style="width: 100%" class="table table-striped table-hover" id="table-order">
+					<thead>
+						<tr>
+							<th style="width: 20%">团号</th>
+							<th style="width: 20%">销售</th>
+							<th style="width: 10%">人数</th>
+							<th style="width: 30%">游客</th>
+							<th style="color: red">决算价格</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:sale_orders">
+						<tr>
+							<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
+							<td data-bind="text:$data.team_number"></td>
+							<td data-bind="text:$data.create_user"></td>
+							<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
+							<td><a href="javascript:void(0)" style="color: blue"
+								data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
+							<td><input type="number" class="required intdtext" data-bind="value:$data.payable" st="team-payable" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- /ko -->
 		<div class="input-row clearfloat">
 			<label class="col-md-2 control-label" style="color: red">决算总成本</label>
 			<div class="col-md-4">

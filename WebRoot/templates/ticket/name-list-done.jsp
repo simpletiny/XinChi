@@ -225,13 +225,13 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 25%">航变原因</label>
 					<div class="ip">
-						<input class="form-control" maxlength="10" placeholder="10个字以内" name="change-reason" required />
+						<input class="form-control" maxlength="10" placeholder="10个字以内" st="change-reason" name="change_reason" required />
 					</div>
 				</div>
 				<div class="col-md-6 required">
 					<label class="l" style="width: 25%">航变成本</label>
 					<div class="ip">
-						<input class="form-control" type="number" placeholder="增加的费用，负数即有退款" name="change-cost" required />
+						<input class="form-control" type="number" placeholder="增加的费用，负数即有退款" st="change-cost" name="change_cost" required />
 					</div>
 				</div>
 			</div>
@@ -258,7 +258,7 @@
 				<div class="col-md-12 required">
 					<label class="l">航变备注</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default comment" name="comment" rows="5" maxlength="200" placeholder="需要备注说明的信息"
+						<textarea type="text" class="ip-default comment" st="comment" name="comment" rows="5" maxlength="200" placeholder="需要备注说明的信息"
 							required></textarea>
 					</div>
 				</div>

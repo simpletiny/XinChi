@@ -1,5 +1,6 @@
 package com.xinchi.backend.order.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.OrderReportDto;
@@ -13,4 +14,6 @@ public interface OrderReportService extends BaseService {
 	public String apporveTeamReport(String team_number);
 
 	public String rollBackTeamReport(String team_number);
+
+	public String fillAriTicketCost(String team_number, BigDecimal air_ticket_cost);
 }

@@ -111,6 +111,9 @@ var OrderContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOperations.removeAll();
+							} else if (str == "approved") {
+								fail_msg("单团已审核不能打回！");
+								return;
 							} else {
 								fail_msg(str);
 							}

@@ -11,8 +11,7 @@ var UsersContext = function() {
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
-			'TICKET' ];
+	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET'];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'
@@ -23,44 +22,40 @@ var UsersContext = function() {
 		'ADMIN' : '管理员',
 		'SALES' : '销售人员',
 		'PRODUCT' : '产品',
-		'FINANCE' : '财务',
+		'ACCOUNTING' : '会计',
+		'CASHIER' : '出纳',
 		'TICKET' : '票务'
 	};
 
 	self.refresh = function() {
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'user/searchUsersByPage', param,
-				function(data) {
-					var users = data.users;
-					$(users).each(
-							function(idx, user) {
-								var user_roles = user.user_roles;
-								var arr;
-								if (user_roles == null) {
-									arr = [];
-								} else {
-									arr = user_roles.split(",");
-								}
+		$.getJSON(self.apiurl + 'user/searchUsersByPage', param, function(data) {
+			var users = data.users;
+			$(users).each(function(idx, user) {
+				var user_roles = user.user_roles;
+				var arr;
+				if (user_roles == null) {
+					arr = [];
+				} else {
+					arr = user_roles.split(",");
+				}
 
-								var roles_name = "";
-								for (var i = 0; i < arr.length; i++) {
-									roles_name += self.roleMapping[arr[i]]
-											+ ",";
-								}
+				var roles_name = "";
+				for (var i = 0; i < arr.length; i++) {
+					roles_name += self.roleMapping[arr[i]] + ",";
+				}
 
-								roles_name = roles_name.substring(0,
-										roles_name.length - 1);
-								user.user_roles = ko.observable();
-								user.user_roles(roles_name);
-							});
+				roles_name = roles_name.substring(0, roles_name.length - 1);
+				user.user_roles = ko.observable();
+				user.user_roles(roles_name);
+			});
 
-					self.users(users);
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-				});
+			self.users(users);
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+		});
 	};
 
 	// 修改用户角色
@@ -73,8 +68,7 @@ var UsersContext = function() {
 			return;
 		} else {
 
-			$.getJSON(self.apiurl + 'user/searchUserByPk', "user_pk="
-					+ self.chosenUsers()[0], function(data) {
+			$.getJSON(self.apiurl + 'user/searchUserByPk', "user_pk=" + self.chosenUsers()[0], function(data) {
 				self.chosenUserRoles.removeAll();
 				var user = data.ucb;
 				var roles;
@@ -83,7 +77,7 @@ var UsersContext = function() {
 				} else {
 					roles = user.user_roles.split(",");
 				}
-				
+
 				for (var i = 0; i < roles.length; i++) {
 					if (roles[i] == '')
 						continue;
@@ -92,12 +86,12 @@ var UsersContext = function() {
 
 				userRoleLayer = $.layer({
 					type : 1,
-					title : [ '修改用户角色', '' ],
+					title : ['修改用户角色', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '600px', '200px' ],
-					offset : [ '200px', '' ],
+					area : ['600px', '200px'],
+					offset : ['200px', ''],
 					scrollbar : true,
 					page : {
 						dom : '#edit-role'
@@ -112,8 +106,7 @@ var UsersContext = function() {
 	};
 	self.doSave = function() {
 		startLoadingSimpleIndicator("保存中");
-		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles="
-				+ self.chosenUserRoles();
+		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles();
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'user/updateUserRoles',
@@ -141,12 +134,12 @@ var UsersContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要停用该用户吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("停用中");
@@ -176,12 +169,12 @@ var UsersContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要启用该用户吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("启用中");
@@ -213,12 +206,12 @@ var UsersContext = function() {
 		} else {
 			passwordLayer = $.layer({
 				type : 1,
-				title : [ '设置新密码', '' ],
+				title : ['设置新密码', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '600px', '250px' ],
-				offset : [ '', '' ],
+				area : ['600px', '250px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#password-new'
@@ -236,8 +229,7 @@ var UsersContext = function() {
 			fail_msg("密码不能为空!");
 			return;
 		} else {
-			var data = "ucb.pk=" + self.chosenUsers()[0] + "&ucb.password="
-					+ newPassword;
+			var data = "ucb.pk=" + self.chosenUsers()[0] + "&ucb.password=" + newPassword;
 			$.ajax({
 				type : "POST",
 				url : self.apiurl + 'user/changePassword',
@@ -258,12 +250,12 @@ var UsersContext = function() {
 		$("#img-pic").attr("src", "");
 		idCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看身份证图片', '' ],
+			title : ['查看身份证图片', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -273,17 +265,13 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr(
-				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=USER_ID");
+		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(
 			'click',
 			function() {
-				window.open(self.apiurl
-						+ "templates/common/check-picture-big.jsp?src="
+				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
 						+ encodeURIComponent($(this).attr("src")));
 			});
 
@@ -321,8 +309,7 @@ var UsersContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

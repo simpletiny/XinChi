@@ -56,11 +56,8 @@
 				resultStr
 			</result>
 		</action>
-<!-- 		<action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder">
-			<result name="success" type="str">
-				resultStr
-			</result>
-		</action> -->
+		<!-- <action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder"> <result name="success" type="str"> 
+			resultStr </result> </action> -->
 		<action name="operatePassengers" class="ticketAction" method="operatePassengers">
 			<result name="success">
 				/templates/ticket/operate-name-list.jsp
@@ -178,12 +175,32 @@
 			</result>
 		</action>
 		<!-- 套票管理 -->
+		<!-- 新建套票 -->
 		<action name="createSeasonTicket" class="seasonTicketAction" method="createSeasonTicket">
 			<result name="success" type="str">
 				resultStr
 			</result>
 		</action>
+		<!-- 更新套票 -->
+		<action name="updateSeasonTicket" class="seasonTicketAction" method="updateSeasonTicket">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 删除套票 -->
+		<action name="deleteSeasonTicket" class="seasonTicketAction" method="deleteSeasonTicket">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<action name="searchSeasonTicketByPage" class="seasonTicketAction" method="searchSeasonTicketByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据base pk查询套票信息 -->
+		<action name="searchSeasonTicketByBasePk" class="seasonTicketAction" method="searchSeasonTicketByBasePk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

@@ -123,14 +123,14 @@
 										<label class="l">直客报价</label>
 										<div class="ip fix-width">
 											<input type="number" class="ip-" id="adult-price" onkeyup="caculateGrossProfit()"
-												data-bind="value: product().adult_price" placeholder="成人报价" name="delay.adult_price" required="required" />
+												data-bind="value: product().adult_price" placeholder="成人报价" name="product.adult_price" required="required" />
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="ip fix-width">
 										<input type="number" class="ip-" id="child-price" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().child_price" placeholder="儿童报价" name="delay.child_price" />
+											data-bind="value: product().child_price" placeholder="儿童报价" name="product.child_price" />
 									</div>
 								</td>
 								<td>
@@ -139,7 +139,7 @@
 										<div class="ip fix-width">
 											<input type="number" class="ip-" id="business-profit-substract" onkeyup="caculateGrossProfit()"
 												data-bind="value: product().business_profit_substract" placeholder="同业返利"
-												name="delay.business_profit_substract" required="required" />
+												name="product.business_profit_substract" required="required" />
 										</div>
 									</div>
 								</td>
@@ -149,7 +149,7 @@
 										<div class="ip fix-width">
 											<input type="number" class="ip-" required="required" id="max-profit-substract"
 												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
-												name="delay.max_profit_substract" />
+												name="product.max_profit_substract" />
 										</div>
 									</div>
 								</td>

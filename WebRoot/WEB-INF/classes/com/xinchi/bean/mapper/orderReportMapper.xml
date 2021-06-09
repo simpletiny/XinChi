@@ -42,8 +42,8 @@
 		    A.other_cost,
 		    A.fy,
 		    IF(B.final_flg = 'Y',
-		        final_receivable,
-		        budget_receivable) AS receivable,
+		        B.final_receivable,
+		        B.budget_receivable) AS receivable,
 		    A.air_ticket_cost,
 		    C.payable AS product_cost,
 		    A.departure_date,
@@ -58,8 +58,8 @@
 		    IF(X.discount_flg = 'Y',
 		        X.discount_receivable,
 		        IF(B.final_flg = 'Y',
-		            final_receivable,
-		            budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		            B.final_receivable,
+		            B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
 		        0,
 		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		        0,
@@ -67,8 +67,8 @@
 		    (IF(X.discount_flg = 'Y',
 		        X.discount_receivable,
 		        IF(B.final_flg = 'Y',
-		            final_receivable,
-		            budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		            B.final_receivable,
+		            B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
 		        0,
 		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		        0,
@@ -86,6 +86,7 @@
 		    receivable B ON A.team_number = B.team_number
 		        LEFT JOIN
 		    view_team_payable C ON A.team_number = C.team_number
+            LEFT JOIN final_order_view D ON A.team_number=D.team_number
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -117,7 +118,7 @@
 					#{params.bo.report_statuses[${index}]}
 				</foreach>
 			</if>
-			and (A.confirm_flg='Y' or A.confirm_flg='F')
+			and (A.confirm_flg='Y' or A.confirm_flg='F') and (D.final_type !=4 or D.final_type is null)
 		</where>
 		ORDER BY A.departure_date DESC
 	</select>

@@ -43,4 +43,6 @@ public interface SeasonTicketBaseDAO {
 	public List<SeasonTicketBaseBean> selectByParam(SeasonTicketBaseBean bean);
 
 	public List<SeasonTicketBaseBean> selectByPage(Page<SeasonTicketBaseBean> page);
+
+	public SeasonTicketBaseBean selectWithInfoByPrimaryKey(String base_pk);
 }

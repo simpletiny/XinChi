@@ -42,7 +42,7 @@
 		create_time,
 		update_time,
 		receiver_card_number,
- 		receiver_bank
+		receiver_bank
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -278,7 +278,7 @@
 		A.create_time,
 		A.update_time,
 		A.receiver_card_number,
- 		A.receiver_bank
+		A.receiver_bank
 		from pay_approval A LEFT JOIN user_base B ON A.apply_user =
 		B.user_number
 		<where>
@@ -296,6 +296,18 @@
 			</if>
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and from_unixtime((A.create_time-0)/1000, '%Y-%m-%d') &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.receiver != null and params.bo.receiver !=''">
+				and A.receiver like concat('%', #{params.bo.receiver,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.item != null and params.bo.item !=''">
+				and A.item = #{params.bo.item,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY A.apply_time DESC,A.limit_time

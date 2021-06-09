@@ -2,6 +2,7 @@ package com.xinchi.backend.product.service;
 
 import java.util.List;
 
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductOrderBean;
@@ -28,5 +29,9 @@ public interface ProductOrderService extends BaseService {
 	public String isAllOrdersLocked(String order_number);
 
 	public ProductOrderBean selectByOrderNumber(String order_number);
+
+	public List<OrderDto> searchSaleOrderInfoByProductOrderInfo(String order_number, String supplier_employee_pk);
+
+	public List<AirTicketNameListBean> searchTicketInfoByOrderNumber(String order_number);
 
 }

@@ -2,7 +2,9 @@ package com.xinchi.backend.payable.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,9 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 
 		List<AirTicketPaidDetailBean> details = dao.selectByRelatedPk(related_pk);
 
+		String paid_type = ((details != null && details.size() > 0) ? details.get(0).getType() : "default");
+
+		// 更新应付款相关
 		for (AirTicketPaidDetailBean detail : details) {
 			// 更新应付款的尾款和已付款
 			String payable_pk = detail.getBase_pk();
@@ -113,32 +118,67 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			dao.delete(detail.getPk());
 
 		}
+		// 支付类型
+		if (paid_type.equals(ResourcesConstants.PAID_TYPE_PAID)) {
 
-		// 删除待支付信息
-		List<WaitingForPaidBean> wfps = accPaidDao.selectByRelatedPk(related_pk);
-		for (WaitingForPaidBean wfp : wfps) {
-			accPaidDao.deleteByPk(wfp.getPk());
+			// 删除待支付信息
+			List<WaitingForPaidBean> wfps = accPaidDao.selectByRelatedPk(related_pk);
+			for (WaitingForPaidBean wfp : wfps) {
+				accPaidDao.deleteByPk(wfp.getPk());
+			}
+
+			// 删除银行流水的支出信息
+			String voucher_number = details.get(0).getVoucher_number();
+			if (SimpletinyString.isEmpty(voucher_number))
+				return SUCCESS;
+			String[] voucher_numbers = voucher_number.split(",");
+			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+
+			for (String v_n : voucher_numbers) {
+				List<PaymentDetailBean> paymentDetails = paymentDetailDao.selectByVoucherNumber(v_n);
+				for (PaymentDetailBean paymentDetail : paymentDetails) {
+
+					// 删除支付凭证
+					File destfile = new File(fileFolder + File.separator + paymentDetail.getAccount_pk()
+							+ File.separator + paymentDetail.getVoucher_file_name());
+					if (destfile.exists()) {
+						destfile.delete();
+					}
+
+					paymentDetailService.deleteDetail(paymentDetail.getPk());
+				}
+			}
 		}
 
-		// 删除银行流水的支出信息
-		String voucher_number = details.get(0).getVoucher_number();
-		if (SimpletinyString.isEmpty(voucher_number))
-			return SUCCESS;
-		String[] voucher_numbers = voucher_number.split(",");
-		String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+		else if (paid_type.equals(ResourcesConstants.PAID_TYPE_DEPOSIT_IN)) {
 
-		for (String v_n : voucher_numbers) {
-			List<PaymentDetailBean> paymentDetails = paymentDetailDao.selectByVoucherNumber(v_n);
-			for (PaymentDetailBean paymentDetail : paymentDetails) {
+			// 更新押金信息
+			List<DepositTicketPaidBean> dtps = depositTicketPaidDao.selectByRelatedPk(related_pk);
+			Set<String> deposit_pks = new HashSet<String>();
+			for (DepositTicketPaidBean dtp : dtps) {
+				String deposit_pk = dtp.getDeposit_pk();
+				BigDecimal money = dtp.getMoney();
+				SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
+				deposit.setReceived(deposit.getReceived().subtract(money));
+				deposit.setBalance(deposit.getBalance().add(money));
+				depositDao.update(deposit);
 
-				// 删除支付凭证
-				File destfile = new File(fileFolder + File.separator + paymentDetail.getAccount_pk() + File.separator
-						+ paymentDetail.getVoucher_file_name());
-				if (destfile.exists()) {
-					destfile.delete();
+				deposit_pks.add(deposit_pk);
+
+			}
+
+			// 删除押金和票务支付详情的对应关系
+			depositTicketPaidDao.deleteByRelatedPk(related_pk);
+
+			// 检验押金是否还有冲账的类型
+			for (String deposit_pk : deposit_pks) {
+				List<DepositTicketPaidBean> exists = depositTicketPaidDao.selectByDepositPk(deposit_pk);
+
+				if (exists == null || exists.size() == 0) {
+					SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
+					deposit.setReturn_way(deposit.getReturn_way().replace("C", "").replace(",", ""));
+					depositDao.update(deposit);
 				}
-
-				paymentDetailService.deleteDetail(paymentDetail.getPk());
 			}
 		}
 
@@ -380,6 +420,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			DepositTicketPaidBean dtp = new DepositTicketPaidBean();
 			dtp.setDeposit_pk(deposit_pk);
 			dtp.setRelated_pk(related_pk);
+			dtp.setMoney(money);
 			depositTicketPaidDao.insert(dtp);
 		}
 

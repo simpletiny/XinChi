@@ -90,6 +90,11 @@ public class ProductBean extends SupperBO implements Serializable {
 	private BigDecimal spot_child_cash;
 	private float gross_child_profit_rate;
 
+	// 保持上架标识
+	private String keep_flg;
+
+	private String analysis_flg;
+
 	// 产品维护相关标识
 	private String client_confirm_templet;
 	private String out_notice_templet;
@@ -501,6 +506,22 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setLocal_upkeep_flg(String local_upkeep_flg) {
 		this.local_upkeep_flg = local_upkeep_flg;
+	}
+
+	public String getKeep_flg() {
+		return keep_flg;
+	}
+
+	public void setKeep_flg(String keep_flg) {
+		this.keep_flg = keep_flg;
+	}
+
+	public String getAnalysis_flg() {
+		return analysis_flg;
+	}
+
+	public void setAnalysis_flg(String analysis_flg) {
+		this.analysis_flg = analysis_flg;
 	}
 
 }

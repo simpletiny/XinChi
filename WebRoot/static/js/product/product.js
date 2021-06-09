@@ -29,6 +29,10 @@ var ProductContext = function() {
 		'Y' : "架上",
 		'D' : "废弃"
 	};
+	self.keepMapping = {
+		'N' : "未",
+		'Y' : "预"
+	};
 	self.chosenStatuses = ko.observableArray([]);
 	self.chosenStatuses.push("Y");
 
@@ -49,7 +53,7 @@ var ProductContext = function() {
 		} else if (self.chosenProducts().length == 1) {
 			window.location.href = self.apiurl
 					+ "templates/product/product-edit.jsp?key="
-					+ self.chosenProducts();
+					+ self.chosenProducts()[0].split(';')[0];
 		}
 	};
 
@@ -64,11 +68,12 @@ var ProductContext = function() {
 		} else if (self.chosenProducts().length == 1) {
 			window.location.href = self.apiurl
 					+ "templates/product/product-clone.jsp?key="
-					+ self.chosenProducts();
+					+ self.chosenProducts()[0].split(';')[0];
 		}
 	};
 
 	self.product = ko.observable();
+	self.urgentCnt = ko.observable();
 	self.onSale = function(sale_flg) {
 		if (self.chosenProducts().length == 0) {
 			fail_msg("请选择产品！");
@@ -94,8 +99,24 @@ var ProductContext = function() {
 			}
 			msg += "产品吗？";
 
+			var product_pks = "";
+			for (var i = 0; i < self.chosenProducts().length; i++) {
+				var currents = self.chosenProducts()[i].split(";");
+				if (currents[1] != 'Y' && sale_flg == 'N') {
+					fail_msg("请选择架上产品！");
+					return;
+				}
+				if ((currents[1] == 'Y' || currents[1] == 'D')
+						&& sale_flg == 'Y') {
+					fail_msg("请选择架下产品！");
+					return;
+				}
+				product_pks += currents[0] + ',';
+			}
+			product_pks = product_pks.RTrim(',');
 			if (sale_flg == "N") {
-				msg += "下架当日不能重新上架！";
+				msg += "下架后本周不能重新上架！";
+
 				$.layer({
 					area : ['auto', 'auto'],
 					dialog : {
@@ -105,9 +126,11 @@ var ProductContext = function() {
 						btn : ['确认', '取消'],
 						yes : function(index) {
 							layer.close(index);
+
 							startLoadingIndicator("保存中！");
+
 							var data = "sale_flg=" + sale_flg + "&product_pks="
-									+ self.chosenProducts();
+									+ product_pks;
 							$.ajax({
 								type : "POST",
 								url : self.apiurl + 'product/onSaleProduct',
@@ -127,37 +150,30 @@ var ProductContext = function() {
 					}
 				});
 			} else {
-				$.ajax({
-					type : "POST",
-					url : self.apiurl + 'product/searchProductByPk',
-					data : "product_pk=" + self.chosenProducts()[0]
-				}).success(function(data) {
-					self.product(data.product);
-					console.log(data);
-					productInfoLayer = $.layer({
-						type : 1,
-						title : ['产品详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['1200px', '700px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#product-info'
-						},
-						end : function() {
-						}
-					});
-				})
+				$.getJSON(self.apiurl + 'product/searchUrgentCnt', {},
+						function(str) {
+							if (str - 0 >= 2) {
+								fail_msg("本周紧急上架次数已用完！");
+							} else {
+								self.urgentCnt(2 - str);
+								self.searchProductByPk(product_pks);
+							}
+						});
 			}
 		}
 	};
 
 	self.doOnSale = function() {
-
 		startLoadingIndicator("上架中！");
-		var data = "sale_flg=Y" + "&product_pks=" + self.chosenProducts();
+		var product_pks = "";
+		for (var i = 0; i < self.chosenProducts().length; i++) {
+			var currents = self.chosenProducts()[i].split(";");
+			product_pks += currents[0] + ',';
+		}
+
+		product_pks = product_pks.RTrim(',');
+		var data = "sale_flg=Y" + "&product_pks=" + product_pks
+				+ "&urgent_flg=Y";
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/onSaleProduct',
@@ -174,6 +190,31 @@ var ProductContext = function() {
 				fail_msg(str);
 			}
 		});
+	}
+
+	self.searchProductByPk = function(product_pks) {
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/searchProductByPk',
+			data : "product_pk=" + product_pks
+		}).success(function(data) {
+			self.product(data.product);
+			productInfoLayer = $.layer({
+				type : 1,
+				title : ['产品详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['1200px', '700px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#product-info'
+				},
+				end : function() {
+				}
+			});
+		})
 	}
 
 	self.cancelOnSale = function() {
@@ -224,7 +265,7 @@ var ProductContext = function() {
 		} else if (self.chosenProducts().length == 1) {
 			$.getJSON(self.apiurl
 					+ 'product/searchProductAirTicketInfoByProductPk', {
-				product_pk : self.chosenProducts()[0]
+				product_pk : self.chosenProducts()[0].split(';')[0]
 			}, function(data) {
 				if (data.product.sale_flg == "Y") {
 					fail_msg("请选择未上架产品！");
@@ -241,7 +282,7 @@ var ProductContext = function() {
 							layer.close(index);
 							startLoadingIndicator("保存中！");
 							var data = "sale_flg=D" + "&product_pks="
-									+ self.chosenProducts();
+									+ self.chosenProducts()[0].split(';')[0];
 							$.ajax({
 								type : "POST",
 								url : self.apiurl + 'product/onSaleProduct',
@@ -262,6 +303,207 @@ var ProductContext = function() {
 
 		}
 	};
+	/**
+	 * 恢复废弃产品
+	 */
+	self.recovery = function() {
+		if (self.chosenProducts().length == 0) {
+			fail_msg("请选择产品！");
+			return;
+		} else if (self.chosenProducts().length > 1) {
+			fail_msg("只能选择一个产品！");
+			return;
+		} else if (self.chosenProducts().length == 1) {
+			$.getJSON(self.apiurl
+					+ 'product/searchProductAirTicketInfoByProductPk', {
+				product_pk : self.chosenProducts()[0].split(';')[0]
+			}, function(data) {
+				if (data.product.sale_flg != "D") {
+					fail_msg("请选择已废弃产品！");
+					return;
+				}
+				$.layer({
+					area : ['auto', 'auto'],
+					dialog : {
+						msg : '确认要恢复此产品吗？',
+						btns : 2,
+						type : 4,
+						btn : ['确认', '取消'],
+						yes : function(index) {
+							layer.close(index);
+							startLoadingIndicator("保存中！");
+							var data = "sale_flg=N" + "&product_pks="
+									+ self.chosenProducts()[0].split(';')[0];
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'product/onSaleProduct',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+									self.chosenProducts.removeAll();
+								} else {
+									fail_msg(str);
+								}
+							});
+						}
+					}
+				});
+			});
+
+		}
+	};
+
+	/**
+	 * 预约上架
+	 */
+	self.delayOnSale = function() {
+		if (self.chosenProducts().length == 0) {
+			fail_msg("请选择产品！");
+			return;
+		} else if (self.chosenProducts().length > 1) {
+			fail_msg("只能选择一个产品！");
+			return;
+		} else if (self.chosenProducts().length == 1) {
+			$
+					.getJSON(
+							self.apiurl
+									+ 'product/searchProductAirTicketInfoByProductPk',
+							{
+								product_pk : self.chosenProducts()[0]
+										.split(';')[0]
+							},
+							function(data) {
+								if (data.product.sale_flg == "D") {
+									fail_msg("不能选择废弃产品！");
+									return;
+								}
+								if (data.product.keep_flg == "Y") {
+									fail_msg("已预约！");
+									return;
+								}
+								if (data.product.analysis_flg == "N") {
+									fail_msg("请先进行产品分析！");
+									return;
+								}
+								$
+										.layer({
+											area : ['auto', 'auto'],
+											dialog : {
+												msg : '确认预约上架此产品吗？',
+												btns : 2,
+												type : 4,
+												btn : ['确认', '取消'],
+												yes : function(index) {
+													layer.close(index);
+													startLoadingIndicator("预约中！");
+													var data = "product.keep_flg=Y"
+															+ "&product.pk="
+															+ self
+																	.chosenProducts()[0]
+																	.split(';')[0];
+													$
+															.ajax(
+																	{
+																		type : "POST",
+																		url : self.apiurl
+																				+ 'product/updateProductDirectly',
+																		data : data
+																	})
+															.success(
+																	function(
+																			str) {
+																		endLoadingIndicator();
+																		if (str == "success") {
+																			self
+																					.refresh();
+																			self.chosenProducts
+																					.removeAll();
+																		} else {
+																			fail_msg(str);
+																		}
+																	});
+												}
+											}
+										});
+							});
+
+		}
+	};
+	/**
+	 * 预约上架
+	 */
+	self.cancelDelay = function() {
+		if (self.chosenProducts().length == 0) {
+			fail_msg("请选择产品！");
+			return;
+		} else if (self.chosenProducts().length > 1) {
+			fail_msg("只能选择一个产品！");
+			return;
+		} else if (self.chosenProducts().length == 1) {
+			$
+					.getJSON(
+							self.apiurl
+									+ 'product/searchProductAirTicketInfoByProductPk',
+							{
+								product_pk : self.chosenProducts()[0]
+										.split(';')[0]
+							},
+							function(data) {
+								if (data.product.sale_flg == "D") {
+									fail_msg("不能选择废弃产品！");
+									return;
+								}
+								if (data.product.keep_flg == "N") {
+									fail_msg("未预约！");
+									return;
+								}
+								$
+										.layer({
+											area : ['auto', 'auto'],
+											dialog : {
+												msg : '确认取消预约上架此产品吗？',
+												btns : 2,
+												type : 4,
+												btn : ['确认', '取消'],
+												yes : function(index) {
+													layer.close(index);
+													startLoadingIndicator("取消中！");
+													var data = "product.keep_flg=N"
+															+ "&product.pk="
+															+ self
+																	.chosenProducts()[0]
+																	.split(';')[0];
+													$
+															.ajax(
+																	{
+																		type : "POST",
+																		url : self.apiurl
+																				+ 'product/updateProductDirectly',
+																		data : data
+																	})
+															.success(
+																	function(
+																			str) {
+																		endLoadingIndicator();
+																		if (str == "success") {
+																			self
+																					.refresh();
+																			self.chosenProducts
+																					.removeAll();
+																		} else {
+																			fail_msg(str);
+																		}
+																	});
+												}
+											}
+										});
+							});
+
+		}
+	};
+
 	self.product = ko.observable({});
 	self.airTickets = ko.observableArray([]);
 	// 绑定机票
@@ -415,12 +657,12 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.products().length; i++) {
 			var product = ctx.products()[i];
-			ctx.chosenProducts.push(product.pk);
+			ctx.chosenProducts.push(product.pk + ";" + product.sale_flg);
 		}
 	} else {
 		for (var i = 0; i < ctx.products().length; i++) {
 			var product = ctx.products()[i];
-			ctx.chosenProducts.remove(product.pk);
+			ctx.chosenProducts.remove(product.pk + ";" + product.sale_flg);
 		}
 	}
 }

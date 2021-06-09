@@ -48,7 +48,7 @@ public interface ProductService extends BaseService {
 
 	public List<ProductBean> selectByPage(Page<ProductBean> page);
 
-	public String onSale(String product_pks, String sale_flg, String force_flg);
+	public String onSale(String product_pks, String sale_flg, String force_flg, String urgent_flg);
 
 	public void updateStraight(ProductBean product);
 
@@ -83,5 +83,7 @@ public interface ProductService extends BaseService {
 	public String tipSalesConfirmName(List<String> team_numbers);
 
 	public String saveAirTicket(String product_pk, String ticket_json);
+
+	public String searchUrgentCnt(String user_number);
 
 }

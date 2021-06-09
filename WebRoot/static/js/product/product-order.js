@@ -1,6 +1,7 @@
 var orderCheckLayer;
 var passengerCheckLayer;
 var innerPassengerCheckLayer;
+var ticketInfoCheckLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -28,13 +29,16 @@ var ProductContext = function() {
 		'Y' : "锁定"
 	}
 
-	self.chosenStatuses = ko.observableArray([]);
-	self.chosenStatuses.push("N");
+	self.chosenStatuses = ko.observable();
+	self.chosenStatuses("N");
 
 	self.orders = ko.observable({
 		total : 0,
 		items : []
 	});
+	self.adult_cnt = ko.observable();
+	self.special_cnt = ko.observable();
+
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...")
 
@@ -44,7 +48,16 @@ var ProductContext = function() {
 		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param,
 				function(data) {
 					self.orders(data.orders);
+					var total_adult = 0;
+					var total_special = 0;
+					// 计算合计
+					$(self.orders()).each(function(idx, data) {
+						total_adult += data.adult_count;
+						total_special += data.special_count;
+					});
 
+					self.adult_cnt(total_adult);
+					self.special_cnt(total_special);
 					self.totalCount(Math.ceil(data.page.total / self.perPage));
 					self.setPageNums(self.currentPage());
 
@@ -286,6 +299,36 @@ var ProductContext = function() {
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check-inner'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+
+	self.ticketInfos = ko.observableArray();
+
+	// 查看出票信息
+	self.checkTicketInfos = function(data, event) {
+		self.ticketInfos.removeAll();
+		var order_number = data.order_number;
+		var url = "product/searchTicketInfoByOrderNumber";
+
+		$.getJSON(self.apiurl + url, {
+			order_number : order_number
+		}, function(data) {
+			self.ticketInfos(data.ticket_infos);
+			ticketInfoCheckLayer = $.layer({
+				type : 1,
+				title : ['出票信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['1000px', '700px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#ticket-check'
 				},
 				end : function() {
 				}

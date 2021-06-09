@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -53,6 +54,8 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private String cellphone_A;
 	private String cellphone_B;
 	private String chairman;
+
+	private List<PassengerTicketInfoBean> ticket_infos;;
 
 	public String getTeam_number() {
 		return team_number;
@@ -252,6 +255,14 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setChairman(String chairman) {
 		this.chairman = chairman;
+	}
+
+	public List<PassengerTicketInfoBean> getTicket_infos() {
+		return ticket_infos;
+	}
+
+	public void setTicket_infos(List<PassengerTicketInfoBean> ticket_infos) {
+		this.ticket_infos = ticket_infos;
 	}
 
 }

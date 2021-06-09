@@ -45,14 +45,14 @@
 							<tr role="row">
 								<th>分值</th>
 								<th>月份</th>
-								<th>收人总数</th>
+								<!-- <th>收人总数</th> -->
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: scores">
 							<tr>
 								<td data-bind="text: $data.score"></td>
 								<td data-bind="text: $data.confirm_month"></td>
-								<td data-bind="text: $data.sum_people"></td>
+								<!-- <td data-bind="text: $data.sum_people"></td> -->
 							</tr>
 						</tbody>  
 					</table>

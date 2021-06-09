@@ -43,8 +43,8 @@
 					<div class="form-group">
 						<div style="width: 30%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {createSeasonTicket() }">新建</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {editLeg() }">编辑</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {deleteLeg() }">删除</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {editSeasonTicket() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {deleteSeasonTicket() }">删除</button>
 							<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {onlyTicket() }">单售票</button> -->
 						</div>
 					</div>
@@ -54,9 +54,9 @@
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control" placeholder="名称" name="base.name" />
 							</div>
-							<label class="col-md-1 control-label">城市</label>
+							<label class="col-md-1 control-label">编号</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control" placeholder="城市" name="base.city" />
+								<input type="text" class="form-control" placeholder="编号" name="base.model" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -78,7 +78,7 @@
 						</thead>
 						<tbody data-bind="foreach: bases">
 							<tr>
-								<th><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenBases" /></th>
+								<th><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenTickets" /></th>
 								<th data-bind="text: $data.name"></th>
 								<th data-bind="text: $data.model"></th>
 								<th data-bind="text: $data.model"></th>

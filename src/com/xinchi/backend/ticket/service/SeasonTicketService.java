@@ -12,4 +12,10 @@ public interface SeasonTicketService extends BaseService {
 
 	public List<SeasonTicketBaseBean> selectByPage(Page<SeasonTicketBaseBean> page);
 
+	public SeasonTicketBaseBean searchByBasePk(String base_pk);
+
+	public String deleteSeasonTicket(String base_pk);
+
+	public String updateSeasonTicket(String json, SeasonTicketBaseBean base);
+
 }

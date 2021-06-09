@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductUrgentMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductUrgentBean">
+		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="record_date" property="record_date" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		product_pk,
+		user_number,
+		record_date,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_urgent
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_urgent
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductUrgentBean">
+
+		insert into product_urgent
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="product_pk != null">
+				product_pk,
+			</if>
+			<if test="user_number != null">
+				user_number,
+			</if>
+			<if test="record_date != null">
+				record_date,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="product_pk != null">
+				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="user_number != null">
+				#{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="record_date != null">
+				#{record_date,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductUrgentBean">
+		update product_urgent
+		<set>
+			<if test="product_pk != null">
+				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="user_number != null">
+				user_number = #{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="record_date != null">
+				record_date = #{record_date,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductUrgentBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_urgent
+		<where>
+			<if test="user_number != null and user_number !=''">
+				and user_number = #{user_number,jdbcType=VARCHAR}
+			</if>
+			<if test="date_from != null and date_from !=''">
+				and record_date >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and record_date &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -26,33 +26,33 @@ var AirLegContext = function() {
 		window.location.href = self.apiurl
 				+ "templates/ticket/season-ticket-creation.jsp"
 	}
-	self.chosenLegs = ko.observableArray([]);
+	self.chosenTickets = ko.observableArray([]);
 
-	self.deleteLeg = function() {
-		if (self.chosenLegs().length < 1) {
+	self.deleteSeasonTicket = function() {
+		if (self.chosenTickets().length < 1) {
 			fail_msg("请选择！");
+		} else if (self.chosenTickets().length > 1) {
+			fail_msg("删除只能选择一个！");
 		} else {
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
-					msg : "是否要删除航段！",
+					msg : "确认要删除套票吗！",
 					btns : 2,
 					type : 4,
 					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中");
-						var data = "";
-						for (var i = 0; i < self.chosenLegs().length; i++) {
-							data += "leg_pks=" + self.chosenLegs()[i] + "&";
-						}
+						var data = "base_pk=" + self.chosenTickets()[0];
 						$.ajax({
 							type : "POST",
-							url : self.apiurl + 'ticket/deleteAirLeg',
+							url : self.apiurl + 'ticket/deleteSeasonTicket',
 							data : data
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
+								self.chosenTickets.removeAll();
 								self.refresh();
 							} else {
 								fail_msg("保存失败，联系管理员！");
@@ -64,76 +64,17 @@ var AirLegContext = function() {
 
 		}
 	}
-	self.switchHot = function(data, event) {
-		var leg_pk = data.pk;
-		var v = $(event.target).val();
-		var data = "leg.pk=" + leg_pk + "&leg.hot_flg=" + v;
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'ticket/switchHot',
-			data : data
-		}).success(function(str) {
-		});
-	}
-	self.editLeg = function() {
-		if (self.chosenLegs().length < 1) {
+
+	self.editSeasonTicket = function() {
+		if (self.chosenTickets().length < 1) {
 			fail_msg("请选择！");
-		} else if (self.chosenLegs().length > 1) {
+		} else if (self.chosenTickets().length > 1) {
 			fail_msg("编辑只能选择一个！");
 		} else {
-			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'ticket/searchAirLegByPk', {
-				leg_pk : self.chosenLegs()[0]
-			}, function(data) {
-				self.leg(data.leg);
-
-				endLoadingIndicator();
-				legEditLayer = $.layer({
-					type : 1,
-					title : ['新建航段', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '260px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#air-leg-edit'
-					},
-					end : function() {
-					}
-				});
-			});
-
+			window.location.href = self.apiurl
+					+ "templates/ticket/season-ticket-edit.jsp?key="
+					+ self.chosenTickets()[0];
 		}
-	}
-
-	self.doUpdate = function() {
-		if (!$("#leg-edit-form").valid()) {
-			return;
-		}
-		startLoadingSimpleIndicator("保存中");
-		var data = $("#leg-edit-form").serialize();
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'ticket/updateAirLeg',
-			data : data
-		}).success(function(str) {
-			endLoadingIndicator();
-			if (str == "success") {
-				layer.close(legEditLayer);
-				self.refresh();
-				$("#leg-edit-form")[0].reset();
-			} else if (str == "exists") {
-				fail_msg("存在相同航段！");
-			} else {
-				fail_msg("更新失败，联系管理员！");
-			}
-		});
-	}
-
-	self.cancelEdit = function() {
-		layer.close(legEditLayer);
 	}
 
 	self.search = function() {

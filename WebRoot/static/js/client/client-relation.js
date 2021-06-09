@@ -168,6 +168,8 @@ var ClientContext = function() {
 		sum_dead : 0,
 		day_hold : 0,
 		bad_interest : 0,
+		dev_fund : 0,
+		new_fund : 0,
 	});
 	self.workOrder = ko.observable({});
 	self.accurateSale = ko.observable({});

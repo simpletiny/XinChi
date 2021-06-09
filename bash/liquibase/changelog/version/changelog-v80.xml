@@ -761,7 +761,7 @@
 			<comment>ALTER TABLE air_ticket_name_list </comment>
 		</sql>
 	</changeSet>
-		<changeSet id="35" author="simpletiny">
+	<changeSet id="35" author="simpletiny">
 		<sql>
             <![CDATA[
             	DROP VIEW IF EXISTS view_drop_off;
@@ -791,6 +791,117 @@
 				GROUP BY first_ticket_date,team_number;
              ]]>
 			<comment>ALTER VIEW view_drop_off </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_score;
+            	CREATE VIEW  view_score AS
+					SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+				    sum(IF(LEFT(A.confirm_date,7)=LEFT(curdate(),7),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0) ) as month_score,
+					A.create_user AS user_number,
+					B.user_name AS user_name,
+			        B.pk AS user_pk
+					FROM budget_standard_order A
+					LEFT JOIN user_base B on A.create_user = B.user_number
+		            where LEFT(A.confirm_date,7)>='2021-04'
+			        GROUP by create_user;
+             ]]>
+			<comment>ALTER VIEW view_score</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+				CREATE VIEW view_sum_reimbursement AS
+					SELECT SUM(money) AS sum_reimbursement,apply_user FROM reimbursement where month>='2021-04' and status!='N' group by apply_user;
+             ]]>
+			<comment>Alter VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product 
+					ADD COLUMN keep_flg CHAR(1) NULL DEFAULT 'N' COMMENT '保持上架标识，Y周一不下架，N周一下架。' AFTER local_upkeep_flg;
+             ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_urgent (
+				  product_pk CHAR(22) NOT NULL COMMENT '产品pk',
+				  user_number VARCHAR(10) NOT NULL COMMENT '上架人',
+				  record_date VARCHAR(10) NOT NULL COMMENT '上架时间',
+				  pk CHAR(22) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
+				  create_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  create_time VARCHAR(15) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  update_user VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品紧急上架记录';
+             ]]>
+			<comment>CREATE TABLE product_urgent</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE deposit_ticket_paid 
+					ADD COLUMN money DECIMAL(12,2) NULL AFTER pk;
+             ]]>
+			<comment>ALTER TABLE deposit_ticket_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+					 CREATE VIEW view_sum_reimbursement AS
+					    SELECT 
+					        SUM(money) AS sum_reimbursement, apply_user
+					    FROM
+					        reimbursement
+					    WHERE
+					        month >= '2021-04' AND status != 'N'
+					            AND item = 'X'
+					    GROUP BY apply_user;
+             ]]>
+			<comment>ALTER VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_month_reimbursement;
+					  CREATE VIEW view_month_reimbursement AS
+						    SELECT 
+						        SUM(money) AS sum_reimbursement, apply_user
+						    FROM
+						        reimbursement
+						    WHERE
+						        month = DATE_FORMAT(NOW(), '%Y-%m')
+						            AND status != 'N'
+						            AND item = 'X'
+						    GROUP BY apply_user;
+             ]]>
+			<comment>ALTER VIEW view_month_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product 
+					ADD COLUMN analysis_flg CHAR(1) NULL DEFAULT 'N' COMMENT '产品是否分析标识' AFTER keep_flg;
+             ]]>
+			<comment>ALTER TABLE product</comment>
 		</sql>
 	</changeSet>
 </databaseChangeLog>

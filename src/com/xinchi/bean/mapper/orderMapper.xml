@@ -68,6 +68,7 @@
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
+		<result column="payable" property="payable" jdbcType="DECIMAL" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -171,6 +172,30 @@
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+	<select id="selectPayableInfoByParam" parameterType="com.xinchi.bean.OrderDto" resultMap="BaseResultMap">
+		SELECT 
+		    A.team_number,
+		    B.create_user,
+		    B.adult_count,
+		    B.special_count,
+		    B.passenger_captain,
+		    A.budget_payable AS payable
+		FROM
+		    payable_order A
+		        LEFT JOIN
+		    budget_order_view B ON A.team_number = B.team_number
+		<where>
+			<if test="team_numbers != null">
+				and A.team_number in
+				<foreach item="item" index="index" collection="team_numbers" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="supplier_employee_pk != null and supplier_employee_pk !=''">
+				and A.supplier_employee_pk = #{supplier_employee_pk,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 
 	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">

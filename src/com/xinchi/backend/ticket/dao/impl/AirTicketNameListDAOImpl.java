@@ -116,4 +116,10 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 				ticket_change_pk);
 	}
 
+	@Override
+	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> t_ns) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectWithInfoByTeamNumbers",
+				t_ns);
+	}
+
 }

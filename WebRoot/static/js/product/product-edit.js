@@ -40,7 +40,7 @@ var ProductContext = function() {
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
-					msg : '架上产品更新，价格信息将于次日凌晨生效！',
+					msg : '架上产品更新，分值下周一生效，其他立即生效！',
 					btns : 2,
 					type : 4,
 					btn : ['确认', '取消'],

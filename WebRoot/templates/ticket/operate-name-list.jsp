@@ -126,8 +126,8 @@
 										<tr class="required">
 											
 											<th style="width: 10%">航班日期</th>
-											<th style="width: 10%">航班号</th>
-											<th style="width: 20%">起降时刻</th>
+											<th style="width: 10%;color:red">航班号</th>
+											<th style="width: 20%;color:red">起降时刻</th>
 											<th style="width: 20%">起降城市</th>
 											<th style="width: 18%">起飞地</th>
 											<th style="width: 18%">降落地</th>

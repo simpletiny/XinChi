@@ -40,4 +40,6 @@ public interface SeasonTicketInfoDAO {
 	 * @param bean
 	 */
 	public List<SeasonTicketInfoBean> selectByParam(SeasonTicketInfoBean bean);
+
+	public void deleteByBasePk(String base_pk);
 }

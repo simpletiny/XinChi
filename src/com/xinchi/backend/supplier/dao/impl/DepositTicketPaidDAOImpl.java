@@ -1,5 +1,7 @@
 package com.xinchi.backend.supplier.dao.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,21 @@ public class DepositTicketPaidDAOImpl extends SqlSessionDaoSupport implements De
 	public DepositTicketPaidBean selectByPrimaryKey(String id) {
 		return (DepositTicketPaidBean) daoUtil
 				.selectByPK("com.xinchi.bean.mapper.DepositTicketPaidMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<DepositTicketPaidBean> selectByRelatedPk(String related_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.DepositTicketPaidMapper.selectByRelatedPk", related_pk);
+	}
+
+	@Override
+	public void deleteByRelatedPk(String related_pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.DepositTicketPaidMapper.deleteByRelatedPk", related_pk);
+	}
+
+	@Override
+	public List<DepositTicketPaidBean> selectByDepositPk(String deposit_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.DepositTicketPaidMapper.selectByDepositPk", deposit_pk);
 	}
 
 }

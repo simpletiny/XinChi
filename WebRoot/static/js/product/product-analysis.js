@@ -20,7 +20,7 @@ var ProductContext = function() {
 
 	self.product = ko.observable({});
 
-	self.status = [ 'N', 'Y', 'D' ];
+	self.status = ['N', 'Y', 'D'];
 	self.saleMapping = {
 		'N' : "架下",
 		'Y' : "架上",
@@ -56,12 +56,12 @@ var ProductContext = function() {
 				caculateGrossProfit();
 				costLayer = $.layer({
 					type : 1,
-					title : [ '成本编辑', '' ],
+					title : ['成本编辑', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '500px' ],
-					offset : [ '', '' ],
+					area : ['800px', '500px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#cost-update'
@@ -88,12 +88,12 @@ var ProductContext = function() {
 				self.product(data.product);
 				valueLayer = $.layer({
 					type : 1,
-					title : [ '分值编辑', '' ],
+					title : ['分值编辑', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '600px' ],
-					offset : [ '', '' ],
+					area : ['800px', '600px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#value-update'
@@ -273,6 +273,7 @@ function updateCost() {
 	layer.close(costLayer);
 	startLoadingIndicator("保存中！");
 	var data = $("#form-cost").serialize();
+	data += "&product.analysis_flg=Y";
 	$.ajax({
 		type : "POST",
 		url : ctx.apiurl + 'product/updateProductDirectly',
@@ -294,12 +295,12 @@ function cancelUpdateCost() {
 function updateValue() {
 	if (ctx.product().sale_flg == "Y") {
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '系统检测到此为架上产品，更新分值将于次日凌晨生效！',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					doUpdateValue();
