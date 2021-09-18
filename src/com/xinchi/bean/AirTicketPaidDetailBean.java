@@ -43,6 +43,7 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String base_pk;
+	private String receiver;
 
 	private String PNR;
 
@@ -233,6 +234,14 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setAccount(String account) {
 		this.account = account;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 
 }

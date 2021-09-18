@@ -1,47 +1,13 @@
 package apptest;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.LineNumberReader;
+import net.sf.json.JSONArray;
 
-import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-
-import com.xinchi.common.DateUtil;
-
-/**
- * 
- * @author Administrator 通过aop拦截后执行具体操作
- */
-@Aspect
-@Component
 public class SomeTest {
-	private static final int BUFFER_SIZE = 2 * 1024;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(DateUtil.getThisWeekLastDay());
+		String a = "[{\"account\":\"新非公票务\",\"comment\":\"成交编号：G1060760273;航段：卢沟湖;航班日期：2021-10-01;杜招商\",\"money\":\"16620\",\"return_date\":\"2021-10-11\",\"supplier_name\":\"祥鹏航空公司\",\"time\":\"2021-06-08 21\\\\:25\\\\:34\",\"isConfirmed\":\"1\"}]";
 
-		// System.out.println(DateUtil.getTimeMillis());
-	}
-
-	public static int countLine(File f, int n) throws Exception {
-		if (f.isFile()) {
-			String fn = f.getName();
-			if (fn.indexOf("java") >= 0 || fn.indexOf("jsp") >= 0 || fn.indexOf("js") >= 0 || fn.indexOf("xml") >= 0
-					|| fn.indexOf("properties") >= 0 || fn.indexOf("css") >= 0) {
-				LineNumberReader lnr = new LineNumberReader(new FileReader(f));
-				lnr.skip(Long.MAX_VALUE);
-				n += lnr.getLineNumber() + 1;
-				lnr.close();
-			}
-		} else {
-			File[] files = f.listFiles();
-			for (File file : files) {
-				n += countLine(file, n);
-			}
-		}
-
-		return n;
+		JSONArray array = JSONArray.fromObject(a);
 
 	}
 

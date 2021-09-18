@@ -1,0 +1,60 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE deposit_ticket_paid 
+						ADD COLUMN type VARCHAR(10) NULL COMMENT '支付类型' AFTER money;
+             ]]>
+			<comment>ALTER TABLE deposit_ticket_paid</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE VIEW view_discount_receivable AS
+						SELECT 
+						    A.team_number AS team_number,
+						    A.create_user AS user_number,
+						    D.final_type,
+						    A.confirm_date AS confirm_date,
+							IF(B.final_flg='Y',B.final_receivable,B.budget_receivable) as receivable,
+						    C.status,
+						    SUM(C.received) AS discount_received,
+						    IF(B.final_flg='Y',B.final_balance,B.budget_balance) as balance,
+						    DATE_FORMAT(FROM_UNIXTIME( B.update_time/1000),'%Y-%m-%d') AS update_time
+						FROM
+						    budget_order_view A
+						        LEFT JOIN
+						    final_order_view D ON A.team_number = D.team_number
+						        LEFT JOIN
+						    receivable B ON A.team_number = B.team_number
+						        LEFT JOIN
+						    client_received_detail C ON A.team_number = C.team_number
+						        AND LEFT(C.received_time, 10) <= (A.confirm_date + INTERVAL 1 DAY)
+						        AND C.status = 'E'
+						        AND C.type != 'TAIL98'
+						WHERE
+						    C.team_number IS NOT NULL AND (D.final_type is null OR D.final_type!=4)
+						GROUP BY A.team_number
+						HAVING balance=0 AND discount_received>=receivable*0.98 and receivable >=discount_received;
+             ]]>
+			<comment>CREATE VIEW view_discount_receivable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE air_ticket_need 
+						CHANGE COLUMN product_name product_name VARCHAR(20) NOT NULL ;
+             ]]>
+			<comment>ALTER TABLE air_ticket_need </comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>
+
+
+
+

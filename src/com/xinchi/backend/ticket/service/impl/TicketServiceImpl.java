@@ -20,6 +20,7 @@ import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.tools.Page;
 
@@ -98,6 +99,7 @@ public class TicketServiceImpl implements TicketService {
 
 				atp.setSupplier_employee_pk(supplier_employee_pk);
 				atp.setPaid(BigDecimal.ZERO);
+				atp.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_CHANGE);
 				atp.setBudget_payable(money);
 				atp.setBudget_balance(money);
 				atp.setFinal_flg("N");
@@ -116,12 +118,12 @@ public class TicketServiceImpl implements TicketService {
 		if (saleOrder.getStandard_flg().equals("Y")) {
 			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 			bso.setPk(saleOrder.getPk());
-			bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(sumMoney));
+			bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(sumMoney));
 			bsoDao.update(bso);
 		} else {
 			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 			bnso.setPk(saleOrder.getPk());
-			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(sumMoney));
+			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(sumMoney));
 			bnsoDao.update(bnso);
 		}
 		return SUCCESS;

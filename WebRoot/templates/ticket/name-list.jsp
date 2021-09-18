@@ -134,6 +134,8 @@
 								<th>序号</th>
 								<th>乘机人</th>
 								<th>身份证号</th>
+								<th>电话1</th>
+								<th>电话2</th>
 								<th>订单号</th>
 								<th>团号</th>
 								<th>首段日期</th>
@@ -148,10 +150,12 @@
 							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
 
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status}, checked: $root.chosenPassengers" /></td>
+									data-bind="attr: {'value': $data.pk+':'+$data.name+':'+$data.id+':'+$data.team_number+':'+$data.order_number+':'+$data.name_confirm_status+':'+$data.cellphone_A}, checked: $root.chosenPassengers" /></td>
 								<td data-bind="text: $index()+1"></td>
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.id"></td>
+								<td data-bind="text: $data.cellphone_A"></td>
+								<td data-bind="text: $data.cellphone_B"></td>
 								<td st="order-number" data-bind="text: $data.order_number"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.first_ticket_date"></td>

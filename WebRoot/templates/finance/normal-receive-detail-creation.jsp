@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </div>
                     <div class="col-md-6 required">
                         <label class="l">发生时间</label>
-                        <div class="ip"><input type="text" id="name" class="ip- datetime-picker"   placeholder="发生时间" name="detail.time" required="required"/></div>
+                        <div class="ip"><input type="text" id="name" class="ip- datesecond-picker"   placeholder="发生时间" name="detail.time" required="required"/></div>
                     </div>
                 </div>
                 <div class="input-row clearfloat">

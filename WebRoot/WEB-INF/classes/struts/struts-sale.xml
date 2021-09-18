@@ -94,6 +94,10 @@
 		<action name="applyTail98" class="receivedAction" method="applyTail98">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 判断是否符合立款规则 -->
+		<action name="checkIs98" class="receivedAction" method="checkIs98">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="applySum" class="receivedAction" method="applySum">
 			<result name="success" type="str">resultStr</result>
 		</action>

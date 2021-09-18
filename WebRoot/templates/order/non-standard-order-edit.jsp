@@ -82,18 +82,18 @@
 									name="bnsOrder.adult_count" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_cost" placeholder="费用"
+								<input type="number" class="ip-" data-bind="value:order().adult_cost" placeholder="费用"
 									name="bnsOrder.adult_cost" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">特殊</label>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_count" placeholder="人数"
+								<input type="number" class="ip-" id="special-count" data-bind="value:order().special_count" placeholder="人数"
 									name="bnsOrder.special_count" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_cost" placeholder="费用"
+								<input type="number" class="ip-" data-bind="value:order().special_cost" placeholder="费用"
 									name="bnsOrder.special_cost" />
 							</div>
 						</div>
@@ -132,21 +132,18 @@
 						</div>
 					</div>
 					<hr />
-					<!-- ko if:$root.order().lock_flg=='N' -->
 					<h3>名单</h3>
-					<div class="input-row clearfloat">
-						<div class="col-md-12">
-							<label class="l">名单录入</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" data-bind="value: order().name_list"
-									name="bnsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
+					<div style="display: none; width: 600px" id="bat-passenger">
+						<div class="input-row clearfloat">
+							<div class="col-md-12">
+								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" placeholder="姓名+身份证号。"></textarea>
 							</div>
-
-							<a type="submit" class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
-
+							<div class="col-md-12" style="text-align: right; margin-top: 10px">
+								<a type="submit" class="btn btn-green btn-r" onclick="cancelBat()">取消</a> <a type="submit"
+									class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
+							</div>
 						</div>
 					</div>
-					<!-- /ko -->
 					<div id="air-ticket-check">
 						<div class="input-row clearfloat">
 							<div class="col-md-12">
@@ -155,17 +152,17 @@
 										<tr>
 											<th style="width: 4%">团长</th>
 											<th style="width: 4%">序号</th>
-											<th style="width: 10%">姓名</th>
+											<th style="width: 7%">姓名</th>
 											<th style="width: 7%">性别</th>
 											<th style="width: 5%" title="只按年份计算">年龄</th>
 											<th style="width: 10%">手机号A</th>
 											<th style="width: 10%">手机号B</th>
 											<th style="width: 15%">证件号码</th>
 											<th style="width: 10%">分房组</th>
-											<th style="width: 10%"></th>
-											<th style="width: 10%"></th>
-											<!-- ko if:order().lock_flg=='N' -->
-											<th style="width: 5%"></th>
+											<th style="width: 9%"></th>
+											<th style="width: 9%"></th>
+											<!-- ko if: order().lock_flg=="N" && order().operate_flg=="N" -->
+											<th style="width: 3%"></th>
 											<!-- /ko -->
 										</tr>
 									</thead>
@@ -183,13 +180,14 @@
 											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" style="width: 90%" st="id" /></td>
+											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();"
+												style="width: 90%" st="id" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
-												type="hidden" name="bsOrder.confirm_file" /></td>
+												type="hidden" /></td>
 											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
-												type="hidden" name="bsOrder.confirm_file" /></td>
-											<!-- ko if:$root.order().lock_flg=='N' -->
+												type="hidden" /></td>
+											<!-- ko if:$root.order().lock_flg=="N" && $root.order().operate_flg=="N" -->
 											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
 											<!-- /ko -->
 										</tr>
@@ -197,9 +195,10 @@
 								</table>
 							</div>
 						</div>
-						<!-- ko if:order().lock_flg=='N' -->
+						<!-- ko if:order().lock_flg=='N'&& order().operate_flg=="N" -->
 						<div align="right">
-							<a type="submit" class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
+							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
+								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 						</div>
 						<!-- /ko -->
 					</div>

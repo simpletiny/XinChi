@@ -143,6 +143,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<!-- 单团报表汇总 -->
+		<action name="searchSumReport" class="orderReportAction" method="searchSumReport">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 审核 -->
 		<action name="approveTeamReport" class="orderReportAction" method="approveTeamReport">
 			<result name="success" type="str">resultStr</result>

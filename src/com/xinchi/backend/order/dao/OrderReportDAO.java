@@ -14,4 +14,6 @@ public interface OrderReportDAO {
 
 	public void updateTeamReport(TeamReportBean tr);
 
+	public OrderReportDto selectSumReport(OrderReportDto option);
+
 }

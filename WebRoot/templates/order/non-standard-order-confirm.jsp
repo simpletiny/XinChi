@@ -82,18 +82,18 @@
 									name="bnsOrder.adult_count" required="required" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().adult_cost" placeholder="费用"
+								<input type="number" class="ip-" data-bind="value:order().adult_cost" placeholder="费用"
 									name="bnsOrder.adult_cost" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">特殊</label>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_count" placeholder="人数"
+								<input type="number" class="ip-" id="special-count" data-bind="value:order().special_count" placeholder="人数"
 									name="bnsOrder.special_count" />
 							</div>
 							<div class="ip" style="width: 30%">
-								<input type="number" class="ip-" id="people-count" data-bind="value:order().special_cost" placeholder="费用"
+								<input type="number" class="ip-" data-bind="value:order().special_cost" placeholder="费用"
 									name="bnsOrder.special_cost" />
 							</div>
 						</div>
@@ -150,14 +150,15 @@
 					</div>
 					<hr />
 					<h3>名单</h3>
-					<div class="input-row clearfloat">
-						<div class="col-md-12">
-							<label class="l">名单录入</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" data-bind="value: order().name_list"
-									name="bsOrder.name_list" placeholder="姓名+身份证号。"></textarea>
+					<div style="display: none; width: 600px" id="bat-passenger">
+						<div class="input-row clearfloat">
+							<div class="col-md-12">
+								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" placeholder="姓名+身份证号。"></textarea>
 							</div>
-							<a type="submit" class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
+							<div class="col-md-12" style="text-align: right; margin-top: 10px">
+								<a type="submit" class="btn btn-green btn-r" onclick="cancelBat()">取消</a> <a type="submit"
+									class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
+							</div>
 						</div>
 					</div>
 					<div id="air-ticket-check">
@@ -194,7 +195,7 @@
 											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" style="width: 90%" st="id" /></td>
+											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();" style="width: 90%" st="id" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
@@ -213,7 +214,7 @@
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" /></a> <input type="hidden"
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input type="hidden"
 								id="txt-confirm-file" data-bind="value:order().confirm_file" name="bnsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
@@ -273,8 +274,7 @@
 		</div>
 	</div>
 	<script>
-		$(".product-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".product-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

@@ -425,6 +425,8 @@
 		A.status,
 		C.name_confirm_status,
 		C.days,
+		A.cellphone_A,
+		A.cellphone_B,
 		E.comment AS need_comment
 
 		from air_ticket_name_list A LEFT JOIN
@@ -485,6 +487,8 @@
 		D.ticket_cost,
 		A.change_pk,
 		C.days,
+		A.cellphone_A,
+		A.cellphone_B,
 		E.comment AS need_comment
 
 		from

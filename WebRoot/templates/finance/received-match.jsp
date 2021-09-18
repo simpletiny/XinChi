@@ -89,16 +89,18 @@
 								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
-						<div align="right" style="padding-right:200px">
-							<em class="small-box"> <input type="checkbox" id="chk-data" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>日期</label>
-							</em>
-							<em class="small-box"> <input type="checkbox" id="chk-account" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>账户</label>
-							</em>
-							<em class="small-box"> <input type="checkbox" id="chk-money" checked="checked" data-bind="click:function(){searchReceiveApply();return true}"/> <label>金额</label>
+						<div align="right" style="padding-right: 200px">
+							<em class="small-box"> <input type="checkbox" id="chk-data" checked="checked"
+								data-bind="click:function(){searchReceiveApply();return true}" /> <label>日期</label>
+							</em> <em class="small-box"> <input type="checkbox" id="chk-account" checked="checked"
+								data-bind="click:function(){searchReceiveApply();return true}" /> <label>账户</label>
+							</em> <em class="small-box"> <input type="checkbox" id="chk-money" checked="checked"
+								data-bind="click:function(){searchReceiveApply();return true}" /> <label>金额</label>
 							</em>
 						</div>
 						<div style="padding-top: 3px; float: right">
 							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<em class="small-box"><a href="javascript:void(0)" data-bind="click: showAll">显示全部</a> </em>
 						</div>
 					</div>
 				</form>
@@ -467,8 +469,7 @@
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<script>
-		$(".accounting").addClass("current").children("ol").css("display",
-				"block");
+		$(".accounting").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>

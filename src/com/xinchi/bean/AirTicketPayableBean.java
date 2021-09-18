@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -11,6 +12,9 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 
 	private String supplier_employee_name;
 
+	private String payable_type;
+
+	private String related_pk;
 	private String financial_body_name;
 
 	private java.math.BigDecimal payable;
@@ -44,6 +48,9 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 	private String order_number;
 
 	private String comment;
+
+	// option
+	private List<String> payable_types;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -203,6 +210,30 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getPayable_type() {
+		return payable_type;
+	}
+
+	public void setPayable_type(String payable_type) {
+		this.payable_type = payable_type;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
+	}
+
+	public List<String> getPayable_types() {
+		return payable_types;
+	}
+
+	public void setPayable_types(List<String> payable_types) {
+		this.payable_types = payable_types;
 	}
 
 }

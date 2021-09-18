@@ -75,4 +75,10 @@ public class OrderReportServiceImpl implements OrderReportService {
 		return SUCCESS;
 	}
 
+	@Override
+	public OrderReportDto searchSumReport(OrderReportDto option) {
+
+		return dao.selectSumReport(option);
+	}
+
 }

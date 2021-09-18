@@ -14,10 +14,13 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -36,12 +39,15 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	private BudgetNonStandardOrderDAO dao;
 
 	@Override
-	public String insert(BudgetNonStandardOrderBean bean, String json) {
+	public String createOrder(BudgetNonStandardOrderBean bean, String json) {
 		// 保存确认文件
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			saveFile(bean);
 		}
-		dao.insert(bean);
+		String order_pk = DBCommonUtil.genPk();
+		String passenger_captain = "";
+		bean.setPk(order_pk);
+
 		JSONArray nameList = JSONArray.fromObject(json);
 		for (int i = 0; i < nameList.size(); i++) {
 			JSONObject obj = JSONObject.fromObject(nameList.get(i));
@@ -56,15 +62,20 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
-
 			nameListDao.insert(passenger);
 		}
+
+		bean.setPassenger_captain(passenger_captain);
+		dao.insertWithPk(bean);
 		return SUCCESS;
 	}
 
@@ -92,6 +103,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		// 修改名单
 		// 删除之前的名单
 		nameListDao.deleteByOrderPk(bean.getPk());
+
+		String passenger_captain = "";
 		// 保存现在的名单
 		JSONArray nameList = JSONArray.fromObject(json);
 		for (int i = 0; i < nameList.size(); i++) {
@@ -107,6 +120,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
 			passenger.setCellphone_A(cellphone_A);
@@ -133,33 +149,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String departureDate = bean.getDeparture_date();
 			int days = bean.getDays();
 			String returnDate = DateUtil.addDate(departureDate, days - 1);
-			// // 生成预算单
-			// BudgetOrderBean budgetOrder = new BudgetOrderBean();
-			// budgetOrder.setProduct(bean.getProduct_name());
-			// budgetOrder.setTeam_number(bean.getTeam_number());
-			// budgetOrder.setDeparture_date(bean.getDeparture_date());
-			//
-			//
-			// budgetOrder.setDays(days);
-			// budgetOrder.setReturn_date(returnDate);
-			// budgetOrder.setComment(bean.getComment());
-			// budgetOrder.setReceivable(bean.getReceivable());
-			// budgetOrder.setConfirm_date(bean.getConfirm_date());
-			// budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO
-			// : bean.getOther_cost())
-			// .add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
-			//
-			// String other_cost_comment = "";
-			// if (bean.getFy() != null) {
-			// other_cost_comment += bean.getOther_cost_comment() + "fy:" + bean.getFy();
-			// }
-			//
-			// budgetOrder.setPayment_comment(other_cost_comment);
-			// budgetOrder.setPeople_count(
-			// bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 :
-			// bean.getSpecial_count()));
-			// budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
-			// budgetOrderDao.insert(budgetOrder);
 
 			// 生成应收款
 			ReceivableBean receivable = new ReceivableBean();
@@ -181,12 +170,16 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 			receivableDao.insert(receivable);
 		}
+		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;
 	}
 
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
 	@Override
-	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bean,String json) {
+	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bean, String json) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
@@ -201,6 +194,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		// 更新名单
 		// 删除之前的名单
 		nameListDao.deleteByTeamNumber(bean.getTeam_number());
+		String passenger_captain = "";
 		// 保存现在的名单
 		JSONArray nameList = JSONArray.fromObject(json);
 		for (int i = 0; i < nameList.size(); i++) {
@@ -216,6 +210,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
 			passenger.setCellphone_A(cellphone_A);
@@ -225,33 +222,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setTeam_number(bean.getTeam_number());
 			nameListDao.insert(passenger);
 		}
-
-		// // 更新预算单
-		// BudgetOrderBean budgetOrder =
-		// budgetOrderDao.selectBudgetOrderByTeamNumber(bean.getTeam_number());
-		// budgetOrder.setProduct(bean.getProduct_name());
-		// budgetOrder.setDeparture_date(bean.getDeparture_date());
-
-		// budgetOrder.setDays(days);
-		// budgetOrder.setReturn_date(returnDate);
-		// budgetOrder.setComment(bean.getComment());
-		// budgetOrder.setReceivable(bean.getReceivable());
-		// budgetOrder.setConfirm_date(bean.getConfirm_date());
-		// budgetOrder.setOther_payment((bean.getOther_cost() == null ? BigDecimal.ZERO
-		// : bean.getOther_cost())
-		// .add((bean.getFy() == null ? BigDecimal.ZERO : bean.getFy())));
-		//
-		// String other_cost_comment = "";
-		// if (bean.getFy() != null) {
-		// other_cost_comment += bean.getOther_cost_comment() + "fy:" + bean.getFy();
-		// }
-		//
-		// budgetOrder.setPayment_comment(other_cost_comment);
-		// budgetOrder.setPeople_count(
-		// bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 :
-		// bean.getSpecial_count()));
-		// budgetOrder.setClient_employee_pk(bean.getClient_employee_pk());
-		// budgetOrderDao.updateBudgetOrder(budgetOrder);
 
 		String departureDate = bean.getDeparture_date();
 		int days = bean.getDays();
@@ -274,7 +244,45 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 		receivableDao.update(receivable);
 		bean.setLock_flg("Y");
+		bean.setPassenger_captain(passenger_captain);
+
 		dao.update(bean);
+
+		// 如果已经生成待出票名单，修改待出票名单
+		if (old.getName_confirm_status().equals("4")) {
+			// 获取票务名单
+			List<AirTicketNameListBean> atns = airTicketNameListDao.selectByTeamNumber(bean.getTeam_number());
+			// 获取最新名单
+			List<SaleOrderNameListBean> names = nameListDao.selectByOrderPk(bean.getPk());
+
+			if (atns.size() != names.size()) {
+				return "conflict";
+			}
+
+			for (int i = names.size() - 1; i >= 0; i--) {
+
+				SaleOrderNameListBean name = names.get(i);
+				for (int j = atns.size() - 1; j >= 0; j--) {
+					AirTicketNameListBean atn = atns.get(j);
+					if (name.getTeam_number().equals(atn.getTeam_number()) && name.getId().equals(atn.getId())
+							&& name.getName().equals(atn.getName())) {
+						names.remove(i);
+						atns.remove(j);
+						break;
+					}
+				}
+			}
+
+			for (int j = atns.size() - 1; j >= 0; j--) {
+				AirTicketNameListBean atn = atns.get(j);
+				SaleOrderNameListBean name = names.get(j);
+
+				atn.setName(name.getName());
+				atn.setId(name.getId());
+				airTicketNameListDao.update(atn);
+			}
+		}
+
 		return SUCCESS;
 	}
 

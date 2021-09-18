@@ -1,8 +1,19 @@
 package com.xinchi.backend.supplier.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +33,9 @@ import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.office.SimpletinyExcel;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -204,6 +217,167 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			dp.setDeposit_pk(deposit_pk);
 			dp.setPayment_voucher_number(voucher_number);
 			depositPaymentDao.insert(dp);
+		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public List<SupplierDepositBean> batUploadDeposit(String file_name, String deposit_type) throws IOException {
+		List<SupplierDepositBean> deposits = new ArrayList<SupplierDepositBean>();
+
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		String tem_file = tempFolder + File.separator + file_name;
+		File excelFile = new File(tem_file);
+
+		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(excelFile));
+		// 获得工作簿
+		@SuppressWarnings("resource")
+		XSSFWorkbook wb = new XSSFWorkbook(fs);
+
+		// 获得sheet
+		XSSFSheet sheet = wb.getSheetAt(0);
+		int rows = sheet.getPhysicalNumberOfRows();
+
+		// 获取标题行
+		XSSFRow titleRow = sheet.getRow(0);
+		int colnum = titleRow.getLastCellNum();
+		Map<String, Integer> colMapping = new HashMap<String, Integer>();
+
+		for (int i = 0; i < colnum; i++) {
+			Cell cell = titleRow.getCell(i);
+			String title = cell.getStringCellValue();
+			colMapping.put(title, i);
+		}
+
+		for (int i = 1; i < rows; i++) {
+
+			SupplierDepositBean deposit = new SupplierDepositBean();
+			String comment = "";
+			// 获取第i行
+			XSSFRow row = sheet.getRow(i);
+
+			// 成交编号
+			Cell cell1 = row.getCell(colMapping.get("成交编号"));
+			String dealNum = SimpletinyExcel.getCellValueByCell(cell1);
+
+			// 航段
+			Cell cell2 = row.getCell(colMapping.get("航段"));
+			String airLeg = SimpletinyExcel.getCellValueByCell(cell2);
+
+			// 供应商
+			Cell cell3 = row.getCell(colMapping.get("供应商"));
+			String supplier_name = SimpletinyExcel.getCellValueByCell(cell3);
+
+			// 航班日期
+			Cell cell4 = row.getCell(colMapping.get("航班日期"));
+			String air_date = SimpletinyExcel.getCellValueByCell(cell4).substring(0, 10);
+
+			// 押金
+			Cell cell5 = row.getCell(colMapping.get("押金"));
+			String deposit_money = SimpletinyExcel.getCellValueByCell(cell5);
+
+			// 支付方
+			Cell cell6 = row.getCell(colMapping.get("支付方"));
+			String account = SimpletinyExcel.getCellValueByCell(cell6);
+
+			// 支付时间
+			Cell cell7 = row.getCell(colMapping.get("支付时间"));
+			String payTime = SimpletinyExcel.getCellValueByCell(cell7);
+
+			// 备注
+			Cell cell8 = row.getCell(colMapping.get("备注"));
+			String excelComment = SimpletinyExcel.getCellValueByCell(cell8);
+
+			comment = "成交编号：" + dealNum + ";" + "航段：" + airLeg + ";" + "航班日期：" + air_date + ";" + excelComment;
+
+			deposit.setAccount(account);
+			deposit.setSupplier_name(supplier_name);
+			deposit.setMoney(new BigDecimal(deposit_money));
+
+			deposit.setReturn_date(DateUtil.addDate(air_date, 10));
+
+			deposit.setComment(comment);
+			deposit.setTime(payTime);
+
+			deposits.add(deposit);
+		}
+		excelFile.delete();
+		return deposits;
+	}
+
+	@Override
+	public String batSaveDeposit(String json) {
+
+		JSONArray array = JSONArray.fromObject(json);
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+
+			String supplier_name = obj.getString("supplier_name");
+			String account = obj.getString("account");
+			String comment = obj.getString("comment");
+
+			if (comment.length() > 200) {
+				comment = comment.substring(0, 200);
+			}
+
+			BigDecimal money = new BigDecimal(obj.getString("money"));
+			String pay_time = obj.getString("time");
+			String return_date = obj.getString("return_date");
+
+			SupplierBean option = new SupplierBean();
+			option.setSupplier_name(supplier_name);
+			List<SupplierBean> suppliers = supplierDao.getAllByParam(option);
+
+			if (null == suppliers || suppliers.size() == 0) {
+				return supplier_name + "供应商不存在！";
+			}
+
+			SupplierBean supplier = suppliers.get(0);
+
+			// 生成银行流水账
+			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+					ResourcesConstants.PAY_TYPE_DEPOSIT_AIR, DateUtil.getDateStr(DateUtil.YYYYMMDD));
+
+			// 生成银行流水数据
+			String msg = SUCCESS;
+
+			CardBean card = cardDao.getCardByAccount(account);
+
+			if (card == null) {
+				return account + "账户不存在！";
+			}
+
+			BigDecimal balance = card.getBalance().subtract(money);
+
+			PaymentDetailBean payment = new PaymentDetailBean();
+			payment.setVoucher_number(voucher_number);
+			payment.setAccount(account);
+			payment.setTime(pay_time);
+			payment.setMoney(money);
+			payment.setBalance(balance);
+			payment.setType("支出");
+			payment.setComment(supplier.getSupplier_short_name() + "机票押金,凭证号：" + voucher_number);
+
+			msg = paymentDetailService.insert(payment);
+			if (!msg.equals(SUCCESS)) {
+				return msg;
+			}
+
+			SupplierDepositBean deposit = new SupplierDepositBean();
+
+			// 保存航司押金记录
+			deposit.setSupplier_pk(supplier.getPk());
+			deposit.setAccount(account);
+			deposit.setVoucher_number(voucher_number);
+			deposit.setMoney(money);
+			deposit.setReturn_date(return_date);
+			deposit.setComment(comment);
+			deposit.setReceived(BigDecimal.ZERO);
+			deposit.setBalance(deposit.getMoney());
+			dao.insert(deposit);
+
 		}
 
 		return SUCCESS;

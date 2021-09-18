@@ -3,6 +3,8 @@
 <mapper namespace="com.xinchi.bean.mapper.AirTicketPayableMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirTicketPayableBean">
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="payable_type" property="payable_type" jdbcType="CHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
 		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
@@ -41,7 +43,9 @@
 		passenger,
 		from_to_city,
 		first_date,
-		comment
+		comment,
+		payable_type,
+		related_pk
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -69,7 +73,9 @@
 		A.passenger,
 		A.from_to_city,
 		A.first_date,
-		A.comment
+		A.comment,
+		A.payable_type,
+		A.related_pk
 		from air_ticket_payable A LEFT JOIN
 		supplier_employee B ON
 		A.supplier_employee_pk=B.pk
@@ -94,6 +100,12 @@
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
 				supplier_employee_pk,
+			</if>
+			<if test="payable_type != null">
+				payable_type,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
 			</if>
 			<if test="PNR != null">
 				PNR,
@@ -147,6 +159,12 @@
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
 				#{supplier_employee_pk,jdbcType=CHAR},
+			</if>
+			<if test="payable_type != null">
+				#{payable_type,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=CHAR},
 			</if>
 			<if test="PNR != null">
 				#{PNR,jdbcType=VARCHAR},
@@ -206,6 +224,12 @@
 			<if test="supplier_employee_pk != null">
 				supplier_employee_pk = #{supplier_employee_pk,jdbcType=CHAR},
 			</if>
+			<if test="payable_type != null">
+				payable_type = #{payable_type,jdbcType=CHAR},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=CHAR},
+			</if>
 			<if test="PNR != null">
 				PNR = #{PNR,jdbcType=VARCHAR},
 			</if>
@@ -262,6 +286,8 @@
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.supplier_employee_pk,
+		A.payable_type,
+		A.related_pk,
 		B.name AS supplier_employee_name,
 		C.supplier_name AS financial_body_name,
 		A.PNR,
@@ -300,6 +326,13 @@
 			<if test="params.bo.first_date != null and params.bo.first_date !=''">
 				and A.first_date = #{params.bo.first_date,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.payable_types != null and params.bo.payable_types !=''">
+				and A.payable_type in
+				<foreach item="item" index="index" collection="params.bo.payable_types" open="(" separator="," close=")">
+					#{params.bo.payable_types[${index}]}
+				</foreach>
+			</if>
+			
 		</where>
 	</select>
 </mapper>

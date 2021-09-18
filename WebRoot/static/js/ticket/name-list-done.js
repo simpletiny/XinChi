@@ -9,8 +9,7 @@ var PassengerContext = function() {
 		total : 0,
 		items : []
 	});
-	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
-			'TICKET'];
+	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET'];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
@@ -30,43 +29,36 @@ var PassengerContext = function() {
 		startLoadingIndicator("加载中...");
 
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage + "&passenger.status=Y";
-		$.getJSON(self.apiurl + 'ticket/searchAirTicketDoneNameListByPage',
-				param, function(data) {
-					self.passengers(data.airTicketNameList);
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage + "&passenger.status=Y";
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketDoneNameListByPage', param, function(data) {
+			self.passengers(data.airTicketNameList);
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					$(".rmb").formatCurrency();
+			$(".rmb").formatCurrency();
 
-					$("#chk-all").attr('checked', false);
+			$("#chk-all").attr('checked', false);
 
-					var trs = $("#div-table").find("tbody").find("tr");
-					var current_no = "";
-					var current_index = 0;
-					for (var i = 0; i < trs.length; i++) {
-						var tr = $(trs[i]);
-						if (i == 0) {
-							current_no = $(tr).find("td[st='order-number']")
-									.text();
-						}
-						var order_number = $(tr).find("td[st='order-number']")
-								.text();
+			var trs = $("#div-table").find("tbody").find("tr");
+			var current_no = "";
+			var current_index = 0;
+			for (var i = 0; i < trs.length; i++) {
+				var tr = $(trs[i]);
+				if (i == 0) {
+					current_no = $(tr).find("td[st='order-number']").text();
+				}
+				var order_number = $(tr).find("td[st='order-number']").text();
 
-						if (order_number != current_no) {
-							current_no = order_number;
-							current_index += 1;
-						}
-						tr.find("td").css(
-								"cssText",
-								"background:" + self.colors[current_index % 4]
-										+ " !important");
+				if (order_number != current_no) {
+					current_no = order_number;
+					current_index += 1;
+				}
+				tr.find("td").css("cssText", "background:" + self.colors[current_index % 4] + " !important");
 
-					}
+			}
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.changeNames = ko.observableArray([]);
@@ -101,29 +93,27 @@ var PassengerContext = function() {
 			passenger_pks = passenger_pks.LTrim(",");
 			startLoadingIndicator("加载中...");
 			var param = "passenger_pks_str=" + passenger_pks;
-			$.getJSON(self.apiurl
-					+ 'ticket/searchFlightChangeDataByPassengerPks', param,
-					function(data) {
-						endLoadingIndicator();
-						self.changeNames(data.airTicketNameList);
-						self.changeTicketSources(data.ticket_sources);
+			$.getJSON(self.apiurl + 'ticket/searchFlightChangeDataByPassengerPks', param, function(data) {
+				endLoadingIndicator();
+				self.changeNames(data.airTicketNameList);
+				self.changeTicketSources(data.ticket_sources);
 
-						changeLayer = $.layer({
-							type : 1,
-							title : ['乘客航变', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['800px', '700px'],
-							offset : ['', ''],
-							scrollbar : true,
-							page : {
-								dom : '#div-flight-change'
-							},
-							end : function() {
-							}
-						});
-					});
+				changeLayer = $.layer({
+					type : 1,
+					title : ['乘客航变', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '700px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#div-flight-change'
+					},
+					end : function() {
+					}
+				});
+			});
 
 		}
 	}
@@ -146,10 +136,8 @@ var PassengerContext = function() {
 		var cost = $("input[st='change-cost']").val() - 0;
 		var comment = $("textarea[st='comment']").val();
 
-		json += '"team_number":"' + team_number + '","passenger_pks":"'
-				+ passenger_pks + '","change_reason":"' + change_reason
-				+ '","cost":"' + cost + '","comment":"' + comment
-				+ '","allot":[';
+		json += '"team_number":"' + team_number + '","passenger_pks":"' + passenger_pks + '","change_reason":"'
+				+ change_reason + '","cost":"' + cost + '","comment":"' + comment.replace("\n", " ") + '","allot":[';
 
 		var divs = $("#div-allot").children();
 
@@ -158,13 +146,11 @@ var PassengerContext = function() {
 		for (var i = 0; i < divs.length; i++) {
 
 			var current = divs[i];
-			var ticket_source_pk = $(current).find(
-					"input[st='ticket-source-pk']").val();
+			var ticket_source_pk = $(current).find("input[st='ticket-source-pk']").val();
 
 			var money = $(current).find("input[st='money']").val() - 0;
 			sumMoney += money;
-			allotJson += ',{"ticket_source_pk":"' + ticket_source_pk
-					+ '","money":"' + money + '"}';
+			allotJson += ',{"ticket_source_pk":"' + ticket_source_pk + '","money":"' + money + '"}';
 		}
 		if (cost != sumMoney) {
 			fail_msg("航变成本与分配总额不符！");
@@ -211,26 +197,25 @@ var PassengerContext = function() {
 	 */
 	self.checkChange = function(passenger_pk) {
 		var param = "passenger_pk=" + passenger_pk;
-		$.getJSON(self.apiurl + 'ticket/searchFlightChangeLogByPassengerPk',
-				param, function(data) {
-					self.changeLog(data.changeLog);
+		$.getJSON(self.apiurl + 'ticket/searchFlightChangeLogByPassengerPk', param, function(data) {
+			self.changeLog(data.changeLog);
 
-					checkChangeLayer = $.layer({
-						type : 1,
-						title : ['航变详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', '300px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#div-check-change'
-						},
-						end : function() {
-						}
-					});
-				});
+			checkChangeLayer = $.layer({
+				type : 1,
+				title : ['航变详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '300px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-check-change'
+				},
+				end : function() {
+				}
+			});
+		});
 	}
 
 	self.cancelChange = function() {
@@ -243,52 +228,47 @@ var PassengerContext = function() {
 		if (self.chosenPassengers().length < 1) {
 			fail_msg("请选择需要打回的名单！");
 		} else {
-			$
-					.layer({
-						area : ['auto', 'auto'],
-						dialog : {
-							msg : "确认要将这些名单打回至待出票状态吗？",
-							btns : 2,
-							type : 4,
-							btn : ['确认', '取消'],
-							yes : function(index) {
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : "确认要将这些名单打回至待出票状态吗？",
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("打回中...");
+						var param = "";
+						for (var i = 0; i < self.chosenPassengers().length; i++) {
+							var data = self.chosenPassengers()[i].split(":");
+
+							var status = data[6];
+							console.log(status);
+							if (status == "C") {
 								layer.close(index);
-								startLoadingIndicator("打回中...");
-								var param = "";
-								for (var i = 0; i < self.chosenPassengers().length; i++) {
-									var data = self.chosenPassengers()[i]
-											.split(":");
-
-									var status = data[6];
-									console.log(status);
-									if (status == "C") {
-										layer.close(index);
-										fail_msg("不能选择已经有航变的乘客！");
-										return;
-									}
-									var pk = data[0];
-									param += "passenger_pks=" + pk + "&";
-								}
-
-								$
-										.ajax(
-												{
-													type : "POST",
-													url : self.apiurl
-															+ 'ticket/rollBackNameDone',
-													data : param
-												}).success(function(str) {
-											endLoadingIndicator();
-											if (str == "success") {
-												self.refresh();
-											} else {
-												fail_msg("打回失败，请联系管理员！");
-											}
-										});
-
+								fail_msg("不能选择已经有航变的乘客！");
+								return;
 							}
+							var pk = data[0];
+							param += "passenger_pks=" + pk + "&";
 						}
-					});
+
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'ticket/rollBackNameDone',
+							data : param
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+							} else {
+								fail_msg("打回失败，请联系管理员！");
+							}
+						});
+
+					}
+				}
+			});
 		}
 	}
 	self.search = function() {
@@ -333,8 +313,7 @@ var PassengerContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -365,9 +344,11 @@ $(document).ready(function() {
 			var text = "";
 			if (ctx.chosenPassengers().length > 0) {
 				for (var i = 0; i < ctx.chosenPassengers().length; i++) {
-					var id = ctx.chosenPassengers()[i].split(":")[1];
-					var name = ctx.chosenPassengers()[i].split(":")[2];
-					text += id + "：" + name + "；\n";
+					var arr = ctx.chosenPassengers()[i].split(":");
+					var name = arr[1];
+					var id = arr[2];
+					var cellphone = arr[7];
+					text += name + "；" + id + "；" + cellphone + "；\n";
 				}
 			}
 			return text;
@@ -396,18 +377,16 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":"
-					+ passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status + ":" + passenger.status)
+			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
+					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+					+ passenger.status)
 		}
 	} else {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name
-					+ ":" + passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status + ":" + passenger.status)
+			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
+					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+					+ passenger.status)
 		}
 	}
 }
@@ -417,10 +396,9 @@ function checkSameOrderNumber(tr) {
 		var passenger = ctx.passengers()[i];
 
 		if (passenger.order_number == order_number) {
-			var xxstr = passenger.pk + ":" + passenger.name + ":"
-					+ passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status + ":" + passenger.status;
+			var xxstr = passenger.pk + ":" + passenger.name + ":" + passenger.id + ":" + passenger.team_number + ":"
+					+ passenger.order_number + ":" + passenger.name_confirm_status + ":" + passenger.status + ":"
+					+ passenger.cellphone_A;
 
 			if (ctx.chosenPassengers().contains(xxstr)) {
 				ctx.chosenPassengers.remove(xxstr);

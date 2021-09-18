@@ -64,6 +64,14 @@
 								<input type="text" class="form-control" placeholder="首航段" name="option.from_to_city" />
 							</div>
 						</div>
+						<div class="span6">
+							<div data-bind="foreach: payableTypes" style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenTypes,click:function(){$root.refresh();return true;}"
+									name="option.payable_types" /><label data-bind="text: $root.payableTypesMapping[$data]"></label>
+								</em>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -95,6 +103,7 @@
 								<th></th>
 								<th>供应商</th>
 								<th>主体</th>
+								<th>类型</th>
 								<th>PNR</th>
 								<th>首航日期</th>
 								<th>首航段</th>
@@ -102,6 +111,7 @@
 								<th>应付款</th>
 								<th>已付款</th>
 								<th>尾款</th>
+								<th>备注</th>
 							</tr>
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: payables">
@@ -109,6 +119,7 @@
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenPayables" /></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.financial_body_name"></td>
+								<td data-bind="text: $root.payableTypesMapping[$data.payable_type]"></td>
 								<td data-bind="text: $data.PNR"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfo,text: $data.first_date"></a></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfo,text: $data.from_to_city"></a></td>
@@ -116,6 +127,7 @@
 								<td data-bind="text:$data.budget_payable" class="rmb"></td>
 								<td data-bind="text: $data.paid" class="rmb"></td>
 								<td data-bind="text:$data.budget_balance" class="rmb"></td>
+								<td data-bind="text:$data.comment"></td>
 							</tr>
 						</tbody>
 						<tr id="total-row">
@@ -243,7 +255,7 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">入账时间</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.time" placeholder="请准确填写避免冲突" class="form-control datetime-picker"
+						<input type="text" name="detail.time" placeholder="请准确填写避免冲突" class="form-control datesecond-picker"
 							required="required" />
 					</div>
 				</div>

@@ -107,10 +107,22 @@
 										<input style="display:none" value='<s:property value="#ta.ticket_source_pk"/>' st="ticket-source-pk"/>
 									</div>
 								</div>
-								<div class="col-md-3 required">
-									<label class="l" style="width: 60px">单价</label>
-									<div class="ip">
+								<div class="col-md-2 required">
+									<label class="l" style="width: 30%">单价</label>
+									<div class="ip" style="width: 70%">
 										<input type="number" class="ip-" st="ticket-cost" placeholder="单价" required="required" />
+									</div>
+								</div>
+								<div class="col-md-2">
+									<label class="l" style="width: 30%">手续费</label>
+									<div class="ip" style="width: 70%">
+										<input type="number" class="ip-" st="ticket-charges" placeholder="手续费"/>
+									</div>
+								</div>
+								<div class="col-md-2 required">
+									<label class="l" style="width: 30%">总款</label>
+									<div class="ip" style="width: 70%">
+										<input type="number" class="ip-" st="sum-cost" placeholder="总款" required="required" />
 									</div>
 								</div>
 								<div class="col-md-3">

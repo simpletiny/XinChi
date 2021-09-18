@@ -162,6 +162,7 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 			waiting.setRelated_pk(related_pk);
 			waiting.setStatus(ResourcesConstants.PAY_STATUS_YES);
 			waiting.setPay_user(user.getUser_number());
+			waiting.setUpdate_time(String.valueOf(DateUtil.castStr2Date(time, DateUtil.YYYY_MM_DD_HH_MM).getTime()));
 
 			accPaidDao.insert(waiting);
 		}

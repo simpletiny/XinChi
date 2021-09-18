@@ -56,6 +56,19 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 批量上传供应商押金 -->
+		<action name="batUploadDeposit" class="supplierDepositAction" method="batUploadDeposit">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 批量保存供应商押金 -->
+		<action name="batSaveDeposit" class="supplierDepositAction" method="batSaveDeposit">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<!-- 新建押金账 -->
 		<action name="createSupplierDeposit" class="supplierDepositAction" method="createSupplierDeposit">
 			<result name="success" type="str">resultStr</result>

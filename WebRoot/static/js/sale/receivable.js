@@ -235,27 +235,45 @@ var OrderContext = function() {
 
 			if (!check_result)
 				return;
-
-			self.team_number(current.team_number);
-			self.client_employee_name(current.client_employee_name);
-			self.financial_body_name(current.financial_body_name);
-			$(".rmb").formatCurrency();
-			tail98Layer = $.layer({
-				type : 1,
-				title : ['立款98', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['1120px', '450px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#tail98-clear'
-				},
-				end : function() {
-					console.log("Done");
+			// 2021-09-01之后要检查是否符合立款规则（即是否在两天内收齐了立款）
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'sale/checkIs98',
+				data : "team_number=" + current.team_number,
+				success : function(str) {
+					endLoadingIndicator();
+					layer.close(tailLayer);
+					if (str == "success") {
+						self.team_number(current.team_number);
+						self.client_employee_name(current.client_employee_name);
+						self.financial_body_name(current.financial_body_name);
+						$(".rmb").formatCurrency();
+						tail98Layer = $.layer({
+							type : 1,
+							title : ['立款98', ''],
+							maxmin : false,
+							closeBtn : [1, true],
+							shadeClose : false,
+							area : ['1120px', '450px'],
+							offset : ['150px', ''],
+							scrollbar : true,
+							page : {
+								dom : '#tail98-clear'
+							},
+							end : function() {
+								console.log("Done");
+							}
+						});
+					} else if (str == "bad") {
+						fail_msg("不符合立款规则，不是在确认后两天内收取的款项不算做立款，不享受打折！")
+					} else if (str == "noconfirm") {
+						fail_msg("收款会计未确认，请稍后再试！");
+					} else {
+						fail_msg("申请失败，请联系管理员");
+					}
 				}
 			});
+
 		}
 	};
 
@@ -473,8 +491,7 @@ var OrderContext = function() {
 			var current = strike_out[i];
 			var n = $(current).find("[st='strike-team-number']").val();
 			var r = $(current).find("[st='strike-out-money']").val();
-			strike_out_json += '{"team_number":"' + n + '",' + '"received":"'
-					+ r;
+			strike_out_json += '{"team_number":"' + n + '",' + '"received":"' + r;
 			if (i == strike_out.length - 1) {
 				strike_out_json += '"}';
 			} else {
@@ -489,8 +506,7 @@ var OrderContext = function() {
 			var current = strike_in[i];
 			var n = $(current).find("[st='strike-team-number']").val();
 			var r = $(current).find("[st='strike-in-money']").val();
-			strike_in_json += '{"team_number":"' + n + '",' + '"received":"'
-					+ r;
+			strike_in_json += '{"team_number":"' + n + '",' + '"received":"' + r;
 			if (i == strike_in.length - 1) {
 				strike_in_json += '"}';
 			} else {
@@ -503,8 +519,7 @@ var OrderContext = function() {
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/applyReceiveStrike',
-			data : data + "&strike_out_json=" + strike_out_json
-					+ "&strike_in_json=" + strike_in_json,
+			data : data + "&strike_out_json=" + strike_out_json + "&strike_in_json=" + strike_in_json,
 			success : function(str) {
 				endLoadingIndicator();
 				if (str == "success") {
@@ -646,8 +661,7 @@ var OrderContext = function() {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
 				var r = $(current).find("[st='receive_received']").val();
-				allot_json += '{"team_number":"' + n + '",' + '"received":"'
-						+ r;
+				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -776,10 +790,8 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 		startLoadingSimpleIndicator("加载中...");
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'sale/searchReceivableByPage', param, function(data) {
 			self.receivables(data.receivables);
 
 			// 计算合计
@@ -865,16 +877,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/sale/order-edit.jsp?key="
-					+ self.chosenOrders()[0];
+			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl
-				+ "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -911,8 +920,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

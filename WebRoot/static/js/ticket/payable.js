@@ -29,6 +29,14 @@ var PayableContext = function() {
 		items : []
 	});
 
+	self.chosenTypes = ko.observableArray();
+
+	self.payableTypes = ['A', 'B', 'C'];
+	self.payableTypesMapping = {
+		"A" : "机票款",
+		"B" : "手续费",
+		"C" : "航变"
+	};
 	self.store = ko.observableArray([]);
 	self.chosenPayables = ko.observableArray([]);
 
@@ -81,9 +89,7 @@ var PayableContext = function() {
 					if (data.isSame == "NOT") {
 						fail_msg("供应商不属于同一财务主体");
 					} else {
-						window.location.href = self.apiurl
-								+ "templates/ticket/air-ticket-paid.jsp?key="
-								+ payable_pks;
+						window.location.href = self.apiurl + "templates/ticket/air-ticket-paid.jsp?key=" + payable_pks;
 
 					}
 				}
@@ -178,8 +184,7 @@ var PayableContext = function() {
 			var base_pk = $(current).find("[st='base-pk']").val();
 			var r = $(current).find("[st='back_receive']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
-			allot_json += '{"base_pk":"' + base_pk + '",' + '"received":"' + r
-					+ '",' + '"supplier_employee_pk":"' + p;
+			allot_json += '{"base_pk":"' + base_pk + '",' + '"received":"' + r + '",' + '"supplier_employee_pk":"' + p;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -278,15 +283,13 @@ var PayableContext = function() {
 			var current = outs[i];
 			var payable_pk = $(current).find('input[st="payable-pk"]').val();
 			var money = $(current).find('input[st="strike-out-money"]').val();
-			var budget_balance = $(current).find('input[st="budget-balance"]')
-					.val();
+			var budget_balance = $(current).find('input[st="budget-balance"]').val();
 
 			if ((money - 0) > (budget_balance - 0) * -1) {
 				fail_msg("第" + (i + 1) + "个的冲出金额大于可用冲出！");
 				return;
 			}
-			outJson += '{"payable_pk":"' + payable_pk + '","money":"' + money
-					+ '"}';
+			outJson += '{"payable_pk":"' + payable_pk + '","money":"' + money + '"}';
 
 			if (i < outs.length - 1) {
 				outJson += ',';
@@ -301,16 +304,14 @@ var PayableContext = function() {
 			var current = ins[i];
 			var payable_pk = $(current).find('input[st="payable-pk"]').val();
 			var money = $(current).find('input[st="strike-in-money"]').val();
-			var budget_balance = $(current).find('input[st="budget-balance"]')
-					.val();
+			var budget_balance = $(current).find('input[st="budget-balance"]').val();
 
 			if ((money - 0) > (budget_balance - 0)) {
 				fail_msg("第" + (i + 1) + "个的冲入金额大于最大冲入金额！");
 				return;
 			}
 
-			inJson += '{"payable_pk":"' + payable_pk + '","money":"' + money
-					+ '"}';
+			inJson += '{"payable_pk":"' + payable_pk + '","money":"' + money + '"}';
 
 			if (i < ins.length - 1) {
 				inJson += ',';
@@ -326,8 +327,7 @@ var PayableContext = function() {
 			return;
 		}
 
-		var json = '{"out":' + outJson + ',"in":' + inJson + ',"allot_money":"'
-				+ sum_out + '"}';
+		var json = '{"out":' + outJson + ',"in":' + inJson + ',"allot_money":"' + sum_out + '"}';
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -459,8 +459,7 @@ var PayableContext = function() {
 
 			sum_out += (money - 0);
 
-			outJson += '{"deposit_pk":"' + deposit_pk + '","money":"' + money
-					+ '"}';
+			outJson += '{"deposit_pk":"' + deposit_pk + '","money":"' + money + '"}';
 
 			if (i < outs.length - 1) {
 				outJson += ',';
@@ -482,8 +481,7 @@ var PayableContext = function() {
 
 			sum_in += (money - 0);
 
-			inJson += '{"payable_pk":"' + payable_pk + '","money":"' + money
-					+ '"}';
+			inJson += '{"payable_pk":"' + payable_pk + '","money":"' + money + '"}';
 
 			if (i < ins.length - 1) {
 				inJson += ',';
@@ -491,8 +489,7 @@ var PayableContext = function() {
 		}
 		inJson += ']';
 
-		var json = '{"out":' + outJson + ',"in":' + inJson + ',"allot_money":"'
-				+ sum_out + '"}';
+		var json = '{"out":' + outJson + ',"in":' + inJson + ',"allot_money":"' + sum_out + '"}';
 
 		$.layer({
 			area : ['auto', 'auto'],
@@ -547,35 +544,33 @@ var PayableContext = function() {
 		var totalBudgetBalance = 0;
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'payable/searchAirTicketPayableByPage', param,
-				function(data) {
-					self.payables(data.payables);
-					if (!pages.contains(self.currentPage())) {
-						self.store(self.store().concat(self.payables()));
-						pages.push(self.currentPage());
-					}
-					// 计算合计
-					$(self.payables()).each(function(idx, data) {
-						totalBudgetPayable += data.budget_payable;
-						totalBudgetBalance += data.budget_balance;
-						totalPaid += data.paid;
+		$.getJSON(self.apiurl + 'payable/searchAirTicketPayableByPage', param, function(data) {
+			self.payables(data.payables);
+			if (!pages.contains(self.currentPage())) {
+				self.store(self.store().concat(self.payables()));
+				pages.push(self.currentPage());
+			}
+			// 计算合计
+			$(self.payables()).each(function(idx, data) {
+				totalBudgetPayable += data.budget_payable;
+				totalBudgetBalance += data.budget_balance;
+				totalPaid += data.paid;
 
-					});
+			});
 
-					self.totalBudgetPayable(totalBudgetPayable);
-					self.totalPaid(totalPaid);
+			self.totalBudgetPayable(totalBudgetPayable);
+			self.totalPaid(totalPaid);
 
-					self.totalBudgetBalance(totalBudgetBalance);
+			self.totalBudgetBalance(totalBudgetBalance);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
-				});
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+		});
 	};
 
 	self.zeroBalance = function() {
@@ -682,8 +677,7 @@ var PayableContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -740,18 +734,14 @@ var PayableContext = function() {
 
 	self.refresh1 = function() {
 		var param = $("#form-search-deposit").serialize();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1 + "&deposit.deposit_type=A";
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1 + "&deposit.deposit_type=A";
 
-		$.getJSON(self.apiurl + 'supplier/searchDepositByPage', param,
-				function(data) {
-					self.deposits(data.deposits);
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-					$(".rmb").formatCurrency();
-				});
+		$.getJSON(self.apiurl + 'supplier/searchDepositByPage', param, function(data) {
+			self.deposits(data.deposits);
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+			$(".rmb").formatCurrency();
+		});
 
 	};
 
@@ -768,7 +758,7 @@ var PayableContext = function() {
 		layer.close(depositLayer);
 	}
 
-	// start supplier pick pagination
+	// start deposits pick pagination
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 10;
 	self.pageNums1 = ko.observableArray();
@@ -802,8 +792,7 @@ var PayableContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

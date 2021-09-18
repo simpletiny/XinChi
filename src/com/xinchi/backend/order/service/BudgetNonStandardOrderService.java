@@ -12,7 +12,7 @@ public interface BudgetNonStandardOrderService extends BaseService {
 	 * 
 	 * @param bean
 	 */
-	public String insert(BudgetNonStandardOrderBean bean, String json);
+	public String createOrder(BudgetNonStandardOrderBean bean, String json);
 
 	/**
 	 * 修改

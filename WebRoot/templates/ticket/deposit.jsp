@@ -20,6 +20,10 @@
 .form-control {
 	height: 30px;
 }
+
+.confirmed{
+	font-weight: bold;
+}
 </style>
 
 </head>
@@ -36,6 +40,7 @@
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
 						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: upload">批量上传</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: create">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: receive">退还</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: delete_deposit">删除</button>
@@ -61,7 +66,7 @@
 						<div>
 							<label class="col-md-1 control-label">支出账户</label>
 							<div class="col-md-2" style="float: left">
-								<select class="form-control" name="deposit.account" 
+								<select class="form-control" name="deposit.account"
 									data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 							</div>
 						</div>
@@ -99,8 +104,7 @@
 								<!-- ko if:$data.status=='Y' -->
 								<td data-bind="text: $root.statusMapping[$data.status]" style="color: green"></td>
 								<!-- /ko -->
-								<td><a href="javascript:void(0)"
-									data-bind="text: $root.wayMapping[$data.return_way],click:$root.viewDetail"></a></td>
+								<td><a href="javascript:void(0)" data-bind="text: $data.return_way,click:$root.viewDetail"></a></td>
 								<td data-bind="text: $data.comment"></td>
 								<!-- ko if:$data.status=='I' -->
 								<!-- <td data-bind="text: $root.statusMapping[$data.status]"></td> -->
@@ -123,6 +127,55 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="div-upload" style="display: none; width: 500px; height: 200px; overflow-y: auto; padding-top: 30px;">
+		<div class="input-row clearfloat" style="height: 40px">
+			<div class="col-md-8 required">
+				<input type="text" class="ip-default file-path" required="required" />
+			</div>
+			<div class="col-md-4">
+				<a href="javascript:;" class="a-upload">选择文件<input type="file" class="file-office"
+					accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="file-upload" /></a> <input
+					type="hidden" id="office-file" />
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doUpload">上传</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelUpload">取消</button>
+		</div>
+	</div>
+	<div id="div-upload-confirm" style="display: none; width: 1200px; height: 700px; overflow-y: auto; padding-top: 30px;">
+		<div class="input-row clearfloat" style="height: 40px">
+			<label style="color: red">请确认每笔上传记录，不确认的视为错误数据，不进行记录!</label>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>支出账户</th>
+						<th>收款方</th>
+						<th>金额</th>
+						<th>到期时间</th>
+						<th>备注</th>
+						<th>确认</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-data" data-bind="foreach:batDeposits">
+					<tr>
+						<td data-bind="text: $data.account"></td>
+						<td data-bind="text: $data.supplier_name"></td>
+						<td data-bind="text: $data.money" class="rmb"></td>
+						<td data-bind="text: $data.return_date"></td>
+						<td data-bind="text: $data.comment"></td>
+						<td><a href="javascript:void(0)" data-bind="event:{click:confirmUpload}">确认</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doSaveBat">保存</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelSaveBat">取消</button>
 		</div>
 	</div>
 	<div id="div-create" style="display: none; width: 1200px; height: 750px; overflow-y: auto; padding-top: 30px;">
@@ -177,7 +230,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required"
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" class="file-img"
 						accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="deposit.voucher_file_name" />
 				</div>
 				<div class="col-md-6"></div>
@@ -204,7 +257,8 @@
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">退还总金额</label>
 					<div class="ip" style="width: 70%">
-						<input type="number" class="ip-default" placeholder="退还总金额" name="deposit.money" id="sum-money" required="required" />
+						<input type="number" class="ip-default" placeholder="退还总金额" name="deposit.money" id="sum-money"
+							required="required" />
 					</div>
 				</div>
 				<div class="col-md-4 required">
@@ -218,8 +272,8 @@
 			<hr />
 			<div data-bind="foreach: chosenDeposits" id="div-allot">
 				<div>
-					<input type="hidden" data-bind="value:$data.pk" st="deposit-pk" />
-					<input type="hidden" data-bind="value:$data.balance" st="deposit-balance" />
+					<input type="hidden" data-bind="value:$data.pk" st="deposit-pk" /> <input type="hidden"
+						data-bind="value:$data.balance" st="deposit-balance" />
 					<div class="input-row clearfloat">
 						<div class="col-md-4">
 							<label class="l" style="width: 30%">供应商</label>
@@ -244,8 +298,8 @@
 						<div class="col-md-6 required">
 							<label class="l">分配金额</label>
 							<div class="ip">
-								<input type="number" class="ip-default" placeholder="押金金额"
-									data-bind="attr:{'name':'money_'+$index()}" st="money" min="1" required="required" />
+								<input type="number" class="ip-default" placeholder="押金金额" data-bind="attr:{'name':'money_'+$index()}"
+									st="money" min="1" required="required" />
 							</div>
 						</div>
 					</div>
@@ -254,7 +308,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required"
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" class="file-img"
 						accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="deposit.voucher_file_name" />
 				</div>
 				<div class="col-md-6"></div>
@@ -320,6 +374,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
+	<script src="<%=basePath%>static/js/file-upload-office.js"></script>
 	<script src="<%=basePath%>static/js/ticket/deposit.js"></script>
 </body>
 </html>

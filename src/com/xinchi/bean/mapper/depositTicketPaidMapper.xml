@@ -6,13 +6,15 @@
 		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
 		<result column="money" property="money" jdbcType="DECIMAL" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		money,
 		deposit_pk,
 		related_pk,
-		pk
+		pk,
+		type
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -35,10 +37,10 @@
 		delete from deposit_ticket_paid
 		where related_pk = #{related_pk,jdbcType=CHAR}
 	</delete>
-	<delete id="selectByDepositPk" parameterType="java.lang.String">
-		delete from deposit_ticket_paid
+	<select id="selectByDepositPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from deposit_ticket_paid
 		where deposit_pk = #{deposit_pk,jdbcType=CHAR}
-	</delete>
+	</select>
 
 	<insert id="insert" parameterType="com.xinchi.bean.DepositTicketPaidBean">
 		insert into deposit_ticket_paid
@@ -55,6 +57,9 @@
 			<if test="money != null">
 				money,
 			</if>
+			<if test="type != null">
+				type,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="deposit_pk != null">
@@ -68,6 +73,9 @@
 			</if>
 			<if test="money != null">
 				#{money,jdbcType=DECIMAL},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>

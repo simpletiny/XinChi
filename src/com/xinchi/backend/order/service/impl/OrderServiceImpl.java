@@ -12,6 +12,7 @@ import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.FinalNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.FinalStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
@@ -21,6 +22,7 @@ import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleScoreDto;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -290,12 +292,22 @@ public class OrderServiceImpl implements OrderService {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private OrderReportDAO orderReportDao;
+
 	@Override
 	public String rollBackFinalOrder(String order_pk, String standard_flg) {
+
 		// TODO 打回需要处理应收款
 
 		if (standard_flg.equals("N")) {
 			FinalNonStandardOrderBean final_order = fnsoDao.selectByPrimaryKey(order_pk);
+			// 判断单团核算单是否已经审核，如果审核则不允许打回。
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(final_order.getTeam_number());
+			if (null != tr && tr.getApproved().equals("Y")) {
+				return "approved";
+			}
+
 			// 更新预算订单状态
 			BudgetNonStandardOrderBean budget_order = bnsoDao.selectByTeamNumber(final_order.getTeam_number());
 			budget_order.setConfirm_flg("Y");
@@ -320,6 +332,13 @@ public class OrderServiceImpl implements OrderService {
 
 		} else if (standard_flg.equals("Y")) {
 			FinalStandardOrderBean final_order = fsoDao.selectByPrimaryKey(order_pk);
+
+			// 判断单团核算单是否已经审核，如果审核则不允许打回。
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(final_order.getTeam_number());
+			if (null != tr && tr.getApproved().equals("Y")) {
+				return "approved";
+			}
+
 			// 更新预算订单状态
 			BudgetStandardOrderBean budget_order = bsoDao.selectByTeamNumber(final_order.getTeam_number());
 			budget_order.setConfirm_flg("Y");

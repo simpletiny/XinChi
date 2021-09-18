@@ -45,6 +45,14 @@
 		<action name="depositStrike" class="airTicketPaidDetailAction" method="depositStrike">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 新建票务单纯收支 -->
+		<action name="createPaymentDetail" class="airTicketPaidDetailAction" method="createPaymentDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 新建机票押金无业务扣款 -->
+		<action name="createDeduct" class="airTicketPaidDetailAction" method="createDeduct">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 查询应付款涉及到的名单 -->
 		<action name="searchPayablePassengersByPayablePk" class="airTicketPayableAction" method="searchPayablePassengersByPayablePk">
 			<result name="success" type="json">

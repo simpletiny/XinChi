@@ -59,6 +59,9 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private BigDecimal money_from;
 	private BigDecimal money_to;
 
+	// dto
+	private String receiver_pk;
+
 	public String getAccount() {
 		return account;
 	}
@@ -297,6 +300,14 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setMoney_to(BigDecimal money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getReceiver_pk() {
+		return receiver_pk;
+	}
+
+	public void setReceiver_pk(String receiver_pk) {
+		this.receiver_pk = receiver_pk;
 	}
 
 }

@@ -8,8 +8,7 @@ var PassengerContext = function() {
 		total : 0,
 		items : []
 	});
-	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
-			'TICKET'];
+	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET'];
 
 	self.confirmStatusMapping = {
 		"1" : "未确认",
@@ -213,8 +212,7 @@ var PassengerContext = function() {
 		var passengerBoxChild = $('<div class="ip" style="width: 80%"></div>');
 		var passengerBoxGrandson = $('<div style="padding-top: 4px;" class="name-box"></div>');
 
-		$(passengerBox)
-				.append('<label class="l" style="width: 20%">名单</label>');
+		$(passengerBox).append('<label class="l" style="width: 20%">名单</label>');
 
 		for (var i = 0; i < self.chosenPassengers().length; i++) {
 			var data = self.chosenPassengers()[i].split(":");
@@ -241,8 +239,8 @@ var PassengerContext = function() {
 								+ '<label class="l" style="width: 20%">票源</label>'
 								+ '<div class="ip" style="width: 80%">'
 								+ '<input  st="supplier-name" type="text" onclick="choseSupplierEmployee(event)"  class="ip- txt-ticket-source" placeholder="票源" maxlength="20"'
-								+ ' /><input type="text" st="supplier-pk" style="display: none" />'
-								+ '</div>' + '</div>');
+								+ ' /><input type="text" st="supplier-pk" style="display: none" />' + '</div>'
+								+ '</div>');
 
 		$(sourceDiv).append(passengerDiv);
 		$(".right-div").append(sourceDiv);
@@ -291,39 +289,32 @@ var PassengerContext = function() {
 
 		startLoadingIndicator("加载中...");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage + "&passenger.status=I";
-		$.getJSON(self.apiurl + 'ticket/searchAirTicketNameListByPage', param,
-				function(data) {
-					self.passengers(data.airTicketNameList);
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-					$("#chk-all").attr('checked', false);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage + "&passenger.status=I";
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketNameListByPage', param, function(data) {
+			self.passengers(data.airTicketNameList);
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+			$("#chk-all").attr('checked', false);
 
-					var trs = $("#div-table").find("tbody").find("tr");
-					var current_no = "";
-					var current_index = 0;
-					for (var i = 0; i < trs.length; i++) {
-						var tr = $(trs[i]);
-						if (i == 0) {
-							current_no = $(tr).find("td[st='order-number']")
-									.text();
-						}
-						var order_number = $(tr).find("td[st='order-number']")
-								.text();
+			var trs = $("#div-table").find("tbody").find("tr");
+			var current_no = "";
+			var current_index = 0;
+			for (var i = 0; i < trs.length; i++) {
+				var tr = $(trs[i]);
+				if (i == 0) {
+					current_no = $(tr).find("td[st='order-number']").text();
+				}
+				var order_number = $(tr).find("td[st='order-number']").text();
 
-						if (order_number != current_no) {
-							current_no = order_number;
-							current_index += 1;
-						}
-						tr.find("td").css(
-								"cssText",
-								"background:" + self.colors[current_index % 4]
-										+ " !important");
-					}
+				if (order_number != current_no) {
+					current_no = order_number;
+					current_index += 1;
+				}
+				tr.find("td").css("cssText", "background:" + self.colors[current_index % 4] + " !important");
+			}
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	// 完成选择票源
@@ -342,8 +333,7 @@ var PassengerContext = function() {
 			var all = $('.source-div');
 			for (var i = 0; i < all.length; i++) {
 				var current = all[i];
-				var sourceName = $(current).find("input.txt-ticket-source")
-						.val();
+				var sourceName = $(current).find("input.txt-ticket-source").val();
 				var sourcePk = $(current).find("[st='supplier-pk']").val();
 				var pks = $(current).find("input.passenger-pk");
 				var passengerPks = "";
@@ -351,9 +341,8 @@ var PassengerContext = function() {
 					passengerPks += $(pks[j]).val() + ",";
 				}
 				passengerPks = passengerPks.substr(0, passengerPks.length - 1);
-				json += '{"sourceName":"' + sourceName + '","sourcePk":"'
-						+ sourcePk + '","passengerPks":"' + passengerPks
-						+ '"},';
+				json += '{"sourceName":"' + sourceName + '","sourcePk":"' + sourcePk + '","passengerPks":"'
+						+ passengerPks + '"},';
 			}
 			json = json.substr(0, json.length - 1);
 			json += ']';
@@ -409,8 +398,7 @@ var PassengerContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -425,20 +413,37 @@ var PassengerContext = function() {
 
 	// 供应商选择
 	self.supplierEmployees = ko.observable({});
-	self.refreshSupplier = function() {
-		var param = "employee.type=A&employee.name="
-				+ $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+	function choseSupplierEmployee(event) {
+		supplierEmployeeLayer = $.layer({
+			type : 1,
+			title : ['选择供应商操作', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#supplier-pick'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
 
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-				});
+		currentSupplier = event.target;
+		$(currentSupplier).blur();
+	}
+
+	self.refreshSupplier = function() {
+		var param = "employee.type=A&employee.name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
+
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -484,8 +489,7 @@ var PassengerContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -516,9 +520,11 @@ $(document).ready(function() {
 			var text = "";
 			if (ctx.chosenPassengers().length > 0) {
 				for (var i = 0; i < ctx.chosenPassengers().length; i++) {
-					var name = ctx.chosenPassengers()[i].split(":")[1];
-					var id = ctx.chosenPassengers()[i].split(":")[2];
-					text += name + "：" + id + "；\n";
+					var arr = ctx.chosenPassengers()[i].split(":");
+					var name = arr[1];
+					var id = arr[2];
+					var cellphone = arr[6];
+					text += name + "；" + id + "；" + cellphone + "；\n";
 				}
 			}
 			return text;
@@ -572,18 +578,16 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":"
-					+ passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status)
+			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
+					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+					+ passenger.cellphone_A)
 		}
 	} else {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
-			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name
-					+ ":" + passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status)
+			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
+					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+					+ passenger.cellphone_A)
 		}
 	}
 }
@@ -594,10 +598,8 @@ function checkSameOrderNumber(tr) {
 		var passenger = ctx.passengers()[i];
 
 		if (passenger.order_number == order_number) {
-			var xxstr = passenger.pk + ":" + passenger.name + ":"
-					+ passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":"
-					+ passenger.name_confirm_status;
+			var xxstr = passenger.pk + ":" + passenger.name + ":" + passenger.id + ":" + passenger.team_number + ":"
+					+ passenger.order_number + ":" + passenger.name_confirm_status + ":" + passenger.cellphone_A;
 
 			if (ctx.chosenPassengers().contains(xxstr)) {
 				ctx.chosenPassengers.remove(xxstr);

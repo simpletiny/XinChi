@@ -8,55 +8,47 @@ var AgencyContext = function() {
 		for (var i = 0; i < all.length; i++) {
 			var current = all[i];
 
-			var ticket_source = $(current).find("input[st^='ticket-source']")
-					.val();
-			var ticket_source_pk = $(current).find(
-					"input[st^='ticket-source-pk']").val();
+			var ticket_source = $(current).find("input[st^='ticket-source']").val();
+			var ticket_source_pk = $(current).find("input[st^='ticket-source-pk']").val();
 
-			var ticket_cost = $(current).find("input[st^='ticket-cost']").val();
-			var ticket_PNR = $(current).find("input[st^='ticket-PNR']").val();
+			var ticket_cost = $(current).find("input[st^='ticket-cost']").val().trim();
+			var ticket_charges = $(current).find("input[st^='ticket-charges']").val().trim();
+			var sum_cost = $(current).find("input[st^='sum-cost']").val().trim();
+			var ticket_PNR = $(current).find("input[st^='ticket-PNR']").val().trim();
 
-			if (ticket_source == "" || ticket_cost == "") {
+			if (ticket_source == "" || ticket_cost == "" || sum_cost == "") {
 				fail_msg("请填写必填项！");
 				return;
 			}
 
-			json += '{"ticket_source":+"' + ticket_source
-					+ '","ticket_source_pk":"' + ticket_source_pk
-					+ '","ticket_cost":"' + ticket_cost + '","ticket_PNR":"'
-					+ ticket_PNR + '","ticket_info":[';
+			json += '{"ticket_source":+"' + ticket_source + '","ticket_source_pk":"' + ticket_source_pk
+					+ '","ticket_cost":"' + ticket_cost + '","ticket_PNR":"' + ticket_PNR + '","ticket_charges":"'
+					+ ticket_charges + '","sum_cost":"' + sum_cost + '","ticket_info":[';
 			var trs = $(current).find(".table-ticket tbody tr");
 			for (var j = 0; j < trs.length; j++) {
 				var tr = trs[j];
 				var ticket_index = j + 1;
 				var ticket_date = $(tr).find("input[st^='ticket-date']").val();
-				var ticket_number = $(tr).find("input[st^='ticket-number']")
-						.val().trim();
+				var ticket_number = $(tr).find("input[st^='ticket-number']").val().trim();
 
 				if (ticket_number == "") {
 					fail_msg("请填写航班号！");
 					return;
 				}
 
-				var from_to_time = $(tr).find("input[st^='from-to-time']")
-						.val().trim();
+				var from_to_time = $(tr).find("input[st^='from-to-time']").val().trim();
 
 				if (from_to_time == "") {
 					fail_msg("请填写起降时刻！");
 					return;
 				}
 
-				var from_to_city = $(tr).find("input[st^='from-to-city']")
-						.val();
+				var from_to_city = $(tr).find("input[st^='from-to-city']").val();
 				var start_place = $(tr).find("input[st^='start-place']").val();
 				var end_place = $(tr).find("input[st^='end-place']").val();
-				json += '{"ticket_index":+"' + ticket_index
-						+ '","ticket_date":"' + ticket_date
-						+ '","ticket_number":"' + ticket_number
-						+ '","from_to_time":"' + from_to_time
-						+ '","from_to_city":"' + from_to_city
-						+ '","from_airport":"' + start_place
-						+ '","to_airport":"' + end_place + '"}';
+				json += '{"ticket_index":+"' + ticket_index + '","ticket_date":"' + ticket_date + '","ticket_number":"'
+						+ ticket_number + '","from_to_time":"' + from_to_time + '","from_to_city":"' + from_to_city
+						+ '","from_airport":"' + start_place + '","to_airport":"' + end_place + '"}';
 
 				if (j != trs.length - 1) {
 					json += ",";
@@ -67,8 +59,7 @@ var AgencyContext = function() {
 			var pks = "";
 			for (var k = 0; k < passengers.length; k++) {
 				var passenger = passengers[k];
-				pks += $(passenger).find("input[st^='passenger-pk']").val()
-						+ ",";
+				pks += $(passenger).find("input[st^='passenger-pk']").val() + ",";
 			}
 			pks = pks.substr(0, pks.length - 1);
 			json += ',"passenger_pks":"' + pks + '"}';
@@ -82,16 +73,14 @@ var AgencyContext = function() {
 			type : "POST",
 			url : self.apiurl + 'ticket/allotTicket',
 			data : "json=" + json
-		}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/ticket/name-list.jsp";
-					} else {
-						fail_msg(str);
-					}
-					endLoadingIndicator();
-				});
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/ticket/name-list.jsp";
+			} else {
+				fail_msg(str);
+			}
+			endLoadingIndicator();
+		});
 	};
 
 };
@@ -99,6 +88,7 @@ var AgencyContext = function() {
 var ctx = new AgencyContext();
 
 $(document).ready(function() {
+	$("input[st='ticket-source']").disabled();
 	ko.applyBindings(ctx);
 });
 

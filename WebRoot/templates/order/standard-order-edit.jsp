@@ -113,7 +113,7 @@
 						<div class="col-md-2">
 							<label class="l">成人</label>
 							<div class="ip fix-width">
-								<p class="ip-default" id="txt-auto-adult-count" data-bind="text:order().adult_count"></p>
+								<p class="ip-default" id="txt-auto-adult-count" data-bind="text:order().adult_count">12312</p>
 								<input type="hidden" class="ip- auto-1" id="auto-adult-count" data-bind="value: order().adult_count"
 									name="bsOrder.adult_count" />
 							</div>
@@ -267,11 +267,11 @@
 													<option value="F">女</option>
 											</select></td>
 											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
+											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" class="edit" st="cellphone_A" /></td>
+											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" class="edit" st="cellphone_B" /></td>
 											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();autoPrice();"
 												style="width: 90%" st="id" /></td>
-											<td><input type="text" style="width: 90%" st="price" onblur="autoPrice()" data-bind="value:$data.price" /></td>
+											<td><input type="text" style="width: 90%" st="price" onblur="autoPrice()" class="edit" data-bind="value:$data.price" /></td>
 											<td><input type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
@@ -285,7 +285,7 @@
 								</table>
 							</div>
 						</div>
-						<!-- ko if:order().lock_flg=='N' -->
+						<!-- ko if:order().lock_flg=='N'&& $root.order().operate_flg=="N" -->
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
 								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
@@ -296,7 +296,7 @@
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" /></a> <input type="hidden"
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file"  accept=".jpg,.png" name="file" /></a> <input type="hidden"
 								data-bind="value:order().confirm_file" id="txt-confirm-file" name="bsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPaidDto;
+import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -55,4 +56,8 @@ public interface AirTicketPaidDetailService extends BaseService {
 	public String businessStrike(String json);
 
 	public String depositStrike(String json);
+
+	public String createPaymentDetail(PaymentDetailBean payment_detail);
+
+	public String createDeduct(String json);
 }

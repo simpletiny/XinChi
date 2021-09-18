@@ -61,6 +61,37 @@ public class OrderReportAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private OrderReportDto report;
+
+	/**
+	 * 单团核算单汇总
+	 * 
+	 * @return
+	 */
+	public String searchSumReport() {
+		if (null == option)
+			option = new OrderReportDto();
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			option.setProduct_manager_number(sessionBean.getUser_number());
+		}
+
+		if (!SimpletinyString.isEmpty(option.getConfirm_date_from())) {
+			option.setConfirm_date_from(option.getConfirm_date_from() + "-00");
+		}
+		if (!SimpletinyString.isEmpty(option.getConfirm_date_to())) {
+			option.setConfirm_date_to(option.getConfirm_date_to() + "-31");
+		}
+
+		report = service.searchSumReport(option);
+		if (report == null)
+			report = new OrderReportDto();
+		return SUCCESS;
+	}
+
 	private String team_number;
 
 	/**
@@ -128,5 +159,13 @@ public class OrderReportAction extends BaseAction {
 
 	public void setAir_ticket_cost(BigDecimal air_ticket_cost) {
 		this.air_ticket_cost = air_ticket_cost;
+	}
+
+	public OrderReportDto getReport() {
+		return report;
+	}
+
+	public void setReport(OrderReportDto report) {
+		this.report = report;
 	}
 }

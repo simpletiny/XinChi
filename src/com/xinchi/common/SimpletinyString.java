@@ -34,8 +34,7 @@ public class SimpletinyString {
 	 * @return
 	 */
 	public static String MD5OneTime(String strSource) {
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-				'a', 'b', 'c', 'd', 'e', 'f' };
+		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 		try {
 
 			byte[] strTemp = strSource.getBytes();
@@ -66,18 +65,35 @@ public class SimpletinyString {
 	}
 
 	public static int str2Int(String str) {
-		return (null == str || str.trim().equals("")) ? 0 : Integer.valueOf(str
-				.trim());
+		return (null == str || str.trim().equals("")) ? 0 : Integer.valueOf(str.trim());
 	}
 
 	public static BigDecimal str2Decimal(String str) {
-		return (null == str || str.trim().equals("")) ? BigDecimal.ZERO
-				: new BigDecimal((str.trim()));
+		return (null == str || str.trim().equals("")) ? BigDecimal.ZERO : new BigDecimal((str.trim()));
 	}
 
 	public static String addSingleQuote(String str) {
 		if (isEmpty(str))
 			return "";
 		return "'" + str.replaceAll(",", "','") + "'";
+	}
+
+	public static String left(String src, int length) {
+		if (isEmpty(src))
+			return src;
+		int len = src.length();
+		return len >= length ? src.substring(0, length) : src;
+	}
+
+	public static String replaceWhenWithComma(String src, String cha) {
+		String b = src.replaceAll(",{0,1}" + cha + ",{0,1}", ",");
+		if (b.endsWith(",")) {
+			b = b.substring(0, b.length() - 1);
+		}
+
+		if (b.startsWith(",")) {
+			b = b.substring(1);
+		}
+		return b;
 	}
 }

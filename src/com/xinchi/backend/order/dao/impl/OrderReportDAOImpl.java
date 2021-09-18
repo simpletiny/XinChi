@@ -43,4 +43,11 @@ public class OrderReportDAOImpl extends SqlSessionDaoSupport implements OrderRep
 
 	}
 
+	@Override
+	public OrderReportDto selectSumReport(OrderReportDto option) {
+
+		return (OrderReportDto) daoUtil
+				.selectOneValueByParam("com.xinchi.bean.mapper.OrderReportMapper.selectSumReport", option);
+	}
+
 }

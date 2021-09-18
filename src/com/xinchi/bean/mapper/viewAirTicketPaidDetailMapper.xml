@@ -25,6 +25,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="voucher_number" property="voucher_number" jdbcType="VARCHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,7 +49,8 @@
 		PNR,
 		create_time,
 		update_time,
-		voucher_number
+		voucher_number,
+		receiver
 	</sql>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -73,7 +75,8 @@
 		A.PNR,
 		A.voucher_number,
 		A.create_time,
-		A.update_time
+		A.update_time,
+		A.receiver
 		from
 		view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON
@@ -98,7 +101,10 @@
 				and A.allot_money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
 			</if>
 			<if test="params.bo.receiver != null and params.bo.receiver !=''">
-				and C.supplier_name like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%') 
+				and C.supplier_name like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and A.type =#{params.bo.type,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

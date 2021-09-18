@@ -439,8 +439,9 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 				List<ProductOrderTeamNumberBean> potns = productOrderTeamNumberDao.selectByOrderNumber(t_n);
 				for (ProductOrderTeamNumberBean potn : potns) {
-					payableOrderDao.deleteByTeamNumber(potn.getTeam_number());
 					// 删除每个订单的应付款
+					payableOrderDao.deleteByTeamNumber(potn.getTeam_number());
+
 					OrderDto order = orderDao.selectByTeamNumber(potn.getTeam_number());
 
 					// 更新订单状态
@@ -462,8 +463,8 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 				product_order.setStatus("N");
 				productOrderDao.update(product_order);
-			}
 
+			}
 		}
 
 		return SUCCESS;

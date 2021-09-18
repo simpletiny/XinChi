@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,8 @@ import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
+import com.xinchi.common.DBCommonUtil;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 
 import net.sf.json.JSONArray;
@@ -143,6 +146,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			String ticket_source_pk = obj.getString("ticket_source_pk");
 
 			String ticket_cost = obj.getString("ticket_cost");
+			String ticket_charges = obj.getString("ticket_charges");
+			String sum_cost = obj.getString("sum_cost");
 			String ticket_PNR = obj.getString("ticket_PNR");
 			String passenger_pks = obj.getString("passenger_pks");
 			String pkkk[] = passenger_pks.split(",");
@@ -150,14 +155,11 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			// 保存机票供应商应付款
 			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
 			airTicketPayable.setSupplier_employee_pk(ticket_source_pk);
-			airTicketPayable.setBudget_payable(
-					null != ticket_cost ? new BigDecimal(ticket_cost).multiply(new BigDecimal(pkkk.length))
-							: BigDecimal.ZERO);
+			airTicketPayable.setBudget_payable(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
 			airTicketPayable.setPNR(ticket_PNR);
-			airTicketPayable.setBudget_balance(
-					null != ticket_cost ? new BigDecimal(ticket_cost).multiply(new BigDecimal(pkkk.length))
-							: BigDecimal.ZERO);
+			airTicketPayable.setBudget_balance(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
 			airTicketPayable.setPaid(BigDecimal.ZERO);
+			airTicketPayable.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_COST);
 
 			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(pkkk[0]);
 			airTicketPayable.setPassenger(passenger.getName());
@@ -178,8 +180,10 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 				if (ticket_index == 1) {
 					airTicketPayable.setFrom_to_city(from_to_city);
 					airTicketPayable.setFirst_date(ticket_date);
-					airTicketPayableDao.insert(airTicketPayable);
+					airTicketPayable.setComment(
+							ticket_date + SimpletinyString.left(passenger.getName(), 4) + pkkk.length + "人机票款。");
 				}
+
 				// 保存乘客详细信息
 				for (String pk : pkkk) {
 					if (SimpletinyString.isEmpty(pk))
@@ -227,6 +231,32 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					}
 				}
 			}
+			if (null != ticket_charges) {
+				BigDecimal charges = new BigDecimal(ticket_charges);
+				if (charges.compareTo(BigDecimal.ZERO) == 1) {
+					String related_pk = DBCommonUtil.genPk();
+					airTicketPayable.setRelated_pk(related_pk);
+
+					AirTicketPayableBean payable_charges = new AirTicketPayableBean();
+
+					try {
+						PropertyUtils.copyProperties(payable_charges, airTicketPayable);
+
+						payable_charges.setBudget_payable(charges);
+						payable_charges.setBudget_balance(charges);
+						payable_charges.setPaid(BigDecimal.ZERO);
+						payable_charges.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_CHARGES);
+						payable_charges.setComment(payable_charges.getFirst_date()
+								+ SimpletinyString.left(passenger.getName(), 4) + pkkk.length + "人票务手续费。");
+						airTicketPayableDao.insert(payable_charges);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						return FAIL;
+					}
+				}
+			}
+			airTicketPayableDao.insert(airTicketPayable);
 
 		}
 

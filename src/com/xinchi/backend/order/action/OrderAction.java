@@ -57,7 +57,7 @@ public class OrderAction extends BaseAction {
 	private BudgetNonStandardOrderBean bnsOrder;
 
 	public String createBudgetNonStandardOrder() {
-		resultStr = bnsoService.insert(bnsOrder, json);
+		resultStr = bnsoService.createOrder(bnsOrder, json);
 		return SUCCESS;
 	}
 

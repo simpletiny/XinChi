@@ -27,9 +27,6 @@ var OrderContext = function() {
 		});
 		self.passengers(data.passengers);
 
-		if (self.order().name_list_lock == '1')
-			$("#txt-name-list").disabled();
-
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
 		}
@@ -51,17 +48,18 @@ var OrderContext = function() {
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
+		if (self.order().name_confirm_status == "5") {
+			$("#name-table input:not(.edit)").disabled();
+		}
+
 		self.loadFiles();
 
 	});
 
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val()
-				+ "&employee.review_flg=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
-				data) {
+		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -120,8 +118,7 @@ var OrderContext = function() {
 			if (i != 0)
 				json += ',';
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(
-					":checked") ? "Y" : "N";
+			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val();
 			var sex = $(tr).find("[st='sex']").val();
@@ -135,11 +132,9 @@ var OrderContext = function() {
 				continue;
 			}
 
-			json += '{"chairman":"' + teamChairman + '","index":"' + index
-					+ '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"'
-					+ cellphone_B + '","id":"' + id + '","price":"' + price
-					+ '"}';
+			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
+					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
+					+ '","price":"' + price + '"}';
 		}
 		json += ']';
 		data += "&json=" + json;
@@ -152,6 +147,9 @@ var OrderContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				window.history.go(-1);
+			} else if (str == "conflict") {
+				fail_msg("订单名单人数与票务不符，请联系票务!");
+
 			}
 		});
 	};
@@ -199,14 +197,11 @@ var OrderContext = function() {
 						img.width = initWidth;
 					}
 
-					$(img).mouseenter(
-							function() {
-								deleteButton.css("top", $(img).offset().top
-										+ img.height / 2 - 25);
-								deleteButton.css("left", $(img).offset().left
-										+ img.width / 2 - 50);
-								deleteButton.show();
-							});
+					$(img).mouseenter(function() {
+						deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
+						deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
+						deleteButton.show();
+					});
 					$(img).mouseout(function() {
 						deleteButton.hide();
 					});
@@ -245,9 +240,7 @@ var OrderContext = function() {
 	self.addName = function() {
 		var tbody = $("#name-table").find("tbody");
 		var count = $(tbody).children().length;
-		var html = '<tr>'
-				+ '<td><input type="radio" name="team_chairman" /></td>'
-				+ '<td st="name-index">'
+		var html = '<tr>' + '<td><input type="radio" name="team_chairman" /></td>' + '<td st="name-index">'
 				+ (count + 1)
 				+ '</td>'
 				+ '<td><input type="text" style="width: 90%" st="name" /></td>'
@@ -308,8 +301,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -401,22 +393,16 @@ function autoCaculate() {
 
 		var birthday = id.substring(6, 14);
 		if (isChild(birthday)) {
-			if ($(td_price).val() - 0 == ctx.product().adult_price
-					- ctx.product().business_profit_substract
+			if ($(td_price).val() - 0 == ctx.product().adult_price - ctx.product().business_profit_substract
 					|| $(td_price).val() == "") {
-				$(td_price).val(
-						ctx.product().child_price
-								- ctx.product().business_profit_substract);
+				$(td_price).val(ctx.product().child_price - ctx.product().business_profit_substract);
 			}
 			childrenCnt++;
 
 		} else {
-			if ($(td_price).val() - 0 == ctx.product().child_price
-					- ctx.product().business_profit_substract
+			if ($(td_price).val() - 0 == ctx.product().child_price - ctx.product().business_profit_substract
 					|| $(td_price).val() == "") {
-				$(td_price).val(
-						ctx.product().adult_price
-								- ctx.product().business_profit_substract);
+				$(td_price).val(ctx.product().adult_price - ctx.product().business_profit_substract);
 			}
 			adultCnt++;
 		}
@@ -516,8 +502,7 @@ var writeName = function(nameObj) {
 	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 
-		if ($(tr).find("[st='name']").val().trim() == ""
-				&& $(tr).find("[st='id']").val().trim() == "") {
+		if ($(tr).find("[st='name']").val().trim() == "" && $(tr).find("[st='id']").val().trim() == "") {
 
 			var name = $(tr).find("[st='name']");
 			var id = $(tr).find("[st='id']");
@@ -593,8 +578,7 @@ var caculate_fly_time = function() {
 	var off_time = $("#txt-off-time").val();
 	var land_time = $("#txt-land-time").val();
 	var next_day = $("#txt-next-day").val() - 0;
-	if (off_time == "" || land_time == "" || off_time.length != 5
-			|| land_time.length != 5)
+	if (off_time == "" || land_time == "" || off_time.length != 5 || land_time.length != 5)
 		return;
 	var off_time = "1988-03-22 " + off_time + ":00";
 	var land_time = "1988-03-22 " + land_time + ":00";

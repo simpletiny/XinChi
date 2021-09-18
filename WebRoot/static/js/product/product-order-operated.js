@@ -43,41 +43,28 @@ var OrderContext = function() {
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$
-				.getJSON(
-						self.apiurl
-								+ 'product/searchProductOrderOperationByPage',
-						param,
-						function(data) {
-							self.operations(data.operations);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
+			self.operations(data.operations);
 
-							$(self.operations())
-									.each(
-											function(idx, data) {
-												total_people_count += data.people_count - 0;
-												total_supplier_cost += data.supplier_cost == null
-														? 0
-														: data.supplier_cost;
-											});
+			$(self.operations()).each(function(idx, data) {
+				total_people_count += data.people_count - 0;
+				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
+			});
 
-							self.totalPeopleCount(total_people_count);
-							self.totalSupplierCost(total_supplier_cost);
-							$(".detail").showDetail();
-							self.totalCount(Math.ceil(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
+			self.totalPeopleCount(total_people_count);
+			self.totalSupplierCost(total_supplier_cost);
+			$(".detail").showDetail();
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-							endLoadingIndicator();
-						});
+			endLoadingIndicator();
+		});
 	};
 
 	self.downloadSc = function(team_number, supplier_employee_pk) {
-		window.location.href = self.apiurl
-				+ "file/downloadProductFile?team_number=" + team_number
-				+ "&supplier_employee_pk=" + supplier_employee_pk
-				+ "&fileType=C";
+		window.location.href = self.apiurl + "file/downloadProductFile?team_number=" + team_number
+				+ "&supplier_employee_pk=" + supplier_employee_pk + "&fileType=C";
 	}
 
 	self.productSuppliers = ko.observableArray([]);
@@ -98,30 +85,27 @@ var OrderContext = function() {
 
 			self.order_number(order_number);
 
-			var param = "order_number=" + order_number
-					+ "&supplier_employee_pk=" + supplier_employee_pk;
+			var param = "order_number=" + order_number + "&supplier_employee_pk=" + supplier_employee_pk;
 
-			$.getJSON(self.apiurl
-					+ 'product/searchSaleOrderInfoByProductOrderInfo', param,
-					function(data) {
-						self.sale_orders(data.sale_orders);
-						endLoadingIndicator();
-						finalLayser = $.layer({
-							type : 1,
-							title : ['决算', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['800px', '600px'],
-							offset : ['', ''],
-							scrollbar : true,
-							page : {
-								dom : '#order-final'
-							},
-							end : function() {
-							}
-						});
-					});
+			$.getJSON(self.apiurl + 'product/searchSaleOrderInfoByProductOrderInfo', param, function(data) {
+				self.sale_orders(data.sale_orders);
+				endLoadingIndicator();
+				finalLayser = $.layer({
+					type : 1,
+					title : ['决算', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '600px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#order-final'
+					},
+					end : function() {
+					}
+				});
+			});
 		}
 	};
 
@@ -146,16 +130,14 @@ var OrderContext = function() {
 			for (var i = 0; i < trs.length; i++) {
 				var tr = trs[i];
 				var team_number = $(tr).find("input[st='team-number']").val();
-				var team_payable = $(tr).find("input[st='team-payable']").val()
-						.trim();
+				var team_payable = $(tr).find("input[st='team-payable']").val().trim();
 
 				if (team_payable == "") {
 					fail_msg("请填写" + team_number + "的决算价格!");
 					return;
 				}
 				sum_payable = sum_payable + (team_payable - 0);
-				var oneJson = '{"team_number":"' + team_number
-						+ '","team_payable":"' + team_payable + '"}';
+				var oneJson = '{"team_number":"' + team_number + '","team_payable":"' + team_payable + '"}';
 				json += oneJson + ',';
 			}
 			json = json.RTrim(',') + ']';
@@ -214,7 +196,7 @@ var OrderContext = function() {
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
-					msg : '删除会将关联的操作订单一并删除，并将产品订单设置为未操作状态！',
+					msg : '打回会将关联的操作订单一并打回，并将产品订单设置为未操作状态！',
 					btns : 2,
 					type : 4,
 					btn : ['确认', '取消'],
@@ -384,8 +366,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -401,17 +382,13 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-				});
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -457,8 +434,7 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -482,14 +458,12 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.operations().length; i++) {
 			var operation = ctx.operations()[i];
-			ctx.chosenOperations.push(operation.pk + ';'
-					+ operation.team_number + ';' + operation.supplier_cost);
+			ctx.chosenOperations.push(operation.pk + ';' + operation.team_number + ';' + operation.supplier_cost);
 		}
 	} else {
 		for (var i = 0; i < ctx.operations().length; i++) {
 			var operation = ctx.operations()[i];
-			ctx.chosenOperations.remove(operation.pk + ';'
-					+ operation.team_number + ';' + operation.supplier_cost);
+			ctx.chosenOperations.remove(operation.pk + ';' + operation.team_number + ';' + operation.supplier_cost);
 		}
 	}
 }

@@ -19,5 +19,12 @@ public class AutoUpdateTeamReport {
 		SqlBean ss = new SqlBean();
 		ss.setSql(sql1);
 		commonDao.exeBySql(ss);
+
+		String sql2 = "UPDATE team_report A LEFT JOIN view_discount_receivable B ON A.team_number = B.team_number"
+				+ " SET A.discount_flg = 'Y',  A.discount_receivable = B.discount_received" + " WHERE B.update_time = '"
+				+ DateUtil.yesterday() + "';";
+
+		ss.setSql(sql2);
+		commonDao.exeBySql(ss);
 	}
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 import com.xinchi.bean.TaskBean;
 
 public class ResourcesConstants {
+	public static String SIMPLETINY = "SIMPLETINY";
+
 	public static String PLACE_HOLDER = "&&^^@@@";
 	// 用户注册状态
 	// 申请中
@@ -95,6 +97,12 @@ public class ResourcesConstants {
 	public static String PAID_TYPE_PAID = "PAID";
 	// 冲账
 	public static String PAID_TYPE_STRIKE = "STRIKE";
+
+	// 单纯收入
+	public static String PAID_TYPE_RECEIVE = "RECEIVE";
+
+	// 单纯支出
+	public static String PAID_TYPE_PAY = "PAY";
 
 	// 冲账出
 	public static String PAID_TYPE_STRIKE_OUT = "STRIKEOUT";
@@ -292,4 +300,14 @@ public class ResourcesConstants {
 	// 产品订单状态
 	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
 	/** 销售订单操作状态 end **/
+
+	// ************************* 票务相关*********************************
+	/** 票务应付款类型 start **/
+	// 机票款
+	public static String Ticket_PAYABLE_TYPE_COST = "A";
+	// 手续费
+	public static String Ticket_PAYABLE_TYPE_CHARGES = "B";
+	// 航变
+	public static String Ticket_PAYABLE_TYPE_CHANGE = "C";
+	/** 票务应付款类型 start **/
 }

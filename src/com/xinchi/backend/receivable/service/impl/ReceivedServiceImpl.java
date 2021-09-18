@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
@@ -372,6 +373,56 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 		payApprovalDao.insert(pa);
 
+		return SUCCESS;
+	}
+
+	@Autowired
+	private ReceivableDAO receivableDao;
+
+	@Override
+	public String checkIs98(String team_number) {
+		OrderDto order = orderDao.selectByTeamNumber(team_number);
+		if (DateUtil.compare(order.getConfirm_date(), "2021-09-01") != 2) {
+			ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+			option.setTeam_number(team_number);
+			List<ClientReceivedDetailBean> res = dao.selectByParam(option);
+			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(team_number);
+			BigDecimal discount_receivable = (receivable.getFinal_flg().equals("Y")
+					? receivable.getFinal_receivable().subtract(new BigDecimal(0.98))
+					: receivable.getBudget_receivable().subtract(new BigDecimal(0.98)));
+
+			BigDecimal discount_received = BigDecimal.ZERO;
+
+			boolean isConfirm = true;
+			for (ClientReceivedDetailBean re : res) {
+				if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)) {
+
+					if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
+						discount_received = discount_received.add(re.getReceived());
+					} else {
+						String limitDate = DateUtil.addDate(order.getConfirm_date(), 1);
+						if (DateUtil.compare(limitDate, re.getReceived_time().substring(0, 10)) < 2) {
+							discount_received = discount_received.add(re.getReceived());
+						}
+					}
+
+					if (!re.getStatus().equals("E"))
+						isConfirm = false;
+				}
+			}
+
+			if (discount_received.compareTo(discount_receivable) >= 0) {
+				if (!isConfirm) {
+					return "noconfirm";
+				} else {
+					return SUCCESS;
+				}
+
+			} else {
+				return "bad";
+			}
+
+		}
 		return SUCCESS;
 	}
 }

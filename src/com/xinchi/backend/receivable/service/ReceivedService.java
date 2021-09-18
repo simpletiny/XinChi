@@ -50,4 +50,6 @@ public interface ReceivedService extends BaseService {
 	public String applyStrike(ClientReceivedDetailBean detail, String strike_out_json, String strike_in_json);
 
 	public String applyFly(ClientReceivedDetailBean detail);
+
+	public String checkIs98(String team_number);
 }

@@ -258,6 +258,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/finance/received-match.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收入匹配</a></li>
 						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>内转明细</a></li>
+						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务报表</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('CASHIER')">
@@ -310,7 +311,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/users/user-log.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户操作日志</a></li>
 						<li><a href="<%=basePath%>templates/product/product-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品小组</a></li>
 						<li><a href="<%=basePath%>templates/sale/sale-work-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售工作报表</a></li>
-
+						<li><a href="<%=basePath%>templates/reports/product-team-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品单团报表</a></li>
 					</ol></li>
 			</s:if>
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i

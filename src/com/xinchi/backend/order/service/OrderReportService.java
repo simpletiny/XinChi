@@ -16,4 +16,6 @@ public interface OrderReportService extends BaseService {
 	public String rollBackTeamReport(String team_number);
 
 	public String fillAriTicketCost(String team_number, BigDecimal air_ticket_cost);
+
+	public OrderReportDto searchSumReport(OrderReportDto option);
 }

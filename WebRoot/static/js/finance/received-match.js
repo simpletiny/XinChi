@@ -5,7 +5,7 @@ var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.allStatus = [ 'N', 'Y' ];
+	self.allStatus = ['N', 'Y'];
 	self.statusMapping = {
 		'N' : '未匹配',
 		'Y' : '已匹配',
@@ -33,17 +33,16 @@ var DetailContext = function() {
 	self.today(x.Format("yyyy-MM-dd"));
 
 	self.refresh = function() {
-		var param = $("form").serialize()
-				+ "&detail.type=收入&detail.inner_flg=N";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(
-				data) {
+		startLoadingSimpleIndicator("加载中...");
+		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N";
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
 			self.details(data.details);
 			$(".rmb").formatCurrency();
-
+			endLoadingIndicator();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
 		});
 	};
 
@@ -54,12 +53,12 @@ var DetailContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认标记为其他收入吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						startLoadingSimpleIndicator("保存中...");
 						$.ajax({
@@ -105,89 +104,62 @@ var DetailContext = function() {
 	self.showDetails = function(data, event) {
 		var detail_pk = data.pk;
 		startLoadingSimpleIndicator("加载中");
-		$
-				.getJSON(
-						self.apiurl
-								+ 'finance/searchReceivedDetailByPaymentDetailPk',
-						{
-							detailId : detail_pk
+		$.getJSON(self.apiurl + 'finance/searchReceivedDetailByPaymentDetailPk', {
+			detailId : detail_pk
+		}, function(data) {
+			self.received(data.received_detail);
+
+			if (self.received().type == "SUM") {
+				var param = "related_pks=" + self.received().related_pk;
+
+				$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+					self.sumDetails(data.receiveds);
+					self.sumDetail(self.sumDetails()[0]);
+					$(".rmb").formatCurrency();
+					endLoadingIndicator();
+					matchDetailLayer = $.layer({
+						type : 1,
+						title : ['合账详情', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['800px', 'auto'],
+						offset : ['150px', ''],
+						scrollbar : true,
+						page : {
+							dom : '#sum_detail'
 						},
-						function(data) {
-							self.received(data.received_detail);
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+			} else {
+				var param = "team_number=" + self.received().team_number;
+				$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
+					self.order(data.order);
+					self.comment(self.received().comment);
+					endLoadingIndicator();
+					matchDetailLayer = $.layer({
+						type : 1,
+						title : ['摘要详情', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['700px', 'auto'],
+						offset : ['150px', ''],
+						scrollbar : true,
+						page : {
+							dom : '#comment'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				});
+			}
 
-							if (self.received().type == "SUM") {
-								var param = "related_pks="
-										+ self.received().related_pk;
-
-								$.getJSON(self.apiurl
-										+ 'sale/searchByRelatedPks', param,
-										function(data) {
-											self.sumDetails(data.receiveds);
-											self
-													.sumDetail(self
-															.sumDetails()[0]);
-											$(".rmb").formatCurrency();
-											endLoadingIndicator();
-											matchDetailLayer = $.layer({
-												type : 1,
-												title : [ '合账详情', '' ],
-												maxmin : false,
-												closeBtn : [ 1, true ],
-												shadeClose : false,
-												area : [ '800px', 'auto' ],
-												offset : [ '150px', '' ],
-												scrollbar : true,
-												page : {
-													dom : '#sum_detail'
-												},
-												end : function() {
-													console.log("Done");
-												}
-											});
-										});
-							} else {
-								var param = "team_number="
-										+ self.received().team_number;
-								$
-										.getJSON(
-												self.apiurl
-														+ 'sale/searchOrderByTeamNumber',
-												param,
-												function(data) {
-													self.order(data.order);
-													self
-															.comment(self
-																	.received().comment);
-													endLoadingIndicator();
-													matchDetailLayer = $
-															.layer({
-																type : 1,
-																title : [
-																		'摘要详情',
-																		'' ],
-																maxmin : false,
-																closeBtn : [ 1,
-																		true ],
-																shadeClose : false,
-																area : [
-																		'700px',
-																		'auto' ],
-																offset : [
-																		'150px',
-																		'' ],
-																scrollbar : true,
-																page : {
-																	dom : '#comment'
-																},
-																end : function() {
-																	console
-																			.log("Done");
-																}
-															});
-												});
-							}
-
-						});
+		});
 	};
 
 	// 取消匹配
@@ -197,12 +169,12 @@ var DetailContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要取消匹配吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						startLoadingSimpleIndicator("匹配中");
 						$.ajax({
@@ -263,8 +235,7 @@ var DetailContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -288,17 +259,17 @@ var DetailContext = function() {
 	self.dateTo = ko.observable();
 	self.dateFrom = ko.observable();
 	self.checkReceived = function() {
+		startLoadingSimpleIndicator("加载中...");
 		var detailId = self.chosenDetails();
 		// 获取收入信息
-		$.getJSON(self.apiurl + 'finance/searchDetailByPk',
-				"detailId=" + detailId, function(data) {
-					if (data.detail) {
-						self.detail(data.detail);
-						self.refreshRight(data);
-					} else {
-						fail_msg("不存在的收入明细！");
-					}
-				}).fail(function(reason) {
+		$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
+			if (data.detail) {
+				self.detail(data.detail);
+				self.refreshRight(data);
+			} else {
+				fail_msg("不存在的收入明细！");
+			}
+		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
 		return true;
@@ -318,13 +289,15 @@ var DetailContext = function() {
 
 	self.searchReceiveApply = function() {
 
-		if (self.chosenDetails().length == 0)
+		if (self.chosenDetails().length == 0) {
+			endLoadingIndicator();
 			return;
+		}
+
 		var param = "detail.statuses=I";
 
 		if ($("#chk-data").is(":checked")) {
-			param += "&detail.date_from=" + self.dateFrom()
-					+ "&detail.date_to=" + self.dateTo();
+			param += "&detail.date_from=" + self.dateFrom() + "&detail.date_to=" + self.dateTo();
 		}
 
 		if ($("#chk-account").is(":checked")) {
@@ -335,19 +308,34 @@ var DetailContext = function() {
 			param += "&detail.money=" + self.money();
 		}
 
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
 
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
 
 			self.totalCount1(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums1(self.currentPage1());
 
 			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 		});
 	};
+
+	self.showAll = function() {
+		startLoadingSimpleIndicator("加载中...");
+		var param = "detail.statuses=I";
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
+			self.receiveds(data.receiveds);
+
+			self.totalCount1(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums1(self.currentPage1());
+
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+		});
+	};
+
 	self.chosenReceiveds = ko.observableArray([]);
 	// 匹配主营业务收入
 	self.match = function() {
@@ -382,8 +370,7 @@ var DetailContext = function() {
 		}
 		var json = '{"detailId":"' + self.chosenDetails() + '","arr":[';
 		for (var i = 0; i < checks.length; i++) {
-			json += '{"related_pk":"' + checks[i].related_pk + '","type":"'
-					+ checks[i].type + '"';
+			json += '{"related_pk":"' + checks[i].related_pk + '","type":"' + checks[i].type + '"';
 			if (i == checks.length - 1) {
 				json += '}]}';
 			} else {
@@ -391,12 +378,12 @@ var DetailContext = function() {
 			}
 		}
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '是否确认匹配?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					startLoadingSimpleIndicator("匹配中");
 					$.ajax({
@@ -422,70 +409,68 @@ var DetailContext = function() {
 		} else {
 			var param = "team_number=" + detail.team_number;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param,
-					function(data) {
-						self.order(data.order);
-						self.comment(detail.comment);
-						endLoadingIndicator();
-						viewCommentLayer = $.layer({
-							type : 1,
-							title : [ '摘要详情', '' ],
-							maxmin : false,
-							closeBtn : [ 1, true ],
-							shadeClose : false,
-							area : [ '700px', 'auto' ],
-							offset : [ '150px', '' ],
-							scrollbar : true,
-							page : {
-								dom : '#comment1'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					});
+			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
+				self.order(data.order);
+				self.comment(detail.comment);
+				endLoadingIndicator();
+				viewCommentLayer = $.layer({
+					type : 1,
+					title : ['摘要详情', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['700px', 'auto'],
+					offset : ['150px', ''],
+					scrollbar : true,
+					page : {
+						dom : '#comment1'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+			});
 		}
 	};
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
-				function(data) {
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
 
-					self.sumDetails(data.receiveds);
-					self.sumDetail(self.sumDetails()[0]);
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
+			self.sumDetails(data.receiveds);
+			self.sumDetail(self.sumDetails()[0]);
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 
-					viewDetailLayer = $.layer({
-						type : 1,
-						title : [ '合账详情', '' ],
-						maxmin : false,
-						closeBtn : [ 1, true ],
-						shadeClose : false,
-						area : [ '800px', 'auto' ],
-						offset : [ '150px', '' ],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail1'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['合账详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#sum_detail1'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		});
 	};
 	// 查看收入凭证
 	self.checkVoucherPic = function(fileName, received_time) {
 		$("#img-pic").attr("src", "");
 		budgetConfirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看确认件', '' ],
+			title : ['查看确认件', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -495,21 +480,18 @@ var DetailContext = function() {
 			}
 		});
 		console.log(received_time)
-		var subFolder = received_time.substring(0, 4) + "/"
-				+ received_time.substring(5, 7);
+		var subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
 
 		$("#img-pic").attr(
 				"src",
 				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder="
-						+ subFolder);
+						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder=" + subFolder);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(
 			'click',
 			function() {
-				window.open(self.apiurl
-						+ "templates/common/check-picture-big.jsp?src="
+				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
 						+ encodeURIComponent($(this).attr("src")));
 			});
 	// start pagination
@@ -546,8 +528,7 @@ var DetailContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

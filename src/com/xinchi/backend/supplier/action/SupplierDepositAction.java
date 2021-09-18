@@ -1,5 +1,6 @@
 package com.xinchi.backend.supplier.action;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,25 @@ public class SupplierDepositAction extends BaseAction {
 	 */
 	public String createSupplierDeposit() {
 		resultStr = service.createDeposit(deposit);
+		return SUCCESS;
+	}
+
+	private String file_name;
+	private String deposit_type;
+
+	/**
+	 * 批量上传押金账
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public String batUploadDeposit() throws IOException {
+		deposits = service.batUploadDeposit(file_name, deposit_type);
+		return SUCCESS;
+	}
+
+	public String batSaveDeposit() {
+		resultStr = service.batSaveDeposit(json);
 		return SUCCESS;
 	}
 
@@ -103,6 +123,22 @@ public class SupplierDepositAction extends BaseAction {
 
 	public void setJson(String json) {
 		this.json = json;
+	}
+
+	public String getFile_name() {
+		return file_name;
+	}
+
+	public String getDeposit_type() {
+		return deposit_type;
+	}
+
+	public void setFile_name(String file_name) {
+		this.file_name = file_name;
+	}
+
+	public void setDeposit_type(String deposit_type) {
+		this.deposit_type = deposit_type;
 	}
 
 }

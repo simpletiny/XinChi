@@ -103,6 +103,28 @@ public class AirTicketPaidDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 机票押金无业务扣款
+	 * 
+	 * @return
+	 */
+	public String createDeduct() {
+		resultStr = service.createDeduct(json);
+		return SUCCESS;
+	}
+
+	private PaymentDetailBean payment_detail;
+
+	/**
+	 * 新建票务单纯收支
+	 * 
+	 * @return
+	 */
+	public String createPaymentDetail() {
+		resultStr = service.createPaymentDetail(payment_detail);
+		return SUCCESS;
+	}
+
 	public AirTicketPaidDto getOption() {
 		return option;
 	}
@@ -157,6 +179,14 @@ public class AirTicketPaidDetailAction extends BaseAction {
 
 	public void setDetail(AirTicketPaidDetailBean detail) {
 		this.detail = detail;
+	}
+
+	public PaymentDetailBean getPayment_detail() {
+		return payment_detail;
+	}
+
+	public void setPayment_detail(PaymentDetailBean payment_detail) {
+		this.payment_detail = payment_detail;
 	}
 
 }

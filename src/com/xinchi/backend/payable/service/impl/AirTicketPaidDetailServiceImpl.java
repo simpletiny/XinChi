@@ -18,7 +18,9 @@ import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.supplier.dao.DepositTicketPaidDAO;
+import com.xinchi.backend.supplier.dao.SupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
+import com.xinchi.backend.supplier.dao.SupplierEmployeeDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPaidDto;
@@ -26,7 +28,9 @@ import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.CardBean;
 import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierDepositBean;
+import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -105,21 +109,25 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		for (AirTicketPaidDetailBean detail : details) {
 			// 更新应付款的尾款和已付款
 			String payable_pk = detail.getBase_pk();
-			AirTicketPayableBean airTicketPayable = airTicketPayableDao.selectByPrimaryKey(payable_pk);
-			airTicketPayable.setPaid(airTicketPayable.getPaid().subtract(detail.getMoney()));
+			if (!payable_pk.equals("SIMPLE")) {
+				AirTicketPayableBean airTicketPayable = airTicketPayableDao.selectByPrimaryKey(payable_pk);
+				if (null != airTicketPayable) {
+					airTicketPayable.setPaid(airTicketPayable.getPaid().subtract(detail.getMoney()));
 
-			airTicketPayable.setBudget_balance(airTicketPayable.getBudget_balance().add(detail.getMoney()));
-			if (airTicketPayable.getFinal_flg().equals("Y")) {
-				airTicketPayable.setFinal_balance(airTicketPayable.getFinal_balance().add(detail.getMoney()));
+					airTicketPayable.setBudget_balance(airTicketPayable.getBudget_balance().add(detail.getMoney()));
+					if (airTicketPayable.getFinal_flg().equals("Y")) {
+						airTicketPayable.setFinal_balance(airTicketPayable.getFinal_balance().add(detail.getMoney()));
+					}
+					airTicketPayableDao.update(airTicketPayable);
+				}
 			}
-			airTicketPayableDao.update(airTicketPayable);
 
 			// 删除要打回的机票往来详情
 			dao.delete(detail.getPk());
 
 		}
-		// 支付类型
-		if (paid_type.equals(ResourcesConstants.PAID_TYPE_PAID)) {
+		// 支付和单纯支出
+		if (paid_type.equals(ResourcesConstants.PAID_TYPE_PAID) || paid_type.equals(ResourcesConstants.PAID_TYPE_PAY)) {
 
 			// 删除待支付信息
 			List<WaitingForPaidBean> wfps = accPaidDao.selectByRelatedPk(related_pk);
@@ -149,7 +157,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 				}
 			}
 		}
-
+		// 押金冲账
 		else if (paid_type.equals(ResourcesConstants.PAID_TYPE_DEPOSIT_IN)) {
 
 			// 更新押金信息
@@ -161,6 +169,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 				SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
 				deposit.setReceived(deposit.getReceived().subtract(money));
 				deposit.setBalance(deposit.getBalance().add(money));
+				deposit.setStatus("N");
 				depositDao.update(deposit);
 
 				deposit_pks.add(deposit_pk);
@@ -173,10 +182,81 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			// 检验押金是否还有冲账的类型
 			for (String deposit_pk : deposit_pks) {
 				List<DepositTicketPaidBean> exists = depositTicketPaidDao.selectByDepositPk(deposit_pk);
+				boolean isExists = false;
+				for (DepositTicketPaidBean exist : exists) {
+					if (exist.getType().equals(ResourcesConstants.PAID_TYPE_DEPOSIT_IN)) {
+						isExists = true;
+					}
+				}
 
-				if (exists == null || exists.size() == 0) {
+				if (!isExists) {
 					SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
-					deposit.setReturn_way(deposit.getReturn_way().replace("C", "").replace(",", ""));
+					String return_way = deposit.getReturn_way();
+
+					deposit.setReturn_way(SimpletinyString.replaceWhenWithComma(return_way, "C"));
+					depositDao.update(deposit);
+				}
+			}
+		}
+		// 返款和单纯收入
+		else if (paid_type.equals(ResourcesConstants.PAID_TYPE_BACK)
+				|| paid_type.equals(ResourcesConstants.PAID_TYPE_RECEIVE)) {
+
+			// 删除银行流水
+			String voucher_number = details.get(0).getVoucher_number();
+			if (SimpletinyString.isEmpty(voucher_number))
+				return SUCCESS;
+			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+
+			List<PaymentDetailBean> paymentDetails = paymentDetailDao.selectByVoucherNumber(voucher_number);
+			for (PaymentDetailBean paymentDetail : paymentDetails) {
+
+				// 删除支付凭证
+				File destfile = new File(fileFolder + File.separator + paymentDetail.getAccount_pk() + File.separator
+						+ paymentDetail.getVoucher_file_name());
+				if (destfile.exists()) {
+					destfile.delete();
+				}
+
+				paymentDetailService.deleteDetail(paymentDetail.getPk());
+			}
+		}
+		// 无业务押金扣款
+		else if (paid_type.equals(ResourcesConstants.PAID_TYPE_DEDUCT)) {
+
+			// 更新押金信息
+			List<DepositTicketPaidBean> dtps = depositTicketPaidDao.selectByRelatedPk(related_pk);
+			Set<String> deposit_pks = new HashSet<String>();
+			for (DepositTicketPaidBean dtp : dtps) {
+				String deposit_pk = dtp.getDeposit_pk();
+				BigDecimal money = dtp.getMoney();
+				SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
+				deposit.setReceived(deposit.getReceived().subtract(money));
+				deposit.setBalance(deposit.getBalance().add(money));
+				deposit.setStatus("N");
+				depositDao.update(deposit);
+
+				deposit_pks.add(deposit_pk);
+
+			}
+
+			// 删除押金和票务支付详情的对应关系
+			depositTicketPaidDao.deleteByRelatedPk(related_pk);
+
+			// 检验押金是否还有扣款的类型
+			for (String deposit_pk : deposit_pks) {
+				List<DepositTicketPaidBean> exists = depositTicketPaidDao.selectByDepositPk(deposit_pk);
+				boolean isExists = false;
+				for (DepositTicketPaidBean exist : exists) {
+					if (exist.getType().equals(ResourcesConstants.PAID_TYPE_DEDUCT)) {
+						isExists = true;
+					}
+				}
+
+				if (!isExists) {
+					SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
+					String return_way = deposit.getReturn_way();
+					deposit.setReturn_way(SimpletinyString.replaceWhenWithComma(return_way, "K"));
 					depositDao.update(deposit);
 				}
 			}
@@ -254,9 +334,9 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			currentDetail.setRelated_pk(related_pk);
 			BigDecimal money = BigDecimal.ZERO;
 			if (!SimpletinyString.isEmpty(received)) {
-				money = new BigDecimal(Integer.valueOf(received) * -1);
+				money = new BigDecimal(Double.valueOf(received) * -1);
 			}
-			currentDetail.setTime(time);
+			currentDetail.setTime(time.substring(0, 16));
 			currentDetail.setMoney(money);
 			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
 			currentDetail.setApprove_user(user.getUser_number());
@@ -421,6 +501,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			dtp.setDeposit_pk(deposit_pk);
 			dtp.setRelated_pk(related_pk);
 			dtp.setMoney(money);
+			dtp.setType(ResourcesConstants.PAID_TYPE_DEPOSIT_IN);
 			depositTicketPaidDao.insert(dtp);
 		}
 
@@ -463,6 +544,199 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			payableDao.update(airTicketPayable);
 
 		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private SupplierEmployeeDAO supplierEmployeeDao;
+
+	@Autowired
+	private SupplierDAO supplierDao;
+
+	@Override
+	public String createPaymentDetail(PaymentDetailBean payment_detail) {
+		UserSessionBean user = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+				ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
+
+		String related_pk = DBCommonUtil.genPk();
+		BigDecimal money = payment_detail.getMoney();
+		String supplier_employee_pk = payment_detail.getReceiver_pk();
+		String comment = payment_detail.getComment();
+		String account = payment_detail.getAccount();
+		String msg = SUCCESS;
+		CardBean card = cardDao.getCardByAccount(account);
+
+		String time = payment_detail.getTime().substring(0, 16);
+
+		// 如果是收入
+		if (payment_detail.getType().equals("R")) {
+			/* 保存银行流水 start */
+			payment_detail.setType("收入");
+
+			BigDecimal balance = card.getBalance().add(money);
+
+			payment_detail.setVoucher_number(voucher_number);
+			payment_detail.setBalance(balance);
+			payment_detail.setComment("票务记录无业务关联收入,凭证号：" + voucher_number);
+
+			msg = paymentDetailService.insert(payment_detail);
+
+			if (!msg.equals(SUCCESS)) {
+				return msg;
+			}
+			/* 保存银行流水 end */
+
+			// 更新账户余额
+			card.setBalance(balance);
+			cardDao.update(card);
+
+			/* 保存一笔票务往来详情 start */
+
+			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
+
+			currentDetail.setAllot_money(money);
+			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
+			currentDetail.setBase_pk("SIMPLE");
+			currentDetail.setType(ResourcesConstants.PAID_TYPE_RECEIVE);
+			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			currentDetail.setRelated_pk(related_pk);
+			currentDetail.setTime(time);
+			currentDetail.setMoney(money);
+			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
+			currentDetail.setApprove_user(user.getUser_number());
+			currentDetail.setVoucher_number(voucher_number);
+			currentDetail.setComment(comment);
+
+			dao.insert(currentDetail);
+
+			/* 保存一笔票务往来详情 end */
+		}
+		// 如果是支出
+		else if (payment_detail.getType().equals("P")) {
+			/* 保存银行流水 start */
+			payment_detail.setType("支出");
+
+			SupplierEmployeeBean employee = supplierEmployeeDao.selectByPrimaryKey(supplier_employee_pk);
+			SupplierBean supplier = supplierDao.selectByPrimaryKey(employee.getFinancial_body_pk());
+
+			String receiver = supplier.getSupplier_short_name();
+
+			BigDecimal balance = card.getBalance().subtract(money);
+
+			payment_detail.setVoucher_number(voucher_number);
+			payment_detail.setReceiver(receiver);
+			payment_detail.setBalance(balance);
+			payment_detail.setComment("收款方：" + receiver + ",凭证号：" + voucher_number);
+
+			msg = paymentDetailService.insert(payment_detail);
+
+			if (!msg.equals(SUCCESS)) {
+				return msg;
+			}
+			/* 保存银行流水 end */
+
+			/* 生成待支付数据并直接写入为已支付状态 start */
+			WaitingForPaidBean waiting = new WaitingForPaidBean();
+			waiting.setPay_number(voucher_number);
+
+			waiting.setItem(ResourcesConstants.PAY_TYPE_PIAOWU);
+			waiting.setReceiver(receiver);
+			waiting.setMoney(money);
+			waiting.setApply_user(user.getUser_number());
+			waiting.setApproval_user(user.getUser_number());
+			waiting.setRelated_pk(related_pk);
+			waiting.setStatus(ResourcesConstants.PAY_STATUS_YES);
+			waiting.setPay_user(user.getUser_number());
+			waiting.setUpdate_time(String.valueOf(DateUtil.castStr2Date(time, DateUtil.YYYY_MM_DD_HH_MM).getTime()));
+
+			accPaidDao.insert(waiting);
+			/* 生成待支付数据并直接写入为已支付状态 end */
+
+			/* 保存一笔票务往来详情 start */
+			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
+
+			currentDetail.setAllot_money(money);
+			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
+			currentDetail.setBase_pk("SIMPLE");
+			currentDetail.setType(ResourcesConstants.PAID_TYPE_PAY);
+			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			currentDetail.setRelated_pk(related_pk);
+
+			currentDetail.setTime(time);
+			currentDetail.setMoney(money);
+			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
+			currentDetail.setApprove_user(user.getUser_number());
+			currentDetail.setVoucher_number(voucher_number);
+			dao.insert(currentDetail);
+			/* 保存一笔票务往来详情 end */
+		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String createDeduct(String json) {
+		UserSessionBean user = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+				ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
+
+		JSONObject obj = JSONObject.fromObject(json);
+
+		String deduct_money = obj.getString("deduct_money");
+		String deposit_pk = obj.getString("deposit_pk");
+		String comment = obj.getString("comment");
+		String time = obj.getString("time");
+
+		SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
+		SupplierBean supplier = supplierDao.selectByPrimaryKey(deposit.getSupplier_pk());
+
+		String related_pk = DBCommonUtil.genPk();
+		/* 保存一笔票务往来详情 start */
+		AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
+		BigDecimal money = SimpletinyString.str2Decimal(deduct_money);
+		currentDetail.setAllot_money(money);
+		currentDetail.setSupplier_employee_pk(ResourcesConstants.SIMPLETINY);
+		currentDetail.setReceiver(supplier.getSupplier_short_name());
+		currentDetail.setBase_pk(deposit_pk);
+		currentDetail.setType(ResourcesConstants.PAID_TYPE_DEDUCT);
+		currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+		currentDetail.setRelated_pk(related_pk);
+
+		currentDetail.setTime(time);
+		currentDetail.setMoney(money);
+		currentDetail.setConfirm_time(DateUtil.getTimeMillis());
+		currentDetail.setApprove_user(user.getUser_number());
+		currentDetail.setVoucher_number(voucher_number);
+		currentDetail.setComment(comment);
+		dao.insert(currentDetail);
+
+		// 更新航司押金款项
+		deposit.setBalance(deposit.getBalance().subtract(money));
+		if (SimpletinyString.isEmpty(deposit.getReturn_way())) {
+			deposit.setReturn_way("K");
+		} else {
+			if (deposit.getReturn_way().indexOf("K") < 0) {
+				deposit.setReturn_way(deposit.getReturn_way() + ",K");
+			}
+		}
+		deposit.setReceived(deposit.getReceived().add(money));
+
+		if (deposit.getBalance().compareTo(BigDecimal.ZERO) == 0) {
+			deposit.setStatus("Y");
+		}
+		depositDao.update(deposit);
+
+		// 保存押金和票务支付详情的对应关系
+		DepositTicketPaidBean dtp = new DepositTicketPaidBean();
+		dtp.setDeposit_pk(deposit_pk);
+		dtp.setRelated_pk(related_pk);
+		dtp.setMoney(money);
+		dtp.setType(ResourcesConstants.PAID_TYPE_DEDUCT);
+		depositTicketPaidDao.insert(dtp);
 
 		return SUCCESS;
 	}

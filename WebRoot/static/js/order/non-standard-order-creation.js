@@ -1,4 +1,5 @@
 var clientEmployeeLayer;
+var passengerBatLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -15,11 +16,9 @@ var OrderContext = function() {
 	var x = new Date();
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val()+"&employee.review_flg=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
-				data) {
+		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -35,12 +34,12 @@ var OrderContext = function() {
 		$("#txt-client-employee-name").blur();
 		clientEmployeeLayer = $.layer({
 			type : 1,
-			title : [ '选择客户操作', '' ],
+			title : ['选择客户操作', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#client-pick'
@@ -70,8 +69,7 @@ var OrderContext = function() {
 			if (i != 0)
 				json += ',';
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(
-					":checked") ? "Y" : "N";
+			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val();
 			var sex = $(tr).find("[st='sex']").val();
@@ -80,30 +78,43 @@ var OrderContext = function() {
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			var id = $(tr).find("[st='id']").val();
 
-			json += '{"chairman":"' + teamChairman + '","index":"' + index
-					+ '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"'
-					+ cellphone_B + '","id":"' + id + '"}';
+			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
+					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"}';
 		}
 		json += ']';
-		
-		var data = $("form").serialize() + "&bnsOrder.independent_flg="
-				+ self.independent_flg()+"&json="+json;
+
+		var data = $("form").serialize() + "&bnsOrder.independent_flg=" + self.independent_flg() + "&json=" + json;
 
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/createBudgetNonStandardOrder',
 			data : data
-		}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product-box.jsp";
-					}
-				});
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/product/product-box.jsp";
+			}
+		});
 	};
-
+	// 批量导入
+	self.batName = function() {
+		passengerBatLayer = $.layer({
+			type : 1,
+			title : ['批量导入名单', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '300px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#bat-passenger'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
 	self.addName = function() {
 		var tbody = $("#name-table").find("tbody");
 		var count = $(tbody).children().length;
@@ -166,8 +177,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -188,6 +198,51 @@ $(document).ready(function() {
 		changeFile(this);
 	});
 });
+function cancelBat() {
+	layer.close(passengerBatLayer);
+}
+
+function autoCaculate() {
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	var adultCnt = 0;
+	var childrenCnt = 0;
+
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var td_id = $(tr).find("[st='id']");
+		var td_price = $(tr).find("[st='price']");
+		var td_sex = $(tr).find("[st='sex']");
+		var id = $(td_id).val();
+
+		if (id.length < 18)
+			continue;
+
+		var td_age = $(tr).find("[st='age']");
+		var d = new Date();
+		var year_now = d.getFullYear();
+		var birthYear = id.substring(6, 10);
+		$(td_age).val(year_now - birthYear);
+
+		var lastSecond = id.charAt(16);
+		$(td_sex).val(lastSecond % 2 == 0 ? "F" : "M");
+
+		var birthday = id.substring(6, 14);
+		if (isChild(birthday)) {
+			childrenCnt++;
+		} else {
+			adultCnt++;
+		}
+	}
+	if (adultCnt != 0) {
+		$("#people-count").val(adultCnt);
+	}
+
+	if (childrenCnt != 0) {
+		$("#special-count").val(childrenCnt);
+	}
+}
+
 function formatNameList() {
 	nameList = $("#txt-name-list").val();
 	if (nameList.trim() == "")
@@ -201,6 +256,7 @@ function formatNameList() {
 	var namePattern = /[\u4e00-\u9fa5]+/gm;
 	var names = nameList.match(namePattern);
 
+	console.log(nameList);
 	if (null == ids) {
 		fail_msg("请填写正确的名单！");
 		return;
@@ -208,6 +264,7 @@ function formatNameList() {
 
 	for (var i = 0; i < ids.length; i++) {
 		var id = ids[i];
+		console.log(id)
 		nameList = nameList.replace(id, ":" + id + ";");
 	}
 
@@ -232,38 +289,46 @@ function formatNameList() {
 		nameObj.id = passenger[1];
 		nameObjs.push(nameObj);
 	}
-	var d = new Date();
-	var year_now = d.getFullYear();
 
 	for (var i = 0; i < nameObjs.length; i++) {
 		var nameObj = nameObjs[i];
-		var birthYear = nameObj.id.substring(6, 10);
-
-		var lastSecond = nameObj.id.charAt(16);
-
 		if (isRepeatId(nameObj.id))
 			continue;
-		var tbody = $("#name-table").find("tbody");
-		var trs = $(tbody).children();
-		if (nameObjs.length > trs.length)
-			ctx.addName();
-
-		var tbody = $("#name-table").find("tbody");
-		var trs = $(tbody).children();
-		var tr = trs[i];
-		var name = $(tr).find("[st='name']");
-		var sex = $(tr).find("[st='sex']");
-		var age = $(tr).find("[st='age']");
-		var id = $(tr).find("[st='id']");
-
-		$(name).val(nameObj.name);
-		$(sex).val(lastSecond % 2 == 0 ? "F" : "M");
-		$(age).val(year_now - birthYear);
-		$(id).val(nameObj.id);
+		writeName(nameObj);
 	}
 
 	$("#txt-name-list").val(newNameList);
+	layer.close(passengerBatLayer);
+	autoCaculate();
 }
+
+var writeName = function(nameObj) {
+
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	var done = false;
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+
+		if ($(tr).find("[st='name']").val().trim() == "" && $(tr).find("[st='id']").val().trim() == "") {
+
+			var name = $(tr).find("[st='name']");
+			var id = $(tr).find("[st='id']");
+
+			$(name).val(nameObj.name);
+			$(id).val(nameObj.id);
+
+			done = true;
+		}
+	}
+
+	if (!done) {
+		ctx.addName();
+		writeName(nameObj);
+	}
+
+}
+
 // 判断是否已经存在重复的id乘客
 var isRepeatId = function(id) {
 	var tbody = $("#name-table").find("tbody");
@@ -287,7 +352,13 @@ var removeName = function(btn) {
 		var td_radio = $(target).find("[name='team_chairman']");
 		$(target).remove();
 		refreshNameIndex();
+
+		if ($(td_radio).is(":checked")) {
+			var next_chair = $("input[name='team_chairman']:eq(0)");
+			$(next_chair).prop("checked", true);
+		}
 	}
+	autoCaculate();
 
 };
 var refreshNameIndex = function() {

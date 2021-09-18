@@ -14,6 +14,8 @@ public class DepositTicketPaidBean extends SupperBO implements Serializable {
 
 	private BigDecimal money;
 
+	private String type;
+
 	public String getDeposit_pk() {
 		return deposit_pk;
 	}
@@ -36,6 +38,14 @@ public class DepositTicketPaidBean extends SupperBO implements Serializable {
 
 	public void setMoney(BigDecimal money) {
 		this.money = money;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

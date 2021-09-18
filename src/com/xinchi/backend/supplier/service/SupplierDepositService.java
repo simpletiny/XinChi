@@ -1,5 +1,6 @@
 package com.xinchi.backend.supplier.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.xinchi.bean.SupplierDepositBean;
@@ -50,4 +51,8 @@ public interface SupplierDepositService extends BaseService {
 	public String deleteSupplierDeposit(String deposit_pk);
 
 	public String receiveSupplierDeposit(SupplierDepositBean deposit, String json);
+
+	public List<SupplierDepositBean> batUploadDeposit(String file_name, String deposit_type) throws IOException;
+
+	public String batSaveDeposit(String json);
 }

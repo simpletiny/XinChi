@@ -171,8 +171,8 @@
 								<td data-bind="text: $data.other_cost" class="rmb"></td>
 								<td data-bind="text: $data.other_receive" class="rmb"></td>
 								<td data-bind="text: $data.fy" class="rmb"></td>
-								<td data-bind="text: $data.sale_cost" class="rmb"></td>
 								<td data-bind="text: $data.sys_cost" class="rmb"></td>
+								<td data-bind="text: $data.sale_cost" class="rmb"></td>
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
 								<td data-bind="text: $data.per_profit" class="rmb"></td>
 								<td data-bind="text: $data.confirm_date"></td>

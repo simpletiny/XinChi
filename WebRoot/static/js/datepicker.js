@@ -17,10 +17,18 @@ if ($('.datetime-picker').datetimepicker != null) {
 		lang : 'zh'
 	});
 }
-
+if ($('.datesecond-picker').datetimepicker != null) {
+	$('.datesecond-picker').datetimepicker({
+		format : 'Y-m-d H:i:s',
+		timepicker : true,
+		scrollInput : false,
+		defaultDate : new Date(),
+		lang : 'zh'
+	});
+}
 if ($('.datetime-picker-same-1').datetimepicker != null) {
 	$('.datetime-picker-same-1').datetimepicker({
-		format : 'Y-m-d H:i',
+		format : 'Y-m-d H:i:s',
 		timepicker : true,
 		scrollInput : false,
 		defaultDate : new Date(),
@@ -32,7 +40,7 @@ if ($('.datetime-picker-same-1').datetimepicker != null) {
 
 if ($('.datetime-picker-same-2').datetimepicker != null) {
 	$('.datetime-picker-same-2').datetimepicker({
-		format : 'Y-m-d H:i',
+		format : 'Y-m-d H:i:s',
 		timepicker : true,
 		scrollInput : false,
 		defaultDate : new Date(),

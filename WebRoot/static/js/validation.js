@@ -20,6 +20,14 @@ jQuery.validator.addMethod("date_year", function(value, element) {
 	return this.optional(element) || mobile.test(value);
 }, "请正确填写出生年");
 
+jQuery.validator.addMethod("isDate", function(value, element) {
+	var length = value.length;
+	var date = /^[1|2]{1}[0-9]{3}-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(31))$/;
+	if (length != 10)
+		return this.optional(element) || false;
+	return this.optional(element) || date.test(value);
+}, "请正确填写日期");
+
 jQuery.validator.addMethod("isTime", function(value, element) {
 	var length = value.length;
 	var time = /^(([0-2][0-3])|([0-1][0-9])):[0-5][0-9]$/;
@@ -48,13 +56,9 @@ jQuery.validator.addMethod("isStep", function(value, element) {
 // }
 // }, "不能相同");
 
-jQuery.validator
-		.addMethod(
-				"checkurl",
-				function(value, element) {
-					return /^(http:\/\/)?(https:\/\/)?(www\.)?[A-Za-z0-9_-]+\.+[A-Za-z0-9.\/%&=\?_:;-]+$/
-							.test(value);
-				}, "请输入有效的网址");
+jQuery.validator.addMethod("checkurl", function(value, element) {
+	return /^(http:\/\/)?(https:\/\/)?(www\.)?[A-Za-z0-9_-]+\.+[A-Za-z0-9.\/%&=\?_:;-]+$/.test(value);
+}, "请输入有效的网址");
 
 jQuery.validator.addMethod("amountLimit", function(value, element) {
 	var returnVal = false;
@@ -72,38 +76,33 @@ jQuery.validator.addClassRules({
 	}
 });
 
-$("form").each(
-		function() {
-			$(this).validate(
-					{
+$("form").each(function() {
+	$(this).validate({
 
-						highlight : function(element) {
-							$(element).closest('.ip')
-									.removeClass('has-success').addClass(
-											'has-error');
-						},
-						unhighlight : function(element) {
-							$(element).closest('.ip').removeClass('has-error')
-									.addClass('has-success');
-						},
-						rules : {},
-						errorElement : 'span',
-						errorClass : 'help-block',
-						errorPlacement : function(error, element) {
+		highlight : function(element) {
+			$(element).closest('.ip').removeClass('has-success').addClass('has-error');
+		},
+		unhighlight : function(element) {
+			$(element).closest('.ip').removeClass('has-error').addClass('has-success');
+		},
+		rules : {},
+		errorElement : 'span',
+		errorClass : 'help-block',
+		errorPlacement : function(error, element) {
 
-							if (element.closest(".ip").length) {
-								element.closest(".ip").append(error);
-							} else {
-								error.insertAfter(element);
-							}
-						},
-						messages : {
-							c_password : {
-								equalTo : '两次密码输入不一致'
-							}
-						}
-					});
-		});
+			if (element.closest(".ip").length) {
+				element.closest(".ip").append(error);
+			} else {
+				error.insertAfter(element);
+			}
+		},
+		messages : {
+			c_password : {
+				equalTo : '两次密码输入不一致'
+			}
+		}
+	});
+});
 
 $(".phone").each(function() {
 	$(this).rules("add", {
@@ -131,6 +130,11 @@ $(".amountRangeEnd").each(function() {
 $(".time").each(function() {
 	$(this).rules("add", {
 		isTime : true
+	});
+});
+$(".date").each(function() {
+	$(this).rules("add", {
+		isDate : true
 	});
 });
 $("#c_password").each(function() {

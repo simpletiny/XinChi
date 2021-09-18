@@ -9,6 +9,8 @@
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
 		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
 		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
 		<result column="train_ticket_cost" property="train_ticket_cost" jdbcType="DECIMAL" />
@@ -24,69 +26,90 @@
 		<result column="discount_flg" property="discount_flg" jdbcType="CHAR" />
 		<result column="sale_cost" property="sale_cost" jdbcType="DECIMAL" />
 		<result column="sys_cost" property="sys_cost" jdbcType="DECIMAL" />
+		<result column="tail98" property="tail98" jdbcType="DECIMAL" />
 		<result column="approved" property="approved" jdbcType="CHAR" />
 		<result column="product_final_flg" property="product_final_flg" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
-		SELECT 
-		    X.team_number,
-		    X.discount_receivable,
-		    X.discount_flg,
-		    X.sale_cost,
-		    X.sys_cost,
-		    X.approved,
-		    A.product_name,
-		    A.client_employee_pk,
-		    A.client_employee_name,
-		    A.other_cost,
-		    A.fy,
-		    IF(B.final_flg = 'Y',
-		        B.final_receivable,
-		        B.budget_receivable) AS receivable,
-		    A.air_ticket_cost,
-		    C.payable AS product_cost,
-		    A.departure_date,
-		    A.pk,
-		    A.confirm_flg AS order_type,
-		    (A.adult_count + IF(ISNULL(A.special_count),
-		        0,
-		        A.special_count)) AS people_count,
-		    A.update_user,
-		    A.create_user_number AS sale_number,
-		    A.create_user AS sale_name,
-		    IF(X.discount_flg = 'Y',
-		        X.discount_receivable,
-		        IF(B.final_flg = 'Y',
-		            B.final_receivable,
-		            B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
-		        0,
-		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
-		        0,
-		        A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost-X.sale_cost AS gross_profit,
-		    (IF(X.discount_flg = 'Y',
-		        X.discount_receivable,
-		        IF(B.final_flg = 'Y',
-		            B.final_receivable,
-		            B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
-		        0,
-		        A.air_ticket_cost) - IF(ISNULL(A.other_cost),
-		        0,
-		        A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy)- X.sys_cost-X.sale_cost) / (A.adult_count + IF(ISNULL(A.special_count),
-		        0,
-		        A.special_count)) AS per_profit,
-		    A.confirm_flg,
-		    A.confirm_date,
-		    C.final_flg AS product_final_flg
+		SELECT
+		X.team_number,
+		X.discount_receivable,
+		X.discount_flg,
+		X.sale_cost,
+		X.sys_cost,
+		X.approved,
+		A.product_name,
+		A.client_employee_pk,
+		A.client_employee_name,
+		A.other_cost,
+		A.fy,
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable) AS receivable,
+		A.air_ticket_cost,
+		C.payable AS product_cost,
+		A.departure_date,
+		A.pk,
+		A.confirm_flg AS
+		order_type,
+		IF(A.confirm_flg = 'F',
+		D.adult_count,
+		A.adult_count)+IF(A.confirm_flg = 'F',
+		IF(ISNULL(D.special_count),
+		0,
+		D.special_count),
+		IF(ISNULL(A.special_count),
+		0,
+		A.special_count)) AS people_count,
+		A.update_user,
+		A.create_user_number AS sale_number,
+		A.create_user AS sale_name,
+		IF(X.discount_flg = 'Y',
+		X.discount_receivable,
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) -
+		IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy),
+		0, A.fy) -
+		X.sys_cost-X.sale_cost AS gross_profit,
+		(IF(X.discount_flg = 'Y',
+		X.discount_receivable,
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) -
+		IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy)-
+		X.sys_cost-X.sale_cost) / (IF(A.confirm_flg = 'F',
+		D.adult_count,
+		A.adult_count)+IF(A.confirm_flg = 'F',
+		IF(ISNULL(D.special_count),
+		0,
+		D.special_count),
+		IF(ISNULL(A.special_count),
+		0,
+		A.special_count))) AS per_profit,
+		A.confirm_flg,
+		A.confirm_date,
+		C.final_flg AS product_final_flg
 		FROM
-		    team_report X
-		        LEFT JOIN
-		    budget_order_view A ON A.team_number = X.team_number
-		        LEFT JOIN
-		    receivable B ON A.team_number = B.team_number
-		        LEFT JOIN
-		    view_team_payable C ON A.team_number = C.team_number
-            LEFT JOIN final_order_view D ON A.team_number=D.team_number
+		team_report X
+		LEFT JOIN
+		budget_order_view A ON A.team_number =
+		X.team_number
+		LEFT JOIN
+		receivable B ON A.team_number = B.team_number
+		LEFT JOIN
+		view_team_payable C ON A.team_number =
+		C.team_number
+		LEFT JOIN final_order_view D ON A.team_number=D.team_number
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -122,4 +145,104 @@
 		</where>
 		ORDER BY A.departure_date DESC
 	</select>
+
+	<select id="selectSumReport" parameterType="com.xinchi.bean.OrderReportDto" resultMap="BaseResultMap">
+		SELECT
+		SUM(IF(X.discount_flg = 'Y',
+		X.discount_receivable,
+		0)) AS discount_receivable,
+		SUM(IF(X.discount_flg = 'Y',
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable) - X.discount_receivable,
+		0)) AS tail98,
+		SUM(X.sale_cost) AS
+		sale_cost,
+		SUM(X.sys_cost) AS sys_cost,
+		SUM(A.other_cost) AS other_cost,
+		SUM(A.fy) AS fy,
+		SUM(IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable)) AS receivable,
+		SUM(A.air_ticket_cost) AS
+		air_ticket_cost,
+		SUM(C.payable) AS
+		product_cost,
+		SUM(IF(A.confirm_flg = 'F',
+		D.adult_count,
+		A.adult_count)) AS
+		adult_count,
+		SUM(IF(A.confirm_flg = 'F',
+		IF(ISNULL(D.special_count),
+		0,
+		D.special_count),
+		IF(ISNULL(A.special_count),
+		0,
+		A.special_count))) AS special_count,
+		SUM(IF(X.discount_flg = 'Y',
+		X.discount_receivable,
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable)) -
+		IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) -
+		IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable), 0,
+		C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost
+		- X.sale_cost) AS gross_profit,
+		SUM(IF(X.discount_flg = 'Y',
+		X.discount_receivable,
+		IF(B.final_flg = 'Y',
+		B.final_receivable,
+		B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+		0,
+		A.air_ticket_cost) -
+		IF(ISNULL(A.other_cost),
+		0,
+		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy),
+		0, A.fy) - X.sys_cost
+		- X.sale_cost) / SUM(IF(A.confirm_flg
+		= 'F',
+		D.adult_count,
+		A.adult_count) + IF(A.confirm_flg = 'F',
+		IF(ISNULL(D.special_count),
+		0,
+		D.special_count),
+		IF(ISNULL(A.special_count),
+		0,
+		A.special_count))) AS per_profit
+		FROM
+		team_report X
+		LEFT JOIN
+		budget_order_view A ON A.team_number = X.team_number
+		LEFT JOIN
+		receivable B ON A.team_number =
+		B.team_number
+		LEFT JOIN
+		view_team_payable C ON A.team_number = C.team_number
+		LEFT JOIN
+		final_order_view D ON A.team_number
+		= D.team_number
+		<where>
+			<if test="confirm_date_from != null and confirm_date_from !=''">
+				and A.confirm_date &gt;= #{confirm_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_date_to != null and confirm_date_to !=''">
+				and A.confirm_date &lt;= #{confirm_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and A.product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="report_statuses != null and report_statuses !=''">
+				and X.approved in
+				<foreach item="item" index="index" collection="report_statuses" open="(" separator="," close=")">
+					#{report_statuses[${index}]}
+				</foreach>
+			</if>
+			and (A.confirm_flg='Y' or A.confirm_flg='F') and (D.final_type !=4 or D.final_type is null)
+		</where>
+	</select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.common.SupperBO;
@@ -48,6 +49,10 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String product_final_flg;
 
 	private String confirm_month;
+
+	private int adult_count;
+	private int special_count;
+	private BigDecimal tail98;
 
 	public String getTeam_number() {
 		return team_number;
@@ -303,5 +308,29 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setConfirm_month(String confirm_month) {
 		this.confirm_month = confirm_month;
+	}
+
+	public int getAdult_count() {
+		return adult_count;
+	}
+
+	public int getSpecial_count() {
+		return special_count;
+	}
+
+	public BigDecimal getTail98() {
+		return tail98;
+	}
+
+	public void setAdult_count(int adult_count) {
+		this.adult_count = adult_count;
+	}
+
+	public void setSpecial_count(int special_count) {
+		this.special_count = special_count;
+	}
+
+	public void setTail98(BigDecimal tail98) {
+		this.tail98 = tail98;
 	}
 }

@@ -18,8 +18,7 @@ var NeedContext = function() {
 		} else if (self.chosenNeeds().length == 1) {
 			self.airTickets.removeAll();
 			startLoadingIndicator("加载中...");
-			$.getJSON(self.apiurl
-					+ 'ticket/selectOrderAirInfoByProductOrderNumber', {
+			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
 				product_order_number : self.chosenNeeds()[0].split(";")[1]
 			}, function(data) {
 				self.airTickets(data.order_air_infos);
@@ -51,6 +50,15 @@ var NeedContext = function() {
 	// 确认生成订单
 	self.doCreateOrder = function() {
 
+		if ($("#txt-ticket-price").val().trim() == "") {
+			fail_msg("请填写成人单价！");
+			return;
+		}
+		if ($("#txt-ticket-special-price").val().trim() == "") {
+			fail_msg("请填写儿童单价！");
+			return;
+		}
+
 		var allLegTxt = $(".ticket-air-leg");
 		for (var i = 0; i < allLegTxt.length; i++) {
 			var v = $(allLegTxt[i]).val().trim();
@@ -73,8 +81,7 @@ var NeedContext = function() {
 			for (var i = 0; i < trs.length; i++) {
 				var tr = $(trs[i]);
 
-				var ticket_number = $(tr).find("input[st='ticket-number']")
-						.val();
+				var ticket_number = $(tr).find("input[st='ticket-number']").val();
 
 				var leg_from = tr.find("input[st='leg-from-city']").val();
 				var leg_to = tr.find(':input[st="leg-to-city"]').val();
@@ -82,8 +89,7 @@ var NeedContext = function() {
 				var start_time = tr.find("input[st='start-time']").val();
 				var end_time = tr.find("input[st='end-time']").val();
 
-				var add_day_flg = tr.find("input[st='is-add-day']").is(
-						":checked") ? "Y" : "N";
+				var add_day_flg = tr.find("input[st='is-add-day']").is(":checked") ? "Y" : "N";
 
 				var start_place = tr.find("input[st='start-place']").val();
 				var end_place = tr.find("input[st='end-place']").val();
@@ -91,13 +97,10 @@ var NeedContext = function() {
 				var leg_index = tr.find(':input[st="leg-index"]').val();
 				var leg_date = tr.find(':input[st="leg-date"]').val();
 
-				legJson += '{"leg_index":"' + leg_index + '","leg_date":"'
-						+ leg_date + '","leg_from":"' + leg_from
-						+ '","leg_to":"' + leg_to + '","ticket_number":"'
-						+ ticket_number + '","start_time":"' + start_time
-						+ '","end_time":"' + end_time + '","add_day_flg":"'
-						+ add_day_flg + '","start_place":"' + start_place
-						+ '","end_place":"' + end_place + '"}';
+				legJson += '{"leg_index":"' + leg_index + '","leg_date":"' + leg_date + '","leg_from":"' + leg_from
+						+ '","leg_to":"' + leg_to + '","ticket_number":"' + ticket_number + '","start_time":"'
+						+ start_time + '","end_time":"' + end_time + '","add_day_flg":"' + add_day_flg
+						+ '","start_place":"' + start_place + '","end_place":"' + end_place + '"}';
 
 				if (i != trs.length - 1) {
 					legJson += ',';
@@ -111,8 +114,7 @@ var NeedContext = function() {
 		var ticket_price = $("#txt-ticket-price").val();
 		var ticket_special_price = $("#txt-ticket-special-price").val();
 
-		var json = '{"need_pk":"' + need_pk + '","ticket_price":"'
-				+ ticket_price + '","ticket_special_price":"'
+		var json = '{"need_pk":"' + need_pk + '","ticket_price":"' + ticket_price + '","ticket_special_price":"'
 				+ ticket_special_price + '","legJson":' + legJson + '}';
 
 		$.layer({
@@ -156,29 +158,27 @@ var NeedContext = function() {
 		self.airTickets.removeAll();
 		console.log(order_number);
 		startLoadingIndicator("加载中...");
-		$.getJSON(
-				self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber',
-				{
-					product_order_number : order_number
-				}, function(data) {
-					self.airTickets(data.order_air_infos);
-					endLoadingIndicator();
-					airTicketCheckLayer = $.layer({
-						type : 1,
-						title : ['航段信息', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', '500px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#air-ticket-check'
-						},
-						end : function() {
-						}
-					});
-				});
+		$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
+			product_order_number : order_number
+		}, function(data) {
+			self.airTickets(data.order_air_infos);
+			endLoadingIndicator();
+			airTicketCheckLayer = $.layer({
+				type : 1,
+				title : ['航段信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#air-ticket-check'
+				},
+				end : function() {
+				}
+			});
+		});
 	};
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
@@ -219,24 +219,22 @@ var NeedContext = function() {
 		startLoadingIndicator("加载中...");
 		var totalPeople = 0;
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		param += "&airTicketNeed.ordered=N"
-		$.getJSON(self.apiurl + 'ticket/searchAirTicketNeedByPage', param,
-				function(data) {
+		$.getJSON(self.apiurl + 'ticket/searchAirTicketNeedByPage', param, function(data) {
 
-					self.needs(data.airTicketNeeds);
+			self.needs(data.airTicketNeeds);
 
-					$(self.needs()).each(function(idx, data) {
-						totalPeople += data.people_count - 0;
-					});
-					self.totalPeople(totalPeople);
+			$(self.needs()).each(function(idx, data) {
+				totalPeople += data.people_count - 0;
+			});
+			self.totalPeople(totalPeople);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.search = function() {
@@ -281,8 +279,7 @@ var NeedContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -299,10 +296,8 @@ var NeedContext = function() {
 	self.airLegs = ko.observable({});
 	self.refreshAirLeg = function() {
 		var param = "leg.city=" + $("#city").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(data) {
 			self.airLegs(data.legs);
 
 			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
@@ -354,8 +349,7 @@ var NeedContext = function() {
 
 	self.setPageNums1 = function(curPage1) {
 		var startPage1 = curPage1 - 4 > 0 ? curPage1 - 4 : 1;
-		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self
-				.totalCount1();
+		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -399,17 +393,14 @@ var NeedContext = function() {
 		var param = "base.name=" + $("#ticket-name").val();
 		param += "&base.model=" + $("#ticket-model").val();
 
-		param += "&page.start=" + self.startIndexSeason() + "&page.count="
-				+ self.perPageSeason;
+		param += "&page.start=" + self.startIndexSeason() + "&page.count=" + self.perPageSeason;
 
-		$.getJSON(self.apiurl + 'ticket/searchSeasonTicketByPage', param,
-				function(data) {
-					self.seasonTickets(data.bases);
+		$.getJSON(self.apiurl + 'ticket/searchSeasonTicketByPage', param, function(data) {
+			self.seasonTickets(data.bases);
 
-					self.totalCountSeason(Math.ceil(data.page.total
-							/ self.perPageSeason));
-					self.setPageNumsSeason(self.currentPageSeason());
-				});
+			self.totalCountSeason(Math.ceil(data.page.total / self.perPageSeason));
+			self.setPageNumsSeason(self.currentPageSeason());
+		});
 
 	}
 
@@ -454,8 +445,7 @@ var NeedContext = function() {
 			$(tr).find("input[st='start-time']").val(info.start_time);
 			$(tr).find("input[st='end-time']").val(info.end_time);
 
-			$(tr).find("input[st='is-add-day']").attr("checked",
-					info.add_day_flg == 'Y' ? true : false);
+			$(tr).find("input[st='is-add-day']").attr("checked", info.add_day_flg == 'Y' ? true : false);
 
 			$(tr).find("input[st='start-place']").val(info.start_place);
 			$(tr).find("input[st='end-place']").val(info.end_place);
@@ -498,9 +488,7 @@ var NeedContext = function() {
 
 	self.setPageNumsSeason = function(curPageSeason) {
 		var startPageSeason = curPageSeason - 4 > 0 ? curPageSeason - 4 : 1;
-		var endPageSeason = curPageSeason + 4 <= self.totalCountSeason()
-				? curPageSeason + 4
-				: self.totalCountSeason();
+		var endPageSeason = curPageSeason + 4 <= self.totalCountSeason() ? curPageSeason + 4 : self.totalCountSeason();
 		var pageNumsSeason = [];
 		for (var i = startPageSeason; i <= endPageSeason; i++) {
 			pageNumsSeason.push(i);

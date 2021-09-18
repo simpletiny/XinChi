@@ -40,18 +40,26 @@ public class BudgetNonStandardOrderDAOImpl extends SqlSessionDaoSupport implemen
 
 	@Override
 	public BudgetNonStandardOrderBean selectByPrimaryKey(String id) {
-		return (BudgetNonStandardOrderBean) daoUtil.selectByPK("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByPrimaryKey", id);
+		return (BudgetNonStandardOrderBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<BudgetNonStandardOrderBean> selectByParam(BudgetNonStandardOrderBean bean) {
-		List<BudgetNonStandardOrderBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByParam", bean);
+		List<BudgetNonStandardOrderBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByParam", bean);
 		return list;
 	}
 
 	@Override
 	public BudgetNonStandardOrderBean selectByTeamNumber(String team_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByTeamNumber", team_number);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.selectByTeamNumber",
+				team_number);
+	}
+
+	@Override
+	public void insertWithPk(BudgetNonStandardOrderBean bean) {
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.BudgetNonStandardOrderMapper.insert", bean);
 	}
 
 }

@@ -85,6 +85,12 @@ public class DateUtil {
 		return sdf1.format(c.getTime());
 	}
 
+	public static String yesterday() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -1);
+		return sdf1.format(c.getTime());
+	}
+
 	public static String getMinStr() {
 		Calendar c = Calendar.getInstance();
 		return sdf3.format(c.getTime());
@@ -323,8 +329,8 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		String d1 = "2018-03-22";
-		String d2 = "2018-03-21";
-		System.out.println(compare(d1, d2));
+
+		System.out.println(yesterday());
 	}
+
 }

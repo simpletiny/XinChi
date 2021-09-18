@@ -78,6 +78,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+	
 		<!-- 产品订单 -->
 		<action name="searchProductNeedByPage" class="productAction" method="searchProductNeedByPage">
 			<result name="success" type="json">

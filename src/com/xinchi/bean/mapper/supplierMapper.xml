@@ -427,6 +427,11 @@
 		select
 		<include refid="Base_Column_List" />
 		from supplier
+		<where>
+			<if test="supplier_name != null and supplier_name !=''">
+				and supplier_name=#{supplier_name,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select

@@ -24,7 +24,7 @@ public class ReceivedAction extends BaseAction {
 	private ClientReceivedDetailBean detail;
 
 	@Autowired
-	private ReceivedService receivedService;
+	private ReceivedService service;
 
 	/**
 	 * 抹零申请
@@ -32,7 +32,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyRidTail() {
-		resultStr = receivedService.applyRidTail(detail);
+		resultStr = service.applyRidTail(detail);
 		return SUCCESS;
 	}
 
@@ -42,7 +42,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyCollect() {
-		resultStr = receivedService.applyCollect(detail);
+		resultStr = service.applyCollect(detail);
 		return SUCCESS;
 	}
 
@@ -52,13 +52,20 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyTail98() {
-		resultStr = receivedService.applyTail98(detail);
+		resultStr = service.applyTail98(detail);
+		return SUCCESS;
+	}
+
+	private String team_number;
+
+	public String checkIs98() {
+		resultStr = service.checkIs98(team_number);
 		return SUCCESS;
 	}
 
 	// 收入申请
 	public String applyReceive() {
-		resultStr = receivedService.applyReceive(detail);
+		resultStr = service.applyReceive(detail);
 		return SUCCESS;
 	}
 
@@ -70,7 +77,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applySum() {
-		resultStr = receivedService.applySum(detail, allot_json);
+		resultStr = service.applySum(detail, allot_json);
 		return SUCCESS;
 	}
 
@@ -80,7 +87,7 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyIfMorePay() {
-		resultStr = receivedService.applyIfMorePay(detail, allot_json);
+		resultStr = service.applyIfMorePay(detail, allot_json);
 		return SUCCESS;
 	}
 
@@ -93,13 +100,13 @@ public class ReceivedAction extends BaseAction {
 	 * @return
 	 */
 	public String applyStrike() {
-		resultStr = receivedService.applyStrike(detail, strike_out_json, strike_in_json);
+		resultStr = service.applyStrike(detail, strike_out_json, strike_in_json);
 		return SUCCESS;
 	}
 
 	// 返佣申请
 	public String applyFly() {
-		resultStr = receivedService.applyFly(detail);
+		resultStr = service.applyFly(detail);
 		return SUCCESS;
 	}
 
@@ -112,28 +119,29 @@ public class ReceivedAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
+				&& !roles.contains(ResourcesConstants.USER_ROLE_CASHIER)) {
 			detail.setCreate_user(sessionBean.getUser_number());
 		}
 		params.put("bo", detail);
 
 		page.setParams(params);
 
-		receiveds = receivedService.getAllReceivedsByPage(page);
+		receiveds = service.getAllReceivedsByPage(page);
 		return SUCCESS;
 	}
 
 	private String received_pks;
 
 	public String rollBackReceived() {
-		resultStr = receivedService.rollBackReceived(received_pks);
+		resultStr = service.rollBackReceived(received_pks);
 		return SUCCESS;
 	}
 
 	private String related_pks;
 
 	public String searchByRelatedPks() {
-		receiveds = receivedService.selectByRelatedPks(related_pks);
+		receiveds = service.selectByRelatedPks(related_pks);
 
 		return SUCCESS;
 	}
@@ -196,6 +204,14 @@ public class ReceivedAction extends BaseAction {
 
 	public void setStrike_in_json(String strike_in_json) {
 		this.strike_in_json = strike_in_json;
+	}
+
+	public String getTeam_number() {
+		return team_number;
+	}
+
+	public void setTeam_number(String team_number) {
+		this.team_number = team_number;
 	}
 
 }

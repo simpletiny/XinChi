@@ -58,6 +58,7 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private BigDecimal product_cost;
 
+	private String passenger_captain;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
@@ -293,6 +294,14 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setName_confirm_status(String name_confirm_status) {
 		this.name_confirm_status = name_confirm_status;
+	}
+
+	public String getPassenger_captain() {
+		return passenger_captain;
+	}
+
+	public void setPassenger_captain(String passenger_captain) {
+		this.passenger_captain = passenger_captain;
 	}
 
 }
