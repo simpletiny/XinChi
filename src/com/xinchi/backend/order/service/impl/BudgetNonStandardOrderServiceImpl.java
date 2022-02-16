@@ -12,14 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
+import com.xinchi.backend.order.dao.OrderTicketInfoDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirNeedTeamNumberBean;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.bean.SaleOrderTicketInfoBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -76,6 +82,81 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 		bean.setPassenger_captain(passenger_captain);
 		dao.insertWithPk(bean);
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private OrderTicketInfoDAO orderTicketInfoDao;
+
+	@Override
+	public String createOnlyTicketOrder(BudgetNonStandardOrderBean bean, String json) {
+		// 保存确认文件
+		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
+			saveFile(bean);
+		}
+
+		String order_pk = DBCommonUtil.genPk();
+		String passenger_captain = "";
+		bean.setPk(order_pk);
+		bean.setProduct_name("单机票");
+
+		JSONObject obj = JSONObject.fromObject(json);
+
+		// 保存名单信息
+		JSONArray nameList = obj.getJSONArray("name_json");
+		for (int i = 0; i < nameList.size(); i++) {
+			JSONObject name_obj = JSONObject.fromObject(nameList.get(i));
+			String chairman = name_obj.getString("chairman");
+			int name_index = name_obj.getInt("index");
+			String name = name_obj.getString("name");
+			String sex = name_obj.getString("sex");
+			String cellphone_A = name_obj.getString("cellphone_A");
+			String cellphone_B = name_obj.getString("cellphone_B");
+			String id = name_obj.getString("id");
+
+			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
+			passenger.setName(name);
+			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
+			passenger.setName_index(name_index);
+			passenger.setSex(sex);
+			passenger.setCellphone_A(cellphone_A);
+			passenger.setCellphone_B(cellphone_B);
+			passenger.setId(id);
+			passenger.setOrder_pk(bean.getPk());
+			nameListDao.insert(passenger);
+		}
+		bean.setPassenger_captain(passenger_captain);
+
+		// 保存航班信息
+		JSONArray ticketList = obj.getJSONArray("ticket_json");
+		String air_comment = obj.getString("air_comment");
+		for (int i = 0; i < ticketList.size(); i++) {
+			JSONObject ticket_obj = JSONObject.fromObject(ticketList.get(i));
+
+			int index = ticket_obj.getInt("index");
+			String date = ticket_obj.getString("date");
+			String from_city = ticket_obj.getString("from_city");
+			String to_city = ticket_obj.getString("to_city");
+
+			SaleOrderTicketInfoBean soti = new SaleOrderTicketInfoBean();
+			soti.setTicket_index(index);
+			soti.setTicket_date(date);
+			soti.setFrom_city(from_city);
+			soti.setTo_city(to_city);
+			soti.setOrder_pk(order_pk);
+
+			if (index == 1)
+				soti.setComment(air_comment);
+
+			orderTicketInfoDao.insert(soti);
+		}
+
+		dao.insertWithPk(bean);
+
 		return SUCCESS;
 	}
 
@@ -170,6 +251,201 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 			receivableDao.insert(receivable);
 		}
+		bean.setPassenger_captain(passenger_captain);
+		dao.update(bean);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private AirTicketNeedDAO airTicketNeedDao;
+
+	@Autowired
+	private AirNeedTeamNumberDAO airNeedTeamNumberDao;
+
+	@Override
+	public String updateOnlyTicketOrder(BudgetNonStandardOrderBean bean, String json) {
+		String order_pk = bean.getPk();
+		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(order_pk);
+		bean.setCreate_user(old.getCreate_user());
+		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
+			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
+				deleteFile(old);
+				saveFile(bean);
+			}
+		} else {
+			deleteFile(old);
+		}
+
+		// 修改名单
+		// 删除之前的名单
+		nameListDao.deleteByOrderPk(order_pk);
+
+		JSONObject obj = JSONObject.fromObject(json);
+
+		// 保存现在的名单信息
+		String passenger_captain = "";
+		JSONArray nameList = obj.getJSONArray("name_json");
+		for (int i = 0; i < nameList.size(); i++) {
+			JSONObject name_obj = JSONObject.fromObject(nameList.get(i));
+			String chairman = name_obj.getString("chairman");
+			int name_index = name_obj.getInt("index");
+			String name = name_obj.getString("name");
+			String sex = name_obj.getString("sex");
+			String cellphone_A = name_obj.getString("cellphone_A");
+			String cellphone_B = name_obj.getString("cellphone_B");
+			String id = name_obj.getString("id");
+
+			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
+			passenger.setName(name);
+			passenger.setChairman(chairman);
+			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
+				passenger_captain = name;
+			}
+			passenger.setName_index(name_index);
+			passenger.setSex(sex);
+			passenger.setCellphone_A(cellphone_A);
+			passenger.setCellphone_B(cellphone_B);
+			passenger.setId(id);
+			passenger.setOrder_pk(bean.getPk());
+			nameListDao.insert(passenger);
+		}
+		bean.setPassenger_captain(passenger_captain);
+
+		// 删除之前的航班信息
+		orderTicketInfoDao.deleteByOrderPk(order_pk);
+
+		String first_from_to = "";
+		String first_ticket_date = "";
+		// 保存现在的航班信息
+		JSONArray ticketList = obj.getJSONArray("ticket_json");
+		String air_comment = obj.getString("air_comment");
+		for (int i = 0; i < ticketList.size(); i++) {
+			JSONObject ticket_obj = JSONObject.fromObject(ticketList.get(i));
+
+			int index = ticket_obj.getInt("index");
+			String date = ticket_obj.getString("date");
+			String from_city = ticket_obj.getString("from_city");
+			String to_city = ticket_obj.getString("to_city");
+
+			SaleOrderTicketInfoBean soti = new SaleOrderTicketInfoBean();
+			soti.setTicket_index(index);
+			soti.setTicket_date(date);
+			soti.setFrom_city(from_city);
+			soti.setTo_city(to_city);
+			soti.setOrder_pk(order_pk);
+			if (index == 1) {
+				soti.setComment(air_comment);
+				first_from_to += from_city + "-" + to_city;
+				// fly_day = start_day;
+				first_ticket_date = date;
+			}
+
+			orderTicketInfoDao.insert(soti);
+		}
+
+		if (bean.getConfirm_flg().equals("Y")) {
+			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
+				bean.setTeam_number(numberService.generateTeamNumber());
+			}
+
+			// 更新名单的team_number
+			List<SaleOrderNameListBean> names = nameListDao.selectByOrderPk(bean.getPk());
+			for (SaleOrderNameListBean name : names) {
+				name.setTeam_number(bean.getTeam_number());
+				nameListDao.update(name);
+			}
+			// 更新机票信息的team_number
+			List<SaleOrderTicketInfoBean> tickets = orderTicketInfoDao.selectByOrderPk(bean.getPk());
+			for (SaleOrderTicketInfoBean ticket : tickets) {
+				ticket.setTeam_number(bean.getTeam_number());
+				orderTicketInfoDao.update(ticket);
+			}
+
+			String departureDate = bean.getDeparture_date();
+			int days = bean.getDays();
+			String returnDate = DateUtil.addDate(departureDate, days - 1);
+
+			if (SimpletinyString.isEmpty(bean.getConfirm_type())) {
+				// 因为不设计产品，第一次确认名单状态标记为产品确认状态，所以产品操作状态直接标记为已操作
+				bean.setName_confirm_status("3");
+				bean.setOperate_flg("I");
+
+				// 生成应收款
+				ReceivableBean receivable = new ReceivableBean();
+				receivable.setTeam_number(bean.getTeam_number());
+				receivable.setFinal_flg("N");
+				receivable.setClient_employee_pk(bean.getClient_employee_pk());
+
+				receivable.setDeparture_date(bean.getDeparture_date());
+				receivable.setReturn_date(returnDate);
+				receivable.setProduct("单机票");
+				receivable.setPeople_count(
+						bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+				receivable.setBudget_receivable(bean.getReceivable());
+
+				receivable.setBudget_balance(bean.getReceivable());
+				receivable.setReceived(BigDecimal.ZERO);
+				receivable.setSales(old.getCreate_user());
+				receivable.setCreate_user(old.getCreate_user());
+
+				receivableDao.insert(receivable);
+
+				// 生成票务需求
+				AirTicketNeedBean atn = new AirTicketNeedBean();
+
+				String ticket_client_number = "";
+
+				atn.setPassenger_captain(passenger_captain);
+				atn.setComment(air_comment);
+				atn.setProduct_name("单机票");
+				atn.setDeparture_date(bean.getDeparture_date());
+				atn.setAdult_cnt(bean.getAdult_count());
+				atn.setSpecial_cnt((bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+				atn.setFirst_from_to(first_from_to);
+				// 因为单机票没有产品订单，直接写入团号信息
+				atn.setProduct_order_number(bean.getTeam_number());
+
+				UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+						.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+				ticket_client_number = sessionBean.getUser_number();
+
+				atn.setTicket_client_number(ticket_client_number);
+				atn.setFirst_ticket_date(first_ticket_date);
+
+				String need_pk = airTicketNeedDao.insert(atn);
+				// 生成团号和票务需求对应关系表
+				AirNeedTeamNumberBean ant = new AirNeedTeamNumberBean();
+				ant.setNeed_pk(need_pk);
+				ant.setTeam_number(bean.getTeam_number());
+				airNeedTeamNumberDao.insert(ant);
+
+			} else if (bean.getConfirm_type().equals("edit")) {
+				// 更新应收款
+				ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
+				receivable.setDeparture_date(bean.getDeparture_date());
+				receivable.setReturn_date(returnDate);
+				receivable.setPeople_count(
+						bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+				receivable.setBudget_receivable(bean.getReceivable());
+
+				receivable.setBudget_balance(bean.getReceivable()
+						.subtract((receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived())));
+				receivableDao.update(receivable);
+
+				// 更新票务需求
+				AirTicketNeedBean atn = airTicketNeedDao.selectByProductOrderNumber(bean.getTeam_number());
+
+				atn.setPassenger_captain(passenger_captain);
+				atn.setComment(air_comment);
+				atn.setDeparture_date(bean.getDeparture_date());
+				atn.setAdult_cnt(bean.getAdult_count());
+				atn.setSpecial_cnt((bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+				atn.setFirst_from_to(first_from_to);
+				atn.setFirst_ticket_date(first_ticket_date);
+				airTicketNeedDao.update(atn);
+			}
+		}
+
 		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;
@@ -316,14 +592,18 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	}
 
 	@Override
-	public String delete(String id) {
-		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(id);
-		// AirTicketOrderBean ticketOrder =
-		// airTicketOrderService.selectBySaleOrderPk(id);
-		// if (null != ticketOrder && ticketOrder.getLock_flg().equals("1"))
-		// return "air_ticket_lock";
+	public String delete(String order_pk) {
+		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(order_pk);
 		deleteFile(old);
-		dao.delete(id);
+		dao.delete(order_pk);
+		// 删除名单
+		nameListDao.deleteByOrderPk(order_pk);
+
+		// 如果是单机票订单，删除机票信息
+		if (old.getIndependent_flg().equals("A")) {
+			orderTicketInfoDao.deleteByOrderPk(order_pk);
+		}
+
 		return SUCCESS;
 	}
 

@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -24,4 +25,6 @@ public interface ReceivedDAO {
 	public ClientReceivedDetailBean selectReceivedDetailByRelatedPk(String related_pk);
 
 	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean);
+
+	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
 }

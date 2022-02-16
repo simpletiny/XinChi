@@ -21,7 +21,7 @@
 	height: 30px;
 }
 
-.confirmed{
+.confirmed {
 	font-weight: bold;
 }
 </style>
@@ -68,6 +68,12 @@
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" name="deposit.account"
 									data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
+							</div>
+						</div>
+						<div>
+							<label class="col-md-1 control-label">备注</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
 							</div>
 						</div>
 						<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
@@ -153,9 +159,11 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr role="row">
+						<th>支付序</th>
 						<th>支出账户</th>
 						<th>收款方</th>
 						<th>金额</th>
+						<th>支付时间</th>
 						<th>到期时间</th>
 						<th>备注</th>
 						<th>确认</th>
@@ -163,9 +171,11 @@
 				</thead>
 				<tbody id="tbody-data" data-bind="foreach:batDeposits">
 					<tr>
+						<td data-bind="text: $data.pay_index"></td>
 						<td data-bind="text: $data.account"></td>
 						<td data-bind="text: $data.supplier_name"></td>
 						<td data-bind="text: $data.money" class="rmb"></td>
+						<td data-bind="text: $data.time"></td>
 						<td data-bind="text: $data.return_date"></td>
 						<td data-bind="text: $data.comment"></td>
 						<td><a href="javascript:void(0)" data-bind="event:{click:confirmUpload}">确认</a></td>
@@ -264,7 +274,7 @@
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">入账时间</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="deposit.time" placeholder="请准确填写避免冲突" class="form-control datetime-picker"
+						<input type="text" name="deposit.time" placeholder="请准确填写避免冲突" class="form-control datesecond-picker"
 							required="required" />
 					</div>
 				</div>

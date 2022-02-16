@@ -467,7 +467,6 @@ var writeName = function(nameObj) {
 
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
-	var done = false;
 	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 
@@ -479,14 +478,12 @@ var writeName = function(nameObj) {
 			$(name).val(nameObj.name);
 			$(id).val(nameObj.id);
 
-			done = true;
+			return;
 		}
 	}
 
-	if (!done) {
-		ctx.addName();
-		writeName(nameObj);
-	}
+	ctx.addName();
+	writeName(nameObj);
 
 }
 

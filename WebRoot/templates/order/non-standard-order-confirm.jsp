@@ -208,6 +208,7 @@
 							</div>
 						</div>
 						<div align="right">
+							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a>
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 						</div>
 					</div>

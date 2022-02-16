@@ -10,6 +10,8 @@ import com.xinchi.tools.Page;
 
 public interface PayableDAO {
 
+	public PayableBean selectByPk(String pk);
+
 	public void insert(PayableBean payable);
 
 	public List<PayableBean> selectByParam(PayableBean payable);

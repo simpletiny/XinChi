@@ -339,6 +339,7 @@
 	</select>
 
 	<select id="searchReceivableDetailsByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+
 		select
 		<include refid="Base_Column_List" />
 		from client_received_detail
@@ -347,7 +348,12 @@
 			team_number = #{team_number,jdbcType=CHAR}
 		</where>
 	</select>
+	<select id="searchSumReceivedByTeamNumber" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+		select sum(received) from
+		client_received_detail where type != 'TAIL98'
+		and team_number = #{team_number,jdbcType=CHAR}
 
+	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.team_number,

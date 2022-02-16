@@ -35,7 +35,7 @@
 				<form class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 30%; float: right">
+						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: rollBack">打回重报</button>
 								<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reimbursement() }">费用报销</button> -->

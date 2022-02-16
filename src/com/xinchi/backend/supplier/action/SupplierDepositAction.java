@@ -71,6 +71,14 @@ public class SupplierDepositAction extends BaseAction {
 
 	private String deposit_pk;
 
+	private String voucher_number;
+
+	public String searchDepositByVoucherNumber() {
+		deposits = service.selectByVoucherNumber(voucher_number);
+
+		return SUCCESS;
+	}
+
 	/**
 	 * 删除押金账
 	 * 
@@ -139,6 +147,14 @@ public class SupplierDepositAction extends BaseAction {
 
 	public void setDeposit_type(String deposit_type) {
 		this.deposit_type = deposit_type;
+	}
+
+	public String getVoucher_number() {
+		return voucher_number;
+	}
+
+	public void setVoucher_number(String voucher_number) {
+		this.voucher_number = voucher_number;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -18,4 +19,8 @@ public interface OrderReportService extends BaseService {
 	public String fillAriTicketCost(String team_number, BigDecimal air_ticket_cost);
 
 	public OrderReportDto searchSumReport(OrderReportDto option);
+
+	public TeamReportBean selectTeamReportByTeamNumber(String team_number);
+
+	public String updateTeamReport(TeamReportBean bean);
 }

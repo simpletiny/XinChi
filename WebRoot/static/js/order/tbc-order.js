@@ -23,12 +23,12 @@ var ProductBoxContext = function() {
 			var order_pk = data[0];
 			var standard_flg = data[1];
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要删除此订单吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
@@ -66,10 +66,16 @@ var ProductBoxContext = function() {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
 			var standard_flg = data[1];
+			var independent_flg = data[2];
+
 			if (standard_flg == "Y") {
 				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
+				if (independent_flg == "A") {
+					window.location.href = self.apiurl + "templates/order/only-ticket-order-edit.jsp?key=" + order_pk;
+				} else {
+					window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
+				}
 			}
 		}
 	};
@@ -86,10 +92,19 @@ var ProductBoxContext = function() {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
 			var standard_flg = data[1];
+			var independent_flg = data[2];
+
 			if (standard_flg == "Y") {
 				window.location.href = self.apiurl + "templates/order/standard-order-confirm.jsp?key=" + order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-confirm.jsp?key=" + order_pk;
+				if (independent_flg == "A") {
+					window.location.href = self.apiurl + "templates/order/only-ticket-order-confirm.jsp?key="
+							+ order_pk;
+				} else {
+					window.location.href = self.apiurl + "templates/order/non-standard-order-confirm.jsp?key="
+							+ order_pk;
+				}
+
 			}
 		}
 	};
@@ -106,7 +121,7 @@ var ProductBoxContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
-			
+
 			endLoadingIndicator();
 		});
 	};
@@ -115,12 +130,12 @@ var ProductBoxContext = function() {
 		$("#img-pic").attr("src", "");
 		confirmCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看确认件', '' ],
+			title : ['查看确认件', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -130,12 +145,18 @@ var ProductBoxContext = function() {
 			}
 		});
 
-		$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder="
+						+ user_number);
 	};
 	// 新标签页显示大图片
-	$("#img-pic").on('click', function() {
-		window.open(self.apiurl + "templates/common/check-picture-big.jsp?src=" + encodeURIComponent($(this).attr("src")));
-	});
+	$("#img-pic").on(
+			'click',
+			function() {
+				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
+						+ encodeURIComponent($(this).attr("src")));
+			});
 	// 下载相关文件
 	self.downloadFile = function(data, event) {
 		$('.download-panel').remove();
@@ -198,7 +219,7 @@ var ProductBoxContext = function() {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

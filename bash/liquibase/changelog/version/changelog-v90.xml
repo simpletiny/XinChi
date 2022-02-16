@@ -53,6 +53,49 @@
 			<comment>ALTER TABLE air_ticket_need </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE supplier_paid_detail
+					ADD COLUMN payable_pk CHAR(22) NULL COMMENT '关联的应付款pk' AFTER paid_user;
+             ]]>
+			<comment>ALTER TABLE supplier_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		ALTER TABLE budget_non_standard_order 
+					CHANGE COLUMN independent_flg independent_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否为独立团，Y独立团，N非独立，A单机票';
+             ]]>
+			<comment>ALTER TABLE budget_non_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+            		CREATE TABLE sale_order_ticket_info (
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  pk CHAR(22) NOT NULL,
+					  team_number VARCHAR(10) NULL,
+					  ticket_index TINYINT NULL,
+					  ticket_date VARCHAR(10) NULL,
+					  from_city VARCHAR(10) NULL,
+					  to_city VARCHAR(10) NULL,
+					  order_pk CHAR(22) NULL,
+					  comment VARCHAR(200) NULL COMMENT '票务需求，有多条记录的数据，只存储于ticket_index为1的行',
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '订单机票信息（目前用于单机票）';
+             ]]>
+			<comment>CREATE TABLE sale_order_ticket_info</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

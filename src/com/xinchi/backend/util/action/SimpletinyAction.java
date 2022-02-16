@@ -30,6 +30,7 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
+import com.xinchi.backend.order.service.OrderReportService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
@@ -72,6 +73,7 @@ import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.bean.TempBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.BaseAction;
@@ -883,6 +885,28 @@ public class SimpletinyAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String team_numbers;
+
+	@Autowired
+	private OrderReportService orderReportService;
+
+	public String fixReportReceivable() {
+
+		String[] t_ns = team_numbers.split(",");
+
+		for (String t_n : t_ns) {
+			TeamReportBean trb = orderReportService.selectTeamReportByTeamNumber(t_n);
+			BigDecimal sum = receivedService.selectSumReceivedByTeamNumber(t_n);
+
+			trb.setDiscount_receivable(sum);
+
+			orderReportService.updateTeamReport(trb);
+		}
+
+		resultStr = SUCCESS;
+		return SUCCESS;
+	}
+
 	public List<PayableBean> getPayables() {
 		return payables;
 	}
@@ -913,5 +937,13 @@ public class SimpletinyAction extends BaseAction {
 
 	public void setReboot_min(int reboot_min) {
 		this.reboot_min = reboot_min;
+	}
+
+	public String getTeam_numbers() {
+		return team_numbers;
+	}
+
+	public void setTeam_numbers(String team_numbers) {
+		this.team_numbers = team_numbers;
 	}
 }

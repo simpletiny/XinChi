@@ -64,6 +64,9 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String operate_flg;
 
+	// dto
+	private String confirm_type;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -302,6 +305,14 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setPassenger_captain(String passenger_captain) {
 		this.passenger_captain = passenger_captain;
+	}
+
+	public String getConfirm_type() {
+		return confirm_type;
+	}
+
+	public void setConfirm_type(String confirm_type) {
+		this.confirm_type = confirm_type;
 	}
 
 }

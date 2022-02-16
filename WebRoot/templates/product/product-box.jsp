@@ -37,6 +37,7 @@ tr td {
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
 							</div> -->
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createTicket() }">单机票</button>
 						</div> 
 					</div>
 					<div class="form-group">

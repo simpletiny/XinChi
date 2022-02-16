@@ -35,7 +35,7 @@ public class GenerateXMLMain {
 		 * List<String> tablelist = DatabaseUtil.getTableList(); for (String table :
 		 * tablelist) { createXmlAndBOByTabName(table); }
 		 */
-		String table = "product_urgent";
+		String table = "sale_order_ticket_info";
 		createXmlAndBOByTabName(table);
 	}
 
@@ -53,6 +53,7 @@ public class GenerateXMLMain {
 		for (String str : strs) {
 			clzssName += Character.toUpperCase(str.charAt(0)) + str.substring(1);
 		}
+		clzssName += "Bean";
 		// 配置类名 包名和表名
 		hbmMoudelVO.setClzssName(clzssName);
 		hbmMoudelVO.setTableName(table);

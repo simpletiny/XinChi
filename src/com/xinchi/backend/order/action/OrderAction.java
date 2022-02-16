@@ -17,6 +17,7 @@ import com.xinchi.backend.order.service.FinalNonStandardOrderService;
 import com.xinchi.backend.order.service.FinalStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.order.service.OrderTicketInfoService;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -25,6 +26,7 @@ import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.bean.SaleOrderTicketInfoBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -39,9 +41,6 @@ public class OrderAction extends BaseAction {
 	private BudgetStandardOrderService bsoService;
 
 	private BudgetStandardOrderBean bsOrder;
-
-	@Autowired
-	private OrderNameListService orderNameService;
 
 	private String json;
 
@@ -58,6 +57,16 @@ public class OrderAction extends BaseAction {
 
 	public String createBudgetNonStandardOrder() {
 		resultStr = bnsoService.createOrder(bnsOrder, json);
+		return SUCCESS;
+	}
+
+	/**
+	 * 创建但机票订单
+	 * 
+	 * @return
+	 */
+	public String createOnlyTicketOrder() {
+		resultStr = bnsoService.createOnlyTicketOrder(bnsOrder, json);
 		return SUCCESS;
 	}
 
@@ -289,6 +298,16 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 更新单机票订单
+	 * 
+	 * @return
+	 */
+	public String updateOnlyTicketOrder() {
+		resultStr = bnsoService.updateOnlyTicketOrder(bnsOrder, json);
+		return SUCCESS;
+	}
+
 	public String updateConfirmedNonStandardOrder() {
 		resultStr = bnsoService.updateConfirmedNonStandardOrder(bnsOrder, json);
 		return SUCCESS;
@@ -359,6 +378,11 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<SaleOrderTicketInfoBean> ticketInfos;
+
+	@Autowired
+	private OrderTicketInfoService orderTicketInfoService;
+
 	/**
 	 * 查询非标准预算单
 	 * 
@@ -367,6 +391,10 @@ public class OrderAction extends BaseAction {
 	public String searchTbcBnsOrderByPk() {
 		bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
 		passengers = orderNameListService.selectByOrderPk(order_pk);
+
+		if (bnsOrder.getIndependent_flg().equals("A")) {
+			ticketInfos = orderTicketInfoService.selectByOrderPk(order_pk);
+		}
 		return SUCCESS;
 	}
 
@@ -532,5 +560,13 @@ public class OrderAction extends BaseAction {
 
 	public void setTeam_numbers(String team_numbers) {
 		this.team_numbers = team_numbers;
+	}
+
+	public List<SaleOrderTicketInfoBean> getTicketInfos() {
+		return ticketInfos;
+	}
+
+	public void setTicketInfos(List<SaleOrderTicketInfoBean> ticketInfos) {
+		this.ticketInfos = ticketInfos;
 	}
 }

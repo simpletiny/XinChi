@@ -114,7 +114,7 @@
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg}, checked: $root.chosenOrders" /></td>
+									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg+';'+$data.independent_flg}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.product_name"></td>

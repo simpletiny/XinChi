@@ -26,6 +26,7 @@
 		<result column="paid_user" property="paid_user" jdbcType="VARCHAR" />
 		<result column="approve_user_name" property="approve_user_name" jdbcType="VARCHAR" />
 		<result column="paid_user_name" property="paid_user_name" jdbcType="VARCHAR" />
+		<result column="payable_pk" property="payable_pk" jdbcType="CHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -50,7 +51,8 @@
 		update_time,
 		limit_time,
 		approve_user,
-		paid_user
+		paid_user,
+		payable_pk
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -139,6 +141,9 @@
 			<if test="approve_user != null">
 				approve_user,
 			</if>
+			<if test="payable_pk != null">
+				payable_pk,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -203,6 +208,9 @@
 			</if>
 			<if test="approve_user != null">
 				#{approve_user,jdbcType=VARCHAR},
+			</if>
+			<if test="payable_pk != null">
+				#{payable_pk,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -274,6 +282,7 @@
 			<if test="paid_user != null">
 				paid_user = #{paid_user,jdbcType=VARCHAR},
 			</if>
+
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>

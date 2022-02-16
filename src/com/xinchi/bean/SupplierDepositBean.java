@@ -37,6 +37,7 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 	private List<String> statuses;
 	private String voucher_file_name;
 	private String time;
+	private int pay_index;
 
 	public String getVoucher_number() {
 		return voucher_number;
@@ -164,6 +165,14 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setReceived_voucher_number(String received_voucher_number) {
 		this.received_voucher_number = received_voucher_number;
+	}
+
+	public int getPay_index() {
+		return pay_index;
+	}
+
+	public void setPay_index(int pay_index) {
+		this.pay_index = pay_index;
 	}
 
 }

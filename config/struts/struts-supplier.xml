@@ -77,6 +77,14 @@
 		<action name="deleteSupplierDeposit" class="supplierDepositAction" method="deleteSupplierDeposit">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 通过凭证号搜索押金 -->
+		<action name="searchDepositByVoucherNumber" class="supplierDepositAction" method="searchDepositByVoucherNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 		<!--押金退回 -->
 		<action name="receiveSupplierDeposit" class="supplierDepositAction" method="receiveSupplierDeposit">
 			<result name="success" type="str">resultStr</result>

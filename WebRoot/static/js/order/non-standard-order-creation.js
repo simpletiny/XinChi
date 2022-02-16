@@ -256,7 +256,6 @@ function formatNameList() {
 	var namePattern = /[\u4e00-\u9fa5]+/gm;
 	var names = nameList.match(namePattern);
 
-	console.log(nameList);
 	if (null == ids) {
 		fail_msg("请填写正确的名单！");
 		return;
@@ -264,7 +263,6 @@ function formatNameList() {
 
 	for (var i = 0; i < ids.length; i++) {
 		var id = ids[i];
-		console.log(id)
 		nameList = nameList.replace(id, ":" + id + ";");
 	}
 
@@ -306,7 +304,6 @@ var writeName = function(nameObj) {
 
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
-	var done = false;
 	for (var i = 0; i < trs.length; i++) {
 		var tr = trs[i];
 
@@ -318,14 +315,12 @@ var writeName = function(nameObj) {
 			$(name).val(nameObj.name);
 			$(id).val(nameObj.id);
 
-			done = true;
+			return;
 		}
 	}
 
-	if (!done) {
-		ctx.addName();
-		writeName(nameObj);
-	}
+	ctx.addName();
+	writeName(nameObj);
 
 }
 

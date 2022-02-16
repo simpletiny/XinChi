@@ -81,4 +81,16 @@ public class OrderReportServiceImpl implements OrderReportService {
 		return dao.selectSumReport(option);
 	}
 
+	@Override
+	public TeamReportBean selectTeamReportByTeamNumber(String team_number) {
+		return dao.selectTeamReportByTn(team_number);
+	}
+
+	@Override
+	public String updateTeamReport(TeamReportBean bean) {
+		dao.updateTeamReport(bean);
+
+		return SUCCESS;
+	}
+
 }

@@ -171,15 +171,19 @@ public class PayableServiceImpl implements PayableService {
 		document.addField("return_date", DateUtil.castStr2Date(payable.getReturn_date()));
 		document.addField("product", payable.getProduct());
 		document.addField("people_count", payable.getPeople_count());
-		document.addField("budget_payable", (null == payable.getBudget_payable() ? 0 : payable.getBudget_payable().doubleValue()));
+		document.addField("budget_payable",
+				(null == payable.getBudget_payable() ? 0 : payable.getBudget_payable().doubleValue()));
 
-		document.addField("final_payable", (null == payable.getFinal_payable() ? 0 : payable.getFinal_payable().doubleValue()));
+		document.addField("final_payable",
+				(null == payable.getFinal_payable() ? 0 : payable.getFinal_payable().doubleValue()));
 
 		document.addField("paid", (null == payable.getPaid() ? 0 : payable.getPaid().doubleValue()));
 
-		document.addField("budget_balance", (null == payable.getBudget_balance() ? 0 : payable.getBudget_balance().doubleValue()));
+		document.addField("budget_balance",
+				(null == payable.getBudget_balance() ? 0 : payable.getBudget_balance().doubleValue()));
 
-		document.addField("final_balance", (null == payable.getFinal_balance() ? 0 : payable.getFinal_balance().doubleValue()));
+		document.addField("final_balance",
+				(null == payable.getFinal_balance() ? 0 : payable.getFinal_balance().doubleValue()));
 
 		document.addField("sales", payable.getSales());
 		document.addField("sales_name", payable.getSales_name());
@@ -342,38 +346,14 @@ public class PayableServiceImpl implements PayableService {
 
 	@Override
 	public void updatePayablePaid(SupplierPaidDetailBean detail) {
-		PayableBean options = new PayableBean();
-		options.setTeam_number(detail.getTeam_number());
-		options.setSupplier_employee_pk(detail.getSupplier_employee_pk());
 
-		List<PayableBean> payables = dao.selectByParam(options);
-		PayableBean payable = new PayableBean();
-		if (null != payables && payables.size() > 0) {
-			payable = payables.get(0);
-		} else {
-			return;
-		}
-
+		PayableBean payable = dao.selectByPk(detail.getPayable_pk());
 		payable.setPaid(payable.getPaid().add(detail.getMoney()));
 		payable.setBudget_balance(payable.getBudget_balance().subtract(detail.getMoney()));
-
 		if (payable.getFinal_flg().equals("Y")) {
 			payable.setFinal_balance(payable.getFinal_balance().subtract(detail.getMoney()));
 		}
 		dao.update(payable);
-
-		// SolrClient solrClient =
-		// solr.getSolr(PropertiesUtil.getProperty("solr.payableUrl"));
-		//
-		// SolrInputDocument document = castP2D(payable);
-		// try {
-		// solrClient.add(document);
-		// solrClient.commit();
-		// } catch (SolrServerException e) {
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -73,6 +74,12 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 	@Override
 	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByParam", bean);
+	}
+
+	@Override
+	public BigDecimal selectSumReceivedByTeamNumber(String team_number) {
+		return (BigDecimal) daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.searchSumReceivedByTeamNumber", team_number);
 	}
 
 }

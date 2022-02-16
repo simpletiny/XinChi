@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.${hbmMoudelVO.clzssName?cap_first}Mapper" >
   <resultMap id="BaseResultMap" type="com.xinchi.bean.${hbmMoudelVO.clzssName?cap_first}" >
-    	<id column="id" property="id" jdbcType="CHAR" />
     <#list hbmMoudelVO.columnList as columnVO>
 	    <result column="${columnVO.propertyName}" property="${columnVO.propertyName}" jdbcType="${columnVO.jdbcType?upper_case}" />
 	 </#list>  
@@ -30,7 +29,7 @@
     where pk = ${r"#{pk,jdbcType=CHAR}"}
   </delete>
   
-  <insert id="insert" parameterType="${hbmMoudelVO.clzssName?cap_first}" >
+  <insert id="insert" parameterType="com.xinchi.bean.${hbmMoudelVO.clzssName?cap_first}" >
   	
     insert into ${hbmMoudelVO.tableName}
     
@@ -63,7 +62,7 @@
   </insert>
   
 
-  <update id="updateByPrimaryKey" parameterType="${hbmMoudelVO.clzssName?cap_first}" >
+  <update id="updateByPrimaryKey" parameterType="com.xinchi.bean.${hbmMoudelVO.clzssName?cap_first}" >
     update ${hbmMoudelVO.tableName}
     <set >
     	<#list hbmMoudelVO.columnList as columnVO>
@@ -77,7 +76,7 @@
     </set>
     where pk = ${r"#{pk,jdbcType=CHAR}"}
   </update>
- <select id="selectByParam" parameterType="${hbmMoudelVO.clzssName?cap_first}" resultMap="BaseResultMap">
+ <select id="selectByParam" parameterType="com.xinchi.bean.${hbmMoudelVO.clzssName?cap_first}" resultMap="BaseResultMap">
    select 
     <include refid="Base_Column_List" />
     from ${hbmMoudelVO.tableName}

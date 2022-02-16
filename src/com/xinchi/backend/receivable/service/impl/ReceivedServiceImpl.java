@@ -425,4 +425,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 		}
 		return SUCCESS;
 	}
+
+	@Override
+	public BigDecimal selectSumReceivedByTeamNumber(String team_number) {
+
+		return dao.selectSumReceivedByTeamNumber(team_number);
+	}
 }

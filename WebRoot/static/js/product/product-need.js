@@ -53,27 +53,25 @@ var OrderContext = function() {
 		var totalSpecial = 0;
 		var param = $('#form-search').serialize();
 		param += "&order_option.operate_flgs=N&order_option.operate_flgs=A";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductNeedByPage', param,
-				function(data) {
-					self.orders(data.productOrders);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductNeedByPage', param, function(data) {
+			self.orders(data.productOrders);
 
-					$(self.orders()).each(function(idx, data) {
-						totalAdult += data.adult_count - 0;
-						if (data.special_count != null) {
-							totalSpecial += data.special_count - 0;
-						}
-					});
+			$(self.orders()).each(function(idx, data) {
+				totalAdult += data.adult_count - 0;
+				if (data.special_count != null) {
+					totalSpecial += data.special_count - 0;
+				}
+			});
 
-					self.totalAdult(totalAdult);
-					self.totalSpecial(totalSpecial);
+			self.totalAdult(totalAdult);
+			self.totalSpecial(totalSpecial);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.productSuppliers = ko.observableArray([]);
@@ -231,8 +229,8 @@ var OrderContext = function() {
 			var product_name = data[7];
 			var product_model = data[8];
 
-			var param = 'product_name=' + product_name + '&product_model='
-					+ product_model + '&departure_date=' + departure_date;
+			var param = 'product_name=' + product_name + '&product_model=' + product_model + '&departure_date='
+					+ departure_date;
 
 			$.ajax({
 				type : "POST",
@@ -296,8 +294,7 @@ var OrderContext = function() {
 				}
 			});
 		} else {
-			$.getJSON(self.apiurl
-					+ 'product/searchProductAirTicketInfoByProductPk', {
+			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
 				product_pk : product_pk
 			}, function(data) {
 				self.flight(data.air_tickets);
@@ -340,8 +337,7 @@ var OrderContext = function() {
 				var start_city = $(current).find("[st='start-city']").val();
 				var end_city = $(current).find("[st='end-city']").val();
 
-				if (start_day.trim() == "" || start_city.trim() == ""
-						|| end_city.trim() == "") {
+				if (start_day.trim() == "" || start_city.trim() == "" || end_city.trim() == "") {
 					fail_msg("请填写必须填写的项目！");
 					return;
 				}
@@ -353,71 +349,58 @@ var OrderContext = function() {
 		} else {
 			msg = "没有机票信息，确定要生成订单吗?";
 		}
-		$
-				.layer({
-					area : ['auto', 'auto'],
-					dialog : {
-						msg : msg,
-						btns : 2,
-						type : 4,
-						btn : ['确认', '取消'],
-						yes : function(index) {
-							layer.close(airLayer);
-							startLoadingIndicator("保存中...");
-							layer.close(index);
-							var json = '{"air_comment":"'
-									+ $(".air_comment").val().replace(/\n/g,
-											";") + '","comment":"'
-									+ $(".comment").val().replace(/\n/g, ";")
-									+ '","has_ticket":"' + hasTicket
-									+ '","team_numbers":"'
-									+ $("#txt-team-numbers").val()
-									+ '","data":[';
-							var allTrs = tbody.children();
-							for (var i = 0; i < allTrs.length; i++) {
-								var current = allTrs[i];
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : msg,
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(airLayer);
+					startLoadingIndicator("保存中...");
+					layer.close(index);
+					var json = '{"air_comment":"' + $(".air_comment").val().replace(/\n/g, ";") + '","comment":"'
+							+ $(".comment").val().replace(/\n/g, ";") + '","has_ticket":"' + hasTicket
+							+ '","team_numbers":"' + $("#txt-team-numbers").val() + '","data":[';
+					var allTrs = tbody.children();
+					for (var i = 0; i < allTrs.length; i++) {
+						var current = allTrs[i];
 
-								var flight_index = i + 1;
+						var flight_index = i + 1;
 
-								var start_day = $(current).find(
-										"[st='start-day']").val();
-								var start_city = $(current).find(
-										"[st='start-city']").val();
-								var end_city = $(current).find(
-										"[st='end-city']").val();
+						var start_day = $(current).find("[st='start-day']").val();
+						var start_city = $(current).find("[st='start-city']").val();
+						var end_city = $(current).find("[st='end-city']").val();
 
-								json += '{"flight_index":"' + flight_index
-										+ '","start_day":"' + start_day
-										+ '","start_city":"' + start_city
-										+ '","end_city":"' + end_city + '"';
+						json += '{"flight_index":"' + flight_index + '","start_day":"' + start_day + '","start_city":"'
+								+ start_city + '","end_city":"' + end_city + '"';
 
-								if (i == allTrs.length - 1) {
-									json += '}';
-								} else {
-									json += '},';
-								}
-							}
-
-							json += ']}';
-							var data = "json=" + json;
-							$.ajax(
-									{
-										type : "POST",
-										url : self.apiurl
-												+ 'product/createProductOrder',
-										data : data
-									}).success(function(str) {
-								if (str == "success") {
-									self.refresh();
-									self.chosenOrders.removeAll();
-								} else {
-									fail_msg("提交失败，请联系管理员！");
-								}
-								endLoadingIndicator();
-							});
+						if (i == allTrs.length - 1) {
+							json += '}';
+						} else {
+							json += '},';
 						}
 					}
-				});
+
+					json += ']}';
+					var data = "json=" + json;
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'product/createProductOrder',
+						data : data
+					}).success(function(str) {
+						if (str == "success") {
+							self.refresh();
+							self.chosenOrders.removeAll();
+						} else {
+							fail_msg("提交失败，请联系管理员！");
+						}
+						endLoadingIndicator();
+					});
+				}
+			}
+		});
 
 	}
 
@@ -459,8 +442,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -476,17 +458,13 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-				});
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -532,8 +510,7 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -557,20 +534,16 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.push(order.pk + ";" + order.product_pk + ";"
-					+ order.team_number + ';' + order.operate_flg + ';'
-					+ order.name_confirm_status + ';' + order.standard_flg
-					+ ';' + order.departure_date + ';' + order.product_name
-					+ ';' + order.product_model);
+			ctx.chosenOrders.push(order.pk + ";" + order.product_pk + ";" + order.team_number + ';' + order.operate_flg
+					+ ';' + order.name_confirm_status + ';' + order.standard_flg + ';' + order.departure_date + ';'
+					+ order.product_name + ';' + order.product_model);
 		}
 	} else {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.remove(order.pk + ";" + order.product_pk + ";"
-					+ order.team_number + ';' + order.operate_flg + ';'
-					+ order.name_confirm_status + ';' + order.standard_flg
-					+ ';' + order.departure_date + ';' + order.product_name
-					+ ';' + order.product_model);
+			ctx.chosenOrders.remove(order.pk + ";" + order.product_pk + ";" + order.team_number + ';'
+					+ order.operate_flg + ';' + order.name_confirm_status + ';' + order.standard_flg + ';'
+					+ order.departure_date + ';' + order.product_name + ';' + order.product_model);
 		}
 	}
 }
@@ -601,6 +574,8 @@ function choseSupplierEmployee(event) {
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
+	if (index == 10)
+		return;
 	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td st="index"></td><td><input st="start-day" type="number" min="1" maxlength="2" /></td><td><input st="start-city" type="text" maxlength="10" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input type="button" value="-" onclick="deleteRow(this)"></input></td></tr>');
 
 	$(tr).find("td[st='index']").text(index + 1);
@@ -613,7 +588,7 @@ function deleteRow(txt) {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
 	var ins = $(tbody).find("td[st='index']");
-	console.log(ins.length);
+
 	for (var i = 0; i < ins.length; i++) {
 		$(ins[i]).text(i + 1);
 	}

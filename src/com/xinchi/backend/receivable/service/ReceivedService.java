@@ -1,5 +1,6 @@
 package com.xinchi.backend.receivable.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -52,4 +53,6 @@ public interface ReceivedService extends BaseService {
 	public String applyFly(ClientReceivedDetailBean detail);
 
 	public String checkIs98(String team_number);
+
+	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
 }

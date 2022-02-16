@@ -53,8 +53,7 @@ var ProductBoxContext = function() {
 				return;
 			}
 
-			window.location.href = self.apiurl
-					+ "templates/order/final-order-create.jsp?key=" + order_pk;
+			window.location.href = self.apiurl + "templates/order/final-order-create.jsp?key=" + order_pk;
 
 		}
 	};
@@ -63,8 +62,7 @@ var ProductBoxContext = function() {
 	 * 跳转到名单确认页面
 	 */
 	self.confirmNameList = function() {
-		window.location.href = self.apiurl
-				+ "templates/order/confirm-name-list.jsp";
+		window.location.href = self.apiurl + "templates/order/confirm-name-list.jsp";
 	}
 
 	// 取消订单
@@ -85,8 +83,7 @@ var ProductBoxContext = function() {
 				return;
 			}
 
-			window.location.href = self.apiurl
-					+ "templates/order/c-order-cancel.jsp?key=" + order_pk;
+			window.location.href = self.apiurl + "templates/order/c-order-cancel.jsp?key=" + order_pk;
 
 		}
 	};
@@ -104,13 +101,9 @@ var ProductBoxContext = function() {
 			var order_pk = data[0];
 			var standard_flg = data[1];
 			if (standard_flg == "Y") {
-				window.location.href = self.apiurl
-						+ "templates/order/standard-order-edit.jsp?key="
-						+ order_pk;
+				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl
-						+ "templates/order/non-standard-order-edit.jsp?key="
-						+ order_pk;
+				window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
 			}
 		}
 	};
@@ -127,19 +120,22 @@ var ProductBoxContext = function() {
 			var order_pk = data[0];
 			var standard_flg = data[1];
 			var lock_flg = data[3];
+			var independent_flg = data[4];
 
 			if (lock_flg == "Y") {
 				fail_msg("订单已锁定，请联系相关产品进行解锁后变更。");
 				return;
 			}
 			if (standard_flg == "Y") {
-				window.location.href = self.apiurl
-						+ "templates/order/standard-order-edit.jsp?key="
-						+ order_pk;
+				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
 			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl
-						+ "templates/order/non-standard-order-edit.jsp?key="
-						+ order_pk;
+				if (independent_flg == "A") {
+					window.location.href = self.apiurl + "templates/order/only-ticket-order-confirm.jsp?key="
+							+ order_pk + "&type=edit";
+				} else {
+					window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
+				}
+
 			}
 		}
 	}
@@ -166,8 +162,7 @@ var ProductBoxContext = function() {
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("打回中！");
-						var data = "order_pk=" + order_pk + "&standard_flg="
-								+ standard_flg;
+						var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'order/rollBackCOrder',
@@ -316,13 +311,11 @@ var ProductBoxContext = function() {
 			param = "bnsOrder";
 		}
 
-		data = param + ".pk=" + order_pk + "&" + param + ".ticket_number="
-				+ ticket_number + "&" + param + ".start_city=" + start_city
-				+ "&" + param + ".start_airport=" + start_airport + "&" + param
-				+ ".end_city=" + end_city + "&" + param + ".end_airport="
-				+ end_airport + "&" + param + ".off_time=" + off_time + "&"
-				+ param + ".land_time=" + land_time + "&" + param
-				+ ".next_day=" + next_day + "&standard_flg=" + standard_flg;
+		data = param + ".pk=" + order_pk + "&" + param + ".ticket_number=" + ticket_number + "&" + param
+				+ ".start_city=" + start_city + "&" + param + ".start_airport=" + start_airport + "&" + param
+				+ ".end_city=" + end_city + "&" + param + ".end_airport=" + end_airport + "&" + param + ".off_time="
+				+ off_time + "&" + param + ".land_time=" + land_time + "&" + param + ".next_day=" + next_day
+				+ "&standard_flg=" + standard_flg;
 
 		startLoadingIndicator("保存中");
 		$.ajax({
@@ -395,8 +388,7 @@ var ProductBoxContext = function() {
 			param = "bnsOrder";
 		}
 
-		data = param + ".pk=" + order_pk + "&" + param + ".comment=" + comment
-				+ "&standard_flg=" + standard_flg;
+		data = param + ".pk=" + order_pk + "&" + param + ".comment=" + comment + "&standard_flg=" + standard_flg;
 		startLoadingIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -419,10 +411,8 @@ var ProductBoxContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'order/searchCOrdersByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'order/searchCOrdersByPage', param, function(data) {
 			self.orders(data.tbcOrders);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -452,15 +442,14 @@ var ProductBoxContext = function() {
 
 		$("#img-pic").attr(
 				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=CLIENT_CONFIRM&subFolder=" + user_number);
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_CONFIRM&subFolder="
+						+ user_number);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(
 			'click',
 			function() {
-				window.open(self.apiurl
-						+ "templates/common/check-picture-big.jsp?src="
+				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
 						+ encodeURIComponent($(this).attr("src")));
 			});
 
@@ -472,13 +461,9 @@ var ProductBoxContext = function() {
 		var X = $(label).offset().top;
 		var Y = $(label).offset().left;
 		var div = $('<div></div>');
-		var departure_notice = $('<a href="'
-				+ self.apiurl
-				+ 'file/downloadProductFile?team_number='
-				+ team_number
+		var departure_notice = $('<a href="' + self.apiurl + 'file/downloadProductFile?team_number=' + team_number
 				+ '&fileType=A" style="cursor:pointer;margin-right:10px">出团通知</a>');
-		var supplier_confirm = $('<a href="' + self.apiurl
-				+ 'file/downloadProductFile?team_number=' + team_number
+		var supplier_confirm = $('<a href="' + self.apiurl + 'file/downloadProductFile?team_number=' + team_number
 				+ '&fileType=B" style="cursor:pointer">组团社确认</a>');
 
 		$(div).append(departure_notice);
@@ -531,8 +516,7 @@ var ProductBoxContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -583,8 +567,7 @@ var caculate_fly_time = function() {
 	var off_time = $("#txt-off-time").val();
 	var land_time = $("#txt-land-time").val();
 	var next_day = $("#txt-next-day").val() - 0;
-	if (off_time == "" || land_time == "" || off_time.length != 5
-			|| land_time.length != 5)
+	if (off_time == "" || land_time == "" || off_time.length != 5 || land_time.length != 5)
 		return;
 	var off_time = "1988-03-22 " + off_time + ":00";
 	var land_time = "1988-03-22 " + land_time + ":00";

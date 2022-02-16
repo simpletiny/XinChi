@@ -142,13 +142,14 @@ var OrderContext = function() {
 		var allot = $("[st='back_allot']");
 		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
+			var payable_pk = $(current).find("[st='back-pk']").val();
+			console.log(payable_pk);
 			var n = $(current).find("[st='team_number']").val();
 			var r = $(current).find("[st='back_receive']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
 			var m = $(current).find("[st='supplier_employee_name']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r
-					+ '",' + '"supplier_employee_name":"' + m + '",'
-					+ '"supplier_employee_pk":"' + p;
+			allot_json += '{"team_number":"' + n + '",' + '"payable_pk":"' + payable_pk + '","received":"' + r + '",'
+					+ '"supplier_employee_name":"' + m + '",' + '"supplier_employee_pk":"' + p;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -163,7 +164,7 @@ var OrderContext = function() {
 			url : self.apiurl + 'sale/applyBackRecive',
 			data : data + "&allot_json=" + allot_json,
 			success : function(str) {
-				if (str != "OK") {
+				if (str != "success") {
 					fail_msg("申请失败，请联系管理员");
 				}
 
@@ -263,13 +264,13 @@ var OrderContext = function() {
 		var allot = $("[st='pay_allot']");
 		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
+			var payable_pk = $(current).find("[st='pay-pk']").val();
 			var n = $(current).find("[st='team_number']").val();
 			var r = $(current).find("[st='paid']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
 			var m = $(current).find("[st='supplier_employee_name']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"paid":"' + r + '",'
-					+ '"supplier_employee_name":"' + m + '",'
-					+ '"supplier_employee_pk":"' + p;
+			allot_json += '{"team_number":"' + n + '",' + '"paid":"' + r + '","payable_pk":"' + payable_pk + '",'
+					+ '"supplier_employee_name":"' + m + '",' + '"supplier_employee_pk":"' + p;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -284,7 +285,7 @@ var OrderContext = function() {
 			url : self.apiurl + 'sale/applyPay',
 			data : data + "&allot_json=" + allot_json,
 			success : function(str) {
-				if (str != "OK") {
+				if (str != "success") {
 					fail_msg("申请失败，请联系管理员");
 				}
 
@@ -296,11 +297,13 @@ var OrderContext = function() {
 			}
 		});
 	};
+
 	self.chosenPayable = ko.observable({});
 	self.positivePayables = ko.observableArray([]);
-	self.supplier_employee_name = ko.observable();
-	self.max_strike_money = ko.observable();
-	self.supplier_employee_pk = ko.observable();
+	self.negativePayables = ko.observableArray([]);
+	// self.supplier_employee_name = ko.observable();
+	// self.max_strike_money = ko.observable();
+	// self.supplier_employee_pk = ko.observable();
 	// 冲账申请
 	self.strike = function() {
 		if (self.chosenOrders().length == 0) {
@@ -312,58 +315,45 @@ var OrderContext = function() {
 		} else if (self.chosenOrders().length > 1) {
 
 			self.positivePayables.removeAll();
-			self.max_strike_money("");
+			self.negativePayables.removeAll();
 			var supplier_employee_pks = new Array();
 
 			var check_result = true;
 			var negative_cnt = 0;
 			var positive_cnt = 0;
 
-			$(self.chosenOrders())
-					.each(
-							function(idx, data) {
-								supplier_employee_pks
-										.push(data.supplier_employee_pk);
-								if (data.final_flg == "Y") {
-									if (data.final_balance == 0) {
-										fail_msg(data.team_number + "尾款已结清");
-										check_result = false;
-									} else if (data.final_balance < 0) {
-										negative_cnt++;
-										self.team_number(data.team_number);
-										self
-												.supplier_employee_name(data.supplier_employee_name);
-										self
-												.supplier_employee_pk(data.supplier_employee_pk);
-										self
-												.max_strike_money(data.final_balance
-														* -1);
-									} else {
-										positive_cnt++;
-										self.positivePayables.push(data);
-									}
-								} else {
-									if (data.budget_balance == 0) {
-										fail_msg(data.team_number + "尾款已结清");
-										check_result = false;
-									} else if (data.budget_balance < 0) {
-										fail_msg("请选择已经决算的负尾款订单！");
-										check_result = false;
-									} else {
-										positive_cnt++;
-										self.positivePayables.push(data);
-									}
-								}
-							});
+			$(self.chosenOrders()).each(function(idx, data) {
+				supplier_employee_pks.push(data.supplier_employee_pk);
+				if (data.final_flg == "Y") {
+					if (data.final_balance == 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					} else if (data.final_balance < 0) {
+						negative_cnt++;
+						self.negativePayables.push(data);
+					} else {
+						positive_cnt++;
+						self.positivePayables.push(data);
+					}
+				} else {
+					if (data.budget_balance == 0) {
+						fail_msg(data.team_number + "尾款已结清");
+						check_result = false;
+					} else if (data.budget_balance < 0) {
+						fail_msg("请选择已经决算的负尾款订单！");
+						check_result = false;
+					} else {
+						positive_cnt++;
+						self.positivePayables.push(data);
+					}
+				}
+			});
 
 			if (!check_result)
 				return;
 
 			if (negative_cnt == 0) {
-				fail_msg("请选择一单尾款为负的订单（即需要冲账的多付款订单！）");
-				return;
-			} else if (negative_cnt > 1) {
-				fail_msg("只能选择一单尾款为负的订单！");
+				fail_msg("请选择至少一单尾款为负的订单（即需要冲账的多付款订单！）");
 				return;
 			}
 
@@ -388,8 +378,8 @@ var OrderContext = function() {
 							maxmin : false,
 							closeBtn : [1, true],
 							shadeClose : false,
-							area : ['920px', '780px'],
-							offset : ['150px', ''],
+							area : ['1020px', '780px'],
+							offset : ['', ''],
 							scrollbar : true,
 							page : {
 								dom : '#strike'
@@ -409,38 +399,65 @@ var OrderContext = function() {
 		if (!$("#form-strike").valid())
 			return;
 
-		var data = $("#form-strike").serialize();
-		layer.close(strikeLayer);
-		startLoadingSimpleIndicator("保存中");
-
-		var sumAllot = 0;
-		$("[st='strike-paid']").each(function(idx, data) {
-			sumAllot += $(data).val() - 0;
+		var sumIn = 0;
+		$("[st='in-money']").each(function(idx, data) {
+			sumIn += $(data).val() - 0;
 		});
-		if (sumAllot > self.max_strike_money() - 0) {
-			fail_msg("分配金额合计大于冲账金额");
+
+		var sumOut = 0;
+		$("[st='out-money']").each(function(idx, data) {
+			sumOut += $(data).val() - 0;
+		});
+
+		if (sumIn != sumOut) {
+			fail_msg("冲出总额与冲入总额不符！");
 			return;
 		}
 
-		var allot_json = '[';
-		var allot = $("[st='strike-allot']");
-		for (var i = 0; i < allot.length; i++) {
-			var current = allot[i];
-			var n = $(current).find("[st='strike-team_number']").val();
-			var r = $(current).find("[st='strike-paid']").val();
-			var supplier_employee_pk = $(current).find(
-					"[st='supplier-employee-pk']").val();
+		layer.close(strikeLayer);
+		startLoadingSimpleIndicator("保存中");
 
-			allot_json += '{"team_number":"' + n + '",' + '"paid":"' + r
+		var out_json = '[';
+		var strike_out = $("[st='strike-out']");
+		for (var i = 0; i < strike_out.length; i++) {
+			var current = strike_out[i];
+			var payable_pk = $(current).find("[st='out-pk']").val();
+			var n = $(current).find("[st='team-number']").val();
+			var r = $(current).find("[st='out-money']").val();
+			var supplier_employee_pk = $(current).find("[st='supplier-employee-pk']").val();
+
+			out_json += '{"team_number":"' + n + '",' + '"out":"' + r + '","payable_pk":"' + payable_pk
 					+ '","supplier_employee_pk":"' + supplier_employee_pk;
-			if (i == allot.length - 1) {
-				allot_json += '"}';
+			if (i == strike_out.length - 1) {
+				out_json += '"}';
 			} else {
-				allot_json += '"},';
+				out_json += '"},';
 			}
 		}
-		allot_json += ']';
-		data += "&allot_json=" + allot_json;
+		out_json += ']';
+
+		var in_json = '[';
+		var strike_in = $("[st='strike-in']");
+		for (var i = 0; i < strike_in.length; i++) {
+			var current = strike_in[i];
+			var payable_pk = $(current).find("[st='in-pk']").val();
+			var n = $(current).find("[st='team-number']").val();
+			var r = $(current).find("[st='in-money']").val();
+			var supplier_employee_pk = $(current).find("[st='supplier-employee-pk']").val();
+
+			in_json += '{"team_number":"' + n + '",' + '"in":"' + r + '","payable_pk":"' + payable_pk
+					+ '","supplier_employee_pk":"' + supplier_employee_pk;
+			if (i == strike_in.length - 1) {
+				in_json += '"}';
+			} else {
+				in_json += '"},';
+			}
+		}
+		in_json += ']';
+
+		var comment = $("#strike-comment").val();
+		data = 'json={"comment":"' + comment + '",out_json:' + out_json + ',in_json:' + in_json + '}';
+
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'sale/applyStrike',
@@ -530,13 +547,13 @@ var OrderContext = function() {
 		var allot = $("[st='deduct_allot']");
 		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
+			var payable_pk = $(current).find("[st='deduct-pk']").val();
 			var n = $(current).find("[st='team_number']").val();
 			var r = $(current).find("[st='deduct']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
 			var m = $(current).find("[st='supplier_employee_name']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"deduct":"' + r
-					+ '",' + '"supplier_employee_name":"' + m + '",'
-					+ '"supplier_employee_pk":"' + p;
+			allot_json += '{"team_number":"' + n + '",' + '"deduct":"' + r + '","payable_pk":"' + payable_pk + '",'
+					+ '"supplier_employee_name":"' + m + '",' + '"supplier_employee_pk":"' + p;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -551,7 +568,7 @@ var OrderContext = function() {
 			url : self.apiurl + 'sale/applyDeduct',
 			data : data + "&allot_json=" + allot_json,
 			success : function(str) {
-				if (str != "OK") {
+				if (str != "success") {
 					fail_msg("申请失败，请联系管理员");
 				}
 
@@ -596,11 +613,9 @@ var OrderContext = function() {
 		var totalFinalBalance = 0;
 		startLoadingSimpleIndicator("加载中...");
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'sale/searchPayableByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'sale/searchPayableByPage', param, function(data) {
 			self.payables(data.payables);
 			if (!pages.contains(self.currentPage())) {
 				self.store(self.store().concat(self.payables()));
@@ -687,16 +702,13 @@ var OrderContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/sale/order-edit.jsp?key="
-					+ self.chosenOrders()[0];
+			window.location.href = self.apiurl + "templates/sale/order-edit.jsp?key=" + self.chosenOrders()[0];
 		}
 	};
 
 	// 结团
 	self.closeTeam = function(pk) {
-		window.location.href = self.apiurl
-				+ "templates/sale/final-order-creation.jsp?key=" + pk;
+		window.location.href = self.apiurl + "templates/sale/final-order-creation.jsp?key=" + pk;
 	};
 
 	// start pagination
@@ -733,8 +745,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

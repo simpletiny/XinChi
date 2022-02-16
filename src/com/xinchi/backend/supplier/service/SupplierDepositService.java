@@ -55,4 +55,6 @@ public interface SupplierDepositService extends BaseService {
 	public List<SupplierDepositBean> batUploadDeposit(String file_name, String deposit_type) throws IOException;
 
 	public String batSaveDeposit(String json);
+
+	public List<SupplierDepositBean> selectByVoucherNumber(String voucher_number);
 }

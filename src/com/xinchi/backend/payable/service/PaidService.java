@@ -28,4 +28,12 @@ public interface PaidService extends BaseService {
 	public String rollBackPayApply(String related_pk);
 
 	public SupplierPaidDetailBean selectPaidDetailByRelatedPk(String related_pk);
+
+	public String applyStrike(String json);
+
+	public String applyBackRecive(SupplierPaidDetailBean detail, String allot_json);
+
+	public String applyDeduct(SupplierPaidDetailBean detail, String allot_json);
+
+	public String applyPay(SupplierPaidDetailBean detail, String allot_json);
 }

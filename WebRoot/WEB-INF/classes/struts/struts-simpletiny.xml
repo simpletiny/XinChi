@@ -29,6 +29,9 @@
 		<action name="autoUpdateProductReport" class="simpletinyAction" method="autoUpdateProductReport">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="fixReportReceivable" class="simpletinyAction" method="fixReportReceivable">
+			<result name="success" type="str">resultStr</result>
+		</action>
 
 		<action name="currentDate" class="STDateAction" method="currentDate">
 			<result name="success" type="json"></result>

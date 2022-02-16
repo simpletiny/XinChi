@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +145,14 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 		if (result.equals(SUCCESS)) {
 			// 删除押金账
-			dao.delete(deposit_pk);
+			SupplierDepositBean option = new SupplierDepositBean();
+			option.setVoucher_number(deposit.getVoucher_number());
+
+			List<SupplierDepositBean> deposits = dao.selectByParam(option);
+
+			for (SupplierDepositBean a : deposits) {
+				dao.delete(a.getPk());
+			}
 		}
 
 		return result;
@@ -256,11 +264,17 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			String comment = "";
 			// 获取第i行
 			XSSFRow row = sheet.getRow(i);
+			if (row == null) {
+				continue;
+			}
 
 			// 成交编号
 			Cell cell1 = row.getCell(colMapping.get("成交编号"));
 			String dealNum = SimpletinyExcel.getCellValueByCell(cell1);
 
+			if (SimpletinyString.isEmpty(dealNum)) {
+				continue;
+			}
 			// 航段
 			Cell cell2 = row.getCell(colMapping.get("航段"));
 			String airLeg = SimpletinyExcel.getCellValueByCell(cell2);
@@ -289,6 +303,10 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			Cell cell8 = row.getCell(colMapping.get("备注"));
 			String excelComment = SimpletinyExcel.getCellValueByCell(cell8);
 
+			// 支付序列
+			Cell cell9 = row.getCell(colMapping.get("序号"));
+			int pay_index = (int) Float.parseFloat(SimpletinyExcel.getCellValueByCell(cell9));
+
 			comment = "成交编号：" + dealNum + ";" + "航段：" + airLeg + ";" + "航班日期：" + air_date + ";" + excelComment;
 
 			deposit.setAccount(account);
@@ -299,6 +317,8 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 			deposit.setComment(comment);
 			deposit.setTime(payTime);
+
+			deposit.setPay_index(pay_index);
 
 			deposits.add(deposit);
 		}
@@ -311,20 +331,81 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 		JSONArray array = JSONArray.fromObject(json);
 
+		Map<String, String> leader = new HashMap<String, String>();
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+			String supplier_name = obj.getString("supplier_name");
+			String account = obj.getString("account");
+			String pay_index = obj.getString("pay_index");
+			String pay_time = obj.getString("time");
+
+			if (SimpletinyString.isEmpty(supplier_name)) {
+				return "第" + (i + 1) + "行缺少供应商信息！";
+			}
+
+			if (SimpletinyString.isEmpty(account)) {
+				return "第" + (i + 1) + "行缺少支付方信息！";
+			}
+
+			if (SimpletinyString.isEmpty(pay_index)) {
+				return "第" + (i + 1) + "行缺少序号！";
+			}
+			if (SimpletinyString.isEmpty(pay_time)) {
+				return "第" + (i + 1) + "行缺少支付时间！";
+			}
+
+			if (!leader.keySet().contains(pay_index)) {
+				leader.put(pay_index, supplier_name + "##" + account + "##" + pay_time);
+			}
+		}
+
+		// 验证信息计算合计
+		Map<String, BigDecimal> pay_moneys = new HashMap<String, BigDecimal>();
+
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
 
 			String supplier_name = obj.getString("supplier_name");
 			String account = obj.getString("account");
 			String comment = obj.getString("comment");
+			String pay_index = obj.getString("pay_index");
+			String pay_time = obj.getString("time");
+
+			String[] lea = leader.get(pay_index).split("##");
+			if (!lea[0].equals(supplier_name)) {
+				return "序号" + pay_index + "下出现了不同供应商！";
+			}
+			if (!lea[1].equals(account)) {
+				return "序号" + pay_index + "下出现了不同支付方！";
+			}
+			if (!lea[2].equals(pay_time)) {
+				return "序号" + pay_index + "下出现了不同支付时间！";
+			}
 
 			if (comment.length() > 200) {
 				comment = comment.substring(0, 200);
 			}
 
 			BigDecimal money = new BigDecimal(obj.getString("money"));
-			String pay_time = obj.getString("time");
-			String return_date = obj.getString("return_date");
+			pay_moneys.put(pay_index, pay_moneys.get(pay_index) == null ? BigDecimal.ZERO.add(money)
+					: pay_moneys.get(pay_index).add(money));
+
+		}
+
+		// 生成银行流水账
+		Map<String, String> voucher_numbers = new HashMap<String, String>();
+
+		Iterator<String> iterator = leader.keySet().iterator();
+		while (iterator.hasNext()) {
+			String k = iterator.next();
+			String[] lea = leader.get(k).split("##");
+
+			String supplier_name = lea[0];
+			String account = lea[1];
+			String pay_time = lea[2];
+
+			BigDecimal money = pay_moneys.get(k);
 
 			SupplierBean option = new SupplierBean();
 			option.setSupplier_name(supplier_name);
@@ -339,6 +420,8 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			// 生成银行流水账
 			String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
 					ResourcesConstants.PAY_TYPE_DEPOSIT_AIR, DateUtil.getDateStr(DateUtil.YYYYMMDD));
+
+			voucher_numbers.put(k, voucher_number);
 
 			// 生成银行流水数据
 			String msg = SUCCESS;
@@ -362,25 +445,50 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 			msg = paymentDetailService.insert(payment);
 			if (!msg.equals(SUCCESS)) {
-				return msg;
+				return "账户" + account + "银行流水存在相同时间的记录，请修改支付时间！";
 			}
+		}
+
+		// 保存航司押金
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+			String supplier_name = obj.getString("supplier_name");
+			String account = obj.getString("account");
+			String comment = obj.getString("comment");
+			String pay_index = obj.getString("pay_index");
+			BigDecimal money = new BigDecimal(obj.getString("money"));
+			String return_date = obj.getString("return_date");
+
+			SupplierBean option = new SupplierBean();
+			option.setSupplier_name(supplier_name);
+			List<SupplierBean> suppliers = supplierDao.getAllByParam(option);
+
+			SupplierBean supplier = suppliers.get(0);
 
 			SupplierDepositBean deposit = new SupplierDepositBean();
 
 			// 保存航司押金记录
 			deposit.setSupplier_pk(supplier.getPk());
 			deposit.setAccount(account);
-			deposit.setVoucher_number(voucher_number);
+			deposit.setVoucher_number(voucher_numbers.get(pay_index));
 			deposit.setMoney(money);
 			deposit.setReturn_date(return_date);
 			deposit.setComment(comment);
 			deposit.setReceived(BigDecimal.ZERO);
 			deposit.setBalance(deposit.getMoney());
 			dao.insert(deposit);
-
 		}
-
 		return SUCCESS;
+	}
+
+	@Override
+	public List<SupplierDepositBean> selectByVoucherNumber(String voucher_number) {
+		SupplierDepositBean option = new SupplierDepositBean();
+		option.setVoucher_number(voucher_number);
+
+		List<SupplierDepositBean> deposits = dao.selectByParam(option);
+
+		return deposits;
 	}
 
 }

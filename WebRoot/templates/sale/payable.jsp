@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -68,12 +67,14 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">状态</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px" data-bind="options: teamStatus, optionsCaption: '全部'" name="payable.team_status"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: teamStatus, optionsCaption: '全部'"
+									name="payable.team_status"></select>
 							</div>
 						</div>
 						<div class="span6">
 							<div data-bind="foreach: types">
-								<em class="small-box"> <input type="checkbox" required="required" data-bind="attr: {'value': $data}, checked: $root.chosenTypes,event:{click:$root.changeType}" /><label
+								<em class="small-box"> <input type="checkbox" required="required"
+									data-bind="attr: {'value': $data}, checked: $root.chosenTypes,event:{click:$root.changeType}" /><label
 									data-bind="text: $data"></label>
 								</em>
 							</div>
@@ -96,7 +97,8 @@
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:chosenSales,event:{change:function(){fetchSummary();search();}}"
+									<select class="form-control" style="height: 34px"
+										data-bind="options: sales, optionsCaption: '全部',optionsText:'user_name',optionsValue:'user_number',value:chosenSales,event:{change:function(){fetchSummary();search();}}"
 										name="payable.create_user"></select>
 								</div>
 							</div>
@@ -304,7 +306,8 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">收入账户</label>
 					<div class="ip" style="width: 70%">
-						<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" name="detail.card_account" required="required"></select>
+						<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --'" name="detail.card_account"
+							required="required"></select>
 					</div>
 				</div>
 				<div class="col-md-6 required">
@@ -341,6 +344,7 @@
 			</div>
 			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="back_allot">
+				<input type="hidden" data-bind="value:$data.pk" st="back-pk" />
 				<div class="col-md-3">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.team_number"></p>
@@ -350,7 +354,8 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
-						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
+						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input
+							type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -371,10 +376,12 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
-						<input type="number" class="form-control" st="back_receive" data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance*-1" required="required" />
+						<input type="number" class="form-control" st="back_receive"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance*-1" required="required" />
 						<!-- /ko -->
 						<!-- ko if:$data.final_flg=="N" -->
-						<input type="number" class="form-control" st="back_receive" data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance*-1" required="required" />
+						<input type="number" class="form-control" st="back_receive"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance*-1" required="required" />
 						<!-- /ko -->
 
 					</div>
@@ -412,7 +419,8 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">支付时限</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.limit_time" class="form-control date-picker" data-bind="value:today()" required="required" />
+						<input type="text" name="detail.limit_time" class="form-control date-picker" data-bind="value:today()"
+							required="required" />
 					</div>
 				</div>
 				<div class="col-md-6 required">
@@ -442,6 +450,7 @@
 
 			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="pay_allot">
+				<input type="hidden" data-bind="value:$data.pk" st="pay-pk" />
 				<div class="col-md-3">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.team_number"></p>
@@ -451,7 +460,8 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
-						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
+						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input
+							type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -472,10 +482,12 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
-						<input type="number" class="form-control" st="paid" data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
+						<input type="number" class="form-control" st="paid"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
 						<!-- /ko -->
 						<!-- ko if:$data.final_flg=="N" -->
-						<input type="number" class="form-control" st="paid" data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
+						<input type="number" class="form-control" st="paid"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
 						<!-- /ko -->
 
 					</div>
@@ -493,59 +505,115 @@
 	</div>
 
 	<!-- 冲账申请 -->
-	<div id="strike" style="display: none; width: 900px; padding-top: 30px;">
+	<div id="strike" style="display: none; width: 1020px; height: 730px; padding-top: 30px; overflow-y: auto">
 		<form id="form-strike">
+			<h2>冲出</h2>
 			<div class="input-row clearfloat">
-				<div class="col-md-4">
-					<label class="l" style="width: 30%">供应商</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:supplier_employee_name()"></p>
-						<input type="hidden"  name="detail.supplier_employee_pk" data-bind="value:supplier_employee_pk()" />
-					</div>
-				</div>
-				<div class="col-md-4">
-					<label class="l" style="width: 30%">团号</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:team_number()"></p>
-						<input name="detail.team_number" type="hidden" data-bind="value:team_number()" />
-					</div>
-				</div>
-				<div class="col-md-4">
-					<label class="l" style="width: 30%">冲账总金额</label>
-					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:max_strike_money()"></p>
-					</div>
-				</div>
-			</div>
-			<div class="input-row clearfloat">
-				<div class="col-md-3">
+				<div class="col-md-1">
 					<label class="l" style="width: 100%">团号</label>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-1">
 					<label class="l" style="width: 100%">供应商</label>
 				</div>
 				<div class="col-md-3">
+					<label class="l" style="width: 100%">产品</label>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">出团日</label>
+				</div>
+				<div class="col-md-2">
+					<label class="l" style="width: 100%">可冲金额</label>
+				</div>
+				<div class="col-md-2 required">
+					<label class="l" style="width: 100%">冲出金额</label>
+				</div>
+			</div>
+			<!-- ko foreach:negativePayables -->
+			<div class="input-row clearfloat" st="strike-out">
+				<input type="hidden" data-bind="value:$data.pk" st="out-pk" />
+				<div class="col-md-1">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.team_number"></p>
+						<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
+					</div>
+				</div>
+				<div class="col-md-1">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+						<input type="hidden" st="supplier-employee-pk" data-bind="value:$data.supplier_employee_pk" />
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.product"></p>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.departure_date"></p>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="ip">
+						<p class="ip-default rmb" data-bind="text:$data.final_balance*-1"></p>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="ip">
+						<input type="number" class="form-control" data-bind="value:$data.final_balance*-1" name="strike-out" st="out-money"
+							required="required" />
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+			<hr />
+			<h2>冲入</h2>
+			<div class="input-row clearfloat">
+				<div class="col-md-1">
+					<label class="l" style="width: 100%">团号</label>
+				</div>
+				<div class="col-md-1">
+					<label class="l" style="width: 100%">供应商</label>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">产品</label>
+				</div>
+				<div class="col-md-3">
+					<label class="l" style="width: 100%">出团日</label>
+				</div>
+				<div class="col-md-2">
 					<label class="l" style="width: 100%">尾款</label>
 				</div>
-				<div class="col-md-3 required">
-					<label class="l" style="width: 100%">分配金额</label>
+				<div class="col-md-2 required">
+					<label class="l" style="width: 100%">冲入金额</label>
 				</div>
 			</div>
 			<!-- ko foreach:positivePayables -->
-			<div class="input-row clearfloat" st="strike-allot">
-				<div class="col-md-3">
+			<div class="input-row clearfloat" st="strike-in">
+				<input type="hidden" data-bind="value:$data.pk" st="in-pk" />
+				<div class="col-md-1">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.team_number"></p>
-						<input type="hidden" data-bind="value:$data.team_number" st="strike-team_number" />
+						<input type="hidden" data-bind="value:$data.team_number"  st="team-number" />
+					</div>
+				</div>
+				<div class="col-md-1">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+						<input type="hidden" st="supplier-employee-pk" data-bind="value:$data.supplier_employee_pk" />
 					</div>
 				</div>
 				<div class="col-md-3">
 					<div class="ip">
-						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
-						<input type="hidden" st="supplier-employee-pk"  data-bind="value:$data.supplier_employee_pk" />
+						<p class="ip-default" data-bind="text:$data.product"></p>
 					</div>
 				</div>
 				<div class="col-md-3">
+					<div class="ip">
+						<p class="ip-default" data-bind="text:$data.departure_date"></p>
+					</div>
+				</div>
+				<div class="col-md-2">
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
 						<p class="ip-default rmb" data-bind="text:$data.final_balance"></p>
@@ -555,18 +623,19 @@
 						<!-- /ko -->
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<div class="ip">
-						<input type="number" class="form-control" st="strike-paid" required="required" />
+						<input type="number" class="form-control" name="strike-in" st="in-money" required="required" />
 					</div>
 				</div>
 			</div>
 			<!-- /ko -->
+			<hr></hr>
 			<div class="input-row clearfloat">
 				<div class="col-md-12 required">
 					<label class="l" style="width: 10%">说明</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default" rows="15" name="detail.comment" placeholder="需要说明的信息" required="required"></textarea>
+						<textarea type="text" class="ip-default" rows="15" id="strike-comment" placeholder="需要说明的信息" required="required"></textarea>
 					</div>
 				</div>
 			</div>
@@ -624,6 +693,7 @@
 			</div>
 			<!-- ko foreach:chosenOrders -->
 			<div class="input-row clearfloat" st="deduct_allot">
+				<input type="hidden" data-bind="value:$data.pk" st="deduct-pk" />
 				<div class="col-md-3">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.team_number"></p>
@@ -633,7 +703,8 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
-						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
+						<input type="hidden" data-bind="value:$data.supplier_employee_pk" st="supplier_employee_pk" /> <input
+							type="hidden" data-bind="value:$data.supplier_employee_name" st="supplier_employee_name" />
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -654,10 +725,12 @@
 				<div class="col-md-2">
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
-						<input type="number" class="form-control" st="deduct" data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
+						<input type="number" class="form-control" st="deduct"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
 						<!-- /ko -->
 						<!-- ko if:$data.final_flg=="N" -->
-						<input type="number" class="form-control" st="deduct" data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
+						<input type="number" class="form-control" st="deduct"
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
 						<!-- /ko -->
 
 					</div>

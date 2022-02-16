@@ -367,6 +367,8 @@ var DepositContext = function() {
 	self.cancelReceive = function() {
 		layer.close(receiveLayer);
 	}
+
+	self.linkDeposits = ko.observableArray();
 	/**
 	 * 删除押金账
 	 */
@@ -384,34 +386,66 @@ var DepositContext = function() {
 				return;
 			}
 
-			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要删除此押金账吗?',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
-						startLoadingSimpleIndicator("删除中...");
-						layer.close(index);
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'supplier/deleteSupplierDeposit',
-							data : "deposit_pk=" + data.pk,
-							success : function(str) {
-								if (str == "success") {
-									self.refresh();
-									layer.close(index);
-								} else {
-									fail_msg(str);
-								}
-
-								endLoadingIndicator();
-							}
-						});
+			// 检测关联押金
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'supplier/searchDepositByVoucherNumber',
+				data : "voucher_number=" + data.voucher_number,
+				success : function(result) {
+					self.linkDeposits(result.deposits);
+					var checkResult = true;
+					var com = "";
+					for (var i = 0; i < self.linkDeposits().length; i++) {
+						if (self.linkDeposits()[i].received - 0 != 0) {
+							checkResult = false;
+							com = self.linkDeposits()[i].comment;
+							break;
+						}
 					}
+
+					if (!checkResult) {
+						fail_msg("系统检测到与此相关的“" + com + "”这笔押金存在‘已退’，不允许删除！")
+						return;
+					}
+
+					var msg = "";
+					if (self.linkDeposits().length > 1) {
+						msg = "系统检测到与此笔押金相关的一共" + self.linkDeposits().length + "笔押金，删除会将所有相关押金一并删除！确定删除吗？";
+					} else {
+						msg = "确定删除这笔押金吗？";
+					}
+
+					$.layer({
+						area : ['auto', 'auto'],
+						dialog : {
+							msg : msg,
+							btns : 2,
+							type : 4,
+							btn : ['确认', '取消'],
+							yes : function(index) {
+								startLoadingSimpleIndicator("删除中...");
+								layer.close(index);
+								$.ajax({
+									type : "POST",
+									url : self.apiurl + 'supplier/deleteSupplierDeposit',
+									data : "deposit_pk=" + data.pk,
+									success : function(str) {
+										if (str == "success") {
+											self.refresh();
+											layer.close(index);
+										} else {
+											fail_msg(str);
+										}
+
+										endLoadingIndicator();
+									}
+								});
+							}
+						}
+					});
 				}
 			});
+
 		}
 	}
 

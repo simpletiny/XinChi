@@ -50,4 +50,8 @@ public interface BudgetNonStandardOrderService extends BaseService {
 	public String updateConfirmedNonStandardOrder(BudgetNonStandardOrderBean bnsOrder, String json);
 
 	public String rollBackCOrder(String order_pk);
+
+	public String createOnlyTicketOrder(BudgetNonStandardOrderBean bean, String json);
+
+	public String updateOnlyTicketOrder(BudgetNonStandardOrderBean bean, String json);
 }

@@ -12,10 +12,9 @@
 <body>
 
 	<div class="main-body">
+		<jsp:include page="layout.jsp" />
 		<div class="subtitle">
-			<form action="<%=basePath%>simpletiny/autoFixBalance">
-				<input type="text" name="account_name"></input> <input type="submit" value="修正银行流水"></input>
-			</form>
+			
 			<%-- 	<a href="<%=basePath%>simpletiny/autoUpdateClientUser">修复公开客户对应关系</a> --%>
 			<%-- <a href="<%=basePath%>simpletiny/autoUpdateClientRelationConnect">修复客户关系交流信息</a> --%>
 			<a href="<%=basePath%>simpletiny/autoUpdateProductReport">修正单团核算表</a>
@@ -33,12 +32,17 @@
 		</div>
 
 		<div class="main-container">
-			<canvas id="userChart" width="1000" height="400"></canvas>
+			<form action="<%=basePath%>simpletiny/autoFixBalance">
+				<input type="text" name="account_name"></input> <input type="submit" value="修正银行流水"></input>
+			</form>
+			<hr />
+			<textarea type="text" id="txt-team-number"></textarea> <input type="button" value="修正立款" data-bind="click:fixReceivable"></input>
 		</div>
 
-		<form action="<%=basePath%>simpletiny/rebootTimer">
+	<%-- 	<form action="<%=basePath%>simpletiny/rebootTimer">
 			<input type="number" name="reboot_min"></input> <input type="submit" value="重启倒计时"></input>
-		</form>
+		</form> --%>
 	</div>
+	<script src="<%=basePath%>static/js/simpletiny-setting.js"></script>
 </body>
 </html>
