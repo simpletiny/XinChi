@@ -286,7 +286,7 @@
 		</div>
 	</div>
 	<!-- 返款收入 -->
-	<div id="receive" style="display: none; width: 1000px; height: 700px; overflow: auto; padding-top: 30px;">
+	<div id="receive" style="display: none; width: 1000px; height: 600px; overflow: auto; padding-top: 30px;">
 		<form id="form-receive">
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
@@ -319,7 +319,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账时间</label>
+					<label class="l" style="width: 30%">收入时间</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" name="detail.time" class="form-control datetime-picker" required="required" />
 					</div>
@@ -388,6 +388,14 @@
 				</div>
 			</div>
 			<!-- /ko -->
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" accept=".jpg,.png" required="required" name="file3" /></a> <input
+						type="hidden" name="detail.voucher_file" />
+				</div>
+				<div class="col-md-6"></div>
+			</div>
+			<div class="input-row clearfloat"></div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
@@ -765,6 +773,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
+	<script src="<%=basePath%>static/js/file-upload.js"></script>
 	<script src="<%=basePath%>static/js/sale/payable.js"></script>
 </body>
 </html>

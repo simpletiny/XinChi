@@ -315,6 +315,7 @@
 				<div class="col-md-4">
 					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
+						<input type="hidden" data-bind="value:client_employee_pk()" name="detail.client_employee_pk" />
 						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>
@@ -343,6 +344,7 @@
 				<div class="col-md-3">
 					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
+						<input type="hidden" data-bind="value:client_employee_pk()" name="detail.client_employee_pk" />
 						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>
@@ -421,6 +423,7 @@
 				<div class="col-md-3">
 					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
+						<input type="hidden" data-bind="value:client_employee_pk()" name="detail.client_employee_pk" />
 						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>
@@ -523,6 +526,7 @@
 				</div>
 				<div class="col-md-2">
 					<div class="ip">
+						<input type="hidden" data-bind="value:$data.client_employee_pk" st="client-employee-pk" />
 						<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
 					</div>
 				</div>
@@ -624,6 +628,7 @@
 				</div>
 				<div class="col-md-2">
 					<div class="ip">
+						<input type="hidden" data-bind="value:$data.client_employee_pk" st="client-employee-pk" />
 						<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
 					</div>
 				</div>
@@ -662,6 +667,7 @@
 				</div>
 				<div class="col-md-2">
 					<div class="ip">
+						<input type="hidden" data-bind="value:$data.client_employee_pk" st="client-employee-pk" />
 						<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
 					</div>
 				</div>
@@ -729,6 +735,7 @@
 				<div class="col-md-4">
 					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
+						<input type="hidden" data-bind="value:client_employee_pk()" name="detail.client_employee_pk" />
 						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>
@@ -756,7 +763,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账时间</label>
+					<label class="l" style="width: 30%">收入时间</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" name="detail.received_time" class="form-control datetime-picker" required="required" />
 					</div>
@@ -799,7 +806,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账时间</label>
+					<label class="l" style="width: 30%">收入时间</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" name="detail.received_time" class="form-control datetime-picker" required="required" />
 					</div>
@@ -832,6 +839,7 @@
 				</div>
 				<div class="col-md-2">
 					<div class="ip">
+						<input type="hidden" data-bind="value:$data.client_employee_pk" st="client-employee-pk" />
 						<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
 					</div>
 				</div>
@@ -889,6 +897,7 @@
 				<div class="col-md-3">
 					<label class="l" style="width: 30%">客户</label>
 					<div class="ip" style="width: 70%">
+						<input type="hidden" data-bind="value:client_employee_pk()" name="detail.client_employee_pk" />
 						<p class="ip-default" data-bind="text:client_employee_name()"></p>
 					</div>
 				</div>

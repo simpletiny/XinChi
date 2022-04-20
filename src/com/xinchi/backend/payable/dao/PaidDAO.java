@@ -18,6 +18,8 @@ public interface PaidDAO {
 
 	public SupplierPaidDetailBean selectByRelatedPk(String related_pk);
 
+	public SupplierPaidDetailBean selectByPk(String pk);
+
 	public List<SupplierPaidDetailBean> selectSupplierPaidDetailByRelatedPk(String related_pk);
 
 	public void deleteByPk(String pk);

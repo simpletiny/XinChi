@@ -10,13 +10,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.accounting.service.AccPaidService;
-import com.xinchi.backend.accounting.service.PayApprovalService;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.PaidService;
-import com.xinchi.backend.payable.service.PayableService;
-import com.xinchi.backend.supplier.service.SupplierEmployeeService;
-import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.CardBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
@@ -36,9 +32,6 @@ public class PaidAction extends BaseAction {
 	private String allot_json;
 
 	@Autowired
-	private PayableService payableService;
-
-	@Autowired
 	private PaidService paidService;
 
 	// 返款收入
@@ -47,15 +40,6 @@ public class PaidAction extends BaseAction {
 
 		return SUCCESS;
 	}
-
-	@Autowired
-	private PayApprovalService payApprovalService;
-
-	@Autowired
-	private SupplierService supplierService;
-
-	@Autowired
-	private SupplierEmployeeService supplierEmployeeService;
 
 	public String applyPay() {
 		resultStr = paidService.applyPay(detail, allot_json);

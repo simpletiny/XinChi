@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class ReceivedMatchBean extends SupperBO implements Serializable {
@@ -9,6 +10,8 @@ public class ReceivedMatchBean extends SupperBO implements Serializable {
 	private String detail_pk;
 
 	private String received_pk;
+
+	private String from_where;
 
 	private String pk;
 
@@ -54,6 +57,14 @@ public class ReceivedMatchBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getFrom_where() {
+		return from_where;
+	}
+
+	public void setFrom_where(String from_where) {
+		this.from_where = from_where;
 	}
 
 }

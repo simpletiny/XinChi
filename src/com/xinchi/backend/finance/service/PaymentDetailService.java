@@ -41,4 +41,8 @@ public interface PaymentDetailService extends BaseService {
 	public String update(PaymentDetailBean thisDetail);
 
 	public List<PaymentDetailBean> selectByInnerPk(String inner_pk);
+
+	public String matchReceived(String json);
+
+	public String cancelMatchReceived(String detailId);
 }

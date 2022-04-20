@@ -107,7 +107,7 @@ var OrderContext = function() {
 							maxmin : false,
 							closeBtn : [1, true],
 							shadeClose : false,
-							area : ['1000px', '800px'],
+							area : ['1000px', '650px'],
 							offset : ['150px', ''],
 							scrollbar : true,
 							page : {
@@ -194,7 +194,10 @@ var OrderContext = function() {
 				supplier_employee_pks.push(data.supplier_employee_pk);
 				if (data.final_flg == "Y") {
 					if (data.final_balance == 0) {
-						fail_msg(data.team_number + "尾款已清");
+						fail_msg(data.team_number + "尾款已清!");
+						check_result = false;
+					} else if (data.final_balance < 0) {
+						fail_msg(data.team_number + "尾款为负!请选择收入或冲账处理。");
 						check_result = false;
 					} else {
 						totalPay += (data.final_balance - 0);
@@ -202,7 +205,10 @@ var OrderContext = function() {
 
 				} else {
 					if (data.budget_balance == 0) {
-						fail_msg(data.team_number + "尾款已清");
+						fail_msg(data.team_number + "尾款已清!");
+						check_result = false;
+					} else if (data.budget_balance < 0) {
+						fail_msg(data.team_number + "尾款为负!请选择收入或冲账处理。");
 						check_result = false;
 					} else {
 						totalPay += (data.budget_balance - 0);
@@ -768,6 +774,15 @@ $(document).ready(function() {
 	$('.month-picker-st').MonthPicker({
 		Button : false,
 		MonthFormat : 'yy-mm'
+	});
+
+	$(':file').change(function() {
+		changeFile({
+			input : this,
+			size : 400,
+			width : 400,
+			required : "yes"
+		});
 	});
 
 });

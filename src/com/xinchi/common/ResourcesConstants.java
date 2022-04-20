@@ -304,10 +304,20 @@ public class ResourcesConstants {
 	// ************************* 票务相关*********************************
 	/** 票务应付款类型 start **/
 	// 机票款
-	public static String Ticket_PAYABLE_TYPE_COST = "A";
+	public static String TICKET_PAYABLE_TYPE_COST = "A";
 	// 手续费
-	public static String Ticket_PAYABLE_TYPE_CHARGES = "B";
+	public static String TICKET_PAYABLE_TYPE_CHARGES = "B";
 	// 航变
-	public static String Ticket_PAYABLE_TYPE_CHANGE = "C";
-	/** 票务应付款类型 start **/
+	public static String TICKET_PAYABLE_TYPE_CHANGE = "C";
+	/** 票务应付款类型 end **/
+	// ************************* 会计相关*********************************
+	/** 收入匹配申报来源 start **/
+	// 客户收入
+	public static String RECEIVED_FROM_WHERE_CLIENT = "C";
+	// 地接返款
+	public static String RECEIVED_FROM_WHERE_SUPPLIER = "D";
+	// 机票返款
+	public static String RECEIVED_FROM_WHERE_AIR_TICKET = "A";
+
+	/** 收入匹配申报来源 start **/
 }

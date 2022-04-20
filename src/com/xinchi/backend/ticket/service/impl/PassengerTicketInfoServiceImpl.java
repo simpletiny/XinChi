@@ -159,7 +159,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			airTicketPayable.setPNR(ticket_PNR);
 			airTicketPayable.setBudget_balance(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
 			airTicketPayable.setPaid(BigDecimal.ZERO);
-			airTicketPayable.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_COST);
+			airTicketPayable.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_COST);
 
 			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(pkkk[0]);
 			airTicketPayable.setPassenger(passenger.getName());
@@ -231,7 +231,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					}
 				}
 			}
-			if (null != ticket_charges) {
+			if (!SimpletinyString.isEmpty(ticket_charges)) {
 				BigDecimal charges = new BigDecimal(ticket_charges);
 				if (charges.compareTo(BigDecimal.ZERO) == 1) {
 					String related_pk = DBCommonUtil.genPk();
@@ -245,7 +245,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 						payable_charges.setBudget_payable(charges);
 						payable_charges.setBudget_balance(charges);
 						payable_charges.setPaid(BigDecimal.ZERO);
-						payable_charges.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_CHARGES);
+						payable_charges.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_CHARGES);
 						payable_charges.setComment(payable_charges.getFirst_date()
 								+ SimpletinyString.left(passenger.getName(), 4) + pkkk.length + "人票务手续费。");
 						airTicketPayableDao.insert(payable_charges);

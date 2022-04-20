@@ -52,6 +52,7 @@ var OrderContext = function() {
 	self.team_number = ko.observable();
 	self.client_employee_name = ko.observable();
 	self.financial_body_name = ko.observable();
+	self.client_employee_pk = ko.observable();
 
 	self.ridTail = function() {
 		if (self.chosenOrders().length == 0) {
@@ -78,6 +79,7 @@ var OrderContext = function() {
 			self.tailMoney(current.final_balance);
 			self.team_number(current.team_number);
 			self.client_employee_name(current.client_employee_name);
+			self.client_employee_pk(current.client_employee_pk);
 
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
@@ -152,6 +154,7 @@ var OrderContext = function() {
 			self.team_number(current.team_number);
 			self.client_employee_name(current.client_employee_name);
 			self.financial_body_name(current.financial_body_name);
+			self.client_employee_pk(current.client_employee_pk);
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
 				type : 1,
@@ -247,6 +250,7 @@ var OrderContext = function() {
 						self.team_number(current.team_number);
 						self.client_employee_name(current.client_employee_name);
 						self.financial_body_name(current.financial_body_name);
+						self.client_employee_pk(current.client_employee_pk);
 						$(".rmb").formatCurrency();
 						tail98Layer = $.layer({
 							type : 1,
@@ -356,7 +360,9 @@ var OrderContext = function() {
 			var current = allot[i];
 			var n = $(current).find("[st='team-number']").val();
 			var r = $(current).find("[st='more-back-money']").val();
-			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
+			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
+					+ client_employee_pk;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -491,7 +497,12 @@ var OrderContext = function() {
 			var current = strike_out[i];
 			var n = $(current).find("[st='strike-team-number']").val();
 			var r = $(current).find("[st='strike-out-money']").val();
-			strike_out_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+
+			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
+
+			strike_out_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
+					+ client_employee_pk;
+
 			if (i == strike_out.length - 1) {
 				strike_out_json += '"}';
 			} else {
@@ -506,7 +517,9 @@ var OrderContext = function() {
 			var current = strike_in[i];
 			var n = $(current).find("[st='strike-team-number']").val();
 			var r = $(current).find("[st='strike-in-money']").val();
-			strike_in_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
+			strike_in_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
+					+ client_employee_pk;
 			if (i == strike_in.length - 1) {
 				strike_in_json += '"}';
 			} else {
@@ -557,6 +570,7 @@ var OrderContext = function() {
 			self.team_number(current.team_number);
 			self.client_employee_name(current.client_employee_name);
 			self.financial_body_name(current.financial_body_name);
+			self.client_employee_pk(current.client_employee_pk);
 
 			receiveLayer = $.layer({
 				type : 1,
@@ -661,7 +675,9 @@ var OrderContext = function() {
 				var current = allot[i];
 				var n = $(current).find("[st='team_number']").val();
 				var r = $(current).find("[st='receive_received']").val();
-				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r;
+				var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
+				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
+						+ client_employee_pk;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -669,6 +685,7 @@ var OrderContext = function() {
 				}
 			}
 			allot_json += ']';
+
 			startLoadingSimpleIndicator("保存中");
 			$.ajax({
 				type : "POST",

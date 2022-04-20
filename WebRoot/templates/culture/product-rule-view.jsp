@@ -86,7 +86,7 @@
 		</div>
 	</div>
 	<script>
-		$(".culture").addClass("current").children("ol").css("display", "block");
+		$(".rule").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/js/culture/product-rule-view.js"></script>
 </body>

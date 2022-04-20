@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -20,8 +17,6 @@ import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.ReceivedMatchBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.DateUtil;
-import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.PropertiesUtil;
 
 @Controller
@@ -29,11 +24,11 @@ import com.xinchi.tools.PropertiesUtil;
 public class PaymentDetailAction extends BaseAction {
 	private static final long serialVersionUID = 3408762081387739186L;
 	@Autowired
-	private PaymentDetailService pds;
+	private PaymentDetailService service;
 	private PaymentDetailBean detail;
 
 	public String createDetail() {
-		resultStr = pds.insert(detail);
+		resultStr = service.insert(detail);
 		return SUCCESS;
 	}
 
@@ -45,7 +40,7 @@ public class PaymentDetailAction extends BaseAction {
 	 * @return
 	 */
 	public String createInnerDetail() {
-		pds.saveInnerDetail(innerTransfer);
+		service.saveInnerDetail(innerTransfer);
 		resultStr = SUCCESS;
 		return SUCCESS;
 	}
@@ -53,7 +48,7 @@ public class PaymentDetailAction extends BaseAction {
 	List<PaymentDetailBean> details;
 
 	public String searchDetail() {
-		details = pds.getAllDetailsByParam(null);
+		details = service.getAllDetailsByParam(null);
 		return SUCCESS;
 	}
 
@@ -63,30 +58,30 @@ public class PaymentDetailAction extends BaseAction {
 		params.put("bo", detail);
 		page.setParams(params);
 
-		details = pds.getAllDetailsByPage(page);
+		details = service.getAllDetailsByPage(page);
 		return SUCCESS;
 	}
 
 	public String searchDetailByPk() {
-		detail = pds.selectByPk(detailId);
+		detail = service.selectByPk(detailId);
 		return SUCCESS;
 	}
 
 	private String detailId;
 
 	public String deleteDetail() {
-		PaymentDetailBean detail = pds.selectByPk(detailId);
+		PaymentDetailBean detail = service.selectByPk(detailId);
 		if (null != detail) {
 			String inner_flg = detail.getInner_flg();
 			if (inner_flg.equals("Y")) {
-				List<PaymentDetailBean> details = pds.selectByInnerPk(detail.getInner_pk());
+				List<PaymentDetailBean> details = service.selectByInnerPk(detail.getInner_pk());
 				if (null != details && details.size() > 0) {
 					for (PaymentDetailBean d : details) {
-						resultStr = pds.deleteDetail(d.getPk());
+						resultStr = service.deleteDetail(d.getPk());
 					}
 				}
 			} else if (inner_flg.equals("N")) {
-				resultStr = pds.deleteDetail(detailId);
+				resultStr = service.deleteDetail(detailId);
 			}
 
 		} else {
@@ -96,7 +91,7 @@ public class PaymentDetailAction extends BaseAction {
 	}
 
 	public String updateDetail() {
-		resultStr = pds.updateDetail(detail);
+		resultStr = service.updateDetail(detail);
 		return SUCCESS;
 	}
 
@@ -106,7 +101,7 @@ public class PaymentDetailAction extends BaseAction {
 	public String importDetailExcel() {
 		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		File file = new File(fileFolder + File.separator + fileName);
-		resultStr = pds.importDetailExcel(file);
+		resultStr = service.importDetailExcel(file);
 		file.delete();
 		resultStr = OK;
 		return SUCCESS;
@@ -120,28 +115,7 @@ public class PaymentDetailAction extends BaseAction {
 	private ReceivedService receivedService;
 
 	public String matchReceived() {
-		JSONObject obj = JSONObject.fromObject(json);
-		String detail_id = obj.getString("detailId");
-		JSONArray arr = obj.getJSONArray("arr");
-		for (int i = 0; i < arr.size(); i++) {
-			JSONObject receiveds = JSONObject.fromObject(arr.get(i));
-			String related_pk = receiveds.getString("related_pk");
-
-			List<ClientReceivedDetailBean> receivedDetails = receivedService.selectByRelatedPks(related_pk);
-			for (ClientReceivedDetailBean detail : receivedDetails) {
-				detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
-				detail.setConfirm_time(DateUtil.getMinStr());
-				receivedService.update(detail);
-
-				ReceivedMatchBean rmb = new ReceivedMatchBean();
-				rmb.setDetail_pk(detail_id);
-				rmb.setReceived_pk(detail.getPk());
-				rms.insert(rmb);
-			}
-		}
-		PaymentDetailBean thisDetail = pds.selectByPk(detail_id);
-		thisDetail.setMatch_flg("Y");
-		resultStr = pds.update(thisDetail);
+		resultStr = service.matchReceived(json);
 		return SUCCESS;
 	}
 
@@ -162,33 +136,17 @@ public class PaymentDetailAction extends BaseAction {
 
 	public String matchOtherReceived() {
 
-		PaymentDetailBean thisDetail = pds.selectByPk(detailId);
+		PaymentDetailBean thisDetail = service.selectByPk(detailId);
 		// O for other received
 		thisDetail.setMatch_flg("O");
 
-		resultStr = pds.update(thisDetail);
+		resultStr = service.update(thisDetail);
 		return SUCCESS;
 	}
 
 	// 取消匹配
 	public String cancelMatchReceived() {
-		// 更新收入详情
-		detail = pds.selectByPk(detailId);
-		detail.setMatch_flg("N");
-		pds.update(detail);
-
-		List<ReceivedMatchBean> rmbs = rms.selectByDetailPk(detailId);
-		// 更新收入详表
-		for (ReceivedMatchBean rmb : rmbs) {
-			ClientReceivedDetailBean crdb = receivedService.selectByPk(rmb.getReceived_pk());
-			crdb.setConfirm_time(null);
-			crdb.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-			receivedService.update(crdb);
-			// 删除匹配关联
-			rms.delete(rmb.getPk());
-		}
-
-		resultStr = SUCCESS;
+		resultStr = service.cancelMatchReceived(detailId);
 		return SUCCESS;
 	}
 

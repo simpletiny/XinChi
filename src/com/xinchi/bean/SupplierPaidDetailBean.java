@@ -54,6 +54,8 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 	private String voucher_file_name;
 	private String payable_pk;
 
+	private String voucher_file;
+
 	// options
 	private List<String> statuses;
 	private String supplier_name;
@@ -264,6 +266,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setPayable_pk(String payable_pk) {
 		this.payable_pk = payable_pk;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
 	}
 
 }

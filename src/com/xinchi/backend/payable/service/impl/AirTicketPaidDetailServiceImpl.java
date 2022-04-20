@@ -34,6 +34,8 @@ import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.FileFolder;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
@@ -204,21 +206,22 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 
 			// 删除银行流水
 			String voucher_number = details.get(0).getVoucher_number();
-			if (SimpletinyString.isEmpty(voucher_number))
-				return SUCCESS;
-			String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
+			if (!SimpletinyString.isEmpty(voucher_number)) {
 
-			List<PaymentDetailBean> paymentDetails = paymentDetailDao.selectByVoucherNumber(voucher_number);
-			for (PaymentDetailBean paymentDetail : paymentDetails) {
+				String fileFolder = PropertiesUtil.getProperty("voucherFileFolder");
 
-				// 删除支付凭证
-				File destfile = new File(fileFolder + File.separator + paymentDetail.getAccount_pk() + File.separator
-						+ paymentDetail.getVoucher_file_name());
-				if (destfile.exists()) {
-					destfile.delete();
+				List<PaymentDetailBean> paymentDetails = paymentDetailDao.selectByVoucherNumber(voucher_number);
+				for (PaymentDetailBean paymentDetail : paymentDetails) {
+
+					// 删除支付凭证
+					File destfile = new File(fileFolder + File.separator + paymentDetail.getAccount_pk()
+							+ File.separator + paymentDetail.getVoucher_file_name());
+					if (destfile.exists()) {
+						destfile.delete();
+					}
+
+					paymentDetailService.deleteDetail(paymentDetail.getPk());
 				}
-
-				paymentDetailService.deleteDetail(paymentDetail.getPk());
 			}
 		}
 		// 无业务押金扣款
@@ -283,37 +286,44 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		JSONArray array = JSONArray.fromObject(json);
 		BigDecimal allot_money = detail.getAllot_money();
 		String time = detail.getTime();
-
-		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
-				ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
-		// 生成银行流水数据
-		String msg = SUCCESS;
 		String account = detail.getAccount();
+		String voucher_file = detail.getVoucher_file();
 
-		CardBean card = cardDao.getCardByAccount(account);
-		BigDecimal balance = card.getBalance().add(allot_money);
+		// 保存凭证文件
+		String subFolder = detail.getTime().substring(0, 4) + File.separator + detail.getTime().substring(5, 7);
+		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.SUPPLIER_RECEIVED_VOUCHER.value(), subFolder);
 
-		String voucher_file_name = detail.getVoucher_file_name();
-
-		PaymentDetailBean payment = new PaymentDetailBean();
-		payment.setVoucher_number(voucher_number);
-		payment.setAccount(account);
-		payment.setTime(time);
-		payment.setMoney(allot_money);
-		payment.setBalance(balance);
-		payment.setType("收入");
-		payment.setComment("机票返款收入,凭证号：" + voucher_number);
-		payment.setVoucher_file_name(voucher_file_name);
-
-		msg = paymentDetailService.insert(payment);
-
-		if (!msg.equals(SUCCESS)) {
-			return msg;
-		}
+		// String voucher_number =
+		// numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+		// ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
+		// 生成银行流水数据 2022-02-24所有收入纳入收入匹配，不再记录银行流水
+		// String msg = SUCCESS;
+		// String account = detail.getAccount();
+		//
+		// CardBean card = cardDao.getCardByAccount(account);
+		// BigDecimal balance = card.getBalance().add(allot_money);
+		//
+		// String voucher_file_name = detail.getVoucher_file_name();
+		//
+		// PaymentDetailBean payment = new PaymentDetailBean();
+		// payment.setVoucher_number(voucher_number);
+		// payment.setAccount(account);
+		// payment.setTime(time);
+		// payment.setMoney(allot_money);
+		// payment.setBalance(balance);
+		// payment.setType("收入");
+		// payment.setComment("机票返款收入,凭证号：" + voucher_number);
+		// payment.setVoucher_file_name(voucher_file_name);
+		//
+		// msg = paymentDetailService.insert(payment);
+		//
+		// if (!msg.equals(SUCCESS)) {
+		// return msg;
+		// }
 
 		// 更新账户余额
-		card.setBalance(balance);
-		cardDao.update(card);
+		// card.setBalance(balance);
+		// cardDao.update(card);
 
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = JSONObject.fromObject(array.get(i));
@@ -330,17 +340,17 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
 			currentDetail.setBase_pk(payable_pk);
 			currentDetail.setType(ResourcesConstants.PAID_TYPE_BACK);
-			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
 			currentDetail.setRelated_pk(related_pk);
+			currentDetail.setVoucher_file(voucher_file);
 			BigDecimal money = BigDecimal.ZERO;
 			if (!SimpletinyString.isEmpty(received)) {
 				money = new BigDecimal(Double.valueOf(received) * -1);
 			}
-			currentDetail.setTime(time.substring(0, 16));
+			currentDetail.setTime(time);
 			currentDetail.setMoney(money);
-			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
+			currentDetail.setCard_account(account);
 			currentDetail.setApprove_user(user.getUser_number());
-			currentDetail.setVoucher_number(voucher_number);
 			dao.insert(currentDetail);
 
 			airTicketPayable.setPaid(airTicketPayable.getPaid() == null ? BigDecimal.ZERO.add(money)
@@ -574,26 +584,30 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		// 如果是收入
 		if (payment_detail.getType().equals("R")) {
 			/* 保存银行流水 start */
-			payment_detail.setType("收入");
-
-			BigDecimal balance = card.getBalance().add(money);
-
-			payment_detail.setVoucher_number(voucher_number);
-			payment_detail.setBalance(balance);
-			payment_detail.setComment("票务记录无业务关联收入,凭证号：" + voucher_number);
-
-			msg = paymentDetailService.insert(payment_detail);
-
-			if (!msg.equals(SUCCESS)) {
-				return msg;
-			}
-			/* 保存银行流水 end */
-
-			// 更新账户余额
-			card.setBalance(balance);
-			cardDao.update(card);
+			// payment_detail.setType("收入");
+			//
+			// BigDecimal balance = card.getBalance().add(money);
+			//
+			// payment_detail.setVoucher_number(voucher_number);
+			// payment_detail.setBalance(balance);
+			// payment_detail.setComment("票务记录无业务关联收入,凭证号：" + voucher_number);
+			//
+			// msg = paymentDetailService.insert(payment_detail);
+			//
+			// if (!msg.equals(SUCCESS)) {
+			// return msg;
+			// }
+			// /* 保存银行流水 end */
+			//
+			// // 更新账户余额
+			// card.setBalance(balance);
+			// cardDao.update(card);
 
 			/* 保存一笔票务往来详情 start */
+			// 保存凭证文件
+			String subFolder = time.substring(0, 4) + File.separator + time.substring(5, 7);
+			FileUtil.saveFile(payment_detail.getVoucher_file_name(), FileFolder.SUPPLIER_RECEIVED_VOUCHER.value(),
+					subFolder);
 
 			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
 
@@ -601,13 +615,12 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
 			currentDetail.setBase_pk("SIMPLE");
 			currentDetail.setType(ResourcesConstants.PAID_TYPE_RECEIVE);
-			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
 			currentDetail.setRelated_pk(related_pk);
 			currentDetail.setTime(time);
 			currentDetail.setMoney(money);
-			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
-			currentDetail.setApprove_user(user.getUser_number());
-			currentDetail.setVoucher_number(voucher_number);
+			currentDetail.setVoucher_file(payment_detail.getVoucher_file_name());
+			currentDetail.setCard_account(account);
 			currentDetail.setComment(comment);
 
 			dao.insert(currentDetail);

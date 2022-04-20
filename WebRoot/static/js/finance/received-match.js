@@ -249,15 +249,14 @@ var DetailContext = function() {
 	// end pagination
 	// right side info
 	self.typeMapping = {
-		'TAIL' : '抹零',
-		'SUM' : '合账',
-		'STRIKE' : '冲账',
-		'RECEIVED' : '收入'
+		'CSUM' : '合账',
+		'CRECEIVED' : '收入',
+		'ABACK' : '票务退返',
+		'DBACK' : '地接退返'
 	};
 	self.receiveds = ko.observableArray([]);
 	self.detail = ko.observable({});
-	self.dateTo = ko.observable();
-	self.dateFrom = ko.observable();
+	self.date = ko.observable();
 	self.checkReceived = function() {
 		startLoadingSimpleIndicator("加载中...");
 		var detailId = self.chosenDetails();
@@ -265,7 +264,7 @@ var DetailContext = function() {
 		$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
 			if (data.detail) {
 				self.detail(data.detail);
-				self.refreshRight(data);
+				self.searchReceiveApply(data);
 			} else {
 				fail_msg("不存在的收入明细！");
 			}
@@ -276,28 +275,40 @@ var DetailContext = function() {
 	}
 	self.account = ko.observable();
 	self.money = ko.observable();
+	self.current_param = ko.observable('');
 
-	self.refreshRight = function(data) {
-		var x = new Date(data.detail.time);
-		self.dateTo(x.Format("yyyy-MM-dd"));
-		self.dateFrom(x.Format("yyyy-MM-dd"));
-		self.account(data.detail.account);
-		self.money(data.detail.money);
-		// todo
-		self.searchReceiveApply();
-	}
-
-	self.searchReceiveApply = function() {
-
-		if (self.chosenDetails().length == 0) {
-			endLoadingIndicator();
-			return;
+	self.refreshRight = function() {
+		startLoadingSimpleIndicator("加载中...");
+		var param = self.current_param();
+		if (param == null || param == '') {
+			param = '';
+		} else {
+			param += '&';
 		}
 
-		var param = "detail.statuses=I";
+		param += "page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+
+		$.getJSON(self.apiurl + 'accounting/searchReceivedByPage', param, function(data) {
+			self.receiveds(data.receiveds);
+
+			self.totalCount1(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums1(self.currentPage1());
+
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+		});
+	}
+
+	self.searchReceiveApply = function(data) {
+		var x = new Date(data.detail.time);
+		self.date(x.Format("yyyy-MM-dd"));
+		self.account(data.detail.account);
+		self.money(data.detail.money);
+
+		var param = "";
 
 		if ($("#chk-data").is(":checked")) {
-			param += "&detail.date_from=" + self.dateFrom() + "&detail.date_to=" + self.dateTo();
+			param += "&detail.date=" + self.date();
 		}
 
 		if ($("#chk-account").is(":checked")) {
@@ -305,35 +316,16 @@ var DetailContext = function() {
 		}
 
 		if ($("#chk-money").is(":checked")) {
-			param += "&detail.money=" + self.money();
+			param += "&detail.received=" + self.money();
 		}
-
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
-			self.receiveds(data.receiveds);
-
-			self.totalCount1(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums1(self.currentPage1());
-
-			$(".rmb").formatCurrency();
-			endLoadingIndicator();
-		});
+		self.current_param(param);
+		self.refreshRight();
 	};
 
 	self.showAll = function() {
-		startLoadingSimpleIndicator("加载中...");
-		var param = "detail.statuses=I";
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
-			self.receiveds(data.receiveds);
-
-			self.totalCount1(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums1(self.currentPage1());
-
-			$(".rmb").formatCurrency();
-			endLoadingIndicator();
-		});
+		self.chosenDetails(null);
+		self.current_param('');
+		self.refreshRight();
 	};
 
 	self.chosenReceiveds = ko.observableArray([]);
@@ -348,21 +340,16 @@ var DetailContext = function() {
 				if (x[1] == sou.related_pk) {
 					checks.push(sou);
 				}
-
 			}
 		}
+
 		var sum = 0;
 		for (var i = 0; i < checks.length; i++) {
 			if (self.detail().account != checks[i].card_account) {
 				fail_msg("账户不同！不能匹配");
 				return;
 			}
-
-			if (checks[i].type == "SUM") {
-				sum += checks[i].allot_received;
-			} else {
-				sum += checks[i].received;
-			}
+			sum += checks[i].received;
 		}
 		if (self.detail().money != sum) {
 			fail_msg("匹配金额不同！不能匹配");
@@ -370,7 +357,7 @@ var DetailContext = function() {
 		}
 		var json = '{"detailId":"' + self.chosenDetails() + '","arr":[';
 		for (var i = 0; i < checks.length; i++) {
-			json += '{"related_pk":"' + checks[i].related_pk + '","type":"' + checks[i].type + '"';
+			json += '{"related_pk":"' + checks[i].related_pk + '","from_where":"' + checks[i].from_where + '"';
 			if (i == checks.length - 1) {
 				json += '}]}';
 			} else {
@@ -393,7 +380,7 @@ var DetailContext = function() {
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
-							self.searchReceiveApply();
+							self.refreshRight();
 							self.search();
 							self.chosenDetails(null);
 						}
@@ -537,7 +524,7 @@ var DetailContext = function() {
 	};
 
 	self.refreshPage1 = function() {
-		self.searchReceiveApply();
+		self.refreshRight();
 	};
 	// end pagination
 };

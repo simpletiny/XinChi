@@ -376,16 +376,14 @@
 		A.create_time,
 		A.update_time,
 		D.name AS client_employee_name,
-		B.client_employee_pk,
+		A.client_employee_pk,
 		A.voucher_file
 		from
 		received_detail A
-		left join
-		budget_order_view B on A.team_number=B.team_number
 		LEFT JOIN user_base C ON
 		A.create_user=C.user_number
 		LEFT JOIN
-		client_employee D ON B.client_employee_pk = D.pk
+		client_employee D ON A.client_employee_pk = D.pk
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in

@@ -1,5 +1,9 @@
 package com.xinchi.backend.accounting.action;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -8,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.accounting.service.AccountingService;
 import com.xinchi.backend.accounting.service.PayApprovalService;
 import com.xinchi.bean.PayApprovalBean;
+import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -106,6 +111,37 @@ public class AccountingAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private ReceivedDetailDto detail;
+
+	private List<ReceivedDetailDto> receiveds;
+
+	/**
+	 * 搜索待匹配收入
+	 * 
+	 * @return
+	 */
+	public String searchReceivedByPage() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		if (null == detail)
+			detail = new ReceivedDetailDto();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
+				&& !roles.contains(ResourcesConstants.USER_ROLE_CASHIER)) {
+			detail.setCreate_user(sessionBean.getUser_number());
+		}
+
+		params.put("bo", detail);
+		page.setParams(params);
+
+		receiveds = service.searchAllReceivedsByPage(page);
+
+		return SUCCESS;
+	}
+
 	public String getRelated_pk() {
 		return related_pk;
 	}
@@ -128,5 +164,21 @@ public class AccountingAction extends BaseAction {
 
 	public void setItem(String item) {
 		this.item = item;
+	}
+
+	public List<ReceivedDetailDto> getReceiveds() {
+		return receiveds;
+	}
+
+	public void setReceiveds(List<ReceivedDetailDto> receiveds) {
+		this.receiveds = receiveds;
+	}
+
+	public ReceivedDetailDto getDetail() {
+		return detail;
+	}
+
+	public void setDetail(ReceivedDetailDto detail) {
+		this.detail = detail;
 	}
 }

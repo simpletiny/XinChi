@@ -7,7 +7,6 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.payable.dao.PaidDAO;
-import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -36,13 +35,15 @@ public class PaidDAOImpl extends SqlSessionDaoSupport implements PaidDAO {
 
 	@Override
 	public List<SupplierPaidDetailBean> getAllByPage(Page page) {
-		List<SupplierPaidDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByPage", page);
+		List<SupplierPaidDetailBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByPage", page);
 		return list;
 	}
 
 	@Override
 	public List<SupplierPaidDetailBean> selectByParam(SupplierPaidDetailBean options) {
-		List<SupplierPaidDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByParam", options);
+		List<SupplierPaidDetailBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByParam", options);
 		return list;
 	}
 
@@ -55,16 +56,25 @@ public class PaidDAOImpl extends SqlSessionDaoSupport implements PaidDAO {
 	@Override
 	public SupplierPaidDetailBean selectByRelatedPk(String related_pk) {
 
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByRelatedPk", related_pk);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByRelatedPk",
+				related_pk);
 	}
 
 	@Override
 	public List<SupplierPaidDetailBean> selectSupplierPaidDetailByRelatedPk(String related_pk) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectSupplierPaidDetailByRelatedPk", related_pk);
+		return daoUtil.selectByParam(
+				"com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectSupplierPaidDetailByRelatedPk", related_pk);
 	}
 
 	@Override
 	public void deleteByPk(String pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.SupplierPaidDetailMapper.deleteByPrimaryKey", pk);
+	}
+
+	@Override
+	public SupplierPaidDetailBean selectByPk(String pk) {
+
+		return (SupplierPaidDetailBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.SupplierPaidDetailMapper.selectByPrimaryKey", pk);
 	}
 }

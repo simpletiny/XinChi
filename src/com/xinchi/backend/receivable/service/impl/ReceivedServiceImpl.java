@@ -138,7 +138,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 			JSONObject obj = JSONObject.fromObject(array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
+			String client_employee_pk = obj.getString("client_employee_pk");
 			detail.setTeam_number(t);
+			detail.setClient_employee_pk(client_employee_pk);
 
 			if (!SimpletinyString.isEmpty(r)) {
 				detail.setReceived(new BigDecimal(r));
@@ -172,11 +174,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 	@Override
 	public String applyCollect(ClientReceivedDetailBean detail) {
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_COLLECT);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 
-		detail.setClient_employee_pk(receivable.getClient_employee_pk());
 		dao.insert(detail);
 		receivableService.updateReceivableReceived(detail);
 
@@ -190,10 +190,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 	@Override
 	public String applyTail98(ClientReceivedDetailBean detail) {
-		ReceivableBean receivable = receivableService.selectByTeamNumber(detail.getTeam_number());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
-		detail.setClient_employee_pk(receivable.getClient_employee_pk());
 		detail.setReceived_time(DateUtil.today());
 		detail.setCollecter("98清尾");
 		dao.insert(detail);
@@ -242,6 +240,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 			JSONObject obj = JSONObject.fromObject(array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
+			String client_employee_pk = obj.getString("client_employee_pk");
+			detail.setClient_employee_pk(client_employee_pk);
 			detail.setTeam_number(t);
 			detail.setPk(pks[i]);
 
@@ -296,6 +296,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 			JSONObject obj = JSONObject.fromObject(out_array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
+			String client_employee_pk = obj.getString("client_employee_pk");
+			current.setClient_employee_pk(client_employee_pk);
 			current.setTeam_number(t);
 
 			if (!SimpletinyString.isEmpty(r)) {
@@ -317,6 +319,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 			JSONObject obj = JSONObject.fromObject(in_array.get(i));
 			String t = obj.getString("team_number");
 			String r = obj.getString("received");
+			String client_employee_pk = obj.getString("client_employee_pk");
+			current.setClient_employee_pk(client_employee_pk);
 			current.setTeam_number(t);
 
 			if (!SimpletinyString.isEmpty(r)) {
@@ -340,7 +344,6 @@ public class ReceivedServiceImpl implements ReceivedService {
 			return "nomatch";
 		}
 
-		detail.setClient_employee_pk(order.getClient_employee_pk());
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_FLY);
 		detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
 

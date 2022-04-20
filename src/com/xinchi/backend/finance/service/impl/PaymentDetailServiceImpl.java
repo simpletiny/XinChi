@@ -21,10 +21,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.dao.PaymentDetailDAO;
+import com.xinchi.backend.finance.dao.ReceivedMatchDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
+import com.xinchi.backend.payable.dao.PaidDAO;
+import com.xinchi.backend.receivable.dao.ReceivedDAO;
+import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.InnerTransferBean;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ReceivedMatchBean;
+import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -33,6 +41,9 @@ import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class PaymentDetailServiceImpl implements PaymentDetailService {
@@ -492,5 +503,114 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	public List<PaymentDetailBean> selectByInnerPk(String inner_pk) {
 
 		return dao.selectByInnerPk(inner_pk);
+	}
+
+	@Autowired
+	private ReceivedDAO receivedDao;
+
+	@Autowired
+	private PaidDAO paidDao;
+
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDao;
+
+	@Autowired
+	private ReceivedMatchDAO receivedMatchDao;
+
+	@Override
+	public String matchReceived(String json) {
+		JSONObject obj = JSONObject.fromObject(json);
+		String detail_id = obj.getString("detailId");
+		JSONArray arr = obj.getJSONArray("arr");
+		for (int i = 0; i < arr.size(); i++) {
+			JSONObject receiveds = JSONObject.fromObject(arr.get(i));
+			String related_pk = receiveds.getString("related_pk");
+			String from_where = receiveds.getString("from_where");
+			if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_CLIENT)) {
+
+				List<ClientReceivedDetailBean> receivedDetails = receivedDao.selectByRelatedPks(related_pk);
+				for (ClientReceivedDetailBean detail : receivedDetails) {
+					detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+					detail.setConfirm_time(DateUtil.getMinStr());
+					receivedDao.update(detail);
+
+					ReceivedMatchBean rmb = new ReceivedMatchBean();
+					rmb.setFrom_where(from_where);
+					rmb.setDetail_pk(detail_id);
+					rmb.setReceived_pk(detail.getPk());
+					receivedMatchDao.insert(rmb);
+				}
+			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_SUPPLIER)) {
+				List<SupplierPaidDetailBean> receivedDetails = paidDao.selectSupplierPaidDetailByRelatedPk(related_pk);
+				for (SupplierPaidDetailBean detail : receivedDetails) {
+					detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+					detail.setConfirm_time(DateUtil.getMinStr());
+					paidDao.update(detail);
+
+					ReceivedMatchBean rmb = new ReceivedMatchBean();
+					rmb.setFrom_where(from_where);
+					rmb.setDetail_pk(detail_id);
+					rmb.setReceived_pk(detail.getPk());
+					receivedMatchDao.insert(rmb);
+				}
+			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_TICKET)) {
+				List<AirTicketPaidDetailBean> receivedDetails = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+				for (AirTicketPaidDetailBean detail : receivedDetails) {
+					detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+					detail.setConfirm_time(DateUtil.getMinStr());
+					airTicketPaidDetailDao.update(detail);
+
+					ReceivedMatchBean rmb = new ReceivedMatchBean();
+					rmb.setFrom_where(from_where);
+					rmb.setDetail_pk(detail_id);
+					rmb.setReceived_pk(detail.getPk());
+					receivedMatchDao.insert(rmb);
+				}
+			}
+		}
+
+		PaymentDetailBean thisDetail = dao.selectById(detail_id);
+		thisDetail.setMatch_flg("Y");
+		dao.updateDetail(thisDetail);
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String cancelMatchReceived(String detailId) {
+		// 更新收入详情
+		PaymentDetailBean detail = dao.selectById(detailId);
+		detail.setMatch_flg("N");
+		dao.updateDetail(detail);
+
+		List<ReceivedMatchBean> rmbs = receivedMatchDao.selectByDetailPk(detailId);
+		// 更新收入详表
+		for (ReceivedMatchBean rmb : rmbs) {
+			if (rmb.getFrom_where().equals(ResourcesConstants.RECEIVED_FROM_WHERE_CLIENT)) {
+				ClientReceivedDetailBean receivedDetail = receivedDao.selectByPk(rmb.getReceived_pk());
+				receivedDetail.setConfirm_time("");
+				receivedDetail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+				receivedDao.update(receivedDetail);
+				// 删除匹配关联
+				receivedMatchDao.delete(rmb.getPk());
+			} else if (rmb.getFrom_where().equals(ResourcesConstants.RECEIVED_FROM_WHERE_SUPPLIER)) {
+				SupplierPaidDetailBean receivedDetail = paidDao.selectByPk(rmb.getReceived_pk());
+				receivedDetail.setConfirm_time("");
+				receivedDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
+				paidDao.update(receivedDetail);
+				// 删除匹配关联
+				receivedMatchDao.delete(rmb.getPk());
+
+			} else if (rmb.getFrom_where().equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_TICKET)) {
+				AirTicketPaidDetailBean receivedDetail = airTicketPaidDetailDao
+						.selectByPrimaryKey(rmb.getReceived_pk());
+				receivedDetail.setConfirm_time("");
+				receivedDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
+				airTicketPaidDetailDao.update(receivedDetail);
+				// 删除匹配关联
+				receivedMatchDao.delete(rmb.getPk());
+			}
+		}
+		return SUCCESS;
 	}
 }

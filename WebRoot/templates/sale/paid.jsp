@@ -112,7 +112,12 @@
 								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+								<!-- ko if:$data.type!='BACK' -->
 								<td data-bind="text: $data.time"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type=='BACK' -->
+								<td data-bind="text: $data.confirm_time"></td>
+								<!-- /ko -->
 								<!-- ko if:$data.status=='I' -->
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->

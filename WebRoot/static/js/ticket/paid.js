@@ -34,7 +34,7 @@ var PaidContext = function() {
 		'I' : '待审批',
 		'N' : '被驳回',
 		'Y' : '已同意',
-		'P' : '已支付'
+		'P' : '已入账'
 	};
 	self.types = ['BACK', 'PAID', 'STRIKE', 'DEDUCT', 'STRIKEOUT', 'STRIKEIN', 'DSTRIKEIN', 'RECEIVE', 'PAY'];
 
@@ -171,7 +171,18 @@ var PaidContext = function() {
 			return;
 		}
 
-		var related_pk = self.chosenPaids()[0];
+		var param = self.chosenPaids()[0].split(";");
+
+		var related_pk = param[0];
+		var type = param[1];
+		var status = param[2];
+
+		if (type == "RECEIVE" || type == "BACK") {
+			if (status == "P") {
+				fail_msg("已入账，不能打回！");
+				return;
+			}
+		}
 
 		var data = {
 			related_pk : related_pk
@@ -192,7 +203,7 @@ var PaidContext = function() {
 						data : data,
 						success : function(str) {
 							if (str != "success") {
-								fail_msg("回滚失败，请联系管理员");
+								fail_msg(str);
 							}
 							self.refresh();
 							self.chosenPaids.removeAll();

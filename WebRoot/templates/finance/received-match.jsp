@@ -69,7 +69,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">发生月</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control month-picker-st" placeholder="出团月份" name="detail.month" />
+								<input type="text" class="form-control month-picker-st" placeholder="发生月" name="detail.month" />
 							</div>
 						</div>
 					</div>
@@ -172,8 +172,9 @@
 												<th>收入时间</th>
 												<th>我方账户</th>
 												<th>收入凭证</th>
-												<th>客户</th>
+												<th>付款方</th>
 												<th>摘要</th>
+												<th>填报人</th>
 												<th>填报日期</th>
 											</tr>
 										</thead>
@@ -181,26 +182,22 @@
 											<tr>
 												<td><input type="checkbox"
 													data-bind="attr: {'value': $data.type+';'+$data.related_pk}, checked: $root.chosenReceiveds" /></td>
-												<!-- ko if:$data.type=='SUM' -->
-												<td data-bind="text: $data.allot_received" class="rmb"></td>
-												<!-- /ko -->
-												<!-- ko if:$data.type!='SUM' -->
 												<td data-bind="text: $data.received" class="rmb"></td>
-												<!-- /ko -->
-												<td data-bind="text: $root.typeMapping[$data.type]"></td>
+												<td data-bind="text: $root.typeMapping[$data.from_where+$data.type]"></td>
 												<td data-bind="text: $data.received_time"></td>
 												<td data-bind="text: $data.card_account"></td>
 												<td><a href="javascript:void(0)"
 													data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
-												<!-- 	ko if:$data.type=='SUM' -->
+												<!-- ko if: $data.type == 'SUM' -->
 												<td><a href="javascript:void(0)"
 													data-bind="event:{click:function(){$root.viewDetail($data.related_pk)}}">详情</a></td>
-												<!-- 	/ko -->
-												<!-- ko if:$data.type!='SUM' -->
-												<td data-bind="text: $data.client_employee_name"></td>
+												<!-- /ko -->
+												<!-- ko if: $data.type != 'SUM' -->
+												<td data-bind="text: $data.pay_user"></td>
 												<!-- /ko -->
 												<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewComment($data)}}">详情</a></td>
-												<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+												<td data-bind="text: $data.apply_user"></td>
+												<td data-bind="text: $data.apply_date"></td>
 											</tr>
 										</tbody>
 									</table>

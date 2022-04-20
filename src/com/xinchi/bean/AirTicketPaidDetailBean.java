@@ -49,8 +49,9 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	private String voucher_number;
 
-	// DTO
-	private String voucher_file_name;
+	private String card_account;
+
+	private String voucher_file;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -220,14 +221,6 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 		this.voucher_number = voucher_number;
 	}
 
-	public String getVoucher_file_name() {
-		return voucher_file_name;
-	}
-
-	public void setVoucher_file_name(String voucher_file_name) {
-		this.voucher_file_name = voucher_file_name;
-	}
-
 	public String getAccount() {
 		return account;
 	}
@@ -242,6 +235,22 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
+	}
+
+	public String getCard_account() {
+		return card_account;
+	}
+
+	public void setCard_account(String card_account) {
+		this.card_account = card_account;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
 	}
 
 }

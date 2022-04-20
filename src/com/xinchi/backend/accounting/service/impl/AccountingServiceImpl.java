@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.accounting.dao.AccountingDAO;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.AccountingService;
@@ -24,6 +25,7 @@ import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PayableBean;
+import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.UserBaseBean;
@@ -32,6 +34,7 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
+import com.xinchi.tools.Page;
 
 @Service
 @Transactional
@@ -39,6 +42,9 @@ public class AccountingServiceImpl implements AccountingService {
 
 	@Autowired
 	private PaidDAO paidDao;
+
+	@Autowired
+	private AccountingDAO dao;
 
 	@Autowired
 	private NumberService numberService;
@@ -172,7 +178,6 @@ public class AccountingServiceImpl implements AccountingService {
 		bean.setApproval_time(DateUtil.getTimeMillis());
 		bean.setStatus(ResourcesConstants.PAID_STATUS_YES);
 		reimDao.update(bean);
-		
 
 		WaitingForPaidBean waiting = new WaitingForPaidBean();
 
@@ -375,4 +380,8 @@ public class AccountingServiceImpl implements AccountingService {
 		return SUCCESS;
 	}
 
+	@Override
+	public List<ReceivedDetailDto> searchAllReceivedsByPage(Page<ReceivedDetailDto> page) {
+		return dao.selectByPage(page);
+	}
 }

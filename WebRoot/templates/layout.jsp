@@ -82,35 +82,25 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<div class="main-sidebar">
 		<ul class="menu-tree" style="padding-top: 30px;">
 			<li class="culture" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
-					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>企业文化</a>
+					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>企业学院</a>
 				<ol style="display: none;">
 					<li><a href="<%=basePath%>templates/culture/history-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰历史</a></li>
 					<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
 					<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
 					<li><a href="<%=basePath%>templates/culture/team-evolution.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>团质进化</a></li>
-					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
-						<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
-					</s:if>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-						<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
-						<li><a href="<%=basePath%>templates/culture/product-academy-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>产品研发</a></li>
 
-					</s:if>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-						<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>票务制度</a></li>
-					</s:if>
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
 						<li><a href="<%=basePath%>templates/culture/sale-academy-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>销售学院</a></li>
 					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
+						<li><a href="<%=basePath%>templates/culture/product-academy-view.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
+					</s:if>
 					<s:if
 						test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')||#session.user.user_roles.contains('SALES')">
 						<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>产品学院</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>产品研发</a></li>
 					</s:if>
 					<s:if test="#session.user.user_roles.contains('ADMIN')">
 						<li><a href="<%=basePath%>templates/culture/top-academy-view.jsp"><i
@@ -119,6 +109,23 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<s:else>
 						<li><a href="<%=basePath%>templates/501.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>高层学院</a></li>
 					</s:else>
+				</ol></li>
+			<li class="rule" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/rule-view.jsp"><i
+					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>公司制度</a>
+				<ol style="display: none;">
+					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
+						<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
+						<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
+					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+						<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>票务制度</a></li>
+					</s:if>
+
 				</ol></li>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
@@ -228,9 +235,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/sale/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 					</ol></li>
 			</s:if>
+
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-				<li class="ticket"><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i
-						class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
+				<li class="ticket-operation"><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i
+						class="fa fa-users1 fa-lg fa-fw"></i>票务操作</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作订单</a></li>
@@ -238,16 +246,23 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已出票名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-change.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>航变列表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
-						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/deposit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航司押金</a></li>
+					</ol></li>
+			</s:if>
+
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+				<li class="ticket"><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i
+						class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
+						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
-						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
-						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
+						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
+						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-change.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航变列表</a></li>
+
 						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
@@ -311,7 +326,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/users/user-log.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户操作日志</a></li>
 						<li><a href="<%=basePath%>templates/product/product-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品小组</a></li>
 						<li><a href="<%=basePath%>templates/sale/sale-work-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售工作报表</a></li>
-						<li><a href="<%=basePath%>templates/reports/product-team-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品单团报表</a></li>
+						<li><a href="<%=basePath%>templates/reports/product-team-report.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>产品单团报表</a></li>
 					</ol></li>
 			</s:if>
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i

@@ -26,6 +26,8 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="voucher_number" property="voucher_number" jdbcType="VARCHAR" />
 		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
+		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		supplier_employee_pk,
@@ -48,7 +50,9 @@
 		create_time,
 		update_time,
 		voucher_number,
-		receiver
+		receiver,
+		card_account,
+		voucher_file
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -79,7 +83,9 @@
 		A.create_time,
 		A.update_time,
 		A.voucher_number,
-		A.receiver
+		A.receiver,
+		A.card_account,
+		A.voucher_file
 
 		from air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
@@ -109,7 +115,9 @@
 		A.create_time,
 		A.update_time,
 		A.voucher_number,
-		A.receiver
+		A.receiver,
+		A.card_account,
+		A.voucher_file
 
 		from view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
@@ -190,6 +198,12 @@
 			<if test="receiver != null">
 				receiver,
 			</if>
+			<if test="card_account != null">
+				card_account,
+			</if>
+			<if test="voucher_file != null">
+				voucher_file,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
@@ -254,6 +268,12 @@
 			</if>
 			<if test="receiver != null">
 				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="card_account != null">
+				#{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file != null">
+				#{voucher_file,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -321,6 +341,12 @@
 			</if>
 			<if test="receiver != null">
 				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="card_account != null">
+				card_account = #{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="voucher_file != null">
+				voucher_file = #{voucher_file,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

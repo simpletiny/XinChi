@@ -99,7 +99,7 @@ public class TicketServiceImpl implements TicketService {
 
 				atp.setSupplier_employee_pk(supplier_employee_pk);
 				atp.setPaid(BigDecimal.ZERO);
-				atp.setPayable_type(ResourcesConstants.Ticket_PAYABLE_TYPE_CHANGE);
+				atp.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_CHANGE);
 				atp.setBudget_payable(money);
 				atp.setBudget_balance(money);
 				atp.setFinal_flg("N");

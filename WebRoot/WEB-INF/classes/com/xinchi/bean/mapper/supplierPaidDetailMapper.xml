@@ -27,6 +27,7 @@
 		<result column="approve_user_name" property="approve_user_name" jdbcType="VARCHAR" />
 		<result column="paid_user_name" property="paid_user_name" jdbcType="VARCHAR" />
 		<result column="payable_pk" property="payable_pk" jdbcType="CHAR" />
+		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -52,7 +53,8 @@
 		limit_time,
 		approve_user,
 		paid_user,
-		payable_pk
+		payable_pk,
+		voucher_file
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -144,6 +146,9 @@
 			<if test="payable_pk != null">
 				payable_pk,
 			</if>
+			<if test="voucher_file != null">
+				voucher_file,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -211,6 +216,9 @@
 			</if>
 			<if test="payable_pk != null">
 				#{payable_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_file != null">
+				#{voucher_file,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -282,7 +290,9 @@
 			<if test="paid_user != null">
 				paid_user = #{paid_user,jdbcType=VARCHAR},
 			</if>
-
+			<if test="voucher_file != null">
+				voucher_file = #{voucher_file,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -333,7 +343,8 @@
 		A.approve_user,
 		A.paid_user,
 		C.user_name AS approve_user_name,
-		D.user_name As paid_user_name
+		D.user_name As paid_user_name,
+		A.voucher_file
 		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
 		LEFT JOIN user_base C ON A.approve_user = C.user_number
 		LEFT JOIN user_base D ON A.paid_user = D.user_number

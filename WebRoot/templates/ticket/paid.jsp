@@ -108,7 +108,7 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.related_pk}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox" data-bind="attr: {'value': $data.related_pk+';'+$data.type+';'+$data.status}, checked: $root.chosenPaids" /></td>
 								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' || $data.type=='DSTRIKEIN' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<!-- /ko -->
@@ -123,7 +123,12 @@
 								<!-- ko if:$data.type=='DEDUCT' -->
 								<td data-bind="text: $data.receiver"></td>
 								<!-- /ko -->
+								<!-- ko if:$data.type=='BACK' || $data.type=='RECEIVE' -->
+								<td data-bind="text: $data.confirm_time"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.type!='BACK' && $data.type!='RECEIVE' -->
 								<td data-bind="text: $data.time"></td>
+								<!-- /ko -->
 								<!-- ko if:$data.status=='I' -->
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
@@ -302,7 +307,7 @@
 	</div>
 
 	<!-- 选择航司押金 -->
-	<div id="deposit-pick" style="display: none; width: 890px">
+	<div id="deposit-pick" style="display: none; width: 890px; height: 610px; overflow: auto">
 		<form class="form-horizontal search-panel" id="form-search-deposit">
 			<div class="form-group">
 				<div>

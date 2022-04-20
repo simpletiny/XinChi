@@ -1,5 +1,6 @@
 package com.xinchi.backend.payable.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.FileFolder;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.SimpletinyUser;
@@ -182,6 +185,11 @@ public class PaidServiceImpl implements PaidService {
 
 	@Override
 	public String applyBackRecive(SupplierPaidDetailBean detail, String allot_json) {
+
+		// 保存凭证文件
+		String subFolder = detail.getTime().substring(0, 4) + File.separator + detail.getTime().substring(5, 7);
+		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.SUPPLIER_RECEIVED_VOUCHER.value(), subFolder);
+
 		detail.setType(ResourcesConstants.PAID_TYPE_BACK);
 		detail.setStatus(ResourcesConstants.PAID_STATUS_ING);
 
@@ -210,7 +218,6 @@ public class PaidServiceImpl implements PaidService {
 			dao.insertWithPk(detail);
 			payableService.updatePayablePaid(detail);
 		}
-
 		return SUCCESS;
 	}
 

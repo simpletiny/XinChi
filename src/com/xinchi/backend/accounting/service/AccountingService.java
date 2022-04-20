@@ -1,7 +1,11 @@
 package com.xinchi.backend.accounting.service;
 
+import java.util.List;
+
+import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
+import com.xinchi.tools.Page;
 
 @LogDescription(des = "收支审批")
 public interface AccountingService extends BaseService {
@@ -38,5 +42,7 @@ public interface AccountingService extends BaseService {
 
 	// 拒绝返佣支出
 	public String rejectFlyApply(String back_pk);
+
+	public List<ReceivedDetailDto> searchAllReceivedsByPage(Page<ReceivedDetailDto> page);
 
 }

@@ -6,7 +6,9 @@ public enum FileFolder {
 					"clientConfirmFileFolder"), CLIENT_RECEIVED_VOUCHER("clientReceivedVoucherFolder"), CLIENT_FINAL(
 							"clientFinalFileFolder"), CLIENT_FINAL_VOUCHER(
 									"clientFinalVoucherFileFolder"), CLIENT_EMPLOYEE_HEAD(
-											"clientEmployeeHeadFolder"), CLIENT_EMPLOYEE_MIN_HEAD("clientEmployeeMinHeadFolder");
+											"clientEmployeeHeadFolder"), CLIENT_EMPLOYEE_MIN_HEAD(
+													"clientEmployeeMinHeadFolder"), SUPPLIER_RECEIVED_VOUCHER(
+															"supplierReceivedVoucherFolder");
 	private String value;
 
 	public String value() {

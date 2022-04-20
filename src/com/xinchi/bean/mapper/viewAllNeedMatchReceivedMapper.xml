@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ViewAllNeedMatchReceivedMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ReceivedDetailDto">
+		<result column="received" property="received" jdbcType="DECIMAL" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="received_time" property="received_time" jdbcType="VARCHAR" />
+		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="VARCHAR" />
+		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="apply_date" property="apply_date" jdbcType="VARCHAR" />
+		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
+		<result column="pay_user_pk" property="pay_user_pk" jdbcType="CHAR" />
+		<result column="from_where" property="from_where" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		received,
+		type,
+		received_time,
+		card_account,
+		related_pk,
+		apply_user,
+		apply_date,
+		pay_user,
+		pay_user_pk,
+		from_where
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from view_all_need_match_received
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByParam" parameterType="com.xinchi.bean.ReceivedDetailDto" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from view_all_need_match_received
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.received,
+		A.type,
+		A.received_time,
+		A.card_account,
+		A.related_pk,
+		A.apply_user,
+		A.apply_date,
+		A.pay_user,
+		A.pay_user_pk,
+		A.from_where
+		from
+		view_all_need_match_received A
+		<where>
+			<if test="params.bo.card_account != null and params.bo.card_account !=''">
+				and A.card_account =#{params.bo.card_account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.received != null and params.bo.received !=''">
+				and A.received = #{params.bo.received,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.date != null and params.bo.date !=''">
+				and substr(A.received_time,1,10) =#{params.bo.date,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

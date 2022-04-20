@@ -253,9 +253,9 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
-					<label class="l" style="width: 30%">入账时间</label>
+					<label class="l" style="width: 30%">收入时间</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.time" placeholder="请准确填写避免冲突" class="form-control datesecond-picker"
+						<input type="text" name="detail.time" placeholder="收入时间" class="form-control datetime-picker"
 							required="required" />
 					</div>
 				</div>
@@ -308,7 +308,7 @@
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
 					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required"
-						accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="detail.voucher_file_name" />
+						accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="detail.voucher_file" />
 				</div>
 				<div class="col-md-6"></div>
 			</div>
@@ -497,7 +497,7 @@
 	</div>
 
 	<!-- 选择航司押金 -->
-	<div id="deposit-pick" style="display: none; width: 890px">
+	<div id="deposit-pick" style="display: none; width: 890px;height:600px;overflow:auto">
 		<form class="form-horizontal search-panel" id="form-search-deposit">
 			<div class="form-group">
 				<div>
