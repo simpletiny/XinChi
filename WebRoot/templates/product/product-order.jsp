@@ -63,7 +63,7 @@ tr td {
 					<div class="form-group">
 						<div class="col-md-6">
 							<div data-bind="foreach: status" style="padding-top: 4px;">
-								<em class="small-box"> <input type="radio"
+								<em class="small-box"> <input type="checkbox"
 									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
 									name="order.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>

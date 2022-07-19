@@ -30,6 +30,11 @@ public class AirTicketPayableDAOImpl extends SqlSessionDaoSupport implements Air
 	}
 
 	@Override
+	public void insertWithPk(AirTicketPayableBean bean) {
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.AirTicketPayableMapper.insert", bean);
+	}
+
+	@Override
 	public void update(AirTicketPayableBean bean) {
 		daoUtil.updateByPK("com.xinchi.bean.mapper.AirTicketPayableMapper.updateByPrimaryKey", bean);
 	}
@@ -41,12 +46,14 @@ public class AirTicketPayableDAOImpl extends SqlSessionDaoSupport implements Air
 
 	@Override
 	public AirTicketPayableBean selectByPrimaryKey(String id) {
-		return (AirTicketPayableBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketPayableMapper.selectByPrimaryKey", id);
+		return (AirTicketPayableBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.AirTicketPayableMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<AirTicketPayableBean> selectByParam(AirTicketPayableBean bean) {
-		List<AirTicketPayableBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPayableMapper.selectByParam", bean);
+		List<AirTicketPayableBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.AirTicketPayableMapper.selectByParam", bean);
 		return list;
 	}
 

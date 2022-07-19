@@ -83,10 +83,10 @@ var ProductBoxContext = function() {
 	// 确认订单
 	self.confirmOrder = function() {
 		if (self.chosenOrders().length == 0) {
-			fail_msg("请选择产品！");
+			fail_msg("请选择待确认订单！");
 			return;
 		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个产品！");
+			fail_msg("只能选择一个订单！");
 			return;
 		} else if (self.chosenOrders().length == 1) {
 			var data = self.chosenOrders()[0].split(";");

@@ -3,9 +3,9 @@ package com.xinchi.backend.sale.service;
 import java.util.List;
 
 import com.xinchi.bean.BudgetOrderBean;
+import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.SaleOrderNameListBean;
-import com.xinchi.bean.BudgetOrderSupplierBean;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
@@ -60,4 +60,5 @@ public interface SaleOrderService {
 
 	@LogDescription(ignore = true)
 	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(BudgetOrderSupplierBean bo);
+
 }

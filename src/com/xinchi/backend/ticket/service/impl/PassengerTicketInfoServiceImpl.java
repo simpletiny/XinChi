@@ -154,6 +154,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 			// 保存机票供应商应付款
 			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
+			String payable_pk = DBCommonUtil.genPk();
+			airTicketPayable.setPk(payable_pk);
 			airTicketPayable.setSupplier_employee_pk(ticket_source_pk);
 			airTicketPayable.setBudget_payable(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
 			airTicketPayable.setPNR(ticket_PNR);
@@ -203,7 +205,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					pti.setTo_airport(to_airport);
 
 					pti.setPassenger_pk(pk);
-					pti.setBase_pk(airTicketPayable.getPk());
+					pti.setBase_pk(payable_pk);
 					dao.insert(pti);
 
 					AirTicketNameListBean atnl = airTicketNameListDAO.selectByPrimaryKey(pk);
@@ -256,7 +258,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					}
 				}
 			}
-			airTicketPayableDao.insert(airTicketPayable);
+			airTicketPayableDao.insertWithPk(airTicketPayable);
 
 		}
 

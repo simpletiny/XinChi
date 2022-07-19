@@ -29,8 +29,8 @@ var ProductContext = function() {
 		'Y' : "锁定"
 	}
 
-	self.chosenStatuses = ko.observable();
-	self.chosenStatuses("N");
+	self.chosenStatuses = ko.observableArray();
+	self.chosenStatuses.push("N");
 
 	self.orders = ko.observable({
 		total : 0,
@@ -43,26 +43,24 @@ var ProductContext = function() {
 		startLoadingSimpleIndicator("加载中...")
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param,
-				function(data) {
-					self.orders(data.orders);
-					var total_adult = 0;
-					var total_special = 0;
-					// 计算合计
-					$(self.orders()).each(function(idx, data) {
-						total_adult += data.adult_count;
-						total_special += data.special_count;
-					});
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param, function(data) {
+			self.orders(data.orders);
+			var total_adult = 0;
+			var total_special = 0;
+			// 计算合计
+			$(self.orders()).each(function(idx, data) {
+				total_adult += data.adult_count;
+				total_special += data.special_count;
+			});
 
-					self.adult_cnt(total_adult);
-					self.special_cnt(total_special);
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.adult_cnt(total_adult);
+			self.special_cnt(total_special);
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.chosenOrders = ko.observableArray([]);
@@ -108,19 +106,15 @@ var ProductContext = function() {
 
 										$
 												.getJSON(
-														self.apiurl
-																+ 'product/searchProductByPk',
+														self.apiurl + 'product/searchProductByPk',
 														{
 															product_pk : product_pk
 														},
 														function(data) {
-															if (data
-																	&& data.product.supplier_upkeep_flg == 'Y') {
+															if (data && data.product.supplier_upkeep_flg == 'Y') {
 																window.location.href = self.apiurl
 																		+ 'templates/product/order-operate-creation.jsp?standard_flg=Y&product_pk='
-																		+ product_pk
-																		+ '&order_number='
-																		+ order_number;
+																		+ product_pk + '&order_number=' + order_number;
 															} else {
 																fail_msg("产品未添加地接维护！不能操作");
 															}
@@ -370,8 +364,7 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

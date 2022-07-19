@@ -85,8 +85,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 	}
 
 	@Override
-	public List<ClientReceivedDetailBean> searchReceivableDetails(
-			String team_number) {
+	public List<ClientReceivedDetailBean> searchReceivableDetails(String team_number) {
 
 		return dao.searchReceivableDetails(team_number);
 	}
@@ -119,9 +118,9 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 	}
 
 	@Override
-	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(
-			BudgetOrderSupplierBean bo) {
+	public List<BudgetOrderSupplierBean> searchBudgetSupplierByParam(BudgetOrderSupplierBean bo) {
 
 		return dao.searchBudgetSupplierByParam(bo);
 	}
+
 }

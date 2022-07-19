@@ -200,6 +200,11 @@ var OrderContext = function() {
 			var date = tr.find("input[st='date']").val().trim();
 			var from_city = tr.find("input[st='from-city']").val().trim();
 			var to_city = tr.find("input[st='to-city']").val().trim();
+			// 判断是否有航班信息
+			if (date == '' || from_city == '' || to_city == '') {
+				fail_msg("请填写航班信息！")
+				return;
+			}
 
 			ticket_json += '{"index":"' + index + '","date":"' + date + '","from_city":"' + from_city + '","to_city":"'
 					+ to_city + '"}';
@@ -210,6 +215,8 @@ var OrderContext = function() {
 		var air_comment = $("#air-comment").val().trim();
 
 		// 名单json
+		var hasNames = false;
+		var hasChairman = false;
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		var name_json = '[';
@@ -219,18 +226,46 @@ var OrderContext = function() {
 			var tr = trs[i];
 			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
+			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
 
-			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
-			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
+			var cellphone_A = $(tr).find("[st='cellphone_A']").val().trim();
+			var cellphone_B = $(tr).find("[st='cellphone_B']").val().trim();
+			var id = $(tr).find("[st='id']").val().trim();
+
+			if (name == "" && id == "") {
+				continue;
+			}
+
+			if ((name != "" && id == "") || (name == "" && id != "")) {
+				fail_msg("请正确填写第" + index + "个名单!");
+				return;
+			}
+
+			if (name != "" && id != "" && !hasNames) {
+				hasNames = true;
+			}
+
+			if (teamChairman == "Y") {
+				hasChairman = true;
+			}
 
 			name_json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"'
 					+ sex + '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
 					+ '"}';
 		}
 		name_json += ']';
+
+		// 判断是否有名单
+		if (!hasNames) {
+			fail_msg("没有名单，不能确认！");
+			return;
+		}
+
+		if (!hasChairman) {
+			fail_msg("请指定团长！");
+			return;
+		}
 
 		json = '{"ticket_json":' + ticket_json + ',"name_json":' + name_json + ',"air_comment":"' + air_comment + '"}';
 
@@ -283,7 +318,7 @@ var OrderContext = function() {
 				+ '<td><input type="text" style="width: 90%" st="age" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
-				+ '<td><input type="text" style="width: 90%" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate();" st="id" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
 				+ '<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input'
 				+ 'type="hidden"/></td>'

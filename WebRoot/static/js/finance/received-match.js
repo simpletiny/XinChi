@@ -99,6 +99,8 @@ var DetailContext = function() {
 		people_count : "",
 		departure_date : ""
 	});
+
+	self.orders = ko.observableArray([]);
 	self.comment = ko.observable();
 
 	self.showDetails = function(data, event) {
@@ -294,6 +296,7 @@ var DetailContext = function() {
 			self.totalCount1(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums1(self.currentPage1());
 
+			self.chosenReceiveds.removeAll();
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 		});
@@ -331,34 +334,43 @@ var DetailContext = function() {
 	self.chosenReceiveds = ko.observableArray([]);
 	// 匹配主营业务收入
 	self.match = function() {
-		var checks = new Array();
-		for (var i = 0; i < self.receiveds().length; i++) {
-			var sou = self.receiveds()[i];
-			for (var j = 0; j < self.chosenReceiveds().length; j++) {
-				var des = self.chosenReceiveds()[j];
-				var x = des.split(";");
-				if (x[1] == sou.related_pk) {
-					checks.push(sou);
-				}
-			}
-		}
+		// var checks = new Array();
+		// for (var i = 0; i < self.receiveds().length; i++) {
+		// var sou = self.receiveds()[i];
+		// for (var j = 0; j < self.chosenReceiveds().length; j++) {
+		// var des = self.chosenReceiveds()[j];
+		// var x = des.split(";");
+		// if (x[1] == sou.related_pk) {
+		// checks.push(sou);
+		// }
+		// }
+		// }
 
+		if (self.detail().match_flg == "Y") {
+			fail_msg("请选择未匹配的明细！");
+			return;
+		}
+		if (self.chosenReceiveds().length < 1) {
+			fail_msg("请选择要匹配的收入申请！");
+			return;
+		}
 		var sum = 0;
-		for (var i = 0; i < checks.length; i++) {
-			if (self.detail().account != checks[i].card_account) {
+		for (var i = 0; i < self.chosenReceiveds().length; i++) {
+			if (self.detail().account != self.chosenReceiveds()[i].card_account) {
 				fail_msg("账户不同！不能匹配");
 				return;
 			}
-			sum += checks[i].received;
+			sum += self.chosenReceiveds()[i].received;
 		}
 		if (self.detail().money != sum) {
 			fail_msg("匹配金额不同！不能匹配");
 			return;
 		}
 		var json = '{"detailId":"' + self.chosenDetails() + '","arr":[';
-		for (var i = 0; i < checks.length; i++) {
-			json += '{"related_pk":"' + checks[i].related_pk + '","from_where":"' + checks[i].from_where + '"';
-			if (i == checks.length - 1) {
+		for (var i = 0; i < self.chosenReceiveds().length; i++) {
+			json += '{"related_pk":"' + self.chosenReceiveds()[i].related_pk + '","from_where":"'
+					+ self.chosenReceiveds()[i].from_where + '"';
+			if (i == self.chosenReceiveds().length - 1) {
 				json += '}]}';
 			} else {
 				json += '},';
@@ -390,15 +402,58 @@ var DetailContext = function() {
 			}
 		});
 	};
+
+	// 驳回收入申请
+	self.reject = function() {
+		if (self.chosenReceiveds().length < 1) {
+			fail_msg("请选择要驳回的收入申请！");
+			return;
+		}
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认将此收入申请驳回吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					startLoadingSimpleIndicator("驳回中");
+
+					var related_pks = '';
+					for (var i = 0; i < self.chosenReceiveds().length; i++) {
+						related_pks += self.chosenReceiveds()[i].related_pk
+						if (i != self.chosenReceiveds().length - 1) {
+							related_pks += ',';
+						}
+					}
+
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'sale/rejectReceived',
+						data : "related_pks=" + related_pks
+					}).success(function(str) {
+						if (str == "success") {
+							self.refreshRight();
+							self.search();
+							self.chosenDetails(null);
+						}
+						endLoadingIndicator();
+					});
+					layer.close(index);
+				}
+			}
+		});
+	}
 	self.viewComment = function(detail) {
+
 		if (detail.type == "SUM") {
 			msg(detail.comment);
 		} else {
-			var param = "team_number=" + detail.team_number;
+			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
-				self.order(data.order);
-				self.comment(detail.comment);
+			$.getJSON(self.apiurl + 'order/searchOrderByRelatedPk', param, function(data) {
+				console.log(data.orders);
+				self.orders(data.orders);
 				endLoadingIndicator();
 				viewCommentLayer = $.layer({
 					type : 1,

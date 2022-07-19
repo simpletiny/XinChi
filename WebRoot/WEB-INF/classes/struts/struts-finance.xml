@@ -74,6 +74,7 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 
+
 		<action name="matchOtherReceived" class="paymentDetailAction" method="matchOtherReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>

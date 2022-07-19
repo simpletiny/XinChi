@@ -115,6 +115,9 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.product_order_number = #{params.bo.team_number,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 	<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -139,25 +142,16 @@
 	</select>
 	<select id="selectOrderAirInfoByTeamNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select
-		base_pk,
-		air_leg,
-		info_index,
-		day_index,
-		from_to_city,
-		CASE
-		WHEN ISNULL(departure_date) THEN NULL
-		ELSE
-		DATE_ADD(departure_date,
-		INTERVAL
-		day_index - 1 DAY)
-		END AS air_date,
-		ticket_client_number,
-		departure_date
+		team_number AS product_order_number,
+		ticket_index as info_index,
+		CONCAT(from_city,'--',to_city) AS from_to_city,
+		ticket_date AS air_date,
+		create_user AS ticket_client_number
 		from
-		view_order_air_info
+		sale_order_ticket_info
 		where team_number =
 		#{team_number,jdbcType=CHAR}
-		ORDER BY info_index
+		ORDER BY ticket_index
 	</select>
 	<select id="selectOrderAirInfoByProductOrderNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select

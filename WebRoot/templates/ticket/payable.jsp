@@ -255,8 +255,7 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">收入时间</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.time" placeholder="收入时间" class="form-control datetime-picker"
-							required="required" />
+						<input type="text" name="detail.time" placeholder="收入时间" class="form-control datetime-picker" required="required" />
 					</div>
 				</div>
 			</div>
@@ -497,24 +496,33 @@
 	</div>
 
 	<!-- 选择航司押金 -->
-	<div id="deposit-pick" style="display: none; width: 890px;height:600px;overflow:auto">
+	<div id="deposit-pick" style="display: none; width: 1110px; height: 600px; overflow: auto">
 		<form class="form-horizontal search-panel" id="form-search-deposit">
 			<div class="form-group">
 				<div>
 					<label class="col-md-1 control-label">供应商</label>
-					<div class="col-md-3" style="float: left">
+					<div class="col-md-2" style="float: left">
 						<input type="text" class="form-control" name="deposit.supplier_name" />
 					</div>
 				</div>
-				<div>
+				<div> 
 					<label class="col-md-1 control-label">支出账户</label>
 					<div class="col-md-3" style="float: left">
 						<select class="form-control" name="deposit.account"
 							data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: searchDeposit">搜索</button>
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: finishChoose">选择</button>
+
+				<div>
+					<label class="col-md-1 control-label">备注</label>
+					<div class="col-md-2" style="float: left">
+						<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
+					</div>
+				</div>
+				<div>
+					<button type="submit" class="btn btn-green" data-bind="click: searchDeposit">搜索</button>
+					<button type="submit" class="btn btn-green" data-bind="click: finishChoose">选择</button>
+				</div>
 			</div>
 		</form>
 		<div class="list-result">

@@ -142,6 +142,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchOrderByRelatedPk" class="orderAction" method="searchOrderByReceivedRelatedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 单团核算单 -->
 		<!-- 搜索信息 -->
 		<action name="searchOrderReportByPage" class="orderReportAction" method="searchOrderReportByPage">

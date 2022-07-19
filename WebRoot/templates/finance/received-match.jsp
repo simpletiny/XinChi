@@ -38,6 +38,7 @@
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: match">主营收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: matchOther">其他收入</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: reject">驳回</button>
 								<button id="btn-cancel" style="display: none" type="submit" class="btn btn-green col-md-1"
 									data-bind="click: cancelMatch">取消匹配</button>
 							</div>
@@ -180,8 +181,7 @@
 										</thead>
 										<tbody id="tbody-data" data-bind="foreach: receiveds">
 											<tr>
-												<td><input type="checkbox"
-													data-bind="attr: {'value': $data.type+';'+$data.related_pk}, checked: $root.chosenReceiveds" /></td>
+												<td><input type="checkbox" data-bind="checkedValue:$data,checked: $root.chosenReceiveds" /></td>
 												<td data-bind="text: $data.received" class="rmb"></td>
 												<td data-bind="text: $root.typeMapping[$data.from_where+$data.type]"></td>
 												<td data-bind="text: $data.received_time"></td>
@@ -417,47 +417,49 @@
 		<!-- /ko -->
 	</div>
 	<div id="comment1" style="display: none; width: 800px; padding-top: 30px;">
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">团号</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().team_number"></p>
+		<div  data-bind="foreach: orders">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">团号</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.team_number"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">客户</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.client_employee_name" class="rmb"></p>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">客户</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().client_employee_name" class="rmb"></p>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">产品</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.product_name"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">人数</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.adult_count+($data.special_count-0)" class="rmb"></p>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">产品</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().product"></p>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">出团日期</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.departure_date"></p>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">人数</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().people_count" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">出团日期</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().departure_date"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">备注</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:comment()"></p>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">备注</label>
+					<div class="ip" style="width: 70%">
+						<p class="ip-default" data-bind="text:$data.comment"></p>
+					</div>
 				</div>
 			</div>
 		</div>

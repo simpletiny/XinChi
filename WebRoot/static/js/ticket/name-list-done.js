@@ -243,7 +243,6 @@ var PassengerContext = function() {
 							var data = self.chosenPassengers()[i].split(":");
 
 							var status = data[6];
-							console.log(status);
 							if (status == "C") {
 								layer.close(index);
 								fail_msg("不能选择已经有航变的乘客！");
@@ -264,6 +263,7 @@ var PassengerContext = function() {
 							} else {
 								fail_msg("打回失败，请联系管理员！");
 							}
+							self.chosenPassengers.removeAll();
 						});
 
 					}

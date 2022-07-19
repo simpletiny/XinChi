@@ -265,7 +265,7 @@
 		</div>
 	</div>
 	<script>
-		$(".product-box").addClass("current").children("ol").css("display",
+		$(".order-box").addClass("current").children("ol").css("display",
 				"block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>

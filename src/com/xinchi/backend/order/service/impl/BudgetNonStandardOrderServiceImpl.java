@@ -365,7 +365,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			int days = bean.getDays();
 			String returnDate = DateUtil.addDate(departureDate, days - 1);
 
-			if (SimpletinyString.isEmpty(bean.getConfirm_type())) {
+			if (SimpletinyString.isEmpty(bean.getConfirm_type()) || bean.getConfirm_type().equals("null")) {
 				// 因为不设计产品，第一次确认名单状态标记为产品确认状态，所以产品操作状态直接标记为已操作
 				bean.setName_confirm_status("3");
 				bean.setOperate_flg("I");

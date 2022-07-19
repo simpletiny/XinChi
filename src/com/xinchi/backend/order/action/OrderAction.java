@@ -430,6 +430,13 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String related_pk;
+
+	public String searchOrderByReceivedRelatedPk() {
+		orders = service.searchOrderByReceivedRelatedPk(related_pk);
+		return SUCCESS;
+	}
+
 	private List<OrderDto> orders;
 
 	public String searchConfirmingOrders() {
@@ -568,5 +575,13 @@ public class OrderAction extends BaseAction {
 
 	public void setTicketInfos(List<SaleOrderTicketInfoBean> ticketInfos) {
 		this.ticketInfos = ticketInfos;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
 	}
 }

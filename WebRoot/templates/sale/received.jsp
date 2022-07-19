@@ -53,8 +53,8 @@ tr td {
 						<div class="span6">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px; padding-left: 10px" class="col-md-3">
 								<em class="small-box"> <input type="checkbox"
-									data-bind="attr: {'value': $data}, checked: $root.chosenStatus" name="detail.statuses" /><label
-									data-bind="text: $root.statusMapping[$data]"></label>
+									data-bind="attr: {'value': $data}, checked: $root.chosenStatus,click:function(){$root.refresh();return true}" name="detail.statuses" /><label
+									data-bind="text: $root.statusMapping[$data]"></label>  
 								</em>
 							</div>
 						</div>
@@ -206,8 +206,15 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.user_name"></td>
 								</s:if>
-
+								<!-- ko if:$data.status=='I' || $data.status=='Y' -->
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='N' -->
+								<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.status=='E' -->
+								<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<!-- /ko -->
 							</tr>
 						</tbody>
 						<tr role="row">

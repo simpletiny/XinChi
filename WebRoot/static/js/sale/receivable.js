@@ -270,6 +270,7 @@ var OrderContext = function() {
 						});
 					} else if (str == "bad") {
 						fail_msg("不符合立款规则，不是在确认后两天内收取的款项不算做立款，不享受打折！")
+						// fail_msg("不符合立款规则，不是在确认当天内收取的款项不算做立款，不享受打折！")
 					} else if (str == "noconfirm") {
 						fail_msg("收款会计未确认，请稍后再试！");
 					} else {
@@ -293,6 +294,7 @@ var OrderContext = function() {
 				layer.close(tail98Layer);
 				if (str == "success") {
 					self.search();
+					self.chosenOrders.removeAll();
 				} else {
 					fail_msg("申请失败，请联系管理员");
 				}

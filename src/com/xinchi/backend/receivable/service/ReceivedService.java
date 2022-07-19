@@ -55,4 +55,6 @@ public interface ReceivedService extends BaseService {
 	public String checkIs98(String team_number);
 
 	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
+
+	public String rejectRecived(String related_pks);
 }

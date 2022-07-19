@@ -111,7 +111,7 @@ tr td {
 							<label class="col-md-1 control-label" style="width: 5% !important">产品线</label>
 							<div class="col-md-2" style="float: left">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,optionsText:'name',optionsValue:'name',value:product().location, optionsCaption: '--请选择--',event:{change:refresh}"
+									data-bind="options: locations,optionsText:'name',optionsValue:'name', optionsCaption: '--请选择--',event:{change:refresh}"
 									name="product.location"></select>
 							</div>
 						</div>

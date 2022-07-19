@@ -391,35 +391,46 @@ public class ReceivedServiceImpl implements ReceivedService {
 			List<ClientReceivedDetailBean> res = dao.selectByParam(option);
 			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(team_number);
 			BigDecimal discount_receivable = (receivable.getFinal_flg().equals("Y")
-					? receivable.getFinal_receivable().subtract(new BigDecimal(0.98))
-					: receivable.getBudget_receivable().subtract(new BigDecimal(0.98)));
+					? receivable.getFinal_receivable().multiply(new BigDecimal(0.98))
+					: receivable.getBudget_receivable().multiply(new BigDecimal(0.98)));
 
 			BigDecimal discount_received = BigDecimal.ZERO;
 
-			boolean isConfirm = true;
+			// boolean isConfirm = true;
 			for (ClientReceivedDetailBean re : res) {
 				if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)) {
 
 					if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
 						discount_received = discount_received.add(re.getReceived());
 					} else {
-						String limitDate = DateUtil.addDate(order.getConfirm_date(), 1);
-						if (DateUtil.compare(limitDate, re.getReceived_time().substring(0, 10)) < 2) {
+						// 修改为当天汇款享受98折
+						// if (order.getConfirm_date().equals(re.getReceived_time().substring(0, 10))) {
+						// discount_received = discount_received.add(re.getReceived());
+						// }
+						if (DateUtil.compare(order.getConfirm_date(), "2022-07-18") == 2) {
 							discount_received = discount_received.add(re.getReceived());
+						} else {
+							String limitDate = DateUtil.addDate(order.getConfirm_date(), 1);
+							if (DateUtil.compare(limitDate, re.getReceived_time().substring(0, 10)) < 2) {
+								discount_received = discount_received.add(re.getReceived());
+							}
 						}
 					}
 
-					if (!re.getStatus().equals("E"))
-						isConfirm = false;
+					// 取消会计匹配判定
+					// if (!re.getStatus().equals("E"))
+					// isConfirm = false;
 				}
 			}
 
 			if (discount_received.compareTo(discount_receivable) >= 0) {
-				if (!isConfirm) {
-					return "noconfirm";
-				} else {
-					return SUCCESS;
-				}
+				// if (!isConfirm) {
+				// return "noconfirm";
+				// } else {
+				// return SUCCESS;
+				// }
+
+				return SUCCESS;
 
 			} else {
 				return "bad";
@@ -433,5 +444,30 @@ public class ReceivedServiceImpl implements ReceivedService {
 	public BigDecimal selectSumReceivedByTeamNumber(String team_number) {
 
 		return dao.selectSumReceivedByTeamNumber(team_number);
+	}
+
+	@Override
+	public String rejectRecived(String related_pks) {
+		String[] rps = related_pks.split(",");
+
+		for (String related_pk : rps) {
+			List<ClientReceivedDetailBean> receiveds = dao.selectByRelatedPks(related_pk);
+
+			for (ClientReceivedDetailBean crd : receiveds) {
+				crd.setStatus("N");
+				dao.update(crd);
+
+				ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+				option.setTeam_number(crd.getTeam_number());
+				option.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
+				List<ClientReceivedDetailBean> tails = dao.selectByParam(option);
+				for (ClientReceivedDetailBean tail : tails) {
+					tail.setStatus("N");
+					dao.update(tail);
+				}
+			}
+		}
+
+		return SUCCESS;
 	}
 }

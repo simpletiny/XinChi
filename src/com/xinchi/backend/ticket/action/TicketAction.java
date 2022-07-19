@@ -89,7 +89,12 @@ public class TicketAction extends BaseAction {
 	private String product_order_number;
 
 	public String selectOrderAirInfoByProductOrderNumber() {
-		order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(product_order_number);
+		if (product_order_number.startsWith("P")) {
+			order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(product_order_number);
+		} else if (product_order_number.startsWith("N")) {
+			order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(product_order_number);
+		}
+
 		return SUCCESS;
 	}
 

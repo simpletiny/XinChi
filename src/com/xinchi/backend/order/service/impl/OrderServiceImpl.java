@@ -1,6 +1,7 @@
 package com.xinchi.backend.order.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,10 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.FinalNonStandardOrderBean;
 import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
@@ -624,5 +627,24 @@ public class OrderServiceImpl implements OrderService {
 	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number) {
 
 		return dao.search3MonthScoreByUserNumber(user_number);
+	}
+
+	@Autowired
+	private ReceivedService receivedService;
+
+	@Override
+	public List<OrderDto> searchOrderByReceivedRelatedPk(String related_pk) {
+		List<ClientReceivedDetailBean> receiveds = receivedService.selectByRelatedPks(related_pk);
+
+		if (null != receiveds && receiveds.size() > 0) {
+			List<String> team_numbers = new ArrayList<String>();
+			for (ClientReceivedDetailBean crd : receiveds) {
+				team_numbers.add(crd.getTeam_number());
+			}
+			List<OrderDto> orders = dao.selectByTeamNumbers(team_numbers);
+			return orders;
+		}
+
+		return null;
 	}
 }

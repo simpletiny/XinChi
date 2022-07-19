@@ -47,4 +47,6 @@ public interface OrderService extends BaseService {
 
 	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number);
 
+	public List<OrderDto> searchOrderByReceivedRelatedPk(String related_pk);
+
 }

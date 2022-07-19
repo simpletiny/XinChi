@@ -146,6 +146,11 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String rejectReceived() {
+		resultStr = service.rejectRecived(related_pks);
+		return SUCCESS;
+	}
+
 	public String searchFlyVoucherInfo() {
 		return SUCCESS;
 	}

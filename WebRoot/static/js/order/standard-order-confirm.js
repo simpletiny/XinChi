@@ -216,13 +216,13 @@ var OrderContext = function() {
 			var tr = trs[i];
 			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
+			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
 
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
-			var price = $(tr).find("[st='price']").val();
+			var id = $(tr).find("[st='id']").val().trim();
+			var price = $(tr).find("[st='price']").val().trim();
 
 			if (name == "" && id == "") {
 				continue;

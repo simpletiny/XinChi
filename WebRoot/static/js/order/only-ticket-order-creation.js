@@ -151,7 +151,7 @@ var OrderContext = function() {
 				+ '<td><input type="text" style="width: 90%" st="age" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_A" /></td>'
 				+ '<td><input type="text" style="width: 90%" st="cellphone_B" /></td>'
-				+ '<td><input type="text" style="width: 90%" st="id" /></td>'
+				+ '<td><input type="text" style="width: 90%" onblur="autoCaculate();" st="id" /></td>'
 				+ '<td><input type="text" style="width: 90%" value="分房组" /></td>'
 				+ '<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input'
 				+ 'type="hidden"/></td>'
