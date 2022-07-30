@@ -80,25 +80,11 @@ var DetailContext = function() {
 			});
 		}
 	};
-	self.received = ko.observable({
-		user_name : "",
-		create_time : ""
-	});
+	self.received = ko.observable({});
 	self.sumDetails = ko.observableArray([]);
-	self.sumDetail = ko.observable({
-		card_account : "",
-		sum_received : "",
-		client_employee_name : "",
-		allot_received : ""
-	});
+	self.sumDetail = ko.observable({});
 
-	self.order = ko.observable({
-		team_number : "",
-		client_employee_name : "",
-		product : "",
-		people_count : "",
-		departure_date : ""
-	});
+	self.order = ko.observable({});
 
 	self.orders = ko.observableArray([]);
 	self.comment = ko.observable();
@@ -114,8 +100,8 @@ var DetailContext = function() {
 			if (self.received().type == "SUM") {
 				var param = "related_pks=" + self.received().related_pk;
 
-				$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
-					self.sumDetails(data.receiveds);
+				$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(innerData) {
+					self.sumDetails(innerData.receiveds);
 					self.sumDetail(self.sumDetails()[0]);
 					$(".rmb").formatCurrency();
 					endLoadingIndicator();
@@ -138,8 +124,8 @@ var DetailContext = function() {
 				});
 			} else {
 				var param = "team_number=" + self.received().team_number;
-				$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
-					self.order(data.order);
+				$.getJSON(self.apiurl + 'order/selectOrderByTeamNumber', param, function(innerData) {
+					self.order(innerData.option);
 					self.comment(self.received().comment);
 					endLoadingIndicator();
 					matchDetailLayer = $.layer({
@@ -452,7 +438,6 @@ var DetailContext = function() {
 			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
 			$.getJSON(self.apiurl + 'order/searchOrderByRelatedPk', param, function(data) {
-				console.log(data.orders);
 				self.orders(data.orders);
 				endLoadingIndicator();
 				viewCommentLayer = $.layer({
@@ -521,7 +506,6 @@ var DetailContext = function() {
 				console.log("Done");
 			}
 		});
-		console.log(received_time)
 		var subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
 
 		$("#img-pic").attr(

@@ -202,6 +202,9 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Transactional
 	public String deleteDetail(String detailId) {
 		PaymentDetailBean detail = dao.selectById(detailId);
+		if (detail.getMatch_flg().equals("Y")) {
+			return "matched";
+		}
 		/*
 		 * if (detail.getFinance_flg().equals("N")) return "forbidden";
 		 */

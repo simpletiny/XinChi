@@ -12,6 +12,7 @@
 		<result column="pay_user" property="pay_user" jdbcType="VARCHAR" />
 		<result column="pay_user_pk" property="pay_user_pk" jdbcType="CHAR" />
 		<result column="from_where" property="from_where" jdbcType="VARCHAR" />
+		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 	</resultMap>
@@ -52,7 +53,8 @@
 		A.apply_date,
 		A.pay_user,
 		A.pay_user_pk,
-		A.from_where
+		A.from_where,
+		A.voucher_file
 		from
 		view_all_need_match_received A
 		<where>

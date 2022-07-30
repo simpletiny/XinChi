@@ -88,14 +88,14 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传决算单<input type="file" name="file" /></a> <input type="hidden" data-bind="value:order().confirm_file" name="order.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传决算单<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().confirm_file" name="order.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
 					<div class="input-row clearfloat"></div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传凭证<input type="file" name="file" /></a> <input type="hidden" data-bind="value:order().voucher_file" name="order.voucher_file" />
+							<a href="javascript:;" class="a-upload">上传凭证<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().voucher_file" name="order.voucher_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>

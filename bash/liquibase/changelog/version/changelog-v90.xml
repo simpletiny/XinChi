@@ -240,6 +240,76 @@
 			<comment>ALTER TABLE received_match</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists view_all_need_match_received;
+				CREATE VIEW view_all_need_match_received AS
+				SELECT 
+				    IF(A.type = 'SUM',
+				        A.sum_received,
+				        A.received) AS received,
+				    A.type AS type,
+				    A.received_time,
+				    A.card_account,
+				    A.related_pk,
+				    A.create_user AS apply_user,
+				    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+				            '%Y-%m-%d') AS apply_date,
+				    B.name AS pay_user,
+				    A.client_employee_pk AS pay_user_pk,
+				    'C' AS from_where,
+				   A.voucher_file As voucher_file
+				FROM
+				    received_detail A
+				        LEFT JOIN
+				    client_employee B ON A.client_employee_pk = B.pk
+				WHERE
+				    A.type IN ('SUM' , 'RECEIVED')
+				        AND A.status = 'I' 
+				UNION ALL SELECT 
+				    A.allot_money AS received,
+				    'BACK' AS type,
+				    A.time AS received_time,
+				    A.card_account,
+				    A.related_pk,
+				    A.create_user AS apply_user,
+				    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+				            '%Y-%m-%d') AS apply_date,
+				    B.name AS pay_user,
+				    A.supplier_employee_pk AS pay_user_pk,
+				    'D' AS from_where,
+				    A.voucher_file As voucher_file
+				FROM
+				    paid_detail A
+				        LEFT JOIN
+				    supplier_employee B ON A.supplier_employee_pk = B.pk
+				WHERE
+				    A.type = 'BACK' AND A.status = 'I' 
+				UNION ALL SELECT 
+				    A.allot_money AS received,
+				    A.type AS type,
+				    A.time AS received_time,
+				    A.card_account,
+				    A.related_pk,
+				    A.create_user AS apply_user,
+				    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+				            '%Y-%m-%d') AS apply_date,
+				    B.name AS pay_user,
+				    A.supplier_employee_pk AS pay_user_pk,
+				    'A' AS from_where,
+				    A.voucher_file AS voucher_file
+				FROM
+				    view_air_ticket_paid_detail A
+				        LEFT JOIN
+				    supplier_employee B ON A.supplier_employee_pk = B.pk
+				WHERE
+				    A.type IN ('BACK' , 'RECEIVE')
+				        AND A.status = 'I';
+             ]]>
+			<comment>ALTER TABLE received_match</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

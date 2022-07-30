@@ -349,45 +349,69 @@
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from payment_detail
-
+		A.account,
+		A.time,
+		A.type,
+		A.money,
+		A.balance,
+		A.record_time,
+		A.record_user,
+		A.update_user,
+		A.create_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.comment,
+		A.inner_flg,
+		A.inner_pk,
+		A.voucher_number,
+		A.receiver,
+		A.voucher_file_name,
+		A.match_flg,
+		A.exchange_flg,
+		A.finance_flg
+		from payment_detail A
+		LEFT JOIN card B ON A.account=B.account
+ 
 		<where>
 			<if test="params.bo.account != null and params.bo.account !=''">
-				and account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
+				and A.account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
 			</if>
 			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type !="内转"'>
-				and type = #{params.bo.type,jdbcType=VARCHAR}
+				and A.type = #{params.bo.type,jdbcType=VARCHAR}
 			</if>
 			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type =="内转"'>
-				and inner_flg = 'Y'
+				and A.inner_flg = 'Y'
 			</if>
 			<if test='params.bo.match_flg != null and params.bo.match_flg =="N"'>
-				and match_flg = 'N'
+				and A.match_flg = 'N'
 			</if>
 			<if test='params.bo.match_flg != null and params.bo.match_flg =="Y"'>
-				and (match_flg = 'Y' OR match_flg='O')
+				and (A.match_flg = 'Y' OR A.match_flg='O')
 			</if>
 			<if test="params.bo.time != null and params.bo.time !=''">
-				and left(time,10) = #{params.bo.time,jdbcType=VARCHAR}
+				and left(A.time,10) = #{params.bo.time,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.month != null and params.bo.month !=''">
-				and left(time,7) = #{params.bo.month,jdbcType=VARCHAR}
+				and left(A.time,7) = #{params.bo.month,jdbcType=VARCHAR}
 			</if>
 			<!-- 内转搜索条件 -->
 			<if test="params.bo.inner_flg != null and params.bo.inner_flg !=''">
-				and inner_flg = #{params.bo.inner_flg,jdbcType=VARCHAR}
+				and A.inner_flg = #{params.bo.inner_flg,jdbcType=VARCHAR}
 			</if>
 
 			<if test="params.bo.money_from != null and params.bo.money_from !=''">
-				and money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
 			</if>
 			<if test="params.bo.money_to != null and params.bo.money_to !=''">
-				and money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
 			</if>
 
 			<if test="params.bo.money != null and params.bo.money !=''">
-				and money = #{params.bo.money,jdbcType=DECIMAL}
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.purpose != null and params.bo.purpose !=''">
+				and B.purpose = #{params.bo.purpose,jdbcType=DECIMAL}
 			</if>
 		</where>
 		ORDER BY time desc

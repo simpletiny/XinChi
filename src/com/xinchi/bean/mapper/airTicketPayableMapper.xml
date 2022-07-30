@@ -314,6 +314,9 @@
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name like CONCAT('%',#{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.comment != null and params.bo.comment !=''">
+				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 				and C.supplier_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
 			</if>

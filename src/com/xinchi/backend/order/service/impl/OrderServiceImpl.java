@@ -16,6 +16,7 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -368,6 +369,9 @@ public class OrderServiceImpl implements OrderService {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private ReceivedDAO receivedDao;
+
 	@Override
 	public String cancelOrder(OrderDto order) {
 		OrderDto budget_order = dao.searchCOrderByPk(order.getPk());
@@ -439,12 +443,6 @@ public class OrderServiceImpl implements OrderService {
 			bsOrder.setConfirm_flg("F");
 			bsoDao.update(bsOrder);
 
-			// 更新应收款
-			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(budget_order.getTeam_number());
-			receivable.setFinal_flg("Y");
-			receivable.setFinal_receivable(final_order.getReceivable());
-			receivable.setFinal_balance(receivable.getFinal_receivable().subtract(receivable.getReceived()));
-			receivableDao.update(receivable);
 		}
 		// 非标准订单
 		else {
@@ -512,12 +510,6 @@ public class OrderServiceImpl implements OrderService {
 			bnsOrder.setConfirm_flg("F");
 			bnsoDao.update(bnsOrder);
 
-			// 更新应收款
-			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(budget_order.getTeam_number());
-			receivable.setFinal_flg("Y");
-			receivable.setFinal_receivable(final_order.getReceivable());
-			receivable.setFinal_balance(receivable.getFinal_receivable().subtract(receivable.getReceived()));
-			receivableDao.update(receivable);
 		}
 
 		// 保存决算单文件
@@ -530,6 +522,28 @@ public class OrderServiceImpl implements OrderService {
 					budget_order.getTeam_number());
 		}
 
+		// 更新应收款
+		ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(budget_order.getTeam_number());
+		receivable.setFinal_flg("Y");
+		receivable.setFinal_receivable(order.getReceivable());
+
+		// 如果订单存在98清尾，则打回
+		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+		option.setTeam_number(budget_order.getTeam_number());
+
+		List<ClientReceivedDetailBean> res = receivedDao.selectByParam(option);
+		// 在订单所有的收入记录中查找98清尾
+		for (ClientReceivedDetailBean re : res) {
+			if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)) {
+				// 应收款已收减去98清尾的金额
+				receivable.setReceived(receivable.getReceived().subtract(re.getReceived()));
+				// 删除98清尾
+				receivedDao.deleteByPk(re.getPk());
+			}
+		}
+
+		receivable.setFinal_balance(receivable.getFinal_receivable().subtract(receivable.getReceived()));
+		receivableDao.update(receivable);
 		return SUCCESS;
 	}
 
@@ -574,6 +588,10 @@ public class OrderServiceImpl implements OrderService {
 			bso.setPk(order.getPk());
 
 			int old = Integer.valueOf(order.getName_confirm_status());
+			// // 尾款不为0不能进行二次名单确认
+			// if (old == 4) {
+			//
+			// }
 
 			if (old < 5) {
 				bso.setName_confirm_status(String.valueOf(old + 1));

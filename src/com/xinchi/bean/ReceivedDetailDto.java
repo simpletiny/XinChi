@@ -29,6 +29,8 @@ public class ReceivedDetailDto extends SupperBO implements Serializable {
 
 	private String from_where;
 
+	private String voucher_file;
+
 	// option
 	private String date;
 
@@ -118,6 +120,14 @@ public class ReceivedDetailDto extends SupperBO implements Serializable {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getVoucher_file() {
+		return voucher_file;
+	}
+
+	public void setVoucher_file(String voucher_file) {
+		this.voucher_file = voucher_file;
 	}
 
 }

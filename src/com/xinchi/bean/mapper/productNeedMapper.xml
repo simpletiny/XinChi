@@ -45,11 +45,7 @@
 		B.pk AS product_pk,
 		B.product_number AS product_number,
 		A.pk AS pk,
-		CASE WHEN A.standard_flg='N' THEN
-		substring_index(A.name_list,':',1)
-		ELSE
-		A.passenger_captain
-		END AS passenger,
+		A.passenger_captain AS passenger,
 		A.treat_comment,
 		A.lock_flg,
 		A.name_confirm_status,

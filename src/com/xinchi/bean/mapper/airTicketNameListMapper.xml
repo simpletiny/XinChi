@@ -458,6 +458,9 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
+			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
+				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
+			</if>
 		</where>
 		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date
 	</select>
@@ -522,6 +525,9 @@
 			</if>
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
+			</if>
+			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
+				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
 		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date

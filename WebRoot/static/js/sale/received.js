@@ -41,17 +41,16 @@ var ReceivedContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
-			+ 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
-			+ (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
 	self.chosenStatus.push("I");
+	self.chosenStatus.push("N");
 	self.allStatus = ['I', 'Y', 'N', 'E'];
 
 	self.statusMapping = {
@@ -67,14 +66,10 @@ var ReceivedContext = function() {
 	}
 	self.chosenReceivedType = ko.observable();
 	self.chosenReceivedType("RECEIVED");
-	self.receivedTypes = ko.observableArray([new receivedType('TAIL', '抹零'),
-			new receivedType('STRIKE', '冲账'),
-			new receivedType('RECEIVED', '收入&合账'),
-			new receivedType('PAY', '支出'),
-			new receivedType('STRIKEOUT', '冲账/出'),
-			new receivedType('STRIKEIN', '冲账/入'),
-			new receivedType('COLLECT', '代收'), new receivedType('FLY', 'FLY'),
-			new receivedType('TAIL98', '98清尾')]);
+	self.receivedTypes = ko.observableArray([new receivedType('TAIL', '抹零'), new receivedType('STRIKE', '冲账'),
+			new receivedType('RECEIVED', '收入&合账'), new receivedType('PAY', '支出'),
+			new receivedType('STRIKEOUT', '冲账/出'), new receivedType('STRIKEIN', '冲账/入'),
+			new receivedType('COLLECT', '代收'), new receivedType('FLY', 'FLY'), new receivedType('TAIL98', '98清尾')]);
 
 	self.typeMapping = {
 		'TAIL' : '抹零',
@@ -97,8 +92,7 @@ var ReceivedContext = function() {
 
 		startLoadingSimpleIndicator("搜索中");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		if ((self.chosenReceivedType() == "RECEIVED")) {
 			param += "&detail.types=RECEIVED&detail.types=SUM"
@@ -106,8 +100,7 @@ var ReceivedContext = function() {
 			param += "&detail.types=" + self.chosenReceivedType();
 		};
 
-		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
 			// 计算合计
 			$(self.receiveds()).each(function(idx, data) {
@@ -190,28 +183,27 @@ var ReceivedContext = function() {
 		} else {
 			var param = "team_number=" + detail.team_number;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param,
-					function(data) {
-						self.order(data.order);
-						self.comment(detail.comment);
-						endLoadingIndicator();
-						viewCommentLayer = $.layer({
-							type : 1,
-							title : ['摘要详情', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['700px', 'auto'],
-							offset : ['150px', ''],
-							scrollbar : true,
-							page : {
-								dom : '#comment'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					});
+			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
+				self.order(data.order);
+				self.comment(detail.comment);
+				endLoadingIndicator();
+				viewCommentLayer = $.layer({
+					type : 1,
+					title : ['摘要详情', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['700px', 'auto'],
+					offset : ['150px', ''],
+					scrollbar : true,
+					page : {
+						dom : '#comment'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+			});
 		}
 	};
 	self.sumDetail = ko.observable({
@@ -223,31 +215,30 @@ var ReceivedContext = function() {
 	self.viewDetail = function(related_pk) {
 		var param = "related_pks=" + related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
-				function(data) {
+		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
 
-					self.sumDetails(data.receiveds);
-					self.sumDetail(self.sumDetails()[0]);
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
+			self.sumDetails(data.receiveds);
+			self.sumDetail(self.sumDetails()[0]);
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 
-					viewDetailLayer = $.layer({
-						type : 1,
-						title : ['合账详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', 'auto'],
-						offset : ['150px', ''],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['合账详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#sum_detail'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+		});
 
 	};
 	// 查看收入凭证
@@ -269,14 +260,12 @@ var ReceivedContext = function() {
 				console.log("Done");
 			}
 		});
-		var subFolder = received_time.substring(0, 4) + "/"
-				+ received_time.substring(5, 7);
+		var subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
 
 		$("#img-pic").attr(
 				"src",
 				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder="
-						+ subFolder);
+						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder=" + subFolder);
 	};
 
 	self.checkFlyVoucherPic = function(related_pk) {
@@ -308,8 +297,7 @@ var ReceivedContext = function() {
 
 				$("#img-pic").attr(
 						"src",
-						self.apiurl + 'file/getFileStream?fileFileName='
-								+ voucherFileName
+						self.apiurl + 'file/getFileStream?fileFileName=' + voucherFileName
 								+ "&fileType=VOUCHER&subFolder=" + accountId);
 			}
 		});
@@ -348,8 +336,7 @@ var ReceivedContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

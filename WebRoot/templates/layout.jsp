@@ -251,20 +251,26 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			</s:if>
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-				<li class="ticket"><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i
-						class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
+				<li class="ticket"><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
 						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
 						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
-						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
-						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-change.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航变列表</a></li>
 
 						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
+					</ol></li>
+			</s:if>
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+				<li class="ticket-finance"><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>票务财务</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
+						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
+
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('ACCOUNTING')">

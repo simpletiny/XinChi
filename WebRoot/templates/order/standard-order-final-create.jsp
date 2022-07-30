@@ -137,7 +137,7 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file"  name="file" /></a> <input type="hidden" id="txt-confirm-file"  data-bind="value:order().confirm_file" name="fsOrder.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file"  name="file" accept=".jpg,.png"/></a> <input type="hidden" id="txt-confirm-file"  data-bind="value:order().confirm_file" name="fsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>

@@ -87,6 +87,12 @@
 							</div>
 						</div>
 						<div class="span6">
+							<label class="col-md-1 control-label">备注</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="备注" name="option.comment" />
+							</div>
+						</div>
+						<div class="span6">
 							<em class="small-box"> <label>尾款为0</label> <input type="checkbox" value="Y" name="option.zero_flg"
 								data-bind="event:{click:zeroBalance}" />
 							</em>
@@ -567,7 +573,7 @@
 		</div>
 	</div>
 	<script>
-		$(".ticket").addClass("current").children("ol").css("display", "block");
+		$(".ticket-finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

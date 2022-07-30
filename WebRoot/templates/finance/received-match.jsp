@@ -137,7 +137,7 @@
 												<td data-bind="text: $data.money" class="rmb"></td>
 												<td data-bind="text: $data.comment"></td>
 												<!-- ko if: $data.match_flg =='Y' -->
-												<td style="color: green" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails"></td>
+												<td ><a href="javascript:void(0)" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
 												<!-- /ko -->
 												<!-- ko if: $data.match_flg =='O' -->
 												<td style="color: green" data-bind="text: $root.statusMapping[$data.match_flg]"></td>
@@ -329,13 +329,13 @@
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">产品</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().product"></p>
+					<p class="ip-default" data-bind="text:order().product_name"></p>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">人数</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().people_count" class="rmb"></p>
+					<p class="ip-default" data-bind="text:order().adult_count+(order().special_count==null?0:order().special_count)"></p>
 				</div>
 			</div>
 		</div>
@@ -442,7 +442,7 @@
 				<div class="col-md-6">
 					<label class="l" style="width: 30%">人数</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:$data.adult_count+($data.special_count-0)" class="rmb"></p>
+						<p class="ip-default" data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)" class="rmb"></p>
 					</div>
 				</div>
 			</div>

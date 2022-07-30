@@ -129,6 +129,12 @@
 								<input type="text" class="form-control date-picker" placeholder="to" name="passenger.date_to" />
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">首航段</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="首航段" name="passenger.first_from_to" />
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 						</div>

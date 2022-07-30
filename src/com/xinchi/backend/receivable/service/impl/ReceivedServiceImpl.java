@@ -385,6 +385,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public String checkIs98(String team_number) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
+		// 非标订单不享受打折
+		if (order.getStandard_flg().equals("N"))
+			return "cant";
+
 		if (DateUtil.compare(order.getConfirm_date(), "2021-09-01") != 2) {
 			ClientReceivedDetailBean option = new ClientReceivedDetailBean();
 			option.setTeam_number(team_number);
@@ -393,6 +397,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 			BigDecimal discount_receivable = (receivable.getFinal_flg().equals("Y")
 					? receivable.getFinal_receivable().multiply(new BigDecimal(0.98))
 					: receivable.getBudget_receivable().multiply(new BigDecimal(0.98)));
+			// 98折应收精确到元，向下取整。如198.4就应该是198
+			discount_receivable = discount_receivable.setScale(0, BigDecimal.ROUND_DOWN);
 
 			BigDecimal discount_received = BigDecimal.ZERO;
 

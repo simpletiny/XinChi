@@ -273,6 +273,8 @@ var OrderContext = function() {
 						// fail_msg("不符合立款规则，不是在确认当天内收取的款项不算做立款，不享受打折！")
 					} else if (str == "noconfirm") {
 						fail_msg("收款会计未确认，请稍后再试！");
+					} else if (str == "cant") {
+						fail_msg("非标订单不享受打折！");
 					} else {
 						fail_msg("申请失败，请联系管理员");
 					}
@@ -295,6 +297,7 @@ var OrderContext = function() {
 				if (str == "success") {
 					self.search();
 					self.chosenOrders.removeAll();
+
 				} else {
 					fail_msg("申请失败，请联系管理员");
 				}

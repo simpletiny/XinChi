@@ -55,6 +55,7 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String to_account;
 	private String from_month;
 	private String to_month;
+	private String purpose;
 
 	private BigDecimal money_from;
 	private BigDecimal money_to;
@@ -308,6 +309,14 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setReceiver_pk(String receiver_pk) {
 		this.receiver_pk = receiver_pk;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
 	}
 
 }

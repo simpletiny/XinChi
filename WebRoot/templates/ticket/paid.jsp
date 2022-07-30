@@ -372,7 +372,7 @@
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<script>
-		$(".ticket").addClass("current").children("ol").css("display", "block");
+		$(".ticket-finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

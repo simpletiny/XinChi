@@ -195,7 +195,7 @@
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" /></a> <input type="hidden"
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden"
 								name="bnsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
