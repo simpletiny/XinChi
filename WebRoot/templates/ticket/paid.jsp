@@ -108,7 +108,8 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.related_pk+';'+$data.type+';'+$data.status}, checked: $root.chosenPaids" /></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.related_pk+';'+$data.type+';'+$data.status}, checked: $root.chosenPaids" /></td>
 								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' || $data.type=='DSTRIKEIN' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<!-- /ko -->
@@ -307,12 +308,12 @@
 	</div>
 
 	<!-- 选择航司押金 -->
-	<div id="deposit-pick" style="display: none; width: 890px; height: 610px; overflow: auto">
+	<div id="deposit-pick" style="display: none; width: 1110px; height: 600px; overflow: auto">
 		<form class="form-horizontal search-panel" id="form-search-deposit">
 			<div class="form-group">
 				<div>
 					<label class="col-md-1 control-label">供应商</label>
-					<div class="col-md-3" style="float: left">
+					<div class="col-md-2" style="float: left">
 						<input type="text" class="form-control" name="deposit.supplier_name" />
 					</div>
 				</div>
@@ -323,8 +324,16 @@
 							data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: searchDeposit">搜索</button>
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: finishChoose">选择</button>
+				<div>
+					<label class="col-md-1 control-label">备注</label>
+					<div class="col-md-2" style="float: left">
+						<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
+					</div>
+				</div>
+				<div>
+					<button type="submit" class="btn btn-green" data-bind="click: searchDeposit">搜索</button>
+					<button type="submit" class="btn btn-green" data-bind="click: finishChoose">选择</button>
+				</div>
 			</div>
 		</form>
 		<div class="list-result">

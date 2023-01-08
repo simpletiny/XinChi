@@ -9,6 +9,7 @@ var OrderContext = function() {
 	var x = new Date();
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
+		startLoadingSimpleIndicator("加载中……");
 		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
@@ -16,6 +17,8 @@ var OrderContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			endLoadingIndicator();
 		});
 	};
 

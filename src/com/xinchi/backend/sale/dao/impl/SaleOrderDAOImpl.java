@@ -96,8 +96,8 @@ public class SaleOrderDAOImpl extends SqlSessionDaoSupport implements SaleOrderD
 	@Override
 	public List<ClientReceivedDetailBean> searchReceivableDetails(String team_number) {
 
-		return daoUtil.selectByParam(
-				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.searchReceivableDetailsByTeamNumber", team_number);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByTeamNumber",
+				team_number);
 	}
 
 	@Override

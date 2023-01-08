@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.accounting.dao.AccPaidDAO;
+import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.data.dao.DataDAO;
 import com.xinchi.backend.data.dao.OrderCountDAO;
 import com.xinchi.backend.data.service.DataService;
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
 import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
 import com.xinchi.bean.KeyValueDto;
@@ -24,6 +27,8 @@ import com.xinchi.bean.ProductAreaBean;
 import com.xinchi.bean.ProductProductBean;
 import com.xinchi.bean.ProductSaleBean;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyDataUtil;
 
 @Service
 @Transactional
@@ -244,22 +249,68 @@ public class DataServiceImpl implements DataService {
 	@Autowired
 	private ReceivableDAO receivableDao;
 
+	@Autowired
+	private PayApprovalDAO payApprovalDao;
+
+	@Autowired
+	private AccPaidDAO accPaidDao;
+
+	@Autowired
+	private SupplierDepositDAO supplierDepositDao;
+
+	@Autowired
+	private CardDAO cardDao;
+
 	@Override
 	public DataFinanceSummaryDto fetchFinanceSummary() throws Exception {
 		DataFinanceSummaryDto dfsd = new DataFinanceSummaryDto();
-
 		// 获取现金
-		BigDecimal cash = carddao.selectSumBalance();
+		BigDecimal cash = cardDao.selectSumBalance(SimpletinyDataUtil.getAccounts());
+
+		// 待审批
+		BigDecimal waiting_for_approve = payApprovalDao.selectSumBalance();
+
+		// 待支付
+		BigDecimal waiting_for_paid = accPaidDao.selectSumWFP();
+		// 现金余额
+		BigDecimal cash_balance = cash.subtract(waiting_for_approve == null ? BigDecimal.ZERO : waiting_for_approve)
+				.subtract(waiting_for_paid == null ? BigDecimal.ZERO : waiting_for_paid);
+
 		dfsd.setCash(cash);
+		dfsd.setWaiting_for_approve(waiting_for_approve);
+		dfsd.setWaiting_for_paid(waiting_for_paid);
+		dfsd.setCash_balance(cash_balance);
+
+		// 获取应收款总额
+		BigDecimal receivable = receivableDao.selectSumReceivable();
+		// 获取应付款总额
+		BigDecimal payable = payableDao.selectSumPayable();
+		// 资产余额
+		BigDecimal asset_balance = receivable.subtract(payable == null ? BigDecimal.ZERO : payable);
+
+		dfsd.setReceivable(receivable);
+		dfsd.setPayable(payable);
+		dfsd.setAsset_balance(asset_balance);
+
+		// 航司押金
+		BigDecimal air_deposit = supplierDepositDao.selectSumBalanceByType(ResourcesConstants.DEPOSIT_TYPE_AIR);
+		// 其他押金
+		BigDecimal other_deposit = BigDecimal.ZERO;
+		// 押金余额
+		BigDecimal deposit_balance = air_deposit.add(other_deposit);
+
+		dfsd.setAir_deposit(air_deposit);
+		dfsd.setOther_deposit(other_deposit);
+		dfsd.setDeposit_balance(deposit_balance);
+
+		// 总余额
+		BigDecimal sum_balance = cash_balance.add(asset_balance).add(deposit_balance);
+		dfsd.setSum_balance(sum_balance);
 
 		// 获取现金明细
 		KeyValueDto kv = carddao.selectDetailBalance();
 		dfsd.setPositive_cash(new BigDecimal(kv.getKey_key()));
 		dfsd.setNegative_cash(new BigDecimal(kv.getValue_value()));
-
-		// 获取应收款总额
-		BigDecimal receivable = receivableDao.selectSumReceivable();
-		dfsd.setReceivable(receivable);
 
 		// 获取应收款明细(地区应收款)
 		List<KeyValueDto> receivables = receivableDao.selectReceivableWithClient();
@@ -268,10 +319,6 @@ public class DataServiceImpl implements DataService {
 		// 获取应收款明细(销售应收款)
 		List<KeyValueDto> sale_receivables = receivableDao.selectReceivableWithSales();
 		dfsd.setSalesReceivable(sale_receivables);
-
-		// 获取应付款总额
-		BigDecimal payable = payableDao.selectSumPayable();
-		dfsd.setPayable(payable);
 
 		// 获取应付款明细
 		List<KeyValueDto> payables = payableDao.selectPayableWithArea();
@@ -296,5 +343,11 @@ public class DataServiceImpl implements DataService {
 	public List<ProductSaleBean> searchProductSaleData(ProductAreaBean productOption) {
 
 		return dao.selectProductSaleData(productOption);
+	}
+
+	@Override
+	public List<KeyValueDto> fetchPayableByArea(String provice) {
+
+		return payableDao.selectPayableByArea(provice);
 	}
 }

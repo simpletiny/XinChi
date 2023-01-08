@@ -16,4 +16,8 @@ public interface OrderReportDAO {
 
 	public OrderReportDto selectSumReport(OrderReportDto option);
 
+	public void insert(TeamReportBean tr);
+
+	public void deleteByTeamNumber(String team_number);
+
 }

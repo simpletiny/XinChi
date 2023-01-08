@@ -104,6 +104,7 @@ public class BaseDataServiceImpl implements BaseDataService {
 
 	@Override
 	public String updateBaseData(BaseDataBean baseData) {
+		// 产品线
 		if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_LINE)) {
 			BaseDataBean option = new BaseDataBean();
 			option.setName(baseData.getName());
@@ -124,9 +125,17 @@ public class BaseDataServiceImpl implements BaseDataService {
 			commonDao.exeBySql(sql);
 			dao.update(baseData);
 
-		} else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_BAD_CONFIG)) {
+		}
+		// 呆账配置
+		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_BAD_CONFIG)) {
 			dao.update(baseData);
-		} else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_TEAM_CONFIG)) {
+		}
+		// 单团核算相关
+		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_TEAM_CONFIG)) {
+			dao.update(baseData);
+		}
+		// 销售信用额度启用
+		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_SALE_CREDIT)) {
 			dao.update(baseData);
 		}
 

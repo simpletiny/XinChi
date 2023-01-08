@@ -58,7 +58,7 @@
 						<div class="col-md-6">
 							<label class="l">天数</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: order().days" placeholder="天数" name="bnsOrder.days" />
+								<input type="number" class="ip-" data-bind="value: order().days" placeholder="天数" name="bnsOrder.days" />
 							</div>
 						</div>
 					</div>

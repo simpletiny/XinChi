@@ -15,6 +15,10 @@
 .title {
 	margin-left: 20px;
 }
+
+.ip {
+	width: 40% !important;
+}
 </style>
 
 </head>
@@ -33,24 +37,81 @@
 					<h3 class="title">总计</h3>
 					<div class="input-row clearfloat">
 
-						<div class="col-md-6">
+						<div class="col-md-3">
+							<label class="l">现金</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().cash"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">待审批</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().waiting_for_approve"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">待支付</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().waiting_for_paid"></p>
+							</div>
+						</div>
+						<div class="col-md-3" title="现金-待审批-待支付">
+							<label class="l">余额</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().cash_balance"></p>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="input-row clearfloat">
+
+						<div class="col-md-3">
 							<label class="l">应收款</label>
 							<div class="ip">
 								<p class="ip-default rmb" data-bind="text: summary().receivable"></p>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<label class="l">应付款</label>
 							<div class="ip">
 								<p class="ip-default rmb" data-bind="text: summary().payable"></p>
 							</div>
 						</div>
+						<div class="col-md-3" title="应收款-应付款">
+							<label class="l">余额</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().asset_balance"></p>
+							</div>
+						</div>
 					</div>
+					<hr />
+					<div class="input-row clearfloat">
+
+						<div class="col-md-3">
+							<label class="l">航司押金</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().air_deposit"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">其他押金</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().other_deposit"></p>
+							</div>
+						</div>
+						<div class="col-md-3" title="航司押金+其他押金">
+							<label class="l">余额</label>
+							<div class="ip">
+								<p class="ip-default rmb" data-bind="text: summary().deposit_balance"></p>
+							</div>
+						</div>
+					</div>
+					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<label class="l">现金</label>
+							<label class="l">资金总余额</label>
 							<div class="ip">
-								<p class="ip-default rmb" data-bind="text: summary().cash"></p>
+								<p class="ip-default rmb" data-bind="text: summary().sum_balance"></p>
 							</div>
 						</div>
 					</div>
@@ -107,6 +168,11 @@
 									<p class="ip- rmb" data-bind="text:$data.value_value "></p>
 								</div>
 							</div>
+							<div class="col-md-3">
+								<div class="ip" style="width: 50%">
+									<a href="javascript:void(0)" data-bind="click:function() {$root.view_detail($data.key_key);}">查看明细</a>
+								</div>
+							</div>
 						</div>
 
 					</div>
@@ -124,6 +190,25 @@
 							<div class="ip">
 								<p class="ip-" data-bind="text:summary().negative_cash "></p>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="payable-detail" display="none" style="width:600px;height:600px;overflow-y:auto ">
+			<div data-bind="foreach: payable_details">
+				<div class="input-row clearfloat">
+					<div class="col-md-6">
+						<label class="l">供应商</label>
+						<div class="ip" style="width: 50%">
+							<p class="ip- rmb" data-bind="text:$data.key_key "></p>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label class="l">应付款</label>
+						<div class="ip" style="width: 50%">
+							<p class="ip- rmb" data-bind="text:$data.value_value "></p>
 						</div>
 					</div>
 				</div>

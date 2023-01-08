@@ -159,6 +159,12 @@
 		<action name="applyPay" class="paidAction" method="applyPay">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="searchPaidDetailsByRelatedPk" class="paidAction" method="searchPaidDetailsByRelatedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="applyStrike" class="paidAction" method="applyStrike">
 			<result name="success" type="str">resultStr</result>
 		</action>

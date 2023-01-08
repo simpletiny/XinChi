@@ -275,6 +275,8 @@ var OrderContext = function() {
 						fail_msg("收款会计未确认，请稍后再试！");
 					} else if (str == "cant") {
 						fail_msg("非标订单不享受打折！");
+					} else if (str == "not") {
+						fail_msg("未确认订单不能清尾！");
 					} else {
 						fail_msg("申请失败，请联系管理员");
 					}

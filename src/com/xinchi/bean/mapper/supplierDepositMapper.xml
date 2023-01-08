@@ -52,7 +52,15 @@
 		delete from supplier_deposit
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
-
+	<select id="selectSumBalance" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(IF(balance is null,
+		0,
+		balance))
+		FROM
+		supplier_deposit
+		where deposit_type = #{type,jdbcType=CHAR}
+	</select>
 	<insert id="insert" parameterType="com.xinchi.bean.SupplierDepositBean">
 
 		insert into supplier_deposit

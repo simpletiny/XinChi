@@ -61,7 +61,7 @@ public class OrderAction extends BaseAction {
 	}
 
 	/**
-	 * 创建但机票订单
+	 * 创建单机票订单
 	 * 
 	 * @return
 	 */
@@ -185,6 +185,16 @@ public class OrderAction extends BaseAction {
 		} else {
 			resultStr = "lol";
 		}
+		return SUCCESS;
+	}
+
+	/**
+	 * 生成订单应收款
+	 * 
+	 * @return
+	 */
+	public String createReceivable() {
+		resultStr = service.createReceivable(order_pk);
 		return SUCCESS;
 	}
 

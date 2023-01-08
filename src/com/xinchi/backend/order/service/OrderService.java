@@ -49,4 +49,6 @@ public interface OrderService extends BaseService {
 
 	public List<OrderDto> searchOrderByReceivedRelatedPk(String related_pk);
 
+	public String createReceivable(String order_pk);
+
 }

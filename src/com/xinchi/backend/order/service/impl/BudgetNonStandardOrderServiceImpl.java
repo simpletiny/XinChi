@@ -12,20 +12,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.dao.OrderTicketInfoDAO;
 import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.receivable.service.ReceivableService;
+import com.xinchi.backend.sys.dao.BaseDataDAO;
 import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
+import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirNeedTeamNumberBean;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
+import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.SaleOrderTicketInfoBean;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -168,9 +174,91 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	@Autowired
 	private OrderNameListDAO nameListDao;
 
+	@Autowired
+	private BaseDataDAO baseDataDao;
+	@Autowired
+	private OrderReportDAO orderReportDao;
+
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public String update(BudgetNonStandardOrderBean bean, String json) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
+
+		if (bean.getConfirm_flg().equals("Y")) {
+
+			// 判断是否有信用余额确认订单
+			boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(),
+					old.getCreate_user(), old.getTeam_number(), bean.getReceivable());
+
+			if (!canConfirm) {
+				return "noenoughcredit";
+			}
+
+			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
+				bean.setTeam_number(numberService.generateTeamNumber());
+			}
+
+			bean.setLock_flg("Y");
+
+			String departureDate = bean.getDeparture_date();
+			int days = bean.getDays();
+			int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+			String returnDate = DateUtil.addDate(departureDate, days - 1);
+
+			// 如果已经生成了应收款，则更新应收款
+			if (old.getReceivable_first_flg().equals("Y")) {
+				ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
+
+				receivable.setDeparture_date(bean.getDeparture_date());
+				receivable.setReturn_date(returnDate);
+				receivable.setProduct(bean.getProduct_name());
+				receivable.setPeople_count(people_count);
+				receivable.setBudget_receivable(bean.getReceivable());
+				BigDecimal received = receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived();
+				receivable.setBudget_balance(bean.getReceivable().subtract(received));
+				receivable.setSales(old.getCreate_user());
+				receivable.setCreate_user(old.getCreate_user());
+
+				receivableDao.update(receivable);
+			}
+			// 如果没有生成应收款，则生成应收款
+			else {
+				ReceivableBean receivable = new ReceivableBean();
+				receivable.setTeam_number(bean.getTeam_number());
+				receivable.setFinal_flg("N");
+				receivable.setClient_employee_pk(bean.getClient_employee_pk());
+
+				receivable.setDeparture_date(bean.getDeparture_date());
+				receivable.setReturn_date(returnDate);
+				receivable.setProduct(bean.getProduct_name());
+				receivable.setPeople_count(people_count);
+				receivable.setBudget_receivable(bean.getReceivable());
+
+				receivable.setBudget_balance(bean.getReceivable());
+				receivable.setReceived(BigDecimal.ZERO);
+				receivable.setSales(old.getCreate_user());
+				receivable.setCreate_user(old.getCreate_user());
+
+				receivableDao.insert(receivable);
+			}
+
+			// 生成team_report基础数据
+			TeamReportBean tr = new TeamReportBean();
+			tr.setTeam_number(bean.getTeam_number());
+
+			BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
+			BigDecimal sale_cost = new BigDecimal(0);
+			BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
+					BigDecimal.ROUND_UP);
+
+			tr.setSale_cost(sale_cost);
+			tr.setSys_cost(sys_cost);
+
+			orderReportDao.insert(tr);
+		}
+
 		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
@@ -210,47 +298,11 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
-
+			if (bean.getConfirm_flg().equals("Y"))
+				passenger.setTeam_number(bean.getTeam_number());
 			nameListDao.insert(passenger);
 		}
 
-		if (bean.getConfirm_flg().equals("Y")) {
-			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
-				bean.setTeam_number(numberService.generateTeamNumber());
-			}
-			bean.setLock_flg("Y");
-
-			// 更新名单的team_number
-			List<SaleOrderNameListBean> names = nameListDao.selectByOrderPk(bean.getPk());
-			for (SaleOrderNameListBean name : names) {
-				name.setTeam_number(bean.getTeam_number());
-				nameListDao.update(name);
-			}
-
-			String departureDate = bean.getDeparture_date();
-			int days = bean.getDays();
-			String returnDate = DateUtil.addDate(departureDate, days - 1);
-
-			// 生成应收款
-			ReceivableBean receivable = new ReceivableBean();
-			receivable.setTeam_number(bean.getTeam_number());
-			receivable.setFinal_flg("N");
-			receivable.setClient_employee_pk(bean.getClient_employee_pk());
-
-			receivable.setDeparture_date(bean.getDeparture_date());
-			receivable.setReturn_date(returnDate);
-			receivable.setProduct(bean.getProduct_name());
-			receivable.setPeople_count(
-					bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
-			receivable.setBudget_receivable(bean.getReceivable());
-
-			receivable.setBudget_balance(bean.getReceivable());
-			receivable.setReceived(BigDecimal.ZERO);
-			receivable.setSales(old.getCreate_user());
-			receivable.setCreate_user(old.getCreate_user());
-
-			receivableDao.insert(receivable);
-		}
 		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;
@@ -266,6 +318,20 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	public String updateOnlyTicketOrder(BudgetNonStandardOrderBean bean, String json) {
 		String order_pk = bean.getPk();
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(order_pk);
+		// 判断是否有信用余额确认订单
+		if (bean.getConfirm_flg().equals("Y")) {
+			boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(),
+					old.getCreate_user(), old.getTeam_number(), bean.getReceivable());
+
+			if (!canConfirm) {
+				return "noenoughcredit";
+			}
+
+			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
+				bean.setTeam_number(numberService.generateTeamNumber());
+			}
+		}
+
 		bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
@@ -307,6 +373,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
+			if (bean.getConfirm_flg().equals("Y")) {
+				passenger.setTeam_number(bean.getTeam_number());
+			}
 			nameListDao.insert(passenger);
 		}
 		bean.setPassenger_captain(passenger_captain);
@@ -340,55 +409,81 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 				first_ticket_date = date;
 			}
 
+			if (bean.getConfirm_flg().equals("Y")) {
+				soti.setTeam_number(bean.getTeam_number());
+			}
+
 			orderTicketInfoDao.insert(soti);
 		}
 
 		if (bean.getConfirm_flg().equals("Y")) {
-			if (SimpletinyString.isEmpty(bean.getTeam_number())) {
-				bean.setTeam_number(numberService.generateTeamNumber());
-			}
+			// 判断是否有信用余额确认订单
+			boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(),
+					old.getCreate_user(), old.getTeam_number(), bean.getReceivable());
 
-			// 更新名单的team_number
-			List<SaleOrderNameListBean> names = nameListDao.selectByOrderPk(bean.getPk());
-			for (SaleOrderNameListBean name : names) {
-				name.setTeam_number(bean.getTeam_number());
-				nameListDao.update(name);
-			}
-			// 更新机票信息的team_number
-			List<SaleOrderTicketInfoBean> tickets = orderTicketInfoDao.selectByOrderPk(bean.getPk());
-			for (SaleOrderTicketInfoBean ticket : tickets) {
-				ticket.setTeam_number(bean.getTeam_number());
-				orderTicketInfoDao.update(ticket);
+			if (!canConfirm) {
+				return "noenoughcredit";
 			}
 
 			String departureDate = bean.getDeparture_date();
 			int days = bean.getDays();
 			String returnDate = DateUtil.addDate(departureDate, days - 1);
-
+			int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 			if (SimpletinyString.isEmpty(bean.getConfirm_type()) || bean.getConfirm_type().equals("null")) {
 				// 因为不设计产品，第一次确认名单状态标记为产品确认状态，所以产品操作状态直接标记为已操作
 				bean.setName_confirm_status("3");
 				bean.setOperate_flg("I");
+				// 如果已经生成了应收款，则更新应收款
+				if (old.getReceivable_first_flg().equals("Y")) {
+					ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
 
+					receivable.setDeparture_date(bean.getDeparture_date());
+					receivable.setReturn_date(returnDate);
+					receivable.setProduct("单机票");
+					receivable.setPeople_count(people_count);
+					receivable.setBudget_receivable(bean.getReceivable());
+					BigDecimal received = receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived();
+					receivable.setBudget_balance(bean.getReceivable().subtract(received));
+					receivable.setSales(old.getCreate_user());
+					receivable.setCreate_user(old.getCreate_user());
+
+					receivableDao.update(receivable);
+				}
 				// 生成应收款
-				ReceivableBean receivable = new ReceivableBean();
-				receivable.setTeam_number(bean.getTeam_number());
-				receivable.setFinal_flg("N");
-				receivable.setClient_employee_pk(bean.getClient_employee_pk());
+				else {
 
-				receivable.setDeparture_date(bean.getDeparture_date());
-				receivable.setReturn_date(returnDate);
-				receivable.setProduct("单机票");
-				receivable.setPeople_count(
-						bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
-				receivable.setBudget_receivable(bean.getReceivable());
+					ReceivableBean receivable = new ReceivableBean();
+					receivable.setTeam_number(bean.getTeam_number());
+					receivable.setFinal_flg("N");
+					receivable.setClient_employee_pk(bean.getClient_employee_pk());
 
-				receivable.setBudget_balance(bean.getReceivable());
-				receivable.setReceived(BigDecimal.ZERO);
-				receivable.setSales(old.getCreate_user());
-				receivable.setCreate_user(old.getCreate_user());
+					receivable.setDeparture_date(bean.getDeparture_date());
+					receivable.setReturn_date(returnDate);
+					receivable.setProduct("单机票");
+					receivable.setPeople_count(people_count);
+					receivable.setBudget_receivable(bean.getReceivable());
 
-				receivableDao.insert(receivable);
+					receivable.setBudget_balance(bean.getReceivable());
+					receivable.setReceived(BigDecimal.ZERO);
+					receivable.setSales(old.getCreate_user());
+					receivable.setCreate_user(old.getCreate_user());
+
+					receivableDao.insert(receivable);
+				}
+
+				// 生成team_report基础数据
+				TeamReportBean tr = new TeamReportBean();
+				tr.setTeam_number(bean.getTeam_number());
+
+				BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
+				BigDecimal sale_cost = new BigDecimal(0);
+				BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count))
+						.setScale(2, BigDecimal.ROUND_UP);
+
+				tr.setSale_cost(sale_cost);
+				tr.setSys_cost(sys_cost);
+
+				orderReportDao.insert(tr);
 
 				// 生成票务需求
 				AirTicketNeedBean atn = new AirTicketNeedBean();
@@ -502,7 +597,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		String departureDate = bean.getDeparture_date();
 		int days = bean.getDays();
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
-
+		int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 		// 更新应收款
 		ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
 		receivable.setClient_employee_pk(bean.getClient_employee_pk());
@@ -510,8 +605,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		receivable.setDeparture_date(bean.getDeparture_date());
 		receivable.setReturn_date(returnDate);
 		receivable.setProduct(bean.getProduct_name());
-		receivable.setPeople_count(
-				bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count()));
+		receivable.setPeople_count(people_count);
 		receivable.setBudget_receivable(bean.getReceivable());
 
 		receivable.setBudget_balance(bean.getReceivable()
@@ -559,6 +653,14 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			}
 		}
 
+		// 更新team_report数据
+		TeamReportBean tr = orderReportDao.selectTeamReportByTn(bean.getTeam_number());
+		BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
+		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
+				BigDecimal.ROUND_UP);
+		tr.setSys_cost(sys_cost);
+		orderReportDao.updateTeamReport(tr);
+
 		return SUCCESS;
 	}
 
@@ -591,9 +693,21 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		oldFile.delete();
 	}
 
+	@Autowired
+	private ReceivableService receivableService;
+
 	@Override
 	public String delete(String order_pk) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(order_pk);
+		String result = "";
+		// 如果已经生成了应收款，则删除应收款
+		if (old.getReceivable_first_flg().equals("Y")) {
+			result = receivableService.deleteByTeamNumber(old.getTeam_number());
+		}
+
+		if (!result.equals(SUCCESS))
+			return result;
+
 		deleteFile(old);
 		dao.delete(order_pk);
 		// 删除名单
@@ -603,7 +717,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		if (old.getIndependent_flg().equals("A")) {
 			orderTicketInfoDao.deleteByOrderPk(order_pk);
 		}
-
 		return SUCCESS;
 	}
 

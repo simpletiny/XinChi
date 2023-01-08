@@ -2,6 +2,7 @@ package com.xinchi.backend.user.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -10,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.sys.dao.BaseDataDAO;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.userinfo.dao.UserInfoDAO;
 import com.xinchi.backend.userinfo.service.UserInfoService;
 import com.xinchi.backend.util.UserUtilService;
+import com.xinchi.bean.BaseDataBean;
+import com.xinchi.bean.ReceivableBalanceDto;
+import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.UserInfoBean;
@@ -69,6 +75,9 @@ public class UserServiceImpl implements UserService {
 				sessionBean.setCellphone(uib.getCellphone());
 				sessionBean.setUser_status(user.getUser_status());
 				sessionBean.setUser_roles(uib.getUser_role());
+				sessionBean.setCredit_limit(uib.getCredit_limit());
+				sessionBean.setCredit_balance(uib.getCredit_balance());
+
 				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 
 				if (uib.getUser_role().contains("SALE"))
@@ -249,4 +258,60 @@ public class UserServiceImpl implements UserService {
 	public UserCommonBean selectUserCommonByUserNumber(String user_number) {
 		return dao.selectUserCommonByUserNumber(user_number);
 	}
+
+	@Autowired
+	private ReceivableDAO receivableDao;
+
+	// 修改销售信用额度
+	@Override
+	public String updateCreditLimit(String user_pks, BigDecimal credit_limit) {
+		String[] pks = user_pks.split(",");
+
+		for (String pk : pks) {
+			UserBaseBean ubb = dao.selectByPrimaryKey(pk);
+			UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
+			uib.setCredit_limit(credit_limit);
+
+			// 更新余额，余额=初始金额-应收款
+			ReceivableBalanceDto rb = receivableDao.selectUserReceivableBalanceByUserNumber(ubb.getUser_number());
+			uib.setCredit_balance(credit_limit.subtract(rb.getAll_balance()));
+
+			infoDao.update(uib);
+		}
+
+		return SUCCESS;
+	}
+
+	@Autowired
+	private BaseDataDAO baseDataDao;
+
+	@Override
+	public boolean hasEnoughCreditToConfirm(String receivable_first_flg, String user_number, String team_number,
+			BigDecimal money) {
+		BaseDataBean bd = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_SSCREDIT);
+
+		if (bd.getExt1().equals("Y")) {
+
+			UserBaseBean ubb = dao.getByUserNumber(user_number);
+			UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
+
+			BigDecimal credit_balance = uib.getCredit_balance();
+			BigDecimal more = BigDecimal.ZERO;
+			if (receivable_first_flg.equals("Y")) {
+				ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(team_number);
+				more = money.subtract(receivable.getBudget_receivable());
+			} else {
+				more = money;
+			}
+
+			if (BigDecimal.ZERO.compareTo(credit_balance.subtract(more)) != 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }

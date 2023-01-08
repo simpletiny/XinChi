@@ -81,6 +81,12 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">填报日期</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control date-picker" placeholder="填报日期" name="detail.create_time" />
+							</div>
+						</div>
 						<div align="left">
 							<label class="col-md-1 control-label">金额</label>
 							<div class="col-md-1" style="float: left">
@@ -111,6 +117,7 @@
 								<th>收入</th>
 								<th>支出</th>
 								<th>余额</th>
+								<th>填报时间</th>
 								<th>备注</th>
 							</tr>
 						</thead>
@@ -128,6 +135,7 @@
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.balance" class="rmb"></td>
+								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>

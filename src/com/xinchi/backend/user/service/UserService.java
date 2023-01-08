@@ -1,6 +1,7 @@
 package com.xinchi.backend.user.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.UserBaseBean;
@@ -103,4 +104,9 @@ public interface UserService extends BaseService {
 	public UserBaseBean selectByUserNumber(String user_number);
 
 	public UserCommonBean selectUserCommonByUserNumber(String user_number);
+
+	public String updateCreditLimit(String user_pks, BigDecimal credit_limit);
+
+	public boolean hasEnoughCreditToConfirm(String receivable_first_flg, String user_number, String team_number,
+			BigDecimal money);
 }

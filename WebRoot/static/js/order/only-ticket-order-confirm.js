@@ -271,7 +271,7 @@ var OrderContext = function() {
 
 		var data = $("form").serialize() + "&json=" + json;
 
-		startLoadingSimpleIndicator("保存中");
+		startLoadingIndicator("保存中……");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/updateOnlyTicketOrder',
@@ -279,6 +279,9 @@ var OrderContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				window.history.go(-1);
+			} else if (str == "noenoughcredit") {
+				endLoadingIndicator();
+				fail_msg("信用额度不足，不能确认订单！");
 			}
 		});
 	};
@@ -382,6 +385,19 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	var x = new Date();
+	var maxDate = x.Format("yyyy/MM/dd");
+	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
+	$(".date-picker-confirm-date").datetimepicker({
+		format : 'Y-m-d',
+		timepicker : false,
+		scrollInput : false,
+		defaultDate : new Date(),
+		lang : 'zh',
+
+		minDate : minDate,
+		maxDate : maxDate,
+	})
 });
 
 function cancelBat() {

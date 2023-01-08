@@ -27,4 +27,6 @@ public interface ReceivedDAO {
 	public List<ClientReceivedDetailBean> selectByParam(ClientReceivedDetailBean bean);
 
 	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
+
+	public List<ClientReceivedDetailBean> selectByTeamNumber(String team_number);
 }

@@ -1534,7 +1534,7 @@ input:-moz-placeholder {
 	padding: 250px 0 0;
 	font-weight: normal;
 	border: 0;
-	z-index: 9999;
+	z-index: 2147483586;
 	text-align: center;
 	color: #ffffff;
 	font-size: 14px;
@@ -1553,7 +1553,7 @@ input:-moz-placeholder {
 	font-weight: normal;
 	background: rgba(102, 102, 102, 0.8);
 	border: 0;
-	z-index: 9999;
+	z-index: 2147483586;
 	text-align: center;
 	color: #ffffff;
 	font-size: 14px;

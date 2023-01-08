@@ -310,6 +310,213 @@
 			<comment>ALTER TABLE received_match</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE team_report 
+				CHANGE COLUMN pk pk CHAR(22) NOT NULL ;
+             ]]>
+			<comment>ALTER TABLE team_report </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists paid_detail;
+				CREATE VIEW paid_detail AS
+				    SELECT 
+				        *,
+				        team_number AS order_number,
+				        'SINGLE' AS isOne
+				    FROM
+				        supplier_paid_detail
+				    WHERE
+				        type LIKE '%STRIKE%' 
+				    UNION ALL SELECT 
+				        *,
+				        GROUP_CONCAT(team_number) AS order_number,
+				        IF(COUNT(pk) > 1, 'SUM', 'SINGLE') AS isOne
+				    FROM
+				        supplier_paid_detail
+				    WHERE
+				        type NOT LIKE '%STRIKE%'
+				    GROUP BY related_pk
+             ]]>
+			<comment>ALTER VIEW paid_detail </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE user_info 
+					ADD COLUMN credit_limit DECIMAL(12,2) NULL DEFAULT '0.00' COMMENT '信用额度总额' AFTER user_role,
+					ADD COLUMN credit_balance DECIMAL(12,2) NULL DEFAULT 0 COMMENT '可用信用额度' AFTER credit_limit;
+             ]]>
+			<comment>ALTER TABLE user_info </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="18" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	INSERT INTO base_data (name, type, order_index, level, ext1, delete_flg, can_edit, pk, update_user) VALUES ('销售信用额度', 'SCREDIT', '1', '1', 'N', 'N', 'Y', 'pk_scredit', 'N00000');
+             ]]>
+			<comment>INSERT INTO base_data</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="19" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_non_standard_order 
+					ADD COLUMN receivable_first_flg CHAR(1) NULL DEFAULT 'N' COMMENT '先生成团款标识' AFTER passenger_captain;
+             ]]>
+			<comment>ALTER TABLE budget_non_standard_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order 
+					ADD COLUMN receivable_first_flg CHAR(1) NULL DEFAULT 'N' COMMENT '先生成团款标识' AFTER name_confirm_status;
+
+             ]]>
+			<comment>ALTER TABLE budget_standard_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS budget_order_view;
+				CREATE VIEW budget_order_view AS
+					select  A.team_number, 
+					    	A.product_name,
+							'' as product_pk,
+					    	A.client_employee_pk, 
+					    	C.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user,
+					    	A.create_user AS create_user_number,
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'N' AS standard_flg,
+					    	A.product_manager AS product_manager_number,
+					    	D.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            A.lock_flg,
+                            A.name_confirm_status,
+                            A.passenger_captain,
+                            '' AS receivable_comment,
+                            '' AS treat_comment,
+                            '' AS client_name,
+                            '' AS ticket_number,
+                            '' AS start_city,
+                            '' AS start_airport,
+                            '' AS end_city,
+                            '' AS end_airport,
+                            '' AS off_time,
+                            '' AS land_time,
+                            '' AS next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							0 AS product_value,
+							A.receivable_first_flg
+					from budget_non_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN client_employee C ON A.client_employee_pk = C.pk
+					LEFT JOIN user_base D ON A.product_manager = D.user_number
+					union all 
+					select  A.team_number, 
+					    	C.name AS product_name,
+							A.product_pk,
+					    	A.client_employee_pk,
+					    	D.name AS client_employee_name,
+					    	A.independent_flg, 
+					    	A.comment, 
+					    	A.other_cost_comment, 
+					    	A.other_cost, 
+					    	A.fy, 
+					    	A.special_cost, 
+					    	A.special_count, 
+					    	A.adult_cost, 
+					    	A.adult_count, 
+					    	A.receivable, 
+					    	A.days, 
+					    	A.departure_date, 
+					    	A.pk, 
+					    	A.update_user, 
+					    	A.create_user AS create_user_number, 
+					    	B.user_name AS create_user,
+					    	A.confirm_flg, 
+					    	A.create_time,
+					    	A.update_time,
+					    	A.confirm_date,
+					    	A.confirm_file,
+					    	'Y' AS standard_flg,
+					    	C.product_manager AS product_manager_number,
+					    	E.user_name AS product_manager,
+					    	A.air_ticket_cost,
+					    	A.product_cost,
+					    	A.operate_flg,
+					    	A.name_list,
+                            A.lock_flg,
+                            A.name_confirm_status,
+                            A.passenger_captain,
+                            A.receivable_comment,
+                            A.treat_comment,
+                            F.client_short_name AS client_name,
+                            A.ticket_number,
+                            A.start_city,
+                            A.start_airport,
+                            A.end_city,
+                            A.end_airport,
+                            A.off_time,
+                            A.land_time,
+                            A.next_day,
+                            case when
+							A.departure_date>now() then 'no'
+							when now()>=A.departure_date and
+							DATE_ADD(A.departure_date,interval A.days-1 day) >
+							now()
+							then 'yes'
+							when now()>=DATE_ADD(A.departure_date,interval A.days-1 day) then 'back'
+							end
+							AS status,
+							A.product_value,
+							A.receivable_first_flg
+					from budget_standard_order A LEFT JOIN user_base B ON A.create_user = B.user_number
+					LEFT JOIN product C ON A.product_pk = C.pk
+					LEFT JOIN client_employee D ON A.client_employee_pk = D.pk
+       				LEFT JOIN user_base E ON C.product_manager = E.user_number
+       				LEFT JOIN client F ON D.financial_body_pk = F.pk;
+
+             ]]>
+			<comment>ALTER VIEW budget_order_view </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

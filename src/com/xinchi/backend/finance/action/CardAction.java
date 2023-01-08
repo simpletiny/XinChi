@@ -1,11 +1,6 @@
 package com.xinchi.backend.finance.action;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
@@ -16,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.bean.CardBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.SimpletinyDataUtil;
 
 @Controller
 @Scope("prototype")
@@ -36,21 +32,7 @@ public class CardAction extends BaseAction {
 
 	public String searchCard() throws Exception {
 		cards = cardService.getAllCardsByParam(card);
-
-		String basePath = this.getClass().getClassLoader().getResource("").getPath();
-		InputStreamReader config = new InputStreamReader(
-				new FileInputStream(basePath + File.separator + "hot" + File.separator + "accountSumConfig.txt"),
-				"UTF-8");
-		BufferedReader br = new BufferedReader(config);
-		String line;
-		String r = "";
-		while ((line = br.readLine()) != null) {
-			r += line;
-		}
-		br.close();
-
-		List<String> accounts = Arrays.asList(r.split(","));
-		sum_balance = cardService.selectSumBalance(accounts);
+		sum_balance = cardService.selectSumBalance(SimpletinyDataUtil.getAccounts());
 		return SUCCESS;
 	}
 

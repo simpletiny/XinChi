@@ -42,8 +42,8 @@ var ProductBoxContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOrders.removeAll();
-							} else if (str == "air_ticket_lock") {
-								fail_msg("票务已锁定，不能删除！");
+							} else if (str == "hasreceiveds") {
+								fail_msg("请先处理已收款！");
 							} else {
 								fail_msg(str);
 							}
@@ -108,6 +108,53 @@ var ProductBoxContext = function() {
 			}
 		}
 	};
+
+	// 生成订单（只生成应收款）
+	self.createReceivable = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单！");
+			return;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个订单！");
+			return;
+		} else if (self.chosenOrders().length == 1) {
+			var data = self.chosenOrders()[0].split(";");
+			var order_pk = data[0];
+			var standard_flg = data[1];
+
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '生成订单只会生成应收款，确认要这么做吗？',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingIndicator("生成中……");
+						var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'order/createReceivable',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenOrders.removeAll();
+							} else if (str == "nomoney") {
+								fail_msg("没有团款信息，不能生成订单！");
+							} else if (str == "already") {
+								fail_msg("已经生成应收款，不能重复操作！")
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
+	}
 
 	self.orders = ko.observable({});
 

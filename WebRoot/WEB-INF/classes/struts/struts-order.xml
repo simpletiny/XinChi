@@ -11,7 +11,7 @@
 		<action name="createBudgetNonStandardOrder" class="orderAction" method="createBudgetNonStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<!-- 创建但机票订单 -->
+		<!-- 创建单机票订单 -->
 		<action name="createOnlyTicketOrder" class="orderAction" method="createOnlyTicketOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -46,6 +46,10 @@
 		</action>
 		<!-- 删除待确认订单 -->
 		<action name="deleteTbcOrder" class="orderAction" method="deleteTbcOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 待确认订单生成应收款-->
+		<action name="createReceivable" class="orderAction" method="createReceivable">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 打回已确认订单 -->

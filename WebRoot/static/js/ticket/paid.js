@@ -357,7 +357,7 @@ var PaidContext = function() {
 			maxmin : false,
 			closeBtn : [1, true],
 			shadeClose : false,
-			area : ['900px', '650px'],
+			area : ['1120px', '650px'],
 			offset : ['', ''],
 			scrollbar : true,
 			page : {

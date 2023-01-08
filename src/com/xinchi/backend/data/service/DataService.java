@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.bean.ProductAreaBean;
 import com.xinchi.bean.ProductProductBean;
 import com.xinchi.bean.ProductSaleBean;
@@ -20,5 +21,7 @@ public interface DataService extends BaseService {
 	public List<ProductProductBean> searchProductProductData(ProductAreaBean productOption);
 
 	public List<ProductSaleBean> searchProductSaleData(ProductAreaBean productOption);
+
+	public List<KeyValueDto> fetchPayableByArea(String provice);
 
 }

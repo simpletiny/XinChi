@@ -1,5 +1,6 @@
 package com.xinchi.common;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class UserSessionBean {
@@ -14,10 +15,13 @@ public class UserSessionBean {
 	private String user_roles;
 
 	private String login_time;
-	
+
 	private List<String> current_page;
-	
+
 	private String current_url;
+
+	private BigDecimal credit_limit;
+	private BigDecimal credit_balance;
 
 	public String getId() {
 		return id;
@@ -106,12 +110,28 @@ public class UserSessionBean {
 	public void setCurrent_url(String current_url) {
 		this.current_url = current_url;
 	}
-	
-//	public boolean equals(Object obj) {
-//		UserSessionBean user = (UserSessionBean) obj;
-//		if (pk.equals(user.getPk())) {
-//			return true;
-//		}
-//		return false;
-//	}
+
+	public BigDecimal getCredit_limit() {
+		return credit_limit;
+	}
+
+	public BigDecimal getCredit_balance() {
+		return credit_balance;
+	}
+
+	public void setCredit_limit(BigDecimal credit_limit) {
+		this.credit_limit = credit_limit;
+	}
+
+	public void setCredit_balance(BigDecimal credit_balance) {
+		this.credit_balance = credit_balance;
+	}
+
+	// public boolean equals(Object obj) {
+	// UserSessionBean user = (UserSessionBean) obj;
+	// if (pk.equals(user.getPk())) {
+	// return true;
+	// }
+	// return false;
+	// }
 }

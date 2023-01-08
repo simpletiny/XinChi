@@ -51,6 +51,38 @@
 								</em>
 							</div>
 						</div>
+
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">类型</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: paidTypes,optionsText:'name', optionsValue: 'key', optionsCaption: '全部',event:{change:refresh}"
+									name="detail.type"></select>
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">订单号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" name="detail.order_number" />
+							</div>
+						</div>
+						<div class="ip">
+							<label class="col-md-1 control-label">金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="大于等于" name="detail.money_from" />
+							</div>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="小于等于" name="detail.money_to" />
+							</div>
+						</div>
+						<div class="ip">
+							<label class="col-md-1 control-label">精确金额</label>
+							<div class="col-md-1" style="float: left">
+								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div align="left">
@@ -92,11 +124,12 @@
 								<th></th>
 								<th>金额</th>
 								<th>类型</th>
+								<th>订单号</th>
 								<th>供应商</th>
 								<th>申请日期</th>
 								<th>入账日期</th>
 								<th>状态</th>
-								<th>详情</th>
+								<th>支付详情</th>
 								<th>填报人</th>
 							</tr>
 						</thead>
@@ -106,10 +139,21 @@
 								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<!-- /ko -->
-								<!-- ko if:$data.type!='STRIKEIN' & $data.type!='STRIKEOUT' -->
+								<!-- ko if:$data.type!='STRIKEIN' && $data.type!='STRIKEOUT' -->
 								<td data-bind="text: $data.allot_money" class="rmb"></td>
 								<!-- /ko -->
 								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<!-- ko if:$data.isOne=='SUM' && $data.isOne!='SINGLE'-->
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.viewDetail($data)} ">合</a></td>
+								<!-- /ko -->
+								<!-- ko if:$data.isOne=='SINGLE' && $data.isOne!='SUM'-->
+									<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' -->
+										<td><a href="javascript:void(0)" data-bind="text:$data.order_number,click: function() {$root.viewStrikeDetail($data)} ">合</a></td>
+									<!-- /ko -->
+									<!-- ko if:$data.type!='STRIKEIN' && $data.type!='STRIKEOUT' -->
+										<td data-bind="text:$data.order_number"></td>
+									<!-- /ko -->
+								<!-- /ko -->
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
 								<!-- ko if:$data.type!='BACK' -->
@@ -159,38 +203,21 @@
 	<div id="sum_detail" style="display: none; width: 800px; padding-top: 30px;">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
-				<label class="l" style="width: 30%">账户</label>
+				<label class="l" style="width: 30%">总金额</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().card_account"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账总金额</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().sum_received" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账时间</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().received_time"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">我组金额</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().allot_received" class="rmb"></p>
+					<p class="ip-default" data-bind="text:sumDetail().allot_money" class="rmb"></p>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div class="col-md-3">
-				<label class="l" style="width: 100%">团号</label>
+				<label class="l" style="width: 100%">订单号</label>
 			</div>
 			<div class="col-md-3">
-				<label class="l" style="width: 100%">客户</label>
+				<label class="l" style="width: 100%">供应商</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">类型</label>
 			</div>
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">分配金额</label>
@@ -205,12 +232,83 @@
 			</div>
 			<div class="col-md-3">
 				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
+					<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.received" class="rmb"></p>
+					<p class="ip-default" data-bind="text:$root.typeMapping[$data.type]"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.money" class="rmb"></p>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+	<div id="strike_detail" style="display: none; width: 800px; padding-top: 30px;">
+		<h3>冲账出</h3>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">订单号</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">供应商</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">冲出金额</label>
+			</div>
+		</div>
+		<!-- ko foreach:strikeouts -->
+		<div class="input-row clearfloat" st="allot">
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.team_number"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.money" class="rmb"></p>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+		
+		<hr/>
+		<h3>冲账入</h3>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">订单号</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">供应商</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">冲入金额</label>
+			</div>
+		</div>
+		<!-- ko foreach:strikeins -->
+		<div class="input-row clearfloat" st="allot">
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.team_number"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.money" class="rmb"></p>
 				</div>
 			</div>
 		</div>
@@ -262,7 +360,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="div_view_detail" style="display: none; width: 800px; height:600px; padding-top: 30px;overflow:auto ">
+	<div id="div_view_detail" style="display: none; width: 800px; height: 600px; padding-top: 30px; overflow: auto">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">审批人</label>
@@ -281,7 +379,7 @@
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">付款人</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:detail().paid_user_name"></p> 
+					<p class="ip-default" data-bind="text:detail().paid_user_name"></p>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -292,19 +390,18 @@
 			</div>
 		</div>
 		<div class="input-row clearfloat">
-			<div class="col-md-6" >
+			<div class="col-md-6">
 				<label class="l" style="width: 30%">付款凭证</label>
 				<div data-bind="foreach: imgs" id="voucher-img">
-					<input type="hidden" data-bind="value:$data" st="voucher-file-name"/> 
-						<img style="width:400px;height:400px" src="<%=basePath%>static/img/sorry.jpg" st="img"/>
+					<input type="hidden" data-bind="value:$data" st="voucher-file-name" /> <img style="width: 400px; height: 400px"
+						src="<%=basePath%>static/img/sorry.jpg" st="img" />
 				</div>
-				
-			</div> 
+
+			</div>
 		</div>
 	</div>
 	<script>
-		$(".product").addClass("current").children("ol")
-				.css("display", "block");
+		$(".product").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

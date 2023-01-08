@@ -1,94 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.ReceivableSummaryMapper" >
-  <resultMap id="BaseResultMap" type="com.xinchi.bean.ReceivableSummaryBean" >
-	    <result column="all_count" property="all_count" jdbcType="BIGINT" />
-	    <result column="all_budget_balance" property="all_budget_balance" jdbcType="DECIMAL" />
-	    <result column="all_final_balance" property="all_final_balance" jdbcType="DECIMAL" />
-	    <result column="all_balance" property="all_balance" jdbcType="DECIMAL" />
-	    <result column="one_month_count" property="one_month_count" jdbcType="BIGINT" />
-	    <result column="one_month_budget_balance" property="one_month_budget_balance" jdbcType="DECIMAL" />
-	    <result column="one_month_final_balance" property="one_month_final_balance" jdbcType="DECIMAL" />
-	    <result column="one_month_balance" property="one_month_balance" jdbcType="DECIMAL" />
-	    <result column="two_month_count" property="two_month_count" jdbcType="BIGINT" />
-	    <result column="two_month_budget_balance" property="two_month_budget_balance" jdbcType="DECIMAL" />
-	    <result column="two_month_final_balance" property="two_month_final_balance" jdbcType="DECIMAL" />
-	    <result column="two_month_balance" property="two_month_balance" jdbcType="DECIMAL" />
-	    <result column="six_month_count" property="six_month_count" jdbcType="BIGINT" />
-	    <result column="six_month_budget_balance" property="six_month_budget_balance" jdbcType="DECIMAL" />
-	    <result column="six_month_final_balance" property="six_month_final_balance" jdbcType="DECIMAL" />
-	    <result column="six_month_balance" property="six_month_balance" jdbcType="DECIMAL" />
-	    <result column="bad_month_count" property="bad_month_count" jdbcType="BIGINT" />
-	    <result column="bad_month_budget_balance" property="bad_month_budget_balance" jdbcType="DECIMAL" />
-	    <result column="bad_month_final_balance" property="bad_month_final_balance" jdbcType="DECIMAL" />
-	    <result column="bad_month_balance" property="bad_month_balance" jdbcType="DECIMAL" />
-	    <result column="before_count" property="before_count" jdbcType="BIGINT" />
-	    <result column="before_budget_balance" property="before_budget_balance" jdbcType="DECIMAL" />
-	    <result column="before_final_balance" property="before_final_balance" jdbcType="DECIMAL" />
-	    <result column="before_balance" property="before_balance" jdbcType="DECIMAL" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-  		
-    	all_count, 
-    	all_budget_balance, 
-    	all_final_balance, 
-    	all_balance, 
-    	one_month_count, 
-    	one_month_budget_balance, 
-    	one_month_final_balance, 
-    	one_month_balance, 
-    	two_month_count, 
-    	two_month_budget_balance, 
-    	two_month_final_balance, 
-    	two_month_balance, 
-    	six_month_count, 
-    	six_month_budget_balance, 
-    	six_month_final_balance, 
-    	six_month_balance, 
-    	bad_month_count, 
-    	bad_month_budget_balance, 
-    	bad_month_final_balance, 
-    	bad_month_balance,
-    	before_count, 
-    	before_budget_balance, 
-    	before_final_balance, 
-    	before_balance
-  </sql>
-   <select id="selectReceivableSummary" parameterType="com.xinchi.bean.ReceivableSummaryBean" resultMap="BaseResultMap">
-   select 
-    sum(all_count) AS all_count,
-	sum(all_budget_balance) AS all_budget_balance,
-	sum(all_final_balance) AS all_final_balance,
-	sum(all_balance) AS all_balance,
-	sum(one_month_count) AS one_month_count,
-	sum(one_month_budget_balance) AS one_month_budget_balance,
-	sum(one_month_final_balance) AS one_month_final_balance,
-	sum(one_month_balance) AS one_month_balance,
-	sum(two_month_count) AS two_month_count,
-	sum(two_month_budget_balance) AS two_month_budget_balance,
-	sum(two_month_final_balance) AS two_month_final_balance,
-	sum(two_month_balance) AS two_month_balance,
-	sum(six_month_count) AS six_month_count,
-	sum(six_month_budget_balance) AS six_month_budget_balance,
-	sum(six_month_final_balance) AS six_month_final_balance,
-	sum(six_month_balance) AS six_month_balance,
-	sum(bad_month_count) AS bad_month_count,
-	sum(bad_month_budget_balance) AS bad_month_budget_balance,
-	sum(bad_month_final_balance) AS bad_month_final_balance,
-	sum(bad_month_balance) AS bad_month_balance,
-	sum(before_count) AS before_count,
-	sum(before_budget_balance) AS before_budget_balance,
-	sum(before_final_balance) AS before_final_balance,
-	sum(before_balance) AS before_balance
-    from receivable_summary
-   </select>
-   
- <select id="selectByUserNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
-   select 
-    <include refid="Base_Column_List" />
-    from receivable_summary
- 	 where user_number = #{user_number,jdbcType=VARCHAR}  
- 
-   </select>
+<mapper namespace="com.xinchi.bean.mapper.ReceivableSummaryMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ReceivableSummaryBean">
+		<result column="all_count" property="all_count" jdbcType="BIGINT" />
+		<result column="all_budget_balance" property="all_budget_balance" jdbcType="DECIMAL" />
+		<result column="all_final_balance" property="all_final_balance" jdbcType="DECIMAL" />
+		<result column="all_balance" property="all_balance" jdbcType="DECIMAL" />
+		<result column="one_month_count" property="one_month_count" jdbcType="BIGINT" />
+		<result column="one_month_budget_balance" property="one_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="one_month_final_balance" property="one_month_final_balance" jdbcType="DECIMAL" />
+		<result column="one_month_balance" property="one_month_balance" jdbcType="DECIMAL" />
+		<result column="two_month_count" property="two_month_count" jdbcType="BIGINT" />
+		<result column="two_month_budget_balance" property="two_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="two_month_final_balance" property="two_month_final_balance" jdbcType="DECIMAL" />
+		<result column="two_month_balance" property="two_month_balance" jdbcType="DECIMAL" />
+		<result column="six_month_count" property="six_month_count" jdbcType="BIGINT" />
+		<result column="six_month_budget_balance" property="six_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="six_month_final_balance" property="six_month_final_balance" jdbcType="DECIMAL" />
+		<result column="six_month_balance" property="six_month_balance" jdbcType="DECIMAL" />
+		<result column="bad_month_count" property="bad_month_count" jdbcType="BIGINT" />
+		<result column="bad_month_budget_balance" property="bad_month_budget_balance" jdbcType="DECIMAL" />
+		<result column="bad_month_final_balance" property="bad_month_final_balance" jdbcType="DECIMAL" />
+		<result column="bad_month_balance" property="bad_month_balance" jdbcType="DECIMAL" />
+		<result column="before_count" property="before_count" jdbcType="BIGINT" />
+		<result column="before_budget_balance" property="before_budget_balance" jdbcType="DECIMAL" />
+		<result column="before_final_balance" property="before_final_balance" jdbcType="DECIMAL" />
+		<result column="before_balance" property="before_balance" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<resultMap id="ReceivableBalanceResultMap" type="com.xinchi.bean.ReceivableBalanceDto">
+		<result column="user_pk" property="user_pk" jdbcType="VARCHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="all_count" property="all_count" jdbcType="INTEGER" />
+		<result column="all_budget_balance" property="all_budget_balance" jdbcType="DECIMAL" />
+		<result column="all_final_balance" property="all_final_balance" jdbcType="DECIMAL" />
+		<result column="all_balance" property="all_balance" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		all_count,
+		all_budget_balance,
+		all_final_balance,
+		all_balance,
+		one_month_count,
+		one_month_budget_balance,
+		one_month_final_balance,
+		one_month_balance,
+		two_month_count,
+		two_month_budget_balance,
+		two_month_final_balance,
+		two_month_balance,
+		six_month_count,
+		six_month_budget_balance,
+		six_month_final_balance,
+		six_month_balance,
+		bad_month_count,
+		bad_month_budget_balance,
+		bad_month_final_balance,
+		bad_month_balance,
+		before_count,
+		before_budget_balance,
+		before_final_balance,
+		before_balance
+	</sql>
+	<select id="selectReceivableSummary" parameterType="com.xinchi.bean.ReceivableSummaryBean" resultMap="BaseResultMap">
+		select
+		sum(all_count) AS all_count,
+		sum(all_budget_balance) AS all_budget_balance,
+		sum(all_final_balance) AS all_final_balance,
+		sum(all_balance) AS all_balance,
+		sum(one_month_count) AS one_month_count,
+		sum(one_month_budget_balance) AS one_month_budget_balance,
+		sum(one_month_final_balance) AS one_month_final_balance,
+		sum(one_month_balance) AS one_month_balance,
+		sum(two_month_count) AS two_month_count,
+		sum(two_month_budget_balance) AS two_month_budget_balance,
+		sum(two_month_final_balance) AS two_month_final_balance,
+		sum(two_month_balance) AS two_month_balance,
+		sum(six_month_count) AS six_month_count,
+		sum(six_month_budget_balance) AS six_month_budget_balance,
+		sum(six_month_final_balance) AS six_month_final_balance,
+		sum(six_month_balance) AS six_month_balance,
+		sum(bad_month_count) AS bad_month_count,
+		sum(bad_month_budget_balance) AS bad_month_budget_balance,
+		sum(bad_month_final_balance) AS bad_month_final_balance,
+		sum(bad_month_balance) AS bad_month_balance,
+		sum(before_count) AS before_count,
+		sum(before_budget_balance) AS before_budget_balance,
+		sum(before_final_balance) AS before_final_balance,
+		sum(before_balance) AS before_balance
+		from receivable_summary
+	</select>
+
+	<select id="selectByUserNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from receivable_summary
+		where user_number = #{user_number,jdbcType=VARCHAR}
+
+	</select>
+
+
+	<select id="selectUserReceivableBalanceByUserNumber" parameterType="java.lang.String" resultMap="ReceivableBalanceResultMap">
+		select
+		sales as user_number,
+		all_balance
+		from receivable_a
+		where sales = #{user_number,jdbcType=VARCHAR}
+	</select>
 </mapper>

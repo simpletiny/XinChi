@@ -51,8 +51,8 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	}
 
 	@Override
-	public OrderDto searchCOrderByPk(String order_pk) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.searchCOrderByPk", order_pk);
+	public OrderDto searchOrderByPk(String order_pk) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.searchOrderByPk", order_pk);
 	}
 
 	@Override

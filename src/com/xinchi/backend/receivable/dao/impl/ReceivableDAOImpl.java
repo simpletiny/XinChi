@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.bean.KeyValueDto;
+import com.xinchi.bean.ReceivableBalanceDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.ReceivableSummaryBean;
 import com.xinchi.common.DaoUtil;
@@ -31,8 +32,8 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	}
 
 	@Override
-	public void insert(ReceivableBean receivable) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.ReceivableMapper.insert", receivable);
+	public String insert(ReceivableBean receivable) {
+		return daoUtil.insertBO("com.xinchi.bean.mapper.ReceivableMapper.insert", receivable);
 	}
 
 	@Override
@@ -65,7 +66,6 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	@Override
 	public void update(ReceivableBean receivable) {
 		daoUtil.updateByPK("com.xinchi.bean.mapper.ReceivableMapper.updateByPrimaryKey", receivable);
-
 	}
 
 	@Override
@@ -102,5 +102,11 @@ public class ReceivableDAOImpl extends SqlSessionDaoSupport implements Receivabl
 	@Override
 	public List<KeyValueDto> selectReceivableWithSales() {
 		return daoUtil.selectAll("com.xinchi.bean.mapper.ReceivableMapper.selectReceivableWithSales");
+	}
+
+	@Override
+	public ReceivableBalanceDto selectUserReceivableBalanceByUserNumber(String user_number) {
+		return daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.ReceivableSummaryMapper.selectUserReceivableBalanceByUserNumber", user_number);
 	}
 }

@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
@@ -21,6 +22,10 @@ public class UserInfoBean extends SupperBO implements Serializable {
 	private java.lang.String cellphone;
 
 	private String user_role;
+
+	private BigDecimal credit_limit;
+
+	private BigDecimal credit_balance;
 
 	public java.lang.String getId() {
 		return id;
@@ -76,6 +81,22 @@ public class UserInfoBean extends SupperBO implements Serializable {
 
 	public void setUser_role(String user_role) {
 		this.user_role = user_role;
+	}
+
+	public BigDecimal getCredit_limit() {
+		return credit_limit;
+	}
+
+	public void setCredit_limit(BigDecimal credit_limit) {
+		this.credit_limit = credit_limit;
+	}
+
+	public BigDecimal getCredit_balance() {
+		return credit_balance;
+	}
+
+	public void setCredit_balance(BigDecimal credit_balance) {
+		this.credit_balance = credit_balance;
 	}
 
 }

@@ -39,6 +39,7 @@
 						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">删除</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
+							<button type="submit" title="只生成应收款" class="btn btn-green col-md-1" data-bind="click: function() { createReceivable() }">生成订单</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
 						</div>
 					</div>
@@ -92,6 +93,7 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>团号</th>
 								<th>客户</th>
 								<th>财务主体</th>
 								<th>产品名称</th>
@@ -115,6 +117,7 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg+';'+$data.independent_flg}, checked: $root.chosenOrders" /></td>
+								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.product_name"></td>

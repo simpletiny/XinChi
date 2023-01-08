@@ -1,5 +1,6 @@
 package com.xinchi.backend.supplier.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.SupplierDepositBean;
@@ -43,4 +44,6 @@ public interface SupplierDepositDAO {
 	public List<SupplierDepositBean> selectByParam(SupplierDepositBean bean);
 
 	public List<SupplierDepositBean> selectByPage(Page page);
+
+	public BigDecimal selectSumBalanceByType(String type);
 }

@@ -28,6 +28,8 @@
 		<result column="paid_user_name" property="paid_user_name" jdbcType="VARCHAR" />
 		<result column="payable_pk" property="payable_pk" jdbcType="CHAR" />
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
+		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
+		<result column="isOne" property="isOne" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -65,9 +67,33 @@
 
 	<select id="selectSupplierPaidDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from supplier_paid_detail
-		where related_pk = #{related_pk,jdbcType=CHAR}
+		A.team_number,
+		A.supplier_employee_pk,
+		A.money,
+		A.time,
+		A.type,
+		A.confirm_time,
+		A.status,
+		A.comment,
+		A.sum_money,
+		A.allot_money,
+		A.related_pk,
+		A.card_pk,
+		A.card_account,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.create_time,
+		A.update_time,
+		A.limit_time,
+		A.approve_user,
+		A.paid_user,
+		A.payable_pk,
+		A.voucher_file,
+		B.name AS supplier_employee_name
+		from supplier_paid_detail A
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		where A.related_pk = #{related_pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -342,12 +368,15 @@
 		A.limit_time,
 		A.approve_user,
 		A.paid_user,
-		C.user_name AS approve_user_name,
+		C.user_name AS
+		approve_user_name,
 		D.user_name As paid_user_name,
 		A.voucher_file
-		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+		from paid_detail A left join supplier_employee B on
+		A.supplier_employee_pk=B.pk
 		LEFT JOIN user_base C ON A.approve_user = C.user_number
-		LEFT JOIN user_base D ON A.paid_user = D.user_number
+		LEFT JOIN user_base D ON A.paid_user
+		= D.user_number
 		where A.related_pk = #{related_pk,jdbcType=VARCHAR}
 	</select>
 
@@ -372,9 +401,13 @@
 		A.pk,
 		A.create_time,
 		A.update_time,
-		A.limit_time
-		from paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
-		LEFT JOIN user_base C ON A.create_user = C.user_number
+		A.limit_time,
+		A.order_number,
+		A.isOne
+		from
+		paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+		LEFT JOIN user_base C ON A.create_user =
+		C.user_number
 		LEFT JOIN supplier D ON B.financial_body_pk = D.pk
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
@@ -395,6 +428,22 @@
 			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
 				and D.supplier_short_name like concat('%', #{params.bo.supplier_name,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and (A.money=#{params.bo.money,jdbcType=DECIMAL} or A.allot_money=#{params.bo.money,jdbcType=DECIMAL})
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and (A.money>=#{params.bo.money_from,jdbcType=DECIMAL} or A.allot_money>=#{params.bo.money_from,jdbcType=DECIMAL})
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and (A.money&lt;=#{params.bo.money_to,jdbcType=DECIMAL} or A.allot_money&lt;=#{params.bo.money_to,jdbcType=DECIMAL})
+			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and A.type like concat('%', #{params.bo.type,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like concat('%', #{params.bo.order_number,jdbcType=VARCHAR},'%')
+			</if>
 		</where>
+		order by A.create_time DESC
 	</select>
 </mapper>

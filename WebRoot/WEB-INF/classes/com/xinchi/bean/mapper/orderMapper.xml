@@ -69,6 +69,7 @@
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="payable" property="payable" jdbcType="DECIMAL" />
+		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -157,7 +158,7 @@
 		team_number =
 		#{team_number,jdbcType=VARCHAR}
 	</select>
-	<select id="searchCOrderByPk" parameterType="java.lang.String" resultMap="BaseResultMap">
+	<select id="searchOrderByPk" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from budget_order_view
 		where
 		pk
@@ -405,7 +406,8 @@
 		B.budget_balance AS balance,
 		A.product_value,
 		A.lock_flg,
-		A.name_confirm_status
+		A.name_confirm_status,
+		A.receivable_first_flg
 		from
 		budget_order_view A LEFT JOIN
 		receivable B ON A.team_number = B.team_number

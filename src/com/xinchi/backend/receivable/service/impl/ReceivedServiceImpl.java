@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
@@ -18,6 +19,7 @@ import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileFolder;
@@ -188,6 +190,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private OrderReportDAO orderReportDao;
+
 	@Override
 	public String applyTail98(ClientReceivedDetailBean detail) {
 		detail.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
@@ -196,6 +201,27 @@ public class ReceivedServiceImpl implements ReceivedService {
 		detail.setCollecter("98清尾");
 		dao.insert(detail);
 		receivableService.updateReceivableReceived(detail);
+
+		// 更新单团核算信息
+		// 生成team_report基础数据
+		TeamReportBean tr = orderReportDao.selectTeamReportByTn(detail.getTeam_number());
+		tr.setDiscount_flg("Y");
+		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+		option.setTeam_number(detail.getTeam_number());
+		List<ClientReceivedDetailBean> res = dao.selectByParam(option);
+		BigDecimal discount_received = BigDecimal.ZERO;
+		for (ClientReceivedDetailBean re : res) {
+			if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)) {
+				if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
+					discount_received = discount_received.add(re.getReceived());
+				} else {
+					discount_received = discount_received.add(re.getReceived());
+				}
+			}
+		}
+		tr.setDiscount_receivable(discount_received);
+
+		orderReportDao.updateTeamReport(tr);
 
 		return SUCCESS;
 	}
@@ -385,6 +411,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public String checkIs98(String team_number) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
+		if (order.getConfirm_flg().equals("N"))
+			return "not";
+
 		// 非标订单不享受打折
 		if (order.getStandard_flg().equals("N"))
 			return "cant";
@@ -408,7 +437,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 					if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
 						discount_received = discount_received.add(re.getReceived());
-					} else {
+					} else if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_FLY)) {
 						// 修改为当天汇款享受98折
 						// if (order.getConfirm_date().equals(re.getReceived_time().substring(0, 10))) {
 						// discount_received = discount_received.add(re.getReceived());

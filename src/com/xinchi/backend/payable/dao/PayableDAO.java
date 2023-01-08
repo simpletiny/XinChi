@@ -34,4 +34,6 @@ public interface PayableDAO {
 
 	public List<KeyValueDto> selectPayableWithArea();
 
+	public List<KeyValueDto> selectPayableByArea(String provice);
+
 }

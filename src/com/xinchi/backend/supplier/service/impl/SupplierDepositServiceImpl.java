@@ -184,7 +184,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		payment.setMoney(deposit.getMoney());
 		payment.setBalance(balance);
 		payment.setType("收入");
-		payment.setComment("机票押金退反,凭证号：" + voucher_number);
+		payment.setComment("机票押金退还,凭证号：" + voucher_number);
 		payment.setVoucher_file_name(voucher_file_name);
 
 		msg = paymentDetailService.insert(payment);

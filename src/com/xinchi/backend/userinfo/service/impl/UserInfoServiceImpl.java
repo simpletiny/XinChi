@@ -11,11 +11,11 @@ import com.xinchi.backend.userinfo.service.UserInfoService;
 
 @Service
 @Transactional
-public class UserInfoServiceImpl implements UserInfoService{
+public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
 	private UserInfoDAO dao;
-	
+
 	@Override
 	public void insert(com.xinchi.bean.UserInfoBean bo) {
 		dao.insert(bo);
@@ -40,5 +40,5 @@ public class UserInfoServiceImpl implements UserInfoService{
 	public List<com.xinchi.bean.UserInfoBean> getAllByParam(com.xinchi.bean.UserInfoBean bo) {
 		return dao.getAllByParam(bo);
 	}
-	
+
 }

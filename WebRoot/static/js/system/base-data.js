@@ -19,8 +19,7 @@ var DataContext = function() {
 		var name = $("#txt-line").val();
 		var order_index = $("#lineGrid").children().length + 1;
 
-		var data = "baseData.type=LINE&baseData.order_index=" + order_index
-				+ "&baseData.name=" + name;
+		var data = "baseData.type=LINE&baseData.order_index=" + order_index + "&baseData.name=" + name;
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'system/createBaseData',
@@ -52,8 +51,7 @@ var DataContext = function() {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
 						var pk = $("#txt-pk").val();
-						var data = "baseData.type=LINE&baseData.pk=" + pk
-								+ "&baseData.name=" + old_name;
+						var data = "baseData.type=LINE&baseData.pk=" + pk + "&baseData.name=" + old_name;
 
 						$.ajax({
 							type : "POST",
@@ -93,8 +91,7 @@ var DataContext = function() {
 						startLoadingIndicator("更新中！");
 						var pk = $("#txt-pk").val();
 						var name = $("#txt-line").val();
-						var data = "baseData.type=LINE&baseData.name=" + name
-								+ "&baseData.pk=" + pk;
+						var data = "baseData.type=LINE&baseData.name=" + name + "&baseData.pk=" + pk;
 
 						$.ajax({
 							type : "POST",
@@ -237,8 +234,7 @@ var DataContext = function() {
 					startLoadingIndicator("清除中...");
 					var pk = 'pk_clean_bad';
 					var ext1 = date;
-					var data = "baseData.type=BAD&baseData.pk=" + pk
-							+ "&baseData.ext1=" + ext1;
+					var data = "baseData.type=BAD&baseData.pk=" + pk + "&baseData.ext1=" + ext1;
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'system/updateBaseData',
@@ -276,17 +272,13 @@ var DataContext = function() {
 						layer.close(index);
 						startLoadingIndicator("更新中！");
 						var pk = self.badConfig().pk;
-						var code = $("#chk-isauto").is(':checked')
-								? "AUTO"
-								: "HUM";
+						var code = $("#chk-isauto").is(':checked') ? "AUTO" : "HUM";
 						var ext1 = self.chosenDenominator();
 						var ext2 = $("#txt-bad-numerator").val().trim();
 						var ext3 = self.chosenDay();
 
-						var data = "baseData.type=BAD&baseData.pk=" + pk
-								+ "&baseData.ext1=" + ext1 + "&baseData.ext2="
-								+ ext2 + "&baseData.ext3=" + ext3
-								+ "&baseData.code=" + code;
+						var data = "baseData.type=BAD&baseData.pk=" + pk + "&baseData.ext1=" + ext1 + "&baseData.ext2="
+								+ ext2 + "&baseData.ext3=" + ext3 + "&baseData.code=" + code;
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'system/updateBaseData',
@@ -334,8 +326,7 @@ var DataContext = function() {
 					var ext1 = $("#txt-sale-cost").val().trim();
 					var ext2 = $("#txt-sys-cost").val().trim();
 
-					var data = "baseData.type=TEAM&baseData.pk=" + pk
-							+ "&baseData.ext1=" + ext1 + "&baseData.ext2="
+					var data = "baseData.type=TEAM&baseData.pk=" + pk + "&baseData.ext1=" + ext1 + "&baseData.ext2="
 							+ ext2;
 					$.ajax({
 						type : "POST",
@@ -354,6 +345,38 @@ var DataContext = function() {
 		});
 
 	}
+
+	self.saleCreditConfig = ko.observable();
+	self.saleCreditFlg = ko.observable();
+	// 销售信用额度启用/停用
+	self.refreshSaleCreditConfig = function() {
+		var param = "type=SCREDIT";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.saleCreditConfig(data.datas[0]);
+			self.saleCreditFlg(data.datas[0].ext1);
+		});
+	};
+	self.changeSaleCredit = function(flg) {
+		startLoadingIndicator("更新中……");
+		var pk = self.saleCreditConfig().pk;
+		console.log(pk);
+		var data = "baseData.type=SCREDIT&baseData.pk=" + pk + "&baseData.ext1=" + flg;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'system/updateBaseData',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refreshSaleCreditConfig();
+				if (flg == "Y") {
+					success_msg("销售信用额度已启用！")
+				} else {
+					success_msg("销售信用额度已停用！")
+				}
+			}
+		});
+	}
 };
 
 var ctx = new DataContext();
@@ -371,4 +394,5 @@ $(document).ready(function() {
 	});
 	ctx.refreshBadConfig();
 	ctx.refreshTeamConfig();
+	ctx.refreshSaleCreditConfig();
 });

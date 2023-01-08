@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.data.service.DataService;
 import com.xinchi.bean.DataFinanceSummaryDto;
 import com.xinchi.bean.DataOrderCountDto;
+import com.xinchi.bean.KeyValueDto;
 import com.xinchi.bean.ProductAreaBean;
 import com.xinchi.bean.ProductProductBean;
 import com.xinchi.bean.ProductSaleBean;
@@ -86,6 +87,14 @@ public class DataAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String provice;
+	private List<KeyValueDto> payables;
+
+	public String fetchPayableByArea() {
+		payables = service.fetchPayableByArea(provice);
+		return SUCCESS;
+	}
+
 	public DataOrderCountDto getOrder_count() {
 		return order_count;
 	}
@@ -148,5 +157,21 @@ public class DataAction extends BaseAction {
 
 	public void setProductOption(ProductAreaBean productOption) {
 		this.productOption = productOption;
+	}
+
+	public String getProvice() {
+		return provice;
+	}
+
+	public void setProvice(String provice) {
+		this.provice = provice;
+	}
+
+	public List<KeyValueDto> getPayables() {
+		return payables;
+	}
+
+	public void setPayables(List<KeyValueDto> payables) {
+		this.payables = payables;
 	}
 }

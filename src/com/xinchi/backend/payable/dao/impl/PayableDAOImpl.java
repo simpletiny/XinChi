@@ -106,6 +106,11 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 	}
 
 	@Override
+	public List<KeyValueDto> selectPayableByArea(String provice) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableMapper.selectPayableByArea", provice);
+	}
+
+	@Override
 	public PayableBean selectByPk(String pk) {
 		return (PayableBean) daoUtil.selectByPK("com.xinchi.bean.mapper.PayableMapper.selectByPrimaryKey", pk);
 	}

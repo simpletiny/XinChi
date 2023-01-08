@@ -1,5 +1,6 @@
 package com.xinchi.backend.supplier.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -55,6 +56,12 @@ public class SupplierDepositDAOImpl extends SqlSessionDaoSupport implements Supp
 	@Override
 	public List<SupplierDepositBean> selectByPage(Page page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierDepositMapper.selectByPage", page);
+	}
+
+	@Override
+	public BigDecimal selectSumBalanceByType(String type) {
+
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierDepositMapper.selectSumBalance", type);
 	}
 
 }

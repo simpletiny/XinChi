@@ -63,6 +63,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String treat_comment;
 	private String receivable_comment;
 
+	private String receivable_first_flg;
+
 	// 航段信息
 	private String ticket_number;
 	private String start_city;
@@ -391,6 +393,14 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setName_confirm_status(String name_confirm_status) {
 		this.name_confirm_status = name_confirm_status;
+	}
+
+	public String getReceivable_first_flg() {
+		return receivable_first_flg;
+	}
+
+	public void setReceivable_first_flg(String receivable_first_flg) {
+		this.receivable_first_flg = receivable_first_flg;
 	}
 
 }

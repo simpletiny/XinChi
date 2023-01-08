@@ -250,9 +250,10 @@ var DetailContext = function() {
 		var detailId = self.chosenDetails();
 		// 获取收入信息
 		$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
+
 			if (data.detail) {
 				self.detail(data.detail);
-				self.searchReceiveApply(data);
+				self.searchReceiveApply();
 			} else {
 				fail_msg("不存在的收入明细！");
 			}
@@ -288,11 +289,13 @@ var DetailContext = function() {
 		});
 	}
 
-	self.searchReceiveApply = function(data) {
-		var x = new Date(data.detail.time);
+	self.searchReceiveApply = function() {
+		if (self.detail().pk == null)
+			return;
+		var x = new Date(self.detail().time);
 		self.date(x.Format("yyyy-MM-dd"));
-		self.account(data.detail.account);
-		self.money(data.detail.money);
+		self.account(self.detail().account);
+		self.money(self.detail().money);
 
 		var param = "";
 

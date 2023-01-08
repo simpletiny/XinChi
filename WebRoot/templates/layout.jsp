@@ -69,7 +69,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<s:property value="#session.user.nick_name" />
 				（
 				<s:property value="#session.user.user_number" />
-				）&nbsp;&nbsp;&nbsp;&nbsp; <i class="ic-user"
+				）&nbsp;&nbsp;&nbsp;&nbsp;授信额度：<s:property value="#session.user.credit_limit" />&nbsp;&nbsp;剩余额度：<s:property value="#session.user.credit_balance" /> &nbsp;&nbsp;<i class="ic-user"
 					onclick="javascript:window.location.href='<%=basePath%>templates/users/user-center.jsp'"><img
 					src="<%=basePath%>static/img/mc-default-userphoto.png" width="36" height="36" alt="" /></i> <span></span>&nbsp;&nbsp;&nbsp;&nbsp;<a
 					href="<%=basePath%>user/logout">退出</a><i class="fa fa-lg fa-sign-out"></i>
@@ -179,7 +179,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>应收款</a></li>
 						<li class="received"><a href="<%=basePath%>templates/sale/received.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>收入详表</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>收支详表</a></li>
 					</ol></li>
 			</s:if>
 
@@ -265,11 +265,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-				<li class="ticket-finance"><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>票务财务</a>
+				<li class="ticket-finance"><a href="<%=basePath%>templates/ticket/payable.jsp"><i
+						class="fa fa-users1 fa-lg fa-fw"></i>票务财务</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
 
 					</ol></li>
 			</s:if>
@@ -277,7 +279,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li class="accounting"><a href="<%=basePath%>templates/finance/received-match.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>会计</a>
 					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/finance/received-match.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收入匹配</a></li>
+						<li><a href="<%=basePath%>templates/finance/received-match.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收入确认</a></li>
 						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>内转明细</a></li>
 						<li><a href="<%=basePath%>templates/finance/inner-transfer.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务报表</a></li>
 					</ol></li>
@@ -315,6 +317,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 					<li><a href="<%=basePath%>templates/users/user-approve.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>新用户审批</a></li>
 					<li><a href="<%=basePath%>templates/users/users.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户管理</a></li>
+					<li><a href="<%=basePath%>templates/users/sale-credit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售信用额度</a></li>
 					<li><a href="<%=basePath%>templates/users/user-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>用户组</a></li>
 					<li><a href="<%=basePath%>templates/users/user-online.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>在线员工</a></li>
 				</s:if>

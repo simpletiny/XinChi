@@ -2,6 +2,7 @@ package com.xinchi.backend.user.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class UserAction extends BaseAction {
 	public String logout() {
 		HttpSession map = ServletActionContext.getRequest().getSession();
 		map.invalidate();
-		return "SUCCESS";
+		return SUCCESS;
 	}
 
 	public String register() throws IOException {
@@ -79,6 +80,11 @@ public class UserAction extends BaseAction {
 
 	public String searchUsersByPage() {
 		Map<String, Object> params = new HashMap<String, Object>();
+
+		if (null == ucb) {
+			ucb = new UserCommonBean();
+		}
+
 		params.put("bo", ucb);
 		page.setParams(params);
 
@@ -160,6 +166,16 @@ public class UserAction extends BaseAction {
 
 	public String changePassword() {
 		resultStr = userService.changePassword(ucb);
+		return SUCCESS;
+	}
+
+	private BigDecimal credit_limit;
+	private String user_pks;
+
+	public String updateCreditLimit() {
+
+		resultStr = userService.updateCreditLimit(user_pks, credit_limit);
+
 		return SUCCESS;
 	}
 
@@ -255,6 +271,22 @@ public class UserAction extends BaseAction {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getUser_pks() {
+		return user_pks;
+	}
+
+	public void setUser_pks(String user_pks) {
+		this.user_pks = user_pks;
+	}
+
+	public BigDecimal getCredit_limit() {
+		return credit_limit;
+	}
+
+	public void setCredit_limit(BigDecimal credit_limit) {
+		this.credit_limit = credit_limit;
 	}
 
 }

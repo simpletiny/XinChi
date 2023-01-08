@@ -41,4 +41,5 @@ public interface UserInfoService {
 	 * @param bo
 	 */
 	public List<com.xinchi.bean.UserInfoBean> getAllByParam(com.xinchi.bean.UserInfoBean bo);
+
 }

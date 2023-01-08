@@ -8,7 +8,7 @@
 		<result column="discount_flg" property="discount_flg" jdbcType="CHAR" />
 		<result column="discount_receivable" property="discount_receivable" jdbcType="DECIMAL" />
 		<result column="approved" property="approved" jdbcType="CHAR" />
-		<result column="pk" property="pk" jdbcType="INTEGER" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -44,6 +44,11 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from team_report
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
+		delete from team_report
+		where team_number =
+		#{team_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.TeamReportBean">
@@ -103,7 +108,7 @@
 				#{approved,jdbcType=CHAR},
 			</if>
 			<if test="pk != null">
-				#{pk,jdbcType=INTEGER},
+				#{pk,jdbcType=CHAR},
 			</if>
 			<if test="update_user != null">
 				#{update_user,jdbcType=VARCHAR},
@@ -149,7 +154,7 @@
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where pk = #{pk,jdbcType=INTEGER}
+		where pk = #{pk,jdbcType=CHAR}
 	</update>
 	<select id="selectByParam" parameterType="com.xinchi.bean.TeamReportBean" resultMap="BaseResultMap">
 		select

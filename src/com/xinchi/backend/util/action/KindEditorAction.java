@@ -49,7 +49,7 @@ public class KindEditorAction extends BaseAction {
 		extMap.put("file", "doc,docx,xls,xlsx,ppt,htm,html,txt,zip,rar,gz,bz2");
 
 		// 最大文件大小
-		long maxSize = 4194304;
+		long maxSize = 512000;
 
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			error = 1;
@@ -107,7 +107,7 @@ public class KindEditorAction extends BaseAction {
 
 				// 检查扩展名
 				String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-				if (!Arrays.<String> asList(extMap.get(dirName).split(",")).contains(fileExt)) {
+				if (!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)) {
 					error = 1;
 					message = "上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) + "格式。";
 					return SUCCESS;
@@ -124,7 +124,8 @@ public class KindEditorAction extends BaseAction {
 				}
 
 				error = 0;
-				url = saveUrl + "file/getFileStream?fileType=SYSTEM_GUIDE_FILE&subFolder=" + dirName + "&fileFileName=" + newFileName;
+				url = saveUrl + "file/getFileStream?fileType=SYSTEM_GUIDE_FILE&subFolder=" + dirName + "&fileFileName="
+						+ newFileName;
 				message = "success";
 			}
 		}

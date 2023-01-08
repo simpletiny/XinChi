@@ -3,7 +3,9 @@ package com.xinchi.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TeamReportBean implements Serializable {
+import com.xinchi.common.SupperBO;
+
+public class TeamReportBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 4964467900496421592L;
 
 	private String team_number;
@@ -17,8 +19,6 @@ public class TeamReportBean implements Serializable {
 	private java.math.BigDecimal discount_receivable;
 
 	private String approved;
-
-	private int pk;
 
 	private String update_user;
 
@@ -51,10 +51,6 @@ public class TeamReportBean implements Serializable {
 		return approved;
 	}
 
-	public int getPk() {
-		return pk;
-	}
-
 	public String getUpdate_user() {
 		return update_user;
 	}
@@ -85,10 +81,6 @@ public class TeamReportBean implements Serializable {
 
 	public void setApproved(String approved) {
 		this.approved = approved;
-	}
-
-	public void setPk(int pk) {
-		this.pk = pk;
 	}
 
 	public void setUpdate_user(String update_user) {

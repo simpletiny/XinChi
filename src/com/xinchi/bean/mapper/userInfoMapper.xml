@@ -11,6 +11,8 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="user_role" property="user_role" jdbcType="VARCHAR" />
+		<result column="credit_limit" property="credit_limit" jdbcType="DECIMAL" />
+		<result column="credit_balance" property="credit_balance" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -22,6 +24,8 @@
 		nick_name,
 		cellphone,
 		user_role,
+		credit_limit,
+		credit_balance,
 		create_time,update_time
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -136,6 +140,12 @@
 			</if>
 			<if test="user_role != null">
 				user_role = #{user_role,jdbcType=VARCHAR},
+			</if>
+			<if test="credit_limit != null">
+				credit_limit = #{credit_limit,jdbcType=DECIMAL},
+			</if>
+			<if test="credit_balance != null">
+				credit_balance = #{credit_balance,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

@@ -50,4 +50,15 @@ public class OrderReportDAOImpl extends SqlSessionDaoSupport implements OrderRep
 				.selectOneValueByParam("com.xinchi.bean.mapper.OrderReportMapper.selectSumReport", option);
 	}
 
+	@Override
+	public void insert(TeamReportBean tr) {
+		daoUtil.insertBO("com.xinchi.bean.mapper.TeamReportMapper.insert", tr);
+	}
+
+	@Override
+	public void deleteByTeamNumber(String team_number) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.TeamReportMapper.deleteByTeamNumber", team_number);
+
+	}
+
 }

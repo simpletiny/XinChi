@@ -31,6 +31,7 @@
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input> <input type="hidden"
 						data-bind="value:order().independent_flg" name="bnsOrder.independent_flg"></input> <input type="hidden" value='Y'
 						name="bnsOrder.confirm_flg"></input>
+						<input type="hidden" data-bind="value:order().team_number" id="team-number" name="bnsOrder.team_number" />
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">客户</label>
@@ -60,7 +61,7 @@
 						<div class="col-md-6 required">
 							<label class="l">天数</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: order().days" placeholder="天数" name="bnsOrder.days"
+								<input type="number" class="ip-" data-bind="value: order().days" placeholder="天数" name="bnsOrder.days"
 									required="required" />
 							</div>
 						</div>

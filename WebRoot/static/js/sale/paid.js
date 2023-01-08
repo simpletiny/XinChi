@@ -24,11 +24,9 @@ var PaidContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
-			+ 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
-			+ (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
@@ -41,7 +39,19 @@ var PaidContext = function() {
 		'Y' : '已同意',
 		'P' : '已支付'
 	};
-
+	self.paidTypes = [{
+		name : '支付',
+		key : 'PAID'
+	}, {
+		name : '返款',
+		key : 'BACK'
+	}, {
+		name : '冲账',
+		key : 'STRIKE'
+	}, {
+		name : '扣款',
+		key : 'DEDUCT'
+	}];
 	self.typeMapping = {
 		'BACK' : '返款',
 		'PAID' : '支付',
@@ -66,8 +76,7 @@ var PaidContext = function() {
 		var totalPerProfit = 0;
 		startLoadingSimpleIndicator("加载中...");
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'sale/searchPaidByPage', param, function(data) {
 			self.paids(data.paids);
@@ -93,8 +102,7 @@ var PaidContext = function() {
 		});
 	};
 	self.reimbursement = function() {
-		window.location.href = self.apiurl
-				+ "templates/accounting/reimbursement-creation.jsp";
+		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 	self.rollBack = function() {
 		if (self.chosenPaids().length < 1) {
@@ -160,67 +168,93 @@ var PaidContext = function() {
 		} else {
 			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param,
-					function(data) {
-						self.order(data.order);
-						self.comment(detail.comment);
-						endLoadingIndicator();
-						viewCommentLayer = $.layer({
-							type : 1,
-							title : ['摘要详情', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['700px', 'auto'],
-							offset : ['150px', ''],
-							scrollbar : true,
-							page : {
-								dom : '#comment'
-							},
-							end : function() {
-								console.log("Done");
-							}
-						});
-					});
+			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param, function(data) {
+				self.order(data.order);
+				self.comment(detail.comment);
+				endLoadingIndicator();
+				viewCommentLayer = $.layer({
+					type : 1,
+					title : ['摘要详情', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['700px', 'auto'],
+					offset : ['150px', ''],
+					scrollbar : true,
+					page : {
+						dom : '#comment'
+					},
+					end : function() {
+						console.log("Done");
+					}
+				});
+			});
 		}
 	};
-	self.sumDetail = ko.observable({
-		card_account : "",
-		sum_received : "",
-		client_employee_name : "",
-		allot_received : ""
-
-	});
-	self.viewDetail = function(related_pk) {
-		var param = "related_pks=" + related_pk;
+	self.sumDetail = ko.observable({});
+	self.viewDetail = function(data) {
+		var param = "related_pk=" + data.related_pk;
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param,
-				function(data) {
-
-					self.sumDetails(data.paids);
-					self.sumDetail(self.sumDetails()[0]);
-					$(".rmb").formatCurrency();
-					endLoadingIndicator();
-
-					viewDetailLayer = $.layer({
-						type : 1,
-						title : ['合账详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', 'auto'],
-						offset : ['150px', ''],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail'
-						},
-						end : function() {
-							console.log("Done");
-						}
-					});
-				});
-
+		$.getJSON(self.apiurl + 'sale/searchPaidDetailsByRelatedPk', param, function(result) {
+			self.sumDetails(result.paids);
+			self.sumDetail(data);
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['合账详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#sum_detail'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+		});
 	};
+
+	self.strikeouts = ko.observableArray([]);
+	self.strikeins = ko.observableArray([]);
+	self.viewStrikeDetail = function(data) {
+		self.strikeouts.removeAll();
+		self.strikeins.removeAll();
+		var param = "related_pk=" + data.related_pk;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'sale/searchPaidDetailsByRelatedPk', param, function(result) {
+			$(result.paids).each(function(idx, paid) {
+				if (paid.type == "STRIKEOUT") {
+					self.strikeouts.push(paid);
+				} else if (paid.type == "STRIKEIN") {
+					self.strikeins.push(paid);
+				}
+			});
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['冲账详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#strike_detail'
+				},
+				end : function() {
+					console.log("Done");
+				}
+			});
+			$(".rmb").formatCurrency();
+			endLoadingIndicator();
+		});
+	};
+
 	self.detail = ko.observable([]);
 	self.imgs = ko.observableArray();
 	self.viewPaidInfo = function(related_pk) {
@@ -229,6 +263,7 @@ var PaidContext = function() {
 
 			self.detail(data.detail);
 
+			console.log(data);
 			self.imgs(data.detail.voucher_file_name.split(";"));
 			self.loadFiles();
 
@@ -323,8 +358,7 @@ var PaidContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

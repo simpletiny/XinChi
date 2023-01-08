@@ -82,4 +82,10 @@ public class ReceivedDAOImpl extends SqlSessionDaoSupport implements ReceivedDAO
 				"com.xinchi.bean.mapper.ClientReceivedDetailMapper.searchSumReceivedByTeamNumber", team_number);
 	}
 
+	@Override
+	public List<ClientReceivedDetailBean> selectByTeamNumber(String team_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientReceivedDetailMapper.selectByTeamNumber",
+				team_number);
+	}
+
 }

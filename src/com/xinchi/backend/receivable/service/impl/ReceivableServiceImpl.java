@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Joiner;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
+import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.sale.dao.SaleOrderDAO;
 import com.xinchi.backend.sale.service.FinalOrderService;
@@ -316,7 +317,6 @@ public class ReceivableServiceImpl implements ReceivableService {
 		if (receivable.getFinal_flg().equals("Y")) {
 			receivable.setFinal_balance(receivable.getFinal_balance().subtract(detail.getReceived()));
 		}
-
 		dao.update(receivable);
 	}
 
@@ -328,5 +328,20 @@ public class ReceivableServiceImpl implements ReceivableService {
 	@Override
 	public BigDecimal fetchEmployeeBalance(String client_employee_pk) {
 		return dao.fetchEmployeeBalance(client_employee_pk);
+	}
+
+	@Autowired
+	private ReceivedDAO receivedDAO;
+
+	@Override
+	public String deleteByTeamNumber(String team_number) {
+		// 如果存在已收款，则不允许删除
+		List<ClientReceivedDetailBean> receiveds = receivedDAO.selectByTeamNumber(team_number);
+		if (null != receiveds && receiveds.size() > 0) {
+			return "hasreceiveds";
+		}
+
+		dao.deleteByTeamNumber(team_number);
+		return SUCCESS;
 	}
 }

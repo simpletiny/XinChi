@@ -131,6 +131,20 @@
 						</div>
 					</div>
 				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-team">
+					<h3>销售信用额度</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<div class="span6 col-md-3">
+							<input name="relation.sort_type" type="radio" value="Y" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('Y');return true;}}" /><label
+								class="control-label">启用</label>
+						</div>
+						<div class="span6 col-md-3">
+							<input name="relation.sort_type" type="radio" value="N" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('N');return true;}}" /><label
+								class="control-label">停用</label>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

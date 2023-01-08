@@ -33,6 +33,7 @@
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -67,7 +68,8 @@
 		product_cost,
 		lock_flg,
 		name_confirm_status,
-		passenger_captain
+		passenger_captain,
+		receivable_first_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -375,7 +377,10 @@
 				name_confirm_status = #{name_confirm_status,jdbcType=CHAR},
 			</if>
 			<if test="passenger_captain != null">
-				passenger_captain = #{passenger_captain,jdbcType=CHAR},
+				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable_first_flg != null">
+				receivable_first_flg = #{receivable_first_flg,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

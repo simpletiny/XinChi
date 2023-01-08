@@ -433,4 +433,23 @@
 		ORDER BY value_value
 		DESC;
 	</select>
+	<select id="selectPayableByArea" resultMap="KeyMap" parameterType="java.lang.String">
+		SELECT
+		SUM(IF(A.final_flg = 'Y',
+		A.final_balance,
+		A.budget_balance))
+		AS value_value,
+		C.supplier_short_name AS key_key
+		FROM
+		payable A
+		LEFT JOIN
+		supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN
+		supplier C ON B.financial_body_pk = C.pk
+		WHERE C.supplier_provice =  #{provice,jdbcType=VARCHAR}
+		GROUP BY C.pk
+		HAVING value_value > 0
+		ORDER BY value_value
+		DESC;
+	</select>
 </mapper>

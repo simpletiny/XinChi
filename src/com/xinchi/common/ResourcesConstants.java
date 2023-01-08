@@ -278,6 +278,16 @@ public class ResourcesConstants {
 	public static String BASE_DATA_TYPE_BAD_CONFIG = "BAD";
 	// 单团核算相关
 	public static String BASE_DATA_TYPE_TEAM_CONFIG = "TEAM";
+	// 销售信用额度启用配置
+	public static String BASE_DATA_TYPE_SALE_CREDIT = "SCREDIT";
+
+	/** 基础数据固定pk **/
+	// 单团核算pk
+	public static String BASE_DATA_PK_TEAM = "pk_team";
+	// 呆账清除pk
+	public static String BASE_DATA_PK_CLEAN_BAD = "pk_clean_bad";
+	// 销售信用
+	public static String BASE_DATA_PK_SSCREDIT = "pk_scredit";
 
 	// 未确认
 	public static String NAME_CONFIRM_STATUS_NO = "1";
@@ -301,6 +311,12 @@ public class ResourcesConstants {
 	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
 	/** 销售订单操作状态 end **/
 
+	/** 押金相关 start **/
+	// 押金类型
+	// 航司押金
+	public static String DEPOSIT_TYPE_AIR = "A";
+	/** 押金相关 end **/
+
 	// ************************* 票务相关*********************************
 	/** 票务应付款类型 start **/
 	// 机票款
@@ -319,5 +335,6 @@ public class ResourcesConstants {
 	// 机票返款
 	public static String RECEIVED_FROM_WHERE_AIR_TICKET = "A";
 
-	/** 收入匹配申报来源 start **/
+	/** 收入匹配申报来源 end **/
+
 }

@@ -15,18 +15,22 @@ import com.xinchi.backend.order.dao.FinalStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivedService;
+import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.FinalNonStandardOrderBean;
 import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.bean.TeamReportBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -86,12 +90,12 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDto searchCOrderByPk(String order_pk) {
 
-		return dao.searchCOrderByPk(order_pk);
+		return dao.searchOrderByPk(order_pk);
 	}
 
 	@Override
 	public String finalOrder(OrderDto order) {
-		OrderDto budget_order = dao.searchCOrderByPk(order.getPk());
+		OrderDto budget_order = dao.searchOrderByPk(order.getPk());
 		String standard_flg = budget_order.getStandard_flg();
 
 		// 如果是标准订单
@@ -374,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public String cancelOrder(OrderDto order) {
-		OrderDto budget_order = dao.searchCOrderByPk(order.getPk());
+		OrderDto budget_order = dao.searchOrderByPk(order.getPk());
 		String standard_flg = budget_order.getStandard_flg();
 
 		// 如果是标准订单
@@ -527,6 +531,9 @@ public class OrderServiceImpl implements OrderService {
 		receivable.setFinal_flg("Y");
 		receivable.setFinal_receivable(order.getReceivable());
 
+		// 如果存在单团核算数据，则删除
+		orderReportDao.deleteByTeamNumber(budget_order.getTeam_number());
+
 		// 如果订单存在98清尾，则打回
 		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
 		option.setTeam_number(budget_order.getTeam_number());
@@ -664,5 +671,75 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		return null;
+	}
+
+	@Autowired
+	private NumberService numberService;
+
+	@Autowired
+	private ProductDAO productDao;
+
+	@Override
+	public String createReceivable(String order_pk) {
+		OrderDto order = dao.searchOrderByPk(order_pk);
+		if (order.getReceivable() == null || order.getReceivable().compareTo(BigDecimal.ZERO) == 0) {
+			return "nomoney";
+		}
+
+		if (order.getReceivable_first_flg().equals("Y")) {
+			return "already";
+		}
+
+		// 生成团号和应付款
+		String team_number = numberService.generateTeamNumber();
+		// 生成应收款
+		ReceivableBean receivable = new ReceivableBean();
+		receivable.setTeam_number(team_number);
+		receivable.setFinal_flg("N");
+		receivable.setClient_employee_pk(order.getClient_employee_pk());
+		String departureDate = order.getDeparture_date();
+		Integer days = order.getDays();
+		receivable.setDeparture_date(departureDate);
+		if (!SimpletinyString.isEmpty(departureDate) && days != null && days != 0) {
+			String returnDate = DateUtil.addDate(departureDate, days - 1);
+			receivable.setReturn_date(returnDate);
+		}
+
+		if (order.getStandard_flg().equals("Y")) {
+			ProductBean product = productDao.selectByPrimaryKey(order.getProduct_pk());
+			receivable.setProduct(product.getName());
+		} else {
+			receivable.setProduct(order.getProduct_name());
+		}
+
+		if (order.getAdult_count() != null) {
+			int people_count = order.getAdult_count()
+					+ (order.getSpecial_count() == null ? 0 : order.getSpecial_count());
+			receivable.setPeople_count(people_count);
+		}
+
+		receivable.setBudget_receivable(order.getReceivable());
+
+		receivable.setBudget_balance(order.getReceivable());
+		receivable.setReceived(BigDecimal.ZERO);
+		receivable.setSales(order.getCreate_user_number());
+		receivable.setCreate_user(order.getCreate_user_number());
+
+		receivableDao.insert(receivable);
+
+		// 更新订单是否先生成团款标识
+		if (order.getStandard_flg().equals("Y")) {
+			BudgetStandardOrderBean bso = bsoDao.selectByPrimaryKey(order_pk);
+			bso.setTeam_number(team_number);
+			bso.setReceivable_first_flg("Y");
+			bsoDao.update(bso);
+		} else {
+			BudgetNonStandardOrderBean bnso = bnsoDao.selectByPrimaryKey(order_pk);
+			bnso.setTeam_number(team_number);
+			bnso.setReceivable_first_flg("Y");
+			bnsoDao.update(bnso);
+		}
+
+		return SUCCESS;
 	}
 }

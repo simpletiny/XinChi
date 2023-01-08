@@ -43,6 +43,7 @@
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
+		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -87,7 +88,8 @@
 		next_day,
 		product_value,
 		lock_flg,
-		name_confirm_status
+		name_confirm_status,
+		receivable_first_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -487,6 +489,9 @@
 			</if>
 			<if test="name_confirm_status != null">
 				name_confirm_status = #{name_confirm_status,jdbcType=CHAR},
+			</if>
+			<if test="receivable_first_flg != null">
+				receivable_first_flg = #{receivable_first_flg,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

@@ -82,6 +82,11 @@ public class PaidAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchPaidDetailsByRelatedPk() {
+		paids = paidService.selectByRelatedPk(related_pk);
+		return SUCCESS;
+	}
+
 	private String related_pk;
 
 	public String rollBackPayApply() {

@@ -15,6 +15,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="fetchPayableByArea" class="dataAction" method="fetchPayableByArea">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="fetchProductStatisticsData" class="dataAction" method="fetchProductStatisticsData">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

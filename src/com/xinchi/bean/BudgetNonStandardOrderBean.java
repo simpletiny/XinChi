@@ -59,6 +59,9 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 	private BigDecimal product_cost;
 
 	private String passenger_captain;
+
+	private String receivable_first_flg;
+
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
@@ -313,6 +316,14 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setConfirm_type(String confirm_type) {
 		this.confirm_type = confirm_type;
+	}
+
+	public String getReceivable_first_flg() {
+		return receivable_first_flg;
+	}
+
+	public void setReceivable_first_flg(String receivable_first_flg) {
+		this.receivable_first_flg = receivable_first_flg;
 	}
 
 }

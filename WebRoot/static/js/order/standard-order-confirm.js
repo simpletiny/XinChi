@@ -266,6 +266,9 @@ var OrderContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/order/tbc-order.jsp";
+			} else if (str == "noenoughcredit") {
+				endLoadingIndicator();
+				fail_msg("信用额度不足，不能确认订单！");
 			}
 		});
 	};

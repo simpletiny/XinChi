@@ -86,6 +86,8 @@ public class OrderDto extends SupperBO implements Serializable {
 	private BigDecimal balance;
 	private BigDecimal product_value;
 
+	private String receivable_first_flg;
+
 	// about final order
 	private String final_type;
 	private BigDecimal raise_money;
@@ -734,6 +736,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setSupplier_employee_pk(String supplier_employee_pk) {
 		this.supplier_employee_pk = supplier_employee_pk;
+	}
+
+	public String getReceivable_first_flg() {
+		return receivable_first_flg;
+	}
+
+	public void setReceivable_first_flg(String receivable_first_flg) {
+		this.receivable_first_flg = receivable_first_flg;
 	}
 
 }

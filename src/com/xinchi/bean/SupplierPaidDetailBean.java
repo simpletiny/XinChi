@@ -55,10 +55,15 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 	private String payable_pk;
 
 	private String voucher_file;
+	private String order_number;
+	private String isOne;
 
 	// options
 	private List<String> statuses;
 	private String supplier_name;
+
+	private java.math.BigDecimal money_from;
+	private java.math.BigDecimal money_to;
 
 	public String getTeam_number() {
 		return team_number;
@@ -274,6 +279,38 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setVoucher_file(String voucher_file) {
 		this.voucher_file = voucher_file;
+	}
+
+	public java.math.BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public java.math.BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_from(java.math.BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(java.math.BigDecimal money_to) {
+		this.money_to = money_to;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public String getIsOne() {
+		return isOne;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public void setIsOne(String isOne) {
+		this.isOne = isOne;
 	}
 
 }
