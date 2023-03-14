@@ -267,6 +267,136 @@ var DetailContext = function() {
 			});
 		}
 	};
+	self.account = ko.observable();
+	self.bat_details = ko.observableArray([]);
+	// 批量上传
+	self.upload = function() {
+		$(".file-path").val("");
+		$("#file-upload").val("");
+		self.account("微信9544");
+		uploadLayer = $.layer({
+			type : 1,
+			title : ['选择文件', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['550px', '250px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#div-upload'
+			},
+			end : function() {
+
+			}
+		});
+	}
+	// 对上传的文件进行操作
+	self.doUpload = function() {
+		if ($("#file-upload").val().trim() == "") {
+			fail_msg("请选择要上传的文件！");
+			return;
+		}
+		layer.close(uploadLayer);
+		startLoadingSimpleIndicator("处理中...");
+		var data = "file_name=" + $("#csv-file").val();
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'finance/batUploadReceived',
+			data : data,
+			success : function(data) {
+				self.bat_details(data.details);
+				$(".rmb").formatCurrency();
+				endLoadingIndicator();
+
+				$(self.bat_details()).each(function(idx, data) {
+					data.old_time = data.time;
+				});
+
+				uploadConfirmLayer = $.layer({
+					type : 1,
+					title : ['上传确认', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['1200px', '750px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#div-upload-confirm'
+					},
+					end : function() {
+					}
+				});
+			}
+		});
+	}
+
+	// 取消上传
+	self.cancelUpload = function() {
+		layer.close(uploadLayer);
+	}
+
+	self.doSaveBat = function() {
+		var confirmed = new Array();
+		var isLegal = true;
+		$(self.bat_details()).each(function(idx, data) {
+			if (!data.second || data.second.trim().length != 2) {
+				isLegal = false;
+				return;
+			}
+		});
+
+		if (!isLegal) {
+			fail_msg("请准确填写支出秒！")
+			return;
+		}
+
+		$(self.bat_details()).each(function(idx, data) {
+			data.time = data.old_time + ":" + data.second;
+			confirmed.push(data);
+		});
+
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : "确认要上传这些收入记录吗？",
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("保存中...");
+					var data = "account=" + self.account() + "&json=" + JSON.stringify(confirmed, replacer);
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'finance/batSaveReceived',
+						data : data,
+						success : function(str) {
+							layer.close(uploadConfirmLayer);
+							endLoadingIndicator();
+							if (str == "success") {
+								success_msg("上传成功！");
+								self.refresh();
+							} else if (str.indexOf("time") >= 0) {
+								fail_msg(str.split("&")[1] + "时间下存在收入！");
+							} else if (str == "repeat") {
+								fail_msg("上传的数据中有重复的时间！")
+							} else {
+								fail_msg(str);
+							}
+						}
+					});
+				}
+			}
+		});
+
+	}
+
+	self.cancelSaveBat = function() {
+		layer.close(uploadConfirmLayer);
+		self.bat_details.removeAll();
+	}
 	self.test = function() {
 		alert("test")
 	}
@@ -336,49 +466,82 @@ $(document).ready(function() {
 		Button : false,
 		MonthFormat : 'yy-mm'
 	});
-	$(':file').change(function() {
-		changeFile(this);
-
+	$('.file-csv').change(function() {
+		uploadOffice({
+			input : this,
+			type : 'csv',
+			required : "yes"
+		});
 	});
 });
 
-function changeFile(thisx) {
-	var file = thisx.files[0];
-	name = file.name;
-	size = file.size;
-	type = file.type;
-
-	if (type.indexOf("excel") < 0) {
-		fail_msg("请上传Excel");
-		return;
-	}
-	if (size > 4194304) {
-		fail_msg("文件大于4MB");
-		return;
-	}
-	startLoadingSimpleIndicator("导入中");
-	var formData = new FormData();
-	formData.append("file", file);
-
-	var url = ctx.apiurl + 'file/detailExcelUpload';
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', url, true);
-	xhr.onload = function() {
-		if (this.status == 200) {
-
-			var blob = this.response;
-			if (blob == "OK") {
-				success_msg("导入成功");
-			} else if (blob == "BEFORE") {
-				fail_msg("导入数据的交易时间不能早于系统已存在明细的时间");
-			}
-			endLoadingIndicator();
-		}
-	};
-	xhr.send(formData);
-}
-// (function($){
-// $.fn.AlertSelf = function(){
-// this.click(function(){alert($(this).val())});
+// function changeFile(thisx) {
+// var file = thisx.files[0];
+// name = file.name;
+// size = file.size;
+// type = file.type;
+//
+// if (type.indexOf("csv") < 0) {
+// fail_msg("请上传csv文件！");
+// return;
 // }
-// })(jQuery)
+// if (size > 102400) {
+// fail_msg("文件不能大于100KB!");
+// return;
+// }
+// startLoadingSimpleIndicator("导入中");
+// var formData = new FormData();
+// formData.append("file", file);
+//
+// var url = ctx.apiurl + 'file/detailExcelUpload';
+// var xhr = new XMLHttpRequest();
+// xhr.open('POST', url, true);
+// xhr.onload = function() {
+// if (this.status == 200) {
+//
+// var blob = this.response;
+// if (blob == "OK") {
+// success_msg("导入成功");
+// } else if (blob == "BEFORE") {
+// fail_msg("导入数据的交易时间不能早于系统已存在明细的时间");
+// }
+// endLoadingIndicator();
+// }
+// };
+// xhr.send(formData);
+// }
+
+function lessthan60(event, data) {
+	var txt = event.target;
+	var seconds = $(txt).val();
+
+	if (seconds.length == 1) {
+		if (seconds - 0 > 5) {
+			$(txt).val("");
+			return;
+		}
+	} else if (seconds.length == 2) {
+		if (seconds - 0 > 59) {
+			$(txt).val($(txt).val().charAt(0));
+			return;
+		}
+	} else {
+		$(txt).val($(txt).val().substr(0, 2));
+	}
+	seconds = $(txt).val();
+	var time = $(txt).next().val();
+	$(txt).parent().prev().html(time + ":" + seconds);
+}
+var replacer = function(key, value) {
+	if (typeof value === "number") {
+		return value + "";
+	}
+
+	// if (typeof value === "string") {
+	// if (value.indexOf(":") > -1) {
+	// return value.replaceAll(":", "\\:");
+	// }
+	// }
+
+	return value;
+}

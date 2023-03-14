@@ -119,14 +119,20 @@
 									data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
+								<!-- ko if:$data.item!='M' -->
 								<td data-bind="text: $data.receiver"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.item=='M' -->
+								<td><a href="javascript:void(0)"
+									data-bind="text:$data.receiver,event:{click:function(){$root.checkEmployee($data)}}"></a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: moment($data.apply_time-0).format('YYYY-MM-DD')"></td>
 
-								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time+' 23:59') -->
+								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time) -->
 								<td style="color: red" data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
-								<!-- ko if:$data.limit_time!=null && moment().isBefore($data.limit_time+' 23:59') -->
+								<!-- ko if:$data.limit_time!=null && moment().isBefore($data.limit_time) -->
 								<td data-bind="text: $data.limit_time"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.limit_time==null || $data.limit_time=="" -->
@@ -168,113 +174,41 @@
 			</div>
 		</div>
 	</div>
-	<div id="sum_detail" style="display: none; width: 800px; padding-top: 30px;">
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">账户</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().card_account"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账总金额</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().sum_received" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账时间</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().received_time"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">我组金额</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().allot_received" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-3">
-				<label class="l" style="width: 100%">团号</label>
-			</div>
-			<div class="col-md-3">
-				<label class="l" style="width: 100%">客户</label>
-			</div>
-			<div class="col-md-3">
-				<label class="l" style="width: 100%">分配金额</label>
-			</div>
-		</div>
-		<!-- ko foreach:sumDetails -->
-		<div class="input-row clearfloat" st="allot">
-			<div class="col-md-3">
-				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.team_number"></p>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.received" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<!-- /ko -->
-	</div>
-	<div id="comment" style="display: none; width: 800px; padding-top: 30px;">
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">团号</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().team_number"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">客户</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().client_employee_name" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">产品</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().product"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">人数</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().people_count" class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">出团日期</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().departure_date"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">备注</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:comment()"></p>
-				</div>
-			</div>
-		</div>
-	</div>
 
+	<div id="comment" style="display: none; width: 550px; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 40%">驳回理由：</label>
+				<div class="ip" style="width: 60%">
+					<textarea maxlength="50" id="txt-comment" placeholder="50字内,不填写则默认为:账目不符" cols="40" rows="4" class="ip-default"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: doReject">驳回</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: cancel">取消</button>
+		</div>
+	</div>
+	<div id="employee" style="display: none; width: 550px; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l">客户</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text: employee().name"></p>
+				</div>
+				<label class="l">财务主体</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text: employee().financial_body_name"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l">所属销售</label>
+				<div class="ip">
+					<p class="ip-default" data-bind="text: employee().sales_name"></p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(".manager").addClass("current").children("ol").css("display", "block");
 	</script>

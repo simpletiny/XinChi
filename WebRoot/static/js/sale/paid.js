@@ -286,6 +286,18 @@ var PaidContext = function() {
 			});
 		});
 	}
+
+	self.viewRejectReason = function(back_pk) {
+		var data = "back_pk=" + back_pk;
+
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'accounting/searchRejectReason',
+			data : data
+		}).success(function(str) {
+			success_msg(str);
+		});
+	}
 	// 加载头像
 	self.loadFiles = function() {
 		var imgs = $("#voucher-img").find("input[st='voucher-file-name']");

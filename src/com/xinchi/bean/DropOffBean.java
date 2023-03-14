@@ -30,6 +30,8 @@ public class DropOffBean extends SupperBO implements Serializable {
 	// search options
 	private String from_city;
 
+	private String to_city;
+
 	public String getFirst_ticket_date() {
 		return first_ticket_date;
 	}
@@ -148,6 +150,14 @@ public class DropOffBean extends SupperBO implements Serializable {
 
 	public void setPhones(String phones) {
 		this.phones = phones;
+	}
+
+	public String getTo_city() {
+		return to_city;
+	}
+
+	public void setTo_city(String to_city) {
+		this.to_city = to_city;
 	}
 
 }

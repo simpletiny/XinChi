@@ -44,6 +44,11 @@ public class SupplierAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String blockSupplier() {
+		resultStr = supplierService.blockSupplier(supplier_pk);
+		return SUCCESS;
+	}
+
 	private List<SupplierBean> suppliers;
 
 	public String searchSupplier() {
@@ -70,17 +75,18 @@ public class SupplierAction extends BaseAction {
 	private List<SupplierFileBean> supplierFiles;
 
 	public String searchSupplierFiles() {
-		supplierFiles = supplierService
-				.searchSupplierFilesBySupplierPk(supplier_pk);
+		supplierFiles = supplierService.searchSupplierFilesBySupplierPk(supplier_pk);
 		return SUCCESS;
 	}
-	
+
 	private String file_name;
-	public String deleteSupplierFile(){
-		supplierService.deleteSupplierFile(file_name,supplier_pk);
+
+	public String deleteSupplierFile() {
+		supplierService.deleteSupplierFile(file_name, supplier_pk);
 		resultStr = SUCCESS;
 		return SUCCESS;
 	}
+
 	public SupplierBean getSupplier() {
 		return supplier;
 	}

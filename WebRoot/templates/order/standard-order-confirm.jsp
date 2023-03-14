@@ -60,8 +60,7 @@
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
 								<p class="ip-default" data-bind="text:product().name"></p>
-								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" /> <input
-									type="hidden" data-bind="value: product().product_value" name="bsOrder.product_value" />
+								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" /> 
 							</div>
 						</div>
 						<div class="col-md-2">

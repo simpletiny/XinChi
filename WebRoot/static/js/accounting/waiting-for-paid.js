@@ -23,28 +23,30 @@ var PaidContext = function() {
 		nowDayOfWeek = 7;
 	}
 
-	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek
-			+ 1);
+	var getWeekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
 	// 获得本周的结束日期
-	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay
-			+ (7 - nowDayOfWeek));
+	var getWeekEndDate = new Date(nowYear, nowMonth, nowDay + (7 - nowDayOfWeek));
 	self.dateTo(getWeekEndDate.Format("yyyy-MM-dd"));
 
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
-	self.chosenStatus = ko.observableArray([ 'I' ]);
-	self.allStatus = [ 'I', 'N', 'Y' ];
+	self.chosenStatus = ko.observableArray(['I']);
+	self.allStatus = ['I', 'N', 'Y'];
 
-	self.items = ko.observableArray([ 'D', 'X', 'B', 'P', 'J', 'G', 'Q', 'T' ]);
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F']);
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
-		'B' : '办公费用',
-		'P' : '票务费用',
+		'H' : '亲情费用',
 		'J' : '产品费用',
-		'G' : '工资费用',
-		'Q' : '其他支出',
-		'T' : '投诉赔偿',
+		'T' : '唯品费',
+		'P' : '票务费用',
+		'B' : '办公费用',
+		'E' : '招待费',
+		'K' : '差旅费用',
+		'G' : '个人工资',
+		'C' : '分红分润',
+		'Q' : '其它支出',
 		'M' : '多付返款',
 		'F' : 'FLY'
 	};
@@ -60,26 +62,23 @@ var PaidContext = function() {
 	self.refresh = function() {
 		var totalPaid = 0;
 
-		var param = $("form").serialize() + "&wfp.statuses="
-				+ self.chosenStatus();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		var param = $("form").serialize() + "&wfp.statuses=" + self.chosenStatus();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage', param,
-				function(data) {
-					self.paids(data.wfps);
-					// 计算合计
-					$(self.paids()).each(function(idx, data) {
-						totalPaid += data.money;
-					});
+		$.getJSON(self.apiurl + 'accounting/searchWaitingForPaidByPage', param, function(data) {
+			self.paids(data.wfps);
+			// 计算合计
+			$(self.paids()).each(function(idx, data) {
+				totalPaid += data.money;
+			});
 
-					self.totalPaid(totalPaid);
+			self.totalPaid(totalPaid);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					$(".rmb").formatCurrency();
-				});
+			$(".rmb").formatCurrency();
+		});
 	};
 
 	self.pay = function() {
@@ -90,9 +89,7 @@ var PaidContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenPaids().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/accounting/paid.jsp?key="
-					+ self.chosenPaids()[0];
+			window.location.href = self.apiurl + "templates/accounting/paid.jsp?key=" + self.chosenPaids()[0];
 		}
 	};
 	// 打回重报
@@ -106,12 +103,12 @@ var PaidContext = function() {
 		} else if (self.chosenPaids().length == 1) {
 
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要打回到待审批状态吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						var wfpPk = self.chosenPaids()[0];
 						startLoadingSimpleIndicator("操作中");
@@ -170,8 +167,7 @@ var PaidContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

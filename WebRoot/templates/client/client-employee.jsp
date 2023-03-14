@@ -41,9 +41,10 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { combineEmployee() }">合并</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { jobHopping() }">跳槽</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { dimission() }">离职</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee()  }">删除</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changeSales()}">调整销售</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee()  }">删除</button>
+								
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reviewEmployee()  }">审核</button>
 							</s:if>
 						</div>

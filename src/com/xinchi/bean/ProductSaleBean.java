@@ -13,7 +13,7 @@ public class ProductSaleBean extends SupperBO implements Serializable {
 
 	private int sum_people;
 
-	private String confirm_month;
+	private String departure_month;
 
 	private String sale_number;
 
@@ -33,10 +33,6 @@ public class ProductSaleBean extends SupperBO implements Serializable {
 
 	public int getSum_people() {
 		return sum_people;
-	}
-
-	public String getConfirm_month() {
-		return confirm_month;
 	}
 
 	public String getSale_number() {
@@ -67,10 +63,6 @@ public class ProductSaleBean extends SupperBO implements Serializable {
 		this.sum_people = sum_people;
 	}
 
-	public void setConfirm_month(String confirm_month) {
-		this.confirm_month = confirm_month;
-	}
-
 	public void setSale_number(String sale_number) {
 		this.sale_number = sale_number;
 	}
@@ -85,6 +77,14 @@ public class ProductSaleBean extends SupperBO implements Serializable {
 
 	public void setProduct_manager_name(String product_manager_name) {
 		this.product_manager_name = product_manager_name;
+	}
+
+	public String getDeparture_month() {
+		return departure_month;
+	}
+
+	public void setDeparture_month(String departure_month) {
+		this.departure_month = departure_month;
 	}
 
 }

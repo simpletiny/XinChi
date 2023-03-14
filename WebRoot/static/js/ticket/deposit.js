@@ -105,7 +105,7 @@ var DepositContext = function() {
 				dom : '#div-upload'
 			},
 			end : function() {
-				contentClear('div-create');
+				contentClear('div-upload');
 			}
 		});
 	}

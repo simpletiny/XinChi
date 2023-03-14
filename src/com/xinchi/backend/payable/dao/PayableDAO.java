@@ -36,4 +36,6 @@ public interface PayableDAO {
 
 	public List<KeyValueDto> selectPayableByArea(String provice);
 
+	List<PayableSummaryBean> selectPayableSummaryByPage(Page<PayableSummaryBean> page);
+
 }

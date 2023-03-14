@@ -14,13 +14,29 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css" />
 <link rel="stylesheet" href="<%=basePath%>static/vendor/font-awesome-4.2.0/css/font-awesome.min.css" />
+<style type="text/css">
 
+#bottom-layer {
+    width: 100%;
+    position: fixed;
+    z-index: 302;
+    bottom: 0;
+    left: 0;
+    height: 39px;
+    padding-top: 1px;
+    zoom: 1;
+    margin: 0;
+    line-height: 39px;
+    background: #fff;
+}
+
+</style>
 </head>
 <body>
 	<s:hidden id="login_result" value="%{#request.login_result}"></s:hidden>
 	<!-- head start -->
 	<div class="main-header">
-		<div class="header-min-width" ><a style="padding-top: 20px;padding-left: 20px;color:white" href="http://www.beian.miit.gov.cn/">黑ICP备19007355号</a></div>
+		<div class="header-min-width" ></div>
 	</div>
 	<!-- head end -->
 	<input type="hidden" id="hidden_apiurl" value="<%=basePath%>" />
@@ -35,13 +51,15 @@
 				required="required" /></li>
 			<li><input type="checkbox" id="auto-login" /><label>记住密码</label></li>
 			<li><div style="padding-top: 15px;">
-					<input type="button" class="btn btn-green" data-bind="click:login" value="登录" />
+					<input type="button" id="btn-login" class="btn btn-green" data-bind="click:login" value="登录" />
 				</div></li>
 			<li><div style="padding-top: 5px;">
 					<a style="cursor: pointer" href="<%=basePath%>templates/users/register.jsp">注册</a>
 				</div></li>
 		</ul>
 	</form>
+	<div id="bottom-layer"><a style="padding-top: 20px;padding-left: 20px;color:black" href="http://beian.miit.gov.cn/">黑ICP备19007355号</a></div>
+	
 	<!-- login box end -->
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery-cookie/jquery.cookie.js"></script>
@@ -52,6 +70,9 @@
 	<script src="<%=basePath%>static/js/utils.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/users/login.js"></script>
+	
+	
+	
 </body>
 
 </html>

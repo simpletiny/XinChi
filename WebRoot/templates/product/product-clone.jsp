@@ -144,10 +144,10 @@
 									</div>
 								</td>
 								<td>
-									<div class=" required">
+									<div>
 										<label class="l">最大让利</label>
 										<div class="ip fix-width">
-											<input type="number" class="ip-" required="required" id="max-profit-substract"
+											<input type="number" class="ip-" id="max-profit-substract"
 												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
 												name="product.max_profit_substract" />
 										</div>

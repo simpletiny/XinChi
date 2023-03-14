@@ -9,13 +9,12 @@ var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenEmployees = ko.observableArray([]);
-	self.employeeArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化',
-			'呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
+	self.employeeArea = ['哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔', '伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭'];
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	self.chosenSales = ko.observableArray([]);
-	self.status = [ 'N', 'Y' ];
+	self.status = ['N', 'Y'];
 	self.deleteMapping = {
 		'N' : "正常",
 		'Y' : "已停用"
@@ -39,8 +38,7 @@ var CompanyContext = function() {
 	});
 
 	self.createClientEmployee = function() {
-		window.location.href = self.apiurl
-				+ "templates/client/employee-creation.jsp";
+		window.location.href = self.apiurl + "templates/client/employee-creation.jsp";
 	};
 
 	self.employees = ko.observable({
@@ -58,10 +56,8 @@ var CompanyContext = function() {
 			param += "&employee.public_flgs=N";
 		}
 
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.employees(data.employees);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -80,10 +76,9 @@ var CompanyContext = function() {
 	});
 	self.refreshSumCnt = function() {
 		var param = $("#form-search").serialize();
-		$.getJSON(self.apiurl + 'client/searchSumCntData', param,
-				function(data) {
-					self.rld(data.rld);
-				});
+		$.getJSON(self.apiurl + 'client/searchSumCntData', param, function(data) {
+			self.rld(data.rld);
+		});
 	}
 
 	self.chosenUser = ko.observableArray([]);
@@ -104,12 +99,12 @@ var CompanyContext = function() {
 					} else {
 						salesLayer = $.layer({
 							type : 1,
-							title : [ '修改客户销售', '' ],
+							title : ['修改客户销售', ''],
 							maxmin : false,
-							closeBtn : [ 1, true ],
+							closeBtn : [1, true],
 							shadeClose : false,
-							area : [ '600px', '400px' ],
-							offset : [ '', '' ],
+							area : ['600px', '400px'],
+							offset : ['', ''],
 							scrollbar : true,
 							page : {
 								dom : '#edit-sale'
@@ -142,12 +137,12 @@ var CompanyContext = function() {
 		}
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认将选中的客户移至新销售名下吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					var data = {
@@ -197,9 +192,7 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenEmployees().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/employee-edit.jsp?key="
-					+ self.chosenEmployees()[0];
+			window.location.href = self.apiurl + "templates/client/employee-edit.jsp?key=" + self.chosenEmployees()[0];
 		}
 	};
 
@@ -212,12 +205,12 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认停用该客户吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("停用中");
@@ -241,7 +234,7 @@ var CompanyContext = function() {
 		}
 
 	};
-	self.failMsg = [ "exist_visit", "exist_accurate", "exist_order" ];
+	self.failMsg = ["exist_visit", "exist_accurate", "exist_order"];
 	self.failMapping = {
 		"exist_visit" : "有效拜访",
 		"exist_accurate" : "有效沟通",
@@ -258,49 +251,42 @@ var CompanyContext = function() {
 			fail_msg("只能选择一个员工");
 			return;
 		} else {
-			$
-					.layer({
-						area : [ 'auto', 'auto' ],
-						dialog : {
-							msg : '确认删除该客户吗?',
-							btns : 2,
-							type : 4,
-							btn : [ '确认', '取消' ],
-							yes : function(index) {
-								layer.close(index);
-								startLoadingSimpleIndicator("删除中...");
-								String
-								data = {
-									employee_pk : self.chosenEmployees()[0]
-								};
-								$
-										.ajax(
-												{
-													type : "POST",
-													url : self.apiurl
-															+ 'client/deleteClientEmployeeReally',
-													traditional : true,
-													data : data
-												})
-										.success(
-												function(str) {
-													endLoadingIndicator();
-													if (str == "success") {
-														self.refresh();
-														self.chosenEmployees
-																.removeAll();
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '确认删除该客户吗?',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中...");
+						String
+						data = {
+							employee_pk : self.chosenEmployees()[0]
+						};
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'client/deleteClientEmployeeReally',
+							traditional : true,
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenEmployees.removeAll();
 
-													} else if (self.failMsg
-															.contains(str)) {
-														fail_msg("该员工下存在{0}相关数据，不允许删除！"
-																.format(self.failMapping[str]));
-													} else {
-														fail_msg("停用失败，请联系管理员！");
-													}
-												});
+							} else if (self.failMsg.contains(str)) {
+								fail_msg("该员工下存在{0}相关数据，不允许删除！".format(self.failMapping[str]));
+							} else if (str == "alreadyreview") {
+								fail_msg("客户资料已审核，不允许删除！")
+							} else {
+								fail_msg("停用失败，请联系管理员！");
 							}
-						}
-					});
+						});
+					}
+				}
+			});
 
 		}
 	};
@@ -326,12 +312,12 @@ var CompanyContext = function() {
 					if (self.employee().review_flg == "Y") {
 						jobHoppingLayer = $.layer({
 							type : 1,
-							title : [ '跳槽', '' ],
+							title : ['跳槽', ''],
 							maxmin : false,
-							closeBtn : [ 1, true ],
+							closeBtn : [1, true],
 							shadeClose : false,
-							area : [ '350px', '300px' ],
-							offset : [ '', '' ],
+							area : ['350px', '300px'],
+							offset : ['', ''],
 							scrollbar : true,
 							page : {
 								dom : '#job-hopping'
@@ -392,15 +378,14 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确定将员工标记为离职状态吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
-						var data = "employee.pk=" + self.chosenEmployees()[0]
-								+ "&employee.dimission_flg=Y";
+						var data = "employee.pk=" + self.chosenEmployees()[0] + "&employee.dimission_flg=Y";
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'client/swapDimission',
@@ -434,12 +419,12 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '合并会将员工资料合并至第一个选择的员工名下，确定这么做吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("合并中...");
@@ -471,12 +456,12 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认公开该客户吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("保存中...");
@@ -533,12 +518,12 @@ var CompanyContext = function() {
 							if (self.employee().review_flg == "N") {
 								reviewLayer = $.layer({
 									type : 1,
-									title : [ '审核客户员工', '' ],
+									title : ['审核客户员工', ''],
 									maxmin : false,
-									closeBtn : [ 1, true ],
+									closeBtn : [1, true],
 									shadeClose : false,
-									area : [ '400px', '200px' ],
-									offset : [ '', '' ],
+									area : ['400px', '200px'],
+									offset : ['', ''],
 									scrollbar : true,
 									page : {
 										dom : '#div-review'
@@ -595,12 +580,12 @@ var CompanyContext = function() {
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
-			title : [ '选择新的财务主体', '' ],
+			title : ['选择新的财务主体', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#financial_pick'
@@ -613,13 +598,10 @@ var CompanyContext = function() {
 
 	self.clients = ko.observableArray([]);
 	self.refreshClient = function() {
-		var param = "client.client_short_name=" + $("#client_name").val()
-				+ "&client.statuses=N";
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
+		var param = "client.client_short_name=" + $("#client_name").val() + "&client.statuses=N";
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
 			self.totalCount1(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums1(self.currentPage());
@@ -657,12 +639,12 @@ var CompanyContext = function() {
 					console.log(self.financial());
 					checkFinancialLayer = $.layer({
 						type : 1,
-						title : [ '财务主体详情', '' ],
+						title : ['财务主体详情', ''],
 						maxmin : false,
-						closeBtn : [ 1, true ],
+						closeBtn : [1, true],
 						shadeClose : false,
-						area : [ '600px', '400px' ],
-						offset : [ '', '' ],
+						area : ['600px', '400px'],
+						offset : ['', ''],
 						scrollbar : true,
 						page : {
 							dom : '#check-financial'
@@ -693,12 +675,12 @@ var CompanyContext = function() {
 			self.clientEmployee(data.employee);
 			commentLayer = $.layer({
 				type : 1,
-				title : [ '备注', '' ],
+				title : ['备注', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '500px', '300px' ],
-				offset : [ '', '' ],
+				area : ['500px', '300px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#comment-edit'
@@ -719,8 +701,7 @@ var CompanyContext = function() {
 	self.updateComment = function() {
 		var employee_pk = self.clientEmployee().pk;
 		var comment = $("#txt-comment").val();
-		var data = "employee.pk=" + employee_pk + "&" + "employee.comment="
-				+ comment;
+		var data = "employee.pk=" + employee_pk + "&" + "employee.comment=" + comment;
 
 		startLoadingIndicator("保存中");
 		$.ajax({
@@ -737,17 +718,17 @@ var CompanyContext = function() {
 		});
 	};
 
-	//查看头像
+	// 查看头像
 	self.checkHeadPhoto = function(fileName) {
-		$("#img-pic").attr("src","");
+		$("#img-pic").attr("src", "");
 		headCheckLayer = $.layer({
 			type : 1,
-			title : [ '头像', '' ],
+			title : ['头像', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '320px', '355px' ],
-			offset : [ '', '' ],
+			area : ['320px', '355px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -756,14 +737,15 @@ var CompanyContext = function() {
 				console.log("Done");
 			}
 		});
-		if(fileName=="img"){
+		if (fileName == "img") {
 			$("#img-pic").attr("src", self.apiurl + "static/img/head.jpg");
-		}else{
-			$("#img-pic").attr("src", self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");	
+		} else {
+			$("#img-pic").attr("src",
+					self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");
 		}
-		
+
 	};
-	
+
 	// 加载头像
 	self.loadFiles = function() {
 		$("[st='st-file-name']").each(function(idx, stFileName) {
@@ -776,7 +758,7 @@ var CompanyContext = function() {
 
 	self.downFile = function(stFileName, fileName) {
 		var imgContainer = $(stFileName).prev();
-		
+
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_EMPLOYEE_MIN_HEAD");
@@ -827,8 +809,7 @@ var CompanyContext = function() {
 
 	self.setPageNums1 = function(curPage1) {
 		var startPage1 = curPage1 - 4 > 0 ? curPage1 - 4 : 1;
-		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self
-				.totalCount1();
+		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -874,8 +855,7 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -895,6 +875,9 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 	ctx.refreshSumCnt();
-	$("#img-pic").css({"width":"320px","height":"320px"});
+	$("#img-pic").css({
+		"width" : "320px",
+		"height" : "320px"
+	});
 
 });

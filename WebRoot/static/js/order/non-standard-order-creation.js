@@ -16,7 +16,7 @@ var OrderContext = function() {
 	var x = new Date();
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
+		var param = "employee.name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);

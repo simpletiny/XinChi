@@ -21,6 +21,7 @@ import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductNeedDto;
+import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
@@ -69,6 +70,31 @@ public class ProductAction extends BaseAction {
 		page.setParams(params);
 
 		products = service.selectByPage(page);
+		return SUCCESS;
+	}
+
+	private List<ProductProfitBean> productProfits;
+
+	private ProductProfitBean productProfit;
+
+	/**
+	 * 搜索产品利润
+	 * 
+	 * @return
+	 */
+	public String searchProductProfit() {
+
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		if (null == productProfit)
+			productProfit = new ProductProfitBean();
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			productProfit.setUser_number(sessionBean.getUser_number());
+		}
+
+		productProfits = service.searchProductProfit(productProfit);
 		return SUCCESS;
 	}
 
@@ -533,6 +559,22 @@ public class ProductAction extends BaseAction {
 
 	public void setUrgent_flg(String urgent_flg) {
 		this.urgent_flg = urgent_flg;
+	}
+
+	public List<ProductProfitBean> getProductProfits() {
+		return productProfits;
+	}
+
+	public void setProductProfits(List<ProductProfitBean> productProfits) {
+		this.productProfits = productProfits;
+	}
+
+	public ProductProfitBean getProductProfit() {
+		return productProfit;
+	}
+
+	public void setProductProfit(ProductProfitBean productProfit) {
+		this.productProfit = productProfit;
 	}
 
 }

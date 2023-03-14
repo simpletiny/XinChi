@@ -14,6 +14,13 @@ public class SaleScoreDto extends SupperBO implements Serializable {
 	private String confirm_month;
 	private int sum_people;
 
+	private int first_people;
+	private BigDecimal first_score;
+	private int middle_people;
+	private BigDecimal middle_score;
+	private int last_people;
+	private BigDecimal last_score;
+
 	private float discount;
 
 	public BigDecimal getScore() {
@@ -62,5 +69,53 @@ public class SaleScoreDto extends SupperBO implements Serializable {
 
 	public void setDiscount(float discount) {
 		this.discount = discount;
+	}
+
+	public int getFirst_people() {
+		return first_people;
+	}
+
+	public BigDecimal getFirst_score() {
+		return first_score;
+	}
+
+	public int getMiddle_people() {
+		return middle_people;
+	}
+
+	public BigDecimal getMiddle_score() {
+		return middle_score;
+	}
+
+	public int getLast_people() {
+		return last_people;
+	}
+
+	public BigDecimal getLast_score() {
+		return last_score;
+	}
+
+	public void setFirst_people(int first_people) {
+		this.first_people = first_people;
+	}
+
+	public void setFirst_score(BigDecimal first_score) {
+		this.first_score = first_score;
+	}
+
+	public void setMiddle_people(int middle_people) {
+		this.middle_people = middle_people;
+	}
+
+	public void setMiddle_score(BigDecimal middle_score) {
+		this.middle_score = middle_score;
+	}
+
+	public void setLast_people(int last_people) {
+		this.last_people = last_people;
+	}
+
+	public void setLast_score(BigDecimal last_score) {
+		this.last_score = last_score;
 	}
 }

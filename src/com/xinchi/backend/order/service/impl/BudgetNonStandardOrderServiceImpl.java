@@ -106,6 +106,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		String passenger_captain = "";
 		bean.setPk(order_pk);
 		bean.setProduct_name("单机票");
+		bean.setProduct_manager(ResourcesConstants.UNREAL_USER_NUMBER_ONLY_TICKET);
 
 		JSONObject obj = JSONObject.fromObject(json);
 
@@ -417,13 +418,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		}
 
 		if (bean.getConfirm_flg().equals("Y")) {
-			// 判断是否有信用余额确认订单
-			boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(),
-					old.getCreate_user(), old.getTeam_number(), bean.getReceivable());
-
-			if (!canConfirm) {
-				return "noenoughcredit";
-			}
 
 			String departureDate = bean.getDeparture_date();
 			int days = bean.getDays();
@@ -699,14 +693,12 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 	@Override
 	public String delete(String order_pk) {
 		BudgetNonStandardOrderBean old = dao.selectByPrimaryKey(order_pk);
-		String result = "";
 		// 如果已经生成了应收款，则删除应收款
 		if (old.getReceivable_first_flg().equals("Y")) {
-			result = receivableService.deleteByTeamNumber(old.getTeam_number());
+			String result = receivableService.deleteByTeamNumber(old.getTeam_number());
+			if (!result.equals(SUCCESS))
+				return result;
 		}
-
-		if (!result.equals(SUCCESS))
-			return result;
 
 		deleteFile(old);
 		dao.delete(order_pk);

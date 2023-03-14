@@ -40,8 +40,8 @@
 		<div class="subtitle" style="float: left">
 			<h2 style="width: 30%; float: left">销售仪表盘-->分值查询(限标准订单)</h2>
 			<div class="tab">
-				<input type="radio" checked="checked" name="rad-page" value="s" onclick="changePage(this)"/><label>分值查询</label>
-				<input type="radio"  name="rad-page" value="b" onclick="changePage(this)"/><label>回款分值</label>
+				<input type="radio" checked="checked" name="rad-page" value="s" onclick="changePage(this)" /><label>分值查询</label> <input
+					type="radio" name="rad-page" value="b" onclick="changePage(this)" /><label>回款分值</label>
 			</div>
 		</div>
 		<div class="main-container">
@@ -49,7 +49,8 @@
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" name="rad-confirm"  value="month" onclick="switchType(this)" checked="checked"/>确认月份</label>
+							<label class="col-md-1 control-label"><input type="radio" name="rad-confirm" value="month"
+								onclick="switchType(this)" checked="checked" />确认月份</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control month-picker-st" data-bind="value:confirm_month()" placeholder="确认月份"
 									name="score.confirm_month" />
@@ -58,14 +59,14 @@
 					</div>
 					<div class="form-group">
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="date" onclick="switchType(this)" name="rad-confirm"/>确认日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="date" onclick="switchType(this)"
+								name="rad-confirm" />确认日期</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="起始日期"
 									name="score.date_from" />
 							</div>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="截止日期"
-									name="score.date_to" />
+								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="截止日期" name="score.date_to" />
 							</div>
 						</div>
 						<div style="padding-top: 3px;">
@@ -74,25 +75,37 @@
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover" style="width:50%">
+					<table class="table table-striped table-hover" style="width: 70%">
 						<thead>
 							<tr role="row">
 								<th>销售</th>
-								<th>分值</th>
+								<th>上旬分值</th>
+								<th>上旬收客</th>
+								<th>中旬分值</th>
+								<th>中旬收客</th>
+								<th>下旬分值</th>
+								<th>下旬收客</th>
+								<th>月度分值</th>
+								<th>月度收客</th>
 								<th>月份</th>
-								<th>收人总数</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: scores">
 							<tr>
 								<td data-bind="text: $data.sale_name"></td>
+								<td data-bind="text: $data.first_score"></td>
+								<td data-bind="text: $data.first_people"></td>
+								<td data-bind="text: $data.middle_score"></td>
+								<td data-bind="text: $data.middle_people"></td>
+								<td data-bind="text: $data.last_score"></td>
+								<td data-bind="text: $data.last_people"></td>
 								<td data-bind="text: $data.score"></td>
-								<td data-bind="text: $data.confirm_month"></td>
 								<td data-bind="text: $data.sum_people"></td>
+								<td data-bind="text: $data.confirm_month"></td>
 							</tr>
 						</tbody>
 					</table>
-					<div class="pagination clearfloat" style="width:50%">
+					<div class="pagination clearfloat" style="width: 50%">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
 						<!-- ko foreach: pageNums -->
 						<!-- ko if: $data == $root.currentPage() -->

@@ -48,6 +48,34 @@ public class PayableAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<PayableSummaryBean> payableSummarys;
+
+	/**
+	 * 地接款汇总页面，搜索地接款汇总
+	 * 
+	 * @return
+	 */
+	public String searchPayableSummaryByPage() {
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+
+		if (null == summary) {
+			summary = new PayableSummaryBean();
+		}
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			summary.setUser_number(sessionBean.getUser_number());
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bo", summary);
+		page.setParams(params);
+
+		payableSummarys = payableService.searchPayableSummaryByPage(page);
+		return SUCCESS;
+	}
+
 	private PayableBean payable;
 	private List<PayableBean> payables;
 
@@ -181,5 +209,13 @@ public class PayableAction extends BaseAction {
 
 	public void setCreate_user(String create_user) {
 		this.create_user = create_user;
+	}
+
+	public List<PayableSummaryBean> getPayableSummarys() {
+		return payableSummarys;
+	}
+
+	public void setPayableSummarys(List<PayableSummaryBean> payableSummarys) {
+		this.payableSummarys = payableSummarys;
 	}
 }

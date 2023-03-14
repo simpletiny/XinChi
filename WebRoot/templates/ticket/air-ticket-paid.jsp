@@ -137,7 +137,7 @@
 						</div>
 						<div class="input-row clearfloat">
 							<div class="col-md-6">
-								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+								<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" accept=".jpg,.png" name="file" /></a> <input
 									type="hidden" name="voucherFile" />
 							</div>
 							<div class="col-md-6"></div>
@@ -194,7 +194,7 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" accept=".jpg,.png"/></a> <input
 						type="hidden" name="voucherFile" />
 				</div>
 				<div class="col-md-6"></div>

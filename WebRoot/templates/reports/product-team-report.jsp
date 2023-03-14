@@ -52,11 +52,11 @@
 							<label class="col-md-1 control-label">月份</label>
 							<div class="col-md-2">
 								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="起始月"
-									name="option.confirm_date_from" />
+									name="option.date_from" />
 							</div>
 							<div class="col-md-2">
 								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="截止月"
-									name="option.confirm_date_to" />
+									name="option.date_to" />
 							</div>
 						</div>
 						<div class="span6">

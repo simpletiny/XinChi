@@ -79,11 +79,11 @@ public class OrderReportAction extends BaseAction {
 			option.setProduct_manager_number(sessionBean.getUser_number());
 		}
 
-		if (!SimpletinyString.isEmpty(option.getConfirm_date_from())) {
-			option.setConfirm_date_from(option.getConfirm_date_from() + "-00");
+		if (!SimpletinyString.isEmpty(option.getDate_from())) {
+			option.setDate_from(option.getDate_from() + "-00");
 		}
-		if (!SimpletinyString.isEmpty(option.getConfirm_date_to())) {
-			option.setConfirm_date_to(option.getConfirm_date_to() + "-31");
+		if (!SimpletinyString.isEmpty(option.getDate_to())) {
+			option.setDate_to(option.getDate_to() + "-31");
 		}
 
 		report = service.searchSumReport(option);

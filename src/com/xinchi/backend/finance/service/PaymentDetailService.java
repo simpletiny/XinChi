@@ -45,4 +45,8 @@ public interface PaymentDetailService extends BaseService {
 	public String matchReceived(String json);
 
 	public String cancelMatchReceived(String detailId);
+
+	public List<PaymentDetailBean> batUploadReceived(File file);
+
+	public String batSaveReceived(String json, String json2);
 }

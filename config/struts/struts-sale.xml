@@ -126,7 +126,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="searchFlyVoucherInfo" class="receivedAction" method="searchFlyVoucherInfo">
+		<action name="searchPayVoucherInfo" class="receivedAction" method="searchPayVoucherInfo">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

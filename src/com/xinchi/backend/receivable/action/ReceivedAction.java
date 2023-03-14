@@ -9,8 +9,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.accounting.service.AccPaidService;
+import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
@@ -151,7 +155,26 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	public String searchFlyVoucherInfo() {
+	private List<PaymentDetailBean> paymentDetails;
+
+	@Autowired
+	private AccPaidService accPaidService;
+
+	@Autowired
+	private PaymentDetailService paymentDetailService;
+
+	private String related_pk;
+
+	public String searchPayVoucherInfo() {
+		List<WaitingForPaidBean> wfps = accPaidService.selectWfpByRelatedPk(related_pk);
+		if (null == wfps || wfps.size() != 1) {
+			return SUCCESS;
+		}
+
+		WaitingForPaidBean wfp = wfps.get(0);
+
+		paymentDetails = paymentDetailService.selectByVoucherNumber(wfp.getPay_number());
+
 		return SUCCESS;
 	}
 
@@ -217,6 +240,22 @@ public class ReceivedAction extends BaseAction {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
+	}
+
+	public List<PaymentDetailBean> getPaymentDetails() {
+		return paymentDetails;
+	}
+
+	public void setPaymentDetails(List<PaymentDetailBean> paymentDetails) {
+		this.paymentDetails = paymentDetails;
 	}
 
 }

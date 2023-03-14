@@ -10,17 +10,20 @@ var AgencyContext = function() {
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
-		'B' : '办公费用',
-		'C' : '产品费用',
+		'H' : '亲情费用',
+		'J' : '产品费用',
+		'T' : '唯品费',
 		'P' : '票务费用',
-		'J' : '交通垫付',
-		'G' : '工资费用',
-		'Q' : '其他支出',
+		'B' : '办公费用',
+		'E' : '招待费',
+		'G' : '个人工资',
+		'C' : '分红分润',
+		'Q' : '其它支出',
 		'M' : '多付返款',
 		'F' : 'FLY'
 	};
 	var now = new Date();
-	self.current_min = now.Format("yyyy-MM-dd hh:mm");
+	self.current_min = now.Format("yyyy-MM-dd hh:mm:ss");
 	self.chosenAccount = ko.observable();
 	// 获取所有账户
 	self.accounts = ko.observableArray([]);
@@ -48,6 +51,7 @@ var AgencyContext = function() {
 				self.supplier(new Object());
 			}
 			self.defaultMoney(self.wfp().money);
+			$("#txt-money1").formatChineseNumber();
 		} else {
 			fail_msg("待支付信息不存在！");
 		}
@@ -70,19 +74,22 @@ var AgencyContext = function() {
 		}
 		var prev = $("#div_add").prev();
 		$(prev).find("[name='account']").attr("name", "account" + self.count);
-		$(prev).find("[name^='account']").val("交行倒账9363");
+		$(prev).find("[name^='account']").val("");
 		$(prev).find("[name='time']").attr("name", "time" + self.count);
 		$(prev).find("[name^='time']").val(self.current_min);
 		$(prev).find("[name='receiver']").attr("name", "receiver" + self.count);
-		$(prev).find("[name^='receiver']").val(
-				self.supplier().personal_account_name);
+		$(prev).find("[name^='receiver']").val(self.supplier().personal_account_name);
+		$(prev).find("[name='money']").attr("id", "txt-money" + self.count);
 		$(prev).find("[name='money']").attr("name", "money" + self.count);
+
 		$(prev).find("[name='file']").attr("name", "file" + self.count);
-		$(prev).find("[name='voucherFile']").attr("name",
-				"voucherFile" + self.count);
+		$(prev).find("[name='voucherFile']").attr("name", "voucherFile" + self.count);
 		$(':file').change(function() {
 			changeFile(this);
 		});
+
+		$("#txt-money" + self.count).formatChineseNumber();
+
 	};
 	self.finish = function() {
 
@@ -108,9 +115,8 @@ var AgencyContext = function() {
 				fail_msg("请上传凭证");
 				return;
 			}
-			paidJson += '{"account":+"' + account + '","time":"' + time
-					+ '","receiver":"' + receiver + '","money":"' + money
-					+ '","voucherFile":"' + voucherFile + '"';
+			paidJson += '{"account":+"' + account + '","time":"' + time + '","receiver":"' + receiver + '","money":"'
+					+ money + '","voucherFile":"' + voucherFile + '"';
 
 			if (i == allAccount.length - 1) {
 				paidJson += '}';
@@ -122,22 +128,18 @@ var AgencyContext = function() {
 		paidJson += ']';
 
 		startLoadingSimpleIndicator("保存中");
-		$.ajax(
-				{
-					type : "POST",
-					url : self.apiurl + 'accounting/pay',
-					data : "json=" + paidJson + "&voucher_number="
-							+ self.wfp().pay_number
-				}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/accounting/waiting-for-paid.jsp";
-					} else if (str == "time") {
-						fail_msg("同一账户在同一时间下已存在支出！");
-						endLoadingIndicator();
-					}
-				});
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'accounting/pay',
+			data : "json=" + paidJson + "&voucher_number=" + self.wfp().pay_number
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/accounting/waiting-for-paid.jsp";
+			} else if (str == "time") {
+				fail_msg("同一账户在同一时间下已存在支出！");
+				endLoadingIndicator();
+			}
+		});
 	};
 
 	self.caculateSum = function() {
@@ -152,6 +154,7 @@ var AgencyContext = function() {
 			return false;
 		}
 	};
+
 };
 
 var ctx = new AgencyContext();
@@ -162,8 +165,22 @@ $(document).ready(function() {
 
 	$(':file').change(function() {
 		changeFile(this);
-
 	});
+
+	// $("#test").on('dragover', function(e) {
+	// e.preventDefault();
+	// e.stopPropagation();
+	// });
+	//
+	// $("#test").on('drop', function(e) {
+	// e.preventDefault();
+	// e.stopPropagation();
+	// var files = e.originalEvent.dataTransfer.files;
+	// if (files.length > 0) {
+	//
+	// }
+	// });
+
 });
 function changeFile(thisx) {
 	var file = thisx.files[0];
@@ -197,8 +214,7 @@ function changeFile(thisx) {
 	};
 	xhr.onload = function() {
 		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(
-					";")[1].split("=")[1];
+			var fileName = this.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
 			var blob = this.response;
 			var deleteButton = $("<div class='delete'>删除</div>");
 
@@ -218,14 +234,11 @@ function changeFile(thisx) {
 					img.width = initWidth;
 				}
 
-				$(img).mouseenter(
-						function() {
-							deleteButton.css("top", $(img).offset().top
-									+ img.height / 2 - 25);
-							deleteButton.css("left", $(img).offset().left
-									+ img.width / 2 - 50);
-							deleteButton.show();
-						});
+				$(img).mouseenter(function() {
+					deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
+					deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
+					deleteButton.show();
+				});
 				$(img).mouseout(function() {
 					deleteButton.hide();
 				});

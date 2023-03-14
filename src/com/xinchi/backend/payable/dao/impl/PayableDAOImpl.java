@@ -115,4 +115,10 @@ public class PayableDAOImpl extends SqlSessionDaoSupport implements PayableDAO {
 		return (PayableBean) daoUtil.selectByPK("com.xinchi.bean.mapper.PayableMapper.selectByPrimaryKey", pk);
 	}
 
+	@Override
+	public List<PayableSummaryBean> selectPayableSummaryByPage(Page<PayableSummaryBean> page) {
+
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableSummaryMapper.selectPayableSummaryByPage", page);
+	}
+
 }

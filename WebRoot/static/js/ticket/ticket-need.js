@@ -60,15 +60,26 @@ var NeedContext = function() {
 		}
 
 		var allLegTxt = $(".ticket-air-leg");
+		var isSame = true;
 		for (var i = 0; i < allLegTxt.length; i++) {
 			var v = $(allLegTxt[i]).val().trim();
 			if (v == "") {
 				fail_msg("请填写票务航段！");
 				return;
 			}
+
+			var old_leg = $(allLegTxt[i]).parent().prev().prev().text().trim();
+
+			if (old_leg != v)
+				isSame = false;
 		}
 
 		var confirm_msg = "确认要生成订单吗";
+
+		if (!isSame) {
+			confirm_msg = "票务航段与需求城市对不符，确认继续生成订单吗？"
+		}
+
 		var hasLeg = true;
 
 		var tbody = $("#leg-table tbody");

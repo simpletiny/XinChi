@@ -145,6 +145,7 @@ $("#c_password").each(function() {
 });
 
 $("input[type='number']").each(function() {
+
 	$(this).rules("add", {
 		isStep : true
 	});

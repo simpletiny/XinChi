@@ -35,4 +35,6 @@ public interface PayableService {
 	public void deletePayableByTeamNumber(String team_number);
 
 	public void deleteByPk(String pk);
+
+	public List<PayableSummaryBean> searchPayableSummaryByPage(Page<PayableSummaryBean> page);
 }

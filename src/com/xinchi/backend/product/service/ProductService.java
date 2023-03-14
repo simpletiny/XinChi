@@ -6,6 +6,7 @@ import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
+import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
 
@@ -85,5 +86,7 @@ public interface ProductService extends BaseService {
 	public String saveAirTicket(String product_pk, String ticket_json);
 
 	public String searchUrgentCnt(String user_number);
+
+	public List<ProductProfitBean> searchProductProfit(ProductProfitBean productProfit);
 
 }

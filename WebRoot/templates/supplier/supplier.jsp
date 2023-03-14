@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editSupplier() }">编辑</button>
 		                    </div>
 		                    <div>
-		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+		                        <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {blockSupplier() }">终止合作</button>
 		                    </div>
 		                 </div>
 	                </div>

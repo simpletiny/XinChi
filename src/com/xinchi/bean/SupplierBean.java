@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class SupplierBean extends SupperBO implements Serializable {
@@ -56,6 +58,8 @@ public class SupplierBean extends SupperBO implements Serializable {
 	private String corporate_id;
 
 	private String type;
+
+	private List<String> is_cooperates;
 
 	// 供应商账户信息
 	private String corporate_account_name;
@@ -319,6 +323,14 @@ public class SupplierBean extends SupperBO implements Serializable {
 
 	public void setPersonal_account_bank(String personal_account_bank) {
 		this.personal_account_bank = personal_account_bank;
+	}
+
+	public List<String> getIs_cooperates() {
+		return is_cooperates;
+	}
+
+	public void setIs_cooperates(List<String> is_cooperates) {
+		this.is_cooperates = is_cooperates;
 	}
 
 }

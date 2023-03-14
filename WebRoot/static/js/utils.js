@@ -277,8 +277,29 @@ Date.prototype.Format = function(fmt) { // author: meizz
 	for ( var k in o)
 		if (new RegExp("(" + k + ")").test(fmt))
 			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-	return fmt;
+	 return fmt;
 };
+
+Date.prototype.before = function(date, format){
+	  if(!format) 
+		  return date.getTime() > this.getTime()
+	  let d1 = new Date(this.Format(format)),
+	      d2 = new Date(date.Format(format));
+	  return d2.getTime() > d1.getTime()
+};
+
+Date.prototype.after = function(date, format){
+	   return date.before(this, format)
+	};
+
+Date.prototype.equal = function(date, format){
+	  if(!format)
+		  return date.getTime() === this.getTime()
+
+	  let d1 = new Date(this.Format(format)),
+	      d2 = new Date(date.Format(format));
+	  return d2.getTime() === d1.getTime()
+	};
 /**
  * 字符串占位符替换{0}{1}{2}
  */
@@ -294,6 +315,13 @@ Date.prototype.addDate = function(days) {
 	var x = this.valueOf();
 	x = x + days * 24 * 60 * 60 * 1000;
 	x = new Date(x);
+	return x;
+};
+
+Date.prototype.addMonth = function(months) {
+	var current = this.getMonth();
+	var x = new Date(this);
+	x.setMonth(current+months);
 	return x;
 };
 var dateDiff = function(date1,date2){
@@ -407,12 +435,12 @@ String.prototype.addDate = function(days){
 	return date.Format("yyyy-MM-dd");
 }
 
-document.onkeydown=function(event){
-    var e = event || window.event || arguments.callee.caller.arguments[0];
-     if(e && e.keyCode==13){ // enter 键
-    	 $("[st='btn-search']").click();
-     }
-}; 
+// document.onkeydown=function(event){
+// var e = event || window.event || arguments.callee.caller.arguments[0];
+// if(e && e.keyCode==13){ // enter 键
+// $("[st='btn-search']").click();
+// }
+// };
 
 $(document).ready(function() {
 	var current_url = window.location.href;
@@ -440,3 +468,88 @@ function dataURLtoFile(dataurl, filename) {
 		type : mime
 	});
 }
+(function($) {
+	$.fn.tableSum = function(options) {
+		var default_options ={
+				title:"合计",
+				title_index:1,
+				accept:[],
+				except:[],
+		}
+		
+		
+		if(options){
+			default_options.title = options.title||default_options.title;
+			default_options.title_index = options.title_index||default_options.title_index;
+			default_options.accept = options.accept||default_options.accept;
+			default_options.except = options.except ||default_options.except;
+		}
+		
+		$this = $(this);
+		var len = $this.find("tbody:first tr:first td").length;
+		var sum = new Array(len).fill(0);
+		
+		if(default_options.accept.length==0 && default_options.except.length==0){
+			default_options.except = [1];
+		}else{
+			if(default_options.accept.length!=0){
+				for(var i =0;i<len;i++){
+					if(default_options.accept.contains(i+1))
+						continue;
+					default_options.except.push(i+1);
+				}
+			}
+		}
+		
+		var tbody =$($this.find("tbody.st-sum")[0]|| $("<tbody class='st-sum'></tbody>"));
+		tbody.html("");
+		var tr = $("<tr></tr>");
+		tbody.append(tr);
+		
+		$this.find("tbody:eq(0) tr").each(function(){
+			var tds = $(this).children();
+			for(var i =0;i<tds.length;i++){
+				
+				if(default_options.except.contains(i+1))
+					continue;
+				var td = $(tds[i]);
+				sum[i] +=+td.text();
+			}
+		});
+		
+		for(var i = 0;i<len;i++){
+			var td = $("<td></td>");
+			tr.append(td);
+			if(default_options.except.contains(i+1)){
+				if(i+1==default_options.title_index){
+					td.text(default_options.title);
+					continue;
+				}else{
+					continue;
+				}
+			}
+			
+			td.text(sum[i]);
+		}
+		 $this.find("tbody:eq(0)").after(tbody);
+	}
+	
+	function caculate_sum() {
+		var len = +$("#head th:not(:first-child)").length;
+		var sum = new Array(23).fill(0);
+
+		$("#tbody-data tr").each(function() {
+			$(this).children('td:not(:first-child)').each(function() {
+				var index = $(this).index() - 1;
+
+				sum[index] += +$(this).text();
+			});
+		});
+
+		$('#total-row td:not(:first-child)').each(function() {
+			var index = $(this).index() - 1;
+			$(this).text(sum[index]);
+		});
+	}
+})(jQuery);
+

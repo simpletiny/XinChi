@@ -8,6 +8,9 @@
 		<action name="updateSupplier" class="supplierAction" method="updateSupplier">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="blockSupplier" class="supplierAction" method="blockSupplier">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchSupplier" class="supplierAction" method="searchSupplier">
 			<result name="success" type="json"></result>
 		</action>

@@ -335,6 +335,12 @@ public class ResourcesConstants {
 	// 机票返款
 	public static String RECEIVED_FROM_WHERE_AIR_TICKET = "A";
 
+	public static String PAY_REJECT_DEFAULT_REASON = "账目不符";
+
 	/** 收入匹配申报来源 end **/
+
+	// ************************* 虚拟账户*********************************
+	// 单机票虚拟产品经理 员工号
+	public static String UNREAL_USER_NUMBER_ONLY_TICKET = "OT";
 
 }

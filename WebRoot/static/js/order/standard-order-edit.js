@@ -103,7 +103,7 @@ var OrderContext = function() {
 		}
 
 		var url = "";
-		if ($("#team-number").val() == "") {
+		if ($("#confirm-flg").val() == "N") {
 			url = self.apiurl + 'order/updateBudgetStandardOrder';
 		} else {
 			url = self.apiurl + 'order/updateConfirmedStandardOrder';

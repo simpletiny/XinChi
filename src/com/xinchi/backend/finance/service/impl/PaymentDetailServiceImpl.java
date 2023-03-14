@@ -1,15 +1,21 @@
 package com.xinchi.backend.finance.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -46,6 +52,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
+@Transactional
 public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Autowired
 	private PaymentDetailDAO dao;
@@ -54,7 +61,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	private CardDAO cardDao;
 
 	@Override
-	@Transactional
 	public String insert(PaymentDetailBean detail) {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -135,7 +141,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	}
 
 	@Override
-	@Transactional
 	public void saveInnerDetail(InnerTransferBean innerTransfer) {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -199,7 +204,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	}
 
 	@Override
-	@Transactional
 	public String deleteDetail(String detailId) {
 		PaymentDetailBean detail = dao.selectById(detailId);
 		if (detail.getMatch_flg().equals("Y")) {
@@ -244,7 +248,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	}
 
 	@Override
-	@Transactional
 	public String updateDetail(PaymentDetailBean newDetail) {
 		// check same time
 		PaymentDetailBean time = new PaymentDetailBean();
@@ -309,7 +312,6 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	}
 
 	@Override
-	@Transactional
 	public String importDetailExcel(File file) {
 		List<PaymentDetailBean> details = new ArrayList<PaymentDetailBean>();
 		try {
@@ -614,6 +616,109 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				receivedMatchDao.delete(rmb.getPk());
 			}
 		}
+		return SUCCESS;
+	}
+
+	@Override
+	public List<PaymentDetailBean> batUploadReceived(File file) {
+
+		List<PaymentDetailBean> details = new ArrayList<PaymentDetailBean>();
+
+		try {
+			InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			String line;
+
+			boolean first_line = true;
+			while ((line = br.readLine()) != null) {
+				String[] c = line.trim().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+				if (c.length != 6) {
+					continue;
+				} else {
+
+					String time = c[0].replaceAll("\"", "");
+					if (first_line) {
+						first_line = false;
+						continue;
+					}
+
+					String type = c[1].replaceAll("\"", "");
+					String giver = c[2].replaceAll("\"", "");
+					String goods = c[3].replaceAll("\"", "");
+					String name = c[4].replaceAll("\"", "");
+					String money = c[5].replaceAll("\"", "").replaceAll("¥", "").replaceAll(",", "");
+
+					String comment = type + "；付款人：" + giver + "；备注：" + goods + "；";
+
+					PaymentDetailBean pd = new PaymentDetailBean();
+
+					pd.setComment(StringUtils.substring(comment, 0, 200));
+					pd.setMoney(new BigDecimal(money));
+					pd.setType(name);
+
+					Date r_time = DateUtil.castStr2Date(time, "yyyy/M/d H:m");
+					if (r_time == null)
+						continue;
+					pd.setTime(DateUtil.castDate2Str(r_time, "yyyy-MM-dd HH:mm"));
+
+					details.add(pd);
+				}
+			}
+			br.close();
+		} catch (Exception e) {
+			file.delete();
+			System.err.format("IOException: %s%n", e);
+		}
+
+		file.delete();
+		return details;
+	}
+
+	@Override
+	public String batSaveReceived(String account, String json) {
+
+		JSONArray arr = JSONArray.fromObject(json);
+		if (null != arr && arr.size() > 0) {
+			List<PaymentDetailBean> pds = new ArrayList<PaymentDetailBean>();
+			Set<String> times = new HashSet<String>();
+			for (int i = 0; i < arr.size(); i++) {
+				JSONObject obj = arr.getJSONObject(i);
+				String time = obj.getString("time");
+				String type = obj.getString("type");
+				String comment = obj.getString("comment");
+				String money = obj.getString("money");
+
+				PaymentDetailBean pd = new PaymentDetailBean();
+				pd.setAccount(account);
+				pd.setTime(time);
+
+				pd.setType(type);
+				pd.setComment(SimpletinyString.removeEmoji(comment));
+				pd.setMoney(new BigDecimal(money));
+				pds.add(pd);
+
+				times.add(time);
+			}
+
+			if (times.size() < pds.size()) {
+				return "repeat";
+			}
+
+			for (PaymentDetailBean pd : pds) {
+				PaymentDetailBean option = new PaymentDetailBean();
+				option.setAccount(pd.getAccount());
+				option.setTime(pd.getTime());
+				List<PaymentDetailBean> sameDetail = dao.selectAllDetailsByParam(option);
+				if (null != sameDetail && sameDetail.size() > 0) {
+					return "time&" + pd.getTime();
+				}
+			}
+
+			for (PaymentDetailBean pd : pds) {
+				insert(pd);
+			}
+		}
+
 		return SUCCESS;
 	}
 }

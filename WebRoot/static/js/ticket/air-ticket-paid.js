@@ -106,8 +106,7 @@ var AgencyContext = function() {
 				retrun;
 			}
 
-			payableJson += '{"payable_pk":"' + payable_pk + '","this_paid":"'
-					+ this_paid + '"';
+			payableJson += '{"payable_pk":"' + payable_pk + '","this_paid":"' + this_paid + '"';
 
 			if (i == allPayables.length - 1) {
 				payableJson += '}';
@@ -127,9 +126,8 @@ var AgencyContext = function() {
 			var receiver = $(current).find("[name^='receiver']").val();
 			var money = $(current).find("[name^='money']").val();
 			var voucherFile = $(current).find("[name^='voucherFile']").val();
-			paidJson += '{"account":+"' + account + '","time":"' + time
-					+ '","receiver":"' + receiver + '","money":"' + money
-					+ '","voucherFile":"' + voucherFile + '"';
+			paidJson += '{"account":+"' + account + '","time":"' + time + '","receiver":"' + receiver + '","money":"'
+					+ money + '","voucherFile":"' + voucherFile + '"';
 
 			if (i == allAccount.length - 1) {
 				paidJson += '}';
@@ -140,15 +138,13 @@ var AgencyContext = function() {
 
 		paidJson += ']';
 
-		$.ajax(
-				{
-					type : "POST",
-					url : self.apiurl + 'payable/payAirTicket',
-					data : "paidJson=" + paidJson + "&payableJson="
-							+ payableJson + "&allot_money=" + sumMoney
-				}).success(function(str) {
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'payable/payAirTicket',
+			data : "paidJson=" + paidJson + "&payableJson=" + payableJson + "&allot_money=" + sumMoney
+		}).success(function(str) {
 			if (str == "success") {
-				window.history.go(-1);
+				window.location.href = self.apiurl + "templates/ticket/payable.jsp";
 			} else if (str == "time") {
 				fail_msg("同一账户在同一时间下已存在支出！");
 				endLoadingIndicator();
@@ -213,8 +209,7 @@ function changeFile(thisx) {
 	};
 	xhr.onload = function() {
 		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(
-					";")[1].split("=")[1];
+			var fileName = this.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
 			var blob = this.response;
 			var deleteButton = $("<div class='delete'>删除</div>");
 
@@ -234,14 +229,11 @@ function changeFile(thisx) {
 					img.width = initWidth;
 				}
 
-				$(img).mouseenter(
-						function() {
-							deleteButton.css("top", $(img).offset().top
-									+ img.height / 2 - 25);
-							deleteButton.css("left", $(img).offset().left
-									+ img.width / 2 - 50);
-							deleteButton.show();
-						});
+				$(img).mouseenter(function() {
+					deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
+					deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
+					deleteButton.show();
+				});
 				$(img).mouseout(function() {
 					deleteButton.hide();
 				});

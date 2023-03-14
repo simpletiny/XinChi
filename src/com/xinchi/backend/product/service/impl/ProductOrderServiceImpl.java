@@ -1,5 +1,6 @@
 package com.xinchi.backend.product.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -226,12 +227,19 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		for (OrderDto order : orders) {
 
 			if (order.getStandard_flg().equals("Y")) {
+
 				BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
 				bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+				if (has_ticket.equals("NO")) {
+					bsOrder.setAir_ticket_cost(BigDecimal.ZERO);
+				}
 				bsoDao.update(bsOrder);
 			} else {
 				BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
 				bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+				if (has_ticket.equals("NO")) {
+					bnsOrder.setAir_ticket_cost(BigDecimal.ZERO);
+				}
 				bnsoDao.update(bnsOrder);
 			}
 		}

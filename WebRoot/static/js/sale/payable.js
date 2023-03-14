@@ -143,7 +143,6 @@ var OrderContext = function() {
 		for (var i = 0; i < allot.length; i++) {
 			var current = allot[i];
 			var payable_pk = $(current).find("[st='back-pk']").val();
-			console.log(payable_pk);
 			var n = $(current).find("[st='team_number']").val();
 			var r = $(current).find("[st='back_receive']").val();
 			var p = $(current).find("[st='supplier_employee_pk']").val();
@@ -179,7 +178,15 @@ var OrderContext = function() {
 
 	self.totalPay = ko.observable();
 	self.today = ko.observable();
-	self.today((new Date()).Format("yyyy-MM-dd"));
+	var today_date = new Date();
+	self.today(today_date.Format("yyyy-MM-dd"));
+	self.tomorrow = ko.observable();
+	var dow = today_date.getDay();
+	if (dow == 5 || dow == 6) {
+		self.tomorrow(today_date.addDate(8 - dow).Format("yyyy-MM-dd 18:00"))
+	} else {
+		self.tomorrow(today_date.addDate(1).Format("yyyy-MM-dd 18:00"))
+	}
 
 	// 支付申请
 	self.pay = function() {
@@ -252,6 +259,7 @@ var OrderContext = function() {
 			});
 		}
 	};
+
 	// 执行支付申请
 	self.applyPay = function() {
 		if (!$("#form-pay").valid())
@@ -264,6 +272,12 @@ var OrderContext = function() {
 			fail_msg("分配金额合计和总金额不匹配");
 			return;
 		}
+
+		// 验证时间的合法性
+		var limit_time = $(".st-limit-time").val();
+		var date_limit = new Date(limit_time);
+		if (!isLegalLimitDate(date_limit))
+			return;
 
 		var data = $("#form-pay").serialize();
 		var allot_json = '[';
@@ -588,7 +602,6 @@ var OrderContext = function() {
 	};
 
 	self.chosenAll = function(obj) {
-		console.log(obj);
 	};
 	self.zeroBalance = function() {
 		self.refresh();
@@ -696,10 +709,6 @@ var OrderContext = function() {
 		self.refresh();
 	};
 
-	self.resetPage = function() {
-
-	};
-
 	self.editOrder = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单");
@@ -784,7 +793,6 @@ $(document).ready(function() {
 			required : "yes"
 		});
 	});
-
 });
 function checkAll(chk) {
 	if ($(chk).is(":checked")) {
@@ -798,4 +806,33 @@ function checkAll(chk) {
 			ctx.chosenOrders.remove(payable);
 		}
 	}
+}
+
+function isLegalLimitDate(date) {
+	if (date.getDay() == 6 || date.getDay() == 0) {
+		fail_msg("不能选择周末的时间!");
+		return false;
+	}
+
+	var minDate;
+
+	var x = new Date();
+	x.setHours(0);
+	x.setMinutes(0);
+	x.setSeconds(0);
+	var dow = x.getDay();
+	if (dow == 5 || dow == 6) {
+		minDate = x.addDate(8 - dow);
+		minDate.setHours(18);
+	} else {
+		minDate = x.addDate(1);
+		minDate.setHours(18);
+	}
+
+	if (!date.after(minDate, 'yyyy-MM-dd hh:mm') && !date.equal(minDate, 'yyyy-MM-dd hh:mm')) {
+		fail_msg("最早时间为下一个工作日18:00!");
+		return false;
+	}
+
+	return true;
 }

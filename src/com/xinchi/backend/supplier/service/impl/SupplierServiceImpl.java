@@ -55,8 +55,7 @@ public class SupplierServiceImpl implements SupplierService {
 	}
 
 	@Override
-	public List<com.xinchi.bean.SupplierBean> getAllCompaniesByParam(
-			com.xinchi.bean.SupplierBean bo) {
+	public List<com.xinchi.bean.SupplierBean> getAllCompaniesByParam(com.xinchi.bean.SupplierBean bo) {
 		return dao.getAllByParam(bo);
 	}
 
@@ -76,8 +75,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 	@Override
 	@Transactional
-	public void saveSupplierFile(SupplierFileBean supplierFile)
-			throws IOException {
+	public void saveSupplierFile(SupplierFileBean supplierFile) throws IOException {
 		if (!isEmpty(supplierFile.getLicence_name())) {
 			SupplierFileBean sfb = new SupplierFileBean();
 			sfb.setSupplier_pk(supplierFile.getSupplier_pk());
@@ -134,18 +132,16 @@ public class SupplierServiceImpl implements SupplierService {
 	}
 
 	@Override
-	public List<SupplierFileBean> searchSupplierFilesBySupplierPk(
-			String supplier_pk) {
+	public List<SupplierFileBean> searchSupplierFilesBySupplierPk(String supplier_pk) {
 		return supplierFileDAO.selectSupplierFilesBySupplierPk(supplier_pk);
 	}
 
 	private void saveFile(SupplierFileBean sfb) throws IOException {
 		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		String fileFolder = PropertiesUtil.getProperty("supplierFileFolder");
-		File sourceFile = new File(tempFolder + File.separator
-				+ sfb.getFile_name());
-		File destfile = new File(fileFolder + File.separator
-				+ sfb.getSupplier_pk() + File.separator + sfb.getFile_name());
+		File sourceFile = new File(tempFolder + File.separator + sfb.getFile_name());
+		File destfile = new File(
+				fileFolder + File.separator + sfb.getSupplier_pk() + File.separator + sfb.getFile_name());
 		FileUtils.copyFile(sourceFile, destfile);
 		sourceFile.delete();
 		supplierFileDAO.insert(sfb);
@@ -153,15 +149,14 @@ public class SupplierServiceImpl implements SupplierService {
 
 	private void deleteFile(SupplierFileBean sfb) {
 		String fileFolder = PropertiesUtil.getProperty("supplierFileFolder");
-		File destfile = new File(fileFolder + File.separator
-				+ sfb.getSupplier_pk() + File.separator + sfb.getFile_name());
+		File destfile = new File(
+				fileFolder + File.separator + sfb.getSupplier_pk() + File.separator + sfb.getFile_name());
 		destfile.delete();
 	}
 
 	@Override
 	@Transactional
-	public void updateSupplierFile(SupplierFileBean supplierFile)
-			throws IOException {
+	public void updateSupplierFile(SupplierFileBean supplierFile) throws IOException {
 
 		List<SupplierFileBean> check = null;
 		if (!isEmpty(supplierFile.getLicence_name())) {
@@ -275,5 +270,13 @@ public class SupplierServiceImpl implements SupplierService {
 		sfb.setFile_name(file_name);
 		deleteFile(sfb);
 		supplierFileDAO.deleteFileByParam(sfb);
+	}
+
+	@Override
+	public String blockSupplier(String supplier_pk) {
+		SupplierBean s = dao.selectByPrimaryKey(supplier_pk);
+		s.setIs_cooperate("N");
+		dao.update(s);
+		return SUCCESS;
 	}
 }

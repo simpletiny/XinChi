@@ -348,7 +348,9 @@ $(document).ready(function() {
 					var name = arr[1];
 					var id = arr[2];
 					var cellphone = arr[7];
-					text += name + "；" + id + "；" + cellphone + "；\n";
+					var sex = id.charAt(id.length - 2) % 2 == 1 ? "男" : "女";
+					var birthday = id.substr(6, 4) + "/" + id.substr(10, 2) + "/" + id.substr(12, 2);
+					text += name + "；" + id + "；" + cellphone + "；" + sex + "；" + birthday + "；\n";
 				}
 			}
 			return text;

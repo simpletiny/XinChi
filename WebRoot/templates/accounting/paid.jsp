@@ -138,7 +138,7 @@
 					</div>
 					<!-- /ko -->
 				</div>
-				<form class="form-box info-form">
+				<form class="form-box info-form"> <!-- id="test" -->
 					<input type="hidden" id="wfp_pk" value="<%=key%>" />
 					<div>
 						<div class="input-row clearfloat">
@@ -153,7 +153,7 @@
 							<div class="col-md-6 required">
 								<label class="l">支出时间</label>
 								<div class="ip">
-									<input type="text" name="time1" data-bind="value:current_min" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
+									<input type="text" name="time1" data-bind="value:current_min" class="ip- datesecond-picker"  name="xx" placeholder="支出时间" required="required" />
 								</div>
 							</div>
 						</div>
@@ -168,8 +168,8 @@
 							<div class="col-md-6 required">
 								<label class="l">支付金额</label>
 								<div class="ip">
-									<input type="number" data-bind="value: defaultMoney()" name="money1" class="ip-" placeholder="支付金额"
-										required="required" />
+									<input type="number" style="width:40%" data-bind="value: defaultMoney()" name="money1" id="txt-money1" class="ip-" placeholder="支付金额"
+										required="required" /> 
 								</div>
 							</div>
 						</div>
@@ -225,13 +225,13 @@
 				<div class="col-md-6 required">
 					<label class="l">支付金额</label>
 					<div class="ip">
-						<input type="number" name="money" class="ip-" placeholder="支付金额" required="required" />
+						<input type="number" style="width:40%" name="money" data-bind="value: defaultMoney()"  class="ip-" id="txt-money" placeholder="支付金额" required="required" />
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
-					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" name="file" /></a> <input
+					<a href="javascript:;" class="a-upload">上传凭证<input type="file" accept=".jpg,.png" required="required" name="file" /></a> <input
 						type="hidden" name="voucherFile" />
 				</div>
 				<div class="col-md-6"></div>
@@ -247,6 +247,7 @@
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
+	<script type="text/javascript" src="<%=basePath%>static/vendor/chinese_number.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/accounting/paid.js"></script>

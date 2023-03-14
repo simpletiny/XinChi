@@ -3,7 +3,7 @@ var SupplierEmployeeContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.supplier = ko.observable({});
-	self.genders = [ '男', '女' ];
+	self.genders = ['男', '女'];
 
 	self.employee = ko.observable({});
 	self.suppliers = ko.observable({
@@ -14,12 +14,12 @@ var SupplierEmployeeContext = function() {
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
-			title : [ '选择财务主体', '' ],
+			title : ['选择财务主体', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#financial_pick'
@@ -31,7 +31,7 @@ var SupplierEmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "supplier.supplier_short_name=" + $("#supplier_name").val();
+		var param = "supplier.is_cooperates='Y'&supplier.supplier_short_name=" + $("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);
@@ -104,7 +104,7 @@ var SupplierEmployeeContext = function() {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

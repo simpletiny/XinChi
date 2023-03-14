@@ -39,7 +39,8 @@
 						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">删除</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-							<button type="submit" title="只生成应收款" class="btn btn-green col-md-1" data-bind="click: function() { createReceivable() }">生成订单</button>
+							<button type="submit" title="只生成应收款" class="btn btn-green"
+								data-bind="click: function() { createReceivable() }">生成应收款</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
 						</div>
 					</div>
@@ -95,7 +96,6 @@
 								<th></th>
 								<th>团号</th>
 								<th>客户</th>
-								<th>财务主体</th>
 								<th>产品名称</th>
 								<th>天数</th>
 								<th>成人</th>
@@ -103,6 +103,7 @@
 								<th>出团日期</th>
 								<th>首段城市对</th>
 								<th>总团款</th>
+								<th>尾款</th>
 								<th>确认件</th>
 								<th>订单备注</th>
 								<th>产品经理</th>
@@ -119,7 +120,6 @@
 									data-bind="attr: {'value': $data.pk+';'+$data.standard_flg+';'+$data.independent_flg}, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
-								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.adult_count"></td>
@@ -127,6 +127,7 @@
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.start_city +'-'+ $data.end_city"></td>
 								<td data-bind="text: $data.receivable"></td>
+								<td data-bind="text: $data.balance"></td>
 								<!-- ko if:$data.confirm_file!=null && $data.confirm_file != '' -->
 								<td><a href="javascript:void(0)"
 									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
@@ -169,8 +170,7 @@
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

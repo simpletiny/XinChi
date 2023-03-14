@@ -1,5 +1,5 @@
-var viewDetailLayer;
-var viewCommentLayer;
+var reasonLayer;
+var employeeLayer;
 var PaidContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -9,17 +9,20 @@ var PaidContext = function() {
 		total : 0,
 		items : []
 	});
-
-	self.items = ko.observableArray(['D', 'X', 'B', 'P', 'J', 'G', 'Q', 'T']);
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F'])
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
-		'B' : '办公费用',
-		'P' : '票务费用',
+		'H' : '亲情费用',
 		'J' : '产品费用',
-		'G' : '工资费用',
-		'Q' : '其他支出',
-		'T' : '投诉赔偿',
+		'T' : '唯品费',
+		'P' : '票务费用',
+		'B' : '办公费用',
+		'E' : '招待费',
+		'K' : '差旅费用',
+		'G' : '个人工资',
+		'C' : '分红分润',
+		'Q' : '其它支出',
 		'M' : '多付返款',
 		'F' : 'FLY'
 	};
@@ -54,18 +57,6 @@ var PaidContext = function() {
 		'N' : '已驳回',
 		'P' : '已入账'
 	};
-	self.itemMapping = {
-		'D' : '地接款',
-		'X' : '销售费用',
-		'B' : '办公费用',
-		'P' : '票务费用',
-		'J' : '产品费用',
-		'G' : '工资费用',
-		'Q' : '其他支出',
-		'T' : '投诉赔偿',
-		'M' : '多付返款',
-		'F' : 'FLY'
-	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
 	self.totalReceivable = ko.observable(0);
@@ -77,6 +68,8 @@ var PaidContext = function() {
 	self.sumCardBalance = ko.observable();
 	self.sum_waiting_for_paid = ko.observable();
 	self.refresh = function() {
+
+		startLoadingIndicator("加载中……");
 		var totalPeople = 0;
 		var totalReceivable = 0;
 		var totalPayable = 0;
@@ -109,16 +102,13 @@ var PaidContext = function() {
 			self.setPageNums(self.currentPage());
 
 			$(".rmb").formatCurrency();
+			endLoadingIndicator();
 		});
 	};
 
 	self.agree = function(paid) {
-		var data;
-		if (paid.item == 'D' || paid.item == 'P') {
-			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
-		} else {
-			data = "item=" + paid.item + "&pk=" + paid.pk;
-		}
+		var data = "item=" + paid.item + "&pk=" + paid.pk;
+
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -134,9 +124,11 @@ var PaidContext = function() {
 						url : self.apiurl + 'accounting/agreePayApply',
 						data : data
 					}).success(function(str) {
+						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
-							endLoadingIndicator();
+						} else if (str == "NOFINANCIAL") {
+							fail_msg("客户不存在财务主体！");
 						}
 					});
 				}
@@ -144,13 +136,33 @@ var PaidContext = function() {
 		});
 	};
 
+	var current_data;
 	self.reject = function(paid) {
-		var data;
-		if (paid.item == 'D') {
-			data = "item=" + paid.item + "&related_pk=" + paid.related_pk + "&pk=" + paid.pk;
-		} else {
-			data = "item=" + paid.item + "&pk=" + paid.pk;
-		}
+		current_data = paid;
+		$("#txt-comment").val("");
+		reasonLayer = $.layer({
+			type : 1,
+			title : ['驳回理由', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '300px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#comment'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
+
+	self.doReject = function() {
+		var data = "item=" + current_data.item + "&pk=" + current_data.pk;
+
+		var comment = $("#txt-comment").val().trim();
+		data += "&reject_reason=" + comment;
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -166,7 +178,9 @@ var PaidContext = function() {
 						url : self.apiurl + 'accounting/rejectPayApply',
 						data : data
 					}).success(function(str) {
+
 						if (str == "success") {
+							layer.close(reasonLayer);
 							self.refresh();
 							endLoadingIndicator();
 						}
@@ -174,77 +188,28 @@ var PaidContext = function() {
 				}
 			}
 		});
-	};
-	self.sumDetails = ko.observable({
-		total : 0,
-		items : []
-	});
-	self.order = ko.observable({
-		team_number : "",
-		client_employee_name : "",
-		product : "",
-		people_count : "",
-		departure_date : ""
+	}
+	self.cancel = function() {
+		layer.close(reasonLayer);
+	}
+	self.employee = ko.observable({});
+	self.checkEmployee = function(data) {
+		var param = "related_pk=" + data.related_pk;
 
-	});
-	self.comment = ko.observable();
-	self.viewComment = function(detail) {
-		if (detail.type == "STRIKE") {
-			msg(detail.comment);
-		} else {
-			var param = "related_pk=" + detail.related_pk;
-			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchPaidByRelatedPk', param, function(data) {
-				self.order(data.order);
-				self.comment(detail.comment);
-				endLoadingIndicator();
-				viewCommentLayer = $.layer({
-					type : 1,
-					title : ['摘要详情', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['700px', 'auto'],
-					offset : ['150px', ''],
-					scrollbar : true,
-					page : {
-						dom : '#comment'
-					},
-					end : function() {
-						console.log("Done");
-					}
-				});
-			});
-		}
-	};
-	self.sumDetail = ko.observable({
-		card_account : "",
-		sum_received : "",
-		client_employee_name : "",
-		allot_received : ""
-
-	});
-	self.viewDetail = function(related_pk) {
-		var param = "related_pks=" + related_pk;
-		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
-
-			self.sumDetails(data.paids);
-			self.sumDetail(self.sumDetails()[0]);
-			$(".rmb").formatCurrency();
-			endLoadingIndicator();
-
-			viewDetailLayer = $.layer({
+		$.getJSON(self.apiurl + 'accounting/searchMoreBackClientEmployee', param, function(data) {
+			self.employee(data.client_employee);
+			console.log(data.client_employee);
+			employeeLayer = $.layer({
 				type : 1,
-				title : ['合账详情', ''],
+				title : ['多付返款客户', ''],
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['150px', ''],
+				area : ['600px', '300px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
-					dom : '#sum_detail'
+					dom : '#employee'
 				},
 				end : function() {
 					console.log("Done");
@@ -252,7 +217,7 @@ var PaidContext = function() {
 			});
 		});
 
-	};
+	}
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

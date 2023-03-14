@@ -2,18 +2,19 @@ var ReimbursementContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.items = ko.observableArray(['X', 'B', 'P', 'J', 'G', 'Q', 'T']);
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q']);
 	self.itemMapping = {
-		'D' : '地接款',
 		'X' : '销售费用',
-		'B' : '办公费用',
-		'P' : '票务费用',
+		'H' : '客情费用',
 		'J' : '产品费用',
-		'G' : '工资费用',
-		'Q' : '其他支出',
-		'T' : '投诉赔偿',
-		'M' : '多付返款',
-		'F' : 'FLY'
+		'T' : '唯品费',
+		'P' : '票务费用',
+		'B' : '办公费用',
+		'E' : '招待费',
+		'K' : '差旅费用',
+		'G' : '个人工资',
+		'C' : '分红分润',
+		'Q' : '其它支出'
 	};
 
 	self.statusMapping = {
@@ -34,29 +35,27 @@ var ReimbursementContext = function() {
 		var total = 0;
 		var param = $("form").serialize();
 
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		startLoadingIndicator("加载中...");
-		$.getJSON(self.apiurl + 'accounting/searchReimbursementByPage', param,
-				function(data) {
-					self.reimbursements(data.reimbursements);
+		$.getJSON(self.apiurl + 'accounting/searchReimbursementByPage', param, function(data) {
+			self.reimbursements(data.reimbursements);
 
-					// 计算合计
-					$(self.reimbursements()).each(function(idx, data) {
-						if (data.status == "P") {
-							total += data.money;
-						}
-					});
+			// 计算合计
+			$(self.reimbursements()).each(function(idx, data) {
+				if (data.status == "P") {
+					total += data.money;
+				}
+			});
 
-					self.totalMoney(total);
+			self.totalMoney(total);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					$(".rmb").formatCurrency();
+			$(".rmb").formatCurrency();
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.chosenReimbursements = ko.observableArray([]);
@@ -84,13 +83,11 @@ var ReimbursementContext = function() {
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
-						$.ajax(
-								{
-									type : "POST",
-									url : self.apiurl
-											+ 'accounting/deleteReibursement',
-									data : data
-								}).success(function(str) {
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'accounting/deleteReibursement',
+							data : data
+						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
 								self.refresh();
@@ -104,6 +101,18 @@ var ReimbursementContext = function() {
 			});
 		}
 
+	}
+
+	self.viewRejectReason = function(back_pk) {
+		var data = "back_pk=" + back_pk;
+
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'accounting/searchRejectReason',
+			data : data
+		}).success(function(str) {
+			success_msg(str);
+		});
 	}
 	// start pagination
 	self.currentPage = ko.observable(1);
@@ -139,8 +148,7 @@ var ReimbursementContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

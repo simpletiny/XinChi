@@ -47,6 +47,13 @@
 									name="drop_off.from_city" />
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">到达城市</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="到达城市" data-bind="value:from_city()"
+									name="drop_off.to_city" />
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
@@ -57,7 +64,7 @@
 								</div>
 							</div>
 						</s:if>
-						<div style="padding-top: 3px;">
+						<div style="padding-top: 15px;float:right"> 
 							<button type="submit" class="btn btn-green col-md-1" st="btn-search" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>

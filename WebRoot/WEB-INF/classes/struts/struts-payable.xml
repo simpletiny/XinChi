@@ -74,9 +74,17 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+
 		<!-- 打回票务支出 -->
 		<action name="rollBackTicketPayApply" class="airTicketPaidDetailAction" method="rollBackTicketPayApply">
 			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 查询地接款汇总信息 -->
+		<action name="searchPayableSummaryByPage" class="payableAction" method="searchPayableSummaryByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 	</package>
 </struts>

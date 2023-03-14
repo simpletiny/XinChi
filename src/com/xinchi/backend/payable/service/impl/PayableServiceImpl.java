@@ -388,4 +388,9 @@ public class PayableServiceImpl implements PayableService {
 	public void deleteByPk(String pk) {
 		dao.deleteByPk(pk);
 	}
+
+	@Override
+	public List<PayableSummaryBean> searchPayableSummaryByPage(Page<PayableSummaryBean> page) {
+		return dao.selectPayableSummaryByPage(page);
+	}
 }

@@ -517,6 +517,415 @@
 			<comment>ALTER VIEW budget_order_view </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE product_profit (
+					  departure_month VARCHAR(7) NOT NULL COMMENT '出团月',
+					  status CHAR(1) NOT NULL COMMENT '状态，N待审核,Y待终审,P已完结\n',
+					  people_count INT NULL DEFAULT 0 COMMENT '实发人数',
+					  gross_profit DECIMAL(12,2) NULL COMMENT '毛利润',
+					  product_cost DECIMAL(12,2) NULL COMMENT '产品费用',
+					  keep_cost DECIMAL(12,2) NULL COMMENT '唯品费',
+					  air_lose DECIMAL(12,2) NULL COMMENT '机票损失',
+					  other_cost DECIMAL(12,2) NULL COMMENT '其他费用',
+					  profit DECIMAL(12,2) NULL COMMENT '产品利润',
+					  user_number VARCHAR(10) NULL COMMENT '产品经理用户number',
+					  pk CHAR(22) NOT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '产品利润表';
+             ]]>
+			<comment>CREATE TABLE product_profit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="23" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_product_area;
+            	CREATE VIEW view_product_area AS
+			    SELECT 
+			        COUNT(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            A.pk,
+			            NULL)) AS order_cnt,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+			            0)) AS score,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+			            0)) AS sum_people,
+			        LEFT(A.departure_date, 7) AS departure_month,
+			        A.product_manager_number AS product_manager_number,
+			        C.user_name AS product_manager_name,
+			        E.client_area AS area
+			    FROM
+			        budget_order_view A
+			            LEFT JOIN
+			        final_order_view B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        user_base C ON A.product_manager_number = C.user_number
+			            LEFT JOIN
+			        client_employee D ON A.client_employee_pk = D.pk
+			            LEFT JOIN
+			        client E ON D.financial_body_pk = E.pk
+			    GROUP BY A.product_manager_number , E.client_area , LEFT(A.departure_date, 7)
+			    HAVING departure_month IS NOT NULL
+			        AND area IS NOT NULL;
+             ]]>
+			<comment>ALTER view view_product_area</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 DROP VIEW IF EXISTS view_product_product;
+            	 CREATE view view_product_product AS
+				 SELECT 
+				        COUNT(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            A.pk,
+				            NULL)) AS order_cnt,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+				            0)) AS score,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS sum_people,
+				        LEFT(A.departure_date, 7) AS departure_month,
+				        A.product_pk AS product_pk,
+				        C.name AS product_name,
+				        C.product_manager AS product_manager_number,
+				        D.user_name AS product_manager_name
+				    FROM
+				        budget_standard_order A
+				            LEFT JOIN
+				        final_standard_order B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        product C ON A.product_pk = C.pk
+				            LEFT JOIN
+				        user_base D ON C.product_manager = D.user_number
+				    GROUP BY C.product_manager , C.pk , LEFT(A.departure_date, 7)
+				    HAVING product_manager_number is not null;
+             ]]>
+			<comment>ALTER view view_product_product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_product_sale;
+            	 CREATE view view_product_sale AS
+				    SELECT 
+				        COUNT(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            A.pk,
+				            NULL)) AS order_cnt,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+				            0)) AS score,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (B.final_type IS NULL
+				                OR B.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS sum_people,
+				        LEFT(A.departure_date, 7) AS departure_month,
+				        A.create_user_number AS sale_number,
+				        C.user_name AS sale_name,
+				        A.product_manager_number AS product_manager_number,
+				        D.user_name AS product_manager_name
+				    FROM
+				        budget_order_view A
+				            LEFT JOIN
+				        final_order_view B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        user_base C ON A.create_user_number = C.user_number
+							LEFT JOIN
+						user_base D ON A.product_manager_number = D.user_number
+				    GROUP BY A.product_manager_number, A.create_user , LEFT(A.departure_date, 7);
+             ]]>
+			<comment>ALTER view view_product_sale</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE VIEW view_product_profit_a AS
+			    SELECT 
+			        LEFT(A.departure_date, 7) AS departure_month,
+			        GROUP_CONCAT(DISTINCT X.approved
+			            SEPARATOR ',') AS status,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (D.final_type IS NULL
+			                OR D.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+			            0)) AS people_count,
+			        A.product_manager_number,
+			        SUM(IF(X.discount_flg = 'Y',
+			            X.discount_receivable,
+			            IF(B.final_flg = 'Y',
+			                B.final_receivable,
+			                B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+			            0,
+			            A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+			            0,
+			            A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost) AS gross_profit
+			    FROM
+			        team_report X
+			            LEFT JOIN
+			        budget_order_view A ON A.team_number = X.team_number
+			            LEFT JOIN
+			        receivable B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        view_team_payable C ON A.team_number = C.team_number
+			            LEFT JOIN
+			        final_order_view D ON A.team_number = D.team_number
+			    GROUP BY LEFT(A.departure_date, 7) , A.product_manager_number;
+			    
+			CREATE VIEW view_product_profit_b AS
+			    SELECT 
+			        SUM(IF(item = 'J', money, 0)) AS product_cost,
+			        SUM(IF(item = 'T', money, 0)) AS keep_cost,
+			        month AS departure_month,
+			        apply_user AS user_number
+			    FROM
+			        xinchi.reimbursement
+			    WHERE
+			        item IN ('J' , 'T') AND status != 'N'
+			            AND delete_flg = 'N'
+			    GROUP BY month , apply_user;
+			    
+			CREATE VIEW view_product_profit AS
+			SELECT 
+			    A.departure_month,
+			    CASE A.status
+			        WHEN 'N' THEN 'N'
+			        WHEN 'Y' THEN 'Y'
+			        ELSE 'N'
+			    END AS status,
+			    A.people_count,
+			    A.product_manager_number AS user_number,
+			    A.gross_profit,
+			    B.product_cost,
+			    B.keep_cost
+			FROM
+			    view_product_profit_a A
+			        LEFT JOIN
+			    view_product_profit_b B ON A.product_manager_number = B.user_number
+			        AND A.departure_month = B.departure_month;
+             ]]>
+			<comment>create view view_product_profit_a,view_product_profit_b,view_product_profit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_score;
+            	CREATE VIEW  view_score AS
+					SELECT sum((IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value) AS score,
+				    sum(IF(LEFT(A.confirm_date,7)=LEFT(curdate(),7),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0))*A.product_value,0) ) as month_score,
+					A.create_user AS user_number,
+					B.user_name AS user_name,
+			        B.pk AS user_pk
+					FROM budget_standard_order A
+					LEFT JOIN user_base B on A.create_user = B.user_number
+		            where LEFT(A.confirm_date,7)>='2023-02'
+			        GROUP by create_user;
+             ]]>
+			<comment>ALTER VIEW view_score</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_sum_reimbursement;
+					 CREATE VIEW view_sum_reimbursement AS
+					    SELECT 
+					        SUM(money) AS sum_reimbursement, apply_user
+					    FROM
+					        reimbursement
+					    WHERE
+					        month >= '2023-02' AND status != 'N'
+					            AND item in ('X','H')
+					    GROUP BY apply_user;
+             ]]>
+			<comment>ALTER VIEW view_sum_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+				DROP VIEW IF EXISTS  view_month_reimbursement;
+					  CREATE VIEW view_month_reimbursement AS
+						   SELECT 
+							    SUM(money) AS sum_reimbursement, apply_user
+							FROM
+							    reimbursement
+							WHERE
+							    month = DATE_FORMAT(NOW(), '%Y-%m')
+							        AND status != 'N'
+							        AND item IN ('X' , 'H')
+							GROUP BY apply_user;
+             ]]>
+			<comment>ALTER VIEW view_month_reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE pages (
+					  page_url VARCHAR(50) NOT NULL COMMENT '页面地址',
+					  level TINYINT(2) UNSIGNED NOT NULL COMMENT '页面层级',
+					  father_pk CHAR(22) NULL COMMENT '父页面pk',
+					  order_index TINYINT(2) UNSIGNED NOT NULL COMMENT '排序',
+					  page_title VARCHAR(20) NOT NULL COMMENT '页面标题（名称）',
+					  page_class VARCHAR(20) NULL COMMENT '页面分类（目前用于子页面定位）',
+					  pk CHAR(22) NOT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '页面表';
+             ]]>
+			<comment>CREATE TABLE pages</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE pages_role (
+					  role VARCHAR(10) NOT NULL COMMENT '角色',
+					  page_pk CHAR(22) NOT NULL COMMENT '页面pk',
+					  page_url VARCHAR(50) NULL COMMENT '页面地址',
+					  is_father CHAR(1) NOT NULL DEFAULT 'N' COMMENT '是否为一级页面',
+					  pk CHAR(22) NOT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+             ]]>
+			<comment>CREATE TABLE page_role</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+			INSERT INTO user_base (login_name, password, user_number, id, user_name, sex, delete_flg, user_status, create_time, update_time, pk, approve_user, approve_time) VALUES ('onlyticket', '697401ab403aa81eaf1eb314c0e4a89e', 'OT', '13154878', '单机票', 'F', 'N', 'N', '1678263451066', '1678263459723', 'dHWAcoB7fHF3dXJ3d3R-dw', 'N00000', '1678263459723');
+            INSERT INTO user_info (id, id_file_name, user_right, update_time, create_time, pk, nick_name, cellphone, user_role, credit_limit, credit_balance) VALUES ('13154878', 'no', '', '1678263459725', '1678263451076', 'cnN7dnVxfIB3cXJ8dXV3dg', '单机票', '15454787878', 'PRODUCT', '0.00', '0.00');
+             ]]>
+			<comment>INSERT INTO user_base,user_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE budget_standard_order 
+					CHANGE COLUMN product_value product_value VARCHAR(10) NULL DEFAULT NULL COMMENT '产品分值,例10,2,代表成人10分其他2分' ;
+            
+             ]]>
+			<comment>ALTER TABLE budget_standard_order </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+				 DROP VIEW IF EXISTS view_product_profit_a;
+				 CREATE VIEW view_product_profit_a AS
+				    SELECT 
+				        LEFT(A.departure_date, 7) AS departure_month,
+				        GROUP_CONCAT(DISTINCT X.approved
+				            SEPARATOR ',') AS status,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (D.final_type IS NULL
+				                OR D.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS people_count,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (D.final_type IS NULL
+				                OR D.final_type != 4),
+				            IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
+				            0)) AS score,
+				        A.product_manager_number,
+				        SUM(IF(X.discount_flg = 'Y',
+				            X.discount_receivable,
+				            IF(B.final_flg = 'Y',
+				                B.final_receivable,
+				                B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+				            0,
+				            A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+				            0,
+				            A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost) AS gross_profit
+				    FROM
+				        team_report X
+				            LEFT JOIN
+				        budget_order_view A ON A.team_number = X.team_number
+				            LEFT JOIN
+				        receivable B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        view_team_payable C ON A.team_number = C.team_number
+				            LEFT JOIN
+				        final_order_view D ON A.team_number = D.team_number
+				    GROUP BY LEFT(A.departure_date, 7) , A.product_manager_number;
+				
+				 DROP VIEW IF EXISTS view_product_profit;
+				 CREATE VIEW view_product_profit AS
+				SELECT 
+				    A.departure_month,
+				    CASE A.status
+				        WHEN 'N' THEN 'N'
+				        WHEN 'Y' THEN 'Y'
+				        ELSE 'N'
+				    END AS status,
+				    A.people_count,
+				    A.score,
+				    A.product_manager_number AS user_number,
+				    A.gross_profit,
+				    B.product_cost,
+				    B.keep_cost
+				FROM
+				    view_product_profit_a A
+				        LEFT JOIN
+				    view_product_profit_b B ON A.product_manager_number = B.user_number
+				        AND A.departure_month = B.departure_month;
+             ]]>
+			<comment>ALTER VIEW view_product_profit_a,view_product_profit </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+				 ALTER TABLE pay_approval 
+					ADD COLUMN reject_reason VARCHAR(50) NULL COMMENT '驳回理由，限制在50字以内' AFTER receiver_bank;
+             ]]>
+			<comment>ALTER TABLE pay_approval</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

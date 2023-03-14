@@ -211,12 +211,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 		List<ClientReceivedDetailBean> res = dao.selectByParam(option);
 		BigDecimal discount_received = BigDecimal.ZERO;
 		for (ClientReceivedDetailBean re : res) {
-			if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)) {
-				if (re.getType().equals(ResourcesConstants.RECEIVED_TYPE_PAY)) {
-					discount_received = discount_received.add(re.getReceived());
-				} else {
-					discount_received = discount_received.add(re.getReceived());
-				}
+			if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)
+					&& !re.getType().equals(ResourcesConstants.RECEIVED_TYPE_FLY)) {
+				discount_received = discount_received.add(re.getReceived());
 			}
 		}
 		tr.setDiscount_receivable(discount_received);
@@ -302,6 +299,14 @@ public class ReceivedServiceImpl implements ReceivedService {
 		pa.setLimit_time(detail.getLimit_time());
 
 		payApprovalDao.insert(pa);
+
+		// 更新单团核算数据
+		TeamReportBean tr = orderReportDao.selectTeamReportByTn(detail.getTeam_number());
+		if (tr.getDiscount_flg().equals("Y")) {
+			tr.setDiscount_receivable(tr.getDiscount_receivable().add(detail.getReceived()));
+			orderReportDao.updateTeamReport(tr);
+		}
+
 		return SUCCESS;
 	}
 
@@ -411,8 +416,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 	@Override
 	public String checkIs98(String team_number) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
-		if (order.getConfirm_flg().equals("N"))
-			return "not";
+		// 98清尾不需要确认订单
+		// if (order.getConfirm_flg().equals("N"))
+		// return "not";
 
 		// 非标订单不享受打折
 		if (order.getStandard_flg().equals("N"))

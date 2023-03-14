@@ -277,9 +277,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (null != results3 && results3.size() > 0) {
 			return "exist_order";
 		}
-		ClientEmployeeBean ceb = dao.selectByPrimaryKey(employee_pk);
-		deleteOldHead(ceb.getHead_photo());
+
+		// 检查是否已审核
+		if (!candelete) {
+			// 如果不是管理员，则不能删除
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			String roles = sessionBean.getUser_roles();
+
+			if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+				return "alreadyreview";
+			}
+		}
 		// 删除头像
+		deleteOldHead(employee.getHead_photo());
+
 		dao.delete(employee_pk);
 		return SUCCESS;
 	}

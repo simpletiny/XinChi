@@ -1,5 +1,6 @@
 var viewDetailLayer;
 var viewCommentLayer;
+var voucherLayer;
 var ReceivedContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -65,11 +66,9 @@ var ReceivedContext = function() {
 		this.value = value;
 	}
 	self.chosenReceivedType = ko.observable();
-	self.chosenReceivedType("RECEIVED");
-	self.receivedTypes = ko.observableArray([new receivedType('TAIL', '抹零'), new receivedType('STRIKE', '冲账'),
-			new receivedType('RECEIVED', '收入&合账'), new receivedType('PAY', '支出'),
-			new receivedType('STRIKEOUT', '冲账/出'), new receivedType('STRIKEIN', '冲账/入'),
-			new receivedType('COLLECT', '代收'), new receivedType('FLY', 'FLY'), new receivedType('TAIL98', '98清尾')]);
+	self.chosenReceivedType("RP");
+	self.receivedTypes = ko.observableArray([new receivedType('RP', '收支'), new receivedType('STRIKE', '冲账'),
+			new receivedType('TAIL', '抹零'), new receivedType('TAIL98', '98折')]);
 
 	self.typeMapping = {
 		'TAIL' : '抹零',
@@ -94,9 +93,11 @@ var ReceivedContext = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		if ((self.chosenReceivedType() == "RECEIVED")) {
-			param += "&detail.types=RECEIVED&detail.types=SUM"
-		} else if ((self.chosenReceivedType() != null)) {
+		if ((self.chosenReceivedType() == "RP")) {
+			param += "&detail.types=RECEIVED&detail.types=SUM&detail.types=PAY&detail.types=FLY&detail.types=COLLECT"
+		} else if (self.chosenReceivedType() == "STRIKE") {
+			param += "&detail.types=STRIKE&detail.types=STRIKEOUT&detail.types=STRIKEIN";
+		} else if (self.chosenReceivedType() != null) {
 			param += "&detail.types=" + self.chosenReceivedType();
 		};
 
@@ -168,14 +169,7 @@ var ReceivedContext = function() {
 		total : 0,
 		items : []
 	});
-	self.order = ko.observable({
-		team_number : "",
-		client_employee_name : "",
-		product : "",
-		people_count : "",
-		departure_date : ""
-
-	});
+	self.order = ko.observable({});
 	self.comment = ko.observable();
 	self.viewComment = function(detail) {
 		if (detail.type == "SUM") {
@@ -183,9 +177,10 @@ var ReceivedContext = function() {
 		} else {
 			var param = "team_number=" + detail.team_number;
 			startLoadingSimpleIndicator("加载中");
-			$.getJSON(self.apiurl + 'sale/searchOrderByTeamNumber', param, function(data) {
-				self.order(data.order);
+			$.getJSON(self.apiurl + 'order/selectOrderByTeamNumber', param, function(data) {
+				self.order(data.option);
 				self.comment(detail.comment);
+
 				endLoadingIndicator();
 				viewCommentLayer = $.layer({
 					type : 1,
@@ -244,7 +239,7 @@ var ReceivedContext = function() {
 	// 查看收入凭证
 	self.checkVoucherPic = function(fileName, received_time) {
 		$("#img-pic").attr("src", "");
-		budgetConfirmCheckLayer = $.layer({
+		voucherLayer = $.layer({
 			type : 1,
 			title : ['查看凭证', ''],
 			maxmin : false,
@@ -267,39 +262,50 @@ var ReceivedContext = function() {
 				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
 						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder=" + subFolder);
 	};
-
-	self.checkFlyVoucherPic = function(related_pk) {
+	self.paymentDetails = ko.observable({});
+	// 查看支出凭证
+	self.checkPayVoucherPic = function(related_pk) {
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'sale/searchFlyVoucherInfo',
+			url : self.apiurl + 'sale/searchPayVoucherInfo',
 			data : "related_pk=" + related_pk,
 			success : function(data) {
-				var accountId = data.detail.account_pk;
-				var voucherFileName = data.detail.voucher_file_name;
+				if (data.paymentDetails == null) {
+					fail_msg("款项尚未支付！")
+				} else {
 
-				$("#img-pic").attr("src", "");
-				budgetConfirmCheckLayer = $.layer({
-					type : 1,
-					title : ['查看凭证', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['600px', '650px'],
-					offset : ['50px', ''],
-					scrollbar : true,
-					page : {
-						dom : '#pic-check'
-					},
-					end : function() {
-						console.log("Done");
-					}
-				});
+					self.paymentDetails(data.paymentDetails);
 
-				$("#img-pic").attr(
-						"src",
-						self.apiurl + 'file/getFileStream?fileFileName=' + voucherFileName
-								+ "&fileType=VOUCHER&subFolder=" + accountId);
+					voucherLayer = $.layer({
+						type : 1,
+						title : ['查看凭证', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['630px', '750px'],
+						offset : ['50px', ''],
+						scrollbar : true,
+						page : {
+							dom : '#pay-pic'
+						},
+						end : function() {
+							console.log("Done");
+						}
+					});
+				}
 			}
+
+		});
+	}
+	self.viewRejectReason = function(back_pk) {
+		var data = "back_pk=" + back_pk;
+
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'accounting/searchRejectReason',
+			data : data
+		}).success(function(str) {
+			success_msg(str);
 		});
 	}
 	// start pagination

@@ -11,11 +11,16 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.accounting.service.AccountingService;
 import com.xinchi.backend.accounting.service.PayApprovalService;
+import com.xinchi.backend.client.service.EmployeeService;
+import com.xinchi.backend.receivable.service.ReceivedService;
+import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
@@ -41,7 +46,7 @@ public class AccountingAction extends BaseAction {
 		pa.setApproval_user(sessionBean.getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_YES);
-		payApprovalService.update(pa);
+
 		// 'D' : '地接款',
 
 		// 'X' : '销售费用',
@@ -57,7 +62,7 @@ public class AccountingAction extends BaseAction {
 		// 'F' : 'FLY'
 		// 地接款
 		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
-			resultStr = service.updateRelatedPaid(related_pk, ResourcesConstants.PAID_STATUS_YES);
+			resultStr = service.updateRelatedPaid(pa.getRelated_pk(), ResourcesConstants.PAID_STATUS_YES);
 		}
 		// 多退返款
 		else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
@@ -73,8 +78,14 @@ public class AccountingAction extends BaseAction {
 		} else {
 			resultStr = service.agreePayApply(pa.getBack_pk());
 		}
+
+		if (resultStr.equals(SUCCESS))
+			payApprovalService.update(pa);
+
 		return SUCCESS;
 	}
+
+	private String reject_reason;
 
 	public String rejectPayApply() {
 		SimpletinyUser su = new SimpletinyUser();
@@ -82,19 +93,32 @@ public class AccountingAction extends BaseAction {
 		pa.setApproval_user(su.getUser().getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_NO);
-		payApprovalService.update(pa);
+		if (SimpletinyString.isEmpty(reject_reason))
+			reject_reason = ResourcesConstants.PAY_REJECT_DEFAULT_REASON;
+		pa.setReject_reason(reject_reason);
 
 		if (item.equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
-			resultStr = service.updateRelatedPaid(related_pk, ResourcesConstants.PAID_STATUS_NO);
+			resultStr = service.updateRelatedPaid(pa.getRelated_pk(), ResourcesConstants.PAID_STATUS_NO);
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
 			resultStr = service.rejectMoreBack(pa.getBack_pk());
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
-			resultStr = service.rejectAirTicketPayApply(related_pk);
+			resultStr = service.rejectAirTicketPayApply(pa.getRelated_pk());
 		} else if (item.equals(ResourcesConstants.PAY_TYPE_FLY)) {
 			resultStr = service.rejectFlyApply(pa.getBack_pk());
 		} else {
 			resultStr = service.rejectPayApply(pa.getBack_pk());
 		}
+
+		if (resultStr.equals(SUCCESS))
+			payApprovalService.update(pa);
+		return SUCCESS;
+	}
+
+	private String back_pk;
+
+	public String searchRejectReason() {
+		PayApprovalBean pa = payApprovalService.selectByBackPk(back_pk);
+		resultStr = SimpletinyString.isEmpty(pa.getReject_reason()) ? "" : pa.getReject_reason();
 		return SUCCESS;
 	}
 
@@ -142,6 +166,29 @@ public class AccountingAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private ReceivedService receivedService;
+
+	private ClientEmployeeBean client_employee;
+
+	@Autowired
+	private EmployeeService clientEmployeeService;
+
+	/**
+	 * 搜索多付返款客户信息
+	 * 
+	 * @return
+	 */
+	public String searchMoreBackClientEmployee() {
+		List<ClientReceivedDetailBean> details = receivedService.selectByRelatedPks(related_pk);
+		if (null != details && details.size() > 0) {
+			client_employee = clientEmployeeService.selectByPrimaryKey(details.get(0).getClient_employee_pk());
+		} else {
+			client_employee = new ClientEmployeeBean();
+		}
+		return SUCCESS;
+	}
+
 	public String getRelated_pk() {
 		return related_pk;
 	}
@@ -180,5 +227,29 @@ public class AccountingAction extends BaseAction {
 
 	public void setDetail(ReceivedDetailDto detail) {
 		this.detail = detail;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
+	}
+
+	public String getBack_pk() {
+		return back_pk;
+	}
+
+	public void setBack_pk(String back_pk) {
+		this.back_pk = back_pk;
+	}
+
+	public ClientEmployeeBean getClient_employee() {
+		return client_employee;
+	}
+
+	public void setClient_employee(ClientEmployeeBean client_employee) {
+		this.client_employee = client_employee;
 	}
 }

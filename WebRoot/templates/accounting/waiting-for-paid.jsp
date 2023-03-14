@@ -32,7 +32,7 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-<!-- 						<div class="span6">
+						<!-- 						<div class="span6">
 							<div class="col-md-6">
 								<div data-bind="foreach: allStatus" style="padding-top: 4px;">
 									<em class="small-box"> <input type="checkbox" checked
@@ -97,6 +97,7 @@
 								<th>支付时限</th>
 								<th>申请人</th>
 								<th>审批人</th>
+								<th>审批时间</th>
 								<th>备注</th>
 								<th>支付状态</th>
 							</tr>
@@ -109,9 +110,18 @@
 								<td data-bind="text: $root.itemMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time) -->
+								<td style="color: red" data-bind="text: $data.limit_time"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.limit_time!=null && moment().isBefore($data.limit_time) -->
 								<td data-bind="text: $data.limit_time"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.limit_time==null || $data.limit_time=="" -->
+								<td data-bind="text: $data.limit_time"></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.apply_user"></td>
 								<td data-bind="text: $data.approval_user"></td>
+								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
 								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 
@@ -148,8 +158,7 @@
 	</div>
 
 	<script>
-		$(".finance").addClass("current").children("ol")
-				.css("display", "block");
+		$(".finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

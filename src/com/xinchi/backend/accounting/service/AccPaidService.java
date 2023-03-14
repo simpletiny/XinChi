@@ -42,4 +42,6 @@ public interface AccPaidService extends BaseService {
 	public BigDecimal selectSumWFP();
 
 	public List<WaitingForPaidBean> selectWfpByRelatedPk(String related_pk);
+
+	public String pay(String json, String voucher_number);
 }

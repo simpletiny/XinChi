@@ -30,6 +30,21 @@
 		<result column="earlier_month_balance" property="earlier_month_balance" jdbcType="DECIMAL" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
+		<result column="all_expected_balance" property="all_expected_balance" jdbcType="DECIMAL" />
+		<result column="current_month_budget_payable" property="current_month_budget_payable" jdbcType="DECIMAL" />
+		<result column="current_month_final_payable" property="current_month_final_payable" jdbcType="DECIMAL" />
+		<result column="current_month_paid" property="current_month_paid" jdbcType="DECIMAL" />
+		<result column="one_month_budget_payable" property="one_month_budget_payable" jdbcType="DECIMAL" />
+		<result column="one_month_final_payable" property="one_month_final_payable" jdbcType="DECIMAL" />
+		<result column="one_month_paid" property="one_month_paid" jdbcType="DECIMAL" />
+		<result column="two_month_budget_payable" property="two_month_budget_payable" jdbcType="DECIMAL" />
+		<result column="two_month_final_payable" property="two_month_final_payable" jdbcType="DECIMAL" />
+		<result column="two_month_paid" property="two_month_paid" jdbcType="DECIMAL" />
+		<result column="earlier_month_budget_payable" property="earlier_month_budget_payable" jdbcType="DECIMAL" />
+		<result column="earlier_month_final_payable" property="earlier_month_final_payable" jdbcType="DECIMAL" />
+		<result column="earlier_month_paid" property="earlier_month_paid" jdbcType="DECIMAL" />
+
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -83,7 +98,8 @@
 		sum(all_balance) AS all_balance,
 		sum(current_month_count)
 		AS current_month_count,
-		sum(current_month_budget_balance) AS current_month_budget_balance,
+		sum(current_month_budget_balance) AS
+		current_month_budget_balance,
 		sum(current_month_final_balance) AS
 		current_month_final_balance,
 		sum(current_month_balance) AS current_month_balance,
@@ -93,17 +109,21 @@
 		sum(one_month_balance) AS
 		one_month_balance,
 		sum(two_month_count) AS two_month_count,
-		sum(two_month_budget_balance) AS two_month_budget_balance,
+		sum(two_month_budget_balance) AS
+		two_month_budget_balance,
 		sum(two_month_final_balance) AS
 		two_month_final_balance,
-		sum(two_month_balance) AS two_month_balance,
+		sum(two_month_balance) AS
+		two_month_balance,
 		sum(three_month_count) AS three_month_count,
 		sum(three_month_budget_balance) AS
 		three_month_budget_balance,
 		sum(three_month_final_balance) AS three_month_final_balance,
-		sum(three_month_balance) AS three_month_balance,
+		sum(three_month_balance) AS
+		three_month_balance,
 		sum(earlier_month_count) AS earlier_month_count,
-		sum(earlier_month_budget_balance) AS earlier_month_budget_balance,
+		sum(earlier_month_budget_balance) AS
+		earlier_month_budget_balance,
 		sum(earlier_month_final_balance)
 		AS earlier_month_final_balance,
 		sum(earlier_month_balance) AS earlier_month_balance
@@ -115,6 +135,108 @@
 		<include refid="Base_Column_List" />
 		from payable_summary
 		where user_number = #{user_number,jdbcType=VARCHAR}
+	</select>
 
+	<select id="selectPayableSummaryByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		SELECT
+		C.supplier_short_name,
+		A.create_user AS user_number,
+		SUM(A.budget_balance) AS all_budget_balance,
+		SUM(A.final_balance) AS all_final_balance,
+		SUM(IF(A.final_flg = 'N',
+		A.budget_balance,
+		0)) AS all_expected_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(NOW(), '%Y-%m'),
+		A.budget_balance,
+		0)) AS current_month_budget_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(NOW(), '%Y-%m'),
+		A.budget_payable,
+		0)) AS current_month_budget_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(NOW(), '%Y-%m'),
+		A.final_balance,
+		0)) AS current_month_final_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(NOW(), '%Y-%m'),
+		A.final_payable,
+		0)) AS current_month_final_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(NOW(), '%Y-%m'),
+		A.paid,
+		0)) AS current_month_paid,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		'%Y-%m'),
+		A.budget_balance,
+		0)) AS one_month_budget_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		'%Y-%m'),
+		A.budget_payable,
+		0)) AS one_month_budget_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		'%Y-%m'),
+		A.final_balance,
+		0)) AS one_month_final_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		'%Y-%m'),
+		A.final_payable,
+		0)) AS one_month_final_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		'%Y-%m'),
+		A.paid,
+		0)) AS one_month_paid,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m'),
+		A.budget_balance,
+		0)) AS two_month_budget_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m'),
+		A.budget_payable,
+		0)) AS two_month_budget_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m'),
+		A.final_balance,
+		0)) AS two_month_final_balance,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m'),
+		A.final_payable,
+		0)) AS two_month_final_payable,
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m'),
+		A.paid,
+		0)) AS two_month_paid,
+		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m') > LEFT(A.departure_date, 7),
+		A.budget_balance,
+		0)) AS earlier_month_budget_balance,
+		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m') > LEFT(A.departure_date, 7),
+		A.budget_payable,
+		0)) AS earlier_month_budget_payable,
+		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m') > LEFT(A.departure_date, 7),
+		A.final_balance,
+		0)) AS earlier_month_final_balance,
+		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m') > LEFT(A.departure_date, 7),
+		A.final_payable,
+		0)) AS earlier_month_final_payable,
+		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		'%Y-%m') > LEFT(A.departure_date, 7),
+		A.paid,
+		0)) AS earlier_month_paid
+		FROM
+		payable A
+		LEFT JOIN
+		supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN
+		supplier C ON B.financial_body_pk = C.pk
+		<where>
+			<if test="params.bo.user_number != null and params.bo.user_number !=''">
+				and A.create_user = #{params.bo.user_number,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.supplier_short_name != null and params.bo.supplier_short_name !=''">
+				and C.supplier_short_name like concat('%', #{params.bo.supplier_short_name,jdbcType=VARCHAR},'%')
+			</if>
+			and C.pk IS NOT NULL and C.is_cooperate = 'Y'
+		</where>
+		GROUP BY C.pk
+		ORDER BY ABS(sum(A.final_balance)) DESC,ABS(sum(A.budget_balance)) DESC
 	</select>
 </mapper>

@@ -10,7 +10,7 @@ var OrderContext = function() {
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
 		startLoadingSimpleIndicator("加载中……");
-		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
+		var param = "employee.name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);

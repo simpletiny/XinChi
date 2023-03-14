@@ -3,7 +3,6 @@ package com.xinchi.common;
 import static com.xinchi.common.SimpletinyString.isEmpty;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import com.xinchi.tools.PropertiesUtil;
 

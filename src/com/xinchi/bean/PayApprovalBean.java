@@ -43,6 +43,8 @@ public class PayApprovalBean extends SupperBO implements Serializable {
 	private String receiver_card_number;
 	private String receiver_bank;
 
+	private String reject_reason;
+
 	// options
 	private List<String> statuses;
 	private String date_from;
@@ -225,6 +227,14 @@ public class PayApprovalBean extends SupperBO implements Serializable {
 
 	public void setMoney_to(BigDecimal money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
 	}
 
 }

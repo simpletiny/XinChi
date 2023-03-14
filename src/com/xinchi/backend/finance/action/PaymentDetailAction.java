@@ -150,6 +150,21 @@ public class PaymentDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String file_name;
+	private String account;
+
+	public String batUploadReceived() {
+		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		File file = new File(fileFolder + File.separator + file_name);
+		details = service.batUploadReceived(file);
+		return SUCCESS;
+	}
+
+	public String batSaveReceived() {
+		resultStr = service.batSaveReceived(account, json);
+		return SUCCESS;
+	}
+
 	public PaymentDetailBean getDetail() {
 		return detail;
 	}
@@ -204,5 +219,21 @@ public class PaymentDetailAction extends BaseAction {
 
 	public void setReceived_detail(ClientReceivedDetailBean received_detail) {
 		this.received_detail = received_detail;
+	}
+
+	public String getFile_name() {
+		return file_name;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setFile_name(String file_name) {
+		this.file_name = file_name;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 }

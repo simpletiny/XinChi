@@ -456,6 +456,12 @@
 			<if test="params.bo.type == null or params.bo.type ==''">
 				and type = 'D'
 			</if>
+			<if test="params.bo.is_cooperates != null and params.bo.is_cooperates !=''">
+				and is_cooperate in 
+				<foreach item="item" index="index" collection="params.bo.is_cooperates" open="(" separator="," close=")">
+					#{params.bo.is_cooperates[${index}]}
+				</foreach> 
+			</if>
 		</where>
 	</select>
 </mapper>

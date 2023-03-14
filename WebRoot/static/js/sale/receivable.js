@@ -238,6 +238,7 @@ var OrderContext = function() {
 
 			if (!check_result)
 				return;
+			startLoadingSimpleIndicator("检测中……");
 			// 2021-09-01之后要检查是否符合立款规则（即是否在两天内收齐了立款）
 			$.ajax({
 				type : "POST",
@@ -310,6 +311,14 @@ var OrderContext = function() {
 	self.chosenReceivables = ko.observableArray([]);
 	self.more_money = ko.observable();
 	self.nextDay = ko.observable();
+
+	var dow = today.getDay();
+	if (dow == 5 || dow == 6) {
+		self.nextDay(today.addDate(8 - dow).Format("yyyy-MM-dd 18:00"))
+	} else {
+		self.nextDay(today.addDate(1).Format("yyyy-MM-dd 18:00"))
+	}
+
 	// 退反申请
 	self.pay = function() {
 		if (self.chosenOrders().length == 0) {
@@ -332,7 +341,7 @@ var OrderContext = function() {
 			});
 			if (!check_result)
 				return;
-			self.nextDay(tomorrow.Format("yyyy-MM-dd") + " 23:59");
+
 			$(".rmb").formatCurrency();
 			caculateSumBack();
 			payLayer = $.layer({
@@ -356,6 +365,12 @@ var OrderContext = function() {
 	// 执行退反申请
 	self.applyPay = function() {
 		if (!$("#form-pay").valid())
+			return;
+
+		// 验证时间的合法性
+		var limit_time = $(".st-back-limit").val();
+		var date_limit = new Date(limit_time);
+		if (!isLegalLimitDate(date_limit))
 			return;
 
 		var data = $("#form-pay").serialize();
@@ -561,16 +576,16 @@ var OrderContext = function() {
 			var current = self.chosenOrders()[0];
 
 			if (current.final_flg == "Y") {
-				if (current.final_balance <= 0) {
-					fail_msg("尾款必须为正！");
-					return;
-				}
+				// if (current.final_balance <= 0) {
+				// fail_msg("尾款必须为正！");
+				// return;
+				// }
 				self.tailMoney(current.final_balance);
 			} else {
-				if (current.budget_balance == 0) {
-					fail_msg("尾款必须为正！");
-					return;
-				}
+				// if (current.budget_balance == 0) {
+				// fail_msg("尾款必须为正！");
+				// return;
+				// }
 				self.tailMoney(current.budget_balance);
 			}
 
@@ -600,21 +615,21 @@ var OrderContext = function() {
 			var money = 0;
 			$(self.chosenOrders()).each(function(idx, data) {
 				if (data.final_flg == "Y") {
-					if (data.final_balance <= 0) {
-						fail_msg(data.team_number + "尾款必须为正");
-						check_result = false;
-					}
+					// if (data.final_balance <= 0) {
+					// fail_msg(data.team_number + "尾款必须为正");
+					// check_result = false;
+					// }
 					money += data.final_balance;
 				} else {
-					if (data.budget_balance <= 0) {
-						fail_msg(data.team_number + "尾款必须为正");
-						check_result = false;
-					}
+					// if (data.budget_balance <= 0) {
+					// fail_msg(data.team_number + "尾款必须为正");
+					// check_result = false;
+					// }
 					money += data.budget_balance;
 				}
 			});
-			if (!check_result)
-				return;
+			// if (!check_result)
+			// return;
 			self.tailMoney(money);
 			$(".rmb").formatCurrency();
 
@@ -737,7 +752,6 @@ var OrderContext = function() {
 					fail_msg("已经申请fly！");
 					return;
 				} else {
-					self.nextDay(tomorrow.Format("yyyy-MM-dd") + " 23:59");
 					self.team_number(current.team_number);
 					self.client_employee_name(current.client_employee_name);
 					self.financial_body_name(current.financial_body_name);
@@ -769,6 +783,13 @@ var OrderContext = function() {
 		if (!$("#form-fly").valid()) {
 			return;
 		}
+
+		// 验证时间的合法性
+		var limit_time = $(".st-fly-limit").val();
+		var date_limit = new Date(limit_time);
+		if (!isLegalLimitDate(date_limit))
+			return;
+
 		var data = $("#form-fly").serialize();
 		layer.close(flyLayer);
 		startLoadingSimpleIndicator("保存中");
@@ -1016,3 +1037,32 @@ var caculateStrike = function() {
 	$("#p-strike-out").formatCurrency();
 	$("#p-strike-in").formatCurrency();
 };
+
+function isLegalLimitDate(date) {
+	if (date.getDay() == 6 || date.getDay() == 0) {
+		fail_msg("不能选择周末的时间!");
+		return false;
+	}
+
+	var minDate;
+
+	var x = new Date();
+	x.setHours(0);
+	x.setMinutes(0);
+	x.setSeconds(0);
+	var dow = x.getDay();
+	if (dow == 5 || dow == 6) {
+		minDate = x.addDate(8 - dow);
+		minDate.setHours(18);
+	} else {
+		minDate = x.addDate(1);
+		minDate.setHours(18);
+	}
+
+	if (!date.after(minDate, 'yyyy-MM-dd hh:mm') && !date.equal(minDate, 'yyyy-MM-dd hh:mm')) {
+		fail_msg("最早时间为下一个工作日18:00!");
+		return false;
+	}
+
+	return true;
+}

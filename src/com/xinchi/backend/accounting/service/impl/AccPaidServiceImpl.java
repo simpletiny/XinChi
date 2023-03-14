@@ -13,11 +13,14 @@ import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.ReimbursementService;
+import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
 import com.xinchi.backend.payable.service.PaidService;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivedService;
+import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PaidDetailSummary;
 import com.xinchi.bean.PayApprovalBean;
@@ -27,8 +30,13 @@ import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 @Transactional
@@ -221,6 +229,81 @@ public class AccPaidServiceImpl implements AccPaidService {
 	public List<WaitingForPaidBean> selectWfpByRelatedPk(String related_pk) {
 
 		return dao.selectByRelatedPk(related_pk);
+	}
+
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDao;
+
+	@Autowired
+	private CardDAO cardDao;
+
+	@Override
+	public String pay(String json, String voucher_number) {
+		JSONArray array = JSONArray.fromObject(json);
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = JSONObject.fromObject(array.get(i));
+			String account = obj.getString("account");
+			String time = obj.getString("time");
+			String receiver = obj.getString("receiver");
+			BigDecimal balance = new BigDecimal(cardDao.getAccountBalance(account));
+			BigDecimal money = new BigDecimal(obj.getString("money"));
+			String voucher_file_name = obj.getString("voucherFile");
+
+			PaymentDetailBean detail = new PaymentDetailBean();
+			detail.setVoucher_number(voucher_number);
+			detail.setAccount(account);
+			detail.setTime(time);
+			detail.setReceiver(receiver);
+			detail.setMoney(money);
+			detail.setBalance(balance.subtract(money));
+			detail.setType("支出");
+			detail.setComment(receiver + ",凭证号：" + voucher_number);
+			detail.setVoucher_file_name(voucher_file_name);
+			pds.insert(detail);
+		}
+		// 更新待支付状态
+		WaitingForPaidBean wfp = dao.selectByPayNumber(voucher_number);
+		wfp.setStatus(ResourcesConstants.PAY_STATUS_YES);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		wfp.setPay_user(sessionBean.getUser_number());
+		dao.update(wfp);
+
+		String related_pk = wfp.getRelated_pk();
+		// 更新申请状态
+		if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_DIJIE)) {
+			List<SupplierPaidDetailBean> details = paidService.selectByRelatedPk(related_pk);
+			for (SupplierPaidDetailBean detail : details) {
+				detail.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+				detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+				detail.setPaid_user(sessionBean.getUser_number());
+				paidService.update(detail);
+			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+			List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+			for (AirTicketPaidDetailBean paid : paids) {
+				paid.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+				paid.setTime(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+				airTicketPaidDetailDao.update(paid);
+			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+			receivedService.update(detail);
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
+			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
+			detail.setConfirm_time(DateUtil.getTimeMillis());
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+			receivedService.update(detail);
+		} else {
+			ReimbursementBean reim = reimService.selectByPk(related_pk);
+			reim.setPay_user(sessionBean.getUser_number());
+			reim.setPay_time(DateUtil.getDateStr("yyyy-MM-dd HH:mm"));
+			reim.setStatus(ResourcesConstants.PAID_STATUS_PAID);
+			reimService.update(reim);
+		}
+		return SUCCESS;
 	}
 
 }

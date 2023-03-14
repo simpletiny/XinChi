@@ -89,7 +89,7 @@
 						<tbody data-bind="foreach: scores">
 							<tr>
 								<td data-bind="text: $data.sale_name"></td>
-								<td data-bind="text: $data.score"></td>
+								<td data-bind="text: $data.score.toFixed(2)"></td>
 							</tr>
 						</tbody>
 					</table>

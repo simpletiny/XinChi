@@ -84,7 +84,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String land_time;
 	private Integer next_day;
 	private BigDecimal balance;
-	private BigDecimal product_value;
+	private String product_value;
 
 	private String receivable_first_flg;
 
@@ -658,14 +658,6 @@ public class OrderDto extends SupperBO implements Serializable {
 		this.final_receivable = final_receivable;
 	}
 
-	public BigDecimal getProduct_value() {
-		return product_value;
-	}
-
-	public void setProduct_value(BigDecimal product_value) {
-		this.product_value = product_value;
-	}
-
 	public String getConfirm_year() {
 		return confirm_year;
 	}
@@ -744,6 +736,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setReceivable_first_flg(String receivable_first_flg) {
 		this.receivable_first_flg = receivable_first_flg;
+	}
+
+	public String getProduct_value() {
+		return product_value;
+	}
+
+	public void setProduct_value(String product_value) {
+		this.product_value = product_value;
 	}
 
 }

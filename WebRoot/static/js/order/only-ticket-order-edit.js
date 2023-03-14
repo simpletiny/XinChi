@@ -160,12 +160,9 @@ var OrderContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-		var url = "";
-		if ($("#team-number").val() == "") {
-			url = self.apiurl + 'order/updateOnlyTicketOrder';
-		} else {
-			url = self.apiurl + 'order/updateConfirmedNonStandardOrder';
-		}
+		var url = self.apiurl + 'order/updateOnlyTicketOrder';
+
+		console.log(url);
 
 		var json = '';
 		// 航班信息json
@@ -217,6 +214,7 @@ var OrderContext = function() {
 
 		var data = $("form").serialize() + "&json=" + json;
 
+		console.log(data);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",

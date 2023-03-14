@@ -53,8 +53,8 @@ tr td {
 						<div class="span6">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px; padding-left: 10px" class="col-md-3">
 								<em class="small-box"> <input type="checkbox"
-									data-bind="attr: {'value': $data}, checked: $root.chosenStatus,click:function(){$root.refresh();return true}" name="detail.statuses" /><label
-									data-bind="text: $root.statusMapping[$data]"></label>  
+									data-bind="attr: {'value': $data}, checked: $root.chosenStatus,click:function(){$root.refresh();return true}"
+									name="detail.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -172,14 +172,13 @@ tr td {
 								<td data-bind="text: $root.typeMapping[$data.type]"></td>
 								<td data-bind="text: $data.received_time"></td>
 								<td data-bind="text: $data.card_account"></td>
-								<!-- ko if:$data.type=='FLY' -->
-								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkFlyVoucherPic($data.related_pk)} ">查看</a></td>
+								<!-- ko if:$data.type=='FLY' || $data.type=='PAY' -->
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkPayVoucherPic($data.pk)} ">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.type=='TAIL98' -->
 								<td>无</td>
 								<!-- /ko -->
-								<!-- ko if:$data.type!='TAIL98' && $data.type!='FLY'-->
+								<!-- ko if:$data.type!='TAIL98' && $data.type!='FLY' && $data.type!='PAY'-->
 								<td><a href="javascript:void(0)"
 									data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
 								<!-- /ko -->
@@ -210,10 +209,10 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td style="color:red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data.related_pk)} "></a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='E' -->
-								<td style="color:green" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 							</tr>
 						</tbody>
@@ -330,17 +329,23 @@ tr td {
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">产品</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().product"></p>
+					<p class="ip-default" data-bind="text:order().product_name"></p>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">人数</label>
 				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().people_count" class="rmb"></p>
+					<p class="ip-default" data-bind="text:(isNaN(order().adult_count)?0:order().adult_count)+(isNaN(order().special_count)?0:order().special_count)" class="rmb"></p>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
+		<div class="col-md-6">
+				<label class="l" style="width: 30%">确认日期</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().confirm_date"></p>
+				</div>
+			</div>
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">出团日期</label>
 				<div class="ip" style="width: 70%">
@@ -359,6 +364,11 @@ tr td {
 	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
+	</div>
+
+	<div id="pay-pic" data-bind="foreach:paymentDetails" style="display:none;height:700px;overflow-y:auto">
+		<img data-bind="attr:{src:$root.apiurl+'file/getFileStream?fileFileName=' + $data.voucher_file_name
+									+ '&fileType=VOUCHER&subFolder=' + $data.account_pk}" alt="图片" style="width: 590px; height: 600px; cursor: pointer" />
 	</div>
 	<script>
 		$(".sale").addClass("current").children("ol").css("display", "block");

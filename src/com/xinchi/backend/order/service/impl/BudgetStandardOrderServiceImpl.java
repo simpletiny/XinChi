@@ -137,7 +137,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String departureDate = bean.getDeparture_date();
 			int days = bean.getDays();
 			String returnDate = DateUtil.addDate(departureDate, days - 1);
-			int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+			int special_count = bean.getSpecial_count() == null ? 0 : bean.getSpecial_count();
+			int people_count = bean.getAdult_count() + special_count;
 
 			// 如果已经生成了应收款，则更新应收款
 			if (old.getReceivable_first_flg().equals("Y")) {
@@ -178,14 +179,22 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 			// 确认后锁定订单
 			bean.setLock_flg("Y");
+			String product_value = product.getProduct_value().floatValue() + ","
+					+ (null == product.getProduct_child_value() ? "0" : product.getProduct_child_value().floatValue());
+			bean.setProduct_value(product_value);
 
 			// 生成team_report基础数据
 			TeamReportBean tr = new TeamReportBean();
 			tr.setTeam_number(bean.getTeam_number());
 
 			BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
-			BigDecimal sale_cost = new BigDecimal(option.getExt1()).multiply(bean.getProduct_value())
-					.multiply(new BigDecimal(people_count)).setScale(2, BigDecimal.ROUND_UP);
+
+			// 修改系统费用计算逻辑
+			BigDecimal sale_cost = new BigDecimal(option.getExt1())
+					.multiply(product.getProduct_child_value().multiply(new BigDecimal(special_count))
+							.add(product.getProduct_value().multiply(new BigDecimal(bean.getAdult_count()))))
+					.setScale(2, BigDecimal.ROUND_UP);
+
 			BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
 					BigDecimal.ROUND_UP);
 
@@ -355,12 +364,23 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		TeamReportBean tr = orderReportDao.selectTeamReportByTn(bean.getTeam_number());
 
 		BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
-		BigDecimal sale_cost = new BigDecimal(option.getExt1()).multiply(old.getProduct_value())
-				.multiply(new BigDecimal(people_count)).setScale(2, BigDecimal.ROUND_UP);
+		// 修改销售费用计算逻辑
+		// BigDecimal sale_cost = new
+		// BigDecimal(option.getExt1()).multiply(old.getProduct_value())
+		// .multiply(new BigDecimal(people_count)).setScale(2, BigDecimal.ROUND_UP);
+		int special_count = bean.getSpecial_count() == null ? 0 : bean.getSpecial_count();
+		String[] product_value = old.getProduct_value().split(",");
+
+		if (product_value.length == 2) {
+			BigDecimal sale_cost = new BigDecimal(option.getExt1())
+					.multiply(new BigDecimal(product_value[1]).multiply(new BigDecimal(special_count))
+							.add(new BigDecimal(product_value[0]).multiply(new BigDecimal(bean.getAdult_count()))))
+					.setScale(2, BigDecimal.ROUND_UP);
+			tr.setSale_cost(sale_cost);
+		}
+
 		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
 				BigDecimal.ROUND_UP);
-
-		tr.setSale_cost(sale_cost);
 		tr.setSys_cost(sys_cost);
 
 		orderReportDao.updateTeamReport(tr);
@@ -404,14 +424,12 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	public String delete(String id) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(id);
 
-		String result = "";
 		// 如果已经生成了应收款，则删除应收款
 		if (old.getReceivable_first_flg().equals("Y")) {
-			result = receivableService.deleteByTeamNumber(old.getTeam_number());
+			String result = receivableService.deleteByTeamNumber(old.getTeam_number());
+			if (!result.equals(SUCCESS))
+				return result;
 		}
-
-		if (!result.equals(SUCCESS))
-			return result;
 
 		deleteFile(old);
 		dao.delete(id);

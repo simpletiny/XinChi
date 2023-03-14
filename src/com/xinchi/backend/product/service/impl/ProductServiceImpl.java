@@ -17,6 +17,7 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductDelayDAO;
 import com.xinchi.backend.product.dao.ProductLocalDAO;
+import com.xinchi.backend.product.dao.ProductProfitDAO;
 import com.xinchi.backend.product.dao.ProductSupplierDAO;
 import com.xinchi.backend.product.dao.ProductSupplierInfoDAO;
 import com.xinchi.backend.product.dao.ProductUrgentDAO;
@@ -34,6 +35,7 @@ import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
+import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.ProductSupplierInfoBean;
 import com.xinchi.bean.ProductUrgentBean;
@@ -891,6 +893,14 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductUrgentBean> pubs = productUrgentDao.selectByParam(option);
 
 		return null != pubs ? String.valueOf(pubs.size()) : "0";
+	}
+
+	@Autowired
+	private ProductProfitDAO productProfitDao;
+
+	@Override
+	public List<ProductProfitBean> searchProductProfit(ProductProfitBean productProfit) {
+		return productProfitDao.selectByParam(productProfit);
 	}
 
 }

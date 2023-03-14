@@ -9,23 +9,42 @@ var ClientContext = function() {
 		month : ''
 	});
 
-	self.item = ['X', 'J', 'Q', 'T'];
 	self.itemMapping = ko.observableArray([{
 		"key" : "X",
 		"value" : "销售费用"
+	}, {
+		"key" : "H",
+		// "value" : "交通垫付"
+		"value" : "客情费用"
 	}, {
 		"key" : "J",
 		// "value" : "交通垫付"
 		"value" : "产品费用"
 	}, {
 		"key" : "T",
-		"value" : "投诉赔偿"
+		// "value" : "投诉赔偿"
+		"value" : "维品费"
 	}, {
-		"key" : "Q",
-		"value" : "其他支出"
+		"key" : "P",
+		"value" : "票务费用"
+	}, {
+		"key" : "B",
+		"value" : "办公费用"
+	}, {
+		"key" : "E",
+		"value" : "招待费"
+	}, {
+		"key" : "K",
+		"value" : "差旅费用"
 	}, {
 		"key" : "G",
 		"value" : "个人工资"
+	}, {
+		"key" : "C",
+		"value" : "分红分润"
+	}, {
+		"key" : "Q",
+		"value" : "其他支出"
 	}]);
 	var x = new Date();
 	self.reibursement().date = ko.observable();

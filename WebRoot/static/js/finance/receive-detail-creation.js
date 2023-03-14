@@ -3,7 +3,7 @@ var DetailContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.detail = ko.observable({});
 	self.accounts = ko.observableArray([]);
-	
+
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
 			self.accounts(data.accounts);
@@ -20,12 +20,12 @@ var DetailContext = function() {
 		}
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '提交后无法修改，是否确认提交?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					startLoadingSimpleIndicator("保存中");
 					$.ajax({
@@ -51,4 +51,5 @@ var ctx = new DetailContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	$("#txt-money").formatChineseNumber();
 });

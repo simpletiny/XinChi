@@ -160,7 +160,7 @@ var OrderContext = function() {
 			return;
 		}
 		var url = "";
-		if ($("#team-number").val() == "") {
+		if ($("#confirm-flg").val() == "N") {
 			url = self.apiurl + 'order/updateBudgetNonStandardOrder';
 		} else {
 			url = self.apiurl + 'order/updateConfirmedNonStandardOrder';

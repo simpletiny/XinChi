@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierFileBean;
+import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
 
 @LogDescription(des = "供应商财务主体")
-public interface SupplierService {
+public interface SupplierService extends BaseService {
 
 	/**
 	 * 新增
@@ -71,4 +72,6 @@ public interface SupplierService {
 
 	@LogDescription(des = "删除供应商财务主体相关文件")
 	public void deleteSupplierFile(String file_name, String supplier_pk);
+
+	public String blockSupplier(String supplier_pk);
 }

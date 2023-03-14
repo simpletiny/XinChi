@@ -46,6 +46,9 @@
 			<if test="from_city != null and from_city !=''">
 				and A.first_start_city like CONCAT('%', #{from_city,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="to_city != null and to_city !=''">
+				and A.first_end_city like CONCAT('%', #{to_city,jdbcType=VARCHAR},'%')
+			</if>
 		</where>
 		ORDER BY A.ticket_number
 	</select>

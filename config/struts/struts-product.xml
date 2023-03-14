@@ -78,6 +78,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 搜索产品利润页面 -->
+		<action name="searchProductProfit" class="productAction" method="searchProductProfit">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	
 		<!-- 产品订单 -->
 		<action name="searchProductNeedByPage" class="productAction" method="searchProductNeedByPage">

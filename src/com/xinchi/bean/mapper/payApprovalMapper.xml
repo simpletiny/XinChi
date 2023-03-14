@@ -21,6 +21,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="receiver_card_number" property="receiver_card_number" jdbcType="VARCHAR" />
 		<result column="receiver_bank" property="receiver_bank" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -42,7 +43,8 @@
 		create_time,
 		update_time,
 		receiver_card_number,
-		receiver_bank
+		receiver_bank,
+		reject_reason
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -128,6 +130,9 @@
 			<if test="receiver_bank != null">
 				receiver_bank,
 			</if>
+			<if test="reject_reason != null">
+				reject_reason,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="receiver != null">
@@ -186,6 +191,9 @@
 			</if>
 			<if test="receiver_bank != null">
 				#{receiver_bank,jdbcType=VARCHAR},
+			</if>
+			<if test="reject_reason != null">
+				#{reject_reason,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -248,6 +256,9 @@
 			<if test="receiver_bank != null">
 				receiver_bank = #{receiver_bank,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -266,7 +277,7 @@
 		A.related_pk,
 		B.user_name AS apply_user,
 		A.apply_time,
-		LEFT(A.limit_time,10) AS
+		LEFT(A.limit_time,16) AS
 		limit_time,
 		A.back_pk,
 		A.pk,
@@ -278,7 +289,8 @@
 		A.create_time,
 		A.update_time,
 		A.receiver_card_number,
-		A.receiver_bank
+		A.receiver_bank,
+		A.reject_reason
 		from pay_approval A LEFT JOIN user_base B ON A.apply_user =
 		B.user_number
 		<where>

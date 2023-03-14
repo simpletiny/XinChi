@@ -34,7 +34,7 @@ var DetailContext = function() {
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
-		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N";
+		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N&detail.purpose_ticket=out";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
 			self.details(data.details);

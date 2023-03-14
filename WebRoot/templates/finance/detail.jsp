@@ -41,13 +41,14 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('receive') }">财务收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('pay') }">财务支出</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createDetail('inner') }">内转</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: upload">上传收入</button>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify() }">修改</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail() }">删除</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify() }">修改</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail() }">删除</button>
 								</s:if>
 								<s:if test="#session.user.user_roles.contains('FINANCE')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify_temp() }">修改</button>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail_temp() }">删除</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify_temp() }">修改</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail_temp() }">删除</button>
 								</s:if>
 							</div>
 						</div>
@@ -102,7 +103,7 @@
 								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;float:right">
+						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
@@ -156,13 +157,68 @@
 			</div>
 		</div>
 	</div>
+	<div id="div-upload" style="display: none; width: 500px; height: 200px; overflow-y: auto; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="span6">
+				<label class="col-md-3 control-label">选择账户</label>
+				<div class="col-md-8">
+					<select class="form-control"
+						data-bind="options: accounts,value:account(),selectedOptions:account, optionsCaption: '-- 请选择 --'"
+						required="required"></select>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-8 required">
+				<input type="text" class="ip-default file-path" required="required" />
+			</div>
+			<div class="col-md-4">
+				<a href="javascript:;" class="a-upload">选择文件<input type="file" class="file-csv" accept=".csv" id="file-upload" /></a>
+				<input type="hidden" id="csv-file" />
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doUpload">上传</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelUpload">取消</button>
+		</div>
+	</div>
+	<div id="div-upload-confirm" style="display: none; width: 1200px; height: 700px; overflow-y: auto; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<label data-bind="text:'账户：'+account()"></label>&nbsp;&nbsp; <label style="color: red">请仔细核对每笔记录！</label>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th style="width: 20%">收入时间</th>
+						<th style="width: 10%">添加秒</th>
+						<th style="width: 10%">金额</th>
+						<th style="width: 60%">备注</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-data" data-bind="foreach:bat_details">
+					<tr>
+						<td data-bind="text: $data.time"></td>
+						<td><input type="number" data-bind="value:$data.second,event:{input:function(){lessthan60(event,$data);}}" class="ip-default"
+							style="padding: 4px !important; width: 60%" /><input type="hidden" data-bind="value:$data.time"></input></td>
+						<td data-bind="text: $data.money" class="rmb"></td>
+						<td data-bind="text: $data.comment"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doSaveBat">保存</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelSaveBat">取消</button>
+		</div>
+	</div>
 	<script>
-		$(".finance").addClass("current").children("ol")
-				.css("display", "block");
+		$(".finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
+	<script src="<%=basePath%>static/js/file-upload-plain.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/finance/detail.js"></script>
 </body>

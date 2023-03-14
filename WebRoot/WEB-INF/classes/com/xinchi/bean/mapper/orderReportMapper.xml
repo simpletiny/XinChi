@@ -226,11 +226,11 @@
 		final_order_view D ON A.team_number
 		= D.team_number
 		<where>
-			<if test="confirm_date_from != null and confirm_date_from !=''">
-				and A.confirm_date &gt;= #{confirm_date_from,jdbcType=VARCHAR}
+			<if test="date_from != null and date_from !=''">
+				and A.departure_date &gt;= #{date_from,jdbcType=VARCHAR}
 			</if>
-			<if test="confirm_date_to != null and confirm_date_to !=''">
-				and A.confirm_date &lt;= #{confirm_date_to,jdbcType=VARCHAR}
+			<if test="date_to != null and date_to !=''">
+				and A.departure_date &lt;= #{date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and A.product_manager_number = #{product_manager_number,jdbcType=VARCHAR}

@@ -390,6 +390,6 @@
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 		</where>
-		order by A.first_ticket_date
+		order by A.first_ticket_date DESC
 	</select>
 </mapper>

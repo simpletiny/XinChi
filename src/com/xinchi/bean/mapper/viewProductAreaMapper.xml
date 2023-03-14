@@ -5,7 +5,7 @@
 		<result column="order_cnt" property="order_cnt" jdbcType="INTEGER" />
 		<result column="score" property="score" jdbcType="DECIMAL" />
 		<result column="sum_people" property="sum_people" jdbcType="INTEGER" />
-		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
+		<result column="departure_month" property="departure_month" jdbcType="VARCHAR" />
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="area" property="area" jdbcType="VARCHAR" />
@@ -19,10 +19,10 @@
 		from view_product_area
 		<where>
 			<if test="date_from != null and date_from !=''">
-				and confirm_month >= #{date_from,jdbcType=VARCHAR}
+				and departure_month >= #{date_from,jdbcType=VARCHAR}
 			</if>
 			<if test="date_to != null and date_to !=''">
-				and confirm_month &lt;= #{date_to,jdbcType=VARCHAR}
+				and departure_month &lt;= #{date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}

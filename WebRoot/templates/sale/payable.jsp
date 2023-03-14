@@ -427,7 +427,7 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">支付时限</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.limit_time" class="form-control date-picker" data-bind="value:today()"
+						<input type="text" name="detail.limit_time" class="form-control datetime-picker st-limit-time" data-bind="value:tomorrow()"
 							required="required" />
 					</div>
 				</div>

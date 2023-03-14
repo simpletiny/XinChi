@@ -55,7 +55,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private BigDecimal product_cost;
 
 	private String passenger_captain;
-	private BigDecimal product_value;
+	private String product_value;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
@@ -371,14 +371,6 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 		this.next_day = next_day;
 	}
 
-	public BigDecimal getProduct_value() {
-		return product_value;
-	}
-
-	public void setProduct_value(BigDecimal product_value) {
-		this.product_value = product_value;
-	}
-
 	public String getLock_flg() {
 		return lock_flg;
 	}
@@ -401,6 +393,14 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setReceivable_first_flg(String receivable_first_flg) {
 		this.receivable_first_flg = receivable_first_flg;
+	}
+
+	public String getProduct_value() {
+		return product_value;
+	}
+
+	public void setProduct_value(String product_value) {
+		this.product_value = product_value;
 	}
 
 }

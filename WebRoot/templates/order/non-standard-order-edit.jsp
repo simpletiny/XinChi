@@ -30,7 +30,7 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input> <input type="hidden"
 						data-bind="value:order().independent_flg" name="bnsOrder.independent_flg"></input> <input type="hidden"
-						data-bind="value:order().confirm_flg" name="bnsOrder.confirm_flg"></input> <input type="hidden"
+						data-bind="value:order().confirm_flg" name="bnsOrder.confirm_flg" id="confirm-flg"></input> <input type="hidden"
 						data-bind="value:order().team_number" name="bnsOrder.team_number" id="team-number"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">

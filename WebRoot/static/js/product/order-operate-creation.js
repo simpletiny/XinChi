@@ -21,25 +21,23 @@ var ProductContext = function() {
 	startLoadingSimpleIndicator("加载中...")
 
 	self.refresh = function() {
-		var param = "standard_flg=" + self.standard_flg
-				+ "&product_order_number=" + self.order_number;
+		var param = "standard_flg=" + self.standard_flg + "&product_order_number=" + self.order_number;
 
 		if (self.standard_flg == "Y") {
 			param += "&product_pk=" + self.product_pk;
 		}
-		$.getJSON(self.apiurl + 'product/searchProductDataForOrder', param,
-				function(data) {
-					self.orders(data.orders);
-					self.productSuppliers(data.productSuppliers);
-					self.adult_count(data.adult_count);
-					self.special_count(data.special_count);
+		$.getJSON(self.apiurl + 'product/searchProductDataForOrder', param, function(data) {
+			self.orders(data.orders);
+			self.productSuppliers(data.productSuppliers);
+			self.adult_count(data.adult_count);
+			self.special_count(data.special_count);
 
-					if (self.productSuppliers().length == 0) {
-						addSupplier();
-					}
+			if (self.productSuppliers().length == 0) {
+				addSupplier();
+			}
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	}
 
 	self.isD = function(t) {
@@ -64,16 +62,14 @@ var ProductContext = function() {
 			type : "POST",
 			url : self.apiurl + 'product/createOrderOperation',
 			data : data
-		}).success(
-				function(str) {
-					endLoadingIndicator();
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product-order.jsp";
-					} else {
-						fail_msg(str);
-					}
-				});
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/product/product-order.jsp";
+			} else {
+				fail_msg(str);
+			}
+		});
 
 	}
 	var normal_td_len = 4;
@@ -97,8 +93,7 @@ var ProductContext = function() {
 
 			cost = cost.RTrim(";");
 
-			json += '{"team_number":"' + team_number + '","cost":"' + cost
-					+ '"},';
+			json += '{"team_number":"' + team_number + '","cost":"' + cost + '"},';
 		}
 
 		json = json.RTrim(",") + ']';
@@ -113,36 +108,27 @@ var ProductContext = function() {
 		for (var i = 0; i < all_divs.length; i++) {
 			var current_div = all_divs[i];
 
-			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]')
-					.val();
+			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]').val();
 
-			var supplier_product_name = $(current_div).find(
-					':input[st="supplier-product-name"]').val();
+			var supplier_product_name = $(current_div).find(':input[st="supplier-product-name"]').val();
 
-			var supplier_product_days = $(current_div).find(
-					':input[st="supplier-product-days"]').val();
+			var supplier_product_days = $(current_div).find(':input[st="supplier-product-days"]').val();
 
-			var supplier_cost = $(current_div).find(
-					':input[st="supplier-cost"]').val();
+			var supplier_cost = $(current_div).find(':input[st="supplier-cost"]').val();
 			// var child_cost = $(current_div).find(':input[st="child-cost"]')
 			// .val();
 
 			var tourist_info = '';
-			$(current_div).find('input[name="chk_tourist"]:checked').each(
-					function(i) {
-						tourist_info += $(this).val() + ";";
-					});
+			$(current_div).find('input[name="chk_tourist"]:checked').each(function(i) {
+				tourist_info += $(this).val() + ";";
+			});
 
-			var confirm_file_templet = $(current_div).find(
-					'input[st="confirm-file-templet"]').val();
+			var confirm_file_templet = $(current_div).find('input[st="confirm-file-templet"]').val();
 
-			one_json += '{"supplier_index":"' + i + '",' + '"supplier_pk":"'
-					+ supplier_pk + '",' + '"supplier_product_name":"'
-					+ supplier_product_name + '",'
-					+ '"supplier_product_days":"' + supplier_product_days
-					+ '",' + '"supplier_cost":"' + supplier_cost + '",'
-					+ '"tourist_info":"' + tourist_info + '",'
-					+ '"confirm_file_templet":"' + confirm_file_templet + '",';
+			one_json += '{"supplier_index":"' + i + '",' + '"supplier_pk":"' + supplier_pk + '",'
+					+ '"supplier_product_name":"' + supplier_product_name + '",' + '"supplier_product_days":"'
+					+ supplier_product_days + '",' + '"supplier_cost":"' + supplier_cost + '",' + '"tourist_info":"'
+					+ tourist_info + '",' + '"confirm_file_templet":"' + confirm_file_templet + '",';
 
 			one_json += '"info_json":';
 
@@ -161,63 +147,48 @@ var ProductContext = function() {
 
 				var info_index = j / 3;
 
-				var pick_type = $(tr_min).find(
-						':radio[name^="radio-jie"]:checked').val();
+				var pick_type = $(tr_min).find(':radio[name^="radio-jie"]:checked').val();
 				var pick_leg, pick_other;
 
 				if (pick_type == "0") {
-					pick_leg = $(tr_min).find(':input[st="txt-jie-type-0"]')
-							.val();
+					pick_leg = $(tr_min).find(':input[st="txt-jie-type-0"]').val();
 					pick_other = "";
 				} else {
-					pick_other = $(tr_min).find(':input[st="txt-jie-type-1"]')
-							.val();
+					pick_other = $(tr_min).find(':input[st="txt-jie-type-1"]').val();
 					pick_leg = "";
 				}
 
 				var pick_day = $(tr_min).find(':input[st="day"]').val();
-				var pick_traffic = $(tr_min).find(':input[st="traffic-tool"]')
-						.val();
+				var pick_traffic = $(tr_min).find(':input[st="traffic-tool"]').val();
 				var pick_time = $(tr_min).find(':input[st="time"]').val();
 				var pick_city = $(tr_min).find(':input[st="city"]').val();
 				var pick_place = $(tr_min).find(':input[st="place"]').val();
 
-				var send_type = $(tr_add).find(
-						':radio[name^="radio-song"]:checked').val();
+				var send_type = $(tr_add).find(':radio[name^="radio-song"]:checked').val();
 				var send_leg, send_other;
 
 				if (send_type == "0") {
-					send_leg = $(tr_add).find(':input[st="txt-song-type-0"]')
-							.val();
+					send_leg = $(tr_add).find(':input[st="txt-song-type-0"]').val();
 					send_other = "";
 				} else {
-					send_other = $(tr_add).find(':input[st="txt-song-type-1"]')
-							.val();
+					send_other = $(tr_add).find(':input[st="txt-song-type-1"]').val();
 					send_leg = "";
 				}
 
 				var send_day = $(tr_add).find(':input[st="day"]').val();
-				var send_traffic = $(tr_add).find(':input[st="traffic-tool"]')
-						.val();
+				var send_traffic = $(tr_add).find(':input[st="traffic-tool"]').val();
 				var send_time = $(tr_add).find(':input[st="time"]').val();
 				var send_city = $(tr_add).find(':input[st="city"]').val();
 				var send_place = $(tr_add).find(':input[st="place"]').val();
 
 				two_json += '{';
-				two_json += '"info_index":"' + info_index + '",'
-						+ '"pick_type":"' + pick_type + '",' + '"pick_leg":"'
-						+ pick_leg + '",' + '"pick_other":"' + pick_other
-						+ '",' + '"pick_day":"' + pick_day + '",'
-						+ '"pick_traffic":"' + pick_traffic + '",'
-						+ '"pick_time":"' + pick_time + '",' + '"pick_city":"'
-						+ pick_city + '",' + '"pick_place":"' + pick_place
-						+ '",' + '"send_type":"' + send_type + '",'
-						+ '"send_leg":"' + send_leg + '",' + '"send_other":"'
-						+ send_other + '",' + '"send_day":"' + send_day + '",'
-						+ '"send_traffic":"' + send_traffic + '",'
-						+ '"send_time":"' + send_time + '",' + '"send_city":"'
-						+ send_city + '",' + '"send_place":"' + send_place
-						+ '"';
+				two_json += '"info_index":"' + info_index + '",' + '"pick_type":"' + pick_type + '",' + '"pick_leg":"'
+						+ pick_leg + '",' + '"pick_other":"' + pick_other + '",' + '"pick_day":"' + pick_day + '",'
+						+ '"pick_traffic":"' + pick_traffic + '",' + '"pick_time":"' + pick_time + '",'
+						+ '"pick_city":"' + pick_city + '",' + '"pick_place":"' + pick_place + '",' + '"send_type":"'
+						+ send_type + '",' + '"send_leg":"' + send_leg + '",' + '"send_other":"' + send_other + '",'
+						+ '"send_day":"' + send_day + '",' + '"send_traffic":"' + send_traffic + '",' + '"send_time":"'
+						+ send_time + '",' + '"send_city":"' + send_city + '",' + '"send_place":"' + send_place + '"';
 
 				if (j == trs.length - 2) {
 					two_json += '}';
@@ -267,8 +238,7 @@ var ProductContext = function() {
 		for (var i = 0; i < all_divs.length; i++) {
 			var current_div = all_divs[i];
 
-			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]')
-					.val();
+			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]').val();
 			pks.push(supplier_pk);
 		}
 
@@ -286,23 +256,20 @@ var ProductContext = function() {
 		for (var i = 4; i < tdlen; i++) {
 			var sum = 0;
 			for (j = 1; j < trlen; j++) {
-				sum += $("#table-order tr:eq(" + j + ") td:eq(" + i + ") input")
-						.val() - 0;
+				sum += $("#table-order tr:eq(" + j + ") td:eq(" + i + ") input").val() - 0;
 			}
-			sum_money.push(sum);
+			sum_money.push(sum.toFixed(2));
 		}
 
 		var max_div = $("#div-supplier");
 		var all_divs = $(max_div).children();
 		for (var i = 0; i < all_divs.length; i++) {
 			var current_div = all_divs[i];
-			var supplier_cost = $(current_div).find(
-					':input[st="supplier-cost"]').val() - 0;
+			var supplier_cost = $(current_div).find(':input[st="supplier-cost"]').val() - 0;
 
 			if (supplier_cost != sum_money[i]) {
 
-				fail_msg("地接社" + (i + 1) + "的订单合计金额：￥" + sum_money[i]
-						+ "与结算价格：￥" + supplier_cost + "不符！");
+				fail_msg("地接社" + (i + 1) + "的订单合计金额：￥" + sum_money[i] + "与结算价格：￥" + supplier_cost + "不符！");
 				return false;
 			}
 		}
@@ -311,17 +278,13 @@ var ProductContext = function() {
 
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$
-				.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-						function(data) {
-							self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-							self.totalCount(Math.round(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
-						});
+			self.totalCount(Math.round(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -396,8 +359,7 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -443,44 +405,33 @@ function addRow(btn) {
 	var tr_current = $(btn).parent().parent();
 	var timestamp = (new Date()).getTime();
 
-	var tr_min = $('<tr>'
-			+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
-			+ '<td class="r">接：</td>'
-			+ '<td><input name="radio-jie-'
-			+ timestamp
+	var tr_min = $('<tr>' + '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
+			+ '<td class="r">接：</td>' + '<td><input name="radio-jie-' + timestamp
 			+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0"/></td>'
-			+ '<td><input name="radio-jie-'
-			+ timestamp
+			+ '<td><input name="radio-jie-' + timestamp
 			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
 			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>');
-	var tr_add = $('<tr>'
-			+ '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
-			+ '<td class="r">送：</td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
+			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>' + '</tr>');
+	var tr_add = $('<tr>' + '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
+			+ '<td class="r">送：</td>' + '<td><input name="radio-song-' + timestamp
 			+ '" checked="checked" st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)"/>航段</td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="txt-song-type-0"/></td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
+			+ '<td><input name="radio-song-' + timestamp
 			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
 			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
 			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
 			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>');
+			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>' + '</tr>');
 
 	var tr_line = $('<tr>'
-			+ '<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>'
-			+ '</tr>');
+			+ '<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>' + '</tr>');
 
 	tr_current.after(tr_line);
 	tr_line.after(tr_min);
@@ -507,49 +458,25 @@ function addSupplier() {
 			+ '<label class="l" style="width: 70px !important">地接社</label>'
 			+ '<div class="fix-width1">'
 			+ '<input type="text" class="ip-" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"'
-			+ 'class="need" st="supplier-pk" style="display: none" />'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-3 required">'
-			+ '<label class="l" style="width: 70px !important">产品名称</label>'
-			+ '<div class="fix-width1">'
-			+ '<input type="text" class="ip-" st="supplier-product-name"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-2 required">'
+			+ 'class="need" st="supplier-pk" style="display: none" />' + '</div>' + '</div>'
+			+ '<div class="col-md-3 required">' + '<label class="l" style="width: 70px !important">产品名称</label>'
+			+ '<div class="fix-width1">' + '<input type="text" class="ip-" st="supplier-product-name"/>' + '</div>'
+			+ '</div>' + '<div class="col-md-2 required">'
 			+ '<label class="l" style="width: 70px !important">天数</label>'
 			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-" st="supplier-product-days"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-2 required">'
-			+ '<label class="l" style="width: 70px !important">结算价格</label>'
+			+ '<input type="number" class="ip-" st="supplier-product-days"/>' + '</div>' + '</div>'
+			+ '<div class="col-md-2 required">' + '<label class="l" style="width: 70px !important">结算价格</label>'
 			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-" st="supplier-cost"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '</div>'
+			+ '<input type="number" class="ip-" st="supplier-cost"/>' + '</div>' + '</div>' + '</div>'
 			+ '<div style="margin-top: 20px; padding-left: 70px">'
-			+ '<table style="width: 90%" class="table-supplier">'
-			+ '<thead>'
-			+ '<tr class="required">'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 10%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 10%"></th>'
-			+ '<th class="r" style="width: 10%">天次</th>'
-			+ '<th class="r" style="width: 10%">交通工具</th>'
-			+ '<th class="r" style="width: 10%">抵离时间</th>'
-			+ '<th class="r" style="width: 10%">抵离城市</th>'
-			+ '<th class="r" style="width: 10%">抵离地点</th>'
-			+ '</tr>'
-			+ '</thead>'
-			+ '<tbody st="t-body">'
-			+ '<tr>'
-			+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
-			+ '<td class="r">接：</td>' + '<td><input name="radio-jie-'
+			+ '<table style="width: 90%" class="table-supplier">' + '<thead>' + '<tr class="required">'
+			+ '<th style="width: 5%"></th>' + '<th style="width: 5%"></th>' + '<th style="width: 5%"></th>'
+			+ '<th style="width: 10%"></th>' + '<th style="width: 5%"></th>' + '<th style="width: 10%"></th>'
+			+ '<th class="r" style="width: 10%">天次</th>' + '<th class="r" style="width: 10%">交通工具</th>'
+			+ '<th class="r" style="width: 10%">抵离时间</th>' + '<th class="r" style="width: 10%">抵离城市</th>'
+			+ '<th class="r" style="width: 10%">抵离地点</th>' + '</tr>' + '</thead>' + '<tbody st="t-body">' + '<tr>'
+			+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>' + '<td class="r">接：</td>'
+			+ '<td><input name="radio-jie-'
 			+ timestamp
 			+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
 			+ '<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0"/></td>'
@@ -627,8 +554,7 @@ function deleteSupplier() {
 		var c_th = $("#table-order tr:eq(0) th:eq(" + (tdlen - 1) + ")");
 		$(c_th).remove();
 		for (var i = 1; i < trlen; i++) {
-			var c_td = $("#table-order tr:eq(" + i + ") td:eq(" + (tdlen - 1)
-					+ ")");
+			var c_td = $("#table-order tr:eq(" + i + ") td:eq(" + (tdlen - 1) + ")");
 			$(c_td).remove();
 		}
 	}

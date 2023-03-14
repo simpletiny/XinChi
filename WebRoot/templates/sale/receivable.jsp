@@ -569,7 +569,7 @@
 				<div class="col-md-4">
 					<label class="l" style="width: 30%">汇款时限</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.limit_time" data-bind="value:nextDay()" class="form-control datetime-picker" />
+						<input type="text" name="detail.limit_time" data-bind="value:nextDay()" class="form-control datetime-picker st-back-limit" />
 					</div>
 				</div>
 			</div>
@@ -946,7 +946,7 @@
 				<div class="col-md-4">
 					<label class="l" style="width: 30%">汇款时限</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="detail.limit_time" data-bind="value:nextDay()" class="form-control datetime-picker" />
+						<input type="text" name="detail.limit_time" data-bind="value:nextDay()" class="form-control datetime-picker st-fly-limit" />
 					</div>
 				</div>
 			</div>

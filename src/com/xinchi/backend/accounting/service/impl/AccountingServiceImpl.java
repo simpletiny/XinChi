@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.accounting.dao.AccountingDAO;
+import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.accounting.dao.ReimbursementDAO;
 import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.accounting.service.AccountingService;
@@ -24,6 +25,7 @@ import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.bean.ReimbursementBean;
@@ -206,6 +208,8 @@ public class AccountingServiceImpl implements AccountingService {
 	private EmployeeDAO clientEmployeeDao;
 	@Autowired
 	private ClientDAO clientDao;
+	@Autowired
+	private PayApprovalDAO payApprovalDao;
 
 	@Override
 	public String agreeMoreBack(String back_pk) {
@@ -213,6 +217,7 @@ public class AccountingServiceImpl implements AccountingService {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String user_number = sessionBean.getUser_number();
+		PayApprovalBean pa = payApprovalDao.selectByBackPk(back_pk);
 
 		for (ClientReceivedDetailBean bean : details) {
 			bean.setConfirm_time(DateUtil.getTimeMillis());
@@ -230,6 +235,10 @@ public class AccountingServiceImpl implements AccountingService {
 			ClientEmployeeBean employee = clientEmployeeDao.selectByPrimaryKey(bean.getClient_employee_pk());
 			ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
 
+			if (null == client)
+				return "NOFINANCIAL";
+
+			waiting.setLimit_time(pa.getLimit_time());
 			waiting.setReceiver(client.getClient_short_name());
 			waiting.setRelated_pk(bean.getPk());
 			waiting.setMoney(bean.getReceived().negate());

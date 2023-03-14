@@ -76,7 +76,8 @@
 		from user_base A LEFT JOIN user_info B
 		ON A.id = B.id
 		where B.user_role like CONCAT('%',#{roles},'%')
-		AND A.delete_flg='N'
+		AND
+		A.delete_flg='N'
 	</select>
 	<select id="selectByPage" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean">
 		select
@@ -90,7 +91,7 @@
 			<if test="params.bo.user_roles != null and params.bo.user_roles !=''">
 				and B.user_role like CONCAT('%',#{params.bo.user_roles,jdbcType=VARCHAR},'%')
 			</if>
-			and A.user_number!='N00000' and A.user_number !='N00001'
+			and A.user_number not in ('N00000','N00001','OT')
 		</where>
 		ORDER BY delete_flg,user_number
 	</select>

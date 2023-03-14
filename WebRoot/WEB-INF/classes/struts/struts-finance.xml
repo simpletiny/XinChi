@@ -70,6 +70,15 @@
 		<action name="importDetailExcel" class="paymentDetailAction" method="importDetailExcel">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="batUploadReceived" class="paymentDetailAction" method="batUploadReceived">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="batSaveReceived" class="paymentDetailAction" method="batSaveReceived">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="matchReceived" class="paymentDetailAction" method="matchReceived">
 			<result name="success" type="str">resultStr</result>
 		</action>

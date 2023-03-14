@@ -14,6 +14,16 @@
 		<action name="rejectPayApply" class="accountingAction" method="rejectPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="searchMoreBackClientEmployee" class="accountingAction" method="searchMoreBackClientEmployee">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="searchRejectReason" class="accountingAction" method="searchRejectReason">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 搜索待匹配收入 -->
 		<action name="searchReceivedByPage" class="accountingAction" method="searchReceivedByPage">
 			<result name="success" type="json">

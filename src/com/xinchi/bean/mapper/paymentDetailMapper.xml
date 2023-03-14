@@ -413,6 +413,9 @@
 			<if test="params.bo.purpose != null and params.bo.purpose !=''">
 				and B.purpose = #{params.bo.purpose,jdbcType=DECIMAL}
 			</if>
+			<if test="params.bo.purpose_ticket != null and params.bo.purpose_ticket =='out'">
+				and B.purpose != 'TICKET'
+			</if>
 			<if test="params.bo.create_time != null and params.bo.create_time !=''">
 				and date_format(from_unixtime(A.create_time/1000),'%Y-%m-%d') = #{params.bo.create_time,jdbcType=VARCHAR}
 			</if>

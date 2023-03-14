@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductProfitMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductProfitBean">
+		<result column="departure_month" property="departure_month" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="gross_profit" property="gross_profit" jdbcType="DECIMAL" />
+		<result column="product_cost" property="product_cost" jdbcType="DECIMAL" />
+		<result column="keep_cost" property="keep_cost" jdbcType="DECIMAL" />
+		<result column="air_lose" property="air_lose" jdbcType="DECIMAL" />
+		<result column="score" property="score" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
+		<result column="profit" property="profit" jdbcType="DECIMAL" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		departure_month,
+		status,
+		people_count,
+		gross_profit,
+		product_cost,
+		keep_cost,
+		air_lose,
+		other_cost,
+		profit,
+		user_number,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_profit
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_profit
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductProfitBean">
+
+		insert into product_profit
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="departure_month != null">
+				departure_month,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="people_count != null">
+				people_count,
+			</if>
+			<if test="gross_profit != null">
+				gross_profit,
+			</if>
+			<if test="product_cost != null">
+				product_cost,
+			</if>
+			<if test="keep_cost != null">
+				keep_cost,
+			</if>
+			<if test="air_lose != null">
+				air_lose,
+			</if>
+			<if test="other_cost != null">
+				other_cost,
+			</if>
+			<if test="profit != null">
+				profit,
+			</if>
+			<if test="user_number != null">
+				user_number,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="departure_month != null">
+				#{departure_month,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="people_count != null">
+				#{people_count,jdbcType=INTEGER},
+			</if>
+			<if test="gross_profit != null">
+				#{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="product_cost != null">
+				#{product_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="keep_cost != null">
+				#{keep_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="air_lose != null">
+				#{air_lose,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				#{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="profit != null">
+				#{profit,jdbcType=DECIMAL},
+			</if>
+			<if test="user_number != null">
+				#{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductProfitBean">
+		update product_profit
+		<set>
+			<if test="departure_month != null">
+				departure_month = #{departure_month,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="people_count != null">
+				people_count = #{people_count,jdbcType=INTEGER},
+			</if>
+			<if test="gross_profit != null">
+				gross_profit = #{gross_profit,jdbcType=DECIMAL},
+			</if>
+			<if test="product_cost != null">
+				product_cost = #{product_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="keep_cost != null">
+				keep_cost = #{keep_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="air_lose != null">
+				air_lose = #{air_lose,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				other_cost = #{other_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="profit != null">
+				profit = #{profit,jdbcType=DECIMAL},
+			</if>
+			<if test="user_number != null">
+				user_number = #{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductProfitBean" resultMap="BaseResultMap">
+		SELECT
+		departure_month,
+		status,
+		SUM(people_count) AS people_count,
+		SUM(gross_profit) AS gross_profit,
+		SUM(product_cost) AS product_cost,
+		SUM(keep_cost) AS keep_cost,
+		SUM(score) AS score
+		FROM
+		view_product_profit
+
+		<where>
+			<if test="option_year != null and option_year !=''">
+				and LEFT(departure_month,4) =#{option_year,jdbcType=VARCHAR}
+			</if>
+			<if test="user_number != null and user_number !=''">
+				and user_number =#{user_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY departure_month
+		ORDER BY departure_month
+	</select>
+</mapper>

@@ -11,7 +11,7 @@ var UsersContext = function() {
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
 
-	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET'];
+	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'CPRODUCT'];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'
@@ -24,7 +24,9 @@ var UsersContext = function() {
 		'PRODUCT' : '产品',
 		'ACCOUNTING' : '会计',
 		'CASHIER' : '出纳',
-		'TICKET' : '票务'
+		'TICKET' : '票务',
+		// C for cooperate
+		'CPRODUCT' : '合作产品'
 	};
 
 	self.refresh = function() {
