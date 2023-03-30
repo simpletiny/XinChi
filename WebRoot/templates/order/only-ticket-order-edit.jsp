@@ -22,6 +22,11 @@
 	width: 90%;
 }
 
+#name-table tr th, td {
+	text-align: center;
+	vertical-align:middle !important
+}
+
 #table-ticket {
 	border-collapse: separate;
 	border-spacing: 0px 10px;
@@ -187,19 +192,18 @@
 								<table style="width: 100%" id="name-table" class="table table-striped table-hover">
 									<thead>
 										<tr>
+											<thead>
+										<tr>
 											<th style="width: 4%">团长</th>
 											<th style="width: 4%">序号</th>
-											<th style="width: 7%">姓名</th>
+											<th style="width: 18%">姓名</th>
 											<th style="width: 7%">性别</th>
-											<th style="width: 5%" title="只按年份计算">年龄</th>
-											<th style="width: 10%">手机号A</th>
-											<th style="width: 10%">手机号B</th>
-											<th style="width: 15%">证件号码</th>
-											<th style="width: 10%">分房组</th>
-											<th style="width: 9%"></th>
-											<th style="width: 9%"></th>
+											<th style="width: 7%" title="只按年份计算">年龄</th>
+											<th style="width: 15%">手机号A</th>
+											<th style="width: 15%">手机号B</th>
+											<th style="width: 25%">证件号码</th>
 											<!-- ko if: order().lock_flg=="N" && order().operate_flg=="N" -->
-											<th style="width: 3%"></th>
+											<th style="width: 5%"></th>
 											<!-- /ko -->
 										</tr>
 									</thead>
@@ -208,23 +212,18 @@
 
 											<td><input type="radio" data-bind="value:$data.chairman,checked:'Y'" name="team_chairman" /></td>
 											<td st="name-index" data-bind="text:$data.name_index"></td>
-											<td><input type="text" data-bind="value:$data.name" style="width: 90%" st="name" /></td>
+											<td><input type="text" data-bind="value:$data.name" class="ip-" style="width: 90%" st="name" /></td>
 											<td><select class="form-control" data-bind="value:$data.sex" style="height: 34px" st="sex">
 													<option value="">选择</option>
 													<option value="M">男</option>
 													<option value="F">女</option>
 											</select></td>
-											<td><input type="text" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();" style="width: 90%" st="id" /></td>
-											<td><input type="text" style="width: 90%" value="分房组" /></td>
-											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
-											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
+											<td><input type="text" class="ip-" data-bind="value:$data.age" style="width: 90%" st="age" /></td>
+											<td><input type="text" class="ip-" data-bind="value:$data.cellphone_A" style="width: 90%" st="cellphone_A" /></td>
+											<td><input type="text" class="ip-" data-bind="value:$data.cellphone_B" style="width: 90%" st="cellphone_B" /></td>
+											<td><input type="text" class="ip-" data-bind="value:$data.id" maxlength="18" oninput="autoCaculate();" style="width: 90%" st="id" /></td>
 											<!-- ko if:$root.order().lock_flg=="N" && $root.order().operate_flg=="N" -->
-											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
+											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
 											<!-- /ko -->
 										</tr>
 									</tbody>
@@ -320,6 +319,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-edit.js"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-edit.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.0"></script>
 </body>
 </html>

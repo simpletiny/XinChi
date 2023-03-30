@@ -148,7 +148,9 @@ var OrderContext = function() {
 			});
 		}
 	};
-
+	// 产品包含的供应商信息
+	self.operation = ko.observable({});
+	self.orders = ko.observableArray([]);
 	self.editOperation = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
@@ -158,20 +160,24 @@ var OrderContext = function() {
 			return;
 		} else if (self.chosenOperations().length == 1) {
 
+			startLoadingSimpleIndicator("加载中……");
+			$("#supplier-info input").val('');
 			var current = self.chosenOperations()[0].split(";");
-			var team_number = current[1];
-
-			$.getJSON(self.apiurl + 'product/searchOperationByTeamNumber', {
-				team_number : team_number
+			var operate_pk = current[0];
+			$.getJSON(self.apiurl + 'product/searchOpeartionDataByPk', {
+				operate_pk : operate_pk
 			}, function(data) {
-				self.productSuppliers(data.operations);
+				self.operation(data.operate_option);
+				self.orders(data.orders);
+
+				endLoadingIndicator();
 				operateLayer = $.layer({
 					type : 1,
 					title : ['供应商信息', ''],
 					maxmin : false,
 					closeBtn : [1, true],
 					shadeClose : false,
-					area : ['1400px', '500px'],
+					area : ['800px', '500px'],
 					offset : ['', ''],
 					scrollbar : true,
 					page : {
@@ -180,12 +186,13 @@ var OrderContext = function() {
 					end : function() {
 					}
 				});
+
 			});
 		}
 	};
 
 	self.doEdit = function() {
-		var allNeeds = $('.need');
+		var allNeeds = $("#supplier-info input");
 		for (var i = 0; i < allNeeds.length; i++) {
 			var current = allNeeds[i];
 			if ($(current).val().trim() == "") {
@@ -193,49 +200,40 @@ var OrderContext = function() {
 				return;
 			}
 		}
+		// 地接结算费用和所有费用合计是否匹配
+		var costs = 0;
+
+		$(".supplier-cost").each(function() {
+			costs += +$(this).val().trim();
+		});
+
+		var new_cost = +$(".new-cost").val().trim();
+
+		if (costs != new_cost) {
+			fail_msg("分配费用合计" + costs + "和新费用" + new_cost + "不符！");
+			return;
+		}
 		layer.close(operateLayer);
 		startLoadingIndicator("更新中...");
 
-		var current = self.chosenOperations()[0].split(";");
-		var team_number = current[1];
-
 		// json化供应商信息
-		var json = '[';
-		var tbody = $("#table-supplier tbody");
-		var trs = $(tbody).children();
-		for (var i = 0; i < trs.length; i++) {
-			var tr = trs[i];
-			var index = i + 1;
-			var supplierEmployeePk = $(tr).find("[st='supplier-pk']").val();
+		var current = self.chosenOperations()[0].split(";");
+		var operate_pk = current[0];
+		var supplier_employee_pk = $(".supplier-employee-pk").val().trim();
+		var json = '{"operate_pk":"' + operate_pk + '","supplier_employee_pk":"' + supplier_employee_pk
+				+ '","new_cost":"' + new_cost + '","teams":[';
+		$(".team-number").each(function() {
+			var team_number = $(this).text().trim();
+			var supplier_cost = +$(this).parent().find(".supplier-cost").val().trim();
 
-			if (supplierEmployeePk == '')
-				continue;
+			json += '{"team_number":"' + team_number + '","supplier_cost":"' + supplier_cost + '"},'
 
-			var supplierProductName = $(tr).find("[st='supplier-product-name']").val();
-			var supplierCost = $(tr).find("[st='supplier-cost']").val();
+		});
 
-			var landDay = $(tr).find("[st='land-day']").val();
-			var pickType = $(tr).find("[st='pick-type']").val();
-			var picker = $(tr).find("[st='picker']").val();
-			var pickerCellphone = $(tr).find("[st='picker-cellphone']").val();
-			var offDay = $(tr).find("[st='off-day']").val();
-			var sendType = $(tr).find("[st='send-type']").val();
-
-			var current = '{"supplier_index":"' + index + '","supplier_employee_pk":"' + supplierEmployeePk
-					+ '","supplier_product_name":"' + supplierProductName + '","supplier_cost":"' + supplierCost
-					+ '","land_day":"' + landDay + '","pick_type":"' + pickType + '","picker":"' + picker
-					+ '","picker_cellphone":"' + pickerCellphone + '","off_day":"' + offDay + '","send_type":"'
-					+ sendType + '"}';
-			if (i == trs.length - 1) {
-				json += current + ']';
-			} else {
-				json += current + ',';
-			}
-		}
+		json = json.RTrim(',');
+		json += ']}';
 
 		var data = "json=" + json;
-		data += "&team_number=" + team_number;
-
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/updateOrderOperation',
@@ -261,7 +259,6 @@ var OrderContext = function() {
 		self.passengers.removeAll();
 
 		var team_number = data.team_number;
-		console.log(team_number)
 		var url = "product/searchSaleOrderNameListByProductOrderNumber";
 
 		$.getJSON(self.apiurl + url, {
@@ -274,7 +271,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', '500px'],
+				area : ['800px', '700px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {
@@ -290,7 +287,6 @@ var OrderContext = function() {
 		window.location.href = self.apiurl + "file/downloadProductFile?team_number=" + team_number
 				+ "&supplier_employee_pk=" + supplier_employee_pk + "&fileType=C";
 	}
-	self.productSuppliers = ko.observableArray([]);
 
 	// 查看订单详情
 	self.sale_orders = ko.observableArray([]);
@@ -512,28 +508,39 @@ function choseSupplierEmployee(event) {
 	currentSupplier = event.target;
 	$(currentSupplier).blur();
 }
-function addRow() {
-	var tbody = $("#table-supplier tbody");
-	var index = tbody.children().length + 1;
-	var tr = $('<tr><td st="index">1</td><td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /><input type="text" class="need" st="supplier-pk" style="display: none" /></td><td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td><td><input st="supplier-cost" class="need" type="number" /></td><td><input st="land-day" class="need" type="number" /></td><td><input st="pick-type" maxlength="50" type="text" /></td><td><input st="picker" maxlength="10" type="text" /></td>	<td><input st="picker-cellphone" maxlength="15" type="number" /></td><td><input st="off-day" class="need" type="number" /></td><td><input st="send-type" maxlength="50" type="text" /></td><td><input type="button" value="-" onclick="deleteRow(this)" /></td></tr>');
-	$(tr).find("td[st='index']").html(index);
-	tbody.append(tr);
-}
-
-function deleteRow(btn) {
-	var tbody = $("#table-supplier tbody");
-	var index = tbody.children().length - 1;
-	if (index > 0) {
-		$(btn).parent().parent().remove();
-		refreshIndex();
-	}
-}
-
-function refreshIndex() {
-	var tbody = $("#table-supplier tbody");
-	var trs = $(tbody).children();
-	for (var i = 0; i < trs.length; i++) {
-		var tr = trs[i];
-		$(tr).find("td[st='index']").html(i + 1);
-	}
-}
+// function addRow() {
+// var tbody = $("#table-supplier tbody");
+// var index = tbody.children().length + 1;
+// var tr = $('<tr><td st="index">1</td><td><input type="text"
+// st="supplier-name" onclick="choseSupplierEmployee(event)" /><input
+// type="text" class="need" st="supplier-pk" style="display: none"
+// /></td><td><input class="need" st="supplier-product-name" maxlength="10"
+// type="text" /></td><td><input st="supplier-cost" class="need" type="number"
+// /></td><td><input st="land-day" class="need" type="number" /></td><td><input
+// st="pick-type" maxlength="50" type="text" /></td><td><input st="picker"
+// maxlength="10" type="text" /></td> <td><input st="picker-cellphone"
+// maxlength="15" type="number" /></td><td><input st="off-day" class="need"
+// type="number" /></td><td><input st="send-type" maxlength="50" type="text"
+// /></td><td><input type="button" value="-" onclick="deleteRow(this)"
+// /></td></tr>');
+// $(tr).find("td[st='index']").html(index);
+// tbody.append(tr);
+// }
+//
+// function deleteRow(btn) {
+// var tbody = $("#table-supplier tbody");
+// var index = tbody.children().length - 1;
+// if (index > 0) {
+// $(btn).parent().parent().remove();
+// refreshIndex();
+// }
+// }
+//
+// function refreshIndex() {
+// var tbody = $("#table-supplier tbody");
+// var trs = $(tbody).children();
+// for (var i = 0; i < trs.length; i++) {
+// var tr = trs[i];
+// $(tr).find("td[st='index']").html(i + 1);
+// }
+// }

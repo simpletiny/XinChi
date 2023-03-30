@@ -282,6 +282,20 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 通过id搜索操作 -->
+		<action name="searchOperationByPk" class="productOrderOperationAction" method="searchOperationByPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 通过id搜索修改信息 -->
+		<action name="searchOpeartionDataByPk" class="productOrderOperationAction" method="searchOpeartionDataByPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 通过团号搜索操作 -->
 		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
 			<result name="success" type="str">

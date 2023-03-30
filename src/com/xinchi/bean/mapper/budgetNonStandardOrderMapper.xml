@@ -136,7 +136,7 @@
 			<if test="days != null">
 				days,
 			</if>
-			<if test="departure_date != null">
+			<if test="departure_date != null and departure_date !=''">
 				departure_date,
 			</if>
 			<if test="pk != null">
@@ -231,7 +231,7 @@
 			<if test="days != null">
 				#{days,jdbcType=INTEGER},
 			</if>
-			<if test="departure_date != null">
+			<if test="departure_date != null and departure_date !=''">
 				#{departure_date,jdbcType=VARCHAR},
 			</if>
 			<if test="pk != null">

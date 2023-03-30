@@ -13,6 +13,12 @@
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/js/order/upload.css" />
+<style>
+#name-table tr th, td {
+	text-align: center;
+	vertical-align: middle !important
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -121,10 +127,10 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12">
+						<div class="col-md-6"> 
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: order().comment"
+								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
 									name="bnsOrder.comment" placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
@@ -150,15 +156,12 @@
 										<tr>
 											<th style="width: 4%">团长</th>
 											<th style="width: 4%">序号</th>
-											<th style="width: 10%">姓名</th>
+											<th style="width: 18%">姓名</th>
 											<th style="width: 7%">性别</th>
-											<th style="width: 5%" title="只按年份计算">年龄</th>
-											<th style="width: 10%">手机号A</th>
-											<th style="width: 10%">手机号B</th>
-											<th style="width: 15%">证件号码</th>
-											<th style="width: 10%">分房组</th>
-											<th style="width: 10%"></th>
-											<th style="width: 10%"></th>
+											<th style="width: 7%" title="只按年份计算">年龄</th>
+											<th style="width: 15%">手机号A</th>
+											<th style="width: 15%">手机号B</th>
+											<th style="width: 25%">证件号码</th>
 											<th style="width: 5%"></th>
 										</tr>
 									</thead>
@@ -166,22 +169,17 @@
 										<tr>
 											<td><input type="radio" checked="checked" name="team_chairman" /></td>
 											<td st="name-index">1</td>
-											<td><input type="text" style="width: 90%" st="name" /></td>
+											<td><input type="text" class="ip-" style="width: 90%" st="name" /></td>
 											<td><select class="form-control" style="height: 34px" st="sex">
 													<option value="">选择</option>
 													<option value="M">男</option>
 													<option value="F">女</option>
 											</select></td>
-											<td><input type="text" style="width: 90%" st="age" /></td>
-											<td><input type="text" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" onblur="autoCaculate();" style="width: 90%" st="id" /></td>
-											<td><input type="text" style="width: 90%" value="分房组" /></td>
-											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
-											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
-											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
+											<td><input type="text" class="ip-" style="width: 90%" st="age" /></td>
+											<td><input type="text" class="ip-" style="width: 90%" st="cellphone_A" /></td>
+											<td><input type="text" class="ip-" style="width: 90%" st="cellphone_B" /></td>
+											<td><input type="text" class="ip-" data-bind="value:$data.id" oninput="autoCaculate();" style="width: 90%" st="id" /></td>
+											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
 										</tr>
 									</tbody>
 								</table>
@@ -189,14 +187,14 @@
 						</div>
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
-								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
+								class="btn btn-green btn-r" onclick="addName()">添加名单</a>
 						</div>
 					</div>
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden"
-								name="bnsOrder.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" name="file" accept=".jpg,.png" /></a> <input
+								type="hidden" name="bnsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -263,6 +261,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.0"></script>
 </body>
 </html>

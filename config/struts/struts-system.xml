@@ -30,7 +30,7 @@
 			</result>
 		</action>
 		<!-- 对产品线数据进行排序 -->
-		<action name="sortProductLine" class="baseDataAction" method="sortProductLine">
+		<action name="sortData" class="baseDataAction" method="sortData">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		

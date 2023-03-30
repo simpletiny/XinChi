@@ -9,16 +9,18 @@ var UsersContext = function() {
 	});
 	self.chosenUserRoles = ko.observableArray([]);
 
-	self.allRoles = [ 'ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE',
-			'TICKET' ];
+	self.allRoles = ['MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'CPRODUCT'];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
 		'ADMIN' : '管理员',
 		'SALES' : '销售人员',
 		'PRODUCT' : '产品',
-		'FINANCE' : '财务',
-		'TICKET' : '票务'
+		'ACCOUNTING' : '会计',
+		'CASHIER' : '出纳',
+		'TICKET' : '票务',
+		// C for cooperate
+		'CPRODUCT' : '合作产品'
 	};
 
 	self.refresh = function() {
@@ -30,12 +32,12 @@ var UsersContext = function() {
 	self.checkIdPic = function(fileName) {
 		idCheckLayer = $.layer({
 			type : 1,
-			title : [ '查看身份证图片', '' ],
+			title : ['查看身份证图片', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#pic-check'
@@ -45,22 +47,19 @@ var UsersContext = function() {
 			}
 		});
 
-		$("#img-pic").attr(
-				"src",
-				self.basePath + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=USER_ID");
+		$("#img-pic").attr("src", self.basePath + 'file/getFileStream?fileFileName=' + fileName + "&fileType=USER_ID");
 	};
 
 	self.agreeUser = function(pk) {
 		$("#current-pk").val(pk);
 		userAgreeLayer = $.layer({
 			type : 1,
-			title : [ '选择用户角色', '' ],
+			title : ['选择用户角色', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '200px' ],
-			offset : [ '200px', '' ],
+			area : ['600px', '200px'],
+			offset : ['200px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#agree-panel'
@@ -87,8 +86,7 @@ var UsersContext = function() {
 		$.ajax({
 			url : self.basePath + "user/approveUser",
 			type : "post",
-			data : "user_pk=" + pk + "&" + "user_roles="
-					+ self.chosenUserRoles(),
+			data : "user_pk=" + pk + "&" + "user_roles=" + self.chosenUserRoles(),
 			success : function(data) {
 				if (data == "success") {
 					success_msg("审批成功");
@@ -111,12 +109,12 @@ var UsersContext = function() {
 
 	self.rejectUser = function(pk) {
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确定要拒绝此用户申请吗？',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					$.ajax({
@@ -144,8 +142,7 @@ var UsersContext = function() {
 	$("#img-pic").on(
 			'click',
 			function() {
-				window.open(self.basePath
-						+ "templates/common/check-picture-big.jsp?src="
+				window.open(self.basePath + "templates/common/check-picture-big.jsp?src="
 						+ encodeURIComponent($(this).attr("src")));
 			});
 };

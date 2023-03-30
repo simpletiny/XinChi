@@ -70,16 +70,16 @@
 					</div>
 				</form>
 				<div class="list-result" id="div-table">
-					<table class="table table-striped table-hover" style="white-space: pre-line">
+					<table class="table table-striped table-hover" style="white-space: pre-line;font-weight:550">
 						<thead>
 							<tr role="row">
 								<th style="width:10%">订单号</th>
 								<th style="width:10%">团号</th>
-								<th style="width:15%">航班信息</th>
+								<th style="width:20%">航班信息</th>
 								<th style="width:35%">名单</th>
 								<th style="width:20%">电话</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
-									<th style="width:10%">产品经理</th>
+									<th style="width:5%">产品经理</th>
 								</s:if>
 							</tr>
 						</thead>
@@ -108,6 +108,6 @@
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/drop-off.js"></script>
+	<script src="<%=basePath%>static/js/product/drop-off.js?v=1.0"></script>
 </body>
 </html>

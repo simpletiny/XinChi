@@ -21,7 +21,9 @@ var CardContext = function() {
 
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
 		self.users(data.users);
 	});
 
@@ -44,47 +46,42 @@ var CardContext = function() {
 	self.refresh = function() {
 		var param = $("form").serialize();
 		startLoadingSimpleIndicator("加载中...");
-		$.getJSON(self.apiurl + 'data/fetchProductStatisticsData', param,
-				function(data) {
-					self.areaData(data.areaData);
-					self.productData(data.productData);
+		$.getJSON(self.apiurl + 'data/fetchProductStatisticsData', param, function(data) {
+			self.areaData(data.areaData);
+			self.productData(data.productData);
 
-					var data_area = new Array();
-					var data_product = new Array();
-					var data_sale = new Array();
+			var data_area = new Array();
+			var data_product = new Array();
+			var data_sale = new Array();
 
-					$(self.areaData()).each(function(idx, data) {
-						var obj = new Object();
-						obj.name = data.area;
-						obj.value = data.sum_people;
+			$(self.areaData()).each(function(idx, data) {
+				var obj = new Object();
+				obj.name = data.area;
+				obj.value = data.sum_people;
 
-						data_area.push(obj);
-					});
-					$(self.productData()).each(function(idx, data) {
-						var obj = new Object();
-						obj.name = data.product_name;
-						obj.value = data.sum_people;
+				data_area.push(obj);
+			});
+			$(self.productData()).each(function(idx, data) {
+				var obj = new Object();
+				obj.name = data.product_name;
+				obj.value = data.sum_people;
 
-						data_product.push(obj);
-					});
-					$(data.saleData).each(
-							function(idx, data) {
-								var obj = new Object();
-								obj.name = data.sale_name;
-								obj.value = data.sum_people;
-								this.score = (data.sum_people / data.order_cnt)
-										.toFixed(2);
-								data_sale.push(obj);
-							});
-					self.saleData(data.saleData);
-					self.createChart(title_area, chart_area, data_area);
-					self
-							.createChart(title_product, chart_product,
-									data_product);
-					self.createChart(title_sale, chart_sale, data_sale);
+				data_product.push(obj);
+			});
+			$(data.saleData).each(function(idx, data) {
+				var obj = new Object();
+				obj.name = data.sale_name;
+				obj.value = data.sum_people;
+				this.score = (data.sum_people / data.order_cnt).toFixed(2);
+				data_sale.push(obj);
+			});
+			self.saleData(data.saleData);
+			self.createChart(title_area, chart_area, data_area);
+			self.createChart(title_product, chart_product, data_product);
+			self.createChart(title_sale, chart_sale, data_sale);
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 
 	}
 

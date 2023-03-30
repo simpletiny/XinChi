@@ -5,6 +5,7 @@
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
 		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
@@ -32,14 +33,6 @@
 		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
 		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
-		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
-		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
-		<result column="start_airport" property="start_airport" jdbcType="VARCHAR" />
-		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
-		<result column="end_airport" property="end_airport" jdbcType="VARCHAR" />
-		<result column="off_time" property="off_time" jdbcType="VARCHAR" />
-		<result column="land_time" property="land_time" jdbcType="VARCHAR" />
-		<result column="next_day" property="next_day" jdbcType="INTEGER" />
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
@@ -51,6 +44,7 @@
 		team_number,
 		client_employee_pk,
 		product_pk,
+		product_name,
 		departure_date,
 		days,
 		receivable,
@@ -78,14 +72,6 @@
 		treat_comment,
 		receivable_comment,
 		passenger_captain,
-		ticket_number,
-		start_city,
-		start_airport,
-		end_city,
-		end_airport,
-		off_time,
-		land_time,
-		next_day,
 		product_value,
 		lock_flg,
 		name_confirm_status,
@@ -124,7 +110,10 @@
 			<if test="product_pk != null">
 				product_pk,
 			</if>
-			<if test="departure_date != null">
+			<if test="product_name != null">
+				product_name,
+			</if>
+			<if test="departure_date != null and departure_date !=''">
 				departure_date,
 			</if>
 			<if test="days != null">
@@ -205,30 +194,6 @@
 			<if test="passenger_captain != null">
 				passenger_captain,
 			</if>
-			<if test="ticket_number != null">
-				ticket_number,
-			</if>
-			<if test="start_city != null">
-				start_city,
-			</if>
-			<if test="start_airport != null">
-				start_airport,
-			</if>
-			<if test="end_city != null">
-				end_city,
-			</if>
-			<if test="end_airport != null">
-				end_airport,
-			</if>
-			<if test="off_time != null">
-				off_time,
-			</if>
-			<if test="land_time != null">
-				land_time,
-			</if>
-			<if test="next_day != null">
-				next_day,
-			</if>
 			<if test="product_value != null">
 				product_value,
 			</if>
@@ -249,7 +214,10 @@
 			<if test="product_pk != null">
 				#{product_pk,jdbcType=CHAR},
 			</if>
-			<if test="departure_date != null">
+			<if test="product_name != null">
+				#{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="departure_date != null and departure_date !=''">
 				#{departure_date,jdbcType=VARCHAR},
 			</if>
 			<if test="days != null">
@@ -330,30 +298,6 @@
 			<if test="passenger_captain != null">
 				#{passenger_captain,jdbcType=VARCHAR},
 			</if>
-			<if test="ticket_number != null">
-				#{ticket_number,jdbcType=VARCHAR},
-			</if>
-			<if test="start_city != null">
-				#{start_city,jdbcType=VARCHAR},
-			</if>
-			<if test="start_airport != null">
-				#{start_airport,jdbcType=VARCHAR},
-			</if>
-			<if test="end_city != null">
-				#{end_city,jdbcType=VARCHAR},
-			</if>
-			<if test="end_airport != null">
-				#{end_airport,jdbcType=VARCHAR},
-			</if>
-			<if test="off_time != null">
-				#{off_time,jdbcType=VARCHAR},
-			</if>
-			<if test="land_time != null">
-				#{land_time,jdbcType=VARCHAR},
-			</if>
-			<if test="next_day != null">
-				#{next_day,jdbcType=INTEGER},
-			</if>
 			<if test="product_value != null">
 				#{product_value,jdbcType=INTEGER},
 			</if>
@@ -378,6 +322,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_name != null">
+				product_name = #{product_name,jdbcType=VARCHAR},
 			</if>
 			<if test="departure_date != null">
 				departure_date = #{departure_date,jdbcType=VARCHAR},
@@ -456,30 +403,6 @@
 			</if>
 			<if test="passenger_captain != null">
 				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
-			</if>
-			<if test="ticket_number != null">
-				ticket_number = #{ticket_number,jdbcType=VARCHAR},
-			</if>
-			<if test="start_city != null">
-				start_city = #{start_city,jdbcType=VARCHAR},
-			</if>
-			<if test="start_airport != null">
-				start_airport = #{start_airport,jdbcType=VARCHAR},
-			</if>
-			<if test="end_city != null">
-				end_city = #{end_city,jdbcType=VARCHAR},
-			</if>
-			<if test="end_airport != null">
-				end_airport = #{end_airport,jdbcType=VARCHAR},
-			</if>
-			<if test="off_time != null">
-				off_time = #{off_time,jdbcType=VARCHAR},
-			</if>
-			<if test="land_time != null">
-				land_time = #{land_time,jdbcType=VARCHAR},
-			</if>
-			<if test="next_day != null">
-				next_day = #{next_day,jdbcType=INTEGER},
 			</if>
 			<if test="product_value != null">
 				product_value = #{product_value,jdbcType=INTEGER},

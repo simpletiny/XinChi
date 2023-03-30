@@ -135,6 +135,6 @@
 	<script src="<%=basePath%>static/vendor/echart/echarts.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-statistics.js"></script>
+	<script src="<%=basePath%>static/js/product/product-statistics.js?v=1.0"></script>
 </body>
 </html>

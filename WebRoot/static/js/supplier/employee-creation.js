@@ -31,7 +31,7 @@ var SupplierEmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "supplier.is_cooperates='Y'&supplier.supplier_short_name=" + $("#supplier_name").val();
+		var param = "supplier.is_cooperates=Y&supplier.supplier_short_name=" + $("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);

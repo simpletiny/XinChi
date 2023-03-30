@@ -16,7 +16,8 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/js/order/upload.css" />
 <style>
 #name-table tr th, td {
-	text-align: center
+	text-align: center;
+	vertical-align:middle !important
 }
 
 .fix-width {
@@ -147,45 +148,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-12">
-							<table style="width: 100%" class="table table-striped table-hover">
-								<thead>
-									<tr>
-										<th style="width: 7.5%"></th>
-										<th style="width: 7.5%">航班号</th>
-										<th style="width: 12.5%">起飞城市</th>
-										<th style="width: 12.5%">机场</th>
-										<th style="width: 12.5%">抵达城市</th>
-										<th style="width: 12.5%">机场</th>
-										<th style="width: 7.5%">起飞时间</th>
-										<th style="width: 7.5%">抵达时间</th>
-										<th style="width: 10%">隔天达&nbsp;<input type="checkbox" id="chk-next-day" onclick="nextDay()" /></th>
-										<th style="width: 10%">飞行时间</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>首航段：</td>
-										<td><input type="text" style="width: 90%" maxlength="10" name="bsOrder.ticket_number" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" name="bsOrder.start_city"
-											data-bind="value:airInfo().start_city" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" name="bsOrder.start_airport" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" name="bsOrder.end_city"
-											data-bind="value:airInfo().end_city" /></td>
-										<td><input type="text" style="width: 90%" maxlength="10" name="bsOrder.end_airport" /></td>
-										<td><input type="text" style="width: 90%" class="isTime" id="txt-off-time" name="bsOrder.off_time"
-											maxlength="5" onkeyup="caculate_fly_time()" /></td>
-										<td><input type="text" style="width: 90%" class="isTime" id="txt-land-time" name="bsOrder.land_time"
-											maxlength="5" onkeyup="caculate_fly_time()" /></td>
-										<td><input type="number" style="width: 90%" name="bsOrder.next_day" maxlength="2" min="1"
-											id="txt-next-day" value="1" onkeyup="caculate_fly_time()" disabled="disabled" /></td>
-										<td id="txt-fly-time"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
 					<hr />
 					<h3>名单</h3>
 					<div style="display: none; width: 600px" id="bat-passenger">
@@ -207,41 +169,41 @@
 										<tr>
 											<th style="width: 4%">团长</th>
 											<th style="width: 4%">序号</th>
-											<th style="width: 7%">姓名</th>
+											<th style="width: 10%">姓名</th>
 											<th style="width: 7%">性别</th>
 											<th style="width: 5%" title="只按年份计算">年龄</th>
-											<th style="width: 10%">手机号A</th>
-											<th style="width: 10%">手机号B</th>
-											<th style="width: 15%">证件号码</th>
+											<th style="width: 16%">手机号A</th>
+											<th style="width: 16%">手机号B</th>
+											<th style="width: 22%">证件号码</th>
 											<th style="width: 7%">价格&nbsp;<input type="checkbox" id="chk-bind" onclick="bindFix()" title="选中修改所有价格" /></th>
-											<th style="width: 10%">分房组</th>
+										<!-- 	<th style="width: 10%">分房组</th>
 											<th style="width: 9%"></th>
-											<th style="width: 9%"></th>
-											<th style="width: 3%"></th>
+											<th style="width: 9%"></th> -->
+											<th style="width: 7%"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td><input type="radio" checked="checked" name="team_chairman" /></td>
-											<td st="name-index">1</td>
-											<td><input type="text" style="width: 90%" st="name" /></td>
+											<td st="name-index">1</td> 
+											<td><input type="text" class="ip-" style="width: 90%" st="name" /></td>
 											<td><select class="form-control" style="height: 34px" st="sex">
 													<option value="">选择</option>
 													<option value="M">男</option>
 													<option value="F">女</option>
 											</select></td>
-											<td><input type="text" style="width: 90%" st="age" /></td>
-											<td><input type="text" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" style="width: 90%" onblur="autoPrice();autoCaculate()" st="id" /></td>
-											<td><input type="text" style="width: 90%" onblur="autoPrice()"
+											<td><input class="ip-" type="text" style="width: 90%" st="age" /></td>
+											<td><input class="ip-" type="text" style="width: 90%" st="cellphone_A" /></td>
+											<td><input class="ip-" type="text" style="width: 90%" st="cellphone_B" /></td>
+											<td><input class="ip-" type="text" style="width: 90%" maxlength="18" oninput="autoPrice();autoCaculate()" st="id" /></td>
+											<td><input class="ip-" type="text" style="width: 90%" oninput="fixAllPrice(event);autoPrice()"
 												data-bind="value:product().adult_price-product().business_profit_substract" st="price" /></td>
-											<td><input type="text" style="width: 90%" value="分房组" /></td>
+											<!-- <td><input class="ip-" type="text" style="width: 90%" value="分房组" /></td>
 											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
 												type="hidden" /></td>
 											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
-											<td><input type="button" style="width: 50px" onclick="removeName(this)" title="删除名单" value="-" /></td>
+												type="hidden" /></td> -->
+											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
 										</tr>
 									</tbody>
 								</table>
@@ -249,7 +211,7 @@
 						</div>
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
-								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
+								class="btn btn-green btn-r" onclick = "addName()">添加名单</a>
 						</div>
 					</div>
 					<hr />
@@ -325,6 +287,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-creation.js"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.1"></script>
 </body>
 </html>

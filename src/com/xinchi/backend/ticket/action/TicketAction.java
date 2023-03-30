@@ -26,6 +26,7 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
+import com.xinchi.bean.CommonResultDto;
 import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
@@ -96,6 +97,66 @@ public class TicketAction extends BaseAction {
 		}
 
 		return SUCCESS;
+	}
+
+	private List<String> product_order_numbers;
+	private CommonResultDto commonResult;
+
+	public String selectOrderAirInfoByProductOrderNumbers() {
+		commonResult = new CommonResultDto();
+		commonResult.setIs_done(true);
+
+		String order_number = product_order_numbers.get(0);
+		if (order_number.startsWith("P")) {
+			order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(order_number);
+		} else if (order_number.startsWith("N")) {
+			order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+		}
+
+		if (product_order_numbers.size() > 1) {
+
+			for (int i = 1; i < product_order_numbers.size(); i++) {
+				order_number = product_order_numbers.get(i);
+				List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+				if (order_number.startsWith("P")) {
+					next_order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(order_number);
+				} else if (order_number.startsWith("N")) {
+					next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+				}
+
+				String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+				if (!res.equals("")) {
+					commonResult.setMsg(res);
+					commonResult.setIs_done(false);
+					break;
+				}
+			}
+		}
+
+		return SUCCESS;
+	}
+
+	private String compareTwoInfos(List<OrderAirInfoBean> info1, List<OrderAirInfoBean> info2) {
+		String result = "";
+		if (info1.size() != info2.size())
+			return "航段数量不同！";
+
+		for (int i = 0; i < info1.size(); i++) {
+			OrderAirInfoBean in1 = info1.get(i);
+			for (int j = 0; j < info2.size(); j++) {
+				OrderAirInfoBean in2 = info2.get(j);
+				if (in1.getInfo_index() == in2.getInfo_index()) {
+					if (!in1.getAir_date().equals(in2.getAir_date()))
+						return "航段日期不同！";
+
+					if (!in1.getFrom_to_city().equals(in2.getFrom_to_city()))
+						return "航段城市不同";
+
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private List<AirTicketNameListBean> name_list;
@@ -595,6 +656,22 @@ public class TicketAction extends BaseAction {
 
 	public void setTicket_change_pk(String ticket_change_pk) {
 		this.ticket_change_pk = ticket_change_pk;
+	}
+
+	public List<String> getProduct_order_numbers() {
+		return product_order_numbers;
+	}
+
+	public void setProduct_order_numbers(List<String> product_order_numbers) {
+		this.product_order_numbers = product_order_numbers;
+	}
+
+	public CommonResultDto getCommonResult() {
+		return commonResult;
+	}
+
+	public void setCommonResult(CommonResultDto commonResult) {
+		this.commonResult = commonResult;
 	}
 
 }

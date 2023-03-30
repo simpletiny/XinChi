@@ -196,7 +196,7 @@
    </select>
  
    <select id="selectMaxUserNumber" resultType="java.lang.String">
-      select MAX(user_number) from user_base where user_number != 'admin'
+      select MAX(user_number) from user_base where user_number != 'admin' and user_number !='OT'
    </select>
    
    <select id="selectUserMap"  resultType="map" parameterType="com.xinchi.mybatis.param.MapParam">

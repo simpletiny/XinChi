@@ -37,6 +37,9 @@
 			</form>
 			<hr />
 			<textarea type="text" id="txt-team-number"></textarea> <input type="button" value="修正立款" data-bind="click:fixReceivable"></input>
+			
+			
+		
 		</div>
 
 	<%-- 	<form action="<%=basePath%>simpletiny/rebootTimer">

@@ -18,7 +18,7 @@
 <link href="<%=basePath%>static/img/favicon.ico" rel="icon" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/hint.min.css" />
-<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/style.css?v=1.1" />
 <link rel="stylesheet" href="<%=basePath%>static/vendor/font-awesome-4.2.0/css/font-awesome.min.css" />
 <title>欣驰国际</title>
 <style>
@@ -356,7 +356,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 						<li><a href="<%=basePath%>templates/system/base-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>基础数据</a></li>
 					</s:if>
-					<li><a href="<%=basePath%>templates/404.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
+					<li><a href="<%=basePath%>templates/system/roles.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
 				</ol></li>
 
 		</ul>

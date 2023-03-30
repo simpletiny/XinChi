@@ -136,7 +136,6 @@
 								<th>成人</th>
 								<th>特殊</th>
 								<th>游客信息</th>
-								<th>航班信息</th>
 								<th>销售</th>
 								<th>接待特请</th>
 								<th>销售锁定</th>
@@ -156,7 +155,6 @@
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
-								<td data-bind="text: $data.air_info"></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
 								<td data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
@@ -186,8 +184,7 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td></td>
-							<td></td>
+							<td></td> 
 							<td></td>
 						</tr>
 					</table>
@@ -254,7 +251,7 @@
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 650px; overflow-y: auto;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -353,6 +350,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.0"></script>
 </body>
 </html>

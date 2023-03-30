@@ -14,6 +14,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String product_pk;
 
+	private String product_name;
+
 	private String departure_date;
 
 	private Integer days;
@@ -66,14 +68,14 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String receivable_first_flg;
 
 	// 航段信息
-	private String ticket_number;
-	private String start_city;
-	private String start_airport;
-	private String end_city;
-	private String end_airport;
-	private String off_time;
-	private String land_time;
-	private int next_day;
+	// private String ticket_number;
+	// private String start_city;
+	// private String start_airport;
+	// private String end_city;
+	// private String end_airport;
+	// private String off_time;
+	// private String land_time;
+	// private int next_day;
 
 	public String getTeam_number() {
 		return team_number;
@@ -307,70 +309,6 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 		this.passenger_captain = passenger_captain;
 	}
 
-	public String getTicket_number() {
-		return ticket_number;
-	}
-
-	public void setTicket_number(String ticket_number) {
-		this.ticket_number = ticket_number;
-	}
-
-	public String getStart_city() {
-		return start_city;
-	}
-
-	public void setStart_city(String start_city) {
-		this.start_city = start_city;
-	}
-
-	public String getStart_airport() {
-		return start_airport;
-	}
-
-	public void setStart_airport(String start_airport) {
-		this.start_airport = start_airport;
-	}
-
-	public String getEnd_city() {
-		return end_city;
-	}
-
-	public void setEnd_city(String end_city) {
-		this.end_city = end_city;
-	}
-
-	public String getEnd_airport() {
-		return end_airport;
-	}
-
-	public void setEnd_airport(String end_airport) {
-		this.end_airport = end_airport;
-	}
-
-	public String getOff_time() {
-		return off_time;
-	}
-
-	public void setOff_time(String off_time) {
-		this.off_time = off_time;
-	}
-
-	public String getLand_time() {
-		return land_time;
-	}
-
-	public void setLand_time(String land_time) {
-		this.land_time = land_time;
-	}
-
-	public int getNext_day() {
-		return next_day;
-	}
-
-	public void setNext_day(int next_day) {
-		this.next_day = next_day;
-	}
-
 	public String getLock_flg() {
 		return lock_flg;
 	}
@@ -401,6 +339,14 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setProduct_value(String product_value) {
 		this.product_value = product_value;
+	}
+
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
 	}
 
 }

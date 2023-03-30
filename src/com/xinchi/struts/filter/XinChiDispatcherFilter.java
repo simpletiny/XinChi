@@ -8,7 +8,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
 
 /**
@@ -20,7 +19,8 @@ import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
  *         servlet需要保持原有的Request而不需要struts2的封装和过滤
  */
 public class XinChiDispatcherFilter extends StrutsPrepareAndExecuteFilter {
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		String URI = request.getRequestURI();

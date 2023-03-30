@@ -333,4 +333,18 @@ public class DateUtil {
 		System.out.println(yesterday());
 	}
 
+	public static String fromUnixTime(String time, String... format) {
+		if (isEmpty(time))
+			return "";
+		String date = "";
+		if (format.length > 0) {
+			SimpleDateFormat ft = new SimpleDateFormat(format[0]);
+			date = ft.format(new Date(Long.parseLong(time)));
+
+		} else {
+			date = sdf4.format(new Date(Long.parseLong(time)));
+		}
+		return date;
+	}
+
 }

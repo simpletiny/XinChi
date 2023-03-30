@@ -49,9 +49,7 @@
 		A.treat_comment,
 		A.lock_flg,
 		A.name_confirm_status,
-		A.standard_flg,
-		CONCAT(A.start_city,'-',A.end_city) AS
-		air_info
+		A.standard_flg
 
 		from budget_order_view A
 		LEFT JOIN product B ON A.product_pk=B.pk

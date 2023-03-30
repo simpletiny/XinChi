@@ -45,6 +45,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="selectOrderAirInfoByProductOrderNumbers" class="ticketAction" method="selectOrderAirInfoByProductOrderNumbers">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="createTicketOrder" class="ticketAction" method="createTicketOrder">
 			<result name="success" type="str">
 				resultStr

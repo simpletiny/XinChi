@@ -6,6 +6,7 @@
 		<result column="operate_index" property="operate_index" jdbcType="INTEGER" />
 		<result column="supplier_count" property="supplier_count" jdbcType="INTEGER" />
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
 		<result column="supplier_cost" property="supplier_cost" jdbcType="DECIMAL" />
 		<result column="final_supplier_cost" property="final_supplier_cost" jdbcType="DECIMAL" />
 		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
@@ -59,9 +60,33 @@
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from product_order_operation
-		where pk = #{pk,jdbcType=CHAR}
+		A.team_number,
+		A.operate_index,
+		A.supplier_count,
+		A.supplier_employee_pk,
+		B.name AS supplier_employee_name,
+		A.supplier_cost,
+		A.final_supplier_cost,
+		A.supplier_product_name,
+		A.people_count,
+		A.pick_date,
+		A.pick_type,
+		A.picker_cellphone,
+		A.send_type,
+		A.create_user,
+		A.update_user,
+		A.pk,
+		A.send_date,
+		A.status,
+		A.land_day,
+		A.picker,
+		A.off_day,
+		A.create_time,
+		A.update_time,
+		A.passenger_captain
+		from product_order_operation A
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

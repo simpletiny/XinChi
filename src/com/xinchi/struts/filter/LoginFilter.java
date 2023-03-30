@@ -1,8 +1,6 @@
 package com.xinchi.struts.filter;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -54,6 +52,13 @@ public class LoginFilter extends HttpServlet implements Filter {
 				response.sendRedirect(contextPath + "/templates/users/login.jsp");
 				return;
 			}
+
+			// 用户权限检测
+			// String path = request.getRequestURI();
+			// StringBuffer path2 = request.getRequestURL();
+			// String roles = sessionBean.getUser_roles();
+			//
+			// System.out.printf(path, path2, roles);
 			fc.doFilter(request, response);
 		}
 

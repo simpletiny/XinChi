@@ -2,6 +2,7 @@ package com.xinchi.common;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public class UserSessionBean {
 	private String id;
@@ -22,6 +23,8 @@ public class UserSessionBean {
 
 	private BigDecimal credit_limit;
 	private BigDecimal credit_balance;
+
+	private Set<String> authorized_pages;
 
 	public String getId() {
 		return id;
@@ -125,6 +128,14 @@ public class UserSessionBean {
 
 	public void setCredit_balance(BigDecimal credit_balance) {
 		this.credit_balance = credit_balance;
+	}
+
+	public Set<String> getAuthorized_pages() {
+		return authorized_pages;
+	}
+
+	public void setAuthorized_pages(Set<String> authorized_pages) {
+		this.authorized_pages = authorized_pages;
 	}
 
 	// public boolean equals(Object obj) {

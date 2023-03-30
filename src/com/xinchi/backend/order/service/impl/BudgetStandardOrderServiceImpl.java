@@ -52,6 +52,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			saveFile(bean);
 		}
+
+		if (bean.getDeparture_date().equals(""))
+			bean.setDeparture_date(null);
 		String order_pk = DBCommonUtil.genPk();
 		String passenger_captain = "";
 		bean.setPk(order_pk);
@@ -119,6 +122,13 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 
 		if (bean.getConfirm_flg().equals("Y")) {
+			ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
+			bean.setProduct_name(product.getName());
+			String departureDate = bean.getDeparture_date();
+			int days = bean.getDays();
+			String returnDate = DateUtil.addDate(departureDate, days - 1);
+			int special_count = bean.getSpecial_count() == null ? 0 : bean.getSpecial_count();
+			int people_count = bean.getAdult_count() + special_count;
 
 			// 判断是否有信用余额确认订单
 			boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(),
@@ -133,31 +143,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				bean.setTeam_number(numberService.generateTeamNumber());
 			}
 
-			ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
-			String departureDate = bean.getDeparture_date();
-			int days = bean.getDays();
-			String returnDate = DateUtil.addDate(departureDate, days - 1);
-			int special_count = bean.getSpecial_count() == null ? 0 : bean.getSpecial_count();
-			int people_count = bean.getAdult_count() + special_count;
+			// 若果没有生成应收款，则生成应收款
+			if (old.getReceivable_first_flg().equals("N")) {
 
-			// 如果已经生成了应收款，则更新应收款
-			if (old.getReceivable_first_flg().equals("Y")) {
-				ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
-
-				receivable.setDeparture_date(bean.getDeparture_date());
-				receivable.setReturn_date(returnDate);
-				receivable.setProduct(product.getName());
-				receivable.setPeople_count(people_count);
-				receivable.setBudget_receivable(bean.getReceivable());
-				BigDecimal received = receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived();
-				receivable.setBudget_balance(bean.getReceivable().subtract(received));
-				receivable.setSales(old.getCreate_user());
-				receivable.setCreate_user(old.getCreate_user());
-
-				receivableDao.update(receivable);
-			}
-			// 如果没有生成应收款，则生成应收款
-			else {
 				ReceivableBean receivable = new ReceivableBean();
 				receivable.setTeam_number(bean.getTeam_number());
 				receivable.setFinal_flg("N");
@@ -175,6 +163,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				receivable.setCreate_user(old.getCreate_user());
 
 				receivableDao.insert(receivable);
+
 			}
 
 			// 确认后锁定订单
@@ -183,8 +172,13 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 					+ (null == product.getProduct_child_value() ? "0" : product.getProduct_child_value().floatValue());
 			bean.setProduct_value(product_value);
 
-			// 生成team_report基础数据
-			TeamReportBean tr = new TeamReportBean();
+			// 生成或者更新team_report基础数据
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(bean.getTeam_number());
+			boolean exists = null != tr;
+			if (!exists) {
+				tr = new TeamReportBean();
+			}
+
 			tr.setTeam_number(bean.getTeam_number());
 
 			BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
@@ -200,9 +194,36 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 			tr.setSale_cost(sale_cost);
 			tr.setSys_cost(sys_cost);
+			if (!exists) {
+				orderReportDao.insert(tr);
+			} else {
+				orderReportDao.updateTeamReport(tr);
+			}
 
-			orderReportDao.insert(tr);
+		}
 
+		// 如果已经生成了应收款，则更新应收款
+		if (old.getReceivable_first_flg().equals("Y")) {
+			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
+
+			String departureDate = bean.getDeparture_date();
+			Integer days = bean.getDays();
+			receivable.setDeparture_date(departureDate);
+			if (!SimpletinyString.isEmpty(departureDate) && days != null && days != 0) {
+				String returnDate = DateUtil.addDate(departureDate, days - 1);
+				receivable.setReturn_date(returnDate);
+			}
+			if (bean.getAdult_count() != null) {
+				int people_count = bean.getAdult_count()
+						+ (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+				receivable.setPeople_count(people_count);
+			}
+
+			receivable.setBudget_receivable(bean.getReceivable());
+			BigDecimal received = receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived();
+			receivable.setBudget_balance(bean.getReceivable().subtract(received));
+
+			receivableDao.update(receivable);
 		}
 
 		bean.setCreate_user(old.getCreate_user());
@@ -309,14 +330,12 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		// 更新应收款
 		ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(bean.getTeam_number());
 		receivable.setClient_employee_pk(bean.getClient_employee_pk());
-		ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
 		String departureDate = bean.getDeparture_date();
 		int days = bean.getDays();
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 		int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 		receivable.setDeparture_date(bean.getDeparture_date());
 		receivable.setReturn_date(returnDate);
-		receivable.setProduct(product.getName());
 		receivable.setPeople_count(people_count);
 		receivable.setBudget_receivable(bean.getReceivable());
 		receivable.setBudget_balance(bean.getReceivable()
@@ -429,6 +448,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String result = receivableService.deleteByTeamNumber(old.getTeam_number());
 			if (!result.equals(SUCCESS))
 				return result;
+
+			orderReportDao.deleteByTeamNumber(old.getTeam_number());
 		}
 
 		deleteFile(old);
@@ -474,10 +495,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			return "product";
 		}
 
-		// 删除应收款
-		receivableDao.deleteByTeamNumber(order.getTeam_number());
-
-		order.setTeam_number("");
+		order.setReceivable_first_flg("Y");
 		order.setConfirm_flg("N");
 		dao.update(order);
 

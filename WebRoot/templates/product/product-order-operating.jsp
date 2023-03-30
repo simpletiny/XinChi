@@ -27,7 +27,7 @@
 	border-spacing: 0px 10px;
 }
 
-.required th[class="r"]:after {
+.required th.r:after {
 	content: " *";
 	color: red;
 	font-weight: bold;
@@ -54,7 +54,7 @@ tr td {
 					<div class="form-group">
 						<div style="float: right">
 							<div>
-								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">编辑</button> -->
+								<button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">修改价格</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperation() }">确认</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
 							</div>
@@ -194,67 +194,54 @@ tr td {
 			</div>
 		</div>
 	</div>
-	<div id="supplier-info" style="display: none; width: 1400px">
+	<div id="supplier-info" style="display: none; width: 800px;height:450px;overflow-y:auto ">
 		<div class="input-row clearfloat">
-			<div style="margin-top: 20px; height: 300px" id="div-ticket">
+			<div class="col-md-12">
+				<table style="width: 100%" class="table table-striped table-hover" id="table-order">
+					<thead>
+						<tr class="required">
+							<th style="width: 8%">团号</th>
+							<th style="width: 8%">销售</th>
+							<th style="width: 5%">人数</th>
+							<th style="width: 10%">游客</th>
+							<th style="width: 10%" class="r">地接费用</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:orders">
+						<tr> 
+							<td data-bind="text:$data.team_number" class="team-number"></td>
+							<td data-bind="text:$data.create_user"></td>
+							<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
+							<td><a href="javascript:void(0)" style="color: blue"
+								data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
+							<td><input type="number" class="form-control supplier-cost" data-bind="value:$data.payable" st="supplier-cost" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<hr/>
+		<div class="input-row clearfloat">
+			<input type="text" data-bind="value:operation().supplier_employee_pk" class="supplier-employee-pk" st="supplier-pk" style="display: none" />
+			<div style="margin-top: 20px;" id="div-ticket">
 				<table style="width: 90%" id="table-supplier">
 					<thead>
 						<tr class="required">
-							<th style="width: 5%">序号</th>
-							<th style="width: 10%" class="r">供应商</th>
-							<th style="width: 10%" class="r">产品名称</th>
-							<th style="width: 5%" class="r">总价格</th>
-							<th style="width: 9%" class="r">接团天次</th>
-							<th style="width: 10%">接团方式</th>
-							<th style="width: 10%">接团人</th>
-							<th style="width: 10%">联系方式</th>
-							<th style="width: 9%" class="r">送团天次</th>
-							<th style="width: 10%">送团方式</th>
-							<th style="width: 2%"></th>
+							<th style="width: 15%">供应商</th>
+							<th style="width: 20%">产品名称</th>
+							<th style="width: 10%">原费用</th>
+							<th style="width: 10%" class="r">新费用</th>
 						</tr>
 					</thead>
-					<!-- ko if:productSuppliers().length>0 -->
-					<tbody data-bind="foreach:productSuppliers">
-						<tr>
-							<td st="index" data-bind="text:$data.operate_index"></td>
-							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name"
-								onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
-								data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
-							<td><input class="need" st="supplier-product-name" maxlength="10"
-								data-bind="value:$data.supplier_product_name" type="text" /></td>
-							<td><input class="need" st="supplier-cost" data-bind="value:$data.supplier_cost" type="number" /></td>
-							<td><input class="need" st="land-day" data-bind="value:$data.land_day" type="number" /></td>
-							<td><input st="pick-type" data-bind="value:$data.pick_type" maxlength="50" type="text" /></td>
-							<td><input st="picker" data-bind="value:$data.picker" maxlength="10" type="text" /></td>
-							<td><input st="picker-cellphone" data-bind="value:$data.picker_cellphone" maxlength="15" type="number" /></td>
-							<td><input class="need" st="off-day" type="number" data-bind="value:$data.off_day" /></td>
-							<td><input st="send-type" maxlength="50" type="text" data-bind="value:$data.send_type" /></td>
-							<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
-						</tr>
-					</tbody>
-					<!-- /ko -->
-					<!-- ko if:productSuppliers().length<1 -->
 					<tbody>
 						<tr>
-							<td st="index">1</td>
-							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input class="need"
-								type="text" st="supplier-pk" style="display: none" /></td>
-							<td><input class="need" st="supplier-product-name" maxlength="10" type="text" /></td>
-							<td><input class="need" st="supplier-cost" type="number" /></td>
-							<td><input class="need" st="land-day" type="number" /></td>
-							<td><input st="pick-type" maxlength="50" type="text" /></td>
-							<td><input st="picker" maxlength="10" type="text" /></td>
-							<td><input st="picker-cellphone" maxlength="15" type="number" /></td>
-							<td><input class="need" st="off-day" type="number" /></td>
-							<td><input st="send-type" maxlength="50" type="text" /></td>
-							<td><input type="button" value="-" onclick="deleteRow(this)" /></td>
+							<td data-bind="text:operation().supplier_employee_name"></td>
+							<td data-bind="text:operation().supplier_product_name"></td>
+							<td data-bind="text:operation().supplier_cost"></td>
+							<td><input class="form-control new-cost" st="supplier-cost" type="number" /></td>
 						</tr>
 					</tbody>
-					<!-- /ko -->
 				</table>
-				<div style="margin-top: 20px; float: right">
-					<input type="button" value="添加供应商" onclick="addRow()"></input>
-				</div>
 			</div>
 
 			<div style="margin-top: 50px; width: 700px; float: right">
@@ -311,7 +298,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px; height: 650px; overflow-y: auto;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -369,7 +356,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 订单详情查看乘客信息 -->
-	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: scroll;">
+	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: auto;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -396,13 +383,12 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operating.js"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.1"></script>
 </body>
 </html>

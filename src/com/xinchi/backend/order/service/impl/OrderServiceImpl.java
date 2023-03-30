@@ -144,14 +144,14 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable_comment(budget_order.getReceivable_comment());
 
 			// 航段信息
-			final_order.setTicket_number(budget_order.getTicket_number());
-			final_order.setStart_city(budget_order.getStart_city());
-			final_order.setStart_airport(budget_order.getStart_airport());
-			final_order.setEnd_city(budget_order.getEnd_city());
-			final_order.setEnd_airport(budget_order.getEnd_airport());
-			final_order.setOff_time(budget_order.getOff_time());
-			final_order.setLand_time(budget_order.getLand_time());
-			final_order.setNext_day(budget_order.getNext_day());
+			// final_order.setTicket_number(budget_order.getTicket_number());
+			// final_order.setStart_city(budget_order.getStart_city());
+			// final_order.setStart_airport(budget_order.getStart_airport());
+			// final_order.setEnd_city(budget_order.getEnd_city());
+			// final_order.setEnd_airport(budget_order.getEnd_airport());
+			// final_order.setOff_time(budget_order.getOff_time());
+			// final_order.setLand_time(budget_order.getLand_time());
+			// final_order.setNext_day(budget_order.getNext_day());
 
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type(order.getFinal_type());
@@ -194,6 +194,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		// 非标准订单
 		else {
+
 			FinalNonStandardOrderBean final_order = new FinalNonStandardOrderBean();
 			final_order.setTeam_number(budget_order.getTeam_number());
 
@@ -208,6 +209,8 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setAdult_count(budget_order.getAdult_count());
 
 			final_order.setAdult_cost(budget_order.getAdult_cost());
+
+			final_order.setProduct_manager(budget_order.getProduct_manager_number());
 
 			final_order.setSpecial_count(budget_order.getSpecial_count());
 
@@ -238,14 +241,14 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable_comment(budget_order.getReceivable_comment());
 
 			// 航段信息
-			final_order.setTicket_number(budget_order.getTicket_number());
-			final_order.setStart_city(budget_order.getStart_city());
-			final_order.setStart_airport(budget_order.getStart_airport());
-			final_order.setEnd_city(budget_order.getEnd_city());
-			final_order.setEnd_airport(budget_order.getEnd_airport());
-			final_order.setOff_time(budget_order.getOff_time());
-			final_order.setLand_time(budget_order.getLand_time());
-			final_order.setNext_day(budget_order.getNext_day());
+			// final_order.setTicket_number(budget_order.getTicket_number());
+			// final_order.setStart_city(budget_order.getStart_city());
+			// final_order.setStart_airport(budget_order.getStart_airport());
+			// final_order.setEnd_city(budget_order.getEnd_city());
+			// final_order.setEnd_airport(budget_order.getEnd_airport());
+			// final_order.setOff_time(budget_order.getOff_time());
+			// final_order.setLand_time(budget_order.getLand_time());
+			// final_order.setNext_day(budget_order.getNext_day());
 
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type(order.getFinal_type());
@@ -427,14 +430,14 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable_comment(order.getReceivable_comment());
 
 			// 航段信息
-			final_order.setTicket_number(budget_order.getTicket_number());
-			final_order.setStart_city(budget_order.getStart_city());
-			final_order.setStart_airport(budget_order.getStart_airport());
-			final_order.setEnd_city(budget_order.getEnd_city());
-			final_order.setEnd_airport(budget_order.getEnd_airport());
-			final_order.setOff_time(budget_order.getOff_time());
-			final_order.setLand_time(budget_order.getLand_time());
-			final_order.setNext_day(budget_order.getNext_day());
+			// final_order.setTicket_number(budget_order.getTicket_number());
+			// final_order.setStart_city(budget_order.getStart_city());
+			// final_order.setStart_airport(budget_order.getStart_airport());
+			// final_order.setEnd_city(budget_order.getEnd_city());
+			// final_order.setEnd_airport(budget_order.getEnd_airport());
+			// final_order.setOff_time(budget_order.getOff_time());
+			// final_order.setLand_time(budget_order.getLand_time());
+			// final_order.setNext_day(budget_order.getNext_day());
 
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type("4");
@@ -494,14 +497,14 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable_comment(order.getReceivable_comment());
 
 			// 航段信息
-			final_order.setTicket_number(budget_order.getTicket_number());
-			final_order.setStart_city(budget_order.getStart_city());
-			final_order.setStart_airport(budget_order.getStart_airport());
-			final_order.setEnd_city(budget_order.getEnd_city());
-			final_order.setEnd_airport(budget_order.getEnd_airport());
-			final_order.setOff_time(budget_order.getOff_time());
-			final_order.setLand_time(budget_order.getLand_time());
-			final_order.setNext_day(budget_order.getNext_day());
+			// final_order.setTicket_number(budget_order.getTicket_number());
+			// final_order.setStart_city(budget_order.getStart_city());
+			// final_order.setStart_airport(budget_order.getStart_airport());
+			// final_order.setEnd_city(budget_order.getEnd_city());
+			// final_order.setEnd_airport(budget_order.getEnd_airport());
+			// final_order.setOff_time(budget_order.getOff_time());
+			// final_order.setLand_time(budget_order.getLand_time());
+			// final_order.setNext_day(budget_order.getNext_day());
 
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type("4");
@@ -532,7 +535,8 @@ public class OrderServiceImpl implements OrderService {
 		receivable.setFinal_receivable(order.getReceivable());
 
 		// 如果存在单团核算数据，则删除
-		orderReportDao.deleteByTeamNumber(budget_order.getTeam_number());
+		// 不删除单团核算数据，会影响到应收款中的退返和决算打回
+		// orderReportDao.deleteByTeamNumber(budget_order.getTeam_number());
 
 		// 如果订单存在98清尾，则打回
 		ClientReceivedDetailBean option = new ClientReceivedDetailBean();
@@ -739,6 +743,11 @@ public class OrderServiceImpl implements OrderService {
 			bnso.setReceivable_first_flg("Y");
 			bnsoDao.update(bnso);
 		}
+
+		// 生成team_report基础数据
+		TeamReportBean tr = new TeamReportBean();
+		tr.setTeam_number(team_number);
+		orderReportDao.insert(tr);
 
 		return SUCCESS;
 	}

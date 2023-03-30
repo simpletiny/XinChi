@@ -335,7 +335,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px;height:650px;overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -426,6 +426,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-final.js"></script>
+	<script src="<%=basePath%>static/js/product/product-order-final.js?v=1.0"></script>
 </body>
 </html>

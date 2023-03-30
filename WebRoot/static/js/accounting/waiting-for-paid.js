@@ -37,7 +37,7 @@ var PaidContext = function() {
 	self.itemMapping = {
 		'D' : '地接款',
 		'X' : '销售费用',
-		'H' : '亲情费用',
+		'H' : '客情费用',
 		'J' : '产品费用',
 		'T' : '唯品费',
 		'P' : '票务费用',

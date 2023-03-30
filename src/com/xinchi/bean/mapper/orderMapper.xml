@@ -44,14 +44,6 @@
 		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
 		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
 		<result column="client_name" property="client_name" jdbcType="VARCHAR" />
-		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
-		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
-		<result column="start_airport" property="start_airport" jdbcType="VARCHAR" />
-		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
-		<result column="end_airport" property="end_airport" jdbcType="VARCHAR" />
-		<result column="off_time" property="off_time" jdbcType="VARCHAR" />
-		<result column="land_time" property="land_time" jdbcType="VARCHAR" />
-		<result column="next_day" property="next_day" jdbcType="INTEGER" />
 		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
 		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
 		<result column="final_type" property="final_type" jdbcType="CHAR" />
@@ -355,8 +347,6 @@
 		A.days,
 		A.departure_date,
 		A.pk,
-		A.start_city,
-		A.end_city,
 		A.update_user,
 		A.create_user_number,
 		A.create_user,

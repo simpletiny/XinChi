@@ -306,8 +306,14 @@
 			<if test="params.bo.money_to != null and params.bo.money_to !=''">
 				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
 			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
 			<if test="params.bo.receiver != null and params.bo.receiver !=''">
 				and A.receiver like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.apply_user != null and params.bo.apply_user !=''">
+				and B.user_name like CONCAT('%',#{params.bo.apply_user,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.item != null and params.bo.item !=''">
 				and A.item = #{params.bo.item,jdbcType=VARCHAR}

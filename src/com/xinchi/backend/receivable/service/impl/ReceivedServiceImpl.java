@@ -302,11 +302,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 		// 更新单团核算数据
 		TeamReportBean tr = orderReportDao.selectTeamReportByTn(detail.getTeam_number());
-		if (tr.getDiscount_flg().equals("Y")) {
+		if (null != tr && tr.getDiscount_flg().equals("Y")) {
 			tr.setDiscount_receivable(tr.getDiscount_receivable().add(detail.getReceived()));
 			orderReportDao.updateTeamReport(tr);
 		}
-
 		return SUCCESS;
 	}
 
@@ -448,10 +447,14 @@ public class ReceivedServiceImpl implements ReceivedService {
 						// if (order.getConfirm_date().equals(re.getReceived_time().substring(0, 10))) {
 						// discount_received = discount_received.add(re.getReceived());
 						// }
-						if (DateUtil.compare(order.getConfirm_date(), "2022-07-18") == 2) {
+						if (null != order.getConfirm_date()
+								&& DateUtil.compare(order.getConfirm_date(), "2022-07-18") == 2) {
 							discount_received = discount_received.add(re.getReceived());
 						} else {
-							String limitDate = DateUtil.addDate(order.getConfirm_date(), 1);
+							// 如果订单未确认，则用订单创建时间计算
+							String limitDate = DateUtil
+									.addDate(order.getConfirm_flg().equals("Y") ? order.getConfirm_date()
+											: DateUtil.fromUnixTime(order.getCreate_time(), DateUtil.YYYY_MM_DD), 1);
 							if (DateUtil.compare(limitDate, re.getReceived_time().substring(0, 10)) < 2) {
 								discount_received = discount_received.add(re.getReceived());
 							}

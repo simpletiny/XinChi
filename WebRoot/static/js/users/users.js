@@ -11,7 +11,7 @@ var UsersContext = function() {
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
 
-	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'CPRODUCT'];
+	self.allRoles = ['MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'CPRODUCT'];
 	self.sexMapping = {
 		'F' : '女',
 		'M' : '男'

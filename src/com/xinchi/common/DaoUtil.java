@@ -81,6 +81,11 @@ public class DaoUtil {
 		return supperBO.getPk();
 	}
 
+	public String insertObject(String mapper, Object object) {
+		sqlSession.insert(mapper, object);
+		return "success";
+	}
+
 	/**
 	 * 插入对象列表
 	 * 
@@ -273,6 +278,11 @@ public class DaoUtil {
 	 * @return
 	 */
 	public <T extends SupperBO> List<T> selectAll(String mapper) {
+		List<T> listBo = sqlSession.selectList(mapper);
+		return listBo;
+	}
+
+	public <T extends Object> List<T> selectAllOut(String mapper) {
 		List<T> listBo = sqlSession.selectList(mapper);
 		return listBo;
 	}

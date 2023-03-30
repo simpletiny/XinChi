@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.DropOffBean;
+import com.xinchi.bean.PayableOrderBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -63,4 +64,7 @@ public interface ProductOrderOperationService extends BaseService {
 
 	public String rollBackOperation(String operate_pk);
 
+	public List<PayableOrderBean> selectPayableOrderByParam(PayableOrderBean option);
+
+	public String modifyOrderOperation(String json);
 }

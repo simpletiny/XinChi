@@ -42,41 +42,28 @@ var OrderContext = function() {
 		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=F";
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$
-				.getJSON(
-						self.apiurl
-								+ 'product/searchProductOrderOperationByPage',
-						param,
-						function(data) {
-							self.operations(data.operations);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
+			self.operations(data.operations);
 
-							$(self.operations())
-									.each(
-											function(idx, data) {
-												total_people_count += data.people_count - 0;
-												total_supplier_cost += data.supplier_cost == null
-														? 0
-														: data.supplier_cost;
-											});
+			$(self.operations()).each(function(idx, data) {
+				total_people_count += data.people_count - 0;
+				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
+			});
 
-							self.totalPeopleCount(total_people_count);
-							self.totalSupplierCost(total_supplier_cost);
-							$(".detail").showDetail();
-							self.totalCount(Math.ceil(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
+			self.totalPeopleCount(total_people_count);
+			self.totalSupplierCost(total_supplier_cost);
+			$(".detail").showDetail();
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-							endLoadingIndicator();
-						});
+			endLoadingIndicator();
+		});
 	};
 
 	self.downloadSc = function(team_number, supplier_employee_pk) {
-		window.location.href = self.apiurl
-				+ "file/downloadProductFile?team_number=" + team_number
-				+ "&supplier_employee_pk=" + supplier_employee_pk
-				+ "&fileType=C";
+		window.location.href = self.apiurl + "file/downloadProductFile?team_number=" + team_number
+				+ "&supplier_employee_pk=" + supplier_employee_pk + "&fileType=C";
 	}
 
 	self.productSuppliers = ko.observableArray([]);
@@ -142,7 +129,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', '500px'],
+				area : ['800px', '700px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {
@@ -249,8 +236,7 @@ var OrderContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -266,17 +252,13 @@ var OrderContext = function() {
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-				});
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -322,8 +304,7 @@ var OrderContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);

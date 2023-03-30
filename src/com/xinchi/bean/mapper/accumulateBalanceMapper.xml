@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AccumulateBalanceBeanMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AccumulateBalanceBean">
+		<result column="user_pk" property="user_pk" jdbcType="CHAR" />
+		<result column="user_number" property="user_number" jdbcType="VARCHAR" />
+		<result column="date" property="date" jdbcType="VARCHAR" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
+		<result column="receivable_balance" property="receivable_balance" jdbcType="DECIMAL" />
+		<result column="payable" property="payable" jdbcType="DECIMAL" />
+		<result column="payable_balance" property="payable_balance" jdbcType="DECIMAL" />
+		<result column="pk" property="pk" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		user_pk,
+		user_number,
+		date,
+		receivable,
+		receivable_balance,
+		payable,
+		payable_balance,
+		pk
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from accumulate_balance
+		where pk = #{pk,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from accumulate_balance
+		where pk = #{pk,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AccumulateBalanceBean">
+
+		insert into accumulate_balance
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_pk != null">
+				user_pk,
+			</if>
+			<if test="user_number != null">
+				user_number,
+			</if>
+			<if test="date != null">
+				date,
+			</if>
+			<if test="receivable != null">
+				receivable,
+			</if>
+			<if test="receivable_balance != null">
+				receivable_balance,
+			</if>
+			<if test="payable != null">
+				payable,
+			</if>
+			<if test="payable_balance != null">
+				payable_balance,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="user_pk != null">
+				#{user_pk,jdbcType=CHAR},
+			</if>
+			<if test="user_number != null">
+				#{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="date != null">
+				#{date,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable != null">
+				#{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="receivable_balance != null">
+				#{receivable_balance,jdbcType=DECIMAL},
+			</if>
+			<if test="payable != null">
+				#{payable,jdbcType=DECIMAL},
+			</if>
+			<if test="payable_balance != null">
+				#{payable_balance,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AccumulateBalanceBean">
+		update accumulate_balance
+		<set>
+			<if test="user_pk != null">
+				user_pk = #{user_pk,jdbcType=CHAR},
+			</if>
+			<if test="user_number != null">
+				user_number = #{user_number,jdbcType=VARCHAR},
+			</if>
+			<if test="date != null">
+				date = #{date,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable != null">
+				receivable = #{receivable,jdbcType=DECIMAL},
+			</if>
+			<if test="receivable_balance != null">
+				receivable_balance = #{receivable_balance,jdbcType=DECIMAL},
+			</if>
+			<if test="payable != null">
+				payable = #{payable,jdbcType=DECIMAL},
+			</if>
+			<if test="payable_balance != null">
+				payable_balance = #{payable_balance,jdbcType=DECIMAL},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=INTEGER},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AccumulateBalanceBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from accumulate_balance
+	</select>
+	<select id="selectNeedInsert" resultMap="BaseResultMap">
+		<![CDATA[
+		SELECT 
+		    C.pk AS user_pk,
+		    DATE_FORMAT(NOW(), '%Y-%m-%d') AS date,
+		    SUM(IF(final_flg = 'N',
+		        budget_balance,
+		        final_balance)) AS receivable_balance,
+		    sales AS user_number
+		FROM
+		    receivable A
+		        LEFT JOIN
+		    budget_order_view B ON A.team_number = B.team_number
+		        LEFT JOIN
+		    user_base C ON A.sales = C.user_number
+		WHERE
+		    B.confirm_date <= DATE_FORMAT(NOW(), '%Y-%m-%d')
+		GROUP BY sales
+		HAVING receivable_balance > 0;]]>
+	</select>
+</mapper>

@@ -384,7 +384,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/file-upload-office.js"></script>
+	<script src="<%=basePath%>static/js/file-upload-office.js?v1.0"></script>
 	<script src="<%=basePath%>static/js/ticket/deposit.js"></script>
 </body>
 </html>

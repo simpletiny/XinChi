@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.sys.service.BaseDataService;
 import com.xinchi.bean.BaseDataBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 
 @Controller
@@ -60,6 +59,7 @@ public class BaseDataAction extends BaseAction {
 		resultStr = service.updateBaseData(baseData);
 		return SUCCESS;
 	}
+
 	public String deleteBaseData() {
 		resultStr = service.deleteBaseData(baseData);
 		return SUCCESS;
@@ -67,7 +67,7 @@ public class BaseDataAction extends BaseAction {
 
 	private String json;
 
-	public String sortProductLine() {
+	public String sortData() {
 		resultStr = service.sortData(json);
 		return SUCCESS;
 	}

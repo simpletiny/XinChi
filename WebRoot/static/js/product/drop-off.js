@@ -1,7 +1,7 @@
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.colors = ['#ffff99', '#ccffff', '#9999ff', '#00ffcc'];
+	self.colors = ['#FFFFE0', '#FFF0F5', '#FFFACD', '#FFEBCD'];
 	self.drop_offs = ko.observableArray([]);
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
@@ -24,10 +24,8 @@ var OrderContext = function() {
 				var obj = new Object();
 				var info = data.drop_offs[i];
 				obj.product_order_number = info.product_order_number;
-				obj.infos = "航班号：" + info.ticket_number + "\n"
-						+ info.first_start_city + info.from_airport + "--"
-						+ info.first_end_city + info.to_airport + " "
-						+ info.from_to_time;
+				obj.infos = "航班号：" + info.ticket_number + "\n" + info.first_start_city + info.from_airport + "--"
+						+ info.first_end_city + info.to_airport + " " + info.from_to_time;
 				obj.client_name = info.client_name;
 				obj.team_number = info.team_number;
 
@@ -90,10 +88,7 @@ var OrderContext = function() {
 					current_no = order_number;
 					current_index += 1;
 				}
-				tr.find("td").css(
-						"cssText",
-						"background:" + self.colors[current_index % 4]
-								+ " !important");
+				tr.find("td").css("cssText", "background:" + self.colors[current_index % 4] + " !important");
 
 			}
 

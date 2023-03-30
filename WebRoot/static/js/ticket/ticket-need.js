@@ -12,32 +12,38 @@ var NeedContext = function() {
 		if (self.chosenNeeds().length == 0) {
 			fail_msg("请选择");
 			return;
-		} else if (self.chosenNeeds().length > 1) {
-			fail_msg("只能选择一个");
-			return;
-		} else if (self.chosenNeeds().length == 1) {
+		} else if (self.chosenNeeds().length > 0) {
 			self.airTickets.removeAll();
 			startLoadingIndicator("加载中...");
-			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
-				product_order_number : self.chosenNeeds()[0].split(";")[1]
-			}, function(data) {
-				self.airTickets(data.order_air_infos);
+			var param = "";
+			for (var i = 0; i < self.chosenNeeds().length; i++) {
+				param += "product_order_numbers=" + self.chosenNeeds()[i].split(";")[1] + "&";
+			}
+
+			param = param.RTrim("&");
+			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumbers', param, function(data) {
 				endLoadingIndicator();
-				createLayer = $.layer({
-					type : 1,
-					title : ['生成订单', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['1200px', '600px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#order-create'
-					},
-					end : function() {
-					}
-				});
+				if (data.commonResult.is_done == false) {
+					fail_msg(data.commonResult.msg);
+				} else {
+					self.airTickets(data.order_air_infos);
+					createLayer = $.layer({
+						type : 1,
+						title : ['生成订单', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['1200px', '600px'],
+						offset : ['', ''],
+						scrollbar : true,
+						page : {
+							dom : '#order-create'
+						},
+						end : function() {
+						}
+					});
+				}
+
 			});
 
 		}
@@ -121,7 +127,13 @@ var NeedContext = function() {
 		}
 		legJson += ']';
 
-		var need_pk = self.chosenNeeds()[0].split(";")[0];
+		var need_pk = "";
+		for (var i = 0; i < self.chosenNeeds().length; i++) {
+			need_pk += self.chosenNeeds()[i].split(";")[0] + ",";
+		}
+
+		need_pk = need_pk.RTrim(",");
+
 		var ticket_price = $("#txt-ticket-price").val();
 		var ticket_special_price = $("#txt-ticket-special-price").val();
 

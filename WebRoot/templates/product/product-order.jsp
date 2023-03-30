@@ -272,7 +272,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px; height: 650px; overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 650px; overflow-y: auto;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -301,7 +301,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 订单详情查看乘客信息 -->
-	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: scroll;">
+	<div id="passengers-check-inner" style="display: none; width: 800px; height: 550px; overflow-y: auto;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

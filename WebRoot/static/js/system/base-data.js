@@ -73,6 +73,7 @@ var DataContext = function() {
 
 		}
 	}
+
 	self.updateLine = function() {
 		var can_edit = $("#txt-edit").val();
 		var old_name = $("#txt-old-name").val();
@@ -147,7 +148,7 @@ var DataContext = function() {
 		var data = "json=" + json;
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'system/sortProductLine',
+			url : self.apiurl + 'system/sortData',
 			data : data
 
 		}).success(function(str) {
@@ -159,7 +160,6 @@ var DataContext = function() {
 			}
 		});
 	}
-
 	// 呆账设置
 	self.badDenominator = ko.observableArray();
 	var txtArray = ['一分之', '十分之', '百分之', '千分之', '万分之', '十万分之'];

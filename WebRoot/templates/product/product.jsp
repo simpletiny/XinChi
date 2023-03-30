@@ -461,6 +461,6 @@ tr td {
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
-	<script src="<%=basePath%>static/js/product/product.js"></script>
+	<script src="<%=basePath%>static/js/product/product.js?v=1.0"></script>
 </body>
 </html>

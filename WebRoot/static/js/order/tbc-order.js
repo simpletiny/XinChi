@@ -6,7 +6,9 @@ var ProductBoxContext = function() {
 	self.chosenOrders = ko.observableArray([]);
 	// 销售信息
 	self.sales = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'SALES'
+	}, function(data) {
 		self.sales(data.users);
 	});
 
@@ -145,7 +147,7 @@ var ProductBoxContext = function() {
 							} else if (str == "nomoney") {
 								fail_msg("没有团款信息，不能生成订单！");
 							} else if (str == "already") {
-								fail_msg("已经生成应收款，不能重复操作！")
+								fail_msg("已经生成应收款，不能重复操作！");
 							} else {
 								fail_msg(str);
 							}

@@ -77,6 +77,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
     $(".user").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath%>static/js/users/user-approve.js"></script>
+    <script src="<%=basePath%>static/js/users/user-approve.js?v=1.0"></script>
 </body>
 </html>

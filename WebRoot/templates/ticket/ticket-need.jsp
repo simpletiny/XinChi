@@ -358,6 +358,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-need.js"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=1.0"></script>
 </body>
 </html>

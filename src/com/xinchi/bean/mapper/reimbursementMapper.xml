@@ -287,6 +287,12 @@
 			<if test="params.bo.item != null and params.bo.item !=''">
 				and A.item = #{params.bo.item,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.month != null and params.bo.month !=''">
+				and A.month = #{params.bo.month,jdbcType=DECIMAL}
+			</if>
 		</where>
 		ORDER BY A.date DESC
 	</select>

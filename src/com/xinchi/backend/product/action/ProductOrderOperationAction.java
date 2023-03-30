@@ -19,24 +19,18 @@ import com.xinchi.backend.product.service.ProductOrderOperationService;
 import com.xinchi.backend.product.service.ProductOrderTeamNumberService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.ticket.service.FlightService;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
-import com.xinchi.bean.PayableBean;
+import com.xinchi.bean.PayableOrderBean;
 import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
-import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -244,112 +238,44 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String updateOrderOperation() {
-		OrderDto order = orderService.selectByTeamNumber(team_number);
-		String departure_date = order.getDeparture_date();
-		String return_date = DateUtil.addDate(departure_date, order.getDays() - 1);
-		int people_count = order.getAdult_count() + (null == order.getSpecial_count() ? 0 : order.getSpecial_count());
-
-		BigDecimal product_cost = BigDecimal.ZERO;
-		JSONArray array = JSONArray.fromObject(json);
-		int sumcount = array.size();
-
-		// 删除之前的操作
-		service.deleteByTeamNumber(team_number);
-
-		// 之前的应付款
-		PayableBean payable_options = new PayableBean();
-		payable_options.setTeam_number(team_number);
-		List<PayableBean> payables = payableService.selectByParam(payable_options);
-
-		for (int i = 0; i < array.size(); i++) {
-			JSONObject obj = array.getJSONObject(i);
-			int supplier_index = obj.getInt("supplier_index");
-			String supplier_employee_pk = obj.getString("supplier_employee_pk");
-			String supplier_product_name = obj.getString("supplier_product_name");
-			String c = obj.getString("supplier_cost");
-			BigDecimal supplier_cost = null == c ? BigDecimal.ZERO : new BigDecimal(c);
-
-			product_cost = product_cost.add(supplier_cost);
-			int land_day = obj.getInt("land_day");
-			String pick_type = obj.getString("pick_type");
-			String picker = obj.getString("picker");
-			String picker_cellphone = obj.getString("picker_cellphone");
-			int off_day = obj.getInt("off_day");
-			String send_type = obj.getString("send_type");
-
-			ProductOrderOperationBean poo = new ProductOrderOperationBean();
-			poo.setSupplier_count(sumcount);
-			poo.setTeam_number(team_number);
-			poo.setOperate_index(supplier_index);
-			poo.setSupplier_cost(supplier_cost);
-			poo.setSupplier_product_name(supplier_product_name);
-			poo.setPeople_count(people_count);
-			String pick_date = DateUtil.addDate(departure_date, land_day - 1);
-			String send_date = DateUtil.addDate(departure_date, off_day - 1);
-			poo.setPick_date(pick_date);
-			poo.setSend_date(send_date);
-			poo.setSupplier_employee_pk(supplier_employee_pk);
-			poo.setPick_type(pick_type);
-			poo.setPicker_cellphone(picker_cellphone);
-			poo.setSend_type(send_type);
-			poo.setPicker(picker);
-			poo.setOff_day(off_day);
-			poo.setLand_day(land_day);
-			service.insert(poo);
-
-			// 生成应付款
-			PayableBean payable = new PayableBean();
-
-			for (PayableBean p : payables) {
-				if (p.getSupplier_employee_pk().equals(supplier_employee_pk)) {
-					payable = p;
-					payables.remove(p);
-					break;
-				}
-			}
-
-			payable.setTeam_number(team_number);
-			payable.setFinal_flg("N");
-			payable.setSupplier_employee_pk(supplier_employee_pk);
-			payable.setDeparture_date(departure_date);
-			payable.setReturn_date(return_date);
-			payable.setProduct(supplier_product_name);
-			payable.setPeople_count(people_count);
-			payable.setBudget_payable(supplier_cost);
-			payable.setSales(order.getCreate_user_number());
-
-			if (null != payable.getPk()) {
-				payableService.update(payable);
-			} else {
-				payable.setPaid(BigDecimal.ZERO);
-				payable.setBudget_balance(supplier_cost);
-				payableService.insert(payable);
-			}
-		}
-
-		// 删除已经不存在的应付款
-		for (PayableBean p : payables) {
-			payableService.deleteByPk(p.getPk());
-		}
-
-		String standard_flg = order.getStandard_flg();
-		String order_pk = order.getPk();
-
-		if (standard_flg.equals("Y")) {
-			BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(order_pk);
-			bsOrder.setProduct_cost(product_cost);
-			bsoService.updateComment(bsOrder);
-		} else {
-			BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(order_pk);
-			bnsOrder.setProduct_cost(product_cost);
-			bnsoService.updateComment(bnsOrder);
-		}
-		resultStr = SUCCESS;
+		resultStr = service.modifyOrderOperation(json);
 		return SUCCESS;
 	}
 
 	public String searchOperationByTeamNumber() {
 		operations = service.selectByTeamNumber(team_number);
+		return SUCCESS;
+	}
+
+	public String searchOperationByPk() {
+		operate_option = service.selectByPrimaryKey(operate_pk);
+		return SUCCESS;
+	}
+
+	public String searchOpeartionDataByPk() {
+		operate_option = service.selectByPrimaryKey(operate_pk);
+
+		List<ProductOrderTeamNumberBean> potns = productOrderNumberService
+				.selectByOrderNumber(operate_option.getTeam_number());
+
+		List<String> t_ns = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			t_ns.add(potn.getTeam_number());
+		}
+
+		orders = orderService.selectByTeamNumbers(t_ns);
+
+		PayableOrderBean option = new PayableOrderBean();
+		String supplier_employee_pk = operate_option.getSupplier_employee_pk();
+		option.setSupplier_employee_pk(supplier_employee_pk);
+
+		for (OrderDto order : orders) {
+			option.setTeam_number(order.getTeam_number());
+			List<PayableOrderBean> pos = service.selectPayableOrderByParam(option);
+			if (null != pos && pos.size() > 0) {
+				order.setPayable(pos.get(0).getBudget_payable());
+			}
+		}
 		return SUCCESS;
 	}
 

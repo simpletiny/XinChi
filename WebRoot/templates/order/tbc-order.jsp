@@ -101,7 +101,6 @@
 								<th>成人</th>
 								<th>特殊</th>
 								<th>出团日期</th>
-								<th>首段城市对</th>
 								<th>总团款</th>
 								<th>尾款</th>
 								<th>确认件</th>
@@ -125,7 +124,6 @@
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td data-bind="text: $data.departure_date"></td>
-								<td data-bind="text: $data.start_city +'-'+ $data.end_city"></td>
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.balance"></td>
 								<!-- ko if:$data.confirm_file!=null && $data.confirm_file != '' -->

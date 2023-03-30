@@ -115,10 +115,10 @@ var DepositContext = function() {
 			fail_msg("请选择要上传的文件！");
 			return;
 		}
-
+		var data = "deposit_type=TICKET&file_name=" + $("#office-file").val();
 		layer.close(uploadLayer);
 		startLoadingSimpleIndicator("处理中...");
-		var data = "deposit_type=TICKET&file_name=" + $("#office-file").val();
+
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'supplier/batUploadDeposit',
