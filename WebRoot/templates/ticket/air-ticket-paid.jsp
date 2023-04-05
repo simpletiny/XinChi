@@ -211,6 +211,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/air-ticket-paid.js"></script>
+	<script src="<%=basePath%>static/js/ticket/air-ticket-paid.js?v=1.0"></script>
 </body>
 </html>

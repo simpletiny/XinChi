@@ -85,7 +85,10 @@ var AgencyContext = function() {
 		console.log(count);
 	};
 	self.finish = function() {
-
+		if (!self.caculateSum()) {
+			fail_msg("支付金额合计和应支付总金额不符！");
+			return;
+		}
 		if (!$("form").valid()) {
 			return;
 		}
@@ -158,6 +161,7 @@ var AgencyContext = function() {
 		for (var i = 0; i < allMoney.length; i++) {
 			sum += ($(allMoney[i]).val() - 0);
 		}
+		sum = sum.toFixed(2);
 		if (sum == sumMoney) {
 			return true;
 		} else {
@@ -284,9 +288,9 @@ function caculateSumMoney() {
 	var payables = $("#div-payable").children();
 	for (var i = 0; i < payables.length; i++) {
 		var current = payables[i];
-		sumMoney += $(current).find("[st^='this-paid']").val() - 0;
+		sumMoney += +$(current).find("[st^='this-paid']").val();
 	}
-
+	sumMoney = sumMoney.toFixed(2);
 	$("#sum-money").text(sumMoney);
 }
 

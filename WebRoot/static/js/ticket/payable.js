@@ -88,6 +88,7 @@ var PayableContext = function() {
 				success : function(data) {
 					if (data.isSame == "NOT") {
 						fail_msg("供应商不属于同一财务主体");
+						endLoadingIndicator();
 					} else {
 						window.location.href = self.apiurl + "templates/ticket/air-ticket-paid.jsp?key=" + payable_pks;
 

@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDto searchCOrderByPk(String order_pk) {
+	public OrderDto searchOrderByPk(String order_pk) {
 
 		return dao.searchOrderByPk(order_pk);
 	}

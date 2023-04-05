@@ -201,7 +201,7 @@ var ProductContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['1000px', '500px'],
+				area : ['1000px', '600px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {

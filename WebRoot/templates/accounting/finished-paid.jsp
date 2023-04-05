@@ -44,37 +44,40 @@
 								<input type="text" class="form-control date-picker" placeholder="to" name="wfp.date_to" />
 							</div>
 						</div>
-						<div align="left">
-							<label class="col-md-1 control-label">金额</label>
-							<div class="col-md-1" style="float: left">
-								<input type="number" class="form-control" placeholder="大于等于" name="wfp.money_from" />
-							</div>
-							<div class="col-md-1" style="float: left">
-								<input type="number" class="form-control" placeholder="小于等于" name="wfp.money_to" />
-							</div>
-						</div>
-						<div>
-							<label class="col-md-1 control-label">收款方</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control" name="wfp.receiver" />
-							</div>
-						</div>
-
 					</div>
 					<div class="form-group">
-						<div>
-							<label class="col-md-1 control-label">项目</label>
-							<div class="col-md-2">
-								<select class="form-control"
-									data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
-									name="wfp.item" required="required"></select>
-							</div>
+
+						<label class="col-md-1 control-label">金额</label>
+						<div class="col-md-1" style="float: left">
+							<input type="number" class="form-control" placeholder="大于等于" name="wfp.money_from" />
 						</div>
-						<div>
-							<label class="col-md-1 control-label">支付单号</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="支付单号" name="wfp.pay_number" />
-							</div>
+						<div class="col-md-1" style="float: left">
+							<input type="number" class="form-control" placeholder="小于等于" name="wfp.money_to" />
+						</div>
+
+						<label class="col-md-1 control-label">申请人</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" placeholder="申请人" name="wfp.apply_user" />
+						</div>
+						<label class="col-md-1 control-label">项目</label>
+						<div class="col-md-2">
+							<select class="form-control"
+								data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+								name="wfp.item" required="required"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-1 control-label">精确金额</label>
+						<div class="col-md-2" style="float: left">
+							<input type="number" class="form-control" style="width: 44%" placeholder="精确金额" name="wfp.money" />
+						</div>
+						<label class="col-md-1 control-label">收款方</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" placeholder="收款方" name="wfp.receiver" />
+						</div>
+						<label class="col-md-1 control-label">支付单号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="支付单号" name="wfp.pay_number" />
 						</div>
 						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
@@ -91,6 +94,7 @@
 								<th>收款方</th>
 								<th>金额</th>
 								<th>支付时间</th>
+								<th>申请人</th>
 								<th>支付详情</th>
 								<th>支付人</th>
 							</tr>
@@ -104,6 +108,7 @@
 								<td data-bind="text: $data.receiver"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: moment($data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: $data.apply_user"></td>
 								<td><a href="javascript:void(0)" data-bind="attr: {href: 'paid-detail-view.jsp?key='+$data.pay_number}">查看</a></td>
 								<td data-bind="text: $data.pay_user"></td>
 
@@ -133,6 +138,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/finished-paid.js"></script>
+	<script src="<%=basePath%>static/js/accounting/finished-paid.js?v=1.0"></script>
 </body>
 </html>

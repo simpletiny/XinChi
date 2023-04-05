@@ -109,4 +109,44 @@ public class SimpletinyWord {
 			}
 		}
 	}
+
+	public static void copy(String sourceFilePath, String targetFilePath) {
+		// 创建源文件和目标文件的 File 对象
+		File sourceFile = new File(sourceFilePath);
+		if (!sourceFile.exists())
+			return;
+		File targetFile = new File(targetFilePath);
+		// 声明文件输入流和文件输出流
+		InputStream in = null;
+		OutputStream out = null;
+		try {
+			// 创建文件输入流和文件输出流
+			in = new FileInputStream(sourceFile);
+			out = new FileOutputStream(targetFile);
+			// 创建缓冲区
+			byte[] buffer = new byte[1024];
+			int length;
+			// 将输入流中的内容复制到输出流中
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}
+
+			out.flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭输入输出流
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

@@ -327,7 +327,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看订单详情 -->
-	<div id="div-check-order" style="display: none; width: 800px">
+	<div id="div-check-order" style="display: none; width: 1000px; height: 550px; overflow-y: auto;">
 		<div class="list-result">
 			<table class="table table-striped table-hover">
 				<thead>
@@ -389,6 +389,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.2"></script>
 </body>
 </html>

@@ -271,6 +271,10 @@ public class ResourcesConstants {
 	// 地接确认
 	public static String FILE_TYPE_SUPPLIER_CONFIRM = "C";
 
+	public static String FILE_REPLACE_HOLDER_NONE = "无";
+
+	public static String FILE_REPLACE_HOLDER_NO_CLIENT = "未审核客户";
+
 	// ************************* 基础数据 类型*********************************
 	// 产品线
 	public static String BASE_DATA_TYPE_LINE = "LINE";

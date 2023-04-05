@@ -51,7 +51,7 @@
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" >
 						<thead>
 							<tr role="row">
 								<th></th>
@@ -80,20 +80,8 @@
 								<td></td>
 								<td></td>
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
-							</tr>
+							</tr> 
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td>汇总</td>
-							<td data-bind="text:peopleCount"></td>
-							<td data-bind="text:grossProfit"></td>
-							<td data-bind="text:productCost"></td>
-							<td data-bind="text:keepCost"></td>
-							<td></td>
-							<td></td>
-							<td data-bind="text:grossProfit"></td>
-						</tr>
 					</table>
 				</div>
 			</div>
@@ -104,6 +92,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-profit.js"></script>
+	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.0"></script>
 </body>
 </html>

@@ -190,15 +190,17 @@ tr td {
 	</div>
 
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px;height:450px;overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th style="width: 10%">序号</th>
+							<th style="width: 9%">序号</th>
 							<th style="width: 10%">姓名</th>
-							<th style="width: 10%">身份证号</th>
+							<th style="width: 35%">身份证号</th>
+							<th style="width: 23%">电话1</th>
+							<th style="width: 23%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -206,6 +208,8 @@ tr td {
 							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>

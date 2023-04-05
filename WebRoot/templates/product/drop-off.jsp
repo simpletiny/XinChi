@@ -70,20 +70,20 @@
 					</div>
 				</form>
 				<div class="list-result" id="div-table">
-					<table class="table table-striped table-hover" style="white-space: pre-line;font-weight:550">
+					<table class="table table-striped table-hover" style="white-space: pre-line;font-weight:550;">
 						<thead>
-							<tr role="row">
-								<th style="width:10%">订单号</th>
-								<th style="width:10%">团号</th>
+							<tr role="row"> 
+								<th style="width:8%">订单号</th>
+								<th style="width:8%">团号</th>
 								<th style="width:20%">航班信息</th>
-								<th style="width:35%">名单</th>
+								<th style="width:39%">名单</th>
 								<th style="width:20%">电话</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
 									<th style="width:5%">产品经理</th>
 								</s:if>
 							</tr>
 						</thead>
-						<tbody data-bind="foreach: drop_offs">
+						<tbody data-bind="foreach: drop_offs" style="font-size: 17px">
 							<tr style="border-bottom: solid 1px black">
 								<td data-bind="text: $data.product_order_number" st="order-number"></td>
 								<td data-bind="text: $data.team_number"></td>

@@ -248,9 +248,11 @@ tr td {
 				<table style="width: 100%" class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th style="width: 10%">序号</th>
+							<th style="width: 9%">序号</th>
 							<th style="width: 10%">姓名</th>
-							<th style="width: 10%">身份证号</th>
+							<th style="width: 35%">身份证号</th>
+							<th style="width: 23%">电话1</th>
+							<th style="width: 23%">电话2</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:passengers">
@@ -258,6 +260,8 @@ tr td {
 							<td data-bind="text:$index()+1"></td>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
+							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -352,6 +356,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/c-order.js"></script>
+	<script src="<%=basePath%>static/js/order/c-order.js?v=.0"></script>
 </body>
 </html>

@@ -224,7 +224,7 @@ tr td {
 		</div>
 	</div>
 
-	<div id="div-check-order" style="display: none; width: 1000px">
+	<div id="div-check-order" style="display: none; width: 1000px; height: 550px; overflow-y: auto;">
 		<div class="list-result">
 			<table class="table table-striped table-hover">
 				<thead>
@@ -374,6 +374,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.0"></script>
 </body>
 </html>

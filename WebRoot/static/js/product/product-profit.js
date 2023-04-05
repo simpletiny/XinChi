@@ -32,32 +32,16 @@ var ReportContext = function() {
 		items : []
 	});
 
-	self.peopleCount = ko.observable();
-	self.grossProfit = ko.observable();
-	self.productCost = ko.observable();
-	self.keepCost = ko.observable();
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
-		var peopleCount = 0;
-		var grossProfit = 0;
-		var productCost = 0;
-		var keepCost = 0;
 		var param = $('form').serialize();
 		$.getJSON(self.apiurl + 'product/searchProductProfit', param, function(data) {
 			self.reports(data.productProfits);
-
-			$(self.reports()).each(function(idx, data) {
-				peopleCount += data.people_count - 0;
-				grossProfit += data.gross_profit == null ? 0 : data.gross_profit - 0;
-				productCost += data.product_cost == null ? 0 : data.product_cost - 0;
-				keepCost += data.keep_cost == null ? 0 : data.keep_cost - 0;
+			$(".table").tableSum({
+				title : '汇总',
+				title_index : 3,
+				except : [1, 2, 3]
 			});
-
-			self.peopleCount(peopleCount);
-			self.grossProfit(grossProfit);
-			self.productCost(productCost);
-			self.keepCost(keepCost);
-
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 		});
@@ -69,4 +53,5 @@ var ctx = new ReportContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+
 });

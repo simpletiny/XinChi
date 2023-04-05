@@ -19,7 +19,7 @@ public interface OrderService extends BaseService {
 
 	public List<OrderDto> selectTbcByParam(OrderDto option);
 
-	public OrderDto searchCOrderByPk(String order_pk);
+	public OrderDto searchOrderByPk(String order_pk);
 
 	public String finalOrder(OrderDto order);
 

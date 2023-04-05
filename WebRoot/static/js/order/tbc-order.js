@@ -208,16 +208,19 @@ var ProductBoxContext = function() {
 			});
 	// 下载相关文件
 	self.downloadFile = function(data, event) {
+		var order_pk = data.pk;
 		$('.download-panel').remove();
 		var label = event.target;
 		var X = $(label).offset().top;
 		var Y = $(label).offset().left;
 		var div = $('<div></div>');
-		var departure_notice = $('<a href="#" style="cursor:pointer;margin-right:10px">出团通知</a>');
-		var supplier_confirm = $('<a href="#" style="cursor:pointer">地接确认</a>');
+		var departure_notice = $('<a href="' + self.apiurl + 'file/downloadProductFile?order_pk=' + order_pk
+				+ '&fileType=A" style="cursor:pointer;margin-right:10px">出团通知</a>');
+		var client_confirm = $('<a href="' + self.apiurl + 'file/downloadProductFile?order_pk=' + order_pk
+				+ '&fileType=B" style="cursor:pointer">组团社确认</a>');
 
 		$(div).append(departure_notice);
-		$(div).append(supplier_confirm);
+		$(div).append(client_confirm);
 
 		$(div).addClass("download-panel");
 		$(div).css({

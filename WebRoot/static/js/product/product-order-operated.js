@@ -291,7 +291,7 @@ var OrderContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', '500px'],
+				area : ['1000px', '600px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {

@@ -142,7 +142,7 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String searchCOrderByPk() {
-		order = service.searchCOrderByPk(order_pk);
+		order = service.searchOrderByPk(order_pk);
 		return SUCCESS;
 	}
 
