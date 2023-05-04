@@ -121,7 +121,7 @@ tr td {
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th></th>
@@ -175,25 +175,6 @@ tr td {
 								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
 							</tr>
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>汇总</td>
-							<td data-bind="text:totalSupplierCost"></td>
-							<td></td>
-							<td data-bind="text:totalPeopleCount"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -426,6 +407,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-final.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/product/product-order-final.js?v=1.2"></script>
 </body>
 </html>

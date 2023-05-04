@@ -330,14 +330,18 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			// 更新产品状态
 			String standard_flg = order.getStandard_flg();
 			if (standard_flg.equals("Y")) {
-				BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
+				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
+				bsOrder.setPk(order.getPk());
 				bsOrder.setProduct_cost(product_cost);
-				bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_YES);
+				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_YES));
 				bsoDao.update(bsOrder);
 			} else {
-				BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
+				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
+				bnsOrder.setPk(order.getPk());
 				bnsOrder.setProduct_cost(product_cost);
-				bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_YES);
+				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_YES));
 				bnsoDao.update(bnsOrder);
 			}
 		}
@@ -411,12 +415,14 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 				if (standard_flg.equals("Y")) {
 					BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order_pk);
 					bsOrder.setProduct_cost(BigDecimal.ZERO);
-					bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_AIR);
+					bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(bsOrder.getOperate_flg(),
+							ResourcesConstants.ORDER_OPERATE_STATUS_AIR));
 					bsoDao.update(bsOrder);
 				} else {
 					BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order_pk);
 					bnsOrder.setProduct_cost(BigDecimal.ZERO);
-					bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_AIR);
+					bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(bnsOrder.getOperate_flg(),
+							ResourcesConstants.ORDER_OPERATE_STATUS_AIR));
 					bnsoDao.update(bnsOrder);
 				}
 
@@ -428,14 +434,6 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			}
 			// 新产品操作下的订单号，开头为P的
 			else if (t_n.startsWith("P")) {
-				// 删除订单供应商信息,删除订单供应商维护信息
-				ProductOrderBean product_order = productOrderDao.selectByOrderNumber(t_n);
-				deleteOrderSupplier(product_order.getPk());
-
-				// 删除操作中订单
-				dao.deleteByTeamNumber(t_n);
-				// 删除应付款
-				payableDao.deleteByTeamNumber(t_n);
 
 				List<ProductOrderTeamNumberBean> potns = productOrderTeamNumberDao.selectByOrderNumber(t_n);
 				for (ProductOrderTeamNumberBean potn : potns) {
@@ -449,17 +447,30 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 					String order_pk = order.getPk();
 
 					if (standard_flg.equals("Y")) {
-						BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order_pk);
+						BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
+						bsOrder.setPk(order.getPk());
 						bsOrder.setProduct_cost(BigDecimal.ZERO);
-						bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+						bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+								ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
 						bsoDao.update(bsOrder);
 					} else {
-						BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order_pk);
+						BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
+						bnsOrder.setPk(order.getPk());
 						bnsOrder.setProduct_cost(BigDecimal.ZERO);
-						bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+						bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+								ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
 						bnsoDao.update(bnsOrder);
 					}
 				}
+
+				// 删除订单供应商信息,删除订单供应商维护信息
+				ProductOrderBean product_order = productOrderDao.selectByOrderNumber(t_n);
+				deleteOrderSupplier(product_order.getPk());
+
+				// 删除操作中订单
+				dao.deleteByTeamNumber(t_n);
+				// 删除应付款
+				payableDao.deleteByTeamNumber(t_n);
 
 				product_order.setStatus("N");
 				productOrderDao.update(product_order);
@@ -545,18 +556,16 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
 		potns = productOrderTeamNumberDao.selectByOrderNumber(operation.getTeam_number());
-
+		// 检验
+		// 单团是否已审核
 		for (ProductOrderTeamNumberBean potn : potns) {
 			TeamReportBean tr = orderReportDao.selectTeamReportByTn(potn.getTeam_number());
 			if (tr.getApproved().equals("Y")) {
 				return "approved";
 			}
 		}
-		// 检验
-		// 单团是否已审核
 
 		// 更新产品订单操作
-
 		operation.setStatus("Y");
 		operation.setFinal_supplier_cost(BigDecimal.ZERO);
 
@@ -688,5 +697,11 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			}
 		}
 		return SUCCESS;
+	}
+
+	@Override
+	public List<DropOffBean> selectDropOffByPage(Page<DropOffBean> page) {
+
+		return dao.selectDropOffByPage(page);
 	}
 }

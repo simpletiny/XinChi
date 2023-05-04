@@ -48,7 +48,7 @@
 		<action name="deleteTbcOrder" class="orderAction" method="deleteTbcOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<!-- 待确认订单生成应收款-->
+		<!-- 待确认订单生成应收款 -->
 		<action name="createReceivable" class="orderAction" method="createReceivable">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -59,6 +59,15 @@
 
 		<!-- 更新标准预算单 -->
 		<action name="updateBudgetStandardOrder" class="orderAction" method="updateBudgetStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 确认标准订单 -->
+		<action name="confirmBudgetStandardOrder" class="orderAction" method="confirmBudgetStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 检测已确认订单是否能够修改 -->
+		<action name="checkCanBeEdit" class="orderAction" method="checkCanBeEdit">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 更新已确认标准预算单 -->
@@ -104,7 +113,19 @@
 		<action name="updateBudgetNonStandardOrder" class="orderAction" method="updateBudgetNonStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 确认非标订单 -->
+		<action name="confirmBudgetNonStandardOrder" class="orderAction" method="confirmBudgetNonStandardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="updateOnlyTicketOrder" class="orderAction" method="updateOnlyTicketOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 确认单机票订单 -->
+		<action name="confirmOnlyTicketOrder" class="orderAction" method="confirmOnlyTicketOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!--更新已确认单机票订单 -->
+		<action name="updateConfirmedOnlyTicketOrder" class="orderAction" method="updateConfirmedOnlyTicketOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 更新已确认非标准预算单 -->
@@ -160,7 +181,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<!-- 单团报表汇总 -->
 		<action name="searchSumReport" class="orderReportAction" method="searchSumReport">
 			<result name="success" type="json">

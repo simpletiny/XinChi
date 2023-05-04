@@ -102,4 +102,28 @@ public class SimpletinyString {
 		String output = src.replaceAll(regex, "");
 		return output;
 	}
+
+	public static String replaceCharFromLeft(String src, String replacer, Integer... length) {
+		int len = 1;
+		if (length.length > 0)
+			len = length[0];
+		if (len > src.length())
+			return "";
+		String result = "";
+		result = src.substring(len);
+		result = replacer + result;
+		return result;
+	}
+
+	public static String replaceCharFromRight(String src, String replacer, Integer... length) {
+		int len = 1;
+		if (length.length > 0)
+			len = length[0];
+		if (len > src.length())
+			return "";
+		String result = "";
+		result = src.substring(0, src.length() - len);
+		result = result + replacer;
+		return result;
+	}
 }

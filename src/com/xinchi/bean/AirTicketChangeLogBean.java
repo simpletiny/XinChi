@@ -19,6 +19,10 @@ public class AirTicketChangeLogBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	private String first_date;
+	private String from_to_city;
+	private String captain;
+
 	public String getChange_reason() {
 		return change_reason;
 	}
@@ -65,6 +69,30 @@ public class AirTicketChangeLogBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getFirst_date() {
+		return first_date;
+	}
+
+	public String getFrom_to_city() {
+		return from_to_city;
+	}
+
+	public String getCaptain() {
+		return captain;
+	}
+
+	public void setFirst_date(String first_date) {
+		this.first_date = first_date;
+	}
+
+	public void setFrom_to_city(String from_to_city) {
+		this.from_to_city = from_to_city;
+	}
+
+	public void setCaptain(String captain) {
+		this.captain = captain;
 	}
 
 }

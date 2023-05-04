@@ -19,4 +19,6 @@ public interface TicketService extends BaseService {
 
 	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page);
 
+	public String toggleLockOrder(String team_number, String lock_flg);
+
 }

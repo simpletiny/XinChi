@@ -29,6 +29,11 @@ var ProductContext = function() {
 		'Y' : "锁定"
 	}
 
+	self.orderStatusMapping = {
+		'N' : "正常",
+		'Y' : "已取消"
+	};
+
 	self.chosenStatuses = ko.observableArray();
 	self.chosenStatuses.push("N");
 
@@ -36,8 +41,6 @@ var ProductContext = function() {
 		total : 0,
 		items : []
 	});
-	self.adult_cnt = ko.observable();
-	self.special_cnt = ko.observable();
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...")
@@ -46,19 +49,15 @@ var ProductContext = function() {
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderByPage', param, function(data) {
 			self.orders(data.orders);
-			var total_adult = 0;
-			var total_special = 0;
-			// 计算合计
-			$(self.orders()).each(function(idx, data) {
-				total_adult += data.adult_count;
-				total_special += data.special_count;
-			});
-
-			self.adult_cnt(total_adult);
-			self.special_cnt(total_special);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#main-table").tableSum({
+				title : '汇总',
+				title_index : 7,
+				accept : [8, 9]
+
+			})
 			endLoadingIndicator();
 		});
 	};
@@ -93,9 +92,10 @@ var ProductContext = function() {
 						data : "order_number=" + order_number
 					})
 					.success(
-							function(str) {
+							function(result) {
 								endLoadingIndicator()
-								if (str == "yes") {
+								var str = result.split(",");
+								if (str[0] == "yes") {
 									if (standard_flg == "N") {
 
 										window.location.href = self.apiurl
@@ -122,10 +122,10 @@ var ProductContext = function() {
 														});
 
 									}
-								} else if (str == "no") {
+								} else if (str[0] == "no") {
 									fail_msg("请锁定所有销售订单后继续操作！")
 								} else {
-									fail_msg(str);
+									fail_msg(str[0]);
 								}
 							});
 
@@ -236,7 +236,6 @@ var ProductContext = function() {
 			url : self.apiurl + 'product/changeOrderLock',
 			data : param
 		}).success(function(str) {
-			endLoadingIndicator();
 			if (str == "success") {
 				self.refreshSaleOrders();
 			} else {

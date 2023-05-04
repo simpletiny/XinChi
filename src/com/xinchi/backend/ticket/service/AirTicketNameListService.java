@@ -57,4 +57,8 @@ public interface AirTicketNameListService extends BaseService {
 	public List<AirTicketNameListBean> selectDoneByPage(Page<AirTicketNameListBean> page);
 
 	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk);
+
+	public String toggleLockName(List<String> passenger_pks, String lock_flg);
+
+	public String deletePassengerByPassengerPks(List<String> passenger_pks);
 }

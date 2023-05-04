@@ -19,7 +19,7 @@ public interface BudgetStandardOrderService extends BaseService {
 	 * 
 	 * @param bean
 	 */
-	public String update(BudgetStandardOrderBean bean,String json);
+	public String update(BudgetStandardOrderBean bean, String json);
 
 	/**
 	 * 删除
@@ -46,7 +46,9 @@ public interface BudgetStandardOrderService extends BaseService {
 
 	public BudgetStandardOrderBean selectByTeamNumber(String team_number);
 
-	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bsOrder,String json);
+	public String updateConfirmedStandardOrder(BudgetStandardOrderBean bsOrder, String json);
 
 	public String rollBackCOrder(String order_pk);
+
+	public String confirmStandardOrder(BudgetStandardOrderBean bsOrder, String json);
 }

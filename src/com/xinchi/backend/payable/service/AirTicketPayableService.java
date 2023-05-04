@@ -55,4 +55,6 @@ public interface AirTicketPayableService extends BaseService {
 	public List<PassengerTicketInfoBean> searchTicketInfoByPayablePk(String payable_pk);
 
 	public String payAirTicket(String paidJson, String payableJson, BigDecimal allot_money);
+
+	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk);
 }

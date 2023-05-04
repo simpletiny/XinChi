@@ -53,6 +53,12 @@
 		from air_ticket_payable
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_payable
+		where related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
 	<select id="selectByPks" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		A.supplier_employee_pk,
@@ -79,7 +85,8 @@
 		from air_ticket_payable A LEFT JOIN
 		supplier_employee B ON
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN supplier C ON
+		B.financial_body_pk = C.pk
 		<where>
 			and A.pk in
 			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
@@ -91,6 +98,11 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from air_ticket_payable
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByRelatedPk" parameterType="java.lang.String">
+		delete from air_ticket_payable
+		where related_pk =
+		#{related_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.AirTicketPayableBean">
@@ -289,7 +301,8 @@
 		A.payable_type,
 		A.related_pk,
 		B.name AS supplier_employee_name,
-		C.supplier_name AS financial_body_name,
+		C.supplier_name AS
+		financial_body_name,
 		A.PNR,
 		A.budget_payable,
 		A.final_payable,
@@ -309,7 +322,8 @@
 		from air_ticket_payable A LEFT JOIN
 		supplier_employee B ON
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN supplier C ON
+		B.financial_body_pk = C.pk
 		<where>
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name like CONCAT('%',#{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
@@ -335,7 +349,8 @@
 					#{params.bo.payable_types[${index}]}
 				</foreach>
 			</if>
-			
+
 		</where>
+		ORDER BY A.first_date DESC
 	</select>
 </mapper>

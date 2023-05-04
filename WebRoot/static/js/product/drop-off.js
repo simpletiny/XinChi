@@ -15,11 +15,17 @@ var OrderContext = function() {
 	self.first_ticket_date(x.Format("yyyy-MM-dd"));
 
 	self.refresh = function() {
+		if ($("#ticket_date").val().trim() == "") {
+			fail_msg("送机日期不能为空！");
+			return;
+		}
+
 		self.drop_offs.removeAll();
 		var param = $("form").serialize();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		startLoadingIndicator("加载中...");
 		$.getJSON(self.apiurl + 'product/searchDropOff', param, function(data) {
-			// self.drop_offs(data.drop_offs);
+			console.log(data.drop_offs);
 			for (var i = 0; i < data.drop_offs.length; i++) {
 				var obj = new Object();
 				var info = data.drop_offs[i];
@@ -130,10 +136,58 @@ var OrderContext = function() {
 			// }
 			//
 			// }
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 			endLoadingIndicator();
 		});
 	};
+	// start pagination
+	self.currentPage = ko.observable(1);
+	self.perPage = 80;
+	self.pageNums = ko.observableArray();
+	self.totalCount = ko.observable(1);
+	self.startIndex = ko.computed(function() {
+		return (self.currentPage() - 1) * self.perPage;
+	});
 
+	self.resetPage = function() {
+		self.currentPage(1);
+	};
+
+	self.previousPage = function() {
+		if (self.currentPage() > 1) {
+			self.currentPage(self.currentPage() - 1);
+			self.refreshPage();
+		}
+	};
+
+	self.nextPage = function() {
+		if (self.currentPage() < self.pageNums().length) {
+			self.currentPage(self.currentPage() + 1);
+			self.refreshPage();
+		}
+	};
+
+	self.turnPage = function(pageIndex) {
+		self.currentPage(pageIndex);
+		self.refreshPage();
+	};
+
+	self.setPageNums = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var pageNums = [];
+		for (var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums(pageNums);
+	};
+
+	self.refreshPage = function() {
+		self.refresh();
+	};
+	// end pagination
 };
 
 var ctx = new OrderContext();

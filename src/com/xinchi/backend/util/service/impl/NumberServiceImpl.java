@@ -78,7 +78,7 @@ public class NumberServiceImpl implements NumberService {
 		return number;
 	}
 
-	private String addOne(String value, String source) {
+	private static String addOne(String value, String source) {
 
 		if (null == value || value.equals(""))
 			return "";
@@ -87,8 +87,9 @@ public class NumberServiceImpl implements NumberService {
 		String first = value.substring(0, strLength - 1);
 		int nextCharIndex = source.indexOf(last) + 1;
 		if (nextCharIndex >= 36) {
-			String result = addOne(first, source) + "G";
-			if (result.equals("GGGG")) {
+			String result = addOne(first, source) + source.charAt(0);
+			if (result.equals(String.valueOf(source.charAt(0)) + String.valueOf(source.charAt(0))
+					+ String.valueOf(source.charAt(0)) + String.valueOf(source.charAt(0)))) {
 				return "YOU ARE RICH!";
 			} else {
 				return result;
@@ -136,12 +137,10 @@ public class NumberServiceImpl implements NumberService {
 		String user_number = sessionBean.getUser_number();
 
 		String prefix = "A" + user_number.substring(user_number.length() - 2, user_number.length());
-
 		TeamNumberBean option = new TeamNumberBean();
 		option.setUser_pk(user_pk);
 		option.setType("A");
 		TeamNumberBean tb = dao.selectNextNumber(option);
-
 		String source = source_ticket_order_number;
 		String next = "";
 		if (null == tb) {

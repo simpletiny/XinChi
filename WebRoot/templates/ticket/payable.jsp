@@ -127,9 +127,9 @@
 								<td data-bind="text: $data.financial_body_name"></td>
 								<td data-bind="text: $root.payableTypesMapping[$data.payable_type]"></td>
 								<td data-bind="text: $data.PNR"></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfo,text: $data.first_date"></a></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfo,text: $data.from_to_city"></a></td>
-								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.first_date"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.from_to_city"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkPassengers($data);},text: $data.passenger"></a></td>
 								<td data-bind="text:$data.budget_payable" class="rmb"></td>
 								<td data-bind="text: $data.paid" class="rmb"></td>
 								<td data-bind="text:$data.budget_balance" class="rmb"></td>
@@ -583,6 +583,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/ticket/payable.js"></script>
+	<script src="<%=basePath%>static/js/ticket/payable.js?v=1.0"></script>
 </body>
 </html>

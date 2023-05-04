@@ -63,14 +63,13 @@
 							</div>
 						</div>
 						<div align="right">
-							<div class="col-md-1" style="float: right">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: delete_reimbursement">删除</button>
-							</div>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用申请</button>
+							<button type="submit" class="btn btn-green" data-bind="click: delete_reimbursement">删除</button>
 						</div>
 
 					</div>
 					<div class="form-group">
-						<div align="left" >
+						<div align="left">
 							<label class="col-md-1 control-label">精确金额</label>
 							<div class="col-md-1" style="float: left">
 								<input type="number" class="form-control" placeholder="精确金额" name="reimbursement.money" />
@@ -96,7 +95,7 @@
 							</div>
 						</s:if>
 
-						<div style="padding-top: 3px;float:right">
+						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
@@ -192,10 +191,10 @@
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
-		<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
-		<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/reimbursement.js"></script>
+	<script src="<%=basePath%>static/js/accounting/reimbursement.js?v=1.0"></script>
 </body>
 </html>

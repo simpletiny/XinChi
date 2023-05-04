@@ -29,6 +29,11 @@
 		<result column="chairman" property="chairman" jdbcType="CHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
 		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="lock_flg" property="lock_flg" jdbcType="VARCHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="order_lock_flg" property="order_lock_flg" jdbcType="CHAR" />
+		<result column="change_cost" property="change_cost" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.AirTicketNameListBean">
@@ -95,13 +100,23 @@
 		change_pk,
 		cellphone_A,
 		cellphone_B,
-		chairman
+		chairman,
+		lock_flg,
+		delete_flg,
+		base_pk,
+		change_cost
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_name_list
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByBasePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_name_list
+		where base_pk = #{base_pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -173,7 +188,11 @@
 		A.order_number,
 		A.comment,
 		B.ticket_cost,
-		A.change_pk
+		A.change_pk,
+		A.lock_flg,
+		A.delete_flg,
+		A.base_pk,
+		A.change_cost
 		from air_ticket_name_list A
 		LEFT JOIN
 		view_sum_ticket_cost B ON A.pk= B.passenger_pk
@@ -186,6 +205,10 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from air_ticket_name_list
 		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByOrderNumber" parameterType="java.lang.String">
+		delete from air_ticket_name_list
+		where order_number = #{order_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNameListBean">
@@ -253,6 +276,12 @@
 			<if test="chairman != null">
 				chairman,
 			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+			<if test="lock_flg != null">
+				lock_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -314,6 +343,12 @@
 			</if>
 			<if test="chairman != null">
 				#{chairman,jdbcType=CHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="lock_flg != null">
+				#{lock_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -382,6 +417,18 @@
 			<if test="chairman != null">
 				chairman = #{chairman,jdbcType=CHAR},
 			</if>
+			<if test="lock_flg != null">
+				lock_flg = #{lock_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=CHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="change_cost != null">
+				change_cost = #{change_cost,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -427,12 +474,18 @@
 		C.days,
 		A.cellphone_A,
 		A.cellphone_B,
-		E.comment AS need_comment
+		A.lock_flg,
+		A.delete_flg,
+		A.base_pk,
+		E.comment AS need_comment,
+		C.lock_flg AS order_lock_flg,
+		A.change_cost
 
 		from air_ticket_name_list A LEFT JOIN
 		user_base B ON A.client_number=
 		B.user_number
-		LEFT JOIN budget_order_view C ON
+		LEFT JOIN
+		budget_order_view C ON
 		A.team_number=C.team_number
 		LEFT JOIN
 		air_ticket_order E ON A.ticket_order_pk = E.pk
@@ -459,10 +512,11 @@
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
 			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
-				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
+				and CONCAT(A.first_start_city,'--',A.first_end_city) like
+				CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
-		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date
+		ORDER BY A.first_ticket_date DESC,A.order_number,A.team_number,ticket_order_pk
 	</select>
 	<select id="selectDoneByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -492,7 +546,13 @@
 		C.days,
 		A.cellphone_A,
 		A.cellphone_B,
-		E.comment AS need_comment
+		E.comment AS
+		need_comment,
+		A.lock_flg,
+		A.delete_flg,
+		A.base_pk,
+		C.lock_flg AS order_lock_flg,
+		A.change_cost
 
 		from
 		air_ticket_name_list A LEFT JOIN
@@ -502,7 +562,8 @@
 		LEFT JOIN budget_order_view C ON
 		A.team_number=C.team_number
 		LEFT JOIN
-		view_sum_ticket_cost D ON A.pk= D.passenger_pk
+		view_sum_ticket_cost D ON A.pk=
+		D.passenger_pk
 		LEFT JOIN
 		air_ticket_order E ON
 		A.ticket_order_pk = E.pk
@@ -527,7 +588,8 @@
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
 			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
-				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
+				and CONCAT(A.first_start_city,'--',A.first_end_city) like
+				CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
 		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date

@@ -64,12 +64,18 @@
 		from air_ticket_order
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-
-	<select id="selectBySaleOrderPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_order
-		where sale_order_pk = #{sale_order_pk,jdbcType=CHAR}
+		where order_number = #{order_number,jdbcType=CHAR}
+	</select>
+
+	<select id="selectByNeedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_order
+		where need_pk = #{need_pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectByPks" resultMap="BaseResultMap">
@@ -365,7 +371,8 @@
 		A.special_price,
 		A.need_pk,
 		A.comment
-		from air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
+		from
+		air_ticket_order A LEFT JOIN user_base B ON A.client_number = B.user_number
 
 		<where>
 			<if test="params.bo.client_name != null and params.bo.client_name !=''">
@@ -380,7 +387,7 @@
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status = #{params.bo.status,jdbcType=VARCHAR}
 			</if>
-				<if test="params.bo.product_name != null and params.bo.product_name !=''">
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
 				and A.product_name like CONCAT('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.date_from != null and params.bo.date_from !=''">

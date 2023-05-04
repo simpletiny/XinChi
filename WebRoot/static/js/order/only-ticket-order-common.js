@@ -142,6 +142,8 @@ var addName = function() {
 	var tbody = $("#name-table").find("tbody");
 	var count = $(tbody).children().length;
 	var html = '<tr>'
+			+ '	<input type="hidden" data-bind="value:$data.pk" st="name-pk" />'
+			+ '<input type="hidden" data-bind="value:$data.lock_flg" st="name-lock" />'
 			+ '<td><input type="radio" name="team_chairman" /></td>'
 			+ '<td st="name-index">'
 			+ (count + 1)

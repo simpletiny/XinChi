@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
+import com.xinchi.backend.ticket.service.AirTicketNameListService;
+import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
@@ -119,6 +121,7 @@ public class AirTicketPayableAction extends BaseAction {
 	private List<AirTicketNameListBean> passengers;
 
 	private String payable_pk;
+	private String related_pk;
 
 	/**
 	 * 搜索机票应付款涉及到的名单
@@ -127,6 +130,20 @@ public class AirTicketPayableAction extends BaseAction {
 	 */
 	public String searchPayablePassengersByPayablePk() {
 		passengers = service.searchPayablePassengersByPayablePk(payable_pk);
+		return SUCCESS;
+	}
+
+	public String searchPayablePassengersByRelatedPk() {
+		List<AirTicketPayableBean> payables = service.selectByRelatedPk(related_pk);
+		for (AirTicketPayableBean p : payables) {
+			if (p.getPayable_type().equals("A")) {
+				passengers = service.searchPayablePassengersByPayablePk(p.getPk());
+				break;
+			} else if (p.getPayable_type().equals("C")) {
+				passengers = airTicketNameListService.selectByChangePk(p.getRelated_pk());
+				break;
+			}
+		}
 		return SUCCESS;
 	}
 
@@ -139,6 +156,29 @@ public class AirTicketPayableAction extends BaseAction {
 	 */
 	public String searchTicketInfoByPayablePk() {
 		ptInfos = service.searchTicketInfoByPayablePk(payable_pk);
+		return SUCCESS;
+	}
+
+	@Autowired
+	private AirTicketNameListService airTicketNameListService;
+
+	@Autowired
+	private PassengerTicketInfoService passengerTicketInfoService;
+
+	public String searchTicketInfoByRelatedPk() {
+		List<AirTicketPayableBean> payables = service.selectByRelatedPk(related_pk);
+		for (AirTicketPayableBean p : payables) {
+			if (p.getPayable_type().equals("A")) {
+				ptInfos = service.searchTicketInfoByPayablePk(p.getPk());
+				break;
+			} else if (p.getPayable_type().equals("C")) {
+				List<AirTicketNameListBean> names = airTicketNameListService.selectByChangePk(p.getRelated_pk());
+				if (null != names && names.size() > 0) {
+					ptInfos = passengerTicketInfoService.selectByPassengerPk(names.get(0).getPk());
+					break;
+				}
+			}
+		}
 		return SUCCESS;
 	}
 
@@ -228,5 +268,13 @@ public class AirTicketPayableAction extends BaseAction {
 
 	public void setPtInfos(List<PassengerTicketInfoBean> ptInfos) {
 		this.ptInfos = ptInfos;
+	}
+
+	public String getRelated_pk() {
+		return related_pk;
+	}
+
+	public void setRelated_pk(String related_pk) {
+		this.related_pk = related_pk;
 	}
 }

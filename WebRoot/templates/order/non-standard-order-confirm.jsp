@@ -34,16 +34,13 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
-					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input> <input type="hidden"
-						data-bind="value:order().independent_flg" name="bnsOrder.independent_flg"></input> <input type="hidden" value='Y'
-						name="bnsOrder.confirm_flg"></input>
-						<input type="hidden" data-bind="value:order().team_number" id="team-number" name="bnsOrder.team_number" />
+					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">客户</label>
 							<div class="ip">
 								<input type="text" id="txt-client-employee-name" disabled="disabled" class="ip-"
-									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" required="required" />
+									data-bind="value: employee().name" placeholder="客户" required="required" />
 							</div>
 							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
 								style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk" required="required" />
@@ -223,52 +220,7 @@
 				</form>
 
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: updateOrder">确认</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="client-pick" style="display: none;">
-		<div class="main-container">
-			<div class="main-box" style="width: 600px">
-				<div class="form-group">
-					<div class="span8">
-						<label class="col-md-2 control-label">姓名</label>
-						<div class="col-md-6">
-							<input type="text" id="client_name" class="form-control" placeholder="姓名" />
-						</div>
-					</div>
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchClientEmployee }">搜索</button>
-					</div>
-				</div>
-				<div class="list-result">
-					<table class="table table-striped table-hover">
-						<thead>
-							<tr role="row">
-								<th>姓名</th>
-								<th>财务主体</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: clientEmployees">
-							<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data.name,$data.pk)}}">
-								<td data-bind="text: $data.name"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="pagination clearfloat">
-						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums -->
-						<!-- ko if: $data == $root.currentPage() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage() -->
-						<a data-bind="text: $data, click: $root.turnPage"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
-					</div>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: updateOrder">确认订单</a>
 				</div>
 			</div>
 		</div>

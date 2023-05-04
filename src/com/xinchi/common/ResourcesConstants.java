@@ -305,14 +305,25 @@ public class ResourcesConstants {
 	public static String NAME_CONFIRM_STATUS_YES = "5";
 
 	/** 销售订单操作状态 start **/
+	// 产品端
 	// 未操作
 	public static String ORDER_OPERATE_STATUS_NO = "N";
 	// 票务状态（老数据）
 	public static String ORDER_OPERATE_STATUS_AIR = "A";
-	// 操作中
-	public static String ORDER_OPERATE_STATUS_YES = "I";
 	// 产品订单状态
 	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
+	// 操作中/已操作
+	public static String ORDER_OPERATE_STATUS_YES = "I";
+	// 票务端
+	// 未操作
+	public static String AIR_OPERATE_STATUS_NO = "N";
+	// 已生成订单
+	public static String AIR_OPERATE_STATUS_ORDERD = "P";
+	// 出票中
+	public static String AIR_OPERATE_STATUS_ING = "I";
+	// 已完成出票
+	public static String AIR_OPERATE_STATUS_YES = "Y";
+
 	/** 销售订单操作状态 end **/
 
 	/** 押金相关 start **/

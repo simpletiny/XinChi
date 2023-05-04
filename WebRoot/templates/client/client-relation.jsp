@@ -64,7 +64,7 @@
 						<button type="submit" class="btn btn-green" data-bind="click: function() { createMobileTouch() }">主动电联</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { createIncomingCall() }">被动咨询</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { setClientLevel() }">销售力调整</button>
-						<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用报销</button>
+						<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用申请</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { quitConnect() }">放弃维护</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() {createEmployee() }">新增客户</button>
 						<button type="submit" class="btn btn-yellow " data-bind="click: function() {querySysClient() }">系统客户查询</button>

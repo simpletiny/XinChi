@@ -33,6 +33,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 查询航变航班信息 -->
+		<action name="searchTicketInfoByChangePk" class="ticketAction" method="searchTicketInfoByChangePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOrderAirInfoByTeamNumber" class="ticketAction" method="searchOrderAirInfoByTeamNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -113,6 +120,7 @@
 			</result>
 		</action>
 
+
 		<!-- 航班 -->
 		<action name="createFlight" class="flightAction" method="createFlight">
 			<result name="success" type="str">
@@ -163,6 +171,24 @@
 
 		<!-- 名单操作 -->
 		<action name="checkSameAirLeg" class="ticketAction" method="checkSameAirLeg">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 切换销售订单票务锁定状态 -->
+		<action name="toggleLockOrder" class="ticketAction" method="toggleLockOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 切换名单票务锁定状态 -->
+		<action name="toggleLockName" class="ticketAction" method="toggleLockName">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 删除名单 -->
+		<action name="deletePassengerByPassengerPks" class="ticketAction" method="deletePassengerByPassengerPks">
 			<result name="success" type="str">
 				resultStr
 			</result>

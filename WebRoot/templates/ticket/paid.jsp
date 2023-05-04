@@ -51,33 +51,45 @@
 								<input type="number" class="form-control" placeholder="小于等于" name="option.money_to" />
 							</div>
 						</div>
+
+						<label class="col-md-1 control-label">首航日期</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control date-picker"  placeholder="from"
+								name="option.first_date_from" />
+						</div>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control date-picker" placeholder="to"
+								name="option.first_date_to" />
+						</div>
+
+						<div>
+							<label class="col-md-1 control-label">首航段</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control" name="option.from_to_city" />
+							</div>
+						</div>
+
+
+					</div>
+					<div class="form-group">
+						<label class="col-md-1 control-label">精确金额</label>
+						<div class="col-md-2" style="float: left">
+							<input type="number" class="form-control" style="width: 44%" placeholder="精确金额" name="option.money" />
+						</div>
+
+						<label class="col-md-1 control-label">入账日期</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from"
+								name="option.date_from" />
+						</div>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to"
+								name="option.date_to" />
+						</div>
 						<div>
 							<label class="col-md-1 control-label">收款方</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control" name="option.receiver" />
-							</div>
-						</div>
-						<div>
-							<label class="col-md-1 control-label">类型</label>
-							<div class="col-md-2" style="float: left">
-								<select class="form-control"
-									data-bind="options: types, optionsText:function(item){return typeMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
-									name="option.type" required="required"></select>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div align="left">
-							<label class="col-md-1 control-label">入账日期</label>
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from"
-									name="option.date_from" />
-							</div>
-						</div>
-						<div align="left">
-							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to"
-									name="option.date_to" />
 							</div>
 						</div>
 						<!-- 						<div  align="left">
@@ -86,8 +98,19 @@
 								<input type="text" class="form-control" name="option.create_user" />
 							</div>
 						</div> -->
+
+					</div>
+					<div class="form-group">
+						<div>
+							<label class="col-md-1 control-label">类型</label>
+							<div class="col-md-2" style="float: left">
+								<select class="form-control"
+									data-bind="options: types, optionsText:function(item){return typeMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									name="option.type" required="required"></select>
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
 				</form>
@@ -98,6 +121,9 @@
 								<th></th>
 								<th>金额</th>
 								<th>类型</th>
+								<th>首航日期</th>
+								<th>首航段</th>
+								<th>名单</th>
 								<th>供应商员工</th>
 								<th>收款方</th>
 								<th>入账日期</th>
@@ -110,13 +136,17 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.related_pk+';'+$data.type+';'+$data.status}, checked: $root.chosenPaids" /></td>
-								<!-- ko if:$data.type=='STRIKEIN' || $data.type=='STRIKEOUT' || $data.type=='DSTRIKEIN' -->
+
 								<td data-bind="text: $data.money" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type!='STRIKEIN' & $data.type!='STRIKEOUT'& $data.type!='DSTRIKEIN' -->
-								<td data-bind="text: $data.allot_money" class="rmb"></td>
-								<!-- /ko -->
+
 								<td style="color: green" data-bind="text: $root.typeMapping[$data.type]"></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.first_date"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.from_to_city"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkPassengers($data);},text: $data.passenger"></a></td>
+
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<!-- ko if:$data.type!='DEDUCT' -->
 								<td data-bind="text: $data.financial_body_name"></td>
@@ -377,6 +407,54 @@
 			</div>
 		</div>
 	</div>
+	<!-- 查看乘客信息 -->
+	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">姓名</th>
+							<th style="width: 10%">身份证号</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:passengers">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.name"></td>
+							<td data-bind="text:$data.id"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- 查看机票信息-->
+	<div id="infos-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
+		<div class="input-row clearfloat">
+			<div style="margin-top: 60px; height: 300px">
+				<table style="width: 100%" class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th style="width: 10%">序号</th>
+							<th style="width: 10%">日期</th>
+							<th style="width: 10%">时间</th>
+							<th style="width: 10%">城市对</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:infos">
+						<tr>
+							<td data-bind="text:$index()+1"></td>
+							<td data-bind="text:$data.ticket_date"></td>
+							<td data-bind="text:$data.from_to_time"></td>
+							<td data-bind="text:$data.from_to_city"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
@@ -385,6 +463,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/paid.js"></script>
+	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.0"></script>
 </body>
 </html>

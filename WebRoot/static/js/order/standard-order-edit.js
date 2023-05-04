@@ -9,7 +9,7 @@ var OrderContext = function() {
 	self.product = ko.observable({});
 	self.employee = ko.observable({});
 	self.independent_msg = ko.observable();
-	self.passengers = ko.observableArray([]);
+	self.passengers = ko.observableArray([{}]);
 	var d = new Date();
 	var year_now = d.getFullYear();
 
@@ -17,14 +17,14 @@ var OrderContext = function() {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bsOrder);
-		reloadDatePicker();
-
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
-		self.passengers(data.passengers);
+		if (data.passengers.length > 0) {
+			$(data.passengers).each(function(idx, passenger) {
+				passenger.age = ko.observable();
+				var birthYear = passenger.id.substring(6, 10);
+				passenger.age(year_now - birthYear);
+			});
+			self.passengers(data.passengers);
+		}
 
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
@@ -35,7 +35,7 @@ var OrderContext = function() {
 		}, function(data) {
 			self.product(data.product);
 		});
-		caculate_fly_time();
+
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
 			employee_pk : self.order().client_employee_pk
 		}, function(data) {
@@ -47,66 +47,18 @@ var OrderContext = function() {
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
-		if (self.order().name_confirm_status == "5") {
-			$("#name-table input:not(.edit)").disabled();
-		}
-
 		self.loadFiles();
 
 	});
-
-	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
-			self.clientEmployees(data.employees);
-
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
-	};
-
-	self.searchClientEmployee = function() {
-		self.refreshClient();
-	};
-
-	self.choseClientEmployee = function() {
-		$("#txt-client-employee-name").blur();
-		clientEmployeeLayer = $.layer({
-			type : 1,
-			title : ['选择客户操作', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#client-pick'
-			},
-			end : function() {
-				console.log("Done");
-			}
-		});
-	};
-
-	self.pickClientEmployee = function(name, pk) {
-		$("#txt-client-employee-name").val(name);
-		$("#txt-client-employee-pk").val(pk);
-		layer.close(clientEmployeeLayer);
-	};
-
+	/**
+	 * 更新标准订单
+	 */
 	self.updateOrder = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-
-		var url = "";
-		if ($("#confirm-flg").val() == "N") {
-			url = self.apiurl + 'order/updateBudgetStandardOrder';
-		} else {
-			url = self.apiurl + 'order/updateConfirmedStandardOrder';
-		}
+		startLoadingSimpleIndicator("保存中");
+		const url = self.apiurl + 'order/updateBudgetStandardOrder';
 		var data = $("form").serialize();
 
 		// 名单json
@@ -137,8 +89,6 @@ var OrderContext = function() {
 		}
 		json += ']';
 		data += "&json=" + json;
-
-		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : url,
@@ -148,7 +98,6 @@ var OrderContext = function() {
 				window.history.go(-1);
 			} else if (str == "conflict") {
 				fail_msg("订单名单人数与票务不符，请联系票务!");
-
 			}
 		});
 	};
@@ -236,54 +185,6 @@ var OrderContext = function() {
 			}
 		});
 	};
-
-	// start pagination
-	self.currentPage = ko.observable(1);
-	self.perPage = 10;
-	self.pageNums = ko.observableArray();
-	self.totalCount = ko.observable(1);
-	self.startIndex = ko.computed(function() {
-		return (self.currentPage() - 1) * self.perPage;
-	});
-
-	self.resetPage = function() {
-		self.currentPage(1);
-	};
-
-	self.previousPage = function() {
-		if (self.currentPage() > 1) {
-			self.currentPage(self.currentPage() - 1);
-			self.refreshPage();
-		}
-	};
-
-	self.nextPage = function() {
-		if (self.currentPage() < self.pageNums().length) {
-			self.currentPage(self.currentPage() + 1);
-			self.refreshPage();
-		}
-	};
-
-	self.turnPage = function(pageIndex) {
-		self.currentPage(pageIndex);
-		self.refreshPage();
-	};
-
-	self.setPageNums = function(curPage) {
-		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
-		var pageNums = [];
-		for (var i = startPage; i <= endPage; i++) {
-			pageNums.push(i);
-		}
-		self.pageNums(pageNums);
-	};
-
-	self.refreshPage = function() {
-		self.searchClientEmployee();
-	};
-	// end pagination
-
 };
 
 var ctx = new OrderContext();

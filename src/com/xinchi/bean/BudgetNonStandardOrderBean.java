@@ -43,10 +43,12 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 	private String update_user;
 
 	private String lock_flg;
+	private String cancel_flg;
 	private String name_confirm_status;
 	private String confirm_flg;
 
 	private String confirm_date;
+	private String do_confirm_date;
 
 	private String product_manager;
 	private String confirm_file;
@@ -324,6 +326,22 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setReceivable_first_flg(String receivable_first_flg) {
 		this.receivable_first_flg = receivable_first_flg;
+	}
+
+	public String getCancel_flg() {
+		return cancel_flg;
+	}
+
+	public void setCancel_flg(String cancel_flg) {
+		this.cancel_flg = cancel_flg;
+	}
+
+	public String getDo_confirm_date() {
+		return do_confirm_date;
+	}
+
+	public void setDo_confirm_date(String do_confirm_date) {
+		this.do_confirm_date = do_confirm_date;
 	}
 
 }

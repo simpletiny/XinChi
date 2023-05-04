@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	<script>
-		$(".culture").addClass("current").children("ol").css("display", "block");
+		$(".rule").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

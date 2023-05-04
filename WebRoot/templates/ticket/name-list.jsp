@@ -85,7 +85,17 @@
 		<div class="main-container">
 			<div class="main-box" id="div-box" style="overflow: hidden">
 				<form class="form-horizontal search-panel">
-
+					<div class="form-group">
+						<div style="float: left">
+							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockOrder() }">解锁订单</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockName()}">解锁名单</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() {deleteName()}">删除名单</button>
+						</div>
+						<div style="float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder()}">锁定订单</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockName() }">锁定名单</button>
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -149,6 +159,8 @@
 								<th>客户</th>
 								<th>首航段</th>
 								<th>票务需求</th>
+								<th>退团</th>
+								<th>订单/名单</th>
 								<th>确认</th>
 							</tr>
 						</thead>
@@ -168,7 +180,10 @@
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-								<td data-bind="text: $data.need_comment"></td> 
+								<td data-bind="text: $data.need_comment"></td>
+								<td><span data-bind="text:$root.deleteMapping[$data.delete_flg]"></span></td>
+								<td><span data-bind="text: $root.lockMapping[$data.order_lock_flg.substr(2,1)]"></span>/<span
+									data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
 								<td data-bind="text:$root.confirmStatusMapping[$data.name_confirm_status]"></td>
 							</tr>
 						</tbody>
@@ -263,7 +278,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list.js"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list.js?v1.0"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

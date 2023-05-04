@@ -1,5 +1,6 @@
 var payLayer;
 var passengerCheckLayer;
+var ticketInfoCheckLayer;
 var receiveLayer;
 var businessStrikeLayer;
 var depositStrikeLayer;
@@ -86,9 +87,9 @@ var PayableContext = function() {
 				url : self.apiurl + 'sale/isSameFinancialBody2',
 				data : "supplier_employee_pks=" + supplier_employee_pks,
 				success : function(data) {
+					endLoadingIndicator();
 					if (data.isSame == "NOT") {
 						fail_msg("供应商不属于同一财务主体");
-						endLoadingIndicator();
 					} else {
 						window.location.href = self.apiurl + "templates/ticket/air-ticket-paid.jsp?key=" + payable_pks;
 
@@ -581,15 +582,21 @@ var PayableContext = function() {
 
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(data, event) {
-		self.passengers.removeAll();
-		var pk = data.pk;
-		var url = "payable/searchPayablePassengersByPayablePk";
-		$.getJSON(self.apiurl + url, {
-			payable_pk : pk
-		}, function(data) {
+	self.checkPassengers = function(data) {
+		startLoadingIndicator("加载中...");
+		var url = "";
+		var param = "";
+		if (data.payable_type == "A") {
+			url = "payable/searchPayablePassengersByPayablePk";
+			param = "payable_pk=" + data.pk;
+		} else {
+			url = "payable/searchPayablePassengersByRelatedPk";
+			param = "related_pk=" + data.related_pk;
+		}
+
+		$.getJSON(self.apiurl + url, param, function(data) {
 			self.passengers(data.passengers);
-			console.log(data.passengers);
+			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,
 				title : ['名单信息', ''],
@@ -609,16 +616,23 @@ var PayableContext = function() {
 	};
 	self.infos = ko.observableArray([]);
 	// 航班信息
-	self.checkTicketInfo = function(data, event) {
-		self.passengers.removeAll();
-		var pk = data.pk;
-		var url = "payable/searchTicketInfoByPayablePk";
+	self.checkTicketInfo = function(data) {
+		startLoadingIndicator("加载中...");
+		var url = "";
+		var param = "";
+		if (data.payable_type == "A") {
+			url = "payable/searchTicketInfoByPayablePk";
+			param = "payable_pk=" + data.pk;
+		} else {
+			url = "payable/searchTicketInfoByRelatedPk";
+			param = "related_pk=" + data.related_pk;
+		}
 
-		$.getJSON(self.apiurl + url, {
-			payable_pk : pk
-		}, function(data) {
+		$.getJSON(self.apiurl + url, param, function(data) {
 			self.infos(data.ptInfos);
-			passengerCheckLayer = $.layer({
+			endLoadingIndicator();
+
+			ticketInfoCheckLayer = $.layer({
 				type : 1,
 				title : ['航班信息', ''],
 				maxmin : false,

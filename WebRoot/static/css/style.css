@@ -343,6 +343,15 @@ a.btn-green {
 	color: #ffffff;
 }
 
+.main-header .user-time {
+	float: left;
+	display: inline-block;
+	display: block;
+	height: 70px;
+	padding: 22px 0 0 270px;
+	color: #ffffff;
+}
+
 .main-header .value-view {
 	display: inline-block;
 	display: block;

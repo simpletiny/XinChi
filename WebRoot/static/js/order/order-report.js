@@ -1,4 +1,5 @@
 var fillLayer;
+var viewDetailLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -37,19 +38,6 @@ var ProductBoxContext = function() {
 	x = new Date(x.setMonth(x.getMonth() - 1));
 	self.confirm_month(x.Format("yyyy-MM"));
 
-	self.sum_info = ko.observable({
-		people_count : 0,
-		receivable : 0,
-		air_ticket_cost : 0,
-		product_cost : 0,
-		other_cost : 0,
-		other_receive : 0,
-		fy : 0,
-		sale_cost : 0,
-		sys_cost : 0,
-		gross_profit : 0
-	});
-
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
 
@@ -58,32 +46,12 @@ var ProductBoxContext = function() {
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'order/searchOrderReportByPage', param, function(data) {
 			self.reports(data.reports);
-			var obj = new Object({
-				people_count : 0,
-				receivable : 0,
-				air_ticket_cost : 0,
-				product_cost : 0,
-				other_cost : 0,
-				other_receive : 0,
-				fy : 0,
-				sale_cost : 0,
-				sys_cost : 0,
-				gross_profit : 0
-			});
-			$(self.reports()).each(function(idx, data) {
-				obj.people_count += data.people_count == null ? 0 : (data.people_count - 0);
-				obj.receivable += data.receivable == null ? 0 : (data.receivable - 0);
-				obj.air_ticket_cost += data.air_ticket_cost == null ? 0 : (data.air_ticket_cost - 0);
-				obj.product_cost += data.product_cost == null ? 0 : (data.product_cost - 0);
-				obj.other_cost += data.other_cost == null ? 0 : (data.other_cost - 0);
-				obj.other_receive += data.other_receive == null ? 0 : (data.other_receive - 0);
-				obj.fy += data.fy == null ? 0 : (data.fy - 0);
-				obj.sale_cost += data.sale_cost == null ? 0 : (data.sale_cost - 0);
-				obj.sys_cost += data.sys_cost == null ? 0 : (data.sys_cost - 0);
-				obj.gross_profit += data.gross_profit == null ? 0 : (data.gross_profit - 0);
-			});
 
-			self.sum_info(obj);
+			$("#main-table").tableSum({
+				title : '汇总',
+				title_index : 5,
+				except : [1, 2, 3, 4, 18, 19, 20]
+			})
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -231,6 +199,35 @@ var ProductBoxContext = function() {
 					});
 				}
 			}
+		});
+	};
+
+	self.order = ko.observable({});
+	self.ticket_infos = ko.observable({});
+	self.viewTeamDetail = function(team_number) {
+		var param = "team_number=" + team_number;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'order/selectOrderByTeamNumber', param, function(data) {
+
+			self.order(data.option);
+			self.ticket_infos(data.ticketInfos);
+			endLoadingIndicator();
+
+			viewDetailLayer = $.layer({
+				type : 1,
+				title : ['摘要详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['700px', 'auto'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#team-detail'
+				},
+				end : function() {
+				}
+			});
 		});
 	};
 	// start pagination

@@ -7,6 +7,7 @@
 		<result column="flight_leg" property="flight_leg" jdbcType="VARCHAR" />
 		<result column="start_day" property="start_day" jdbcType="INTEGER" />
 		<result column="start_city" property="start_city" jdbcType="VARCHAR" />
+		<result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
 		<result column="end_day" property="end_day" jdbcType="INTEGER" />
 		<result column="end_city" property="end_city" jdbcType="VARCHAR" />
 		<result column="flight_number" property="flight_number" jdbcType="VARCHAR" />
@@ -31,7 +32,8 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		ticket_date
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -100,6 +102,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="ticket_date != null">
+				ticket_date,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="pk != null">
@@ -140,6 +145,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_date != null">
+				#{ticket_date,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -183,6 +191,9 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_date != null">
+				ticket_date = #{ticket_date,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

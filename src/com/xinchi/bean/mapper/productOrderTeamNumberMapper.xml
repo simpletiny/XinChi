@@ -32,6 +32,12 @@
 		from product_order_team_number
 		where product_order_number = #{order_number,jdbcType=CHAR}
 	</select>
+	<select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_team_number
+		where team_number = #{team_number,jdbcType=CHAR}
+	</select>
 
 	<select id="selectTeamNumbersByOrderNumber" resultType="java.lang.String" parameterType="java.lang.String">
 		select

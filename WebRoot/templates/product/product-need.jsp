@@ -124,7 +124,7 @@
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
@@ -147,7 +147,7 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status+';'+$data.standard_flg+';'+$data.departure_date+';'+$data.product_name+';'+$data.product_model}, checked: $root.chosenOrders" /></td>
-								<td data-bind="text:$root.statusMapping[$data.operate_flg]"></td> 
+								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td> 
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
@@ -157,10 +157,10 @@
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
-								<td data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
+								<td data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
 
 								<!-- ko if:$data.name_confirm_status=="1" -->
-								<td style="color: red" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
+								<td style="color: red" class="status-no" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.name_confirm_status=="2" -->
 								<td data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
@@ -171,22 +171,6 @@
 								<td data-bind="text: $root.standardMapping[$data.standard_flg]"></td>
 							</tr>
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>汇总</td>
-							<td data-bind="text:totalAdult"></td>
-							<td data-bind="text:totalSpecial"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td> 
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -350,6 +334,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.2"></script>
 </body>
 </html>

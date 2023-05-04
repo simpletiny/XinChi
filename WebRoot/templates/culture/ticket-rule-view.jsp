@@ -88,6 +88,6 @@
 	<script>
 		$(".rule").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/culture/ticket-rule-view.js"></script>
+	<script src="<%=basePath%>static/js/culture/ticket-rule-view.js?1.0"></script>
 </body>
 </html>

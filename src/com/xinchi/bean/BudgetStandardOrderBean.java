@@ -42,11 +42,13 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String pk;
 	private String lock_flg;
+	private String cancel_flg;
 	private String name_confirm_status;
 	private String independent_flg;
 
 	private String confirm_flg;
 	private String confirm_date;
+	private String do_confirm_date;
 	private String confirm_file;
 	private String standard_flg = "Y";
 
@@ -349,4 +351,19 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 		this.product_name = product_name;
 	}
 
+	public String getCancel_flg() {
+		return cancel_flg;
+	}
+
+	public void setCancel_flg(String cancel_flg) {
+		this.cancel_flg = cancel_flg;
+	}
+
+	public String getDo_confirm_date() {
+		return do_confirm_date;
+	}
+
+	public void setDo_confirm_date(String do_confirm_date) {
+		this.do_confirm_date = do_confirm_date;
+	}
 }

@@ -805,12 +805,12 @@ public class ProductServiceImpl implements ProductService {
 			if (order.getStandard_flg().equals("Y")) {
 				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 				bso.setPk(order.getPk());
-				bso.setLock_flg("N");
+				bso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
 				bsoDao.update(bso);
 			} else {
 				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 				bnso.setPk(order.getPk());
-				bnso.setLock_flg("N");
+				bnso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
 				bnsoDao.update(bnso);
 			}
 		}

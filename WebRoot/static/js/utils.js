@@ -377,14 +377,26 @@ Array.prototype.contains = function(obj) {
 	}
 	return false;
 };
-var st_server_time;
-var getServerTime = function() {
-	$.getJSON($("#hidden_apiurl").val() + 'simpletiny/currentDate', {}, function(data) {
-		st_server_time = new Date(data.current_date);
-	}).fail(function(reason) {
-		fail_msg(reason.responseText);
-	});
-};
+function getServerTime() {
+	 return fetch($("#hidden_apiurl").val() + 'simpletiny/currentDate') 
+	    .then(response => {
+	      if (!response.ok) {
+	        throw new Error(`获取服务器时间失败，状态码：${response.status}`);
+	      }
+	      return response.json();
+	    })
+	    .then(data => {
+	    	console.log(data);
+	      return new Date(data.current_date);
+	    })
+	    .catch(error => {
+	      fail_msg(error);
+	      return new Date();
+	    });
+	 
+	}
+
+
 var isChild = function(birthday){
 	birthday = birthday.replace(/\-/gm,"");
 	var birthYear = birthday.substring(0,4)-0;
@@ -485,6 +497,8 @@ function dataURLtoFile(dataurl, filename) {
 			default_options.except = options.except ||default_options.except;
 		}
 		
+		default_options.except.push(default_options.title_index);
+		
 		$this = $(this);
 		var len = $this.find("tbody:first tr:first td").length;
 		var sum = new Array(len).fill(0);
@@ -513,7 +527,8 @@ function dataURLtoFile(dataurl, filename) {
 				if(default_options.except.contains(i+1))
 					continue;
 				var td = $(tds[i]);
-				sum[i] +=+td.text();
+				if(typeof +td.text() === 'number' && !isNaN(td.text()))
+					sum[i] +=+td.text();
 			}
 		});
 		
@@ -552,4 +567,12 @@ function dataURLtoFile(dataurl, filename) {
 		});
 	}
 })(jQuery);
+
+var sleep = (ms) => {
+	  const start = new Date().getTime();
+	  while (new Date().getTime() - start < ms) {
+	    
+	  }
+	};
+
 

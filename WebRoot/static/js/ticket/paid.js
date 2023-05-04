@@ -1,6 +1,8 @@
 var viewDetailLayer;
 var deductLayer;
 var depositLayer;
+var passengerCheckLayer;
+var ticketInfoCheckLayer;
 var PaidContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -264,7 +266,6 @@ var PaidContext = function() {
 				dom : '#pic-check'
 			},
 			end : function() {
-				console.log("Done");
 			}
 		});
 
@@ -366,6 +367,63 @@ var PaidContext = function() {
 			end : function() {
 				return true;
 			}
+		});
+	};
+
+	self.passengers = ko.observableArray([]);
+	// 查看乘客信息
+	self.checkPassengers = function(data) {
+		startLoadingIndicator("加载中...");
+
+		const url = "payable/searchPayablePassengersByPayablePk";
+		const param = "payable_pk=" + data.base_pk;
+
+		$.getJSON(self.apiurl + url, param, function(data) {
+			self.passengers(data.passengers);
+			endLoadingIndicator();
+			passengerCheckLayer = $.layer({
+				type : 1,
+				title : ['名单信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+	self.infos = ko.observableArray([]);
+	// 航班信息
+	self.checkTicketInfo = function(data) {
+		startLoadingIndicator("加载中...");
+		const url = "payable/searchTicketInfoByPayablePk";
+		const param = "payable_pk=" + data.base_pk;
+
+		$.getJSON(self.apiurl + url, param, function(data) {
+			self.infos(data.ptInfos);
+			endLoadingIndicator();
+
+			ticketInfoCheckLayer = $.layer({
+				type : 1,
+				title : ['航班信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#infos-check'
+				},
+				end : function() {
+				}
+			});
 		});
 	};
 

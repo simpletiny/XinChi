@@ -122,4 +122,16 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 				t_ns);
 	}
 
+	@Override
+	public AirTicketNameListBean selectByBasePk(String base_pk) {
+		return (AirTicketNameListBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.AirTicketNameListMapper.selectByBasePk", base_pk);
+	}
+
+	@Override
+	public void deleteByOrderNumber(String order_number) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.deleteByOrderNumber", order_number);
+
+	}
+
 }

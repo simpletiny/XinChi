@@ -76,4 +76,10 @@ public class ProductOrderOperationDAOImpl extends SqlSessionDaoSupport implement
 		return list;
 	}
 
+	@Override
+	public List<DropOffBean> selectDropOffByPage(Page<DropOffBean> page) {
+		List<DropOffBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.ViewDropOffMapper.selectByPage", page);
+		return list;
+	}
+
 }

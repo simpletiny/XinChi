@@ -45,4 +45,6 @@ public interface PassengerTicketInfoDAO {
 
 	public List<PassengerTicketInfoBean> selectByPayablePk(String payable_pk);
 
+	public List<PassengerTicketInfoBean> selectAllByPayablePk(String payable_pk);
+
 }

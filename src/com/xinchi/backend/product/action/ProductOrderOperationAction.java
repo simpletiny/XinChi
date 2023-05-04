@@ -11,10 +11,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
-import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderService;
-import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.product.service.ProductOrderOperationService;
 import com.xinchi.backend.product.service.ProductOrderTeamNumberService;
 import com.xinchi.backend.product.service.ProductSupplierService;
@@ -23,7 +20,6 @@ import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayableOrderBean;
-import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ProductSupplierBean;
@@ -46,15 +42,6 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	@Autowired
 	private OrderService orderService;
-
-	@Autowired
-	private BudgetNonStandardOrderService bnsoService;
-
-	@Autowired
-	private BudgetStandardOrderService bsoService;
-
-	@Autowired
-	private PayableService payableService;
 
 	private String product_pk;
 	private String order_pk;
@@ -139,8 +126,6 @@ public class ProductOrderOperationAction extends BaseAction {
 			flight = new FlightBean();
 		return SUCCESS;
 	}
-
-	private ProductOrderAirBaseBean air_base;
 
 	/**
 	 * 生成订单操作
@@ -292,8 +277,12 @@ public class ProductOrderOperationAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			drop_off.setClient_number(sessionBean.getUser_number());
 		}
+		Map<String, Object> params = new HashMap<String, Object>();
 
-		drop_offs = service.searchDropOff(drop_off);
+		params.put("bo", drop_off);
+		page.setParams(params);
+
+		drop_offs = service.selectDropOffByPage(page);
 		return SUCCESS;
 	}
 
@@ -399,14 +388,6 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setFlight(FlightBean flight) {
 		this.flight = flight;
-	}
-
-	public ProductOrderAirBaseBean getAir_base() {
-		return air_base;
-	}
-
-	public void setAir_base(ProductOrderAirBaseBean air_base) {
-		this.air_base = air_base;
 	}
 
 	public List<OrderDto> getOrders() {

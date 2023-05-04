@@ -36,7 +36,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">送机日期</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control date-picker" placeholder="送机日期" data-bind="value:first_ticket_date()"
+								<input type="text" class="form-control date-picker" id="ticket_date" placeholder="送机日期" data-bind="value:first_ticket_date()"
 									name="drop_off.first_ticket_date" />
 							</div>
 						</div>
@@ -96,6 +96,18 @@
 							</tr>
 						</tbody>
 					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNums -->
+						<!-- ko if: $data == $root.currentPage() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPage() -->
+						<a data-bind="text: $data, click: $root.turnPage"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -108,6 +120,6 @@
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/drop-off.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/product/drop-off.js?v=1.1"></script>
 </body>
 </html>

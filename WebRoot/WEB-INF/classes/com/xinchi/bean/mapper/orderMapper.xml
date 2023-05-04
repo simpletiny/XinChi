@@ -30,6 +30,7 @@
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="standard_flg" property="standard_flg" jdbcType="VARCHAR" />
 		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="do_confirm_date" property="do_confirm_date" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="VARCHAR" />
 		<result column="back_days" property="back_days" jdbcType="INTEGER" />
 		<result column="people_count" property="people_count" jdbcType="INTEGER" />
@@ -59,9 +60,12 @@
 		<result column="final_receivable" property="final_receivable" jdbcType="DECIMAL" />
 		<result column="product_value" property="product_value" jdbcType="VARCHAR" />
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+		<result column="cancel_flg" property="cancel_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="payable" property="payable" jdbcType="DECIMAL" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
+		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -497,7 +501,8 @@
 		A.product_value,
 		A.lock_flg,
 		A.name_confirm_status,
-		A.receivable_first_flg
+		A.receivable_first_flg,
+		A.do_confirm_date
 		from
 		budget_order_view A LEFT JOIN
 		receivable B ON A.team_number =

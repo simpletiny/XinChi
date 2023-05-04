@@ -50,6 +50,42 @@
 				and A.first_end_city like CONCAT('%', #{to_city,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
-		ORDER BY A.ticket_number
+		ORDER BY A.product_order_number
+	</select>
+	
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.product_order_number,
+		A.team_number,
+		A.name_list,
+		A.first_ticket_date,
+		A.client_number,
+		IFNULL(A.ticket_number,'-') AS ticket_number,
+		A.from_to_time,
+		A.from_to_city,
+		A.first_start_city,
+		A.first_end_city,
+		A.from_airport,
+		A.to_airport,
+		A.phones,
+		B.user_name AS client_name
+		from view_drop_off A LEFT
+		JOIN user_base B ON A.client_number =
+		B.user_number
+		<where>
+			<if test="params.bo.first_ticket_date != null and params.bo.first_ticket_date !=''">
+				and A.first_ticket_date = #{params.bo.first_ticket_date,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.client_number != null and params.bo.client_number !=''">
+				and A.client_number = #{params.bo.client_number,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.from_city != null and params.bo.from_city !=''">
+				and A.first_start_city like CONCAT('%', #{params.bo.from_city,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.to_city != null and params.bo.to_city !=''">
+				and A.first_end_city like CONCAT('%', #{params.bo.to_city,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+		ORDER BY A.product_order_number
 	</select>
 </mapper>

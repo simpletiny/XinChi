@@ -51,4 +51,6 @@ public interface OrderService extends BaseService {
 
 	public String createReceivable(String order_pk);
 
+	public String checkCanBeEdit(String order_pk);
+
 }

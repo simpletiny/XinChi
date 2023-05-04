@@ -50,4 +50,6 @@ public interface ProductOrderOperationDAO {
 	public void deleteByTeamNumber(String team_number);
 
 	public List<DropOffBean> selectDropOff(DropOffBean drop_off);
+
+	public List<DropOffBean> selectDropOffByPage(Page<DropOffBean> page);
 }

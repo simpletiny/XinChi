@@ -13,12 +13,14 @@ var ViewContext = function() {
 	});
 
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中……");
 		var param = "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'culture/searchWorldViewByPage', param, function(data) {
 			self.views(data.views);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			endLoadingIndicator();
 		});
 	};
 
@@ -39,12 +41,12 @@ var ViewContext = function() {
 			return;
 		} else if (self.chosenViews().length == 1) {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认要删除这篇文章吗？',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						$.ajax({
 							type : "POST",
@@ -97,7 +99,7 @@ var ViewContext = function() {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

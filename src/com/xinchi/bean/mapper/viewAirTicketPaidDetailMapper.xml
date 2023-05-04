@@ -26,6 +26,9 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="voucher_number" property="voucher_number" jdbcType="VARCHAR" />
 		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="first_date" property="first_date" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -76,11 +79,14 @@
 		A.voucher_number,
 		A.create_time,
 		A.update_time,
-		A.receiver
+		A.receiver,
+		D.first_date,
+		D.passenger,
+		D.from_to_city
 		from
-		view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		LEFT JOIN supplier C ON
-		B.financial_body_pk = C.pk
+		air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN air_ticket_payable D ON A.base_pk = D.pk
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in
@@ -95,10 +101,13 @@
 				and LEFT(A.time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.money_from != null and params.bo.money_from !=''">
-				and A.allot_money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
 			</if>
 			<if test="params.bo.money_to != null and params.bo.money_to !=''">
-				and A.allot_money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
 			</if>
 			<if test="params.bo.receiver != null and params.bo.receiver !=''">
 				and C.supplier_name like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%')
@@ -106,6 +115,16 @@
 			<if test="params.bo.type != null and params.bo.type !=''">
 				and A.type =#{params.bo.type,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.from_to_city != null and params.bo.from_to_city !=''">
+				and D.from_to_city like CONCAT('%',#{params.bo.from_to_city,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.first_date_from != null and params.bo.first_date_from !=''">
+				and D.first_date &gt;= #{params.bo.first_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.first_date_to != null and params.bo.first_date_to !=''">
+				and D.first_date &lt;= #{params.bo.first_date_to,jdbcType=VARCHAR}
+			</if>
+			order by D.first_date DESC,A.time DESC
 		</where>
 	</select>
 </mapper>

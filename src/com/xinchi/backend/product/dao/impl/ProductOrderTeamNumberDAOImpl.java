@@ -69,4 +69,11 @@ public class ProductOrderTeamNumberDAOImpl extends SqlSessionDaoSupport implemen
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.ProductOrderTeamNumberMapper.deleteByOrderNumber", order_number);
 	}
 
+	@Override
+	public List<ProductOrderTeamNumberBean> selectByTeamNumber(String team_number) {
+		List<ProductOrderTeamNumberBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ProductOrderTeamNumberMapper.selectByTeamNumber", team_number);
+		return list;
+	}
+
 }

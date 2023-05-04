@@ -88,6 +88,6 @@
 	<script>
 		$(".culture").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/culture/value-view.js"></script>
+	<script src="<%=basePath%>static/js/culture/value-view.js?1.0"></script>
 </body>
 </html>

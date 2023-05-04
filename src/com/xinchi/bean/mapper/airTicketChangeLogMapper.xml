@@ -10,6 +10,9 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="first_date" property="first_date" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="captain" property="captain" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -20,7 +23,10 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		first_date,
+		from_to_city,
+		captain
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -63,6 +69,15 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="first_date != null">
+				first_date,
+			</if>
+			<if test="from_to_city != null">
+				from_to_city,
+			</if>
+			<if test="captain != null">
+				captain,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="change_reason != null">
@@ -88,6 +103,15 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="first_date != null">
+				#{first_date,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_city != null">
+				#{from_to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="captain != null">
+				#{captain,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -116,6 +140,15 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="first_date != null">
+				first_date = #{first_date,jdbcType=VARCHAR},
+			</if>
+			<if test="from_to_city != null">
+				from_to_city = #{from_to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="captain != null">
+				captain = #{captain,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

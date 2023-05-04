@@ -213,4 +213,10 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 		return SUCCESS;
 	}
 
+	@Override
+	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk) {
+
+		return dao.selectByRelatedPk(related_pk);
+	}
+
 }

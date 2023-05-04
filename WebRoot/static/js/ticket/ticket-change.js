@@ -1,7 +1,5 @@
-var airTicketCheckLayer;
 var passengerCheckLayer;
-var createLayer;
-var seasonTicketLayer;
+var ticketInfoCheckLayer;
 var ChangeContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -9,13 +7,12 @@ var ChangeContext = function() {
 
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(ticket_change_pk) {
-		self.passengers.removeAll();
+	self.checkPassengers = function(data) {
 		startLoadingIndicator("加载中...");
-		var url = "ticket/searchPassengersByChangePk";
+		const url = "ticket/searchPassengersByChangePk";
 
 		$.getJSON(self.apiurl + url, {
-			ticket_change_pk : ticket_change_pk
+			ticket_change_pk : data.pk
 		}, function(data) {
 
 			self.passengers(data.airTicketNameList);
@@ -37,6 +34,35 @@ var ChangeContext = function() {
 			});
 		});
 	};
+
+	self.infos = ko.observableArray([]);
+	// 航班信息
+	self.checkTicketInfo = function(data) {
+		startLoadingIndicator("加载中...");
+		const url = "ticket/searchTicketInfoByChangePk";
+		const param = "ticket_change_pk=" + data.pk;
+
+		$.getJSON(self.apiurl + url, param, function(data) {
+			self.infos(data.ptInfos);
+			endLoadingIndicator();
+			ticketInfoCheckLayer = $.layer({
+				type : 1,
+				title : ['航班信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '500px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#infos-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+
 	self.changes = ko.observable({
 		total : 0,
 		items : []
@@ -46,18 +72,16 @@ var ChangeContext = function() {
 		startLoadingIndicator("加载中...");
 		var totalPeople = 0;
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'ticket/searchTicketChangeByPage', param,
-				function(data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'ticket/searchTicketChangeByPage', param, function(data) {
 
-					self.changes(data.changes);
+			self.changes(data.changes);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
 
-					endLoadingIndicator();
-				});
+			endLoadingIndicator();
+		});
 	};
 
 	self.search = function() {
@@ -102,8 +126,7 @@ var ChangeContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

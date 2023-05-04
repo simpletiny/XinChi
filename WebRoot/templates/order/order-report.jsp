@@ -58,13 +58,13 @@
 								name="radio_date" />出团日期</label>
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
-									name="option.departure_date_from"  disabled="disabled"/>
+									name="option.departure_date_from" disabled="disabled" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
-									name="option.departure_date_to"  disabled="disabled"/>
+									name="option.departure_date_to" disabled="disabled" />
 							</div>
 						</div>
 					</div>
@@ -119,7 +119,7 @@
 						</div>
 					</s:if>
 				</form>
-				<div class="list-result">
+				<div class="list-result" id="main-table">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
@@ -148,7 +148,8 @@
 						<tbody data-bind="foreach: reports">
 							<tr>
 								<td><input type="checkbox" /></td>
-								<td data-bind="text: $data.team_number"></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.team_number,event:{click:function(){$root.viewTeamDetail($data.team_number)}}"></a></td>
 								<!-- ko if:$data.order_type=="Y" -->
 								<td data-bind="text: $root.orderTypeMapping[$data.order_type]"></td>
 								<!-- /ko -->
@@ -185,28 +186,6 @@
 								<!-- /ko -->
 							</tr>
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>汇总</td>
-							<td data-bind="text:sum_info().people_count"></td>
-							<td class="rmb" data-bind="text:sum_info().receivable"></td>
-							<td></td>
-							<td class="rmb" data-bind="text:sum_info().air_ticket_cost"></td>
-							<td class="rmb" data-bind="text:sum_info().product_cost"></td>
-							<td class="rmb" data-bind="text:sum_info().other_cost"></td>
-							<td class="rmb" data-bind="text:sum_info().other_receive"></td>
-							<td class="rmb" data-bind="text:sum_info().other_fy"></td>
-							<td class="rmb" data-bind="text:sum_info().sale_cost"></td>
-							<td class="rmb" data-bind="text:sum_info().sys_cost"></td>
-							<td class="rmb" data-bind="text:sum_info().gross_profit"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -235,6 +214,85 @@
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFill() }">确认</button>
 		</div>
 	</div>
+	<div id="team-detail" style="display: none; width: 800px; padding-top: 30px;padding-bottom:20px">
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">团号</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().team_number"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">客户</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().client_employee_name" class="rmb"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">产品</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().product_name"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">人数</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default"
+						data-bind="text:(isNaN(order().adult_count)?0:order().adult_count)+(isNaN(order().special_count)?0:order().special_count)"
+						class="rmb"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">确认日期</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().confirm_date"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">出团日期</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().departure_date"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">备注</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().comment"></p>
+				</div>
+			</div>
+		</div>
+		<!-- ko if: order().independent_flg =='A' -->
+		<hr />
+		<h3>航班信息</h3>
+		<table style="width: 100%;margin-left: 30px;margin-top: 20px;" id="table-ticket">
+			<thead>
+				<tr>
+					<th class="r" style="width: 10%">航段</th>
+					<th class="r" style="width: 30%">日期</th>
+					<th class="r" style="width: 30%">起飞城市</th>
+					<th class="r" style="width: 30%">降落城市</th>
+				</tr>
+			</thead>
+			<tbody data-bind="foreach: ticket_infos">
+				<tr>
+					<td st="index" data-bind="text:$data.ticket_index"></td>
+					<td data-bind="text:$data.ticket_date" />
+					</td>
+					<td data-bind="text:$data.from_city" />
+					</td>
+					<td data-bind="text:$data.to_city" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- /ko -->
+	</div>
 	<script>
 		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -242,6 +300,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.0"></script>
 </body>
 </html>

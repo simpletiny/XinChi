@@ -171,6 +171,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 			ProductOrderAirInfoBean info = new ProductOrderAirInfoBean();
 
+			info.setTicket_date(DateUtil.addDate(departure_date, start_day - 1));
 			info.setProduct_order_number(product_order_number);
 			info.setFlight_index(flight_index);
 			info.setStart_day(start_day);
@@ -227,16 +228,19 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		for (OrderDto order : orders) {
 
 			if (order.getStandard_flg().equals("Y")) {
-
-				BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
-				bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
+				bsOrder.setPk(order.getPk());
+				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
 				if (has_ticket.equals("NO")) {
 					bsOrder.setAir_ticket_cost(BigDecimal.ZERO);
 				}
 				bsoDao.update(bsOrder);
 			} else {
-				BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
-				bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED);
+				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
+				bnsOrder.setPk(order.getPk());
+				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
 				if (has_ticket.equals("NO")) {
 					bnsOrder.setAir_ticket_cost(BigDecimal.ZERO);
 				}
@@ -258,30 +262,11 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			return "airlock";
 		}
 
-		// 团号信息
-		List<String> team_numbers = productOrderTeamNumberDao.selectTeamNumbersByOrderNumber(order_number);
-		// 更新销售订单操作标识
-
-		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
-
-		for (OrderDto order : orders) {
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
-				bsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO);
-				bsoDao.update(bsOrder);
-			} else {
-				BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
-				bnsOrder.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO);
-				bnsoDao.update(bnsOrder);
-			}
-		}
-
 		// 删除产品订单号和团号对应关系
 		productOrderTeamNumberDao.deleteByOrderNumber(order_number);
 
 		// 如果存在票务需求
 		if (atn != null) {
-
 			// 删除票务需求和团号之间的对应关系
 			airNeedTeamNumberDao.deleteByNeedPk(atn.getPk());
 			// 删除票务需求
@@ -296,6 +281,25 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 		// 删除产品订单
 		dao.delete(product_order.getPk());
+		// 团号信息
+		List<String> team_numbers = productOrderTeamNumberDao.selectTeamNumbersByOrderNumber(order_number);
+		// 更新销售订单操作标识
+		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
+		for (OrderDto order : orders) {
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
+				bsOrder.setPk(order.getPk());
+				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_NO));
+				bsoDao.update(bsOrder);
+			} else {
+				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
+				bnsOrder.setPk(order.getPk());
+				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_NO));
+				bnsoDao.update(bnsOrder);
+			}
+		}
 
 		return SUCCESS;
 	}
@@ -367,12 +371,12 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		if (order.getStandard_flg().equals("Y")) {
 			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 			bso.setPk(order.getPk());
-			bso.setLock_flg(lock_flg);
+			bso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), lock_flg, 1));
 			bsoDao.update(bso);
 		} else {
 			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 			bnso.setPk(order.getPk());
-			bnso.setLock_flg(lock_flg);
+			bnso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), lock_flg, 1));
 			bnsoDao.update(bnso);
 		}
 
@@ -381,22 +385,25 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 	@Override
 	public String isAllOrdersLocked(String order_number) {
-		List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
-		potns = productOrderTeamNumberDao.selectByOrderNumber(order_number);
+		String numbers[] = order_number.split(",");
+		for (String number : numbers) {
+			List<ProductOrderTeamNumberBean> potns = new ArrayList<ProductOrderTeamNumberBean>();
+			potns = productOrderTeamNumberDao.selectByOrderNumber(number);
 
-		if (null == potns || potns.size() == 0)
-			return "yes";
+			if (null == potns || potns.size() == 0)
+				continue;
 
-		List<String> team_numbers = new ArrayList<String>();
-		for (ProductOrderTeamNumberBean potn : potns) {
-			team_numbers.add(potn.getTeam_number());
-		}
+			List<String> team_numbers = new ArrayList<String>();
+			for (ProductOrderTeamNumberBean potn : potns) {
+				team_numbers.add(potn.getTeam_number());
+			}
 
-		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
+			List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
 
-		for (OrderDto order : orders) {
-			if (order.getLock_flg().equals("N")) {
-				return "no";
+			for (OrderDto order : orders) {
+				if (order.getLock_flg().equals("N")) {
+					return "no," + number;
+				}
 			}
 		}
 

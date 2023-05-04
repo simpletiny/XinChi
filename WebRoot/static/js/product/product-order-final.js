@@ -34,29 +34,23 @@ var OrderContext = function() {
 		items : []
 	});
 
-	self.totalPeopleCount = ko.observable();
-	self.totalSupplierCost = ko.observable();
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
-		var total_people_count = 0;
-		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=F";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
 			self.operations(data.operations);
 
-			$(self.operations()).each(function(idx, data) {
-				total_people_count += data.people_count - 0;
-				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
-			});
-
-			self.totalPeopleCount(total_people_count);
-			self.totalSupplierCost(total_supplier_cost);
 			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#main-table").tableSum({
+				title : '汇总',
+				title_index : 5,
+				accept : [6, 7, 9]
+			})
 			endLoadingIndicator();
 		});
 	};

@@ -48,12 +48,22 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	private String change_pk;
 
+	private BigDecimal change_cost;
+
 	private int days;
 
 	private String need_comment;
 	private String cellphone_A;
 	private String cellphone_B;
 	private String chairman;
+
+	private String lock_flg;
+
+	private String delete_flg;
+
+	private String base_pk;
+
+	private String order_lock_flg;
 
 	private List<PassengerTicketInfoBean> ticket_infos;;
 
@@ -263,6 +273,46 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setTicket_infos(List<PassengerTicketInfoBean> ticket_infos) {
 		this.ticket_infos = ticket_infos;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
+	}
+
+	public String getBase_pk() {
+		return base_pk;
+	}
+
+	public void setBase_pk(String base_pk) {
+		this.base_pk = base_pk;
+	}
+
+	public String getOrder_lock_flg() {
+		return order_lock_flg;
+	}
+
+	public void setOrder_lock_flg(String order_lock_flg) {
+		this.order_lock_flg = order_lock_flg;
+	}
+
+	public BigDecimal getChange_cost() {
+		return change_cost;
+	}
+
+	public void setChange_cost(BigDecimal change_cost) {
+		this.change_cost = change_cost;
 	}
 
 }

@@ -53,39 +53,44 @@ public class TicketServiceImpl implements TicketService {
 	public String changFlight(String json) {
 		JSONObject obj = JSONObject.fromObject(json);
 
-		String passenger_pks = obj.getString("passenger_pks");
 		String change_reason = obj.getString("change_reason");
 		BigDecimal cost = new BigDecimal(SimpletinyString.isEmpty(obj.getString("cost")) ? "0" : obj.getString("cost"));
 
 		String comment = obj.getString("comment");
-
 		String team_number = obj.getString("team_number");
+		JSONArray nameArr = obj.getJSONArray("nameAllot");
+		String first_name_pk = nameArr.getJSONObject(0).getString("name_pk");
+		AirTicketNameListBean first_name = nameListDao.selectByPrimaryKey(first_name_pk);
+
+		String captain = first_name.getName();
+		String first_ticket_date = first_name.getFirst_ticket_date();
+		String from_to_city = first_name.getFirst_start_city() + "--" + first_name.getFirst_end_city();
 
 		// 增加票务航变记录
 		AirTicketChangeLogBean atcl = new AirTicketChangeLogBean();
 		atcl.setChange_cost(cost);
 		atcl.setChange_reason(change_reason);
 		atcl.setComment(comment);
-
+		atcl.setCaptain(captain);
+		atcl.setFirst_date(first_ticket_date);
+		atcl.setFrom_to_city(from_to_city);
 		String change_pk = changeLogDao.insert(atcl);
 
-		String[] pks = passenger_pks.split(",");
-		List<AirTicketNameListBean> names = nameListDao.selectByPks(pks);
+		for (int i = 0; i < nameArr.size(); i++) {
+			JSONObject current = nameArr.getJSONObject(i);
+			String name_pk = current.getString("name_pk");
+			BigDecimal change_cost = new BigDecimal(current.getString("change_cost"));
 
-		String captain = names.get(0).getName();
-		String first_ticket_date = names.get(0).getFirst_ticket_date();
-		// 更新票务名单状态
-		for (AirTicketNameListBean name : names) {
-
+			AirTicketNameListBean name = new AirTicketNameListBean();
+			name.setPk(name_pk);
 			name.setStatus("C");
 			name.setChange_pk(change_pk);
-
+			name.setChange_cost(change_cost);
 			nameListDao.update(name);
 		}
 
 		JSONArray arr = obj.getJSONArray("allot");
 
-		BigDecimal sumMoney = BigDecimal.ZERO;
 		for (int i = 0; i < arr.size(); i++) {
 			JSONObject current = arr.getJSONObject(i);
 
@@ -103,12 +108,14 @@ public class TicketServiceImpl implements TicketService {
 				atp.setBudget_payable(money);
 				atp.setBudget_balance(money);
 				atp.setFinal_flg("N");
+				atp.setFirst_date(first_ticket_date);
+				atp.setPassenger(captain);
+				atp.setFrom_to_city(from_to_city);
+				atp.setRelated_pk(change_pk);
 
-				atp.setComment(first_ticket_date + captain + pks.length + "人航变");
-
+				atp.setComment(first_ticket_date + captain + nameArr.size() + "人航变");
 				payableDao.insert(atp);
 
-				sumMoney = sumMoney.add(money);
 			}
 
 		}
@@ -118,12 +125,12 @@ public class TicketServiceImpl implements TicketService {
 		if (saleOrder.getStandard_flg().equals("Y")) {
 			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 			bso.setPk(saleOrder.getPk());
-			bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(sumMoney));
+			bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(cost));
 			bsoDao.update(bso);
 		} else {
 			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 			bnso.setPk(saleOrder.getPk());
-			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(sumMoney));
+			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(cost));
 			bnsoDao.update(bnso);
 		}
 		return SUCCESS;
@@ -140,6 +147,23 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page) {
 		return changeLogDao.selectByPage(page);
+	}
+
+	@Override
+	public String toggleLockOrder(String team_number, String lock_flg) {
+		OrderDto order = orderDao.selectByTeamNumber(team_number);
+		if (order.getStandard_flg().equals("Y")) {
+			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+			bso.setPk(order.getPk());
+			bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), lock_flg, 1));
+			bsoDao.update(bso);
+		} else {
+			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+			bnso.setPk(order.getPk());
+			bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), lock_flg, 1));
+			bnsoDao.update(bnso);
+		}
+		return SUCCESS;
 	}
 
 }

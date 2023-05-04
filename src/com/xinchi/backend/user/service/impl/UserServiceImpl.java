@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
 				sessionBean.setUser_roles(uib.getUser_role());
 				sessionBean.setCredit_limit(uib.getCredit_limit());
 				sessionBean.setCredit_balance(uib.getCredit_balance());
+				sessionBean.setCurrent_date(DateUtil.today());
 
 				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 
@@ -144,7 +145,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String rejectUser(String user_pk) {
+		UserBaseBean user = dao.selectByPrimaryKey(user_pk);
+		UserInfoBean info = infoDao.selectByUserId(user.getId());
+		if (null != info)
+			infoDao.delete(info.getPk());
 		dao.delete(user_pk);
+
 		return SUCCESS;
 	}
 

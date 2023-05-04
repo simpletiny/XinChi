@@ -75,6 +75,7 @@ public class PaginationInterceptor implements Interceptor {
 			Page<?> page = (Page<?>) obj;
 			String originalSql = (String) metaStatementHandler.getValue("delegate.boundSql.sql");
 			String pageSql = dialect.getLimitString(originalSql, page);
+
 			metaStatementHandler.setValue("delegate.boundSql.sql", pageSql);
 			metaStatementHandler.setValue("delegate.rowBounds.offset", RowBounds.NO_ROW_OFFSET);
 			metaStatementHandler.setValue("delegate.rowBounds.limit", RowBounds.NO_ROW_LIMIT);

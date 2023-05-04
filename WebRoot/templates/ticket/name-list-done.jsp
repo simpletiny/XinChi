@@ -90,9 +90,12 @@
 			<div class="main-box" id="div-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
-						<div style="padding-top: 3px; float: right">
+						<div style="float: left">
+							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockName()}">解锁名单</button>
+						</div>
+						<div style="float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockName() }">锁定名单</button>
 							<button type="button" class="btn btn-green" data-bind="click:flightChange">航变</button>
-							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 							<button type="button" class="btn btn-green" data-bind="click:rollBack">打回重出</button>
 						</div>
 					</div>
@@ -137,6 +140,7 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
+							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -158,6 +162,8 @@
 								<th>首航段</th>
 								<th>价格</th>
 								<th>需求备注</th>
+								<th>退团</th>
+								<th>名单</th>
 								<th>状态</th>
 							</tr>
 						</thead>
@@ -176,8 +182,10 @@
 								<td data-bind="text: $data.days"></td>
 								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.first_from_to"></td>
-								<td data-bind="text: $data.ticket_cost" class="rmb"></td>
+								<td data-bind="text: $data.ticket_cost+$data.change_cost" class="rmb"></td>
 								<td data-bind="text: $data.need_comment"></td>
+								<td><span data-bind="text:$root.deleteMapping[$data.delete_flg]"></span></td>
+								<td><span data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
 								<!-- ko if:$data.status=='Y' -->
 								<td data-bind="text:$root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
@@ -210,22 +218,25 @@
 		</div>
 	</div>
 
-	<div id="div-flight-change" style="display: none; width: 800px; height: 700px; overflow: auto">
+	<div id="div-flight-change" style="display: none; width: 800px; height: 650px; overflow: auto">
 		<form class="form-box info-form" id="form-change">
 			<div class="input-row clearfloat" id="air-ticket">
-				<table style="width: 100%" class="table table-striped table-hover">
+				<table style="width: 100%" class="table table-striped table-hover" id="change-name-table">
 					<thead>
 						<tr>
-							<th style="width: 10%">姓名</th>
-							<th style="width: 10%">身份证号</th>
-							<th style="width: 10%">价格</th>
+							<th style="width: 15%">姓名</th>
+							<th style="width: 40%">身份证号</th>
+							<th style="width: 15%">价格</th>
+							<th style="width: 30%">航变成本<input type="checkbox" id="change-all"/></th>
 						</tr>
 					</thead>
-					<tbody data-bind="foreach:changeNames">
+					<tbody data-bind="foreach:changeNames" >
 						<tr>
+							<input type="hidden" data-bind="value:$data.pk" st="name-pk"/>
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.ticket_cost"></td>
+							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person" oninput="calSum()"  required /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -313,7 +324,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list-done.js"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.0"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

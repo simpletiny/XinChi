@@ -224,6 +224,21 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String confirmBudgetStandardOrder() {
+		resultStr = bsoService.confirmStandardOrder(bsOrder, json);
+		return SUCCESS;
+	}
+
+	/**
+	 * 检测已确认订单是否可以修改
+	 * 
+	 * @return
+	 */
+	public String checkCanBeEdit() {
+		resultStr = service.checkCanBeEdit(order_pk);
+		return SUCCESS;
+	}
+
 	/**
 	 * 更新已确认标准预算订单
 	 * 
@@ -308,6 +323,11 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String confirmBudgetNonStandardOrder() {
+		resultStr = bnsoService.confirm(bnsOrder, json);
+		return SUCCESS;
+	}
+
 	/**
 	 * 更新单机票订单
 	 * 
@@ -315,6 +335,21 @@ public class OrderAction extends BaseAction {
 	 */
 	public String updateOnlyTicketOrder() {
 		resultStr = bnsoService.updateOnlyTicketOrder(bnsOrder, json);
+		return SUCCESS;
+	}
+
+	/**
+	 * 确认单机票订单
+	 * 
+	 * @return
+	 */
+	public String confirmOnlyTicketOrder() {
+		resultStr = bnsoService.confirmOnlyTicketOrder(bnsOrder, json);
+		return SUCCESS;
+	}
+
+	public String updateConfirmedOnlyTicketOrder() {
+		resultStr = bnsoService.updateConfirmedOnlyTicketOrder(bnsOrder, json);
 		return SUCCESS;
 	}
 
@@ -437,6 +472,9 @@ public class OrderAction extends BaseAction {
 
 	public String selectOrderByTeamNumber() {
 		option = service.selectByTeamNumber(team_number);
+		if (option.getIndependent_flg().equals("A")) {
+			ticketInfos = orderTicketInfoService.selectByOrderPk(option.getPk());
+		}
 		return SUCCESS;
 	}
 

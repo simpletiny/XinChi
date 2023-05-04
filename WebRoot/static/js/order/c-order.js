@@ -88,26 +88,29 @@ var ProductBoxContext = function() {
 		}
 	};
 	// 编辑订单
-	self.editOrder = function() {
+	// self.editOrder = function() {
+	//
+	// if (self.chosenOrders().length == 0) {
+	// fail_msg("请选择订单！");
+	// return;
+	// } else if (self.chosenOrders().length > 1) {
+	// fail_msg("只能选择一个订单！");
+	// return;
+	// } else if (self.chosenOrders().length == 1) {
+	// var data = self.chosenOrders()[0].split(";");
+	// var order_pk = data[0];
+	// var standard_flg = data[1];
+	// if (standard_flg == "Y") {
+	// window.location.href = self.apiurl +
+	// "templates/order/standard-order-edit.jsp?key=" + order_pk;
+	// } else if (standard_flg == "N") {
+	// window.location.href = self.apiurl +
+	// "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
+	// }
+	// }
+	// };
 
-		if (self.chosenOrders().length == 0) {
-			fail_msg("请选择订单！");
-			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个订单！");
-			return;
-		} else if (self.chosenOrders().length == 1) {
-			var data = self.chosenOrders()[0].split(";");
-			var order_pk = data[0];
-			var standard_flg = data[1];
-			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
-			} else if (standard_flg == "N") {
-				window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
-			}
-		}
-	};
-
+	// 变更
 	self.changeOrder = function() {
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择订单！");
@@ -122,21 +125,36 @@ var ProductBoxContext = function() {
 			var lock_flg = data[3];
 			var independent_flg = data[4];
 
-			if (lock_flg == "Y") {
-				fail_msg("订单已锁定，请联系相关产品进行解锁后变更。");
-				return;
-			}
-			if (standard_flg == "Y") {
-				window.location.href = self.apiurl + "templates/order/standard-order-edit.jsp?key=" + order_pk;
-			} else if (standard_flg == "N") {
-				if (independent_flg == "A") {
-					window.location.href = self.apiurl + "templates/order/only-ticket-order-confirm.jsp?key="
-							+ order_pk + "&type=edit";
-				} else {
-					window.location.href = self.apiurl + "templates/order/non-standard-order-edit.jsp?key=" + order_pk;
-				}
+			// 检测是否能够修改订单
+			startLoadingIndicator("检测中……");
+			var data = "order_pk=" + order_pk;
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'order/checkCanBeEdit',
+				data : data
+			}).success(
+					function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							if (standard_flg == "Y") {
+								window.location.href = self.apiurl
+										+ "templates/order/standard-order-confirm-edit.jsp?key=" + order_pk;
+							} else if (standard_flg == "N") {
+								if (independent_flg == "A") {
+									window.location.href = self.apiurl
+											+ "templates/order/only-ticket-order-confirm-edit.jsp?key=" + order_pk
+											+ "&type=edit";
+								} else {
+									window.location.href = self.apiurl
+											+ "templates/order/non-standard-order-confirm-edit.jsp?key=" + order_pk;
+								}
 
-			}
+							}
+						} else {
+							fail_msg(str);
+						}
+					});
+
 		}
 	}
 	// 打回订单到未确认状态

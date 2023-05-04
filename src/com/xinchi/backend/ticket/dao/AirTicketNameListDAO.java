@@ -29,6 +29,8 @@ public interface AirTicketNameListDAO {
 	 */
 	public void delete(String id);
 
+	public void deleteByOrderNumber(String order_number);
+
 	/**
 	 * 根据主键查找
 	 * 
@@ -66,4 +68,6 @@ public interface AirTicketNameListDAO {
 	public List<AirTicketNameListBean> selectByChangePk(String ticket_change_pk);
 
 	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> t_ns);
+
+	public AirTicketNameListBean selectByBasePk(String pk);
 }

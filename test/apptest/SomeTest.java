@@ -1,71 +1,40 @@
 package apptest;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-
-import com.xinchi.common.Utils;
-import com.xinchi.common.office.SimpletinyWord;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SomeTest {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
+		Map<String, BigDecimal> map = new HashMap<>();
+		map.put("one", BigDecimal.ZERO);
 
-		String a = "D://C.docx";
-		String b = "D://C.doc";
+		map.put("one", (map.get("one") == null ? BigDecimal.ZERO : map.get("one")).add(new BigDecimal("100")));
+		map.put("one", (map.get("one") == null ? BigDecimal.ZERO : map.get("one")).add(new BigDecimal("100")));
 
-		System.out.println(Utils.getFileExt(a));
-		System.out.println(Utils.getFileExt(b));
+		System.out.println(map.get("one"));
 
-		SimpletinyWord.copy("D://C.docx", "D://test.docx");
-		InputStream is = new FileInputStream("D://test.docx");
-		XWPFDocument destDoc = new XWPFDocument(is);
+	}
 
-		for (XWPFParagraph paragraph : destDoc.getParagraphs()) {
-			String text = paragraph.getText();
-			if (text.contains("${secellphone}")) {
-				for (XWPFRun run : paragraph.getRuns()) {
-					String runText = run.getText(0);
-					if (runText != null && runText.contains("${secellphone}")) {
-						runText = runText.replace("${secellphone}", "1923727183");
-						run.setText(runText, 0);
-					}
-				}
+	public static Map<String, List<String[]>> groupDataByFirstField(List<String[]> data) {
+		Map<String, List<String[]>> groupedData = new HashMap<>();
+
+		for (String[] record : data) {
+			String key = record[0];
+
+			if (groupedData.containsKey(key)) {
+				groupedData.get(key).add(record);
+			} else {
+				List<String[]> group = new ArrayList<>();
+				group.add(record);
+				groupedData.put(key, group);
 			}
 		}
 
-		for (XWPFTable table : destDoc.getTables()) {
-			for (XWPFTableRow row : table.getRows()) {
-				for (XWPFTableCell cell : row.getTableCells()) {
-					for (XWPFParagraph paragraph : cell.getParagraphs()) {
-						String text = paragraph.getText();
-						if (text.contains("${secellphone}")) {
-							for (XWPFRun run : paragraph.getRuns()) {
-								String runText = run.getText(0);
-								if (runText != null && runText.contains("${secellphone}")) {
-									runText = runText.replace("${secellphone}", "1923727183");
-									run.setText(runText, 0);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		is.close();
-		OutputStream os = new FileOutputStream("D://test.docx");
-		destDoc.write(os);
-		os.close();
-		destDoc.close();
+		return groupedData;
 	}
 
 }

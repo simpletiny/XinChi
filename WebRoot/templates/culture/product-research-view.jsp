@@ -126,7 +126,7 @@
 				.css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/sortable/Sortable.js"></script>
-	<script src="<%=basePath%>static/js/culture/product-research-view.js"></script>
+	<script src="<%=basePath%>static/js/culture/product-research-view.js?1.0"></script>
 
 </body>
 </html>

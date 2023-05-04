@@ -103,6 +103,10 @@ var ReimbursementContext = function() {
 
 	}
 
+	self.reimbursement = function() {
+		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
+	};
+
 	self.viewRejectReason = function(back_pk) {
 		var data = "back_pk=" + back_pk;
 

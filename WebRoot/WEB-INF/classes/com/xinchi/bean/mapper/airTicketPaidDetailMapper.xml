@@ -60,6 +60,12 @@
 		from air_ticket_paid_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_paid_detail
+		where base_pk = #{base_pk,jdbcType=CHAR}
+	</select>
 	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		B.financial_body_pk,

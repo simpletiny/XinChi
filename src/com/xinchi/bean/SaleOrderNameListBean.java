@@ -39,6 +39,39 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	private BigDecimal price;
 
+	private String lock_flg;
+
+	private String delete_flg;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof SaleOrderNameListBean)) {
+			return false;
+		}
+		SaleOrderNameListBean other = (SaleOrderNameListBean) obj;
+		return (this.name == other.name || (null != this.name && this.name.equals(other.name)))
+				&& (this.id == other.id || (null != this.id && this.id.equals(other.id)))
+				&& (this.sex == other.sex || (null != this.sex && this.sex.equals(other.sex)));
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		if (null != name)
+			result = 31 * result + name.hashCode();
+		if (null != id)
+			result = 31 * result + id.hashCode();
+		if (null != sex)
+			result = 31 * result + sex.hashCode();
+		return result;
+	}
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -157,6 +190,22 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
 	}
 
 }

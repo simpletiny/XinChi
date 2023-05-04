@@ -32,6 +32,8 @@ public class ProductOrderAirInfoBean extends SupperBO implements Serializable {
 
 	private String product_order_number;
 
+	private String ticket_date;
+
 	public String getPk() {
 		return pk;
 	}
@@ -126,6 +128,14 @@ public class ProductOrderAirInfoBean extends SupperBO implements Serializable {
 
 	public void setProduct_order_number(String product_order_number) {
 		this.product_order_number = product_order_number;
+	}
+
+	public String getTicket_date() {
+		return ticket_date;
+	}
+
+	public void setTicket_date(String ticket_date) {
+		this.ticket_date = ticket_date;
 	}
 
 }

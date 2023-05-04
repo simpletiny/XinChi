@@ -47,4 +47,6 @@ public interface ProductOrderTeamNumberDAO {
 
 	public void deleteByOrderNumber(String order_number);
 
+	public List<ProductOrderTeamNumberBean> selectByTeamNumber(String team_number);
+
 }

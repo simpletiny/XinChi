@@ -25,6 +25,73 @@ var PassengerContext = function() {
 		'C' : '航变'
 	}
 
+	self.deleteMapping = {
+		"N" : "否",
+		"Y" : "是"
+	}
+
+	self.lockMapping = {
+		"N" : "未锁定",
+		"Y" : "已锁定"
+	}
+
+	// 解锁名单
+	self.unlockName = function() {
+		if (self.chosenPassengers().length < 1) {
+			fail_msg("请选择乘客！");
+			return;
+		} else {
+			let passenger_pks = "";
+			for (let i = 0; i < self.chosenPassengers().length; i++) {
+				let data = self.chosenPassengers()[i].split(":");
+				passenger_pks += data[0] + ",";
+			}
+			passenger_pks.RTrim(",");
+			let msg = "解锁名单意味着，销售可以对解锁的名单进行编辑或删除操作。确定解锁这些名单吗？"
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : msg,
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						toggleLockName(passenger_pks, 'N');
+					}
+				}
+			});
+		}
+	}
+	// 锁定名单
+	self.lockName = function() {
+		if (self.chosenPassengers().length < 1) {
+			fail_msg("请选择乘客！");
+			return;
+		} else {
+			let passenger_pks = "";
+			for (let i = 0; i < self.chosenPassengers().length; i++) {
+				let data = self.chosenPassengers()[i].split(":");
+				passenger_pks += data[0] + ",";
+			}
+			passenger_pks.RTrim(",");
+			let msg = "锁定名单，销售将不再允许对这些名单进行操作。确认锁定这些名单吗？"
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : msg,
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						toggleLockName(passenger_pks, 'Y');
+					}
+				}
+			});
+		}
+	}
+
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
 
@@ -56,6 +123,11 @@ var PassengerContext = function() {
 				tr.find("td").css("cssText", "background:" + self.colors[current_index % 4] + " !important");
 
 			}
+
+			$("span:contains('未锁定')").css("color", "red");
+			$("span:contains('已锁定')").css("color", "green");
+			$("span:contains('是')").css("color", "red");
+			$("span:contains('否')").css("color", "green");
 
 			endLoadingIndicator();
 		});
@@ -119,25 +191,20 @@ var PassengerContext = function() {
 	}
 
 	self.doFlightChange = function() {
+
 		if (!$("#form-change").valid()) {
 			return;
 		}
 
 		var json = '{';
 		var team_number = self.chosenPassengers()[0].split(":")[3];
-		var passenger_pks = '';
-		for (var i = 0; i < self.changeNames().length; i++) {
-			passenger_pks += ',' + self.changeNames()[i].pk;
-		}
-
-		passenger_pks = passenger_pks.LTrim(",");
 
 		var change_reason = $("input[st='change-reason']").val();
 		var cost = $("input[st='change-cost']").val() - 0;
 		var comment = $("textarea[st='comment']").val();
 
-		json += '"team_number":"' + team_number + '","passenger_pks":"' + passenger_pks + '","change_reason":"'
-				+ change_reason + '","cost":"' + cost + '","comment":"' + comment.replace("\n", " ") + '","allot":[';
+		json += '"team_number":"' + team_number + '","change_reason":"' + change_reason + '","cost":"' + cost
+				+ '","comment":"' + comment.replace("\n", " ") + '","allot":[';
 
 		var divs = $("#div-allot").children();
 
@@ -152,17 +219,38 @@ var PassengerContext = function() {
 			sumMoney += money;
 			allotJson += ',{"ticket_source_pk":"' + ticket_source_pk + '","money":"' + money + '"}';
 		}
-		if (cost != sumMoney) {
+
+		if (cost.toFixed(2) != sumMoney.toFixed(2)) {
 			fail_msg("航变成本与分配总额不符！");
 			return;
-
 		}
 
 		allotJson = allotJson.LTrim(",");
 
-		json += allotJson + ']}';
+		json += allotJson + ']';
 
-		console.log(json);
+		var nameAllotJson = '';
+
+		var trs = $("#change-name-table tbody tr");
+		var sumPersonMoney = 0;
+		for (let i = 0; i < trs.length; i++) {
+			let tr = $(trs[i]);
+
+			let name_pk = tr.find("input[st='name-pk']").val();
+			let change_cost = tr.find("input[st='change-cost-person']").val() - 0;
+			sumPersonMoney += change_cost;
+
+			nameAllotJson += ',{"name_pk":"' + name_pk + '","change_cost":"' + change_cost + '"}';
+		}
+
+		nameAllotJson = nameAllotJson.LTrim(",");
+
+		json += ',"nameAllot":[' + nameAllotJson + ']}';
+
+		if (cost.toFixed(2) != sumPersonMoney.toFixed(2)) {
+			fail_msg("航变成本与航变名单分配总额不符！");
+			return;
+		}
 
 		$.layer({
 			area : ['auto', 'auto'],
@@ -172,13 +260,14 @@ var PassengerContext = function() {
 				type : 4,
 				btn : ['确认', '取消'],
 				yes : function(index) {
-
+					layer.close(index);
+					startLoadingIndicator("提交中……")
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'ticket/changeFlight',
 						data : "json=" + json
 					}).success(function(str) {
-						layer.close(index);
+						endLoadingIndicator();
 						if (str == "success") {
 							layer.close(changeLayer);
 							self.refresh();
@@ -231,27 +320,19 @@ var PassengerContext = function() {
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
-					msg : "确认要将这些名单打回至待出票状态吗？",
+					msg : "打回操作会将同批次的名单(含航变,并删除航变信息)，全部打回至待出票状态！确认要将这些名单打回至待出票状态吗？",
 					btns : 2,
 					type : 4,
 					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
-						startLoadingIndicator("打回中...");
 						var param = "";
 						for (var i = 0; i < self.chosenPassengers().length; i++) {
 							var data = self.chosenPassengers()[i].split(":");
-
-							var status = data[6];
-							if (status == "C") {
-								layer.close(index);
-								fail_msg("不能选择已经有航变的乘客！");
-								return;
-							}
 							var pk = data[0];
 							param += "passenger_pks=" + pk + "&";
 						}
-
+						startLoadingIndicator("打回中...");
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'ticket/rollBackNameDone',
@@ -261,7 +342,7 @@ var PassengerContext = function() {
 							if (str == "success") {
 								self.refresh();
 							} else {
-								fail_msg("打回失败，请联系管理员！");
+								fail_msg(str);
 							}
 							self.chosenPassengers.removeAll();
 						});
@@ -281,7 +362,7 @@ var PassengerContext = function() {
 
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 50;
+	self.perPage = 80;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {
@@ -412,4 +493,72 @@ function checkSameOrderNumber(tr) {
 
 	}
 
+}
+
+var toggleLockOrder = function(team_number, lock_flg) {
+	startLoadingSimpleIndicator("执行中……");
+	const param = "team_number=" + team_number + "&lock_flg=" + lock_flg;
+	$.ajax({
+		type : "POST",
+		url : ctx.apiurl + 'ticket/toggleLockOrder',
+		async : false,
+		data : param
+	}).success(function(str) {
+		endLoadingIndicator();
+		if (str == "success") {
+			ctx.refresh();
+			ctx.chosenPassengers.removeAll();
+		} else {
+			fail_msg(str);
+		}
+	});
+
+}
+
+var toggleLockName = function(passenger_pks, lock_flg) {
+	if (passenger_pks.length < 1) {
+		fail_msg("没有乘客id");
+		return;
+	}
+
+	startLoadingSimpleIndicator("执行中……");
+	let param = "lock_flg=" + lock_flg;
+	const data = passenger_pks.split(",");
+
+	for (let i = 0; i < data.length; i++) {
+		param += "&passenger_pks=" + data[i];
+	}
+
+	$.ajax({
+		type : "POST",
+		url : ctx.apiurl + 'ticket/toggleLockName',
+		async : false,
+		data : param
+	}).success(function(str) {
+		endLoadingIndicator();
+		if (str == "success") {
+			ctx.refresh();
+			ctx.chosenPassengers.removeAll();
+		} else {
+			fail_msg(str);
+		}
+	});
+}
+
+var calSum = function() {
+
+	let current_value = $(event.target).val()
+
+	var trs = $("#change-name-table tbody tr");
+	var sumPersonMoney = 0;
+	for (let i = 0; i < trs.length; i++) {
+		let tr = $(trs[i]);
+		if ($("#change-all").is(":checked")) {
+			tr.find("input[st='change-cost-person']").val(current_value);
+		}
+
+		let change_cost = tr.find("input[st='change-cost-person']").val() - 0;
+		sumPersonMoney += change_cost;
+	}
+	$("input[st='change-cost']").val(sumPersonMoney);
 }

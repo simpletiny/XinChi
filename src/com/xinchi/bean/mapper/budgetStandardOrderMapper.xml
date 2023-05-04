@@ -26,6 +26,7 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+		<result column="do_confirm_date" property="do_confirm_date" jdbcType="VARCHAR" />
 		<result column="confirm_file" property="confirm_file" jdbcType="VARCHAR" />
 		<result column="name_list" property="name_list" jdbcType="VARCHAR" />
 		<result column="air_ticket_cost" property="air_ticket_cost" jdbcType="DECIMAL" />
@@ -35,6 +36,7 @@
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
 		<result column="product_value" property="product_value" jdbcType="DECIMAL" />
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="cancel_flg" property="cancel_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
 	</resultMap>
@@ -65,6 +67,7 @@
 		update_time,
 		create_user,
 		confirm_date,
+		do_confirm_date,
 		confirm_file,
 		name_list,
 		air_ticket_cost,
@@ -74,6 +77,7 @@
 		passenger_captain,
 		product_value,
 		lock_flg,
+		cancel_flg,
 		name_confirm_status,
 		receivable_first_flg
 	</sql>
@@ -383,6 +387,9 @@
 			<if test="confirm_date != null">
 				confirm_date = #{confirm_date,jdbcType=VARCHAR},
 			</if>
+			<if test="do_confirm_date != null">
+				do_confirm_date = #{do_confirm_date,jdbcType=VARCHAR},
+			</if>
 			<if test="confirm_file != null">
 				confirm_file = #{confirm_file,jdbcType=VARCHAR},
 			</if>
@@ -409,6 +416,9 @@
 			</if>
 			<if test="lock_flg != null">
 				lock_flg = #{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="cancel_flg != null">
+				cancel_flg = #{cancel_flg,jdbcType=CHAR},
 			</if>
 			<if test="name_confirm_status != null">
 				name_confirm_status = #{name_confirm_status,jdbcType=CHAR},

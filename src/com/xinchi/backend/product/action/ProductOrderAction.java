@@ -41,7 +41,6 @@ public class ProductOrderAction extends BaseAction {
 	}
 
 	public String rollBackProductOrder() {
-
 		resultStr = service.rollBackOrder(order_number);
 		return SUCCESS;
 	}

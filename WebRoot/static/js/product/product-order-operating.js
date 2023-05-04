@@ -21,6 +21,15 @@ var OrderContext = function() {
 		'N' : "合",
 		'Y' : "单"
 	};
+	self.lockMapping = {
+		'N' : "未锁定",
+		'Y' : "锁定"
+	}
+
+	self.orderStatusMapping = {
+		'N' : "正常",
+		'Y' : "已取消"
+	};
 	// 获取用户信息
 	self.users = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
@@ -32,29 +41,22 @@ var OrderContext = function() {
 		items : []
 	});
 
-	self.totalPeopleCount = ko.observable();
-	self.totalSupplierCost = ko.observable();
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
-		var total_people_count = 0;
-		var total_supplier_cost = 0;
 		var param = $('form').serialize();
 		param += "&operate_option.status=I";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderOperationByPage', param, function(data) {
 			self.operations(data.operations);
 
-			$(self.operations()).each(function(idx, data) {
-				total_people_count += data.people_count - 0;
-				total_supplier_cost += data.supplier_cost == null ? 0 : data.supplier_cost;
-			});
-
-			self.totalPeopleCount(total_people_count);
-			self.totalSupplierCost(total_supplier_cost);
-
-			$(".detail").showDetail();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			$("#main-table").tableSum({
+				title : '汇总',
+				title_index : 5,
+				accept : [6, 8]
+			})
 			endLoadingIndicator();
 		});
 	};
@@ -66,6 +68,7 @@ var OrderContext = function() {
 			fail_msg("请选择产品订单！");
 			return;
 		} else if (self.chosenOperations().length > 0) {
+
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
@@ -75,36 +78,81 @@ var OrderContext = function() {
 					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
+						startLoadingIndicator("校验中...");
+
 						var operate_pks = "";
+						var order_numbers = "";
 						for (var i = 0; i < self.chosenOperations().length; i++) {
 							var current = self.chosenOperations()[i].split(";");
 							operate_pks += current[0] + ",";
+							order_numbers = current[1] + ",";
 						}
-
-						operate_pks = operate_pks.substr(0, operate_pks.length - 1);
-
-						startLoadingIndicator("确认中...");
-						var data = "operate_pks=" + operate_pks;
+						operate_pks = operate_pks.RTrim(",");
+						order_numbers = order_numbers.RTrim(",");
 						$.ajax({
 							type : "POST",
-							url : self.apiurl + 'product/confirmOperation',
-							data : data
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.refresh();
-								self.chosenOperations.removeAll();
+							url : self.apiurl + 'product/isAllOrdersLocked',
+							data : "order_number=" + order_numbers
+						}).success(function(result) {
+							var str = result.split(",");
+							endLoadingIndicator()
+							if (str[0] == "yes") {
+								startLoadingIndicator("确认中...");
+								var data = "operate_pks=" + operate_pks;
+								$.ajax({
+									type : "POST",
+									url : self.apiurl + 'product/confirmOperation',
+									data : data
+								}).success(function(str) {
+									endLoadingIndicator();
+									if (str == "success") {
+										self.refresh();
+										self.chosenOperations.removeAll();
+									} else {
+										fail_msg(str);
+									}
+								});
+							} else if (str[0] == "no") {
+								fail_msg("请锁定" + str[1] + "所有销售订单后继续操作！")
 							} else {
 								fail_msg(str);
 							}
 						});
+
 					}
 				}
 			});
 
 		}
 	};
+	var current_order_number = "";
+	self.refreshSaleOrders = function() {
+		startLoadingSimpleIndicator("刷新中...");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/searchSaleOrderByProductOrderNumber',
+			data : "order_number=" + current_order_number
+		}).success(function(data) {
+			self.sale_orders(data.sale_orders);
+			endLoadingIndicator();
+		});
+	}
 
+	self.lockOrder = function(team_number, lock_flg) {
+		var param = "team_number=" + team_number + "&lock_flg=" + lock_flg;
+
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/changeOrderLock',
+			data : param
+		}).success(function(str) {
+			if (str == "success") {
+				self.refreshSaleOrders();
+			} else {
+				fail_msg(str);
+			}
+		});
+	}
 	// 打回操作中订单
 	self.deleteOperation = function() {
 		if (self.chosenOperations().length == 0) {
@@ -296,6 +344,7 @@ var OrderContext = function() {
 			return;
 		}
 		startLoadingSimpleIndicator("加载中...");
+		current_order_number = order_number;
 
 		$.ajax({
 			type : "POST",

@@ -63,9 +63,15 @@ public class AirTicketOrderDAOImpl extends SqlSessionDaoSupport implements AirTi
 	}
 
 	@Override
-	public AirTicketOrderBean selectBySaleOrderPk(String pk) {
+	public AirTicketOrderBean selectByNeedPk(String need_pk) {
 
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.AirTicketOrderMapper.selectBySaleOrderPk", pk);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByNeedPk", need_pk);
+	}
+
+	@Override
+	public AirTicketOrderBean selectByOrderNumber(String order_number) {
+		return (AirTicketOrderBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.AirTicketOrderMapper.selectByOrderNumber", order_number);
 	}
 
 }

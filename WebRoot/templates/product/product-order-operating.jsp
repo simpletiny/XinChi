@@ -119,7 +119,7 @@ tr td {
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
@@ -165,18 +165,6 @@ tr td {
 									style="cursor: pointer; margin-right: 10px">确认件</a></td>
 							</tr>
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>汇总</td>
-							<td data-bind="text:totalSupplierCost"></td>
-							<td></td>
-							<td data-bind="text:totalPeopleCount"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -339,6 +327,10 @@ tr td {
 						<th>儿童</th>
 						<th>游客信息</th>
 						<th>销售</th>
+						<th>接待特情</th>
+						<th>订单状态</th>
+						<th>锁定状态</th>
+						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody data-bind="foreach: sale_orders">
@@ -350,6 +342,26 @@ tr td {
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
 						<td data-bind="text:$data.create_user"></td>
+						<td><a href="javascript:void(0)"
+							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
+						<!-- ko if: $data.cancel_flg == "N" -->
+						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.cancel_flg == "Y" -->
+						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
+						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg.substr(0,1) == "N" -->
+						<td style="color: red" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
+						<td><a href="javascript:void(0)" data-bind="click:function(){$root.lockOrder($data.team_number,'N');}">解锁</a></td>
+						<!-- /ko -->
+						<!-- ko if: $data.lock_flg.substr(0,1) == "N" -->
+						<td><a href="javascript:void(0)" data-bind="click:function(){$root.lockOrder($data.team_number,'Y');}">锁定</a></td>
+						<!-- /ko -->
 					</tr>
 				</tbody>
 			</table>
@@ -389,6 +401,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.2"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.3"></script>
 </body>
 </html>

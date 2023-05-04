@@ -6,7 +6,11 @@ import com.xinchi.bean.SaleOrderNameListBean;
 
 public interface OrderNameListDAO {
 
-	public void insert(SaleOrderNameListBean bean);
+	public void delete(String pk);
+
+	public String insert(SaleOrderNameListBean bean);
+
+	public SaleOrderNameListBean selectByPrimaryKey(String pk);
 
 	public List<SaleOrderNameListBean> selectByTeamNumber(String team_number);
 

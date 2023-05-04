@@ -52,6 +52,8 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	private String confirm_date;
 
+	private String do_confirm_date;
+
 	private BigDecimal air_ticket_cost;
 	private BigDecimal product_cost;
 	private String status;
@@ -63,6 +65,9 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	private String lock_flg;
 
+	private String cancel_flg;
+
+	private String delete_flg;
 	private String name_confirm_status;
 
 	private String departure_date_from;
@@ -75,6 +80,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String treat_comment;
 	private String receivable_comment;
 	private String client_name;
+	private String operate_flg;
 	// private String ticket_number;
 	// private String start_city;
 	// private String start_airport;
@@ -680,6 +686,38 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setProduct_value(String product_value) {
 		this.product_value = product_value;
+	}
+
+	public String getCancel_flg() {
+		return cancel_flg;
+	}
+
+	public void setCancel_flg(String cancel_flg) {
+		this.cancel_flg = cancel_flg;
+	}
+
+	public String getOperate_flg() {
+		return operate_flg;
+	}
+
+	public void setOperate_flg(String operate_flg) {
+		this.operate_flg = operate_flg;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
+	}
+
+	public String getDo_confirm_date() {
+		return do_confirm_date;
+	}
+
+	public void setDo_confirm_date(String do_confirm_date) {
+		this.do_confirm_date = do_confirm_date;
 	}
 
 }

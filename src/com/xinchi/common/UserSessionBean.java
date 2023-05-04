@@ -24,6 +24,8 @@ public class UserSessionBean {
 	private BigDecimal credit_limit;
 	private BigDecimal credit_balance;
 
+	private String current_date;
+
 	private Set<String> authorized_pages;
 
 	public String getId() {
@@ -136,6 +138,14 @@ public class UserSessionBean {
 
 	public void setAuthorized_pages(Set<String> authorized_pages) {
 		this.authorized_pages = authorized_pages;
+	}
+
+	public String getCurrent_date() {
+		return current_date;
+	}
+
+	public void setCurrent_date(String current_date) {
+		this.current_date = current_date;
 	}
 
 	// public boolean equals(Object obj) {

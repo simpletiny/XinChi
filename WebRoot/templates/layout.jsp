@@ -62,7 +62,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div style="display: block;">
 				<font size="4" color="white">让组团收客多快好省。&nbsp;&nbsp;&nbsp;以价值创造为核心：开放、透明、坦诚、共赢。&nbsp;&nbsp;&nbsp;做世界一流旅游运营商。&nbsp;&nbsp;&nbsp;以奋斗者为本，与优秀者为伍。</font>
 			</div>
-
+		<div class="user-time">
+			<input type="hidden" id="hidden-server-date" value='${user.current_date}'/>
+			<s:property value="#session.user.current_date" />
+		</div>
 			<div class="user-status">
 				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
 					style="margin-right: 100px; color: pink; font-size: 150%; text-decoration: none;">名单确认</a>
@@ -117,24 +120,24 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 			</s:if>
 			<s:if test="!#session.user.user_roles.contains('CPRODUCT')">
-			<li class="rule" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/rule-view.jsp"><i
-					class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>公司制度</a>
-				<ol style="display: none;">
-					<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
-						<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
-					</s:if>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-						<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
-					</s:if>
-					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-						<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>票务制度</a></li>
-					</s:if>
+				<li class="rule" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/rule-view.jsp"><i
+						class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>公司制度</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
+							<li><a href="<%=basePath%>templates/culture/sale-rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售制度</a></li>
+						</s:if>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
+							<li><a href="<%=basePath%>templates/culture/product-rule-view.jsp"><i
+									class="fa fa-angle-right fa-lg fa-fw"></i>产品制度</a></li>
+						</s:if>
+						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+							<li><a href="<%=basePath%>templates/culture/ticket-rule-view.jsp"><i
+									class="fa fa-angle-right fa-lg fa-fw"></i>票务制度</a></li>
+						</s:if>
 
-				</ol></li>
-				</s:if>
+					</ol></li>
+			</s:if>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
 				<li class="client"><a href="<%=basePath%>templates/client/client-relation.jsp"
@@ -158,6 +161,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					</ol></li>
 
 			</s:if>
+			<s:else>
+			<li class="client"><a href="<%=basePath%>templates/accounting/reimbursement.jsp"
+					onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i
+						class="fa fa-users1 fa-lg fa-fw"></i>客户管理</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/accounting/reimbursement.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>费用详情</a></li>
+					</ol></li>
+			</s:else>
 			<%-- 			<li class="product-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
 					class="fa fa-users1 fa-lg fa-fw"></i>产品架</a>
 				<ol style="display: none;">
@@ -186,8 +198,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li class="sale"><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>应收款管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/sale/receivable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>应收款</a></li>
-						<li><a href="<%=basePath%>templates/sale/received.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>收支详表</a></li>
+						<li><a href="<%=basePath%>templates/sale/received.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>收支详表</a></li>
 					</ol></li>
 			</s:if>
 
@@ -356,7 +367,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 						<li><a href="<%=basePath%>templates/system/base-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>基础数据</a></li>
 					</s:if>
+					<s:if test="#session.user.user_roles.contains('ADMIN')">
 					<li><a href="<%=basePath%>templates/system/roles.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
+					</s:if>
 				</ol></li>
 
 		</ul>

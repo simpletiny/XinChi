@@ -31,7 +31,6 @@ import com.xinchi.bean.OrderAirInfoBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
-import com.xinchi.bean.ProductOrderAirBaseBean;
 import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
@@ -79,8 +78,6 @@ public class TicketAction extends BaseAction {
 
 	private List<OrderAirInfoBean> order_air_infos;
 	private String team_number;
-
-	private ProductOrderAirBaseBean air_base;
 
 	public String searchOrderAirInfoByTeamNumber() {
 		order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(team_number);
@@ -331,6 +328,23 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String lock_flg;
+
+	public String toggleLockOrder() {
+		resultStr = service.toggleLockOrder(team_number, lock_flg);
+		return SUCCESS;
+	}
+
+	public String deletePassengerByPassengerPks() {
+		resultStr = airTicketNameListService.deletePassengerByPassengerPks(passenger_pks);
+		return SUCCESS;
+	}
+
+	public String toggleLockName() {
+		resultStr = airTicketNameListService.toggleLockName(passenger_pks, lock_flg);
+		return SUCCESS;
+	}
+
 	private List<String> team_numbers;
 
 	@Autowired
@@ -431,6 +445,16 @@ public class TicketAction extends BaseAction {
 
 	public String searchPassengersByChangePk() {
 		airTicketNameList = airTicketNameListService.selectByChangePk(ticket_change_pk);
+		return SUCCESS;
+	}
+
+	private List<PassengerTicketInfoBean> ptInfos;
+
+	public String searchTicketInfoByChangePk() {
+		List<AirTicketNameListBean> names = airTicketNameListService.selectByChangePk(ticket_change_pk);
+		if (null != names && names.size() > 0) {
+			ptInfos = passengerTicketInfoService.selectByPassengerPk(names.get(0).getPk());
+		}
 		return SUCCESS;
 	}
 
@@ -570,14 +594,6 @@ public class TicketAction extends BaseAction {
 		this.passenger_pks = passenger_pks;
 	}
 
-	public ProductOrderAirBaseBean getAir_base() {
-		return air_base;
-	}
-
-	public void setAir_base(ProductOrderAirBaseBean air_base) {
-		this.air_base = air_base;
-	}
-
 	public List<String> getTeam_numbers() {
 		return team_numbers;
 	}
@@ -672,6 +688,22 @@ public class TicketAction extends BaseAction {
 
 	public void setCommonResult(CommonResultDto commonResult) {
 		this.commonResult = commonResult;
+	}
+
+	public List<PassengerTicketInfoBean> getPtInfos() {
+		return ptInfos;
+	}
+
+	public void setPtInfos(List<PassengerTicketInfoBean> ptInfos) {
+		this.ptInfos = ptInfos;
+	}
+
+	public String getLock_flg() {
+		return lock_flg;
+	}
+
+	public void setLock_flg(String lock_flg) {
+		this.lock_flg = lock_flg;
 	}
 
 }

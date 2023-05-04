@@ -10,8 +10,9 @@ var OrderContext = function() {
 	self.ticket_infos = ko.observableArray([]);
 	self.air_comment = ko.observable();
 	self.confirm_date = ko.observable();
+	self.current_date = $("#hidden-server-date").val();
 
-	var d = new Date();
+	var d = new Date(self.current_date);
 	var year_now = d.getFullYear();
 
 	self.confirm_date(d.Format('yyyy-MM-dd'));
@@ -30,9 +31,6 @@ var OrderContext = function() {
 		self.ticket_infos(data.ticketInfos);
 		self.air_comment(self.ticket_infos()[0].comment);
 
-		if (self.order().name_list_lock == '1')
-			$("#txt-name-list").disabled();
-
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
 			employee_pk : self.order().client_employee_pk
 		}, function(data) {
@@ -44,10 +42,6 @@ var OrderContext = function() {
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
-
-		if (self.order().name_confirm_status == "5") {
-			$("#name-table input").disabled();
-		}
 		reloadDatePicker();
 		self.loadFiles();
 
@@ -116,46 +110,6 @@ var OrderContext = function() {
 		};
 		xhr.send(formData);
 	};
-	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
-		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
-		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
-			self.clientEmployees(data.employees);
-
-			self.totalCount(Math.ceil(data.page.total / self.perPage));
-			self.setPageNums(self.currentPage());
-		});
-	};
-
-	self.searchClientEmployee = function() {
-		self.refreshClient();
-	};
-
-	self.choseClientEmployee = function() {
-		$("#txt-client-employee-name").blur();
-		clientEmployeeLayer = $.layer({
-			type : 1,
-			title : ['选择客户操作', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#client-pick'
-			},
-			end : function() {
-				console.log("Done");
-			}
-		});
-	};
-
-	self.pickClientEmployee = function(name, pk) {
-		$("#txt-client-employee-name").val(name);
-		$("#txt-client-employee-pk").val(pk);
-		layer.close(clientEmployeeLayer);
-	};
 
 	self.updateOrder = function() {
 
@@ -163,12 +117,12 @@ var OrderContext = function() {
 			return;
 		}
 
-		var x = new Date();
-		var maxDate = new Date(x.Format("yyyy-MM-dd"));
-		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+		// 如果是确认订单编辑状态
+		var maxDate = new Date(d.Format("yyyy-MM-dd"));
+		var minDate = new Date(d.addDate(-2).Format("yyyy-MM-dd"));
 		var confirm_date = new Date($(".date-picker-confirm-date").val());
 		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
-			fail_msg("请选择允许的时间范围！");
+			fail_msg("请选择允许的时间范围！" + minDate.Format("yyyy-MM-dd") + "至" + maxDate.Format("yyyy-MM-dd"));
 			return;
 		}
 
@@ -273,14 +227,16 @@ var OrderContext = function() {
 		startLoadingIndicator("保存中……");
 		$.ajax({
 			type : "POST",
-			url : self.apiurl + 'order/updateOnlyTicketOrder',
+			url : self.apiurl + 'order/confirmOnlyTicketOrder',
 			data : data
 		}).success(function(str) {
+			endLoadingIndicator();
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/order/tbc-order.jsp";
 			} else if (str == "noenoughcredit") {
-				endLoadingIndicator();
 				fail_msg("信用额度不足，不能确认订单！");
+			} else {
+				fail_msg(str);
 			}
 		});
 	};
@@ -303,52 +259,7 @@ var OrderContext = function() {
 			}
 		});
 	};
-	// start pagination
-	self.currentPage = ko.observable(1);
-	self.perPage = 10;
-	self.pageNums = ko.observableArray();
-	self.totalCount = ko.observable(1);
-	self.startIndex = ko.computed(function() {
-		return (self.currentPage() - 1) * self.perPage;
-	});
 
-	self.resetPage = function() {
-		self.currentPage(1);
-	};
-
-	self.previousPage = function() {
-		if (self.currentPage() > 1) {
-			self.currentPage(self.currentPage() - 1);
-			self.refreshPage();
-		}
-	};
-
-	self.nextPage = function() {
-		if (self.currentPage() < self.pageNums().length) {
-			self.currentPage(self.currentPage() + 1);
-			self.refreshPage();
-		}
-	};
-
-	self.turnPage = function(pageIndex) {
-		self.currentPage(pageIndex);
-		self.refreshPage();
-	};
-
-	self.setPageNums = function(curPage) {
-		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
-		var pageNums = [];
-		for (var i = startPage; i <= endPage; i++) {
-			pageNums.push(i);
-		}
-		self.pageNums(pageNums);
-	};
-
-	self.refreshPage = function() {
-		self.searchClientEmployee();
-	};
-	// end pagination
 };
 
 var ctx = new OrderContext();
@@ -357,7 +268,8 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
-	var x = new Date();
+
+	var x = new Date(ctx.current_date);
 	var maxDate = x.Format("yyyy/MM/dd");
 	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
 	$(".date-picker-confirm-date").datetimepicker({

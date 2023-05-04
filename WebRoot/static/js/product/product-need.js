@@ -45,30 +45,24 @@ var OrderContext = function() {
 		items : []
 	});
 
-	self.totalAdult = ko.observable();
-	self.totalSpecial = ko.observable();
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
 		var totalAdult = 0;
 		var totalSpecial = 0;
 		var param = $('#form-search').serialize();
-		param += "&order_option.operate_flgs=N&order_option.operate_flgs=A";
+		param += "&order_option.operate_flgs=N,N&order_option.operate_flgs=N,Y";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductNeedByPage', param, function(data) {
 			self.orders(data.productOrders);
 
-			$(self.orders()).each(function(idx, data) {
-				totalAdult += data.adult_count - 0;
-				if (data.special_count != null) {
-					totalSpecial += data.special_count - 0;
-				}
-			});
-
-			self.totalAdult(totalAdult);
-			self.totalSpecial(totalSpecial);
-
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			$("#main-table").tableSum({
+				title : '汇总',
+				title_index : 6,
+				accept : [7, 8]
+			})
 
 			endLoadingIndicator();
 		});
@@ -158,7 +152,9 @@ var OrderContext = function() {
 			fail_msg("请选择产品订单！");
 			return;
 		} else {
+
 			startLoadingIndicator("操作中...");
+
 			var param = "";
 			for (var i = 0; i < self.chosenOrders().length; i++) {
 				var inner_data = self.chosenOrders()[i].split(";");
@@ -172,7 +168,12 @@ var OrderContext = function() {
 			}).success(function(str) {
 				endLoadingIndicator();
 				if (str == "success") {
-					self.refresh();
+					$("input[type='checkbox']:checked").each(function() {
+						if ($(this).is(":checked")) {
+							$(this).parents("tr").find(".status-no").removeAttr("style").text("待确认");
+						}
+					})
+
 					self.chosenOrders.removeAll();
 					success_msg("提示成功，请等待销售确认后操作。")
 				} else {
@@ -190,6 +191,7 @@ var OrderContext = function() {
 			fail_msg("请选择产品订单！");
 			return;
 		} else {
+
 			// 判断是否是相同产品
 			var data = self.chosenOrders()[0].split(";");
 			var product_pk = data[1];
@@ -225,7 +227,7 @@ var OrderContext = function() {
 					return;
 				}
 			}
-
+			startLoadingSimpleIndicator("检测中……");
 			var product_name = data[7];
 			var product_model = data[8];
 
@@ -246,8 +248,7 @@ var OrderContext = function() {
 						}
 					}
 				}
-
-				console.log(result);
+				endLoadingIndicator();
 				if (result.length != 0) {
 					var msg = "系统检测到" + result + "也是相同的产品和团期，是否添加一起进行操作？"
 					$.layer({
@@ -358,8 +359,8 @@ var OrderContext = function() {
 				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(airLayer);
-					startLoadingIndicator("保存中...");
 					layer.close(index);
+					startLoadingIndicator("保存中...");
 					var json = '{"air_comment":"' + $(".air_comment").val().replace(/\n/g, ";") + '","comment":"'
 							+ $(".comment").val().replace(/\n/g, ";") + '","has_ticket":"' + hasTicket
 							+ '","team_numbers":"' + $("#txt-team-numbers").val() + '","data":[';
@@ -390,13 +391,14 @@ var OrderContext = function() {
 						url : self.apiurl + 'product/createProductOrder',
 						data : data
 					}).success(function(str) {
+						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
 							self.chosenOrders.removeAll();
 						} else {
 							fail_msg("提交失败，请联系管理员！");
 						}
-						endLoadingIndicator();
+
 					});
 				}
 			}

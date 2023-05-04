@@ -40,14 +40,13 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bsOrder.pk"></input> <input type="hidden"
 						data-bind="value:order().independent_flg" name="bsOrder.independent_flg"></input> <input type="hidden"
-						data-bind="value:order().confirm_flg" name="bsOrder.confirm_flg" id="confirm-flg"></input> <input type="hidden"
 						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>
 							<div class="ip fix-width">
 								<input type="text" id="txt-client-employee-name" class="ip-" disabled="disabled"
-									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" required="required" />
+									data-bind="value: employee().name" required="required" />
 							</div>
 							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
 								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" required="required" />
@@ -76,14 +75,8 @@
 						<div class="col-md-6">
 							<label class="l">出团日期</label>
 							<div class="ip">
-								<!-- ko if:order().operate_flg=="N" -->
 								<input type="text" id="departure" class="ip- date-picker" data-bind="value: order().departure_date"
 									placeholder="出团日期" name="bsOrder.departure_date" />
-								<!-- /ko -->
-								<!-- ko if:order().operate_flg!="N" -->
-								<input type="text" id="departure" class="ip-" disabled="disabled" data-bind="value: order().departure_date" />
-								<input type="hidden" data-bind="value: order().departure_date" name="bsOrder.departure_date" />
-								<!-- /ko -->
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -130,15 +123,6 @@
 							<label class="l">FLY</label>
 							<div class="ip fix-width">
 								<input type="text" data-bind="value:order().fy" name="bsOrder.fy" class="ip-" placeholder="FLY" />
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat required">
-						<div class="col-md-6">
-							<label class="l">确认日期</label>
-							<div class="ip">
-								<input type="text" required="required" data-bind="value:order().confirm_date" name="bsOrder.confirm_date"
-									class="ip- date-picker" placeholder="确认日期" />
 							</div>
 						</div>
 					</div>
@@ -196,44 +180,38 @@
 											<!-- 	<th style="width: 10%">分房组</th>
 											<th style="width: 9%"></th>
 											<th style="width: 9%"></th> -->
-											<!-- ko if:$root.order().lock_flg=="N" && $root.order().operate_flg=="N" -->
 											<th style="width: 7%"></th>
-											<!-- /ko -->
 										</tr>
 									</thead>
 									<tbody data-bind="foreach: passengers">
 										<tr>
 											<td><input type="radio" data-bind="value:$data.chairman,checked:'Y'" name="team_chairman" /></td>
 											<td st="name-index" data-bind="text:$data.name_index"></td>
-											<td><input type="text" data-bind="value:$data.name"  class="ip-" style="width: 90%" st="name" /></td>
+											<td><input type="text" data-bind="value:$data.name" class="ip-" style="width: 90%" st="name" /></td>
 											<td><select class="form-control" data-bind="value:$data.sex" style="height: 34px" st="sex">
 													<option value="">选择</option>
 													<option value="M">男</option>
 													<option value="F">女</option>
 											</select></td>
-											<td><input type="text" data-bind="value:$data.age"  class="ip-" style="width: 90%" st="age" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_A"  class="ip-" style="width: 90%" class="edit"
+											<td><input type="text" data-bind="value:$data.age" class="ip-" style="width: 90%" st="age" /></td>
+											<td><input type="text" data-bind="value:$data.cellphone_A" class="ip-" style="width: 90%" class="edit"
 												st="cellphone_A" /></td>
 											<td><input type="text" data-bind="value:$data.cellphone_B" class="ip-" style="width: 90%" class="edit"
 												st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" maxlength="18" class="ip-" oninput="autoCaculate();autoPrice();"
-												style="width: 90%" st="id" /></td>
+											<td><input type="text" data-bind="value:$data.id" maxlength="18" class="ip-"
+												oninput="autoCaculate();autoPrice();" style="width: 90%" st="id" /></td>
 											<td><input type="text" style="width: 90%" st="price" class="ip-" oninput="autoPrice()" class="edit"
 												data-bind="value:$data.price" /></td>
-											<!-- ko if:$root.order().lock_flg=="N" && $root.order().operate_flg=="N" -->
 											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
-											<!-- /ko -->
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
-						<!-- ko if:order().lock_flg=='N'&& $root.order().operate_flg=="N" -->
 						<div align="right">
 							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
 								class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 						</div>
-						<!-- /ko -->
 					</div>
 					<hr />
 					<hr />
@@ -249,51 +227,6 @@
 
 				<div align="right">
 					<a type="submit" class="btn btn-green btn-r" data-bind="click: updateOrder">保存</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="client-pick" style="display: none;">
-		<div class="main-container">
-			<div class="main-box" style="width: 600px">
-				<div class="form-group">
-					<div class="span8">
-						<label class="col-md-2 control-label">姓名</label>
-						<div class="col-md-6">
-							<input type="text" id="client_name" class="form-control" placeholder="姓名" />
-						</div>
-					</div>
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchClientEmployee }">搜索</button>
-					</div>
-				</div>
-				<div class="list-result">
-					<table class="table table-striped table-hover">
-						<thead>
-							<tr role="row">
-								<th>姓名</th>
-								<th>财务主体</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: clientEmployees">
-							<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data.name,$data.pk)}}">
-								<td data-bind="text: $data.name"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="pagination clearfloat">
-						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums -->
-						<!-- ko if: $data == $root.currentPage() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage() -->
-						<a data-bind="text: $data, click: $root.turnPage"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
-					</div>
 				</div>
 			</div>
 		</div>

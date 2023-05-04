@@ -18,6 +18,8 @@
 		<result column="order_pk" property="order_pk" jdbcType="CHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="lock_flg" property="lock_flg" jdbcType="VARCHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
 	</resultMap>
 
@@ -39,7 +41,9 @@
 		order_pk,
 		create_time,
 		update_time,
-		price
+		price,
+		lock_flg,
+		delete_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -144,6 +148,9 @@
 			<if test="price != null">
 				price,
 			</if>
+			<if test="lock_flg != null">
+				lock_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -196,6 +203,9 @@
 			</if>
 			<if test="price != null">
 				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="lock_flg != null">
+				#{lock_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -251,6 +261,12 @@
 			</if>
 			<if test="price != null">
 				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="lock_flg != null">
+				lock_flg = #{lock_flg,jdbcType=VARCHAR},
+			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

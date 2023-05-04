@@ -448,6 +448,7 @@ public class OrderServiceImpl implements OrderService {
 			// 更新预算订单
 			BudgetStandardOrderBean bsOrder = bsoDao.selectByPrimaryKey(order.getPk());
 			bsOrder.setConfirm_flg("F");
+			bsOrder.setCancel_flg("Y");
 			bsoDao.update(bsOrder);
 
 		}
@@ -515,6 +516,7 @@ public class OrderServiceImpl implements OrderService {
 			// 更新预算订单
 			BudgetNonStandardOrderBean bnsOrder = bnsoDao.selectByPrimaryKey(order.getPk());
 			bnsOrder.setConfirm_flg("F");
+			bnsOrder.setCancel_flg("Y");
 			bnsoDao.update(bnsOrder);
 
 		}
@@ -599,11 +601,6 @@ public class OrderServiceImpl implements OrderService {
 			bso.setPk(order.getPk());
 
 			int old = Integer.valueOf(order.getName_confirm_status());
-			// // 尾款不为0不能进行二次名单确认
-			// if (old == 4) {
-			//
-			// }
-
 			if (old < 5) {
 				bso.setName_confirm_status(String.valueOf(old + 1));
 				bsoDao.update(bso);
@@ -748,6 +745,31 @@ public class OrderServiceImpl implements OrderService {
 		TeamReportBean tr = new TeamReportBean();
 		tr.setTeam_number(team_number);
 		orderReportDao.insert(tr);
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String checkCanBeEdit(String order_pk) {
+		OrderDto order = dao.searchOrderByPk(order_pk);
+
+		// 检测产品是否锁定
+		if (order.getLock_flg().split(",")[0].equals("Y")) {
+			return "订单已锁定，请联系产品经理解锁后操作。";
+		}
+
+		// // 标准订单
+		// if (order.getStandard_flg().equals("Y")) {
+		//
+		// } else {
+		// // 单机票订单
+		// if (order.getIndependent_flg().equals("A")) {
+		// // 检测产品是否锁定
+		// }
+		// // 非标订单
+		// else {
+		// }
+		// }
 
 		return SUCCESS;
 	}

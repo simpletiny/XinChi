@@ -60,8 +60,22 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 查询应付款涉及到的名单 related_pk -->
+		<action name="searchPayablePassengersByRelatedPk" class="airTicketPayableAction" method="searchPayablePassengersByRelatedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 查询应付款涉及到的机票信息 -->
 		<action name="searchTicketInfoByPayablePk" class="airTicketPayableAction" method="searchTicketInfoByPayablePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 查询应付款涉及到的机票信息 related_pk-->
+		<action name="searchTicketInfoByRelatedPk" class="airTicketPayableAction" method="searchTicketInfoByRelatedPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

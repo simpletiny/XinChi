@@ -41,7 +41,6 @@ var OrderContext = function() {
 				dom : '#client-pick'
 			},
 			end : function() {
-				console.log("Done");
 			}
 		});
 	};
@@ -133,7 +132,6 @@ var OrderContext = function() {
 				dom : '#bat-passenger'
 			},
 			end : function() {
-				console.log("Done");
 			}
 		});
 	};

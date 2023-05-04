@@ -42,12 +42,19 @@ public class AirTicketPaidDetailDAOImpl extends SqlSessionDaoSupport implements 
 
 	@Override
 	public AirTicketPaidDetailBean selectByPrimaryKey(String id) {
-		return (AirTicketPaidDetailBean) daoUtil.selectByPK("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByPrimaryKey", id);
+		return (AirTicketPaidDetailBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByPrimaryKey", id);
+	}
+
+	@Override
+	public List<AirTicketPaidDetailBean> selectByPayablePk(String payable_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByPayablePk", payable_pk);
 	}
 
 	@Override
 	public List<AirTicketPaidDetailBean> selectByParam(AirTicketPaidDetailBean bean) {
-		List<AirTicketPaidDetailBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByParam", bean);
+		List<AirTicketPaidDetailBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByParam", bean);
 		return list;
 	}
 
@@ -63,7 +70,8 @@ public class AirTicketPaidDetailDAOImpl extends SqlSessionDaoSupport implements 
 
 	@Override
 	public AirTicketPaidDetailBean selectGroupDetailByRelatedPk(String related_pk) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectGroupDetailByRelatedPk", related_pk);
+		return daoUtil.selectOneValueByParam(
+				"com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectGroupDetailByRelatedPk", related_pk);
 	}
 
 }

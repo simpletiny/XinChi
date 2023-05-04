@@ -47,4 +47,8 @@ public interface AirTicketPayableDAO {
 	public List<AirTicketPayableBean> selectByPage(Page<AirTicketPayableBean> page);
 
 	public List<AirTicketPayableBean> selectByPks(List<String> pks);
+
+	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk);
+
+	public void deleteByRelatedPk(String related_pk);
 }

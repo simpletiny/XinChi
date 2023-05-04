@@ -14,12 +14,12 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String age;
 	private String wechat;
 	private String wechat1;
-	
+
 	private String qq;
 
 	private String cellphone;
 	private String cellphone1;
-	
+
 	private String telephone;
 	private String fax;
 	private String type;
@@ -54,10 +54,10 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String quit_flg;
 
 	private String head_photo;
-	
+
 	private String useful_time;
-	private int year_order_count;
-	private int last_order_period;
+	private Integer year_order_count;
+	private Integer last_order_period;
 	private List<ClientEmployeeUserBean> employee_users;
 	//
 	private String new_client_pk;
@@ -335,22 +335,6 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 		this.useful_time = useful_time;
 	}
 
-	public int getYear_order_count() {
-		return year_order_count;
-	}
-
-	public int getLast_order_period() {
-		return last_order_period;
-	}
-
-	public void setYear_order_count(int year_order_count) {
-		this.year_order_count = year_order_count;
-	}
-
-	public void setLast_order_period(int last_order_period) {
-		this.last_order_period = last_order_period;
-	}
-
 	public String getWechat1() {
 		return wechat1;
 	}
@@ -373,6 +357,22 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setHead_photo(String head_photo) {
 		this.head_photo = head_photo;
+	}
+
+	public Integer getYear_order_count() {
+		return year_order_count;
+	}
+
+	public Integer getLast_order_period() {
+		return last_order_period;
+	}
+
+	public void setYear_order_count(Integer year_order_count) {
+		this.year_order_count = year_order_count;
+	}
+
+	public void setLast_order_period(Integer last_order_period) {
+		this.last_order_period = last_order_period;
 	}
 
 }

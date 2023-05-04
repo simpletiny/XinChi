@@ -52,11 +52,17 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	private String voucher_number;
 
+	private String first_date;
+	private String passenger;
+	private String from_to_city;
+
 	// search options
 	private List<String> statuses;
 	private BigDecimal money_from;
 	private BigDecimal money_to;
 	private String receiver;
+	private String first_date_from;
+	private String first_date_to;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
@@ -256,6 +262,46 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
+	}
+
+	public String getFirst_date() {
+		return first_date;
+	}
+
+	public String getPassenger() {
+		return passenger;
+	}
+
+	public String getFrom_to_city() {
+		return from_to_city;
+	}
+
+	public void setFirst_date(String first_date) {
+		this.first_date = first_date;
+	}
+
+	public void setPassenger(String passenger) {
+		this.passenger = passenger;
+	}
+
+	public void setFrom_to_city(String from_to_city) {
+		this.from_to_city = from_to_city;
+	}
+
+	public String getFirst_date_from() {
+		return first_date_from;
+	}
+
+	public String getFirst_date_to() {
+		return first_date_to;
+	}
+
+	public void setFirst_date_from(String first_date_from) {
+		this.first_date_from = first_date_from;
+	}
+
+	public void setFirst_date_to(String first_date_to) {
+		this.first_date_to = first_date_to;
 	}
 
 }

@@ -4,8 +4,7 @@ var ViewContext = function() {
 	self.chosenViews = ko.observableArray([]);
 
 	self.createView = function() {
-		window.location.href = self.apiurl
-				+ "templates/culture/product-research-view-creation.jsp";
+		window.location.href = self.apiurl + "templates/culture/product-research-view-creation.jsp";
 	};
 
 	self.views = ko.observable({
@@ -24,16 +23,16 @@ var ViewContext = function() {
 		});
 	}
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中……");
 		var param = "view.label=" + self.chosenLabel();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'culture/searchProductResearchViewByPage',
-				param, function(data) {
-					self.views(data.views);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'culture/searchProductResearchViewByPage', param, function(data) {
+			self.views(data.views);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-				});
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+			endLoadingIndicator();
+		});
 	};
 
 	self.search = function() {
@@ -52,35 +51,26 @@ var ViewContext = function() {
 			fail_msg("删除每次只能选中一个");
 			return;
 		} else if (self.chosenViews().length == 1) {
-			$
-					.layer({
-						area : ['auto', 'auto'],
-						dialog : {
-							msg : '确认要删除这篇文章吗？',
-							btns : 2,
-							type : 4,
-							btn : ['确认', '取消'],
-							yes : function(index) {
-								$
-										.ajax(
-												{
-													type : "POST",
-													url : self.apiurl
-															+ 'culture/deleteProductResearchView',
-													data : "view_pk="
-															+ self
-																	.chosenViews()
-												})
-										.success(
-												function(str) {
-													if (str == "OK") {
-														window.location.href = self.apiurl
-																+ "templates/culture/product-research-view.jsp";
-													}
-												});
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '确认要删除这篇文章吗？',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'culture/deleteProductResearchView',
+							data : "view_pk=" + self.chosenViews()
+						}).success(function(str) {
+							if (str == "OK") {
+								window.location.href = self.apiurl + "templates/culture/product-research-view.jsp";
 							}
-						}
-					});
+						});
+					}
+				}
+			});
 		}
 	};
 
@@ -116,8 +106,7 @@ var ViewContext = function() {
 			}
 		}
 
-		var data = "label.label_name=" + label + "&label.label_index="
-				+ (self.labels().length + 1);
+		var data = "label.label_name=" + label + "&label.label_index=" + (self.labels().length + 1);
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'culture/createLabel',
@@ -212,8 +201,7 @@ var ViewContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
