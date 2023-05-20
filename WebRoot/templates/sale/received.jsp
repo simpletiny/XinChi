@@ -138,7 +138,7 @@ tr td {
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
@@ -216,23 +216,6 @@ tr td {
 								<!-- /ko -->
 							</tr>
 						</tbody>
-						<tr role="row">
-							<td></td>
-							<td>合计</td>
-							<td data-bind="text:totalReceived()" class="rmb"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<td></td>
-							</s:if>
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -377,6 +360,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/sale/received.js"></script>
+	<script src="<%=basePath%>static/js/sale/received.js?v1.001"></script>
 </body>
 </html>

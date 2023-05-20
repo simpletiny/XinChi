@@ -73,6 +73,20 @@ public class AirTicketPaidDetailAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String detail_pk;
+	private String product_manager_number;
+	private String belong_month;
+
+	/**
+	 * 临时方法，在票务添加完押金扣款的责任产品经理之后删除。
+	 * 
+	 * @return
+	 */
+	public String addProductManager() {
+		resultStr = service.addProductManger(detail_pk, product_manager_number, belong_month);
+		return SUCCESS;
+	}
+
 	private String json;
 
 	private AirTicketPaidDetailBean detail;
@@ -187,6 +201,30 @@ public class AirTicketPaidDetailAction extends BaseAction {
 
 	public void setPayment_detail(PaymentDetailBean payment_detail) {
 		this.payment_detail = payment_detail;
+	}
+
+	public String getDetail_pk() {
+		return detail_pk;
+	}
+
+	public String getProduct_manager_number() {
+		return product_manager_number;
+	}
+
+	public void setDetail_pk(String detail_pk) {
+		this.detail_pk = detail_pk;
+	}
+
+	public void setProduct_manager_number(String product_manager_number) {
+		this.product_manager_number = product_manager_number;
+	}
+
+	public String getBelong_month() {
+		return belong_month;
+	}
+
+	public void setBelong_month(String belong_month) {
+		this.belong_month = belong_month;
 	}
 
 }

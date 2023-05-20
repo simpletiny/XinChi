@@ -15,6 +15,8 @@ import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
@@ -182,6 +184,25 @@ public class AirTicketPayableAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<AirServiceFeeDto> service_fees;
+	private List<AirOtherPaymentDto> deposit_deducts;
+	private List<AirOtherPaymentDto> none_business_payments;
+
+	private AirServiceFeeDto summary_option;
+
+	/**
+	 * 搜索票务财务汇总数据
+	 * 
+	 * @return
+	 */
+	public String searchAirPayableSummary() {
+		service_fees = service.searchServiceFees(summary_option);
+		deposit_deducts = service.searchDepositDeducts(summary_option);
+		none_business_payments = service.searchNoneBussinessPayment(summary_option);
+
+		return SUCCESS;
+	}
+
 	public List<AirTicketPayableBean> getPayables() {
 		return payables;
 	}
@@ -276,5 +297,37 @@ public class AirTicketPayableAction extends BaseAction {
 
 	public void setRelated_pk(String related_pk) {
 		this.related_pk = related_pk;
+	}
+
+	public List<AirServiceFeeDto> getService_fees() {
+		return service_fees;
+	}
+
+	public void setService_fees(List<AirServiceFeeDto> service_fees) {
+		this.service_fees = service_fees;
+	}
+
+	public AirServiceFeeDto getSummary_option() {
+		return summary_option;
+	}
+
+	public void setSummary_option(AirServiceFeeDto summary_option) {
+		this.summary_option = summary_option;
+	}
+
+	public List<AirOtherPaymentDto> getDeposit_deducts() {
+		return deposit_deducts;
+	}
+
+	public void setDeposit_deducts(List<AirOtherPaymentDto> deposit_deducts) {
+		this.deposit_deducts = deposit_deducts;
+	}
+
+	public List<AirOtherPaymentDto> getNone_business_payments() {
+		return none_business_payments;
+	}
+
+	public void setNone_business_payments(List<AirOtherPaymentDto> none_business_payments) {
+		this.none_business_payments = none_business_payments;
 	}
 }

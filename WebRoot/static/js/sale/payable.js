@@ -728,7 +728,7 @@ var OrderContext = function() {
 
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

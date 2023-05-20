@@ -236,7 +236,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-confirm-edit.js"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-confirm-edit.js?v1.001"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-common.js"></script>
 </body>
 </html>

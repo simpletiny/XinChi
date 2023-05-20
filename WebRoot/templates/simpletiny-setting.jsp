@@ -18,6 +18,7 @@
 			<%-- 	<a href="<%=basePath%>simpletiny/autoUpdateClientUser">修复公开客户对应关系</a> --%>
 			<%-- <a href="<%=basePath%>simpletiny/autoUpdateClientRelationConnect">修复客户关系交流信息</a> --%>
 			<a href="<%=basePath%>simpletiny/autoUpdateProductReport">修正单团核算表</a>
+			<a href="<%=basePath%>simpletiny/autoInsertDepositNumber">生成押金单号</a>
 			<%-- <a href="<%=basePath%>simpletiny/fixClientRelation" >修复FLY</a> --%>
 			<%-- <form action="<%=basePath%>simpletiny/updateProductDetail">
 				<input type="submit" value="修正产品信息"></input>

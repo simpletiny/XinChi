@@ -282,7 +282,7 @@ tr td {
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
-							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -309,7 +309,7 @@ tr td {
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
-							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -362,6 +362,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.001"></script>
 </body>
 </html>

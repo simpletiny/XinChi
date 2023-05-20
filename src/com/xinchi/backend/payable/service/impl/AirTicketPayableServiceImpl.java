@@ -16,6 +16,8 @@ import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
@@ -217,6 +219,21 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk) {
 
 		return dao.selectByRelatedPk(related_pk);
+	}
+
+	@Override
+	public List<AirServiceFeeDto> searchServiceFees(AirServiceFeeDto summary_option) {
+		return dao.searchServiceFees(summary_option);
+	}
+
+	@Override
+	public List<AirOtherPaymentDto> searchDepositDeducts(AirServiceFeeDto summary_option) {
+		return airTicketPaidDetailDao.searchDepositDeducts(summary_option);
+	}
+
+	@Override
+	public List<AirOtherPaymentDto> searchNoneBussinessPayment(AirServiceFeeDto summary_option) {
+		return airTicketPaidDetailDao.searchNoneBussinessPayment(summary_option);
 	}
 
 }

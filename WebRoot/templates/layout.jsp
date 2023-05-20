@@ -45,6 +45,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	display: block;
 	background: white;
 }
+
 </style>
 </head>
 <body>
@@ -62,10 +63,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div style="display: block;">
 				<font size="4" color="white">让组团收客多快好省。&nbsp;&nbsp;&nbsp;以价值创造为核心：开放、透明、坦诚、共赢。&nbsp;&nbsp;&nbsp;做世界一流旅游运营商。&nbsp;&nbsp;&nbsp;以奋斗者为本，与优秀者为伍。</font>
 			</div>
-		<div class="user-time">
-			<input type="hidden" id="hidden-server-date" value='${user.current_date}'/>
-			<s:property value="#session.user.current_date" />
-		</div>
+			<div class="user-time">
+				<input type="hidden" id="hidden-server-date" value='${user.current_date}' />
+				<s:property value="#session.user.current_date" />
+			</div>
 			<div class="user-status">
 				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
 					style="margin-right: 100px; color: pink; font-size: 150%; text-decoration: none;">名单确认</a>
@@ -90,7 +91,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		<ul class="menu-tree" style="padding-top: 30px;">
 			<s:if test="!#session.user.user_roles.contains('CPRODUCT')">
 				<li class="culture" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
-						class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>企业学院</a>
+						class="fa fa-users1 fa-lg fa-fw"></i>企业学院</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/culture/history-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰历史</a></li>
 						<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
@@ -121,7 +122,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			</s:if>
 			<s:if test="!#session.user.user_roles.contains('CPRODUCT')">
 				<li class="rule" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/rule-view.jsp"><i
-						class="fa fa-users1 fa-users1 fa-lg fa-fw"></i>公司制度</a>
+						class="fa fa-users1 fa-lg fa-fw"></i>公司制度</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/culture/rule-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>通用制度</a></li>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
@@ -162,7 +163,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 			</s:if>
 			<s:else>
-			<li class="client"><a href="<%=basePath%>templates/accounting/reimbursement.jsp"
+				<li class="client"><a href="<%=basePath%>templates/accounting/reimbursement.jsp"
 					onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
@@ -291,9 +292,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/air-received-detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>押金退还记录</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
-
+						<li><a href="<%=basePath%>templates/ticket/ticket-payable-summary.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>财务汇总</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('ACCOUNTING')">
@@ -368,7 +371,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/system/base-data.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>基础数据</a></li>
 					</s:if>
 					<s:if test="#session.user.user_roles.contains('ADMIN')">
-					<li><a href="<%=basePath%>templates/system/roles.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
+						<li><a href="<%=basePath%>templates/system/roles.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>角色权限管理</a></li>
 					</s:if>
 				</ol></li>
 
@@ -386,7 +389,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
-	<script src="<%=basePath%>static/js/utils.js"></script>
+	<script src="<%=basePath%>static/js/utils.js?v1.001"></script>
 	<script src="<%=basePath%>static/js/layout.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

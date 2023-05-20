@@ -83,11 +83,7 @@ var ReceivedContext = function() {
 		'TAIL98' : '98清尾'
 	};
 
-	// 计算合计
-	self.totalReceived = ko.observable(0);
-
 	self.refresh = function() {
-		var totalReceived = 0;
 
 		startLoadingSimpleIndicator("搜索中");
 		var param = $("form").serialize();
@@ -103,15 +99,13 @@ var ReceivedContext = function() {
 
 		$.getJSON(self.apiurl + 'sale/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
-			// 计算合计
-			$(self.receiveds()).each(function(idx, data) {
-				totalReceived += data.received;
-			});
-
-			self.totalReceived(totalReceived);
-
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			$("#main-table").tableSum({
+				title_index : 2,
+				accept : [3]
+			})
 
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();

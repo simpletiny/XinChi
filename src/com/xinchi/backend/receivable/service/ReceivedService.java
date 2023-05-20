@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.ClientReceivedDetailBean;
+import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
 import com.xinchi.tools.Page;
@@ -57,4 +58,6 @@ public interface ReceivedService extends BaseService {
 	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
 
 	public String rejectRecived(String related_pks);
+
+	public List<ReceivedDetailDto> searchAllAboutReceivedByRelatedPks(String related_pk, String from_where);
 }

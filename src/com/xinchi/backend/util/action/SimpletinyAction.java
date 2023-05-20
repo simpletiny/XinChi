@@ -5,6 +5,7 @@ import static com.xinchi.common.SimpletinyString.isEmpty;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,12 +42,15 @@ import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
+import com.xinchi.backend.supplier.service.SupplierDepositService;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
 import com.xinchi.backend.ticket.service.AirTicketNeedService;
 import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
+import com.xinchi.backend.util.dao.TeamNumberDAO;
+import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.backend.util.service.SimpletinyService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
@@ -73,6 +77,8 @@ import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
+import com.xinchi.bean.SupplierDepositBean;
+import com.xinchi.bean.TeamNumberBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.bean.TempBean;
 import com.xinchi.bean.UserBaseBean;
@@ -905,6 +911,70 @@ public class SimpletinyAction extends BaseAction {
 
 		resultStr = SUCCESS;
 		return SUCCESS;
+	}
+
+	@Autowired
+	private SupplierDepositService supplierDepositService;
+
+	@Autowired
+	private TeamNumberDAO teamNumberDao;
+
+	public String autoInsertDepositNumber() {
+
+		List<SupplierDepositBean> deposits = supplierDepositService.selectByParam(null);
+		int len = deposits.size();
+		String[] numbers = doGenerateNumber(NumberService.SOURCE_DEPOSIT_NUMBER, len + 1);
+
+		for (int i = 0; i < len; i++) {
+			SupplierDepositBean deposit = deposits.get(i);
+			deposit.setDeposit_number(numbers[i]);
+			supplierDepositService.update(deposit);
+		}
+
+		String last = numbers[len];
+
+		TeamNumberBean tb = new TeamNumberBean();
+		tb.setUser_pk("dHV3eXJ8fHl4gHF3d3p4fQ");
+		tb.setType("D");
+		tb.setTeam_number(last);
+		teamNumberDao.insert(tb);
+
+		return SUCCESS;
+	}
+
+	private static String addOne(String value, String source) {
+
+		int strLength = value.length();
+		String last = value.substring(strLength - 1);
+		String first = value.substring(0, strLength - 1);
+		int nextCharIndex = source.indexOf(last) + 1;
+		if (nextCharIndex >= 36) {
+			String result = addOne(first, source) + source.charAt(0);
+			char[] max = new char[4];
+			Arrays.fill(max, source.charAt(0));
+			if (result.equals(String.valueOf(max))) {
+				return "YOU ARE RICH!";
+			} else {
+				return result;
+			}
+		} else {
+			return first + source.charAt(nextCharIndex);
+		}
+	}
+
+	public static String[] doGenerateNumber(String source, int len) {
+		String result[] = new String[len];
+
+		// String user_pk = "dHV3eXJ8fHl4gHF3d3p4fQ";
+		for (int i = 0; i < len; i++) {
+			if (i == 0) {
+				result[i] = "D00" + source.substring(0, 4);
+			} else {
+				result[i] = addOne(result[i - 1], source);
+			}
+
+		}
+		return result;
 	}
 
 	public List<PayableBean> getPayables() {

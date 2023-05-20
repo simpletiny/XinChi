@@ -157,6 +157,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			String passenger_pks = obj.getString("passenger_pks");
 			String pkkk[] = passenger_pks.split(",");
 
+			int people_count = pkkk.length;
+
 			// 保存机票供应商应付款
 			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
 			String payable_pk = DBCommonUtil.genPk();
@@ -170,6 +172,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(pkkk[0]);
 			airTicketPayable.setPassenger(passenger.getName());
+			airTicketPayable.setPeople_count(people_count);
 
 			BigDecimal cost = new BigDecimal(ticket_cost);
 			JSONArray ticket_info = obj.getJSONArray("ticket_info");
@@ -188,7 +191,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					airTicketPayable.setFrom_to_city(from_to_city);
 					airTicketPayable.setFirst_date(ticket_date);
 					airTicketPayable.setComment(
-							ticket_date + SimpletinyString.left(passenger.getName(), 4) + pkkk.length + "人机票款。");
+							ticket_date + SimpletinyString.left(passenger.getName(), 4) + people_count + "人机票款。");
 				}
 
 				// 保存乘客详细信息
@@ -253,8 +256,10 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 						payable_charges.setBudget_balance(charges);
 						payable_charges.setPaid(BigDecimal.ZERO);
 						payable_charges.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_CHARGES);
+
 						payable_charges.setComment(payable_charges.getFirst_date()
-								+ SimpletinyString.left(passenger.getName(), 4) + pkkk.length + "人票务手续费。");
+								+ SimpletinyString.left(passenger.getName(), 4) + people_count + "人票务手续费。");
+
 						airTicketPayableDao.insert(payable_charges);
 
 					} catch (Exception e) {
@@ -465,6 +470,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 								.add(name.getChange_cost()));
 				airTicketChangeLogDao.delete(name.getChange_pk());
 				name.setChange_pk("");
+				name.setChange_cost(BigDecimal.ZERO);
 			}
 			name.setStatus("I");
 			airTicketNameListDAO.update(name);

@@ -43,6 +43,21 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	private String delete_flg;
 
+	public int normalHashCode() {
+		int result = 17;
+		if (null != cellphone_A)
+			result = 31 * result + cellphone_A.hashCode();
+		if (null != cellphone_B)
+			result = 31 * result + cellphone_B.hashCode();
+		if (null != price)
+			result = 31 * result + String.valueOf(price.doubleValue()).hashCode();
+		if (null != chairman)
+			result = 31 * result + chairman.hashCode();
+		if (null != name_index)
+			result = 31 * result + name_index;
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {

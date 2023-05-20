@@ -42,7 +42,7 @@
 						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: upload">批量上传</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: create">新建</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: receive">退还</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: receive">退还申请</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: delete_deposit">删除</button>
 						</div>
 					</div>
@@ -84,6 +84,7 @@
 						<thead>
 							<tr role="row">
 								<th></th>
+								<th>押金单号</th>
 								<th>支出账户</th>
 								<th>收款方</th>
 								<th>金额</th>
@@ -98,6 +99,7 @@
 						<tbody id="tbody-data" data-bind="foreach:deposits">
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenDeposits" /></td>
+								<td data-bind="text: $data.deposit_number"></td>
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
@@ -260,25 +262,25 @@
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">收款账户</label>
 					<div class="ip" style="width: 70%">
-						<select class="form-control" name="deposit.account" data-bind="options: accounts, optionsCaption: '-- 请选择 --'"
-							required="required"></select>
+						<select class="form-control" name="deposit.account"
+							data-bind="options: accounts,value:account(), optionsCaption: '-- 请选择 --'" required="required"></select>
 					</div>
 				</div>
 				<div class="col-md-4 required">
 					<label class="l" style="width: 30%">退还总金额</label>
 					<div class="ip" style="width: 70%">
 						<input type="number" class="ip-default" placeholder="退还总金额" name="deposit.money" id="sum-money"
-							required="required" />
+							required="required" data-bind="value:sum_money()" />
 					</div>
 				</div>
 				<div class="col-md-4 required">
-					<label class="l" style="width: 30%">入账时间</label>
+					<label class="l" style="width: 30%">退还日期</label>
 					<div class="ip" style="width: 70%">
-						<input type="text" name="deposit.time" placeholder="请准确填写避免冲突" class="form-control datesecond-picker"
-							required="required" />
+						<input type="text" name="deposit.time" placeholder="退还日期" class="form-control date-picker" required="required" />
 					</div>
 				</div>
 			</div>
+
 			<hr />
 			<div data-bind="foreach: chosenDeposits" id="div-allot">
 				<div>
@@ -308,14 +310,20 @@
 						<div class="col-md-6 required">
 							<label class="l">分配金额</label>
 							<div class="ip">
-								<input type="number" class="ip-default" placeholder="押金金额" data-bind="attr:{'name':'money_'+$index()}"
-									st="money" min="1" required="required" />
+								<input type="number" class="ip-default" placeholder="押金金额"
+									data-bind="attr:{'name':'money_'+$index()},value:$data.balance" st="money" min="1" required="required" />
+							</div>
+						</div>
+						<div class="col-md-6 required">
+							<label class="l" >备注</label>
+							<div class="ip">
+								<textarea rows="3" class="ip-default" cols="30" maxlength="200" st="comment" placeholder="备注"></textarea>
 							</div>
 						</div>
 					</div>
 				</div>
-				<hr />
 			</div>
+			<hr/>
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
 					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" class="file-img"
@@ -384,7 +392,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/file-upload-office.js?v1.0"></script>
-	<script src="<%=basePath%>static/js/ticket/deposit.js"></script>
+	<script src="<%=basePath%>static/js/file-upload-office.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/deposit.js?v1.001"></script>
 </body>
 </html>

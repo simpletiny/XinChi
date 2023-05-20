@@ -365,7 +365,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		Set<SaleOrderNameListBean> addNameList = (Set<SaleOrderNameListBean>) result.get(1);
 		Set<SaleOrderNameListBean> deleteNameList = (Set<SaleOrderNameListBean>) result.get(2);
 		Set<SaleOrderNameListBean> modifyNameList = (Set<SaleOrderNameListBean>) result.get(3);
-		String passenger_captain = (String) result.get(4);
+		Set<SaleOrderNameListBean> normalModifyNames = (Set<SaleOrderNameListBean>) result.get(4);
+		String passenger_captain = (String) result.get(5);
 
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		String team_number = old.getTeam_number();
@@ -529,6 +530,16 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				airTicketNameListDao.update(modifyAirName);
 			}
 		}
+		// 普通修改的名单
+		for (SaleOrderNameListBean n : normalModifyNames) {
+			nameListDao.update(n);
+			AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
+			if (null != modifyAirName) {
+				modifyAirName.setCellphone_A(n.getCellphone_A());
+				modifyAirName.setCellphone_B(n.getCellphone_B());
+				airTicketNameListDao.update(modifyAirName);
+			}
+		}
 		// 更新订单信息
 		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
@@ -634,6 +645,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 		// 修改的名单
 		Set<SaleOrderNameListBean> modifyNames = new HashSet<SaleOrderNameListBean>();
+		// 普通修改
+		Set<SaleOrderNameListBean> normalModifyNames = new HashSet<SaleOrderNameListBean>();
 		// 删除的名单
 		Set<SaleOrderNameListBean> deleteNames = new HashSet<SaleOrderNameListBean>();
 		for (SaleOrderNameListBean n : oldNameList) {
@@ -642,6 +655,9 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 				if (n.getPk().equals(newn.getPk())) {
 					if (!n.equals(newn)) {
 						modifyNames.add(newn);
+					} else {
+						if (n.normalHashCode() != newn.normalHashCode())
+							normalModifyNames.add(newn);
 					}
 					isDelete = false;
 				}
@@ -683,6 +699,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		result.add(addNames);
 		result.add(deleteNames);
 		result.add(modifyNames);
+		result.add(normalModifyNames);
 		result.add(passenger_captain);
 		return result;
 	}

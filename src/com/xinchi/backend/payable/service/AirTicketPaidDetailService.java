@@ -60,4 +60,6 @@ public interface AirTicketPaidDetailService extends BaseService {
 	public String createPaymentDetail(PaymentDetailBean payment_detail);
 
 	public String createDeduct(String json);
+
+	public String addProductManger(String detail_pk, String product_manager_number, String belong_month);
 }

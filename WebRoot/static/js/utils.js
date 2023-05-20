@@ -487,6 +487,7 @@ function dataURLtoFile(dataurl, filename) {
 				title_index:1,
 				accept:[],
 				except:[],
+				style:[],
 		}
 		
 		
@@ -495,6 +496,7 @@ function dataURLtoFile(dataurl, filename) {
 			default_options.title_index = options.title_index||default_options.title_index;
 			default_options.accept = options.accept||default_options.accept;
 			default_options.except = options.except ||default_options.except;
+			default_options.style = options.style ||default_options.style;
 		}
 		
 		default_options.except.push(default_options.title_index);
@@ -543,29 +545,15 @@ function dataURLtoFile(dataurl, filename) {
 					continue;
 				}
 			}
-			
-			td.text(sum[i]);
+			if((''+sum[i]).indexOf(".")>-1){
+				td.text(sum[i].toFixed(2));
+			}else{
+				td.text(sum[i]);
+			}
 		}
 		 $this.find("tbody:eq(0)").after(tbody);
 	}
 	
-	function caculate_sum() {
-		var len = +$("#head th:not(:first-child)").length;
-		var sum = new Array(23).fill(0);
-
-		$("#tbody-data tr").each(function() {
-			$(this).children('td:not(:first-child)').each(function() {
-				var index = $(this).index() - 1;
-
-				sum[index] += +$(this).text();
-			});
-		});
-
-		$('#total-row td:not(:first-child)').each(function() {
-			var index = $(this).index() - 1;
-			$(this).text(sum[index]);
-		});
-	}
 })(jQuery);
 
 var sleep = (ms) => {

@@ -279,8 +279,6 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 
 	@Override
 	public String backRecive(AirTicketPaidDetailBean detail, String json) {
-		UserSessionBean user = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		String related_pk = DBCommonUtil.genPk();
 		JSONArray array = JSONArray.fromObject(json);
@@ -350,7 +348,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			currentDetail.setTime(time);
 			currentDetail.setMoney(money);
 			currentDetail.setCard_account(account);
-			currentDetail.setApprove_user(user.getUser_number());
+
 			dao.insert(currentDetail);
 
 			airTicketPayable.setPaid(airTicketPayable.getPaid() == null ? BigDecimal.ZERO.add(money)
@@ -580,7 +578,16 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		CardBean card = cardDao.getCardByAccount(account);
 
 		String time = payment_detail.getTime().substring(0, 16);
-
+		/* 保存一笔票务往来详情 start */
+		AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
+		currentDetail.setAllot_money(money);
+		currentDetail.setSupplier_employee_pk(supplier_employee_pk);
+		currentDetail.setBase_pk("SIMPLE");
+		currentDetail.setRelated_pk(related_pk);
+		currentDetail.setTime(time);
+		currentDetail.setMoney(money);
+		currentDetail.setBelong_month(payment_detail.getBelong_month());
+		currentDetail.setComment(comment);
 		// 如果是收入
 		if (payment_detail.getType().equals("R")) {
 			/* 保存银行流水 start */
@@ -609,20 +616,10 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			FileUtil.saveFile(payment_detail.getVoucher_file_name(), FileFolder.SUPPLIER_RECEIVED_VOUCHER.value(),
 					subFolder);
 
-			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
-
-			currentDetail.setAllot_money(money);
-			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
-			currentDetail.setBase_pk("SIMPLE");
 			currentDetail.setType(ResourcesConstants.PAID_TYPE_RECEIVE);
 			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
-			currentDetail.setRelated_pk(related_pk);
-			currentDetail.setTime(time);
-			currentDetail.setMoney(money);
 			currentDetail.setVoucher_file(payment_detail.getVoucher_file_name());
 			currentDetail.setCard_account(account);
-			currentDetail.setComment(comment);
-
 			dao.insert(currentDetail);
 
 			/* 保存一笔票务往来详情 end */
@@ -668,34 +665,19 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 			accPaidDao.insert(waiting);
 			/* 生成待支付数据并直接写入为已支付状态 end */
 
-			/* 保存一笔票务往来详情 start */
-			AirTicketPaidDetailBean currentDetail = new AirTicketPaidDetailBean();
-
-			currentDetail.setAllot_money(money);
-			currentDetail.setSupplier_employee_pk(supplier_employee_pk);
-			currentDetail.setBase_pk("SIMPLE");
 			currentDetail.setType(ResourcesConstants.PAID_TYPE_PAY);
 			currentDetail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
-			currentDetail.setRelated_pk(related_pk);
-
-			currentDetail.setTime(time);
-			currentDetail.setMoney(money);
 			currentDetail.setConfirm_time(DateUtil.getTimeMillis());
 			currentDetail.setApprove_user(user.getUser_number());
 			currentDetail.setVoucher_number(voucher_number);
-			dao.insert(currentDetail);
 			/* 保存一笔票务往来详情 end */
 		}
-
+		dao.insert(currentDetail);
 		return SUCCESS;
 	}
 
 	@Override
 	public String createDeduct(String json) {
-		UserSessionBean user = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
-				ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
 
 		JSONObject obj = JSONObject.fromObject(json);
 
@@ -703,6 +685,13 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		String deposit_pk = obj.getString("deposit_pk");
 		String comment = obj.getString("comment");
 		String time = obj.getString("time");
+		String product_manager = obj.getString("product_manager");
+		String belong_month = obj.getString("belong_month");
+
+		UserSessionBean user = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
+				ResourcesConstants.PAY_TYPE_PIAOWU, DateUtil.getDateStr(DateUtil.YYYYMMDD));
 
 		SupplierDepositBean deposit = depositDao.selectByPrimaryKey(deposit_pk);
 		SupplierBean supplier = supplierDao.selectByPrimaryKey(deposit.getSupplier_pk());
@@ -725,6 +714,8 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		currentDetail.setApprove_user(user.getUser_number());
 		currentDetail.setVoucher_number(voucher_number);
 		currentDetail.setComment(comment);
+		currentDetail.setProduct_manager(product_manager);
+		currentDetail.setBelong_month(belong_month);
 		dao.insert(currentDetail);
 
 		// 更新航司押金款项
@@ -751,6 +742,17 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		dtp.setType(ResourcesConstants.PAID_TYPE_DEDUCT);
 		depositTicketPaidDao.insert(dtp);
 
+		return SUCCESS;
+	}
+
+	@Override
+	public String addProductManger(String detail_pk, String product_manager_number, String belong_month) {
+		AirTicketPaidDetailBean paid = dao.selectByPrimaryKey(detail_pk);
+		if (null != paid) {
+			paid.setProduct_manager(product_manager_number);
+			paid.setBelong_month(belong_month);
+			dao.update(paid);
+		}
 		return SUCCESS;
 	}
 

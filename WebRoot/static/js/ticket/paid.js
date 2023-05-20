@@ -3,9 +3,11 @@ var deductLayer;
 var depositLayer;
 var passengerCheckLayer;
 var ticketInfoCheckLayer;
+var addProductManagerLayer;
 var PaidContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
+	let server_data = $("#hidden-server-date").val();
 	self.chosenPaids = ko.observableArray([]);
 
 	self.paids = ko.observable({
@@ -13,11 +15,19 @@ var PaidContext = function() {
 		items : []
 	});
 
+	// 获取产品经理信息
+	self.users = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.users(data.users);
+	});
+
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
 	// var x = new Date();
 
-	var now = new Date(); // 当前日期
+	var now = new Date(server_data); // 当前日期
 	var nowDayOfWeek = now.getDay(); // 今天本周的第几天
 	var nowDay = now.getDate(); // 当前日
 	var nowMonth = now.getMonth(); // 当前月
@@ -70,7 +80,7 @@ var PaidContext = function() {
 		window.location.href = self.apiurl + "templates/ticket/ticket-detail-creation.jsp?key=" + type;
 	}
 	/**
-	 * 无业务押金退款
+	 * 无业务押金扣款
 	 */
 	self.createDeduct = function() {
 		deductLayer = $.layer({
@@ -82,11 +92,11 @@ var PaidContext = function() {
 			area : ['1000px', '650px'],
 			offset : ['150px', ''],
 			scrollbar : true,
+			zIndex : 9998,
 			page : {
 				dom : '#div-deduct'
 			},
 			end : function() {
-				console.log("Done");
 			}
 		});
 	}
@@ -100,11 +110,19 @@ var PaidContext = function() {
 			return;
 		}
 
+		var product_manager = $("#product-manager").val();
+
+		if (!product_manager) {
+			fail_msg("请选择责任经理！")
+			return;
+		}
+
 		var deduct_money = $("#deduct-money").val().trim();
 		var deposit_pk = $("#deposit-pk").val().trim();
 		var deposit_balance = $("#deposit-balance").val().trim();
 		var comment = $("#comment").val().trim();
 		var date = $("#deduct-date").val().trim();
+		var belong_month = $("#belong-month").val();
 
 		if (deduct_money == "") {
 			fail_msg("请填写扣款金额！");
@@ -119,15 +137,26 @@ var PaidContext = function() {
 			fail_msg("请填写扣款日期！");
 			return;
 		}
+		if (belong_month == "") {
+			fail_msg("请填写归属月份！");
+			return;
+		}
 		if (comment == "") {
 			fail_msg("扣款必须填写备注!");
 			return;
 		}
 
-		var json = '{"deduct_money":"' + deduct_money + '","deposit_pk":"' + deposit_pk + '","time":"' + date
-				+ '","comment":"' + comment + '"}';
+		const obj = {
+			deduct_money : deduct_money,
+			deposit_pk : deposit_pk,
+			time : date,
+			product_manager : product_manager,
+			comment : comment,
+			belong_month : belong_month
+		}
 
-		var data = "json=" + json;
+		var json = JSON.stringify(obj);
+		var data = "json=" + encodeURIComponent(json);
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -143,13 +172,14 @@ var PaidContext = function() {
 						url : self.apiurl + 'payable/createDeduct',
 						data : data,
 						success : function(str) {
-							if (str != "success") {
+							endLoadingIndicator();
+							if (str == "success") {
+								layer.close(deductLayer);
+								self.refresh();
+								self.usedDeposits.removeAll();
+							} else {
 								fail_msg("提交失败");
 							}
-							self.refresh();
-							self.usedDeposits.removeAll();
-							layer.close(deductLayer);
-							endLoadingIndicator();
 						}
 					});
 				}
@@ -228,8 +258,6 @@ var PaidContext = function() {
 			self.details(data.details);
 			self.paymentDetails(data.payment_details);
 
-			console.log(self.details());
-			console.log(self.paymentDetails());
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 			viewDetailLayer = $.layer({
@@ -245,7 +273,6 @@ var PaidContext = function() {
 					dom : '#sum_detail'
 				},
 				end : function() {
-					console.log("Done");
 				}
 			});
 		});
@@ -351,7 +378,6 @@ var PaidContext = function() {
 	self.chosenDeposits = ko.observableArray([]);
 	self.chooseDeposit = function() {
 		self.searchDeposit();
-		self.chosenDeposits.removeAll();
 		depositLayer = $.layer({
 			type : 1,
 			title : ['选择航司押金', ''],
@@ -441,6 +467,7 @@ var PaidContext = function() {
 	};
 
 	self.searchDeposit = function() {
+		self.chosenDeposits.removeAll();
 		self.refresh1();
 	};
 
@@ -454,6 +481,61 @@ var PaidContext = function() {
 		};
 		self.usedDeposits(self.chosenDeposits());
 		layer.close(depositLayer);
+	}
+
+	let current_p = null;
+	self.addProductManager = function(data, event) {
+		current_p = data;
+		console.log(data.product_manager_number);
+		$("#add-product-manager").val(data.product_manager);
+		addProductManagerLayer = $.layer({
+			type : 1,
+			title : ['添加责任产品', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['400px', '250px'],
+			offset : ['', ''],
+			scrollbar : true,
+			zIndex : 9998,
+			page : {
+				dom : '#product-manager-add'
+			},
+			end : function() {
+			}
+		});
+	}
+	self.doAddProductManager = function() {
+		let detail_pk = current_p.pk;
+		let product_manager_number = $("#add-product-manager").val();
+		let belong_month = $("#temp-belong-month").val();
+
+		if (product_manager_number == "" || belong_month == "") {
+			fail_msg("红色的是必填项！");
+			return;
+		}
+		const data = "detail_pk=" + detail_pk + "&product_manager_number=" + product_manager_number + "&belong_month="
+				+ belong_month;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'payable/addProductManager',
+			data : data,
+			success : function(str) {
+				endLoadingIndicator();
+				if (str == "success") {
+					current_p = null;
+					layer.close(addProductManagerLayer);
+					self.refresh();
+
+				} else {
+					fail_msg(str);
+				}
+			}
+		});
+	}
+
+	self.cancelAddProductManager = function() {
+		layer.close(addProductManagerLayer);
 	}
 
 	// start deposit pick pagination

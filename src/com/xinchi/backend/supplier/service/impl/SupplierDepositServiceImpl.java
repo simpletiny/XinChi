@@ -21,17 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
-import com.xinchi.backend.supplier.dao.DepositPaymentDAO;
+import com.xinchi.backend.receivable.dao.AirReceivedDAO;
 import com.xinchi.backend.supplier.dao.SupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
 import com.xinchi.backend.util.service.NumberService;
+import com.xinchi.bean.AirReceivedDetailBean;
 import com.xinchi.bean.CardBean;
-import com.xinchi.bean.DepositPaymentBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierDepositBean;
+import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
+import com.xinchi.common.FileFolder;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.office.SimpletinyExcel;
@@ -159,48 +162,39 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 	}
 
 	@Autowired
-	private DepositPaymentDAO depositPaymentDao;
+	private AirReceivedDAO airReceivedDao;
 
 	@Override
 	public String receiveSupplierDeposit(SupplierDepositBean deposit, String json) {
-
-		// 生成银行流水账
-		String voucher_number = numberService.generatePayOrderNumber(ResourcesConstants.COUNT_TYPE_PAY_ORDER,
-				ResourcesConstants.PAY_TYPE_DEPOSIT_AIR, DateUtil.getDateStr(DateUtil.YYYYMMDD));
-
-		// 生成银行流水数据
-		String msg = SUCCESS;
-		String account = deposit.getAccount();
-		CardBean card = cardDao.getCardByAccount(account);
-
-		BigDecimal balance = card.getBalance().add(deposit.getMoney());
-
-		String voucher_file_name = deposit.getVoucher_file_name();
-
-		PaymentDetailBean payment = new PaymentDetailBean();
-		payment.setVoucher_number(voucher_number);
-		payment.setAccount(account);
-		payment.setTime(deposit.getTime());
-		payment.setMoney(deposit.getMoney());
-		payment.setBalance(balance);
-		payment.setType("收入");
-		payment.setComment("机票押金退还,凭证号：" + voucher_number);
-		payment.setVoucher_file_name(voucher_file_name);
-
-		msg = paymentDetailService.insert(payment);
-		if (!msg.equals(SUCCESS)) {
-			return msg;
-		}
-
 		JSONArray arr = JSONArray.fromObject(json);
+		String related_pk = DBCommonUtil.genPk();
+		String received_type = arr.size() > 1 ? ResourcesConstants.RECEIVED_TYPE_SUM
+				: ResourcesConstants.RECEIVED_TYPE_RECEIVED;
 		for (int i = 0; i < arr.size(); i++) {
 			JSONObject obj = arr.getJSONObject(i);
 
 			String deposit_pk = obj.getString("deposit_pk");
+			SupplierDepositBean currentDeposit = dao.selectByPrimaryKey(deposit_pk);
 			BigDecimal received = new BigDecimal(
 					SimpletinyString.isEmpty(obj.getString("money")) ? "0" : obj.getString("money"));
 
-			SupplierDepositBean currentDeposit = dao.selectByPrimaryKey(deposit_pk);
+			String comment = obj.getString("comment");
+			// 生成退还记录
+			AirReceivedDetailBean detail = new AirReceivedDetailBean();
+			detail.setBusiness_number(currentDeposit.getDeposit_number());
+			detail.setReceived(received);
+			detail.setSum_received(deposit.getMoney());
+			detail.setReceived_type(received_type);
+			detail.setReceived_time(deposit.getTime());
+			detail.setCard_account(deposit.getAccount());
+			detail.setRelated_pk(related_pk);
+			detail.setSupplier_pk(currentDeposit.getSupplier_pk());
+
+			detail.setVoucher_file(deposit.getVoucher_file_name());
+
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			detail.setComment(comment);
+			airReceivedDao.insert(detail);
 
 			currentDeposit.setReceived(currentDeposit.getReceived() == null ? BigDecimal.ZERO
 					: currentDeposit.getReceived().add(received));
@@ -220,11 +214,18 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			}
 			// 更新押金账
 			dao.update(currentDeposit);
-			// 保存押金账和银行流水押金退回收入之间的对应关系
-			DepositPaymentBean dp = new DepositPaymentBean();
-			dp.setDeposit_pk(deposit_pk);
-			dp.setPayment_voucher_number(voucher_number);
-			depositPaymentDao.insert(dp);
+			// // 保存押金账和银行流水押金退回收入之间的对应关系
+			// DepositPaymentBean dp = new DepositPaymentBean();
+			// dp.setDeposit_pk(deposit_pk);
+			// dp.setPayment_voucher_number(voucher_number);
+			// depositPaymentDao.insert(dp);
+		}
+
+		// 保存凭证文件
+		String[] split_str = deposit.getTime().split("-");
+		if (split_str.length > 1) {
+			String sub_folder = split_str[0] + File.separator + split_str[1];
+			FileUtil.saveFile(deposit.getVoucher_file_name(), FileFolder.SUPPLIER_RECEIVED_VOUCHER.value(), sub_folder);
 		}
 
 		return SUCCESS;

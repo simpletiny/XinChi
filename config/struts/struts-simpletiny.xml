@@ -58,5 +58,8 @@
 		<action name="rebootTimer" class="simpletinyAction" method="rebootTimer">
 			<result name="success" type="redirect">/</result>
 		</action>
+		<action name="autoInsertDepositNumber" class="simpletinyAction" method="autoInsertDepositNumber">
+			<result name="success" type="redirect">/</result>
+		</action>
 	</package>
 </struts>

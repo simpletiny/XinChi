@@ -231,6 +231,11 @@ public class DaoUtil {
 		return listBo;
 	}
 
+	public <T extends Object> List<T> selectObjectsByParam(String mapper, Object param) {
+		List<T> listBo = sqlSession.selectList(mapper, param);
+		return listBo;
+	}
+
 	/**
 	 * 根据参数查询结果集(参数为Map对象)
 	 * 

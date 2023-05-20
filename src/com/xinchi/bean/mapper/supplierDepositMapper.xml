@@ -20,6 +20,7 @@
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="deposit_number" property="deposit_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -39,7 +40,8 @@
 		create_time,
 		update_time,
 		comment,
-		received_voucher_number
+		received_voucher_number,
+		deposit_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -114,6 +116,9 @@
 			<if test="comment != null">
 				comment,
 			</if>
+			<if test="deposit_number != null">
+				deposit_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="voucher_number != null">
@@ -163,6 +168,9 @@
 			</if>
 			<if test="comment != null">
 				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="deposit_number != null">
+				#{deposit_number,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -219,6 +227,9 @@
 			<if test="received_voucher_number != null">
 				received_voucher_number = #{received_voucher_number,jdbcType=CHAR},
 			</if>
+			<if test="deposit_number != null">
+				deposit_number = #{deposit_number,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -252,7 +263,8 @@
 		A.create_time,
 		A.update_time,
 		A.comment,
-		A.received_voucher_number
+		A.received_voucher_number,
+		A.deposit_number
 		from
 		supplier_deposit A
 		LEFT JOIN supplier B ON A.supplier_pk = B.pk
@@ -262,6 +274,9 @@
 			</if>
 			<if test="params.bo.comment != null and params.bo.comment !=''">
 				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.deposit_number != null and params.bo.deposit_number !=''">
+				and A.deposit_number like CONCAT('%',#{params.bo.deposit_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and A.account = #{params.bo.account,jdbcType=VARCHAR}

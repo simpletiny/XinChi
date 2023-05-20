@@ -71,6 +71,7 @@ var OrderContext = function() {
 
 	self.productSuppliers = ko.observableArray([]);
 	self.order_number = ko.observable('');
+	self.final_sale_orders = ko.observable({});
 	self.finalOperate = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
@@ -97,7 +98,8 @@ var OrderContext = function() {
 					startLoadingSimpleIndicator("加载中...");
 					var param = "order_number=" + order_number + "&supplier_employee_pk=" + supplier_employee_pk;
 					$.getJSON(self.apiurl + 'product/searchSaleOrderInfoByProductOrderInfo', param, function(data) {
-						self.sale_orders(data.sale_orders);
+						self.final_sale_orders(data.sale_orders);
+
 						endLoadingIndicator();
 						finalLayser = $.layer({
 							type : 1,

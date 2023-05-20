@@ -180,7 +180,323 @@
 			<comment>ALTER TABLE air_ticket_name_list</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE air_ticket_paid_detail 
+					ADD COLUMN product_manager VARCHAR(10) NULL COMMENT '责任经理，针对押金扣款而设定' AFTER voucher_file;
+	          ]]>
+			<comment>ALTER TABLE air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE air_ticket_payable 
+					ADD INDEX related_pk (related_pk ASC, payable_type ASC);
+	          ]]>
+			<comment>ALTER TABLE air_ticket_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE air_ticket_payable 
+					ADD COLUMN people_count INT NULL COMMENT '涉及到的游客数' AFTER comment;
+	          ]]>
+			<comment>ALTER TABLE air_ticket_payable</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE OR REPLACE VIEW view_air_service_fee AS
+				SELECT 
+				    B.pk AS payable_pk,
+				    D.team_number,
+				    COUNT(passenger_pk) AS current_people_count,
+				    A.people_count,
+				    A.first_date,
+				    ROUND((A.budget_payable / A.people_count) * COUNT(passenger_pk),
+				            2) AS per_team_fee,
+					ROUND((A.paid / A.people_count) * COUNT(passenger_pk),
+				            2) AS per_team_paid,
+				    E.product_manager_number,
+				    E.product_manager AS product_manager_name,
+				    E.create_user_number AS sale_number,
+				    E.create_user AS sale_name
+				FROM
+				    air_ticket_payable A
+				        LEFT JOIN
+				    air_ticket_payable B ON A.related_pk = B.related_pk
+				        AND B.payable_type = 'A'
+				        LEFT JOIN
+				    passenger_ticket_info C ON B.pk = C.base_pk AND C.ticket_index = 1
+				        LEFT JOIN
+				    air_ticket_name_list D ON C.passenger_pk = D.pk
+				        LEFT JOIN
+				    budget_order_view E ON D.team_number = E.team_number
+				WHERE
+				    A.payable_type = 'B'
+				        AND C.pk IS NOT NULL
+				GROUP BY A.PK , D.team_number;
+	          ]]>
+			<comment>CREATE VIEW view_air_service_fee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE air_ticket_paid_detail 
+					ADD COLUMN belong_month VARCHAR(7) NULL COMMENT '归属月份，扣款和无业务收支' AFTER product_manager;
+	          ]]>
+			<comment>ALTER TABLE air_ticket_paid_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE OR REPLACE VIEW view_product_area AS
+			    SELECT 
+			        COUNT(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            A.pk,
+			            NULL)) AS order_cnt,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+			            0)) AS score,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+			            0)) AS sum_people,
+			        LEFT(A.departure_date, 7) AS departure_month,
+			        F.product_manager AS product_manager_number,
+			        C.user_name AS product_manager_name,
+			        E.client_area AS area
+			    FROM
+			        budget_standard_order A
+			            LEFT JOIN
+			        final_standard_order B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        product F ON A.product_pk = F.pk
+			            LEFT JOIN
+			        user_base C ON F.product_manager = C.user_number
+			            LEFT JOIN
+			        client_employee D ON A.client_employee_pk = D.pk
+			            LEFT JOIN
+			        client E ON D.financial_body_pk = E.pk
+			    GROUP BY F.product_manager , E.client_area , LEFT(A.departure_date, 7)
+			    HAVING departure_month IS NOT NULL
+			        AND area IS NOT NULL;
+	          ]]>
+			<comment>ALTER VIEW view_product_area</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE OR REPLACE VIEW view_product_sale AS
+			    SELECT 
+			        COUNT(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            A.pk,
+			            NULL)) AS order_cnt,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)) * A.product_value,
+			            0)) AS score,
+			        SUM(IF(A.confirm_flg != 'N'
+			                AND (B.final_type IS NULL
+			                OR B.final_type != 4),
+			            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+			            0)) AS sum_people,
+			        LEFT(A.departure_date, 7) AS departure_month,
+			        A.create_user AS sale_number,
+			        C.user_name AS sale_name,
+			        E.product_manager AS product_manager_number,
+			        D.user_name AS product_manager_name
+			    FROM
+			        budget_standard_order A
+			            LEFT JOIN
+			        final_standard_order B ON A.team_number = B.team_number
+			            LEFT JOIN
+			        product E ON A.product_pk = E.pk
+			            LEFT JOIN
+			        user_base C ON A.create_user = C.user_number
+			            LEFT JOIN
+			        user_base D ON E.product_manager = D.user_number
+			    GROUP BY E.product_manager , A.create_user , LEFT(A.departure_date, 7);
+	          ]]>
+			<comment>ALTER VIEW view_product_sale</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE supplier_deposit 
+					ADD COLUMN deposit_number VARCHAR(10) NULL COMMENT '押金单号，D开头' AFTER pk;
+	          ]]>
+			<comment>ALTER TABLE supplier_deposit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE air_received_detail (
+				  pk CHAR(22) NOT NULL,
+				  business_number VARCHAR(10) NOT NULL COMMENT '业务编号，不限于押金编号。',
+				  received DECIMAL(12,2) NULL COMMENT '收入金额',
+				  sum_received DECIMAL(12,2) NULL COMMENT '合账时，收入总金额',
+				  received_type VARCHAR(10) NULL COMMENT '收入类型（DEPOSIT，押金退反）',
+				  received_time VARCHAR(19) NULL COMMENT '收入时间',
+				  card_account VARCHAR(50) NULL COMMENT '收款账户',
+				  related_pk CHAR(22) NULL COMMENT '合账时的关联pk',
+				  supplier_pk CHAR(22) NULL COMMENT '供应商pk',
+				  voucher_file VARCHAR(30) NULL COMMENT '凭证文件',
+				  status CHAR(1) NULL COMMENT '状态，I申请中，E，已确认。',
+				  comment VARCHAR(200) NULL COMMENT '备注',
+				  confirm_time VARCHAR(19) NULL COMMENT '确认时间',
+				  confirm_user VARCHAR(10) NULL COMMENT '确认人',
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  collecter VARCHAR(10) NULL COMMENT '代收方，预留字段。',
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '机票收入表';
+	          ]]>
+			<comment>CREATE TABLE air_received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE OR REPLACE VIEW view_all_need_match_received AS
+				     SELECT 
+					    A.sum_received AS received,
+					    A.type AS type,
+					    A.received_time,
+					    A.card_account,
+					    A.related_pk,
+					    A.create_user AS apply_user_number,
+					    C.user_name AS apply_user,
+					    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+					            '%Y-%m-%d') AS apply_date,
+					    B.name AS pay_user,
+					    A.client_employee_pk AS pay_user_pk,
+					    'C' AS from_where,
+					    A.comment,
+					    A.voucher_file AS voucher_file
+					FROM
+					    client_received_detail A
+					        LEFT JOIN
+					    client_employee B ON A.client_employee_pk = B.pk
+					        LEFT JOIN
+					    user_base C ON A.create_user = C.user_number
+					WHERE
+					    A.type IN ('SUM' , 'RECEIVED')
+					        AND A.status = 'I'
+					GROUP BY A.related_pk 
+					UNION ALL SELECT 
+					    A.allot_money AS received,
+					    'BACK' AS type,
+					    A.time AS received_time,
+					    A.card_account,
+					    A.related_pk,
+					    A.create_user AS apply_user_number,
+					    C.user_name AS apply_user,
+					    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+					            '%Y-%m-%d') AS apply_date,
+					    B.name AS pay_user,
+					    A.supplier_employee_pk AS pay_user_pk,
+					    'D' AS from_where,
+					    A.comment,
+					    A.voucher_file AS voucher_file
+					FROM
+					    supplier_paid_detail A
+					        LEFT JOIN
+					    supplier_employee B ON A.supplier_employee_pk = B.pk
+					        LEFT JOIN
+					    user_base C ON A.create_user = C.user_number
+					WHERE
+					    A.type = 'BACK' AND A.status = 'I'
+					GROUP BY A.related_pk 
+					UNION ALL SELECT 
+					    A.allot_money AS received,
+					    A.type AS type,
+					    A.time AS received_time,
+					    A.card_account,
+					    A.related_pk,
+					    A.create_user AS apply_user_name,
+					    C.user_name AS apply_user,
+					    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+					            '%Y-%m-%d') AS apply_date,
+					    B.name AS pay_user,
+					    A.supplier_employee_pk AS pay_user_pk,
+					    'A' AS from_where,
+					    A.comment,
+					    A.voucher_file AS voucher_file
+					FROM
+					    air_ticket_paid_detail A
+					        LEFT JOIN
+					    supplier_employee B ON A.supplier_employee_pk = B.pk
+					        LEFT JOIN
+					    user_base C ON A.create_user = C.user_number
+					WHERE
+					    A.type IN ('BACK' , 'RECEIVE')
+					        AND A.status = 'I'
+					GROUP BY A.related_pk 
+					UNION ALL SELECT 
+					    A.sum_received AS received,
+					    A.received_type AS type,
+					    A.received_time,
+					    A.card_account,
+					    A.related_pk,
+					    A.create_user AS apply_user_number,
+					    C.user_name AS apply_user,
+					    DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+					            '%Y-%m-%d') AS apply_date,
+					    B.supplier_short_name AS pay_user,
+					    A.supplier_pk AS pay_user_pk,
+					    'AR' AS from_where,
+					    A.comment,
+					    A.voucher_file AS voucher_file
+					FROM
+					    air_received_detail A
+					        LEFT JOIN
+					    supplier B ON A.supplier_pk = B.pk
+					        LEFT JOIN
+					    user_base C ON A.create_user = C.user_number
+					WHERE
+					    A.received_type IN ('SUM' , 'RECEIVED')
+					        AND A.status = 'I'
+					GROUP BY A.related_pk;
+	          ]]>
+			<comment>CREATE TABLE view_all_need_match_received</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE received_match 
+					CHANGE COLUMN from_where from_where CHAR(2) NULL DEFAULT NULL COMMENT '收入来源，A，票务退返，C，客户收入，D，地接退返,AR,机票收入' ;
+                 ]]>
+			<comment>ALTER TABLE received_match</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
+
+
+
 
 
 

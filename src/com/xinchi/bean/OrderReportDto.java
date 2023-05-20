@@ -40,6 +40,8 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String confirm_date_from;
 	private String confirm_date_to;
 
+	private String independent_flg;
+
 	private String product_manager_number;
 
 	private List<String> order_types;
@@ -332,5 +334,13 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setTail98(BigDecimal tail98) {
 		this.tail98 = tail98;
+	}
+
+	public String getIndependent_flg() {
+		return independent_flg;
+	}
+
+	public void setIndependent_flg(String independent_flg) {
+		this.independent_flg = independent_flg;
 	}
 }

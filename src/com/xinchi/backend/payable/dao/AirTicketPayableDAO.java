@@ -2,6 +2,7 @@ package com.xinchi.backend.payable.dao;
 
 import java.util.List;
 
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.tools.Page;
 
@@ -51,4 +52,7 @@ public interface AirTicketPayableDAO {
 	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk);
 
 	public void deleteByRelatedPk(String related_pk);
+
+	public List<AirServiceFeeDto> searchServiceFees(AirServiceFeeDto summary_option);
+
 }

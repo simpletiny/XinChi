@@ -3,6 +3,8 @@ package com.xinchi.backend.payable.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.PassengerTicketInfoBean;
@@ -57,4 +59,10 @@ public interface AirTicketPayableService extends BaseService {
 	public String payAirTicket(String paidJson, String payableJson, BigDecimal allot_money);
 
 	public List<AirTicketPayableBean> selectByRelatedPk(String related_pk);
+
+	public List<AirServiceFeeDto> searchServiceFees(AirServiceFeeDto summary_option);
+
+	public List<AirOtherPaymentDto> searchDepositDeducts(AirServiceFeeDto summary_option);
+
+	public List<AirOtherPaymentDto> searchNoneBussinessPayment(AirServiceFeeDto summary_option);
 }

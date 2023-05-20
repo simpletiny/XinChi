@@ -61,8 +61,8 @@
 						</div>
 					</div>
 				</form>
-				<div class="list-result" style="height: 2200px">
-					<table class="table table-striped table-hover" style="width: 50%; float: left">
+				<div class="list-result">
+					<table class="table table-striped table-hover" id="main-table-1" style="width: 50%; float: left">
 						<thead>
 							<tr role="row">
 								<th>地区</th>
@@ -82,7 +82,7 @@
 					</table>
 					<div id="chart-area" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
 					<hr style="width: 100%">
-					<table class="table table-striped table-hover" style="width: 50%; float: left">
+					<table class="table table-striped table-hover" id="main-table-2" style="width: 50%; float: left">
 						<thead>
 							<tr role="row">
 								<th>产品名称</th>
@@ -101,8 +101,8 @@
 						</tbody>
 					</table>
 					<div id="chart-product" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
-					<hr style="width: 100%;">
-					<table class="table table-striped table-hover" style="width: 50%; float: left">
+					<hr style="width: 100%;"> 
+					<table class="table table-striped table-hover" id="main-table-3" style="width: 50%; float: left">
 						<thead>
 							<tr role="row">
 								<th>销售</th>
@@ -135,6 +135,6 @@
 	<script src="<%=basePath%>static/vendor/echart/echarts.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-statistics.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/product/product-statistics.js?v=1.001"></script>
 </body>
 </html>

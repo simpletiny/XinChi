@@ -24,8 +24,19 @@
 		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
 		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
 	</resultMap>
-
+	<resultMap id="ServiceFeeMap" type="com.xinchi.bean.AirServiceFeeDto">
+		<result column="payable_pk" property="payable_pk" jdbcType="VARCHAR" />
+		<result column="first_month" property="first_month" jdbcType="VARCHAR" />
+		<result column="payable" property="payable" jdbcType="DECIMAL" />
+		<result column="paid" property="paid" jdbcType="DECIMAL" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		supplier_employee_pk,
 		PNR,
@@ -45,7 +56,8 @@
 		first_date,
 		comment,
 		payable_type,
-		related_pk
+		related_pk,
+		people_count
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -81,11 +93,13 @@
 		A.first_date,
 		A.comment,
 		A.payable_type,
-		A.related_pk
+		A.related_pk,
+		A.people_count
 		from air_ticket_payable A LEFT JOIN
 		supplier_employee B ON
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN supplier C ON
+		LEFT
+		JOIN supplier C ON
 		B.financial_body_pk = C.pk
 		<where>
 			and A.pk in
@@ -167,6 +181,9 @@
 			<if test="comment != null">
 				comment,
 			</if>
+			<if test="people_count != null">
+				people_count,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
@@ -225,6 +242,9 @@
 			</if>
 			<if test="comment != null">
 				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="people_count != null">
+				#{people_count,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -287,6 +307,9 @@
 			<if test="comment != null">
 				comment = #{comment,jdbcType=VARCHAR},
 			</if>
+			<if test="people_count != null">
+				people_count = #{people_count,jdbcType=INTEGER},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -318,11 +341,13 @@
 		A.passenger,
 		A.from_to_city,
 		A.first_date,
-		A.comment
+		A.comment,
+		A.people_count
 		from air_ticket_payable A LEFT JOIN
 		supplier_employee B ON
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN supplier C ON
+		LEFT JOIN
+		supplier C ON
 		B.financial_body_pk = C.pk
 		<where>
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
@@ -343,6 +368,9 @@
 			<if test="params.bo.first_date != null and params.bo.first_date !=''">
 				and A.first_date = #{params.bo.first_date,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.first_month != null and params.bo.first_month !=''">
+				and LEFT(A.first_date,7) = #{params.bo.first_month,jdbcType=VARCHAR}
+			</if>
 			<if test="params.bo.payable_types != null and params.bo.payable_types !=''">
 				and A.payable_type in
 				<foreach item="item" index="index" collection="params.bo.payable_types" open="(" separator="," close=")">
@@ -353,4 +381,30 @@
 		</where>
 		ORDER BY A.first_date DESC
 	</select>
+	<select id="selectServiceFees" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="ServiceFeeMap">
+		SELECT
+		payable_pk,
+		team_number,
+		SUM(current_people_count) AS people_count,
+		LEFT(first_date, 7) AS first_month,
+		SUM(per_team_fee) AS payable,
+		SUM(per_team_paid) AS paid,
+		product_manager_name,
+		product_manager_number,
+		sale_number,
+		sale_name
+		FROM
+		view_air_service_fee
+		<where>
+			<if test="first_month != null and first_month !=''">
+				and LEFT(first_date, 7) = #{first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY product_manager_number
+		ORDER BY payable DESC
+	</select>
+
 </mapper>

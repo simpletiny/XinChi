@@ -94,10 +94,14 @@ public class AirTicketNameListServiceImpl implements AirTicketNameListService {
 	@Autowired
 	private OrderNameListDAO saleOrderNameListDao;
 
+	private final static String NO_NEED_UNLOCK = "销售已删除名单！";
+
 	@Override
 	public String toggleLockName(List<String> passenger_pks, String lock_flg) {
 		List<AirTicketNameListBean> names = dao.selectByPks(passenger_pks.toArray(new String[0]));
 		for (AirTicketNameListBean n : names) {
+			if (n.getDelete_flg().equals("Y"))
+				return NO_NEED_UNLOCK;
 			// 更新票务名单锁定状态
 			n.setLock_flg(lock_flg);
 			dao.update(n);

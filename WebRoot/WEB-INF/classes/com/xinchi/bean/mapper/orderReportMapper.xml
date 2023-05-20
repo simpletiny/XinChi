@@ -28,6 +28,7 @@
 		<result column="sys_cost" property="sys_cost" jdbcType="DECIMAL" />
 		<result column="tail98" property="tail98" jdbcType="DECIMAL" />
 		<result column="approved" property="approved" jdbcType="CHAR" />
+		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
 		<result column="product_final_flg" property="product_final_flg" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -98,7 +99,8 @@
 		A.special_count))) AS per_profit,
 		A.confirm_flg,
 		A.confirm_date,
-		C.final_flg AS product_final_flg
+		C.final_flg AS product_final_flg,
+		A.independent_flg
 		FROM
 		team_report X
 		LEFT JOIN

@@ -117,7 +117,7 @@
 						<tr>
 							<td style="border-right: 1px solid black">
 								<div class="list-result">
-									<table class="table table-striped table-hover">
+									<table class="table table-striped table-hover" id="left-table">
 										<thead>
 											<tr role="row">
 												<th></th>
@@ -139,11 +139,8 @@
 												<!-- ko if: $data.match_flg =='Y' -->
 												<td ><a href="javascript:void(0)" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
 												<!-- /ko -->
-												<!-- ko if: $data.match_flg =='O' -->
-												<td style="color: green" data-bind="text: $root.statusMapping[$data.match_flg]"></td>
-												<!-- /ko -->
-												<!-- ko if: $data.match_flg =='N' -->
-												<td style="color: red" data-bind="text: $root.statusMapping[$data.match_flg]"></td>
+												<!-- ko ifnot: $data.match_flg =='Y'  -->
+												<td  data-bind="text: $root.statusMapping[$data.match_flg]"></td>
 												<!-- /ko -->
 											</tr>
 										</tbody>
@@ -164,7 +161,7 @@
 							</td>
 							<td>
 								<div class="list-result">
-									<table class="table table-striped table-hover">
+									<table class="table table-striped table-hover" id="right-table">
 										<thead>
 											<tr role="row">
 												<th></th>
@@ -187,10 +184,10 @@
 												<td data-bind="text: $data.received_time"></td>
 												<td data-bind="text: $data.card_account"></td>
 												<td><a href="javascript:void(0)"
-													data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time)} ">查看</a></td>
+													data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time,$data.from_where)} ">查看</a></td>
 												<!-- ko if: $data.type == 'SUM' -->
 												<td><a href="javascript:void(0)"
-													data-bind="event:{click:function(){$root.viewDetail($data.related_pk)}}">详情</a></td>
+													data-bind="event:{click:function(){$root.viewDetail($data.related_pk,$data.from_where)}}">详情</a></td>
 												<!-- /ko -->
 												<!-- ko if: $data.type != 'SUM' -->
 												<td data-bind="text: $data.pay_user"></td>
@@ -356,7 +353,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px;">
+	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px;padding-bottom: 30px">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">账户</label>
@@ -365,7 +362,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账总金额</label>
+				<label class="l" style="width: 30%">收入总金额</label>
 				<div class="ip" style="width: 70%">
 					<p class="ip-default" data-bind="text:sumDetail().sum_received" class="rmb"></p>
 				</div>
@@ -373,21 +370,15 @@
 		</div>
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
-				<label class="l" style="width: 30%">入账时间</label>
+				<label class="l" style="width: 30%">收入时间</label>
 				<div class="ip" style="width: 70%">
 					<p class="ip-default" data-bind="text:sumDetail().received_time"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">我组金额</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:sumDetail().allot_received" class="rmb"></p>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div class="col-md-3">
-				<label class="l" style="width: 100%">团号</label>
+				<label class="l" style="width: 100%">业务单号</label>
 			</div>
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">客户</label>
@@ -400,12 +391,12 @@
 		<div class="input-row clearfloat" st="allot">
 			<div class="col-md-3">
 				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.team_number"></p>
+					<p class="ip-default" data-bind="text:$data.business_number"></p>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="ip">
-					<p class="ip-default" data-bind="text:$data.client_employee_name"></p>
+					<p class="ip-default" data-bind="text:$data.pay_user"></p>
 				</div>
 			</div>
 			<div class="col-md-3">
@@ -474,6 +465,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/received-match.js"></script>
+	<script src="<%=basePath%>static/js/finance/received-match.js?v1.001"></script>
 </body>
 </html>

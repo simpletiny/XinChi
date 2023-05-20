@@ -7,6 +7,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -75,6 +76,12 @@ public class AirTicketPayableDAOImpl extends SqlSessionDaoSupport implements Air
 	@Override
 	public void deleteByRelatedPk(String related_pk) {
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.AirTicketPayableMapper.deleteByRelatedPk", related_pk);
+	}
+
+	@Override
+	public List<AirServiceFeeDto> searchServiceFees(AirServiceFeeDto summary_option) {
+		return daoUtil.selectObjectsByParam("com.xinchi.bean.mapper.AirTicketPayableMapper.selectServiceFees",
+				summary_option);
 	}
 
 }

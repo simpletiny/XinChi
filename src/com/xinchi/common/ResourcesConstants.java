@@ -11,6 +11,8 @@ public class ResourcesConstants {
 	public static String SIMPLETINY = "SIMPLETINY";
 
 	public static String PLACE_HOLDER = "&&^^@@@";
+
+	public static String DELIMITER = "@@";
 	// 用户注册状态
 	// 申请中
 	public static String USER_STATUS_APPLY = "A";
@@ -349,6 +351,8 @@ public class ResourcesConstants {
 	public static String RECEIVED_FROM_WHERE_SUPPLIER = "D";
 	// 机票返款
 	public static String RECEIVED_FROM_WHERE_AIR_TICKET = "A";
+	// 机票收入
+	public static String RECEIVED_FROM_WHERE_AIR_RECEIVED = "AR";
 
 	public static String PAY_REJECT_DEFAULT_REASON = "账目不符";
 

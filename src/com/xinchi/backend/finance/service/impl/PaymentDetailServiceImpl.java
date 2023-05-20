@@ -31,7 +31,9 @@ import com.xinchi.backend.finance.dao.ReceivedMatchDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
+import com.xinchi.backend.receivable.dao.AirReceivedDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
+import com.xinchi.bean.AirReceivedDetailBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.CardBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
@@ -43,6 +45,7 @@ import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -522,11 +525,15 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 	@Autowired
 	private ReceivedMatchDAO receivedMatchDao;
 
+	@Autowired
+	private AirReceivedDAO airReceivedDao;
+
 	@Override
 	public String matchReceived(String json) {
 		JSONObject obj = JSONObject.fromObject(json);
 		String detail_id = obj.getString("detailId");
 		JSONArray arr = obj.getJSONArray("arr");
+		UserSessionBean user = SimpletinyUser.user();
 		for (int i = 0; i < arr.size(); i++) {
 			JSONObject receiveds = JSONObject.fromObject(arr.get(i));
 			String related_pk = receiveds.getString("related_pk");
@@ -563,7 +570,22 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				for (AirTicketPaidDetailBean detail : receivedDetails) {
 					detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
 					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setApprove_user(user.getUser_number());
 					airTicketPaidDetailDao.update(detail);
+
+					ReceivedMatchBean rmb = new ReceivedMatchBean();
+					rmb.setFrom_where(from_where);
+					rmb.setDetail_pk(detail_id);
+					rmb.setReceived_pk(detail.getPk());
+					receivedMatchDao.insert(rmb);
+				}
+			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_RECEIVED)) {
+				List<AirReceivedDetailBean> receivedDetails = airReceivedDao.selectByRelatedPk(related_pk);
+				for (AirReceivedDetailBean detail : receivedDetails) {
+					detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
+					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setConfirm_user(user.getUser_number());
+					airReceivedDao.update(detail);
 
 					ReceivedMatchBean rmb = new ReceivedMatchBean();
 					rmb.setFrom_where(from_where);
@@ -610,8 +632,17 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				AirTicketPaidDetailBean receivedDetail = airTicketPaidDetailDao
 						.selectByPrimaryKey(rmb.getReceived_pk());
 				receivedDetail.setConfirm_time("");
+				receivedDetail.setApprove_user("");
 				receivedDetail.setStatus(ResourcesConstants.PAID_STATUS_ING);
 				airTicketPaidDetailDao.update(receivedDetail);
+				// 删除匹配关联
+				receivedMatchDao.delete(rmb.getPk());
+			} else if (rmb.getFrom_where().equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_RECEIVED)) {
+				AirReceivedDetailBean receivedDetail = airReceivedDao.selectByPk(rmb.getReceived_pk());
+				receivedDetail.setConfirm_time("");
+				receivedDetail.setConfirm_user("");
+				receivedDetail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+				airReceivedDao.update(receivedDetail);
 				// 删除匹配关联
 				receivedMatchDao.delete(rmb.getPk());
 			}

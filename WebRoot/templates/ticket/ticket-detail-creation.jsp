@@ -13,6 +13,8 @@
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/upload.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 </head>
 <body>
 	<div class="main-body">
@@ -96,6 +98,15 @@
 						</s:else>
 					</div>
 					<div class="input-row clearfloat">
+						<div class="col-md-6 required">
+							<label class="l">归属月份</label>
+							<div class="ip">
+								<input type="text" id="name" class="ip- month-picker-st" placeholder="归属月份" value='${user.current_date.substring(0,7)}' maxlength="7"
+									name="payment_detail.belong_month" required="required" />
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required"
 								accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="payment_detail.voucher_file_name" />
@@ -170,11 +181,13 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-detail-creation.js"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-detail-creation.js?v1.001"></script>
 </body>
 </html>

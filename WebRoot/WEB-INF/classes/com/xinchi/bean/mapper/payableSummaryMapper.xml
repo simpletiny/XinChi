@@ -164,45 +164,53 @@
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
 		'%Y-%m'),
 		A.budget_balance,
-		0)) AS one_month_budget_balance,
+		0)) AS
+		one_month_budget_balance,
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
 		'%Y-%m'),
 		A.budget_payable,
 		0)) AS one_month_budget_payable,
-		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(),
+		INTERVAL - 1 MONTH),
 		'%Y-%m'),
 		A.final_balance,
 		0)) AS one_month_final_balance,
-		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+		SUM(IF(LEFT(A.departure_date, 7) =
+		DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
 		'%Y-%m'),
 		A.final_payable,
 		0)) AS one_month_final_payable,
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
 		'%Y-%m'),
 		A.paid,
-		0)) AS one_month_paid,
+		0)) AS
+		one_month_paid,
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
 		'%Y-%m'),
 		A.budget_balance,
 		0)) AS two_month_budget_balance,
-		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(),
+		INTERVAL - 2 MONTH),
 		'%Y-%m'),
 		A.budget_payable,
 		0)) AS two_month_budget_payable,
-		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+		SUM(IF(LEFT(A.departure_date, 7) =
+		DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
 		'%Y-%m'),
 		A.final_balance,
 		0)) AS two_month_final_balance,
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
 		'%Y-%m'),
 		A.final_payable,
-		0)) AS two_month_final_payable,
+		0)) AS
+		two_month_final_payable,
 		SUM(IF(LEFT(A.departure_date, 7) = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
 		'%Y-%m'),
 		A.paid,
 		0)) AS two_month_paid,
 		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
-		'%Y-%m') > LEFT(A.departure_date, 7),
+		'%Y-%m') > LEFT(A.departure_date,
+		7),
 		A.budget_balance,
 		0)) AS earlier_month_budget_balance,
 		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
@@ -212,19 +220,23 @@
 		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
 		'%Y-%m') > LEFT(A.departure_date, 7),
 		A.final_balance,
-		0)) AS earlier_month_final_balance,
+		0)) AS
+		earlier_month_final_balance,
 		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
-		'%Y-%m') > LEFT(A.departure_date, 7),
+		'%Y-%m') > LEFT(A.departure_date,
+		7),
 		A.final_payable,
 		0)) AS earlier_month_final_payable,
 		SUM(IF(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
-		'%Y-%m') > LEFT(A.departure_date, 7),
+		'%Y-%m')
+		> LEFT(A.departure_date, 7),
 		A.paid,
 		0)) AS earlier_month_paid
 		FROM
 		payable A
 		LEFT JOIN
-		supplier_employee B ON A.supplier_employee_pk = B.pk
+		supplier_employee B ON
+		A.supplier_employee_pk = B.pk
 		LEFT JOIN
 		supplier C ON B.financial_body_pk = C.pk
 		<where>
@@ -237,6 +249,8 @@
 			and C.pk IS NOT NULL and C.is_cooperate = 'Y'
 		</where>
 		GROUP BY C.pk
-		ORDER BY ABS(sum(A.final_balance)) DESC,ABS(sum(A.budget_balance)) DESC
+		HAVING SUM(IF(A.final_flg = 'N',A.budget_balance,0))>0 OR SUM(A.final_balance)>0
+		ORDER BY
+		ABS(sum(A.final_balance)) DESC,ABS(SUM(IF(A.final_flg = 'N', A.budget_balance, 0))) DESC
 	</select>
 </mapper>

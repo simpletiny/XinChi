@@ -15,6 +15,8 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="apply_user_number" property="apply_user_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -24,10 +26,13 @@
 		card_account,
 		related_pk,
 		apply_user,
+		apply_user_number,
 		apply_date,
 		pay_user,
 		pay_user_pk,
-		from_where
+		from_where,
+		comment,
+		voucher_file
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -50,10 +55,12 @@
 		A.card_account,
 		A.related_pk,
 		A.apply_user,
+		A.apply_user_number,
 		A.apply_date,
 		A.pay_user,
 		A.pay_user_pk,
 		A.from_where,
+		A.comment,
 		A.voucher_file
 		from
 		view_all_need_match_received A

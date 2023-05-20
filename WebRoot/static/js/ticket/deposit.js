@@ -267,6 +267,8 @@ var DepositContext = function() {
 		layer.close(createLayer);
 	}
 
+	self.account = ko.observable();
+	self.sum_money = ko.observable();
 	/**
 	 * 押金退回
 	 */
@@ -275,9 +277,7 @@ var DepositContext = function() {
 			fail_msg("请选择押金账");
 			return;
 		} else if (self.chosenDeposits().length >= 1) {
-
 			var supplier_pk = self.chosenDeposits()[0].supplier_pk;
-
 			// 判断是否还有剩余
 			for (var i = 0; i < self.chosenDeposits().length; i++) {
 				var data = self.chosenDeposits()[i];
@@ -291,6 +291,14 @@ var DepositContext = function() {
 					return;
 				}
 			}
+			var account = self.chosenDeposits()[0].account;
+			self.account(account);
+			let sum = 0;
+			$(self.chosenDeposits()).each(function(index, data) {
+				sum += +data.balance;
+			});
+
+			self.sum_money(sum);
 
 			receiveLayer = $.layer({
 				type : 1,
@@ -319,7 +327,7 @@ var DepositContext = function() {
 		var divs = $("#div-allot>div");
 		var all_money = $("#sum-money").val() - 0;
 		var sum_money = 0;
-		var json = '[';
+		let json_arr = new Array();
 		for (var i = 0; i < divs.length; i++) {
 			var current = divs[i];
 			var deposit_pk = $(current).find('input[st="deposit-pk"]').val();
@@ -331,14 +339,17 @@ var DepositContext = function() {
 				return;
 			}
 
-			json += '{"deposit_pk":"' + deposit_pk + '","money":"' + money + '"}';
-			if (i != divs.length - 1) {
-				json += ',';
-			}
+			let comment = $(current).find('textarea[st="comment"]').val().trim();
+
+			let obj = {};
+			obj.deposit_pk = deposit_pk;
+			obj.money = money;
+			obj.comment = comment;
+			json_arr.push(obj);
 
 			sum_money += (money - 0)
 		}
-		json += ']';
+		const json = encodeURIComponent(JSON.stringify(json_arr));
 
 		data += "&json=" + json;
 
@@ -353,6 +364,7 @@ var DepositContext = function() {
 			data : data,
 			success : function(str) {
 				if (str == "success") {
+					contentClear("div-receive")
 					self.refresh();
 					layer.close(receiveLayer);
 				} else {

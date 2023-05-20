@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AirReceivedDetailMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirReceivedDetailBean">
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="business_number" property="business_number" jdbcType="VARCHAR" />
+		<result column="received" property="received" jdbcType="DECIMAL" />
+		<result column="sum_received" property="sum_received" jdbcType="DECIMAL" />
+		<result column="received_type" property="received_type" jdbcType="VARCHAR" />
+		<result column="received_time" property="received_time" jdbcType="VARCHAR" />
+		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
+		<result column="related_pk" property="related_pk" jdbcType="CHAR" />
+		<result column="supplier_pk" property="supplier_pk" jdbcType="CHAR" />
+		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="confirm_time" property="confirm_time" jdbcType="VARCHAR" />
+		<result column="confirm_user" property="confirm_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="collecter" property="collecter" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
+		<result column="confirm_user_name" property="confirm_user_name" jdbcType="VARCHAR" />
+		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		pk,
+		business_number,
+		received,
+		sum_received,
+		received_type,
+		received_time,
+		card_account,
+		related_pk,
+		supplier_pk,
+		voucher_file,
+		status,
+		comment,
+		confirm_time,
+		confirm_user,
+		create_user,
+		update_user,
+		collecter,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_received_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.pk,
+		A.business_number,
+		A.received,
+		A.sum_received,
+		A.received_type,
+		A.received_time,
+		A.card_account,
+		A.related_pk,
+		A.supplier_pk,
+		A.voucher_file,
+		A.status,
+		A.comment,
+		A.confirm_time,
+		A.confirm_user,
+		C.user_name AS apply_user,
+		D.user_name AS confirm_user_name,
+		A.create_user,
+		A.update_user,
+		A.collecter,
+		A.create_time,
+		A.update_time,
+		B.supplier_short_name AS supplier_name
+		from
+		air_received_detail A
+		LEFT JOIN supplier B ON A.supplier_pk = B.pk
+		LEFT JOIN user_base C ON A.create_user = C.user_number
+		LEFT JOIN user_base
+		D ON A.confirm_user = D.user_number
+		where A.related_pk = #{related_pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from air_received_detail
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AirReceivedDetailBean">
+
+		insert into air_received_detail
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="business_number != null">
+				business_number,
+			</if>
+			<if test="received != null">
+				received,
+			</if>
+			<if test="sum_received != null">
+				sum_received,
+			</if>
+			<if test="received_type != null">
+				received_type,
+			</if>
+			<if test="received_time != null">
+				received_time,
+			</if>
+			<if test="card_account != null">
+				card_account,
+			</if>
+			<if test="related_pk != null">
+				related_pk,
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk,
+			</if>
+			<if test="voucher_file != null">
+				voucher_file,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="confirm_time != null">
+				confirm_time,
+			</if>
+			<if test="confirm_user != null">
+				confirm_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="collecter != null">
+				collecter,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="business_number != null">
+				#{business_number,jdbcType=VARCHAR},
+			</if>
+			<if test="received != null">
+				#{received,jdbcType=DECIMAL},
+			</if>
+			<if test="sum_received != null">
+				#{sum_received,jdbcType=DECIMAL},
+			</if>
+			<if test="received_type != null">
+				#{received_type,jdbcType=VARCHAR},
+			</if>
+			<if test="received_time != null">
+				#{received_time,jdbcType=VARCHAR},
+			</if>
+			<if test="card_account != null">
+				#{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="related_pk != null">
+				#{related_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_pk != null">
+				#{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_file != null">
+				#{voucher_file,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				#{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_user != null">
+				#{confirm_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="collecter != null">
+				#{collecter,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AirReceivedDetailBean">
+		update air_received_detail
+		<set>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="business_number != null">
+				business_number = #{business_number,jdbcType=VARCHAR},
+			</if>
+			<if test="received != null">
+				received = #{received,jdbcType=DECIMAL},
+			</if>
+			<if test="sum_received != null">
+				sum_received = #{sum_received,jdbcType=DECIMAL},
+			</if>
+			<if test="received_type != null">
+				received_type = #{received_type,jdbcType=VARCHAR},
+			</if>
+			<if test="received_time != null">
+				received_time = #{received_time,jdbcType=VARCHAR},
+			</if>
+			<if test="card_account != null">
+				card_account = #{card_account,jdbcType=VARCHAR},
+			</if>
+			<if test="related_pk != null">
+				related_pk = #{related_pk,jdbcType=CHAR},
+			</if>
+			<if test="supplier_pk != null">
+				supplier_pk = #{supplier_pk,jdbcType=CHAR},
+			</if>
+			<if test="voucher_file != null">
+				voucher_file = #{voucher_file,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_time != null">
+				confirm_time = #{confirm_time,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_user != null">
+				confirm_user = #{confirm_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="collecter != null">
+				collecter = #{collecter,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AirReceivedDetailBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from air_received_detail
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.pk,
+		A.business_number,
+		A.received,
+		A.sum_received,
+		A.received_type,
+		A.received_time,
+		A.card_account,
+		A.related_pk,
+		A.supplier_pk,
+		A.voucher_file,
+		A.status,
+		A.comment,
+		A.confirm_time,
+		A.confirm_user,
+		C.user_name AS apply_user,
+		D.user_name AS
+		confirm_user_name,
+		A.create_user,
+		A.update_user,
+		A.collecter,
+		A.create_time,
+		A.update_time,
+		B.supplier_short_name AS
+		supplier_name
+		from
+		air_received_detail A
+		LEFT JOIN supplier B ON A.supplier_pk = B.pk
+		LEFT JOIN user_base C ON
+		A.create_user = C.user_number
+		LEFT JOIN user_base D ON A.confirm_user = D.user_number
+		<where>
+			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
+				and B.supplier_short_name like CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.comment != null and params.bo.comment !=''">
+				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.business_number != null and params.bo.business_number !=''">
+				and A.business_number like CONCAT('%',#{params.bo.business_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.card_account != null and params.bo.card_account !=''">
+				and A.card_account = #{params.bo.card_account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.received_month != null and params.bo.received_month !=''">
+				and LEFT(A.received_time,7) = #{params.bo.received_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and LEFT(A.received_time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.statuses!= null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.received_type != null and params.bo.received_type !=''">
+				and A.received_type = #{params.bo.received_type,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

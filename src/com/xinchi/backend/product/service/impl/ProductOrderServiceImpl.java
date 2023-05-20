@@ -262,9 +262,6 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			return "airlock";
 		}
 
-		// 删除产品订单号和团号对应关系
-		productOrderTeamNumberDao.deleteByOrderNumber(order_number);
-
 		// 如果存在票务需求
 		if (atn != null) {
 			// 删除票务需求和团号之间的对应关系
@@ -300,7 +297,8 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 				bnsoDao.update(bnsOrder);
 			}
 		}
-
+		// 删除产品订单号和团号对应关系
+		productOrderTeamNumberDao.deleteByOrderNumber(order_number);
 		return SUCCESS;
 	}
 
@@ -401,7 +399,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
 
 			for (OrderDto order : orders) {
-				if (order.getLock_flg().equals("N")) {
+				if (order.getLock_flg().substring(0, 1).equals("N")) {
 					return "no," + number;
 				}
 			}

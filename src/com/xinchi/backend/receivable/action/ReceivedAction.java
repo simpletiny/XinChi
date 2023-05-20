@@ -14,6 +14,7 @@ import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ReceivedDetailDto;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
@@ -178,6 +179,14 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String from_where;
+	private List<ReceivedDetailDto> received_details;
+
+	public String searchAllAboutReceivedByRelatedPks() {
+		received_details = service.searchAllAboutReceivedByRelatedPks(related_pk, from_where);
+		return SUCCESS;
+	}
+
 	public ClientReceivedDetailBean getDetail() {
 		return detail;
 	}
@@ -256,6 +265,22 @@ public class ReceivedAction extends BaseAction {
 
 	public void setPaymentDetails(List<PaymentDetailBean> paymentDetails) {
 		this.paymentDetails = paymentDetails;
+	}
+
+	public String getFrom_where() {
+		return from_where;
+	}
+
+	public List<ReceivedDetailDto> getReceived_details() {
+		return received_details;
+	}
+
+	public void setFrom_where(String from_where) {
+		this.from_where = from_where;
+	}
+
+	public void setReceived_details(List<ReceivedDetailDto> received_details) {
+		this.received_details = received_details;
 	}
 
 }

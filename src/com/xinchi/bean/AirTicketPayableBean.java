@@ -49,6 +49,10 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 
 	private String comment;
 
+	private String first_month;
+
+	private int people_count;
+
 	// option
 	private List<String> payable_types;
 
@@ -234,6 +238,22 @@ public class AirTicketPayableBean extends SupperBO implements Serializable {
 
 	public void setPayable_types(List<String> payable_types) {
 		this.payable_types = payable_types;
+	}
+
+	public String getFirst_month() {
+		return first_month;
+	}
+
+	public void setFirst_month(String first_month) {
+		this.first_month = first_month;
+	}
+
+	public int getPeople_count() {
+		return people_count;
+	}
+
+	public void setPeople_count(int people_count) {
+		this.people_count = people_count;
 	}
 
 }

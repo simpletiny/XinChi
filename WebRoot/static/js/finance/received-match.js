@@ -34,11 +34,14 @@ var DetailContext = function() {
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中...");
-		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N&detail.purpose_ticket=out";
+		var param = $("form").serialize() + "&detail.type=收入&detail.inner_flg=N";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'finance/searchDetailByPage', param, function(data) {
 			self.details(data.details);
 			$(".rmb").formatCurrency();
+
+			$("#left-table td:contains('未匹配')").css("color", "red");
+			$("#left-table td:contains('其他收入')").css("color", "green");
 			endLoadingIndicator();
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
@@ -240,14 +243,19 @@ var DetailContext = function() {
 		'CSUM' : '合账',
 		'CRECEIVED' : '收入',
 		'ABACK' : '票务退返',
-		'DBACK' : '地接退返'
+		'DBACK' : '地接退返',
+		'ARSUM' : '押金退还'
 	};
 	self.receiveds = ko.observableArray([]);
 	self.detail = ko.observable({});
 	self.date = ko.observable();
-	self.checkReceived = function() {
+	self.checkReceived = function(data) {
+		const match_flg = data.match_flg;
+		if (match_flg == 'Y')
+			return true;
+
 		startLoadingSimpleIndicator("加载中...");
-		var detailId = self.chosenDetails();
+		var detailId = data.pk;
 		// 获取收入信息
 		$.getJSON(self.apiurl + 'finance/searchDetailByPk', "detailId=" + detailId, function(data) {
 
@@ -323,19 +331,8 @@ var DetailContext = function() {
 	self.chosenReceiveds = ko.observableArray([]);
 	// 匹配主营业务收入
 	self.match = function() {
-		// var checks = new Array();
-		// for (var i = 0; i < self.receiveds().length; i++) {
-		// var sou = self.receiveds()[i];
-		// for (var j = 0; j < self.chosenReceiveds().length; j++) {
-		// var des = self.chosenReceiveds()[j];
-		// var x = des.split(";");
-		// if (x[1] == sou.related_pk) {
-		// checks.push(sou);
-		// }
-		// }
-		// }
 
-		if (self.detail().match_flg == "Y") {
+		if (self.detail().match_flg == "Y" || self.detail().match_flg == "O") {
 			fail_msg("请选择未匹配的明细！");
 			return;
 		}
@@ -355,16 +352,20 @@ var DetailContext = function() {
 			fail_msg("匹配金额不同！不能匹配");
 			return;
 		}
-		var json = '{"detailId":"' + self.chosenDetails() + '","arr":[';
+		let json_obj = {};
+		json_obj.detailId = self.chosenDetails();
+		json_obj.arr = new Array();
+
 		for (var i = 0; i < self.chosenReceiveds().length; i++) {
-			json += '{"related_pk":"' + self.chosenReceiveds()[i].related_pk + '","from_where":"'
-					+ self.chosenReceiveds()[i].from_where + '"';
-			if (i == self.chosenReceiveds().length - 1) {
-				json += '}]}';
-			} else {
-				json += '},';
-			}
+			let arr_obj = {};
+			arr_obj.related_pk = self.chosenReceiveds()[i].related_pk;
+			arr_obj.from_where = self.chosenReceiveds()[i].from_where;
+
+			json_obj.arr.push(arr_obj);
+
 		}
+
+		const json = JSON.stringify(json_obj);
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -412,7 +413,7 @@ var DetailContext = function() {
 					for (var i = 0; i < self.chosenReceiveds().length; i++) {
 						related_pks += self.chosenReceiveds()[i].related_pk
 						if (i != self.chosenReceiveds().length - 1) {
-							related_pks += ',';
+							related_pks += '@@';
 						}
 					}
 
@@ -434,10 +435,9 @@ var DetailContext = function() {
 		});
 	}
 	self.viewComment = function(detail) {
+		let t = detail.from_where + detail.type;
 
-		if (detail.type == "SUM") {
-			msg(detail.comment);
-		} else {
+		if (t.indexOf("CRECEIVED") > -1) {
 			var param = "related_pk=" + detail.related_pk;
 			startLoadingSimpleIndicator("加载中");
 			$.getJSON(self.apiurl + 'order/searchOrderByRelatedPk', param, function(data) {
@@ -460,14 +460,16 @@ var DetailContext = function() {
 					}
 				});
 			});
+		} else {
+			msg(detail.comment);
 		}
 	};
-	self.viewDetail = function(related_pk) {
-		var param = "related_pks=" + related_pk;
+	self.viewDetail = function(related_pk, from_where) {
 		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'sale/searchByRelatedPks', param, function(data) {
+		var param = "related_pk=" + related_pk + "&from_where=" + from_where;
+		$.getJSON(self.apiurl + 'receivable/searchAllAboutReceivedByRelatedPks', param, function(data) {
 
-			self.sumDetails(data.receiveds);
+			self.sumDetails(data.received_details);
 			self.sumDetail(self.sumDetails()[0]);
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
@@ -479,7 +481,7 @@ var DetailContext = function() {
 				closeBtn : [1, true],
 				shadeClose : false,
 				area : ['800px', 'auto'],
-				offset : ['150px', ''],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#sum_detail1'
@@ -491,7 +493,7 @@ var DetailContext = function() {
 		});
 	};
 	// 查看收入凭证
-	self.checkVoucherPic = function(fileName, received_time) {
+	self.checkVoucherPic = function(fileName, received_time, from_where) {
 		$("#img-pic").attr("src", "");
 		budgetConfirmCheckLayer = $.layer({
 			type : 1,
@@ -509,12 +511,26 @@ var DetailContext = function() {
 				console.log("Done");
 			}
 		});
-		var subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
+
+		let subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
+		let fileType = "";
+		switch (from_where) {
+			case "C" :
+				fileType = "CLIENT_RECEIVED_VOUCHER";
+				break;
+			case "D" :
+			case "A" :
+			case "AR" :
+				fileType = "SUPPLIER_RECEIVED_VOUCHER";
+				break;
+			default :
+				console.error("no this type");
+		}
 
 		$("#img-pic").attr(
 				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=CLIENT_RECEIVED_VOUCHER&subFolder=" + subFolder);
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=" + fileType + "&subFolder="
+						+ subFolder);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(

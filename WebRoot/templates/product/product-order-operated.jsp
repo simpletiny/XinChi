@@ -278,7 +278,7 @@ tr td {
 							<th style="color: red">决算价格</th>
 						</tr>
 					</thead>
-					<tbody data-bind="foreach:sale_orders">
+					<tbody data-bind="foreach:final_sale_orders">
 						<tr>
 							<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
 							<td data-bind="text:$data.team_number"></td>
@@ -370,7 +370,7 @@ tr td {
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
-							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -450,7 +450,7 @@ tr td {
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.cellphone_A"></td>
-							<td data-bind="text:$data.cellphone_A"></td>
+							<td data-bind="text:$data.cellphone_B"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -465,6 +465,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.3"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.001"></script>
 </body>
 </html>

@@ -33,6 +33,8 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	private String deposit_type;
 
+	private String deposit_number;
+
 	// DTO
 	private List<String> statuses;
 	private String voucher_file_name;
@@ -173,6 +175,14 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setPay_index(int pay_index) {
 		this.pay_index = pay_index;
+	}
+
+	public String getDeposit_number() {
+		return deposit_number;
+	}
+
+	public void setDeposit_number(String deposit_number) {
+		this.deposit_number = deposit_number;
 	}
 
 }

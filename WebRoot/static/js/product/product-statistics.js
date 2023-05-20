@@ -62,12 +62,14 @@ var CardContext = function() {
 				data_area.push(obj);
 			});
 			$(self.productData()).each(function(idx, data) {
+
 				var obj = new Object();
 				obj.name = data.product_name;
 				obj.value = data.sum_people;
-
 				data_product.push(obj);
+
 			});
+
 			$(data.saleData).each(function(idx, data) {
 				var obj = new Object();
 				obj.name = data.sale_name;
@@ -76,10 +78,12 @@ var CardContext = function() {
 				data_sale.push(obj);
 			});
 			self.saleData(data.saleData);
-			self.createChart(title_area, chart_area, data_area);
-			self.createChart(title_product, chart_product, data_product);
-			self.createChart(title_sale, chart_sale, data_sale);
+			self.createChart(title_area, chart_area, shiftDataArray(data_area));
+			self.createChart(title_product, chart_product, shiftDataArray(data_product));
+			self.createChart(title_sale, chart_sale, shiftDataArray(data_sale));
 
+			$(".list-result").height(
+					$("#main-table-1").height() + $("#main-table-2").height() + $("#main-table-3").height() + 120);
 			endLoadingIndicator();
 		});
 
@@ -95,13 +99,6 @@ var CardContext = function() {
 			tooltip : {
 				trigger : 'item',
 				formatter : '{b} : {c} ({d}%)'
-			},
-			legend : {
-				// orient: 'vertical',
-				// top: 'middle',
-				bottom : 10,
-				left : 'center',
-				data : ['西凉', '益州', '兖州', '荆州', '幽州']
 			},
 			series : [{
 				type : 'pie',
@@ -123,11 +120,11 @@ var CardContext = function() {
 		chart.setOption(option, true);
 	}
 	self.changeRangeType = function(data, event) {
+		var data_area = new Array();
+		var data_product = new Array();
+		var data_sale = new Array();
 		switch ($(event.target).val()) {
 			case "people_cnt" :
-				var data_area = new Array();
-				var data_product = new Array();
-				var data_sale = new Array();
 				title_area.sub = "按收客数统计";
 				title_product.sub = "按收客数统计";
 				title_sale.sub = "按收客数统计";
@@ -153,17 +150,11 @@ var CardContext = function() {
 					data_sale.push(obj);
 				});
 
-				self.createChart(title_area, chart_area, data_area);
-				self.createChart(title_product, chart_product, data_product);
-				self.createChart(title_sale, chart_sale, data_sale);
 				break;
 			case "order_cnt" :
 				title_area.sub = "按订单数统计";
 				title_product.sub = "按订单数统计";
 				title_sale.sub = "按订单数统计";
-				var data_area = new Array();
-				var data_product = new Array();
-				var data_sale = new Array();
 				$(self.areaData()).each(function(idx, data) {
 					var obj = new Object();
 					obj.name = data.area;
@@ -186,17 +177,11 @@ var CardContext = function() {
 					data_sale.push(obj);
 				});
 
-				self.createChart(title_area, chart_area, data_area);
-				self.createChart(title_product, chart_product, data_product);
-				self.createChart(title_sale, chart_sale, data_sale);
 				break;
 			case "value_sum" :
 				title_area.sub = "按总分值统计";
 				title_product.sub = "按总分值统计";
 				title_sale.sub = "按均单统计";
-				var data_area = new Array();
-				var data_product = new Array();
-				var data_sale = new Array();
 				$(self.areaData()).each(function(idx, data) {
 					var obj = new Object();
 					obj.name = data.area;
@@ -219,13 +204,42 @@ var CardContext = function() {
 					data_sale.push(obj);
 				});
 
-				self.createChart(title_area, chart_area, data_area);
-				self.createChart(title_product, chart_product, data_product);
-				self.createChart(title_sale, chart_sale, data_sale);
 				break;
 
 		}
+
+		self.createChart(title_area, chart_area, shiftDataArray(data_area));
+		self.createChart(title_product, chart_product, shiftDataArray(data_product));
+		self.createChart(title_sale, chart_sale, shiftDataArray(data_sale));
 	}
+}
+
+var shiftDataArray = function(arr) {
+	let result = new Array();
+	let sum = 0;
+	let other = new Object();
+	other.name = "其它";
+	other.value = 0;
+	result.push(other);
+	$(arr).each(function(idx, data) {
+		sum += +data.value;
+	});
+	$(arr).each(function(idx, data) {
+		if (data.value / sum < 0.05) {
+			result[0].value += +data.value;
+		} else {
+			var obj = new Object();
+			obj.name = data.name;
+			obj.value = data.value;
+			result.push(obj);
+		}
+	});
+
+	if (result[0].value < 1) {
+		result.shift();
+	}
+
+	return result;
 }
 var ctx = new CardContext();
 $(document).ready(function() {

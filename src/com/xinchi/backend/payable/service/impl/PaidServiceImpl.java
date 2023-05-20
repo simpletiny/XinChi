@@ -296,7 +296,6 @@ public class PaidServiceImpl implements PaidService {
 			dao.insert(detail);
 			payableService.updatePayablePaid(detail);
 		}
-		SimpletinyUser su = new SimpletinyUser();
 		// 生成支出审批数据
 		PayApprovalBean pa = new PayApprovalBean();
 		SupplierEmployeeBean supplierEmployee = supplierEmployeeDao.selectByPrimaryKey(supplier_employee_pk);
@@ -306,7 +305,7 @@ public class PaidServiceImpl implements PaidService {
 		pa.setItem(ResourcesConstants.PAY_TYPE_DIJIE);
 		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
 		pa.setRelated_pk(related_pk);
-		pa.setApply_user(su.getUser().getUser_number());
+		pa.setApply_user(SimpletinyUser.user().getUser_number());
 		pa.setApply_time(DateUtil.getTimeMillis());
 		pa.setLimit_time(detail.getLimit_time());
 		pa.setBack_pk(related_pk);

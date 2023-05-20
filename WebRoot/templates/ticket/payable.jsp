@@ -64,6 +64,10 @@
 								<input type="text" class="form-control" placeholder="首航段" name="option.from_to_city" />
 							</div>
 						</div>
+						<label class="col-md-1 control-label">首航月份</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control month-picker-st" placeholder="首航月份" name="option.first_month" />
+						</div>
 						<div class="span6">
 							<div data-bind="foreach: payableTypes" style="padding-top: 4px;">
 								<em class="small-box"> <input type="checkbox"
@@ -127,9 +131,12 @@
 								<td data-bind="text: $data.financial_body_name"></td>
 								<td data-bind="text: $root.payableTypesMapping[$data.payable_type]"></td>
 								<td data-bind="text: $data.PNR"></td>
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.first_date"></a></td>
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.from_to_city"></a></td>
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkPassengers($data);},text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.first_date"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkTicketInfo($data);},text: $data.from_to_city"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.checkPassengers($data);},text: $data.passenger"></a></td>
 								<td data-bind="text:$data.budget_payable" class="rmb"></td>
 								<td data-bind="text: $data.paid" class="rmb"></td>
 								<td data-bind="text:$data.budget_balance" class="rmb"></td>
@@ -511,7 +518,7 @@
 						<input type="text" class="form-control" name="deposit.supplier_name" />
 					</div>
 				</div>
-				<div> 
+				<div>
 					<label class="col-md-1 control-label">支出账户</label>
 					<div class="col-md-3" style="float: left">
 						<select class="form-control" name="deposit.account"

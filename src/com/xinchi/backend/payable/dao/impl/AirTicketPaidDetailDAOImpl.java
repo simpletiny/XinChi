@@ -7,6 +7,8 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPaidDto;
 import com.xinchi.common.DaoUtil;
@@ -60,7 +62,7 @@ public class AirTicketPaidDetailDAOImpl extends SqlSessionDaoSupport implements 
 
 	@Override
 	public List<AirTicketPaidDto> selectByPage(Page<AirTicketPaidDto> page) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ViewAirTicketPaidDetailMapper.selectByPage", page);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByPage", page);
 	}
 
 	@Override
@@ -72,6 +74,18 @@ public class AirTicketPaidDetailDAOImpl extends SqlSessionDaoSupport implements 
 	public AirTicketPaidDetailBean selectGroupDetailByRelatedPk(String related_pk) {
 		return daoUtil.selectOneValueByParam(
 				"com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectGroupDetailByRelatedPk", related_pk);
+	}
+
+	@Override
+	public List<AirOtherPaymentDto> searchDepositDeducts(AirServiceFeeDto summary_option) {
+		return daoUtil.selectObjectsByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectDepositDeducts",
+				summary_option);
+	}
+
+	@Override
+	public List<AirOtherPaymentDto> searchNoneBussinessPayment(AirServiceFeeDto summary_option) {
+		return daoUtil.selectObjectsByParam(
+				"com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectNoneBusinessPayment", summary_option);
 	}
 
 }

@@ -28,6 +28,16 @@
 		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
 		<result column="card_account" property="card_account" jdbcType="VARCHAR" />
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
+		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
+		<result column="belong_month" property="belong_month" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OtherPaymentMap" type="com.xinchi.bean.AirOtherPaymentDto">
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="pay_money" property="pay_money" jdbcType="DECIMAL" />
+		<result column="receive_money" property="receive_money" jdbcType="DECIMAL" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		supplier_employee_pk,
@@ -52,7 +62,9 @@
 		voucher_number,
 		receiver,
 		card_account,
-		voucher_file
+		voucher_file,
+		product_manager,
+		belong_month
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -91,11 +103,15 @@
 		A.voucher_number,
 		A.receiver,
 		A.card_account,
-		A.voucher_file
+		A.voucher_file,
+		A.product_manager,
+		A.belong_month
 
-		from air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		from air_ticket_paid_detail A
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
-		where related_pk = #{related_pk,jdbcType=CHAR}
+		where
+		related_pk = #{related_pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectGroupDetailByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -123,12 +139,16 @@
 		A.voucher_number,
 		A.receiver,
 		A.card_account,
-		A.voucher_file
+		A.voucher_file,
+		A.product_manager,
+		A.belong_month
 
-		from view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
-		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		from
+		view_air_ticket_paid_detail A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON
+		B.financial_body_pk = C.pk
 		where related_pk = #{related_pk,jdbcType=CHAR}
-		
+
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -210,6 +230,12 @@
 			<if test="voucher_file != null">
 				voucher_file,
 			</if>
+			<if test="product_manager != null">
+				product_manager,
+			</if>
+			<if test="belong_month != null">
+				belong_month,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supplier_employee_pk != null">
@@ -280,6 +306,12 @@
 			</if>
 			<if test="voucher_file != null">
 				#{voucher_file,jdbcType=VARCHAR},
+			</if>
+			<if test="product_manager != null">
+				#{product_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="belong_month != null">
+				#{belong_month,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -354,6 +386,12 @@
 			<if test="voucher_file != null">
 				voucher_file = #{voucher_file,jdbcType=VARCHAR},
 			</if>
+			<if test="product_manager != null">
+				product_manager = #{product_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="belong_month != null">
+				belong_month = #{belong_month,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -361,5 +399,126 @@
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_paid_detail
+	</select>
+	<select id="selectDepositDeducts" parameterType="com.xinchi.bean.AirOtherPaymentDto" resultMap="OtherPaymentMap">
+		SELECT
+		SUM(A.money) AS money,
+		A.product_manager AS product_manager_number,
+		B.user_name AS product_manager_name
+		FROM
+		air_ticket_paid_detail A
+		LEFT JOIN
+		user_base B ON A.product_manager = B.user_number
+
+		<where>
+			and A.type = 'DEDUCT'
+			<if test="first_month != null and first_month !=''">
+				and A.belong_month = #{first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and A.product_manager = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY product_manager
+		ORDER BY money DESC
+	</select>
+	<select id="selectNoneBusinessPayment" parameterType="com.xinchi.bean.AirOtherPaymentDto" resultMap="OtherPaymentMap">
+		SELECT
+		SUM(IF(type='RECEIVE',money,0)) AS receive_money,
+		SUM(IF(type='PAY',money,0)) AS pay_money,
+		SUM(IF(type='RECEIVE',-money,money)) AS money,
+		B.user_name  AS product_manager_name
+		FROM
+		air_ticket_paid_detail A
+		LEFT JOIN user_base B ON A.product_manager = B.user_number
+		<where>
+			and (type = 'RECEIVE' OR type = 'PAY')
+			<if test="first_month != null and first_month !=''">
+				and belong_month = #{first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and product_manager = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY product_manager
+		ORDER BY money DESC
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		B.financial_body_pk,
+		C.supplier_name AS financial_body_name,
+		B.name AS supplier_employee_name,
+		A.money,
+		A.allot_money,
+		A.sum_money,
+		A.status,
+		A.type,
+		A.time,
+		A.limit_time,
+		A.confirm_time,
+		A.approve_user,
+		A.related_pk,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.base_pk,
+		A.PNR,
+		A.voucher_number,
+		A.create_time,
+		A.update_time,
+		COALESCE(C.supplier_name, A.receiver) AS receiver,
+		D.first_date,
+		D.passenger,
+		D.from_to_city,
+		A.product_manager,
+		E.user_name AS product_manager_name,
+		A.belong_month
+		from
+		air_ticket_paid_detail A LEFT JOIN supplier_employee B ON
+		A.supplier_employee_pk = B.pk
+		LEFT JOIN supplier C ON B.financial_body_pk = C.pk
+		LEFT JOIN air_ticket_payable D ON
+		A.base_pk = D.pk
+		LEFT JOIN user_base E ON A.product_manager = E.user_number
+		<where>
+			<if test="params.bo.statuses != null and params.bo.statuses !=''">
+				and A.status in
+				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">
+					#{params.bo.statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and LEFT(A.time,10) &gt;= #{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and LEFT(A.time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.receiver != null and params.bo.receiver !=''">
+				and COALESCE(C.supplier_name, A.receiver) like CONCAT('%',#{params.bo.receiver,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.type != null and params.bo.type !=''">
+				and A.type =#{params.bo.type,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.from_to_city != null and params.bo.from_to_city !=''">
+				and D.from_to_city like CONCAT('%',#{params.bo.from_to_city,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.first_date_from != null and params.bo.first_date_from !=''">
+				and D.first_date &gt;= #{params.bo.first_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.first_date_to != null and params.bo.first_date_to !=''">
+				and D.first_date &lt;= #{params.bo.first_date_to,jdbcType=VARCHAR}
+			</if>
+			order by D.first_date DESC,A.time DESC
+		</where>
 	</select>
 </mapper>

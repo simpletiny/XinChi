@@ -69,16 +69,18 @@ var ProductBoxContext = function() {
 			fail_msg("销售订单未决算，不能审核！");
 			return;
 		}
+		if (report.independent_flg != 'A') {
+			if (report.product_final_flg == null) {
+				fail_msg("产品未操作，不能审核！");
+				return;
+			}
 
-		if (report.product_final_flg == null) {
-			fail_msg("产品未操作，不能审核！");
-			return;
+			if (report.product_final_flg.indexOf("N") >= 0) {
+				fail_msg("地接款未决算，不能审核！");
+				return;
+			}
 		}
 
-		if (report.product_final_flg.indexOf("N") >= 0) {
-			fail_msg("地接款未决算，不能审核！");
-			return;
-		}
 		if (report.air_ticket_cost == null) {
 			fail_msg("请等待票务填报机票款！");
 			return;

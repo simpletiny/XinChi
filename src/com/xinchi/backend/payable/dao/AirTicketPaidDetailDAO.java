@@ -2,6 +2,8 @@ package com.xinchi.backend.payable.dao;
 
 import java.util.List;
 
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPaidDto;
 import com.xinchi.tools.Page;
@@ -50,4 +52,8 @@ public interface AirTicketPaidDetailDAO {
 	public List<AirTicketPaidDetailBean> selectByRelatedPk(String related_pk);
 
 	public AirTicketPaidDetailBean selectGroupDetailByRelatedPk(String related_pk);
+
+	public List<AirOtherPaymentDto> searchDepositDeducts(AirServiceFeeDto summary_option);
+
+	public List<AirOtherPaymentDto> searchNoneBussinessPayment(AirServiceFeeDto summary_option);
 }

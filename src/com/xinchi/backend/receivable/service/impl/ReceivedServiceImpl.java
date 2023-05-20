@@ -2,6 +2,7 @@ package com.xinchi.backend.receivable.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.accounting.dao.PayApprovalDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
+import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
+import com.xinchi.backend.payable.dao.PaidDAO;
+import com.xinchi.backend.receivable.dao.AirReceivedDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
 import com.xinchi.backend.receivable.service.ReceivedService;
+import com.xinchi.bean.AirReceivedDetailBean;
+import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReceivableBean;
+import com.xinchi.bean.ReceivedDetailDto;
+import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -231,6 +239,8 @@ public class ReceivedServiceImpl implements ReceivedService {
 		String pk = DBCommonUtil.genPk();
 		detail.setPk(pk);
 		detail.setRelated_pk(pk);
+		detail.setSum_received(detail.getReceived());
+		detail.setAllot_received(detail.getAllot_received());
 
 		dao.insertWithPk(detail);
 		// 保存收入凭证
@@ -492,7 +502,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 	@Override
 	public String rejectRecived(String related_pks) {
-		String[] rps = related_pks.split(",");
+		String[] rps = related_pks.split(ResourcesConstants.DELIMITER);
 
 		for (String related_pk : rps) {
 			List<ClientReceivedDetailBean> receiveds = dao.selectByRelatedPks(related_pk);
@@ -513,5 +523,57 @@ public class ReceivedServiceImpl implements ReceivedService {
 		}
 
 		return SUCCESS;
+	}
+
+	@Autowired
+	private PaidDAO paidDao;
+
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDao;
+
+	@Autowired
+	private AirReceivedDAO airReceivedDao;
+
+	@Override
+	public List<ReceivedDetailDto> searchAllAboutReceivedByRelatedPks(String related_pk, String from_where) {
+		List<ReceivedDetailDto> results = new ArrayList<ReceivedDetailDto>();
+		switch (from_where) {
+		case "C":
+			List<ClientReceivedDetailBean> c_details = dao.selectByRelatedPks(related_pk);
+			for (ClientReceivedDetailBean detail : c_details) {
+				ReceivedDetailDto result = new ReceivedDetailDto();
+				result.copyFromClientReceived(detail);
+				results.add(result);
+			}
+			break;
+		case "D":
+			List<SupplierPaidDetailBean> d_details = paidDao.selectSupplierPaidDetailByRelatedPk(related_pk);
+			for (SupplierPaidDetailBean detail : d_details) {
+				ReceivedDetailDto result = new ReceivedDetailDto();
+				result.copyFromSupplierReceived(detail);
+				results.add(result);
+			}
+			break;
+		case "A":
+			List<AirTicketPaidDetailBean> a_details = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
+			for (AirTicketPaidDetailBean detail : a_details) {
+				ReceivedDetailDto result = new ReceivedDetailDto();
+				result.copyFromAirSupplierReceived(detail);
+				results.add(result);
+			}
+			break;
+		case "AR":
+			List<AirReceivedDetailBean> ar_details = airReceivedDao.selectByRelatedPk(related_pk);
+			for (AirReceivedDetailBean detail : ar_details) {
+				ReceivedDetailDto result = new ReceivedDetailDto();
+				result.copyFromAirReceived(detail);
+				results.add(result);
+			}
+			break;
+		default:
+			break;
+		}
+
+		return results;
 	}
 }

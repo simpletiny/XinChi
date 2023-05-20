@@ -88,9 +88,8 @@ public class AccountingAction extends BaseAction {
 	private String reject_reason;
 
 	public String rejectPayApply() {
-		SimpletinyUser su = new SimpletinyUser();
 		PayApprovalBean pa = payApprovalService.selectByPrimaryKey(pk);
-		pa.setApproval_user(su.getUser().getUser_number());
+		pa.setApproval_user(SimpletinyUser.user().getUser_number());
 		pa.setApproval_time(DateUtil.getMinStr());
 		pa.setStatus(ResourcesConstants.PAID_STATUS_NO);
 		if (SimpletinyString.isEmpty(reject_reason))

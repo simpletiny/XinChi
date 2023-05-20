@@ -58,6 +58,7 @@ public class PaginationInterceptor implements Interceptor {
 			databaseType = Dialect.Type.MYSQL;
 		}
 		Dialect dialect = null;
+
 		switch (databaseType) {
 		case MYSQL:
 			dialect = new MySqlDialect();
@@ -70,6 +71,7 @@ public class PaginationInterceptor implements Interceptor {
 		String pageSqlId = configuration.getVariables().getProperty("pageSqlId");
 		if (StringUtils.isEmpty(pageSqlId))
 			pageSqlId = ".*ByPage$";
+
 		MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
 		if (obj instanceof Page<?> && mappedStatement.getId().matches(pageSqlId)) {
 			Page<?> page = (Page<?>) obj;

@@ -11,6 +11,9 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css?v1.001" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
+
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -54,12 +57,10 @@
 
 						<label class="col-md-1 control-label">首航日期</label>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker"  placeholder="from"
-								name="option.first_date_from" />
+							<input type="text" class="form-control date-picker" placeholder="from" name="option.first_date_from" />
 						</div>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" placeholder="to"
-								name="option.first_date_to" />
+							<input type="text" class="form-control date-picker" placeholder="to" name="option.first_date_to" />
 						</div>
 
 						<div>
@@ -129,6 +130,8 @@
 								<th>入账日期</th>
 								<th>状态</th>
 								<th>支付详情</th>
+								<th>责任产品</th>
+								<th>归属月份</th>
 								<th>备注</th>
 							</tr>
 						</thead>
@@ -148,12 +151,7 @@
 									data-bind="click:function(){$root.checkPassengers($data);},text: $data.passenger"></a></td>
 
 								<td data-bind="text: $data.supplier_employee_name"></td>
-								<!-- ko if:$data.type!='DEDUCT' -->
-								<td data-bind="text: $data.financial_body_name"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.type=='DEDUCT' -->
 								<td data-bind="text: $data.receiver"></td>
-								<!-- /ko -->
 								<!-- ko if:$data.type=='BACK' || $data.type=='RECEIVE' -->
 								<td data-bind="text: $data.confirm_time"></td>
 								<!-- /ko -->
@@ -172,7 +170,20 @@
 								<!-- ko if:$data.status=='N' -->
 								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
+
 								<td><a href="javascript:void(0)" data-bind="click:$root.viewDetail">查看</a></td>
+								<!-- ko if:$data.product_manager_name==null && ($data.type=='DEDUCT'|| $data.base_pk=='SIMPLE')-->
+								<td><a href="javascript:void(0)" data-bind="click:$root.addProductManager">添加</a></td>
+								<!-- /ko -->
+								<!-- ko ifnot:$data.product_manager_name==null && ($data.type=='DEDUCT'|| $data.base_pk=='SIMPLE') -->
+								<td data-bind="text:$data.product_manager_name"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.belong_month==null && ($data.type=='DEDUCT'|| $data.base_pk=='SIMPLE') -->
+								<td><a href="javascript:void(0)" data-bind="click:$root.addProductManager">添加</a></td>
+								<!-- /ko -->
+								<!-- ko ifnot:$data.belong_month==null && ($data.type=='DEDUCT' || $data.base_pk=='SIMPLE') -->
+								<td data-bind="text:$data.belong_month"></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>
@@ -311,18 +322,34 @@
 				</div>
 			</div>
 			<div class="input-row clearfloat">
-				<div class="col-md-12 required">
+				<div class="col-md-6 required">
 					<label class="l">扣款时间</label>
-					<div class="ip" style="width: 20%">
+					<div class="ip" style="width: 40%">
 						<input type="text" class="ip- date-picker date" id="deduct-date" required="required" />
+					</div>
+				</div>
+				<div class="col-md-6 required">
+					<label class="l">责任经理</label>
+					<div class="ip" style="width: 40%">
+						<select class="form-control" id="product-manager" required="required"
+							data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
-				<div class="col-md-12 required">
+				<div class="col-md-6 required">
+					<label class="l">归属月份</label>
+					<div class="ip" style="width: 40%">
+						<input type="text" class="ip- month-picker-st" id="belong-month" value='${user.current_date.substring(0,7)}'
+							placeholder="月份" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-8 required">
 					<label class="l">备注</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default" rows="3" maxlength="200" id="comment" placeholder="需要备注说明的信息"></textarea>
+						<textarea type="text" class="ip-default" rows="7" maxlength="200" id="comment" placeholder="需要备注说明的信息"></textarea>
 					</div>
 				</div>
 			</div>
@@ -335,6 +362,35 @@
 				</div>
 			</div>
 		</form>
+	</div>
+	<!-- 添加责任产品-->
+	<div id="product-manager-add" style="display: none; width: 400px; height: 200px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-12 required">
+				<label class="l">责任经理</label>
+				<div class="ip" style="width: 60%">
+					<select class="form-control" id="add-product-manager" required="required"
+						data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12 required">
+				<label class="l">归属月份</label>
+				<div class="ip" style="width: 60%">
+					<input type="text" class="ip- month-picker-st" placeholder="月份" value='${user.current_date.substring(0,7)}'
+						id="temp-belong-month" />
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doAddProductManager">保存</a> <a type="button"
+						class="btn btn-green btn-r" data-bind="click: cancelAddProductManager">取消</a>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- 选择航司押金 -->
@@ -461,8 +517,10 @@
 	<script>
 		$(".ticket-finance").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.003"></script>
 </body>
 </html>

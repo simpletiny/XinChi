@@ -144,11 +144,13 @@ var OrderContext = function() {
 			return;
 		}
 
-		startLoadingSimpleIndicator("保存中");
 		const url = self.apiurl + 'order/updateConfirmedNonStandardOrder';
 		var data = $("form").serialize();
 
 		// 名单json
+		// 判断是否有名单
+		var hasNames = false;
+		var hasChairman = false;
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		var json = '[';
@@ -167,10 +169,37 @@ var OrderContext = function() {
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			var id = $(tr).find("[st='id']").val();
 
+			if (name == "" && id == "") {
+				continue;
+			}
+
+			if ((name != "" && id == "") || (name == "" && id != "")) {
+				fail_msg("请正确填写第" + index + "个名单!");
+				return;
+			}
+
+			if (name != "" && id != "" && !hasNames) {
+				hasNames = true;
+			}
+
+			if (teamChairman == "Y") {
+				hasChairman = true;
+			}
+
 			json += '{"pk":"' + pk + '","lock_flg":"' + lock_flg + '","chairman":"' + teamChairman + '","index":"'
 					+ index + '","name":"' + name + '","sex":"' + sex + '","cellphone_A":"' + cellphone_A
 					+ '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"}';
 		}
+
+		if (!hasNames) {
+			fail_msg("没有名单，不能确认！");
+			return;
+		}
+		if (!hasChairman) {
+			fail_msg("请指定团长！");
+			return;
+		}
+		startLoadingSimpleIndicator("保存中");
 		json += ']';
 		data += "&json=" + json;
 

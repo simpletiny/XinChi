@@ -20,6 +20,7 @@ public class ReceivedDetailDto extends SupperBO implements Serializable {
 	private String related_pk;
 
 	private String apply_user;
+	private String apply_user_number;
 
 	private String apply_date;
 
@@ -30,6 +31,67 @@ public class ReceivedDetailDto extends SupperBO implements Serializable {
 	private String from_where;
 
 	private String voucher_file;
+
+	private String business_number;
+	private BigDecimal sum_received;
+
+	private String comment;
+
+	/**
+	 * 从客户收款详情复制
+	 * 
+	 * @param detail
+	 */
+	public void copyFromClientReceived(ClientReceivedDetailBean detail) {
+		this.card_account = detail.getCard_account();
+		this.sum_received = detail.getSum_received();
+		this.received_time = detail.getReceived_time();
+		this.business_number = detail.getTeam_number();
+		this.pay_user = detail.getClient_employee_name();
+		this.received = detail.getReceived();
+	}
+
+	/**
+	 * 从供应商返款复制
+	 * 
+	 * @param detail
+	 */
+	public void copyFromSupplierReceived(SupplierPaidDetailBean detail) {
+		this.card_account = detail.getCard_account();
+		this.sum_received = detail.getAllot_money();
+		this.received_time = detail.getTime();
+		this.business_number = detail.getTeam_number();
+		this.pay_user = detail.getSupplier_employee_name();
+		this.received = detail.getMoney().abs();
+	}
+
+	/**
+	 * 从机票返款复制
+	 * 
+	 * @param detail
+	 */
+	public void copyFromAirSupplierReceived(AirTicketPaidDetailBean detail) {
+		this.card_account = detail.getCard_account();
+		this.sum_received = detail.getAllot_money();
+		this.received_time = detail.getTime();
+		this.business_number = "无";
+		this.pay_user = detail.getSupplier_employee_name();
+		this.received = detail.getMoney().abs();
+	}
+
+	/**
+	 * 从机票收入详情复制
+	 * 
+	 * @param detail
+	 */
+	public void copyFromAirReceived(AirReceivedDetailBean detail) {
+		this.card_account = detail.getCard_account();
+		this.sum_received = detail.getSum_received();
+		this.received_time = detail.getReceived_time();
+		this.business_number = detail.getBusiness_number();
+		this.pay_user = detail.getSupplier_name();
+		this.received = detail.getReceived();
+	}
 
 	// option
 	private String date;
@@ -128,6 +190,38 @@ public class ReceivedDetailDto extends SupperBO implements Serializable {
 
 	public void setVoucher_file(String voucher_file) {
 		this.voucher_file = voucher_file;
+	}
+
+	public String getBusiness_number() {
+		return business_number;
+	}
+
+	public BigDecimal getSum_received() {
+		return sum_received;
+	}
+
+	public void setBusiness_number(String business_number) {
+		this.business_number = business_number;
+	}
+
+	public void setSum_received(BigDecimal sum_received) {
+		this.sum_received = sum_received;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getApply_user_number() {
+		return apply_user_number;
+	}
+
+	public void setApply_user_number(String apply_user_number) {
+		this.apply_user_number = apply_user_number;
 	}
 
 }

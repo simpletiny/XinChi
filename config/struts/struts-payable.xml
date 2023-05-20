@@ -74,7 +74,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 查询应付款涉及到的机票信息 related_pk-->
+		<!-- 查询应付款涉及到的机票信息 related_pk -->
 		<action name="searchTicketInfoByRelatedPk" class="airTicketPayableAction" method="searchTicketInfoByRelatedPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -93,6 +93,19 @@
 		<action name="rollBackTicketPayApply" class="airTicketPaidDetailAction" method="rollBackTicketPayApply">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="addProductManager" class="airTicketPaidDetailAction" method="addProductManager">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 票务财务汇总 start -->
+		<!-- 查询财务汇总信息 -->
+		<action name="searchAirPayableSummary" class="airTicketPayableAction" method="searchAirPayableSummary">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 票务财务汇总 end -->
+
 		<!-- 查询地接款汇总信息 -->
 		<action name="searchPayableSummaryByPage" class="payableAction" method="searchPayableSummaryByPage">
 			<result name="success" type="json">

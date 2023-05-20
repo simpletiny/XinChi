@@ -64,6 +64,7 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	// dto
 	private String receiver_pk;
+	private String belong_month;
 
 	public String getAccount() {
 		return account;
@@ -327,6 +328,14 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setPurpose_ticket(String purpose_ticket) {
 		this.purpose_ticket = purpose_ticket;
+	}
+
+	public String getBelong_month() {
+		return belong_month;
+	}
+
+	public void setBelong_month(String belong_month) {
+		this.belong_month = belong_month;
 	}
 
 }
