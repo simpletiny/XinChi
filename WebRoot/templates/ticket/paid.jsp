@@ -516,8 +516,8 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
-	</div>
+		</div>2
+	</div>3
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
