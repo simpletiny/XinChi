@@ -21,7 +21,6 @@ public class BusinessInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 
 		before(invocation);
-
 		String result = "";
 
 		try {

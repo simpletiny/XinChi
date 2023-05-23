@@ -10,7 +10,6 @@
 <head>
 <jsp:include page="layout.jsp" />
 <title>欣驰国际</title>
-<script src="<%=basePath%>static/vendor/chart/chart.js"></script>
 <script>
 	
 </script>
@@ -24,10 +23,6 @@
 			<canvas id="userChart" width="1000" height="400"></canvas>
 		</div>
 	</div>
-
-
-
-
 
 </body>
 </html>

@@ -44,6 +44,16 @@ public class AirReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 打回押金退还记录
+	 * 
+	 * @return
+	 */
+	public String rollBackReceivedDetail() {
+		resultStr = service.rollBackReceived(related_pk);
+		return SUCCESS;
+	}
+
 	public List<AirReceivedDetailBean> getDetails() {
 		return details;
 	}

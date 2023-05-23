@@ -101,8 +101,16 @@
 						<div class="col-md-6 required">
 							<label class="l">归属月份</label>
 							<div class="ip">
-								<input type="text" id="name" class="ip- month-picker-st" placeholder="归属月份" value='${user.current_date.substring(0,7)}' maxlength="7"
-									name="payment_detail.belong_month" required="required" />
+								<input type="text" id="name" class="ip- month-picker-st" placeholder="归属月份"
+									value='${user.current_date.substring(0,7)}' maxlength="7" name="payment_detail.belong_month"
+									required="required" />
+							</div>
+						</div>
+						<div class="col-md-6 required">
+							<label class="l">责任产品</label>
+							<div class="ip">
+								<select class="form-control" name="payment_detail.product_manager"
+									data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
 							</div>
 						</div>
 					</div>
@@ -188,6 +196,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-detail-creation.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-detail-creation.js?v1.002"></script>
 </body>
 </html>

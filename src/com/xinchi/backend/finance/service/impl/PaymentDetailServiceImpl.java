@@ -546,11 +546,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 					detail.setConfirm_time(DateUtil.getMinStr());
 					receivedDao.update(detail);
 
-					ReceivedMatchBean rmb = new ReceivedMatchBean();
-					rmb.setFrom_where(from_where);
-					rmb.setDetail_pk(detail_id);
-					rmb.setReceived_pk(detail.getPk());
-					receivedMatchDao.insert(rmb);
+					saveReceivedMatch(detail_id, from_where, detail.getPk());
 				}
 			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_SUPPLIER)) {
 				List<SupplierPaidDetailBean> receivedDetails = paidDao.selectSupplierPaidDetailByRelatedPk(related_pk);
@@ -559,11 +555,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 					detail.setConfirm_time(DateUtil.getMinStr());
 					paidDao.update(detail);
 
-					ReceivedMatchBean rmb = new ReceivedMatchBean();
-					rmb.setFrom_where(from_where);
-					rmb.setDetail_pk(detail_id);
-					rmb.setReceived_pk(detail.getPk());
-					receivedMatchDao.insert(rmb);
+					saveReceivedMatch(detail_id, from_where, detail.getPk());
 				}
 			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_TICKET)) {
 				List<AirTicketPaidDetailBean> receivedDetails = airTicketPaidDetailDao.selectByRelatedPk(related_pk);
@@ -573,11 +565,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 					detail.setApprove_user(user.getUser_number());
 					airTicketPaidDetailDao.update(detail);
 
-					ReceivedMatchBean rmb = new ReceivedMatchBean();
-					rmb.setFrom_where(from_where);
-					rmb.setDetail_pk(detail_id);
-					rmb.setReceived_pk(detail.getPk());
-					receivedMatchDao.insert(rmb);
+					saveReceivedMatch(detail_id, from_where, detail.getPk());
 				}
 			} else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_RECEIVED)) {
 				List<AirReceivedDetailBean> receivedDetails = airReceivedDao.selectByRelatedPk(related_pk);
@@ -586,12 +574,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 					detail.setConfirm_time(DateUtil.getMinStr());
 					detail.setConfirm_user(user.getUser_number());
 					airReceivedDao.update(detail);
-
-					ReceivedMatchBean rmb = new ReceivedMatchBean();
-					rmb.setFrom_where(from_where);
-					rmb.setDetail_pk(detail_id);
-					rmb.setReceived_pk(detail.getPk());
-					receivedMatchDao.insert(rmb);
+					saveReceivedMatch(detail_id, from_where, detail.getPk());
 				}
 			}
 		}
@@ -601,6 +584,14 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		dao.updateDetail(thisDetail);
 
 		return SUCCESS;
+	}
+
+	private void saveReceivedMatch(String detail_pk, String from_where, String received_pk) {
+		ReceivedMatchBean rmb = new ReceivedMatchBean();
+		rmb.setFrom_where(from_where);
+		rmb.setDetail_pk(detail_pk);
+		rmb.setReceived_pk(received_pk);
+		receivedMatchDao.insert(rmb);
 	}
 
 	@Override

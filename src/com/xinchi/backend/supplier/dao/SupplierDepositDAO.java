@@ -46,4 +46,6 @@ public interface SupplierDepositDAO {
 	public List<SupplierDepositBean> selectByPage(Page page);
 
 	public BigDecimal selectSumBalanceByType(String type);
+
+	public SupplierDepositBean selectByDepositNumber(String deposit_number);
 }

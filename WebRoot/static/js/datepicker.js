@@ -47,13 +47,14 @@ if ($('.datetime-picker-same-2').datetimepicker != null) {
 		lang : 'zh'
 	});
 }
-
 if ($('.month-picker-st').MonthPicker != null) {
 	$('.month-picker-st').MonthPicker({
 		Button : false,
-		MonthFormat : 'yy-mm'
+		MonthFormat : 'yy-mm',
+
 	});
 }
+
 function reloadDatePicker() {
 	$('.date-picker').datetimepicker({
 		format : 'Y-m-d',

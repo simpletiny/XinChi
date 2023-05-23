@@ -64,6 +64,9 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 	private String first_date_from;
 	private String first_date_to;
 
+	private String product_manager;
+	private String belong_month;
+
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;
 	}
@@ -302,6 +305,22 @@ public class AirTicketPaidDto extends SupperBO implements Serializable {
 
 	public void setFirst_date_to(String first_date_to) {
 		this.first_date_to = first_date_to;
+	}
+
+	public String getBelong_month() {
+		return belong_month;
+	}
+
+	public void setBelong_month(String belong_month) {
+		this.belong_month = belong_month;
+	}
+
+	public String getProduct_manager() {
+		return product_manager;
+	}
+
+	public void setProduct_manager(String product_manager) {
+		this.product_manager = product_manager;
 	}
 
 }

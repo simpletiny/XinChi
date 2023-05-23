@@ -72,6 +72,11 @@ var PaidContext = function() {
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#main-table").tableSum({
+				title_index : 1,
+				accept : [2]
+			})
+
 			$(".rmb").formatCurrency();
 		});
 	};
@@ -591,4 +596,14 @@ var ctx = new PaidContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+	$('.month-picker-st').MonthPicker('option', 'OnAfterMenuClose', changeMonth);
 });
+
+let changeMonth = function() {
+	if (this.id == "option-belong-month") {
+		if ($(this).val() != "") {
+			$("#option-data-from").val("");
+			$("#option-data-to").val("");
+		}
+	}
+}

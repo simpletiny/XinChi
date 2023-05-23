@@ -61,4 +61,10 @@ public class AirReceivedDAOImpl extends SqlSessionDaoSupport implements AirRecei
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirReceivedDetailMapper.selectByRelatedPk", related_pk);
 	}
 
+	@Override
+	public List<AirReceivedDetailBean> selectByBusinessNumber(String business_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirReceivedDetailMapper.selectByBusinessNumber",
+				business_number);
+	}
+
 }

@@ -26,6 +26,9 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
+						<input type="button" class="btn btn-green" value="打回重报" style="float: right" data-bind="click: rollBack"/>
+					</div>
+					<div class="form-group">
 						<label class="col-md-1 control-label">单号</label>
 						<div class="col-md-2">
 							<input type="text" class="form-control" name="detail.business_number" />
@@ -59,7 +62,7 @@
 						<div class="col-md-2">
 							<input type="text" class="form-control" name="detail.comment" placeholder="填写部分信息即可" />
 						</div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						<button type="submit" class="btn btn-green" style="float: right" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
@@ -86,7 +89,7 @@
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenReceiveds" /></td>
 								<td data-bind="text: $data.business_number"></td>
-								<td data-bind="text: $data.supplier_name"></td> 
+								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.card_account"></td>
 								<td data-bind="text: $data.received"></td>
 								<td data-bind="text: $data.sum_received" class="rmb"></td>
@@ -98,7 +101,7 @@
 								<td data-bind="text: $data.comment"></td>
 								<td><a href="javascript:;"
 									data-bind="click: function() {$root.checkIdPic($data.received_time,$data.voucher_file)}">查看</a></td>
-								<td data-bind="text: $data.apply_user"></td> 
+								<td data-bind="text: $data.apply_user"></td>
 							</tr>
 						</tbody>
 					</table>

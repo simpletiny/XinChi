@@ -314,7 +314,7 @@
 									data-bind="attr:{'name':'money_'+$index()},value:$data.balance" st="money" min="1" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l" >备注</label>
 							<div class="ip">
 								<textarea rows="3" class="ip-default" cols="30" maxlength="200" st="comment" placeholder="备注"></textarea>

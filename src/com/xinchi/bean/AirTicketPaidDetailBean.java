@@ -53,11 +53,11 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	private String voucher_file;
 
-	private String belong_month;
-
 	// 责任经理，针对押金扣款而设定
 	private String product_manager;
 	private String product_manager_name;
+
+	private String belong_month;
 
 	public String getSupplier_employee_pk() {
 		return supplier_employee_pk;

@@ -493,6 +493,17 @@
 			<comment>ALTER TABLE received_match</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE pay_approval 
+					CHANGE COLUMN comment comment VARCHAR(249) NULL DEFAULT NULL ;
+			ALTER TABLE waiting_for_paid 
+					CHANGE COLUMN comment comment VARCHAR(240) NULL DEFAULT NULL ;
+                 ]]>
+			<comment>ALTER TABLE pay_approval,waiting_for_paid </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

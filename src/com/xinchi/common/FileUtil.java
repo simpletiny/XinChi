@@ -42,10 +42,12 @@ public class FileUtil {
 		sourceFile.delete();
 	}
 
-	public static void deleteFile(String fileName, String destFolderStr, String subFolder) {
+	public static void deleteFile(String fileName, String destFolderStr, String... subFolder) {
 		String fileFolder = PropertiesUtil.getProperty(destFolderStr);
-		if (subFolder != null) {
-			fileFolder += File.separator + subFolder;
+		if (null != subFolder && subFolder.length > 0) {
+			for (int i = 0; i < subFolder.length; i++) {
+				fileFolder += File.separator + subFolder[i];
+			}
 		}
 		File destfile = new File(fileFolder + File.separator + fileName);
 		if (destfile.exists())

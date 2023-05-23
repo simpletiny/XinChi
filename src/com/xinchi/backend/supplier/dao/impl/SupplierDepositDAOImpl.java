@@ -64,4 +64,10 @@ public class SupplierDepositDAOImpl extends SqlSessionDaoSupport implements Supp
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierDepositMapper.selectSumBalance", type);
 	}
 
+	@Override
+	public SupplierDepositBean selectByDepositNumber(String deposit_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.SupplierDepositMapper.selectByDepositNumber",
+				deposit_number);
+	}
+
 }

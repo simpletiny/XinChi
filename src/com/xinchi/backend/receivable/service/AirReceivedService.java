@@ -12,7 +12,7 @@ public interface AirReceivedService extends BaseService {
 
 	public List<AirReceivedDetailBean> selectByPage(Page<AirReceivedDetailBean> page);
 
-	public String rollBackReceived(String received_pks);
+	public String rollBackReceived(String related_pk);
 
 	public void update(AirReceivedDetailBean detail);
 

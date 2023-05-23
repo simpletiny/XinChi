@@ -54,6 +54,13 @@
 		from air_received_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByBusinessNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from air_received_detail
+		where business_number = #{business_number,jdbcType=VARCHAR}
+	</select>
+
 	<select id="selectByRelatedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		A.pk,

@@ -21,4 +21,6 @@ public interface AirReceivedDAO {
 
 	public List<AirReceivedDetailBean> selectByRelatedPk(String related_pk);
 
+	public List<AirReceivedDetailBean> selectByBusinessNumber(String business_number);
+
 }

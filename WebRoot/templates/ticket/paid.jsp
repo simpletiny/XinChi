@@ -80,11 +80,11 @@
 
 						<label class="col-md-1 control-label">入账日期</label>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" data-bind="value: dateFrom" placeholder="from"
+							<input type="text" class="form-control date-picker" id="option-data-from" data-bind="value: dateFrom" placeholder="from"
 								name="option.date_from" />
 						</div>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" data-bind="value: dateTo" placeholder="to"
+							<input type="text" class="form-control date-picker" id="option-data-to" data-bind="value: dateTo" placeholder="to"
 								name="option.date_to" />
 						</div>
 						<div>
@@ -110,13 +110,20 @@
 									name="option.type" required="required"></select>
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
+						<label class="col-md-1 control-label">归属月份</label> 
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control month-picker-st" id="option-belong-month" name="option.belong_month" />
 						</div>
+						<label class="col-md-1 control-label">责任产品</label>
+						<div class="col-md-2" style="float: left">
+							<select class="form-control" name="option.product_manager"
+								data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
+						</div>
+						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th></th>
@@ -521,6 +528,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.004"></script>
 </body>
 </html>

@@ -1,15 +1,13 @@
 package apptest;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class SomeTest {
 	public static String source_team_number = "GT9RXPJIUHF8EQ34YLNV6MB1WS052OCDAZK7";
 
 	public static void main(String[] args) throws Exception {
-		BigDecimal a = new BigDecimal("-1000");
-
-		System.out.println(a.abs());
+		String a = "sswComment";
+		System.out.println(a.contains("Comment"));
 	}
 
 	private static int add(int a, int b, int... c) {

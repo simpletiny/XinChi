@@ -2,21 +2,27 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
 	<package name="receivable" extends="default" namespace="/receivable">
-
+		<!-- 机票已收款 start -->
 		<!-- 搜索机票已收款 -->
 		<action name="searchAirDetailsByPage" class="airReceivedAction" method="searchAirDetailsByPage">
 			<result name="success" type="json">
-			<param name="excludeNullProperties">true</param>
-			<param name="ignoreHierarchy">false</param>
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+		<action name="rollBackReceivedDetail" class="airReceivedAction" method="rollBackReceivedDetail">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 机票已收款 end -->
+
+		<!-- 混合业务 start -->
 		<!-- 搜索所有收入信息 -->
 		<action name="searchAllAboutReceivedByRelatedPks" class="receivedAction" method="searchAllAboutReceivedByRelatedPks">
 			<result name="success" type="json">
-			<param name="excludeNullProperties">true</param>
-			<param name="ignoreHierarchy">false</param>
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 混合业务 end -->
 	</package>
 </struts>

@@ -6,6 +6,14 @@ var DetailContext = function() {
 	self.cards = ko.observableArray([]);
 	self.key = $("#key").val();
 
+	// 获取产品经理信息
+	self.users = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.users(data.users);
+	});
+
 	$.getJSON(self.apiurl + 'finance/searchCardsByPurpose', {
 		purpose : "TICKET"
 	}, function(data) {

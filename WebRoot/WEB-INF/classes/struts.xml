@@ -35,11 +35,11 @@
 
 		<!--注册拦截器 -->
 		<interceptors>
-			<interceptor name="businessInterceptor" class="com.xinchi.struts.interceptor.BusinessInterceptor" />
+			<interceptor name="commentInterceptor" class="com.xinchi.struts.interceptor.NewCommentInterceptor" />
 			<interceptor-stack name="mystack">
 				<!--  -->
+				<interceptor-ref name="commentInterceptor" />
 				<interceptor-ref name="defaultStack" />
-				<interceptor-ref name="businessInterceptor" />
 			</interceptor-stack>
 		</interceptors>
 

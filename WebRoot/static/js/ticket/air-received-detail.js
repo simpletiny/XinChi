@@ -45,6 +45,49 @@ var AirReceivedDetailContext = function() {
 		});
 	};
 
+	self.rollBack = function() {
+		let len = self.chosenReceiveds().length;
+		if (len == 0) {
+			fail_msg("请选择记录！");
+			return;
+		} else if (len > 1) {
+			fail_msg("只能选择一条记录！");
+			return;
+		} else {
+			let detail = self.chosenReceiveds()[0];
+			if (detail.status != 'I') {
+				fail_msg("请选择会计未确认的记录！");
+				return;
+			}
+
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : "确认要打回押金退还记录吗？",
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("打回中……");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'receivable/rollBackReceivedDetail',
+							data : "related_pk=" + detail.related_pk
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
 	// 查看身份证图片
 	self.checkIdPic = function(received_time, fileName) {
 		$("#img-pic").attr("src", "");

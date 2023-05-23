@@ -494,6 +494,12 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and LEFT(A.time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.belong_month != null and params.bo.belong_month !=''">
+				and A.belong_month = #{params.bo.belong_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
+				and A.product_manager = #{params.bo.product_manager,jdbcType=VARCHAR}
+			</if>
 			<if test="params.bo.money_from != null and params.bo.money_from !=''">
 				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
 			</if>

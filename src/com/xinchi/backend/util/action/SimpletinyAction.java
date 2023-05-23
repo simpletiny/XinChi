@@ -942,6 +942,23 @@ public class SimpletinyAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public static void main(String[] args) {
+		String[] a = new String[5];
+		for (int i = 0; i < 5; i++) {
+			if (i == 0) {
+				String b = addOne("D00VW2Q", NumberService.SOURCE_DEPOSIT_NUMBER);
+				a[0] = b;
+			} else {
+				String b = addOne(a[i - 1], NumberService.SOURCE_DEPOSIT_NUMBER);
+				a[i] = b;
+			}
+		}
+		for (String str : a) {
+			System.out.println(str);
+		}
+
+	}
+
 	private static String addOne(String value, String source) {
 
 		int strLength = value.length();

@@ -587,6 +587,7 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		currentDetail.setTime(time);
 		currentDetail.setMoney(money);
 		currentDetail.setBelong_month(payment_detail.getBelong_month());
+		currentDetail.setProduct_manager(payment_detail.getProduct_manager());
 		currentDetail.setComment(comment);
 		// 如果是收入
 		if (payment_detail.getType().equals("R")) {

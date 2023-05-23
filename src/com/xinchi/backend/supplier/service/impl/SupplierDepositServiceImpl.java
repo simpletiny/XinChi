@@ -127,6 +127,8 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		}
 
 		// 保存航司押金记录
+		String deposit_number = numberService.generateDepositNumber();
+		deposit.setDeposit_number(deposit_number);
 		deposit.setVoucher_number(voucher_number);
 		deposit.setReceived(BigDecimal.ZERO);
 		deposit.setBalance(deposit.getMoney());

@@ -12,7 +12,9 @@ import java.util.Set;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
@@ -512,6 +514,11 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			}
 		}
 
+		TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+
+		if (transactionStatus != null && transactionStatus.isNewTransaction()) {
+			transactionStatus.setRollbackOnly();
+		}
 		return SUCCESS;
 
 	}

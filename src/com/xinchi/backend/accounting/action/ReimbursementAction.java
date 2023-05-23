@@ -28,7 +28,6 @@ public class ReimbursementAction extends BaseAction {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		reimbursement.setApply_user(sessionBean.getUser_number());
-
 		resultStr = service.save(reimbursement);
 		return SUCCESS;
 	}
