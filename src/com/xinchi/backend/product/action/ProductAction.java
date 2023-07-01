@@ -14,7 +14,9 @@ import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.product.service.ProductReportService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.backend.sys.service.BaseDataService;
 import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
@@ -133,10 +135,16 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private BaseDataService baseDataService;
+
 	public String searchUrgentCnt() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		resultStr = service.searchUrgentCnt(sessionBean.getUser_number());
+
+		int urgent_count = service.searchUrgentCnt(sessionBean.getUser_number());
+		BaseDataBean baseData = baseDataService.selectByPk(ResourcesConstants.BASE_DATA_PK_LIMIT_PRODUCT_URGENT_COUNT);
+		resultStr = String.valueOf(Integer.valueOf(baseData.getExt1()) - urgent_count);
 		return SUCCESS;
 	}
 

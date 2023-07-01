@@ -343,6 +343,9 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.create_user != null and params.bo.create_user !=''">
+				and A.create_user= #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
 			<if test="params.bo.statuses!= null and params.bo.statuses !=''">
 				and A.status in
 				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">

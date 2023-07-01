@@ -3,49 +3,58 @@ package apptest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-import com.xinchi.common.DBCommonUtil;
-import com.xinchi.common.DateUtil;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CSVReader {
-	public static void main(String[] args) {
-		String csvFile = "D://list.csv"; // CSV文件路径
-		String line = ""; // 每行数据
-		String csvSplitBy = ","; // CSV分隔符
+	private String file_path;
 
-		String cls = "";
-		String father_pk = "";
-		int index = 0;
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-			int i = 1;
-			int j = 1;
+	private String csvSplitBy;
+
+	public CSVReader(String file_path) {
+		this.file_path = file_path;
+		this.csvSplitBy = ",";
+	}
+
+	public List<Detail> getDetails() {
+		String line = ""; // 每行数据
+		List<Detail> result = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new FileReader(file_path))) {
 			while ((line = br.readLine()) != null) { // 逐行读取CSV文件
 				String[] data = line.split(csvSplitBy); // 按分隔符分割每行数据
-				if (data.length != 4)
-					continue;
-				String result = "";
-				String pk = DBCommonUtil.genPk();
+				Detail detail = new Detail();
+				detail.setMoney(new BigDecimal(data[3].replaceAll(" ", "")));
 
-				index = j;
-				if (!data[0].equals("")) {
-					cls = data[0];
-					father_pk = pk;
-					index = i;
-					i++;
-					j = 1;
-				} else {
-					j++;
-				}
+				String time = data[1].substring(0, 4) + "-" + data[1].substring(4, 6) + "-" + data[1].substring(6) + " "
+						+ data[2];
 
-				result += data[1] + "," + data[3] + "," + father_pk + "," + index + "," + data[2] + "," + cls + "," + pk
-						+ "," + "N00000" + "," + DateUtil.getTimeMillis() + ",,";
+				detail.setTime(time);
 
-				System.out.println(result);
-
+				result.add(detail);
 			}
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return result;
+	}
+
+	public String getFile_path() {
+		return file_path;
+	}
+
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
+	}
+
+	public String getCsvSplitBy() {
+		return csvSplitBy;
+	}
+
+	public void setCsvSplitBy(String csvSplitBy) {
+		this.csvSplitBy = csvSplitBy;
 	}
 
 }

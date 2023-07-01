@@ -20,13 +20,9 @@ var OrderContext = function() {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bsOrder);
-
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
-		self.passengers(data.passengers);
+		if (data.passengers.length>0) {
+			self.passengers(data.passengers);
+		}
 
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
@@ -36,6 +32,9 @@ var OrderContext = function() {
 			product_pk : self.order().product_pk
 		}, function(data) {
 			self.product(data.product);
+			if(self.passengers().length==0){
+				self.passengers({name_index:1,price:data.product.adult_price - data.product.business_profit_substract })
+			}
 		});
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
 			employee_pk : self.order().client_employee_pk
@@ -121,7 +120,7 @@ var OrderContext = function() {
 			return;
 		}
 
-		var x = new Date();
+		var x = new Date($("#hidden-server-date").val());
 		var maxDate = new Date(x.Format("yyyy-MM-dd"));
 		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
 		var confirm_date = new Date($(".date-picker-confirm-date").val());
@@ -130,28 +129,7 @@ var OrderContext = function() {
 			return;
 		}
 
-		/* 判断名单是否有误 */
-		var tbody = $("#name-table").find("tbody");
-		var ids = $(tbody).find("[st='id']");
-		var errors = new Array();
-		for (var i = 0; i < ids.length; i++) {
-			var id = $(ids[i]).val();
-			if (id.trim().length < 18) {
-				errors.push(i + 1);
-			}
-		}
-
-		if (errors.length > 0) {
-			var msg = "序号为{0}的名单信息有误！";
-			var indexs = "";
-			for (var i = 0; i < errors.length; i++) {
-				indexs += errors[i] + ",";
-			}
-			indexs = indexs.substring(0, indexs.length - 1);
-			fail_msg(msg.format(indexs));
-			return;
-		}
-
+		
 		var confirm_file = $("#txt-confirm-file").val();
 		if (confirm_file == "") {
 			fail_msg("请上传确认件！");
@@ -164,20 +142,21 @@ var OrderContext = function() {
 		// 判断是否有名单
 		var hasNames = false;
 		var hasChairman = false;
+		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
-
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
-
+			var age = $(tr).find("[st='age']").val();
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
+			var id_type = $(tr).find("[st='type']").val();
 			var id = $(tr).find("[st='id']").val().trim();
-			var price = $(tr).find("[st='price']").val().trim();
+			var price = $(tr).find("[st='price']").val();
 
 			if (name == "" && id == "") {
 				continue;
@@ -192,13 +171,12 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
 
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
-					+ '","price":"' + price + '"},';
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			people.push(person);
 		}
 
 		if (!hasNames) {
@@ -210,9 +188,8 @@ var OrderContext = function() {
 			fail_msg("请指定团长！");
 			return;
 		}
-		json = json.RTrim(',') + ']';
+		json = JSON.stringify(people);
 		data += "&json=" + json;
-
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -255,7 +232,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
-	var x = new Date();
+	var x = new Date($("#hidden-server-date").val());
 	var maxDate = x.Format("yyyy/MM/dd");
 	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
 	$(".date-picker-confirm-date").datetimepicker({

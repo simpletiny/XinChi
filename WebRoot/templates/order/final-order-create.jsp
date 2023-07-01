@@ -168,6 +168,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/final-order-create.js"></script>
+	<script src="<%=basePath%>static/js/order/final-order-create.js?v=1.001"></script>
 </body>
 </html>

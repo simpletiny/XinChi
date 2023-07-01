@@ -737,7 +737,7 @@ public class ProductServiceImpl implements ProductService {
 		// 删除之前没用的模板
 		for (String file : templetFiles) {
 			if (!file.equals("default")) {
-				FileUtil.deleteFile(file, "supplierConfirmTempletFolder", null);
+				FileUtil.deleteFile(file, "supplierConfirmTempletFolder");
 			}
 		}
 		return SUCCESS;
@@ -881,18 +881,17 @@ public class ProductServiceImpl implements ProductService {
 	private ProductUrgentDAO productUrgentDao;
 
 	@Override
-	public String searchUrgentCnt(String user_number) {
+	public int searchUrgentCnt(String user_number) {
 
 		ProductUrgentBean option = new ProductUrgentBean();
 
-		;
 		option.setUser_number(user_number);
 		option.setDate_from(DateUtil.getThisWeekFirstDay());
 		option.setDate_to(DateUtil.getThisWeekLastDay());
 
 		List<ProductUrgentBean> pubs = productUrgentDao.selectByParam(option);
 
-		return null != pubs ? String.valueOf(pubs.size()) : "0";
+		return null != pubs ? pubs.size() : 0;
 	}
 
 	@Autowired

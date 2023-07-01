@@ -2,6 +2,8 @@ var createLayer;
 var receiveLayer;
 var uploadLayer;
 var uploadConfirmLayer;
+var deductLayer;
+var returnDetailLayer;
 var DepositContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -22,6 +24,14 @@ var DepositContext = function() {
 		}
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
+	});
+
+	// 获取产品经理信息
+	self.product_managers = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.product_managers(data.users);
 	});
 
 	// 获取票务账户
@@ -73,8 +83,7 @@ var DepositContext = function() {
 							new_return += self.wayMapping[return_way[i]] + "+";
 						}
 					}
-					inner.return_way = new_return.RTrim("\\+");
-
+					inner.return_way_cn = new_return.RTrim("\\+");
 				}
 			});
 
@@ -82,6 +91,11 @@ var DepositContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			$("#table-main").tableSum({
+				accept : [5, 6, 7],
+				title_index : 4
+			})
 
 			$(".rmb").formatCurrency();
 		});
@@ -379,6 +393,124 @@ var DepositContext = function() {
 	self.cancelReceive = function() {
 		layer.close(receiveLayer);
 	}
+	// 押金扣款
+	self.deduct = function() {
+		if (self.chosenDeposits().length == 0) {
+			fail_msg("请选择押金账！");
+			return;
+		} else if (self.chosenDeposits().length > 1) {
+			fail_msg("只能选择一笔押金账！");
+			return;
+		} else {
+
+			if (self.chosenDeposits()[0].balance == 0) {
+				fail_msg("无可用余额！");
+				return;
+			}
+
+			deductLayer = $.layer({
+				type : 1,
+				title : ['押金扣款', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['1000px', '650px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-deduct'
+				},
+				end : function() {
+				}
+			});
+
+		}
+	}
+
+	self.doDeduct = function() {
+		if (!$("#form-deduct").valid()) {
+			return;
+		}
+
+		var product_manager = $("#product-manager").val();
+		if (!product_manager) {
+			fail_msg("请选择责任经理！")
+			return;
+		}
+
+		var deduct_money = $("#deduct-money").val().trim();
+		var deposit_pk = $("#deposit-pk").val().trim();
+		var deposit_balance = $("#deposit-balance").val().trim();
+		var comment = $("#comment").val().trim();
+		var date = $("#deduct-date").val().trim();
+		var belong_month = $("#belong-month").val();
+
+		if (deduct_money == "") {
+			fail_msg("请填写扣款金额！");
+			return;
+		}
+		if ((deduct_money - 0) > (deposit_balance - 0)) {
+			fail_msg("扣款金额不能大于可用余额！");
+			return;
+		}
+
+		if (date == "") {
+			fail_msg("请填写扣款日期！");
+			return;
+		}
+		if (belong_month == "") {
+			fail_msg("请填写归属月份！");
+			return;
+		}
+		if (comment == "") {
+			fail_msg("扣款必须填写备注!");
+			return;
+		}
+
+		const obj = {
+			deduct_money : deduct_money,
+			deposit_pk : deposit_pk,
+			time : date,
+			product_manager : product_manager,
+			comment : comment,
+			belong_month : belong_month
+		}
+
+		var json = JSON.stringify(obj);
+		var data = "json=" + encodeURIComponent(json);
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认要提交押金扣款吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					startLoadingSimpleIndicator("操作中");
+					layer.close(index);
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'payable/createDeduct',
+						data : data,
+						success : function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								layer.close(deductLayer);
+								self.refresh();
+								self.chosenDeposits.removeAll();
+							} else {
+								fail_msg("提交失败");
+							}
+						}
+					});
+				}
+			}
+		});
+	}
+
+	self.cancelDeduct = function() {
+		layer.close(deductLayer);
+	}
 
 	self.linkDeposits = ko.observableArray();
 	/**
@@ -461,6 +593,66 @@ var DepositContext = function() {
 		}
 	}
 
+	self.deposit_receiveds = ko.observableArray([]);
+	self.deposit_deducts = ko.observableArray([]);
+	self.deposit_strikes = ko.observableArray([]);
+	self.detail_return_way = ko.observable("");
+	self.sum_receiveds = ko.observable(0);
+	self.sum_deducts = ko.observable(0);
+	self.sum_strikes = ko.observable(0);
+	self.viewDetail = function(data) {
+		startLoadingSimpleIndicator("查询中……");
+		self.detail_return_way(data.return_way);
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'supplier/searchDepositReturnDetails',
+			data : "deposit_pk=" + data.pk,
+			success : function(data) {
+				if (data.deposit_strikes) {
+					let sum = 0;
+					$(data.deposit_deduct_relations).each(function(idx, inner) {
+						sum += +inner.money;
+					});
+					self.sum_strikes(sum);
+					self.deposit_strikes(data.deposit_strikes);
+				}
+
+				if (data.deposit_receiveds) {
+					let sum = 0;
+					$(data.deposit_receiveds).each(function(idx, inner) {
+						sum += +inner.received;
+					});
+					self.sum_receiveds(sum);
+					self.deposit_receiveds(data.deposit_receiveds);
+				}
+				if (data.deposit_deducts) {
+					let sum = 0;
+					$(data.deposit_deducts).each(function(idx, inner) {
+						sum += +inner.money;
+					});
+					self.sum_deducts(sum);
+					self.deposit_deducts(data.deposit_deducts);
+				}
+				endLoadingIndicator();
+				returnDetailLayer = $.layer({
+					type : 1,
+					title : ['退还详情', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['1000px', '650px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#div-return-detail'
+					},
+					end : function() {
+					}
+				});
+			}
+		});
+
+	}
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

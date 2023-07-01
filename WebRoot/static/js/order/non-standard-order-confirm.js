@@ -18,7 +18,10 @@ var OrderContext = function() {
 		self.users(data.users);
 	});
 
-	self.passengers = ko.observableArray([]);
+	self.passengers = ko.observableArray([{
+		name_index : 1,
+		chairman : 'Y'
+	}]);
 
 	var x = new Date(self.current_date);
 	var year_now = x.getFullYear();
@@ -29,12 +32,9 @@ var OrderContext = function() {
 	}, function(data) {
 		self.order(data.bnsOrder);
 
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
-		self.passengers(data.passengers);
+		if (data.passengers.length > 0) {
+			self.passengers(data.passengers);
+		}
 
 		if (self.order().name_list_lock == '1')
 			$("#txt-name-list").disabled();
@@ -148,10 +148,10 @@ var OrderContext = function() {
 		// 判断是否有名单
 		var hasNames = false;
 		var hasChairman = false;
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
@@ -159,6 +159,9 @@ var OrderContext = function() {
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val().trim();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val().trim();
 			var id = $(tr).find("[st='id']").val().trim();
+
+			const age = $(tr).find("[st='age']").val().trim();
+			const id_type = $(tr).find("[st='type']").val();
 
 			if (name == "" && id == "") {
 				continue;
@@ -173,12 +176,12 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
 
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"},';
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			people.push(person);
 		}
 
 		if (!hasNames) {
@@ -190,7 +193,7 @@ var OrderContext = function() {
 			return;
 		}
 
-		json = json.RTrim(',') + ']';
+		const json = JSON.stringify(people);
 		data += "&json=" + json;
 
 		startLoadingSimpleIndicator("保存中");

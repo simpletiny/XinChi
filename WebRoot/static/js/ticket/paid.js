@@ -460,7 +460,8 @@ var PaidContext = function() {
 
 	self.refresh1 = function() {
 		var param = $("#form-search-deposit").serialize();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1 + "&deposit.deposit_type=A";
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1
+				+ "&deposit.deposit_type=A&deposit.statuses=N";
 
 		$.getJSON(self.apiurl + 'supplier/searchDepositByPage', param, function(data) {
 			self.deposits(data.deposits);

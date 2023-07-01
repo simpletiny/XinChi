@@ -31,6 +31,9 @@
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="belong_month" property="belong_month" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="first_date" property="first_date" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="OtherPaymentMap" type="com.xinchi.bean.AirOtherPaymentDto">
 		<result column="money" property="money" jdbcType="DECIMAL" />
@@ -72,7 +75,7 @@
 		from air_ticket_paid_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectByBasePk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_paid_detail

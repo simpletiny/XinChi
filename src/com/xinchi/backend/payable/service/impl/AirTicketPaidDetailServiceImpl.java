@@ -757,4 +757,9 @@ public class AirTicketPaidDetailServiceImpl implements AirTicketPaidDetailServic
 		return SUCCESS;
 	}
 
+	@Override
+	public List<AirTicketPaidDetailBean> selectByBasePk(String base_pk) {
+		return dao.selectByBasePk(base_pk);
+	}
+
 }

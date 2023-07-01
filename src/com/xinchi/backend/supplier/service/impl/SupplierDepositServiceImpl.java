@@ -22,12 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.receivable.dao.AirReceivedDAO;
+import com.xinchi.backend.supplier.dao.DepositTicketPaidDAO;
 import com.xinchi.backend.supplier.dao.SupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirReceivedDetailBean;
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierDepositBean;
@@ -331,9 +333,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 	@Override
 	public String batSaveDeposit(String json) {
-
 		JSONArray array = JSONArray.fromObject(json);
-
 		Map<String, String> leader = new HashMap<String, String>();
 
 		for (int i = 0; i < array.size(); i++) {
@@ -415,6 +415,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			List<SupplierBean> suppliers = supplierDao.getAllByParam(option);
 
 			if (null == suppliers || suppliers.size() == 0) {
+				DBCommonUtil.rollBackData();
 				return supplier_name + "供应商不存在！";
 			}
 
@@ -432,6 +433,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			CardBean card = cardDao.getCardByAccount(account);
 
 			if (card == null) {
+				DBCommonUtil.rollBackData();
 				return account + "账户不存在！";
 			}
 
@@ -448,6 +450,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 			msg = paymentDetailService.insert(payment);
 			if (!msg.equals(SUCCESS)) {
+				DBCommonUtil.rollBackData();
 				return "账户" + account + "银行流水存在相同时间的记录，请修改支付时间！";
 			}
 		}
@@ -492,6 +495,14 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		List<SupplierDepositBean> deposits = dao.selectByParam(option);
 
 		return deposits;
+	}
+
+	@Autowired
+	private DepositTicketPaidDAO depositTicketPaidDao;
+
+	@Override
+	public List<DepositTicketPaidBean> selectDepositTicketPaidsByDepositPk(String deposit_pk) {
+		return depositTicketPaidDao.selectByDepositPk(deposit_pk);
 	}
 
 }

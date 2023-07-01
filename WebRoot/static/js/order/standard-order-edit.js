@@ -9,7 +9,7 @@ var OrderContext = function() {
 	self.product = ko.observable({});
 	self.employee = ko.observable({});
 	self.independent_msg = ko.observable();
-	self.passengers = ko.observableArray([{}]);
+	self.passengers = ko.observableArray([]);
 	var d = new Date();
 	var year_now = d.getFullYear();
 
@@ -18,11 +18,6 @@ var OrderContext = function() {
 	}, function(data) {
 		self.order(data.bsOrder);
 		if (data.passengers.length > 0) {
-			$(data.passengers).each(function(idx, passenger) {
-				passenger.age = ko.observable();
-				var birthYear = passenger.id.substring(6, 10);
-				passenger.age(year_now - birthYear);
-			});
 			self.passengers(data.passengers);
 		}
 
@@ -34,6 +29,9 @@ var OrderContext = function() {
 			product_pk : self.order().product_pk
 		}, function(data) {
 			self.product(data.product);
+			if(self.passengers().length==0){
+				self.passengers({name_index:1,price:data.product.adult_price - data.product.business_profit_substract })
+			}
 		});
 
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
@@ -64,30 +62,27 @@ var OrderContext = function() {
 		// 名单json
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
-			if (i != 0)
-				json += ',';
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
+			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
-
+			var age = $(tr).find("[st='age']").val();
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
+			var id_type = $(tr).find("[st='type']").val();
+			var id = $(tr).find("[st='id']").val().trim();
 			var price = $(tr).find("[st='price']").val();
-
 			if (name.trim() == "" || id.trim() == "") {
 				continue;
 			}
 
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
-					+ '","price":"' + price + '"}';
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			people.push(person);
 		}
-		json += ']';
+		let json = JSON.stringify(people);
 		data += "&json=" + json;
 		$.ajax({
 			type : "POST",

@@ -78,6 +78,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String sex = obj.getString("sex");
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 			String id = obj.getString("id");
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
@@ -88,6 +91,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
@@ -97,7 +102,6 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 		bean.setPassenger_captain(passenger_captain);
 		dao.insertWithPk(bean);
-
 		return SUCCESS;
 	}
 
@@ -129,6 +133,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String sex = name_obj.getString("sex");
 			String cellphone_A = name_obj.getString("cellphone_A");
 			String cellphone_B = name_obj.getString("cellphone_B");
+			String id_type = name_obj.getString("id_type");
+			String age_string = name_obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 			String id = name_obj.getString("id");
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
@@ -139,6 +146,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
@@ -247,6 +256,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
@@ -261,6 +273,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
 			passenger.setTeam_number(old.getTeam_number());
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 			nameListDao.insert(passenger);
 		}
 
@@ -382,6 +396,10 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
 
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
+
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
@@ -390,6 +408,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			}
 			passenger.setName_index(name_index);
 			passenger.setSex(sex);
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
@@ -442,6 +462,10 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = name_obj.getString("cellphone_B");
 			String id = name_obj.getString("id");
 
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
+
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
@@ -455,6 +479,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setId(id);
 			passenger.setOrder_pk(bean.getPk());
 			passenger.setTeam_number(old.getTeam_number());
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
+
 			nameListDao.insert(passenger);
 		}
 
@@ -555,6 +582,10 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = name_obj.getString("cellphone_B");
 			String id = name_obj.getString("id");
 
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
+
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
 			passenger.setChairman(chairman);
@@ -566,6 +597,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setCellphone_A(cellphone_A);
 			passenger.setCellphone_B(cellphone_B);
 			passenger.setId(id);
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 			passenger.setOrder_pk(bean.getPk());
 			passenger.setTeam_number(bean.getTeam_number());
 			nameListDao.insert(passenger);
@@ -826,6 +859,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 				nn.setTicket_order_pk(atnl.getTicket_order_pk());
 				nn.setName(n.getName());
 				nn.setId(n.getId());
+				nn.setAge(n.getAge());
+				nn.setId_type(n.getId_type());
 				nn.setOrder_number(atnl.getOrder_number());
 				nn.setCellphone_A(n.getCellphone_A());
 				nn.setCellphone_B(n.getCellphone_B());
@@ -857,6 +892,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 				modifyAirName.setId(n.getId());
 				modifyAirName.setCellphone_A(n.getCellphone_A());
 				modifyAirName.setCellphone_B(n.getCellphone_B());
+				modifyAirName.setAge(n.getAge());
+				modifyAirName.setId_type(n.getId_type());
 				modifyAirName.setChairman(n.getChairman());
 				modifyAirName.setLock_flg(name_lock_flg.split(",")[1]);
 				airTicketNameListDao.update(modifyAirName);
@@ -890,6 +927,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			if (null != modifyAirName) {
 				modifyAirName.setCellphone_A(n.getCellphone_A());
 				modifyAirName.setCellphone_B(n.getCellphone_B());
+				modifyAirName.setAge(n.getAge());
+				modifyAirName.setId_type(n.getId_type());
 				airTicketNameListDao.update(modifyAirName);
 			}
 		}
@@ -1073,6 +1112,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 				nn.setChairman(n.getChairman());
 				nn.setLock_flg(name_lock_flg.split(",")[1]);
 				nn.setBase_pk(name_pk);
+				nn.setAge(n.getAge());
+				nn.setId_type(n.getId_type());
 				airTicketNameListDao.insert(nn);
 			}
 
@@ -1098,6 +1139,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 				modifyAirName.setCellphone_B(n.getCellphone_B());
 				modifyAirName.setChairman(n.getChairman());
 				modifyAirName.setLock_flg(name_lock_flg.split(",")[1]);
+				modifyAirName.setAge(n.getAge());
+				modifyAirName.setId_type(n.getId_type());
 				airTicketNameListDao.update(modifyAirName);
 			}
 		}
@@ -1109,6 +1152,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			if (null != modifyAirName) {
 				modifyAirName.setCellphone_A(n.getCellphone_A());
 				modifyAirName.setCellphone_B(n.getCellphone_B());
+				modifyAirName.setAge(n.getAge());
+				modifyAirName.setId_type(n.getId_type());
 				airTicketNameListDao.update(modifyAirName);
 			}
 		}
@@ -1177,6 +1222,10 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
 			String pk = obj.getString("pk");
+			String id_type = obj.getString("id_type");
+			String age_string = obj.getString("age");
+			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
+
 			String lock_flg = obj.getString("lock_flg");
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
@@ -1190,6 +1239,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setOrder_pk(bean.getPk());
 			passenger.setTeam_number(old.getTeam_number());
 			passenger.setLock_flg(lock_flg);
+			passenger.setAge(age);
+			passenger.setId_type(id_type);
 
 			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
 				passenger_captain = name;

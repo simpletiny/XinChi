@@ -590,6 +590,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/ticket/payable.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/ticket/payable.js?v=1.001"></script>
 </body>
 </html>

@@ -465,6 +465,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/received-match.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/finance/received-match.js?v=1.002"></script>
 </body>
 </html>

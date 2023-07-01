@@ -16,10 +16,12 @@
 #table-ticket th, #table-ticket td {
 	text-align: center;
 }
+
 #name-table tr th, td {
 	text-align: center;
-	vertical-align:middle !important
+	vertical-align: middle !important
 }
+
 #table-ticket tr td input {
 	width: 90%;
 }
@@ -168,64 +170,13 @@
 					</div>
 					<hr />
 					<h3>名单</h3>
-					<div style="display: none; width: 600px" id="bat-passenger">
-						<div class="input-row clearfloat">
-							<div class="col-md-12">
-								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" placeholder="姓名+身份证号。"></textarea>
-							</div>
-							<div class="col-md-12" style="text-align: right; margin-top: 10px">
-								<a type="submit" class="btn btn-green btn-r" onclick="cancelBat()">取消</a> <a type="submit"
-									class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
-							</div>
-						</div>
-					</div>
-					<div id="air-ticket-check">
-						<div class="input-row clearfloat">
-							<div class="col-md-12">
-								<table style="width: 100%" id="name-table" class="table table-striped table-hover">
-									<thead>
-										<tr>
-											<th style="width: 4%">团长</th>
-											<th style="width: 4%">序号</th>
-											<th style="width: 18%">姓名</th>
-											<th style="width: 7%">性别</th>
-											<th style="width: 7%" title="只按年份计算">年龄</th>
-											<th style="width: 15%">手机号A</th>
-											<th style="width: 15%">手机号B</th>
-											<th style="width: 25%">证件号码</th>
-											<th style="width: 5%"></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><input type="radio" checked="checked" name="team_chairman" /></td>
-											<td st="name-index">1</td>
-											<td><input type="text" class="ip-" style="width: 90%" st="name" /></td>
-											<td><select class="form-control" style="height: 34px" st="sex">
-													<option value="">选择</option>
-													<option value="M">男</option>
-													<option value="F">女</option>
-											</select></td>
-											<td><input type="text" class="ip-" style="width: 90%" st="age" /></td>
-											<td><input type="text" class="ip-" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" class="ip-" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" class="ip-" data-bind="value:$data.id" maxlength="18" oninput="autoCaculate();" style="width: 90%" st="id" /></td>
-											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div align="right">
-							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
-								class="btn btn-green btn-r" onclick="addName()">添加名单</a>
-						</div>
-					</div>
+					<s:include value="common/name-bat.jsp"></s:include>
+					<s:include value="common/name-list-nos.jsp"></s:include>
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input type="hidden"
-								name="bnsOrder.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input
+								type="hidden" name="bnsOrder.confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -303,7 +254,9 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-creation.js?v=1.0"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-creation.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.001"></script>
 </body>
 </html>

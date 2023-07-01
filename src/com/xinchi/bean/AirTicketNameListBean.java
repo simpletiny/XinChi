@@ -65,6 +65,9 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	private String order_lock_flg;
 
+	private String id_type;
+	private int age;
+
 	private List<PassengerTicketInfoBean> ticket_infos;;
 
 	public String getTeam_number() {
@@ -313,6 +316,22 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setChange_cost(BigDecimal change_cost) {
 		this.change_cost = change_cost;
+	}
+
+	public String getId_type() {
+		return id_type;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setId_type(String id_type) {
+		this.id_type = id_type;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 }

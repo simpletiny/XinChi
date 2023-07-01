@@ -38,7 +38,7 @@ public interface AirTicketPaidDetailDAO {
 	 */
 	public AirTicketPaidDetailBean selectByPrimaryKey(String id);
 
-	public List<AirTicketPaidDetailBean> selectByPayablePk(String payable_pk);
+	public List<AirTicketPaidDetailBean> selectByBasePk(String base_pk);
 
 	/**
 	 * 根据条件查找

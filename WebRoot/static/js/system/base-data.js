@@ -359,7 +359,6 @@ var DataContext = function() {
 	self.changeSaleCredit = function(flg) {
 		startLoadingIndicator("更新中……");
 		var pk = self.saleCreditConfig().pk;
-		console.log(pk);
 		var data = "baseData.type=SCREDIT&baseData.pk=" + pk + "&baseData.ext1=" + flg;
 		$.ajax({
 			type : "POST",
@@ -374,6 +373,33 @@ var DataContext = function() {
 				} else {
 					success_msg("销售信用额度已停用！")
 				}
+			}
+		});
+	}
+
+	// 产品每周紧急上架次数
+	self.count_limit_config = ko.observable({});
+	self.refreshProductUrgentCountLimit = function() {
+		var param = "type=PRODUCT";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.count_limit_config(data.datas[0]);
+		});
+	};
+	self.updateCountLimit = function() {
+		startLoadingIndicator("更新中……");
+		let count = $("#txt-count-limit").val().trim();
+		var pk = self.count_limit_config().pk;
+		console.log(count);
+		var data = "baseData.type=PRODUCT&baseData.pk=" + pk + "&baseData.ext1=" + count;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'system/updateBaseData',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refreshProductUrgentCountLimit();
+				success_msg("变更成功！")
 			}
 		});
 	}
@@ -395,4 +421,5 @@ $(document).ready(function() {
 	ctx.refreshBadConfig();
 	ctx.refreshTeamConfig();
 	ctx.refreshSaleCreditConfig();
+	ctx.refreshProductUrgentCountLimit();
 });

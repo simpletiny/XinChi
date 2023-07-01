@@ -3,6 +3,7 @@ package com.xinchi.backend.supplier.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -57,4 +58,6 @@ public interface SupplierDepositService extends BaseService {
 	public String batSaveDeposit(String json);
 
 	public List<SupplierDepositBean> selectByVoucherNumber(String voucher_number);
+
+	public List<DepositTicketPaidBean> selectDepositTicketPaidsByDepositPk(String deposit_pk);
 }

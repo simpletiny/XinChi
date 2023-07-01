@@ -392,14 +392,18 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 		}
 		Map<String, BigDecimal> payable_moneys = new HashMap<>();
 
+		TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
 		Set<String> name_pks = new HashSet<>();
 		for (String payable_pk : payable_pks) {
 			AirTicketPayableBean payable = airTicketPayableDao.selectByPrimaryKey(payable_pk);
 			BigDecimal money = BigDecimal.ZERO;
 			// 删除应付款
 			if (SimpletinyString.isEmpty(payable.getRelated_pk())) {
-				List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByPayablePk(payable_pk);
+				List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByBasePk(payable_pk);
 				if (null != paids && paids.size() > 0) {
+					if (transactionStatus != null && transactionStatus.isNewTransaction()) {
+						transactionStatus.setRollbackOnly();
+					}
 					return "首航日期为：" + payable.getFirst_date() + "，首航段为：" + payable.getFrom_to_city() + "乘客为："
 							+ payable.getPassenger() + "的应付款，已存在已付款，请处理后再进行操作！";
 				}
@@ -409,8 +413,11 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			} else {
 				List<AirTicketPayableBean> payables = airTicketPayableDao.selectByRelatedPk(payable.getRelated_pk());
 				for (AirTicketPayableBean p : payables) {
-					List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByPayablePk(payable_pk);
+					List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByBasePk(payable_pk);
 					if (null != paids && paids.size() > 0) {
+						if (transactionStatus != null && transactionStatus.isNewTransaction()) {
+							transactionStatus.setRollbackOnly();
+						}
 						return "首航日期为：" + p.getFirst_date() + "，首航段为：" + p.getFrom_to_city() + "乘客为：" + p.getPassenger()
 								+ "的应付款，已存在已付款，请处理后再进行操作！";
 					}
@@ -514,11 +521,6 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			}
 		}
 
-		TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-
-		if (transactionStatus != null && transactionStatus.isNewTransaction()) {
-			transactionStatus.setRollbackOnly();
-		}
 		return SUCCESS;
 
 	}

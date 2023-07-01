@@ -85,7 +85,7 @@ public interface ProductService extends BaseService {
 
 	public String saveAirTicket(String product_pk, String ticket_json);
 
-	public String searchUrgentCnt(String user_number);
+	public int searchUrgentCnt(String user_number);
 
 	public List<ProductProfitBean> searchProductProfit(ProductProfitBean productProfit);
 

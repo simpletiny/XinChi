@@ -141,7 +141,8 @@ var PayableContext = function() {
 						fail_msg("供应商不属于同一财务主体");
 					} else {
 						self.supplier_name(data.supplier.supplier_short_name);
-						self.totalBack(totalBack * -1);
+
+						self.totalBack(totalBack.toFixed(2) * -1);
 						receiveLayer = $.layer({
 							type : 1,
 							title : ['收入', ''],
@@ -173,6 +174,7 @@ var PayableContext = function() {
 		$("[st='back_receive']").each(function(idx, data) {
 			sumAllot += $(data).val() - 0;
 		});
+		sumAllot = sumAllot.toFixed(2);
 		if (sumAllot != $("[st='sum_received']").val() - 0) {
 			fail_msg("分配金额合计和总金额不匹配");
 			return;
@@ -749,7 +751,8 @@ var PayableContext = function() {
 
 	self.refresh1 = function() {
 		var param = $("#form-search-deposit").serialize();
-		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1 + "&deposit.deposit_type=A";
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1
+				+ "&deposit.deposit_type=A&deposit.statuses=N";
 
 		$.getJSON(self.apiurl + 'supplier/searchDepositByPage', param, function(data) {
 			self.deposits(data.deposits);

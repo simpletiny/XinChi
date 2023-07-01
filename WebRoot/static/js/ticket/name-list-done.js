@@ -428,18 +428,25 @@ $(document).ready(function() {
 					var arr = ctx.chosenPassengers()[i].split(":");
 					var name = arr[1];
 					var id = arr[2];
-					var cellphone = arr[7];
+					var cellphone = arr[7] == null ? "" : arr[7];
+
 					var sex = id.charAt(id.length - 2) % 2 == 1 ? "男" : "女";
 					var birthday = id.substr(6, 4) + "/" + id.substr(10, 2) + "/" + id.substr(12, 2);
 					text += name + "；" + id + "；" + cellphone + "；" + sex + "；" + birthday + "；\n";
 				}
+
+			} else {
+				fail_msg("请选择！");
+				text = "none";
 			}
 			return text;
 		}
 	});
 
 	clipboard.on('success', function(e) {
-		success_msg("已经成功复制到剪切板！")
+		if (e.text.trim() != "none") {
+			success_msg("已经成功复制到剪切板！")
+		}
 	});
 
 	clipboard.on('error', function(e) {

@@ -54,20 +54,17 @@
 }
 
 .fixed {
-	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 15%;
+	right: 10px;
 	top: 200px;
-	margin-left: 10px;
 	z-index: 100;
 	width: 100px;
 }
 
-.fixed button {
-	width: 80px;
+.fixed input {
 	margin-top: 5px;
-	display: block;
+	display: inline-block;
 }
 
 .error {
@@ -81,11 +78,9 @@
 		<div class="subtitle">
 			<h2>已出票名单</h2>
 		</div>
-		<!-- 	<div class="fixed">
-			<div style="width: 30%; float: right">
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
-			</div>
-		</div> -->
+		<div class="fixed">
+			<input type="button" class="btn btn-green" id="copy" value="复制"></input>
+		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box">
 				<form class="form-horizontal search-panel">
@@ -140,7 +135,6 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
-							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -227,16 +221,17 @@
 							<th style="width: 15%">姓名</th>
 							<th style="width: 40%">身份证号</th>
 							<th style="width: 15%">价格</th>
-							<th style="width: 30%">航变成本<input type="checkbox" id="change-all"/></th>
+							<th style="width: 30%">航变成本<input type="checkbox" id="change-all" /></th>
 						</tr>
 					</thead>
-					<tbody data-bind="foreach:changeNames" >
+					<tbody data-bind="foreach:changeNames">
 						<tr>
-							<input type="hidden" data-bind="value:$data.pk" st="name-pk"/>
+							<input type="hidden" data-bind="value:$data.pk" st="name-pk" />
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.ticket_cost"></td>
-							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person" oninput="calSum()"  required /></td>
+							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person"
+								oninput="calSum()" required /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -324,7 +319,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.002"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

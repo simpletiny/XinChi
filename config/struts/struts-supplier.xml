@@ -87,6 +87,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 搜索押金退还详情记录 -->
+		<action name="searchDepositReturnDetails" class="supplierDepositAction" method="searchDepositReturnDetails">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!--押金退回 -->
 		<action name="receiveSupplierDeposit" class="supplierDepositAction" method="receiveSupplierDeposit">

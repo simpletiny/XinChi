@@ -54,20 +54,17 @@
 }
 
 .fixed {
-	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 5%;
+	right: 10px;
 	top: 200px;
-	margin-left: 10px;
 	z-index: 100;
 	width: 100px;
 }
 
-.fixed button {
-	width: 80px;
+.fixed input {
 	margin-top: 5px;
-	display: block;
+	display: inline-block;
 }
 </style>
 </head>
@@ -78,9 +75,8 @@
 			<h2>待出票名单</h2>
 		</div>
 		<div class="fixed">
-			<div style="width: 30%; float: right">
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
-			</div>
+			<input type="button" class="btn btn-green col-md-1" value="分配" data-bind="click: function() { operate() }"></input> <input
+				type="button" class="btn btn-green" id="copy" value="复制"></input>
 		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box" style="overflow: hidden">
@@ -137,7 +133,6 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
-							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -278,7 +273,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list.js?v1.002"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

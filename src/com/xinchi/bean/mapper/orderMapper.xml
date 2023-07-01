@@ -147,7 +147,8 @@
 		departure_date,
 		confirm_date,
 		adult_count+IFNULL(special_count,0) AS
-		people_count
+		people_count,
+		name_confirm_status
 		from budget_order_view
 		<where>
 			<if test="create_user != null and create_user !=''">

@@ -7,26 +7,37 @@ var OrderContext = function() {
 	self.order_pk = $("#key").val();
 	self.product = ko.observable({});
 	self.employee = ko.observable({});
-	self.confirm_date = ko.observable();
 	self.independent_msg = ko.observable();
 
 	self.passengers = ko.observableArray([]);
 
 	var x = new Date();
 	var year_now = x.getFullYear();
-
-	self.confirm_date(x.Format('yyyy-MM-dd'));
+	self.do_confirm_date = ko.observable();
+	
 	$.getJSON(self.apiurl + 'order/searchTbcBsOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.bsOrder);
+		if (data.passengers.length>0) {
+			self.passengers(data.passengers);
+		}
+		
+		self.do_confirm_date(self.order().do_confirm_date);
+		let do_date = new Date(self.do_confirm_date());
 
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
-		self.passengers(data.passengers);
+		let maxDate = new Date(do_date.Format("yyyy-MM-dd"));
+		let minDate = new Date(do_date.addDate(-2).Format("yyyy-MM-dd"));
+		$(".date-picker-confirm-date").datetimepicker({
+			format : 'Y-m-d',
+			timepicker : false,
+			scrollInput : false,
+			defaultDate : new Date(),
+			lang : 'zh',
+
+			minDate : minDate,
+			maxDate : maxDate,
+		})
 
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
@@ -121,28 +132,6 @@ var OrderContext = function() {
 			return;
 		}
 
-		/* 判断名单是否有误 */
-		var tbody = $("#name-table").find("tbody");
-		var ids = $(tbody).find("[st='id']");
-		var errors = new Array();
-		for (var i = 0; i < ids.length; i++) {
-			var id = $(ids[i]).val();
-			if (id.trim().length < 18) {
-				errors.push(i + 1);
-			}
-		}
-
-		if (errors.length > 0) {
-			var msg = "序号为{0}的名单信息有误！";
-			var indexs = "";
-			for (var i = 0; i < errors.length; i++) {
-				indexs += errors[i] + ",";
-			}
-			indexs = indexs.substring(0, indexs.length - 1);
-			fail_msg(msg.format(indexs));
-			return;
-		}
-
 		var confirm_file = $("#txt-confirm-file").val();
 		if (confirm_file == "") {
 			fail_msg("请上传确认件！");
@@ -155,23 +144,26 @@ var OrderContext = function() {
 		// 判断是否有名单
 		var hasNames = false;
 		var hasChairman = false;
+		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
 
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
-
 			var pk = $(tr).find("[st='name-pk']").val();
 			var lock_flg = $(tr).find("[st='name-lock']").val();
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			var id = $(tr).find("[st='id']").val().trim();
 			var price = $(tr).find("[st='price']").val().trim();
+			var age = $(tr).find("[st='age']").val().trim();
+			var id_type = $(tr).find("[st='type']").val();
 
+			
 			if (name == "" && id == "") {
 				continue;
 			}
@@ -185,13 +177,11 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
-
-			json += '{"pk":"' + pk + '","lock_flg":"' + lock_flg + '","chairman":"' + teamChairman + '","index":"'
-					+ index + '","name":"' + name + '","sex":"' + sex + '","cellphone_A":"' + cellphone_A
-					+ '","cellphone_B":"' + cellphone_B + '","id":"' + id + '","price":"' + price + '"},';
+			let person = {pk,lock_flg,chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			people.push(person);
 		}
 
 		if (!hasNames) {
@@ -199,11 +189,11 @@ var OrderContext = function() {
 			return;
 		}
 
-		if (!hasChairman) {
+		if (!chairman) {
 			fail_msg("请指定团长！");
 			return;
 		}
-		json = json.RTrim(',') + ']';
+		let json = JSON.stringify(people);
 		data += "&json=" + json;
 
 		startLoadingSimpleIndicator("保存中");
@@ -249,17 +239,4 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
-	var x = new Date();
-	var maxDate = x.Format("yyyy/MM/dd");
-	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
-	$(".date-picker-confirm-date").datetimepicker({
-		format : 'Y-m-d',
-		timepicker : false,
-		scrollInput : false,
-		defaultDate : new Date(),
-		lang : 'zh',
-
-		minDate : minDate,
-		maxDate : maxDate,
-	})
 });

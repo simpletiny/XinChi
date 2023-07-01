@@ -136,12 +136,27 @@
 					<h3>销售信用额度</h3>
 					<div class="form-group" style="padding-top: 20px">
 						<div class="span6 col-md-3">
-							<input name="relation.sort_type" type="radio" value="Y" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('Y');return true;}}" /><label
+							<input name="relation.sort_type" type="radio" value="Y"
+								data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('Y');return true;}}" /><label
 								class="control-label">启用</label>
 						</div>
 						<div class="span6 col-md-3">
-							<input name="relation.sort_type" type="radio" value="N" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('N');return true;}}" /><label
+							<input name="relation.sort_type" type="radio" value="N"
+								data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('N');return true;}}" /><label
 								class="control-label">停用</label>
+						</div>
+					</div>
+				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-count-limit">
+					<h3>产品紧急上架次数/周</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-1 control-label">次数/周</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" data-bind="value:count_limit_config().ext1" maxlength="2" id="txt-count-limit" />
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateCountLimit() }">保存</button>
 						</div>
 					</div>
 				</form>
@@ -178,6 +193,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/sortable/Sortable.js"></script>
-	<script src="<%=basePath%>static/js/system/base-data.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/system/base-data.js?v=1.001"></script>
 </body>
 </html>

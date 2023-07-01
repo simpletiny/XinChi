@@ -240,11 +240,12 @@ var DetailContext = function() {
 	// end pagination
 	// right side info
 	self.typeMapping = {
-		'CSUM' : '合账',
-		'CRECEIVED' : '收入',
+		'CSUM' : '客户收入（合）',
+		'CRECEIVED' : '客户收入',
 		'ABACK' : '票务退返',
 		'DBACK' : '地接退返',
-		'ARSUM' : '押金退还'
+		'ARSUM' : '押金退还（合）',
+		'ARRECEIVED' : '押金退还'
 	};
 	self.receiveds = ko.observableArray([]);
 	self.detail = ko.observable({});
@@ -287,7 +288,6 @@ var DetailContext = function() {
 
 		$.getJSON(self.apiurl + 'accounting/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
-
 			self.totalCount1(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums1(self.currentPage1());
 

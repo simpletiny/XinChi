@@ -396,7 +396,6 @@ function getServerTime() {
 	 
 	}
 
-
 var isChild = function(birthday){
 	birthday = birthday.replace(/\-/gm,"");
 	var birthYear = birthday.substring(0,4)-0;
@@ -414,6 +413,7 @@ var isChild = function(birthday){
 	}
 	return false;
 }
+
 // jq 扩展
 jQuery.fn.extend({
 	disabled : function() {
@@ -546,7 +546,7 @@ function dataURLtoFile(dataurl, filename) {
 				}
 			}
 			if((''+sum[i]).indexOf(".")>-1){
-				td.text(sum[i].toFixed(2));
+				td.text(sum[i].toFixed(2));D
 			}else{
 				td.text(sum[i]);
 			}
@@ -556,11 +556,13 @@ function dataURLtoFile(dataurl, filename) {
 	
 })(jQuery);
 
-var sleep = (ms) => {
-	  const start = new Date().getTime();
-	  while (new Date().getTime() - start < ms) {
-	    
-	  }
-	};
-
+function debounce(func, duration = 500) {
+    let timer_id;
+    return function (...args) {
+        clearTimeout(timer_id);
+        timer_id = setTimeout(() => {
+            func.apply(this, args);
+        }, duration);
+    }
+}
 

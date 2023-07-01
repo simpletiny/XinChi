@@ -255,6 +255,8 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 					nn.setChairman(name.getChairman());
 					nn.setLock_flg("Y");
 					nn.setBase_pk(name.getPk());
+					nn.setAge(name.getAge());
+					nn.setId_type(name.getId_type());
 					airTicketNameListDao.insert(nn);
 				}
 

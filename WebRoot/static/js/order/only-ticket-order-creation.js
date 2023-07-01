@@ -5,8 +5,13 @@ var OrderContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
 	self.clientEmployees = ko.observable({});
+	self.passengers = ko.observableArray([{
+		name_index : 1,
+		chairman : 'Y'
+	}]);
+	self.current_date = $("#hidden-server-date").val();
 
-	var x = new Date();
+	var x = new Date(self.current_date);
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
 		startLoadingSimpleIndicator("加载中……");
@@ -43,69 +48,65 @@ var OrderContext = function() {
 			end : function() {
 			}
 		});
-	};
+	}
 
 	self.pickClientEmployee = function(name, pk) {
 		$("#txt-client-employee-name").val(name);
 		$("#txt-client-employee-pk").val(pk);
 		layer.close(clientEmployeeLayer);
-	};
+	}
 
 	self.createOrder = function() {
 		if (!$("form").valid()) {
 			return;
 		}
 
-		var json = '';
-		// 航班信息json
-		var ticket_json = '[';
+		// 航班信息
 		var info_table = $("#table-ticket tbody");
 		var infos = $(info_table).children();
-
-		for (var i = 0; i < infos.length; i++) {
-			if (i != 0)
-				ticket_json += ',';
-			var tr = $(infos[i]);
-			var index = tr.find("input[st='flight-index']").val().trim();
-			var date = tr.find("input[st='date']").val().trim();
-			var from_city = tr.find("input[st='from-city']").val().trim();
-			var to_city = tr.find("input[st='to-city']").val().trim();
-
-			ticket_json += '{"index":"' + index + '","date":"' + date + '","from_city":"' + from_city + '","to_city":"'
-					+ to_city + '"}';
-
+		let legs = new Array();
+		for (let i = 0; i < infos.length; i++) {
+			const tr = $(infos[i]);
+			const index = tr.find("input[st='flight-index']").val().trim();
+			const date = tr.find("input[st='date']").val().trim();
+			const from_city = tr.find("input[st='from-city']").val().trim();
+			const to_city = tr.find("input[st='to-city']").val().trim();
+			
+			let leg = {index,date,from_city,to_city};
+			legs.push(leg);
 		}
-		ticket_json += ']';
-
+		
 		var air_comment = $("#air-comment").val().trim();
 
 		// 名单json
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var name_json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
-			if (i != 0)
-				name_json += ',';
-			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
-			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
-			var sex = $(tr).find("[st='sex']").val();
+			const tr = trs[i];
+			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			const index = i + 1;
+			const name = $(tr).find("[st='name']").val().trim();
+			const sex = $(tr).find("[st='sex']").val();
+			const age = $(tr).find("[st='age']").val().trim();
+			const id_type = $(tr).find("[st='type']").val();
 
-			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
-			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
+			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
+			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
+			const id = $(tr).find("[st='id']").val().trim();
 
-			name_json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"'
-					+ sex + '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
-					+ '"}';
+			if (name == "" || id == "") {
+				continue;
+			}
+			
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			people.push(person);
 		}
-		name_json += ']';
-
-		json = '{"ticket_json":' + ticket_json + ',"name_json":' + name_json + ',"air_comment":"' + air_comment + '"}';
-
+		
+		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
+		const json = JSON.stringify(info);
 		var data = $("form").serialize() + "&bnsOrder.independent_flg=A" + "&json=" + json;
-
+		
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",

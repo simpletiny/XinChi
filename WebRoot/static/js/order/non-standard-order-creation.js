@@ -8,12 +8,18 @@ var OrderContext = function() {
 	self.independent_flg = ko.observable();
 	self.independent_flg($("#independent_flg").val());
 	self.independent_msg = ko.observable();
+	self.passengers = ko.observableArray([{
+		name_index : 1,
+		chairman : 'Y'
+	}]);
 	if (self.independent_flg() == 'Y') {
 		self.independent_msg("（独立团）");
 	} else {
 		self.independent_flg("N");
 	}
-	var x = new Date();
+	
+	self.current_date = $("#hidden-server-date").val();
+	var x = new Date(self.current_date);
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 	self.refreshClient = function() {
 		startLoadingSimpleIndicator("加载中……")
@@ -67,25 +73,29 @@ var OrderContext = function() {
 		// 名单json
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var json = '[';
-		for (var i = 0; i < trs.length; i++) {
-			if (i != 0)
-				json += ',';
-			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
-			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
-			var sex = $(tr).find("[st='sex']").val();
+		let people = new Array();
+		for (let i = 0; i < trs.length; i++) {
+			const tr = trs[i];
+			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			const index = i + 1;
+			const name = $(tr).find("[st='name']").val().trim();
+			const sex = $(tr).find("[st='sex']").val();
+			const age = $(tr).find("[st='age']").val().trim();
+			const id_type = $(tr).find("[st='type']").val();
 
-			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
-			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
-
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"}';
+			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
+			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
+			const id = $(tr).find("[st='id']").val().trim();
+			
+			if (name == "" || id == "") {
+				continue;
+			}
+			
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			people.push(person);
 		}
-		json += ']';
-
+		
+		let json = JSON.stringify(people);
 		var data = $("form").serialize() + "&bnsOrder.independent_flg=" + self.independent_flg() + "&json=" + json;
 
 		startLoadingSimpleIndicator("保存中");

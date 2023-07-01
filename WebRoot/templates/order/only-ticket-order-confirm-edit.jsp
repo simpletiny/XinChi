@@ -18,10 +18,12 @@
 #table-ticket th, #table-ticket td {
 	text-align: center;
 }
+
 #name-table tr th, td {
 	text-align: center;
-	vertical-align:middle !important
+	vertical-align: middle !important
 }
+
 #table-ticket tr td input {
 	width: 90%;
 }
@@ -46,7 +48,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
-					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk" /> 
+					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk" />
 					<div class="input-row clearfloat">
 						<div class="col-md-6 required">
 							<label class="l">客户</label>
@@ -222,9 +224,12 @@
 													<option value="F">女</option>
 											</select></td>
 											<td><input type="text" data-bind="value:$data.age" class="ip-" style="width: 90%" st="age" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_A" class="ip-" style="width: 90%" st="cellphone_A" /></td>
-											<td><input type="text" data-bind="value:$data.cellphone_B" class="ip-" style="width: 90%" st="cellphone_B" /></td>
-											<td><input type="text" data-bind="value:$data.id" oninput="autoCaculate();" maxlength="18" class="ip-" style="width: 90%" st="id" /></td>
+											<td><input type="text" data-bind="value:$data.cellphone_A" class="ip-" style="width: 90%"
+												st="cellphone_A" /></td>
+											<td><input type="text" data-bind="value:$data.cellphone_B" class="ip-" style="width: 90%"
+												st="cellphone_B" /></td>
+											<td><input type="text" data-bind="value:$data.id" oninput="autoCaculate();" maxlength="18" class="ip-"
+												style="width: 90%" st="id" /></td>
 											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
 										</tr>
 									</tbody>
@@ -273,7 +278,9 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm-edit.js"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js"></script>
+	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm-edit.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.001"></script>
 </body>
 </html>

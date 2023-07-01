@@ -43,6 +43,9 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	private String delete_flg;
 
+	private String id_type;
+	private int age;
+
 	public int normalHashCode() {
 		int result = 17;
 		if (null != cellphone_A)
@@ -55,7 +58,9 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 			result = 31 * result + chairman.hashCode();
 		if (null != name_index)
 			result = 31 * result + name_index;
-		return result;
+		if (null != id_type)
+			result = 31 * result + id_type.hashCode();
+		return result + age;
 	}
 
 	@Override
@@ -221,6 +226,22 @@ public class SaleOrderNameListBean extends SupperBO implements Serializable {
 
 	public void setDelete_flg(String delete_flg) {
 		this.delete_flg = delete_flg;
+	}
+
+	public String getId_type() {
+		return id_type;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setId_type(String id_type) {
+		this.id_type = id_type;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 }

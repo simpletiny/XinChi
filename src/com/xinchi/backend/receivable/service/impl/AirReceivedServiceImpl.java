@@ -77,4 +77,9 @@ public class AirReceivedServiceImpl implements AirReceivedService {
 		return dao.selectByParam(option);
 	}
 
+	@Override
+	public List<AirReceivedDetailBean> selectByBusinessNumber(String business_number) {
+		return dao.selectByBusinessNumber(business_number);
+	}
+
 }

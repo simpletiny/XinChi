@@ -41,6 +41,9 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 	private String time;
 	private int pay_index;
 
+	private BigDecimal money_from;
+	private BigDecimal money_to;
+
 	public String getVoucher_number() {
 		return voucher_number;
 	}
@@ -183,6 +186,22 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setDeposit_number(String deposit_number) {
 		this.deposit_number = deposit_number;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
 	}
 
 }

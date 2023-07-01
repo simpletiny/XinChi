@@ -49,8 +49,8 @@ public class AirTicketPaidDetailDAOImpl extends SqlSessionDaoSupport implements 
 	}
 
 	@Override
-	public List<AirTicketPaidDetailBean> selectByPayablePk(String payable_pk) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByPayablePk", payable_pk);
+	public List<AirTicketPaidDetailBean> selectByBasePk(String base_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketPaidDetailMapper.selectByBasePk", base_pk);
 	}
 
 	@Override

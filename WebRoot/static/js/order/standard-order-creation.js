@@ -9,6 +9,7 @@ var OrderContext = function() {
 	self.independent_flg = ko.observable();
 	self.independent_flg($("#independent_flg").val());
 	self.independent_msg = ko.observable();
+	self.passengers = ko.observableArray([{}]);
 	if (self.independent_flg() == 'Y') {
 		self.independent_msg("（独立团）");
 	} else {
@@ -19,11 +20,13 @@ var OrderContext = function() {
 		product_pk : self.product_pk
 	}, function(data) {
 		self.product(data.product);
+		self.passengers({name_index:1,chairman : 'Y',price:data.product.adult_price - data.product.business_profit_substract });
 	});
 	var x = new Date();
 	self.order().confirm_date = x.Format("yyyy-MM-dd");
 
 	self.refreshClient = function() {
+		startLoadingSimpleIndicator("加载中……");
 		var param = "employee.name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
@@ -31,6 +34,8 @@ var OrderContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
 		});
 	};
 
@@ -74,36 +79,34 @@ var OrderContext = function() {
 			fail_msg("请填写团款备注")
 			return;
 		}
-
+		startLoadingSimpleIndicator("保存中");
 		// 名单json
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
-			if (i != 0)
-				json += ',';
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
-			var name = $(tr).find("[st='name']").val();
+			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
-
+			var age = $(tr).find("[st='age']").val();
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val();
-			var id = $(tr).find("[st='id']").val();
+			var id_type = $(tr).find("[st='type']").val();
+			var id = $(tr).find("[st='id']").val().trim();
 			var price = $(tr).find("[st='price']").val();
-
 			if (name.trim() == "" || id.trim() == "") {
 				continue;
 			}
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id
-					+ '","price":"' + price + '"}';
-		}
-		json += ']';
 
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			people.push(person);
+		}
+		let json = JSON.stringify(people);
+		
 		var data = $("form").serialize() + "&bsOrder.independent_flg=" + self.independent_flg() + "&json=" + json;
-		startLoadingSimpleIndicator("保存中");
+	
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/createBudgetStandardOrder',
@@ -190,3 +193,4 @@ $(document).ready(function() {
 	});
 	// changeAutoType("Y");
 });
+

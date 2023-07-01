@@ -204,7 +204,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			</s:if>
 
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
-				<li class="product-manager"><a href="<%=basePath%>templates/product/product.jsp"><i
+				<li class="product-manager"><a href="<%=basePath%>templates/product/product-statistics.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>产品管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品管理</a></li>

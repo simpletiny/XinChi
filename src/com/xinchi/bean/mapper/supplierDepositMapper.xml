@@ -287,6 +287,15 @@
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and A.account = #{params.bo.account,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
 			<if test="params.bo.statuses!= null and params.bo.statuses !=''">
 				and A.status in
 				<foreach item="item" index="index" collection="params.bo.statuses" open="(" separator="," close=")">

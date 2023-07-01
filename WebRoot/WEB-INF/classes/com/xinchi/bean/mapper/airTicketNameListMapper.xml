@@ -34,6 +34,8 @@
 		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
 		<result column="order_lock_flg" property="order_lock_flg" jdbcType="CHAR" />
 		<result column="change_cost" property="change_cost" jdbcType="DECIMAL" />
+		<result column="id_type" property="id_type" jdbcType="CHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
 	</resultMap>
 
 	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.AirTicketNameListBean">
@@ -104,7 +106,9 @@
 		lock_flg,
 		delete_flg,
 		base_pk,
-		change_cost
+		change_cost,
+		id_type,
+		age
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -192,8 +196,11 @@
 		A.lock_flg,
 		A.delete_flg,
 		A.base_pk,
-		A.change_cost
-		from air_ticket_name_list A
+		A.change_cost,
+		A.age,
+		A.id_type
+		from
+		air_ticket_name_list A
 		LEFT JOIN
 		view_sum_ticket_cost B ON A.pk= B.passenger_pk
 		where A.pk in
@@ -208,7 +215,8 @@
 	</delete>
 	<delete id="deleteByOrderNumber" parameterType="java.lang.String">
 		delete from air_ticket_name_list
-		where order_number = #{order_number,jdbcType=CHAR}
+		where order_number =
+		#{order_number,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNameListBean">
@@ -282,6 +290,12 @@
 			<if test="lock_flg != null">
 				lock_flg,
 			</if>
+			<if test="id_type != null">
+				id_type,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -349,6 +363,12 @@
 			</if>
 			<if test="lock_flg != null">
 				#{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				#{id_type,jdbcType=CHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -429,6 +449,12 @@
 			<if test="change_cost != null">
 				change_cost = #{change_cost,jdbcType=CHAR},
 			</if>
+			<if test="id_type != null">
+				id_type = #{id_type,jdbcType=CHAR},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -479,9 +505,12 @@
 		A.base_pk,
 		E.comment AS need_comment,
 		C.lock_flg AS order_lock_flg,
-		A.change_cost
+		A.change_cost,
+		A.id_type,
+		A.age
 
-		from air_ticket_name_list A LEFT JOIN
+		from air_ticket_name_list A LEFT
+		JOIN
 		user_base B ON A.client_number=
 		B.user_number
 		LEFT JOIN
@@ -552,7 +581,9 @@
 		A.delete_flg,
 		A.base_pk,
 		C.lock_flg AS order_lock_flg,
-		A.change_cost
+		A.change_cost,
+		A.id_type,
+		A.age
 
 		from
 		air_ticket_name_list A LEFT JOIN

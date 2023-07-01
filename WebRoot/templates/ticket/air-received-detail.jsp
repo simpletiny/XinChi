@@ -31,7 +31,7 @@
 					<div class="form-group">
 						<label class="col-md-1 control-label">单号</label>
 						<div class="col-md-2">
-							<input type="text" class="form-control" name="detail.business_number" />
+							<input type="text" class="form-control" placeholder="押金单号" name="detail.business_number" />
 						</div>
 						<label class="col-md-1 control-label">收入账户</label>
 						<div class="col-md-2">
@@ -46,7 +46,7 @@
 					<div class="form-group">
 						<label class="col-md-1 control-label">供应商</label>
 						<div class="col-md-2">
-							<input type="text" class="form-control" name="detail.supplier_name" />
+							<input type="text" class="form-control" name="detail.supplier_name" placeholder="供应商简称"/>
 
 						</div>
 						<label class="col-md-1 control-label">收入时间</label>

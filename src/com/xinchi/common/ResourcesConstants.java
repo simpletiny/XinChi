@@ -294,6 +294,8 @@ public class ResourcesConstants {
 	public static String BASE_DATA_PK_CLEAN_BAD = "pk_clean_bad";
 	// 销售信用
 	public static String BASE_DATA_PK_SSCREDIT = "pk_scredit";
+	// 产品每周上架次数限制，p for product,cnt for count
+	public static String BASE_DATA_PK_LIMIT_PRODUCT_URGENT_COUNT = "pk_p_urgent_cnt_limit";
 
 	// 未确认
 	public static String NAME_CONFIRM_STATUS_NO = "1";
