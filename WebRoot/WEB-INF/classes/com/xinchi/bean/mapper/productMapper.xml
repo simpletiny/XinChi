@@ -53,6 +53,8 @@
 		<result column="local_upkeep_flg" property="local_upkeep_flg" jdbcType="VARCHAR" />
 		<result column="keep_flg" property="keep_flg" jdbcType="CHAR" />
 		<result column="analysis_flg" property="analysis_flg" jdbcType="CHAR" />
+		<result column="as_adult_flg" property="as_adult_flg" jdbcType="CHAR" />
+		<result column="id_type" property="id_type" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -106,7 +108,9 @@
 		supplier_upkeep_flg,
 		local_upkeep_flg,
 		keep_flg,
-		analysis_flg
+		analysis_flg,
+		as_adult_flg,
+		id_type
 
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -258,6 +262,12 @@
 			<if test="gross_child_profit_rate != null">
 				gross_child_profit_rate,
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg,
+			</if>
+			<if test="id_type != null">
+				id_type,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -391,6 +401,12 @@
 			</if>
 			<if test="gross_child_profit_rate != null">
 				#{gross_child_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="as_adult_flg != null">
+				#{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				#{id_type,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -549,6 +565,12 @@
 			<if test="analysis_flg != null">
 				analysis_flg = #{analysis_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg = #{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				id_type = #{id_type,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -633,7 +655,9 @@
 		A.supplier_upkeep_flg,
 		A.local_upkeep_flg,
 		A.keep_flg,
-		A.analysis_flg
+		A.analysis_flg,
+		A.as_adult_flg,
+		A.id_type
 		from
 		product A
 		LEFT JOIN user_base B on A.product_manager=B.user_number

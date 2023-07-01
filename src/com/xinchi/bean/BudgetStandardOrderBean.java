@@ -63,6 +63,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
+	private String as_adult_flg;
+
 	private String operate_flg;
 	private String treat_comment;
 	private String receivable_comment;
@@ -365,5 +367,13 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getAs_adult_flg() {
+		return as_adult_flg;
+	}
+
+	public void setAs_adult_flg(String as_adult_flg) {
+		this.as_adult_flg = as_adult_flg;
 	}
 }

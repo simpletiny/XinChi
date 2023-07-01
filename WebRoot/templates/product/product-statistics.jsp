@@ -62,25 +62,25 @@
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover" id="main-table-1" style="width: 50%; float: left">
+					<table class="table table-striped table-hover" id="main-table-3" style="width: 50%; float: left">
 						<thead>
 							<tr role="row">
-								<th>地区</th>
+								<th>销售</th>
 								<th>收客数</th>
 								<th>订单数</th>
-								<th>总分值</th>
+								<th>单均人数</th>
 							</tr>
 						</thead>
-						<tbody data-bind="foreach:areaData">
+						<tbody data-bind="foreach:saleData">
 							<tr>
-								<td data-bind="text:$data.area"></td>
+								<td data-bind="text:$data.sale_name"></td>
 								<td data-bind="text:$data.sum_people"></td>
 								<td data-bind="text:$data.order_cnt"></td>
 								<td data-bind="text:$data.score"></td>
 							</tr>
 						</tbody>
 					</table>
-					<div id="chart-area" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
+					<div id="chart-sale" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
 					<hr style="width: 100%">
 					<table class="table table-striped table-hover" id="main-table-2" style="width: 50%; float: left">
 						<thead>
@@ -101,26 +101,28 @@
 						</tbody>
 					</table>
 					<div id="chart-product" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
-					<hr style="width: 100%;"> 
-					<table class="table table-striped table-hover" id="main-table-3" style="width: 50%; float: left">
+					<hr style="width: 100%;">
+
+
+					<table class="table table-striped table-hover" id="main-table-1" style="width: 50%; float: left">
 						<thead>
 							<tr role="row">
-								<th>销售</th>
+								<th>地区</th>
 								<th>收客数</th>
 								<th>订单数</th>
-								<th>单均人数</th>
+								<th>总分值</th>
 							</tr>
 						</thead>
-						<tbody data-bind="foreach:saleData">
+						<tbody data-bind="foreach:areaData">
 							<tr>
-								<td data-bind="text:$data.sale_name"></td>
+								<td data-bind="text:$data.area"></td>
 								<td data-bind="text:$data.sum_people"></td>
 								<td data-bind="text:$data.order_cnt"></td>
 								<td data-bind="text:$data.score"></td>
 							</tr>
 						</tbody>
 					</table>
-					<div id="chart-sale" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
+					<div id="chart-area" style="margin-left: 50px; width: 45%; height: 350px; float: left"></div>
 				</div>
 
 			</div>
@@ -128,8 +130,7 @@
 	</div>
 
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display",
-				"block");
+		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/echart/echarts.min.js"></script>

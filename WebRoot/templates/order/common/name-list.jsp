@@ -13,7 +13,13 @@
 					<th style="width: 12%">手机号A</th>
 					<th style="width: 12%">手机号B</th>
 					<th style="width: 8%">证件类型</th>
+					<!-- ko if:order().as_adult_flg=='N' -->
 					<th style="width: 22%">证件号码</th>
+					<!-- /ko -->
+					<!-- ko if:order().as_adult_flg=='Y' -->
+					<th style="width: 17%">证件号码</th> 
+					<th style="width: 5%">按成人</th>
+					<!-- /ko -->
 					<th style="width: 7%">价格&nbsp;<input type="checkbox" id="chk-bind" onclick="bindFix()" title="选中修改所有价格" /></th>
 					<!-- 	<th style="width: 10%">分房组</th>
 											<th style="width: 9%"></th>
@@ -42,6 +48,9 @@
 					</select></td>
 					<td><input type="text" class="ip-" data-bind="value:$data.id" maxlength="18" oninput="inputId()"
 						style="width: 90%" st="id" /></td>
+					<!-- ko if:$root.order().as_adult_flg=='Y' -->
+					<td st='td-as-adult'><input type="checkbox" style="display:none" onchange="checkAdult()" data-bind="checked:$data.as_adult" value='Y' st='as-adult' /></td> 
+					<!-- /ko -->
 					<td><input type="text" class="ip-" style="width: 90%" st="price" oninput="autoPrice()"
 						data-bind="value:$data.price" /></td>
 					<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>

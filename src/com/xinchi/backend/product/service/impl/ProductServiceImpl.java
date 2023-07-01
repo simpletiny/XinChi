@@ -78,6 +78,17 @@ public class ProductServiceImpl implements ProductService {
 		if (null != exists && exists.size() > 0)
 			return "exists";
 
+		List<Integer> id_types = product.getId_types();
+
+		int t = 0;
+		if (null != id_types) {
+			for (Integer id_type : id_types) {
+				t += id_type;
+			}
+		}
+		t = t == 0 ? 3 : t;
+		product.setId_type(String.valueOf(t));
+
 		dao.insert(product);
 		return SUCCESS;
 	}
@@ -121,6 +132,17 @@ public class ProductServiceImpl implements ProductService {
 				delayDao.delete(exist_delay.getPk());
 			bean.setProduct_value(delay.getProduct_value());
 			bean.setProduct_child_value(delay.getProduct_child_value());
+
+			List<Integer> id_types = bean.getId_types();
+
+			int t = 0;
+			if (null != id_types) {
+				for (Integer id_type : id_types) {
+					t += id_type;
+				}
+			}
+			t = t == 0 ? 3 : t;
+			bean.setId_type(String.valueOf(t));
 		}
 		dao.update(bean);
 		return "success";

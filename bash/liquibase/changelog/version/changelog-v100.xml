@@ -672,6 +672,27 @@
 			<comment>REPLACE VIEW budget_order_view</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="20" author="simpletiny">
+		<sql>
+            <![CDATA[
+           			ALTER TABLE product 
+						ADD COLUMN as_adult_flg CHAR(1) NULL DEFAULT 'N' COMMENT '儿童是否可以按成人计算' AFTER analysis_flg,
+						ADD COLUMN id_type CHAR(1) NULL DEFAULT '1' COMMENT '证件类型，1，身份证，2，护照，3，无所谓' AFTER as_adult_flg;
+                 ]]>
+			<comment>ALTER TABLE product</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="21" author="simpletiny">
+		<sql>
+            <![CDATA[
+           			ALTER TABLE sale_order_name_list 
+						ADD COLUMN as_adult CHAR(1) NULL DEFAULT 'N' COMMENT '是否按成人操作' AFTER id_type;
+					ALTER TABLE budget_standard_order 
+						ADD COLUMN as_adult_flg CHAR(1) NULL DEFAULT 'N' COMMENT '生成订单的时候，是否可以按成人操作' AFTER do_confirm_date;
+                 ]]>
+			<comment>ALTER TABLE sale_order_name_list,budget_standard_order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

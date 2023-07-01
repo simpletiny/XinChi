@@ -21,10 +21,9 @@ var OrderContext = function() {
 	}, function(data) {
 		self.product(data.product);
 		self.passengers({name_index:1,chairman : 'Y',price:data.product.adult_price - data.product.business_profit_substract });
+		self.order({as_adult_flg:data.product.as_adult_flg});
 	});
-	var x = new Date();
-	self.order().confirm_date = x.Format("yyyy-MM-dd");
-
+	
 	self.refreshClient = function() {
 		startLoadingSimpleIndicator("加载中……");
 		var param = "employee.name=" + $("#client_name").val();
@@ -96,15 +95,24 @@ var OrderContext = function() {
 			var id_type = $(tr).find("[st='type']").val();
 			var id = $(tr).find("[st='id']").val().trim();
 			var price = $(tr).find("[st='price']").val();
+			
 			if (name.trim() == "" || id.trim() == "") {
 				continue;
 			}
+			let txt_as_adult = $(tr).find("[st='as-adult']");
+			let as_adult = 'N';
+			if(txt_as_adult){
+				if($(txt_as_adult).is(":checked")){
+					as_adult='Y';
+				}
+			}
 
-			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type,as_adult};
 			people.push(person);
 		}
-		let json = JSON.stringify(people);
 		
+	
+		let json = JSON.stringify(people);
 		var data = $("form").serialize() + "&bsOrder.independent_flg=" + self.independent_flg() + "&json=" + json;
 	
 		$.ajax({

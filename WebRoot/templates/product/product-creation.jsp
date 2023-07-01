@@ -190,6 +190,10 @@
 											placeholder="0-20整数" name="product.product_child_value" required="required" />
 									</div>
 								</td>
+								<td><label class="l">证件类型</label><label class="l"><input type="checkbox" checked value="1" name="product.id_types" />身份证</label><label class="l"><input type="checkbox" value="2" name="product.id_types" />护照</label></td>
+							</tr>
+							<tr>
+								<td colspan="2"><label class="l" style="width:100%" title="儿童价格和分值将按照成人标准"><input type="checkbox" value="Y" name="product.as_adult_flg" />允许儿童按成人操作</label></td>
 								<td></td>
 							</tr>
 							<tr>
@@ -233,6 +237,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 
-	<script src="<%=basePath%>static/js/product/product-creation.js"></script>
+	<script src="<%=basePath%>static/js/product/product-creation.js?v=1.001"></script>
 </body>
 </html>

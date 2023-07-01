@@ -39,6 +39,7 @@
 		<result column="cancel_flg" property="cancel_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
+		<result column="as_adult_flg" property="as_adult_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -79,7 +80,8 @@
 		lock_flg,
 		cancel_flg,
 		name_confirm_status,
-		receivable_first_flg
+		receivable_first_flg,
+		as_adult_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -207,6 +209,9 @@
 			<if test="name_confirm_status != null">
 				name_confirm_status,
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -310,6 +315,9 @@
 			</if>
 			<if test="name_confirm_status != null">
 				#{name_confirm_status,jdbcType=CHAR},
+			</if>
+			<if test="as_adult_flg != null">
+				#{as_adult_flg,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -425,6 +433,9 @@
 			</if>
 			<if test="receivable_first_flg != null">
 				receivable_first_flg = #{receivable_first_flg,jdbcType=CHAR},
+			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg = #{as_adult_flg,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

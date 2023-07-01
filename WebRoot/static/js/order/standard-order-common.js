@@ -41,6 +41,9 @@ function inputPrice() {
 function inputAge(){
 	autoPersonInfo();
 }
+function checkAdult(){
+	autoPersonInfo();
+}
 function autoPersonInfo() {
 	var tbody = $("#name-table").find("tbody");
 	var trs = $(tbody).children();
@@ -55,7 +58,8 @@ function autoPersonInfo() {
 		var td_sex = $(tr).find("[st='sex']");
 		var td_age = $(tr).find("[st='age']");
 		var td_type = $(tr).find("[st='type']");
-
+		let as_adult = $(tr).find("[st='as-adult']");
+		
 		let person = parseID(id);
 		$(td_type).val(person.id_type);
 
@@ -66,28 +70,48 @@ function autoPersonInfo() {
 			$(td_age).val(person.age);
 			$(td_sex).val(person.sex);
 			if (person.is_child) {
-				if ($(td_price).val() - 0 == ctx.product().adult_price - ctx.product().business_profit_substract
-						|| $(td_price).val() == "") {
+				if ($(td_price).val() == "") {
 					$(td_price).val(ctx.product().child_price - ctx.product().business_profit_substract);
 				}
-				childrenCnt++;
+				
+				if(as_adult){
+					$(as_adult).show();
+					if($(as_adult).is(":checked")){
+						adultCnt++;
+					}else{
+						childrenCnt++;
+					}
+				}else{
+					childrenCnt++;
+				}
 			} else {
-				if ($(td_price).val() - 0 == ctx.product().child_price - ctx.product().business_profit_substract
-						|| $(td_price).val() == "") {
+				if ($(td_price).val() == "") {
 					$(td_price).val(ctx.product().adult_price - ctx.product().business_profit_substract);
 				}
 				adultCnt++;
+				if(as_adult)
+					$(as_adult).hide();
 			}
 		}else{
-			if ($(td_price).val() - 0 == ctx.product().child_price - ctx.product().business_profit_substract
-					|| $(td_price).val() == "") {
+			if ($(td_price).val() == "") {
 				$(td_price).val(ctx.product().adult_price - ctx.product().business_profit_substract);
 			}
 			let age =$(td_age).val().trim();
 			if(age==""||age>=12||age<=0){
 				adultCnt++;
+				if(as_adult)
+					$(as_adult).hide();
 			}else{
-				childrenCnt++;
+				if(as_adult){
+					$(as_adult).show();
+					if($(as_adult).is(":checked")){
+						adultCnt++;
+					}else{
+						childrenCnt++;
+					}
+				}else{
+					childrenCnt++;
+				}
 			}
 		}
 
@@ -146,7 +170,7 @@ var refreshNameIndex = function() {
 	}
 }
 const nameModule = (function(){
-	const html = `
+	let html = `
 		<tr>
 			<input type="hidden" st="name-pk" />
 			<input type="hidden" st="name-lock" />
@@ -169,6 +193,7 @@ const nameModule = (function(){
 			</select>
 			</td>
 			<td><input type="text" class="ip-" style="width: 90%" maxlength="18" oninput="inputId()" st="id" /></td>
+			<td st='td-as-adult'><input type="checkbox" style="display:none" value='Y' onchange='checkAdult()' st='as-adult' /></td>
 			<td>
 				<input type="text" class="ip-" style="width: 90%" oninput="fixAllPrice(event);autoPrice()"  st="price" />
 			</td>
@@ -177,6 +202,9 @@ const nameModule = (function(){
 	`;
 	
 	function nameFormat(){
+		if(ctx.order().as_adult_flg=='N'){
+			html = html.replace(`<td st='td-as-adult'><input type="checkbox" style="display:none" value='Y' onchange='checkAdult()' st='as-adult' /></td>`,'');
+		}
 		return formatNameList({
 			content_id:"txt-name-list",
 			table_id:"name-table",
@@ -190,6 +218,10 @@ const nameModule = (function(){
 		let tr = $(html);
 		tr.find("[st='name-index']").text(count+1);
 		tr.find("[st='price']").val(ctx.product().adult_price - ctx.product().business_profit_substract);
+		let td_as_adult = tr.find("[st='td-as-adult']");
+		if(ctx.order().as_adult_flg=='N'){
+			$(td_as_adult).remove();
+		}
 		tbody.append(tr);
 	}
 	return {nameFormat,addTr};

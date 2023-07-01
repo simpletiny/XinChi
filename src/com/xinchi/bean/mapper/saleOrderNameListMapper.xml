@@ -23,6 +23,7 @@
 		<result column="price" property="price" jdbcType="DECIMAL" />
 		<result column="id_type" property="id_type" jdbcType="CHAR" />
 		<result column="age" property="age" jdbcType="INTEGER" />
+		<result column="as_adult" property="as_adult" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -47,7 +48,8 @@
 		lock_flg,
 		delete_flg,
 		id_type,
-		age
+		age,
+		as_adult
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -161,6 +163,9 @@
 			<if test="age != null">
 				age,
 			</if>
+			<if test="as_adult != null">
+				as_adult,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -222,6 +227,9 @@
 			</if>
 			<if test="age != null">
 				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="as_adult != null">
+				#{as_adult,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -289,6 +297,9 @@
 			</if>
 			<if test="age != null">
 				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="as_adult != null">
+				as_adult = #{as_adult,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

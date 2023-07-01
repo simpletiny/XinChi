@@ -20,9 +20,12 @@ var OrderContext = function() {
 	}, function(data) {
 		self.order(data.bsOrder);
 		if (data.passengers.length>0) {
+			$(data.passengers).each(function(index,data){
+				data.as_adult = data.as_adult=='Y'?true:false;
+			})
 			self.passengers(data.passengers);
 		}
-		
+	
 		self.do_confirm_date(self.order().do_confirm_date);
 		let do_date = new Date(self.do_confirm_date());
 
@@ -42,7 +45,7 @@ var OrderContext = function() {
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
 		}
-
+		autoPersonInfo();
 		$.getJSON(self.apiurl + 'product/searchProductByPk', {
 			product_pk : self.order().product_pk
 		}, function(data) {
@@ -180,7 +183,14 @@ var OrderContext = function() {
 			if (chairman == "Y") {
 				hasChairman = true;
 			}
-			let person = {pk,lock_flg,chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type};
+			let txt_as_adult = $(tr).find("[st='as-adult']");
+			let as_adult = 'N';
+			if(txt_as_adult){
+				if($(txt_as_adult).is(":checked")){
+					as_adult='Y';
+				}
+			}
+			let person = {pk,lock_flg,chairman,index,name,sex,age,cellphone_A,cellphone_B,id,price,id_type,as_adult};
 			people.push(person);
 		}
 

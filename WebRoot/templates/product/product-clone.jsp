@@ -66,7 +66,8 @@
 				<form class="form-box info-form" id="form_container">
 
 					<div class="input-row clearfloat">
-						<label class="l"><input type="checkbox" id="chk-strict" checked="checked" value="Y" name="product.strict_price_flg" />严格执行定价</label>
+						<label class="l"><input type="checkbox" id="chk-strict" checked="checked" value="Y"
+							name="product.strict_price_flg" />严格执行定价</label>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-1">&nbsp;</div>
@@ -75,8 +76,8 @@
 							<label class="l">产品线</label>
 							<div class="ip fix-width">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,optionsText: 'name', optionsValue: 'name',value:product().location, optionsCaption: '--请选择--'" name="product.location"
-									required="required"></select>
+									data-bind="options: locations,optionsText: 'name', optionsValue: 'name',value:product().location, optionsCaption: '--请选择--'"
+									name="product.location" required="required"></select>
 							</div>
 						</div>
 						<div class="col-md-3 required">
@@ -147,9 +148,8 @@
 									<div>
 										<label class="l">最大让利</label>
 										<div class="ip fix-width">
-											<input type="number" class="ip-" id="max-profit-substract"
-												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
-												name="product.max_profit_substract" />
+											<input type="number" class="ip-" id="max-profit-substract" onkeyup="caculateGrossProfit()"
+												data-bind="value: product().max_profit_substract" placeholder="最大让利" name="product.max_profit_substract" />
 										</div>
 									</div>
 								</td>
@@ -193,6 +193,13 @@
 											placeholder="0-20整数" name="product.product_child_value" required="required" />
 									</div>
 								</td>
+								<td><label class="l">证件类型</label><label class="l"><input type="checkbox" id='chk-id-type-id'
+										value="1" name="product.id_types" />身份证</label><label class="l"><input id='chk-id-type-passport'
+										type="checkbox" value="2" name="product.id_types" />护照</label></td>
+							</tr>
+							<tr>
+								<td colspan="2"><label class="l" style="width: 100%" title="儿童价格和分值将按照成人标准"><input type="checkbox"
+										value='Y' id="chk-as-adult-flg" name="product.as_adult_flg" />允许儿童按成人操作</label></td>
 								<td></td>
 							</tr>
 							<tr>
@@ -273,14 +280,13 @@
 		</div>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display",
-				"block");
+		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 
-	<script src="<%=basePath%>static/js/product/product-clone.js"></script>
+	<script src="<%=basePath%>static/js/product/product-clone.js?v=1.001"></script>
 </body>
 </html>

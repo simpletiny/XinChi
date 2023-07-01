@@ -89,6 +89,8 @@ public class ProductBean extends SupperBO implements Serializable {
 	private BigDecimal cash_child_flow;
 	private BigDecimal spot_child_cash;
 	private float gross_child_profit_rate;
+	private String id_type;
+	private String as_adult_flg;
 
 	// 保持上架标识
 	private String keep_flg;
@@ -105,6 +107,8 @@ public class ProductBean extends SupperBO implements Serializable {
 	// search options
 	private List<String> locations;
 	private List<String> statuses;
+
+	private List<Integer> id_types;
 
 	private String high_value_flg = "N";
 
@@ -522,6 +526,30 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setAnalysis_flg(String analysis_flg) {
 		this.analysis_flg = analysis_flg;
+	}
+
+	public String getId_type() {
+		return id_type;
+	}
+
+	public String getAs_adult_flg() {
+		return as_adult_flg;
+	}
+
+	public void setId_type(String id_type) {
+		this.id_type = id_type;
+	}
+
+	public void setAs_adult_flg(String as_adult_flg) {
+		this.as_adult_flg = as_adult_flg;
+	}
+
+	public List<Integer> getId_types() {
+		return id_types;
+	}
+
+	public void setId_types(List<Integer> id_types) {
+		this.id_types = id_types;
 	}
 
 }

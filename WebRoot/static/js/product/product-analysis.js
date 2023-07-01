@@ -112,16 +112,14 @@ var ProductContext = function() {
 	});
 	self.refresh = function() {
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
-				function(data) {
-					self.products(data.products);
+		$.getJSON(self.apiurl + 'product/searchProductsByPage', param, function(data) {
+			self.products(data.products);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-				});
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+		});
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
@@ -157,8 +155,7 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -185,11 +182,9 @@ function caculateGrossProfit() {
 	var max_profit_substract = $("#max-profit-substract").val() - 0;
 
 	// 产品价格
-	var product_price = adult_price - business_profit_substract
-			- max_profit_substract;
+	var product_price = adult_price - business_profit_substract - max_profit_substract;
 
-	var product_child_price = child_price - business_profit_substract
-			- max_profit_substract;
+	var product_child_price = child_price - business_profit_substract - max_profit_substract;
 
 	var local_adult_cost = $("#local-adult-cost").val() - 0;
 	var air_ticket_cost = $("#air-ticket-cost").val() - 0;
@@ -200,10 +195,8 @@ function caculateGrossProfit() {
 	var other_child_cost = $("#other-child-cost").val() - 0;
 
 	// 毛利
-	var gross_profit = product_price - local_adult_cost - air_ticket_cost
-			- other_cost;
-	var gross_child_profit = product_child_price - local_child_cost
-			- air_ticket_child_cost - other_child_cost;
+	var gross_profit = product_price - local_adult_cost - air_ticket_cost - other_cost;
+	var gross_child_profit = product_child_price - local_child_cost - air_ticket_child_cost - other_child_cost;
 
 	$("#gross-profit").text(gross_profit);
 	$("#txt-gross-profit").val(gross_profit);
@@ -214,8 +207,7 @@ function caculateGrossProfit() {
 	// 毛利率
 	var gross_profit_rate = 0;
 	if (adult_price - business_profit_substract != 0) {
-		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract))
-				.toFixed(2));
+		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract)).toFixed(2));
 		gross_profit_rate = Math.round(gross_profit_rate * 100);
 	}
 

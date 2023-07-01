@@ -83,6 +83,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String id = obj.getString("id");
 			String id_type = obj.getString("id_type");
 			String age_string = obj.getString("age").trim();
+			String as_adult = obj.getString("as_adult");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
 			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
@@ -104,6 +105,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setPrice(price);
 			passenger.setId_type(id_type);
 			passenger.setAge(age);
+			passenger.setAs_adult(as_adult);
 			nameListDao.insert(passenger);
 		}
 		bean.setPassenger_captain(passenger_captain);
@@ -187,6 +189,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
 			String id_type = obj.getString("id_type");
+			String as_adult = obj.getString("as_adult");
 			String age_string = obj.getString("age");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
@@ -209,6 +212,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setTeam_number(bean.getTeam_number());
 			passenger.setAge(age);
 			passenger.setId_type(id_type);
+			passenger.setAs_adult(as_adult);
 			nameListDao.insert(passenger);
 		}
 
@@ -326,6 +330,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
+			String as_adult = obj.getString("as_adult");
 			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
 					: new BigDecimal(obj.getString("price"));
 			String id_type = obj.getString("id_type");
@@ -349,6 +354,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setTeam_number(bean.getTeam_number());
 			passenger.setAge(age);
 			passenger.setId_type(id_type);
+			passenger.setAs_adult(as_adult);
 			nameListDao.insert(passenger);
 		}
 
@@ -621,6 +627,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			String cellphone_A = obj.getString("cellphone_A");
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
+			String as_adult = obj.getString("as_adult");
 			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
 					: new BigDecimal(obj.getString("price"));
 
@@ -645,6 +652,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setLock_flg(lock_flg);
 			passenger.setAge(age);
 			passenger.setId_type(id_type);
+			passenger.setAs_adult(as_adult);
 
 			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
 				passenger_captain = name;

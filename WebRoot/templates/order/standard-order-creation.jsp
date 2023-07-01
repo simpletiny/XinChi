@@ -39,6 +39,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
+					<input type="hidden" data-bind="value:product().as_adult_flg" name="bsOrder.as_adult_flg" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>

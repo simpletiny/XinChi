@@ -59,8 +59,8 @@ public class SomeTest {
 	}
 
 	public static void main(String[] args) {
-		Student a = new Student();
-		Integer age = null;
+		int a = Integer.MAX_VALUE;
+		System.out.println(a * 33 + a * 33);
 
 	}
 
