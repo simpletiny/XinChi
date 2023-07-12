@@ -61,4 +61,6 @@ public interface AirTicketNameListService extends BaseService {
 	public String toggleLockName(List<String> passenger_pks, String lock_flg);
 
 	public String deletePassengerByPassengerPks(List<String> passenger_pks);
+
+	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> team_numbers);
 }

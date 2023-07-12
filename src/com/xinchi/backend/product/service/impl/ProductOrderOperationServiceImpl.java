@@ -704,4 +704,9 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 		return dao.selectDropOffByPage(page);
 	}
+
+	@Override
+	public List<PayableOrderBean> selectPayableOrderByTeamNumber(String team_number) {
+		return payableOrderDao.selectByTeamNumber(team_number);
+	}
 }

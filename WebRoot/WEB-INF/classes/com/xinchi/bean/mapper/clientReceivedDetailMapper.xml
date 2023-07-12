@@ -339,11 +339,9 @@
 	</select>
 
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
-
 		select
 		<include refid="Base_Column_List" />
 		from client_received_detail
-
 		<where>
 			team_number = #{team_number,jdbcType=CHAR}
 		</where>

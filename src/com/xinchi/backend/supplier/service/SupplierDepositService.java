@@ -60,4 +60,10 @@ public interface SupplierDepositService extends BaseService {
 	public List<SupplierDepositBean> selectByVoucherNumber(String voucher_number);
 
 	public List<DepositTicketPaidBean> selectDepositTicketPaidsByDepositPk(String deposit_pk);
+
+	public List<SupplierDepositBean> selectDepositWithoutNumber();
+
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean);
+
+	public SupplierDepositBean selectSumDeposit();
 }

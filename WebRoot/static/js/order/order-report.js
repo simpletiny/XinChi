@@ -1,6 +1,7 @@
 var fillLayer;
 var viewDetailLayer;
-var ProductBoxContext = function() {
+var receivedDetailLayer;
+var OrderReportContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
@@ -17,6 +18,25 @@ var ProductBoxContext = function() {
 		'Y' : '已审核',
 		'N' : '未审核'
 	});
+
+	self.statusMapping = {
+		'I' : '待确认',
+		'N' : '被驳回',
+		'Y' : '已确认',
+		'E' : '已入账'
+	};
+	self.typeMapping = {
+		'TAIL' : '抹零',
+		'SUM' : '合账',
+		'STRIKE' : '冲账',
+		'RECEIVED' : '收入',
+		'PAY' : '支出',
+		'STRIKEOUT' : '冲账/出',
+		'STRIKEIN' : '冲账/入',
+		'COLLECT' : '代收',
+		'FLY' : 'FLY',
+		'TAIL98' : '98清尾'
+	};
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
@@ -205,14 +225,20 @@ var ProductBoxContext = function() {
 	};
 
 	self.order = ko.observable({});
-	self.ticket_infos = ko.observable({});
+	self.ticket_infos = ko.observableArray([]);
+	self.final_order = ko.observable({});
+	self.name_infos = ko.observableArray([]);
+	self.payable_orders = ko.observableArray([]);
 	self.viewTeamDetail = function(team_number) {
-		var param = "team_number=" + team_number;
-		startLoadingSimpleIndicator("加载中");
-		$.getJSON(self.apiurl + 'order/selectOrderByTeamNumber', param, function(data) {
+		startLoadingSimpleIndicator("读取中");
+		let param = "team_number=" + team_number;
+		$.getJSON(self.apiurl + 'order/selectOrderInfoByTeamNumber', param, function(data) {
+			self.order(data.option ? data.option : {});
+			self.final_order(data.final_order ? data.final_order : {});
+			self.name_infos(data.name_info ? data.name_info : []);
+			self.payable_orders(data.payable_orders ? data.payable_orders : []);
+			// self.ticket_infos(data.ticketInfos);
 
-			self.order(data.option);
-			self.ticket_infos(data.ticketInfos);
 			endLoadingIndicator();
 
 			viewDetailLayer = $.layer({
@@ -221,7 +247,7 @@ var ProductBoxContext = function() {
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['700px', 'auto'],
+				area : ['1000px', '750px'],
 				offset : ['', ''],
 				scrollbar : true,
 				page : {
@@ -232,6 +258,32 @@ var ProductBoxContext = function() {
 			});
 		});
 	};
+	self.receiveds = ko.observableArray([]);
+	self.viewReceivable = function(team_number) {
+		var param = "team_number=" + team_number;
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'sale/searchReceivedByTeamNumber', param, function(data) {
+			self.receiveds(data.receiveds);
+			endLoadingIndicator();
+
+			receivedDetailLayer = $.layer({
+				type : 1,
+				title : ['收入详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['900px', 'auto'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-receiveds'
+				},
+				end : function() {
+				}
+			});
+		});
+	}
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;
@@ -280,7 +332,7 @@ var ProductBoxContext = function() {
 	// end pagination
 };
 
-var ctx = new ProductBoxContext();
+var ctx = new OrderReportContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();

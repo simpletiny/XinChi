@@ -576,4 +576,9 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 		return results;
 	}
+
+	@Override
+	public List<ClientReceivedDetailBean> selectByTeamNumber(String team_number) {
+		return dao.selectByTeamNumber(team_number);
+	}
 }

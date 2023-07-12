@@ -112,6 +112,12 @@
 		team_number = #{team_number,jdbcType=CHAR}
 		order by name_index
 	</select>
+	<select id="selectFinalOrderByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from
+		final_order_view
+		where
+		team_number = #{team_number,jdbcType=CHAR}
+	</select>
 	<select id="search3MonthScoreByUserNumber" parameterType="java.lang.String" resultMap="SaleScoreMap">
 		SELECT sum(IF(
 		A.confirm_flg!='N' AND(C.final_type is null OR
@@ -206,64 +212,68 @@
 	</select>
 
 	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
-		SELECT 
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4),
-		        IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
-		        0)) AS score,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
-		        (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		        0)) AS first_people,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
-		        IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
-		        0)) AS first_score,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
-		            AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
-		        (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		        0)) AS middle_people,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
-		            AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
-		        IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
-		        0)) AS middle_score,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
-		        (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		        0)) AS last_people,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4)
-		            AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
-		        IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
-		        0)) AS last_score,
-		    LEFT(A.confirm_date, 7) AS confirm_month,
-		    A.create_user AS sale_number,
-		    B.user_name AS sale_name,
-		    SUM(IF(A.confirm_flg != 'N'
-		            AND (C.final_type IS NULL
-		            OR C.final_type != 4),
-		        (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		        0)) AS sum_people
+		SELECT
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		1),
+		0)) AS score,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)) AS first_people,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		1),
+		0)) AS first_score,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
+		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)) AS middle_people,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
+		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		1),
+		0)) AS middle_score,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)) AS last_people,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4)
+		AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		1),
+		0)) AS last_score,
+		LEFT(A.confirm_date, 7) AS confirm_month,
+		A.create_user AS sale_number,
+		B.user_name AS sale_name,
+		SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type != 4),
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)) AS sum_people
 		FROM
-		    budget_standard_order A
-		        LEFT JOIN
-		    user_base B ON A.create_user = B.user_number
-		        LEFT JOIN
-		    final_standard_order C ON A.team_number = C.team_number
+		budget_standard_order A
+		LEFT JOIN
+		user_base B ON A.create_user = B.user_number
+		LEFT JOIN
+		final_standard_order C ON A.team_number = C.team_number
 		<where>
 			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
@@ -375,7 +385,8 @@
 		A.receivable_first_flg
 		from
 		budget_order_view A LEFT JOIN
-		receivable B ON A.team_number =
+		receivable B
+		ON A.team_number =
 		B.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
@@ -506,7 +517,8 @@
 		A.do_confirm_date
 		from
 		budget_order_view A LEFT JOIN
-		receivable B ON A.team_number =
+		receivable B ON
+		A.team_number =
 		B.team_number
 		<where>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">

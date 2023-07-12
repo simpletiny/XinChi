@@ -30,7 +30,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				支付详情<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>返回</a>
+				支付详情<a href="javascript:void(0)" onclick="javascript:history.back(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>返回</a>
 			</h2>
 		</div>
 		<input type="hidden" id="pay-number" value="<%=key%>" />

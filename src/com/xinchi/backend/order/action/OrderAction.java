@@ -1,5 +1,6 @@
 package com.xinchi.backend.order.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,12 +19,19 @@ import com.xinchi.backend.order.service.FinalStandardOrderService;
 import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.order.service.OrderTicketInfoService;
+import com.xinchi.backend.product.service.ProductOrderOperationService;
 import com.xinchi.backend.receivable.service.ReceivableService;
+import com.xinchi.backend.ticket.service.AirTicketNameListService;
+import com.xinchi.backend.ticket.service.TicketService;
+import com.xinchi.bean.AirTicketChangeLogBean;
+import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FinalNonStandardOrderBean;
 import com.xinchi.bean.FinalStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.PassengerTicketInfoBean;
+import com.xinchi.bean.PayableOrderBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.SaleOrderTicketInfoBean;
@@ -472,9 +480,86 @@ public class OrderAction extends BaseAction {
 
 	public String selectOrderByTeamNumber() {
 		option = service.selectByTeamNumber(team_number);
-		if (option.getIndependent_flg().equals("A")) {
-			ticketInfos = orderTicketInfoService.selectByOrderPk(option.getPk());
+		return SUCCESS;
+	}
+
+	private OrderDto final_order;
+	@Autowired
+	private AirTicketNameListService airTicketNameListService;
+
+	private List<AirTicketNameListBean> name_info;
+
+	@Autowired
+	private TicketService ticketService;
+
+	@Autowired
+	private ProductOrderOperationService productOrderOperationService;
+
+	private List<PayableOrderBean> payable_orders;
+
+	public String selectOrderInfoByTeamNumber() {
+		// 预算信息
+		option = service.selectByTeamNumber(team_number);
+
+		// 决算信息
+		final_order = service.selectFinalOrderByTeamNumber(team_number);
+
+		if (null != final_order) {
+			String final_comment = "";
+			if (final_order.getFinal_type().equals(ResourcesConstants.FINAL_TYPE_NO_CHANGE)) {
+				final_comment = "无变化";
+			} else if (final_order.getFinal_type().equals(ResourcesConstants.FINAL_TYPE_CHANGE)) {
+				if (final_order.getRaise_money().compareTo(BigDecimal.ZERO) == 0) {
+					final_comment = "费用减少：" + final_order.getReduce_money() + "；备注：" + final_order.getReduce_comment();
+				} else {
+					final_comment = "费用增加：" + final_order.getRaise_money() + "；备注：" + final_order.getRaise_comment();
+				}
+			} else if (final_order.getFinal_type().equals(ResourcesConstants.FINAL_TYPE_COMPLAIN)) {
+				final_comment = "有投诉，费用：" + final_order.getComplain_money() + "；投诉原因："
+						+ final_order.getComplain_reason() + "；解决方案：" + final_order.getComplain_solution();
+			} else {
+				final_comment = "订单取消";
+			}
+
+			final_order.setFinal_comment(final_comment);
 		}
+		// 机票款信息
+		List<String> t_ns = new ArrayList<>();
+		t_ns.add(team_number);
+
+		List<AirTicketNameListBean> names = airTicketNameListService.selectWithInfoByTeamNumbers(t_ns);
+		if (null != names && names.size() > 0) {
+
+			name_info = new ArrayList<>();
+			for (AirTicketNameListBean name : names) {
+				String detail_comment = "";
+				if (!name.getStatus().equals("I")) {
+					PassengerTicketInfoBean pti = name.getTicket_infos().get(0);
+					name.setBudget_cost(pti.getTicket_cost());
+					if (name.getStatus().equals("C")) {
+						name.setFinal_cost(pti.getTicket_cost().add(name.getChange_cost()));
+						AirTicketChangeLogBean atcl = ticketService.searchFlightChangeLogByPk(name.getChange_pk());
+						detail_comment = "航变原因：" + atcl.getChange_reason() + "；航变费用：" + name.getChange_cost() + "；备注："
+								+ atcl.getComment();
+					} else {
+						name.setFinal_cost(pti.getTicket_cost());
+						detail_comment = "正常出票。";
+					}
+				} else {
+					name.setBudget_cost(BigDecimal.ZERO);
+					name.setFinal_cost(BigDecimal.ZERO);
+					detail_comment = "未出票。";
+				}
+				name.setDetail_comment(detail_comment);
+				name_info.add(name);
+			}
+		}
+		// 地接款信息
+		payable_orders = productOrderOperationService.selectPayableOrderByTeamNumber(team_number);
+		// if (option.getIndependent_flg().equals("A")) {
+		// ticketInfos = orderTicketInfoService.selectByOrderPk(option.getPk());
+		// }
+
 		return SUCCESS;
 	}
 
@@ -631,5 +716,29 @@ public class OrderAction extends BaseAction {
 
 	public void setRelated_pk(String related_pk) {
 		this.related_pk = related_pk;
+	}
+
+	public OrderDto getFinal_order() {
+		return final_order;
+	}
+
+	public void setFinal_order(OrderDto final_order) {
+		this.final_order = final_order;
+	}
+
+	public List<AirTicketNameListBean> getName_info() {
+		return name_info;
+	}
+
+	public void setName_info(List<AirTicketNameListBean> name_info) {
+		this.name_info = name_info;
+	}
+
+	public List<PayableOrderBean> getPayable_orders() {
+		return payable_orders;
+	}
+
+	public void setPayable_orders(List<PayableOrderBean> payable_orders) {
+		this.payable_orders = payable_orders;
 	}
 }

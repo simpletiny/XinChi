@@ -4,8 +4,7 @@ var CardContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCards = ko.observableArray([]);
 	self.createCard = function() {
-		window.location.href = self.apiurl
-				+ "templates/finance/card-creation.jsp";
+		window.location.href = self.apiurl + "templates/finance/card-creation.jsp";
 	};
 	self.cardType = ['借记卡', '信用卡', '公帐', '微信', '支付宝'];
 	self.cardPurposes = [{
@@ -100,16 +99,17 @@ var CardContext = function() {
 
 	};
 	// 停用银行卡
-	self.stopUse = function() {
+	self.switchUse = function(delete_flg) {
 		if (self.chosenCards().length == 0) {
 			fail_msg("请选择账户");
 			return;
 		} else if (self.chosenCards().length > 0) {
 
+			let msg = delete_flg == 'Y' ? "确认停用账户吗?" : "确认启用账户吗?";
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
-					msg : '确认停用账户吗?',
+					msg : msg,
 					btns : 2,
 					type : 4,
 					btn : ['确认', '取消'],
@@ -121,10 +121,10 @@ var CardContext = function() {
 						}
 						card_pks = card_pks.RTrim(",");
 						startLoadingSimpleIndicator("保存中...");
-						var data = "card_pks=" + card_pks;
+						var data = "card_pks=" + card_pks + "&delete_flg=" + delete_flg;
 						$.ajax({
 							type : "POST",
-							url : self.apiurl + 'finance/stopUseCard',
+							url : self.apiurl + 'finance/switchUseCard',
 							data : data
 						}).success(function(str) {
 							endLoadingIndicator();
@@ -141,6 +141,7 @@ var CardContext = function() {
 
 		}
 	};
+
 	self.editCard = function() {
 		if (self.chosenCards().length == 0) {
 			fail_msg("请选择账户");
@@ -149,9 +150,7 @@ var CardContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCards().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/Card-edit.jsp?key="
-					+ self.chosenCards()[0];
+			window.location.href = self.apiurl + "templates/client/Card-edit.jsp?key=" + self.chosenCards()[0];
 		}
 	};
 

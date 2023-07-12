@@ -921,24 +921,23 @@ public class SimpletinyAction extends BaseAction {
 
 	public String autoInsertDepositNumber() {
 
-		List<SupplierDepositBean> deposits = supplierDepositService.selectByParam(null);
+		List<SupplierDepositBean> deposits = supplierDepositService.selectDepositWithoutNumber();
 		int len = deposits.size();
-		String[] numbers = doGenerateNumber(NumberService.SOURCE_DEPOSIT_NUMBER, len + 1);
+		TeamNumberBean option = new TeamNumberBean();
+		option.setUser_pk("dHV3eXJ8fHl4gHF3d3p4fQ");
+		option.setType("D");
+		TeamNumberBean tb = teamNumberDao.selectNextNumber(option);
 
+		String[] numbers = doGenerateNumber(NumberService.SOURCE_DEPOSIT_NUMBER, tb.getTeam_number(), len + 1);
 		for (int i = 0; i < len; i++) {
 			SupplierDepositBean deposit = deposits.get(i);
-			deposit.setDeposit_number(numbers[i]);
+			deposit.setDeposit_number("D00" + numbers[i]);
 			supplierDepositService.update(deposit);
 		}
 
 		String last = numbers[len];
-
-		TeamNumberBean tb = new TeamNumberBean();
-		tb.setUser_pk("dHV3eXJ8fHl4gHF3d3p4fQ");
-		tb.setType("D");
 		tb.setTeam_number(last);
-		teamNumberDao.insert(tb);
-
+		teamNumberDao.update(tb);
 		return SUCCESS;
 	}
 
@@ -946,7 +945,7 @@ public class SimpletinyAction extends BaseAction {
 		String[] a = new String[5];
 		for (int i = 0; i < 5; i++) {
 			if (i == 0) {
-				String b = addOne("D00VW2Q", NumberService.SOURCE_DEPOSIT_NUMBER);
+				String b = addOne("VW2Q", NumberService.SOURCE_DEPOSIT_NUMBER);
 				a[0] = b;
 			} else {
 				String b = addOne(a[i - 1], NumberService.SOURCE_DEPOSIT_NUMBER);
@@ -979,13 +978,13 @@ public class SimpletinyAction extends BaseAction {
 		}
 	}
 
-	public static String[] doGenerateNumber(String source, int len) {
+	public static String[] doGenerateNumber(String source, String first, int len) {
 		String result[] = new String[len];
 
 		// String user_pk = "dHV3eXJ8fHl4gHF3d3p4fQ";
 		for (int i = 0; i < len; i++) {
 			if (i == 0) {
-				result[i] = "D00" + source.substring(0, 4);
+				result[i] = first;
 			} else {
 				result[i] = addOne(result[i - 1], source);
 			}

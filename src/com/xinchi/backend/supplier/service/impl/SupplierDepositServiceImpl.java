@@ -505,4 +505,20 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		return depositTicketPaidDao.selectByDepositPk(deposit_pk);
 	}
 
+	@Override
+	public List<SupplierDepositBean> selectDepositWithoutNumber() {
+		return dao.selectDepositWithoutNumber();
+	}
+
+	@Override
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean) {
+
+		return dao.selectDepositSummary(bean);
+	}
+
+	@Override
+	public SupplierDepositBean selectSumDeposit() {
+		return dao.selectSumDeposit();
+	}
+
 }

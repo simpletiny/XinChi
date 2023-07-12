@@ -19,6 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
@@ -35,6 +36,7 @@ import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -366,6 +368,9 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 	@Autowired
 	private AirTicketChangeLogDAO airTicketChangeLogDao;
 
+	@Autowired
+	private OrderReportDAO orderReportDao;
+
 	@Override
 	public String rollBackNameDone(List<String> passenger_pks) {
 
@@ -503,6 +508,15 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 		// 更新销售订单
 		for (String team_number : team_numbers) {
+			// 判断单团核算单是否已经审核
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(team_number);
+			if (tr.getApproved().equals("Y")) {
+				if (transactionStatus != null && transactionStatus.isNewTransaction()) {
+					transactionStatus.setRollbackOnly();
+				}
+				return team_number + "单团核算单已审核，请联系产品经理！";
+			}
+
 			String operate_flg = statuses.get(team_number);
 			// 销售订单机票款设置为0
 			OrderDto sale_order = orderDao.selectByTeamNumber(team_number);

@@ -462,8 +462,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = name_obj.getString("cellphone_B");
 			String id = name_obj.getString("id");
 
-			String id_type = obj.getString("id_type");
-			String age_string = obj.getString("age");
+			String id_type = name_obj.getString("id_type");
+			String age_string = name_obj.getString("age");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
@@ -582,8 +582,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			String cellphone_B = name_obj.getString("cellphone_B");
 			String id = name_obj.getString("id");
 
-			String id_type = obj.getString("id_type");
-			String age_string = obj.getString("age");
+			String id_type = name_obj.getString("id_type");
+			String age_string = name_obj.getString("age");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();

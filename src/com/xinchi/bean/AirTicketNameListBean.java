@@ -68,6 +68,11 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private String id_type;
 	private int age;
 
+	// DTO
+	private BigDecimal budget_cost;
+	private BigDecimal final_cost;
+	private String detail_comment;
+
 	private List<PassengerTicketInfoBean> ticket_infos;;
 
 	public String getTeam_number() {
@@ -332,6 +337,30 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public BigDecimal getBudget_cost() {
+		return budget_cost;
+	}
+
+	public BigDecimal getFinal_cost() {
+		return final_cost;
+	}
+
+	public void setBudget_cost(BigDecimal budget_cost) {
+		this.budget_cost = budget_cost;
+	}
+
+	public void setFinal_cost(BigDecimal final_cost) {
+		this.final_cost = final_cost;
+	}
+
+	public String getDetail_comment() {
+		return detail_comment;
+	}
+
+	public void setDetail_comment(String detail_comment) {
+		this.detail_comment = detail_comment;
 	}
 
 }

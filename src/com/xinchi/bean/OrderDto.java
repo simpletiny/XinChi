@@ -127,6 +127,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private BigDecimal payable;
 	private List<String> team_numbers;
 	private String supplier_employee_pk;
+	private String final_comment;
 
 	public String getTeam_number() {
 		return team_number;
@@ -718,6 +719,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getFinal_comment() {
+		return final_comment;
+	}
+
+	public void setFinal_comment(String final_comment) {
+		this.final_comment = final_comment;
 	}
 
 }

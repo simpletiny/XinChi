@@ -21,6 +21,12 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="deposit_number" property="deposit_number" jdbcType="VARCHAR" />
+
+		<result column="create_month" property="create_month" jdbcType="VARCHAR" />
+		<result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
+		<result column="balance_money" property="balance_money" jdbcType="DECIMAL" />
+		<result column="clear_money" property="clear_money" jdbcType="DECIMAL" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -49,11 +55,45 @@
 		from supplier_deposit
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectDepositSummary" resultMap="BaseResultMap" parameterType="com.xinchi.bean.SupplierDepositBean">
+		SELECT
+		DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
+		'%Y-%m') AS create_month,
+		A.supplier_pk,
+		SUM(money) AS sum_money,
+		SUM(IF(A.status = 'N', A.balance, 0)) AS balance_money,
+		SUM(IF(A.status = 'Y', A.money, 0)) AS clear_money,
+		B.supplier_name,
+		B.supplier_short_name
+		FROM
+		supplier_deposit A
+		LEFT JOIN supplier B ON A.supplier_pk = B.pk
+		<where>
+			<if test="create_month != null and create_month !=''">
+				and DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),'%Y-%m')=#{create_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY supplier_pk,create_month
+	</select>
+	<select id="selectSumDeposit" resultMap="BaseResultMap">
+		SELECT
+		SUM(money) AS sum_money,
+		SUM(balance) AS balance_money,
+		SUM(IF(status = 'Y', money, 0)) AS clear_money
+		FROM
+		supplier_deposit
+	</select>
 	<select id="selectByDepositNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from supplier_deposit
 		where deposit_number = #{deposit_number,jdbcType=VARCHAR}
+	</select>
+	<select id="selectDepositWithoutNumber" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_deposit
+		where deposit_number is null
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

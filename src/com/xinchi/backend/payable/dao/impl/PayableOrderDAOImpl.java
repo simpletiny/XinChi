@@ -48,4 +48,9 @@ public class PayableOrderDAOImpl extends SqlSessionDaoSupport implements Payable
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.PayableOrderMapper.deleteTeamNumber", team_number);
 	}
 
+	@Override
+	public List<PayableOrderBean> selectByTeamNumber(String team_number) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.PayableOrderMapper.selectByTeamNumber", team_number);
+	}
+
 }

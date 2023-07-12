@@ -32,7 +32,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-
+			
 					<div class="form-group">
 						<div style="float: right">
 							<div>
@@ -50,6 +50,16 @@
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { modify_temp() }">修改</button>
 									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteDetail_temp() }">删除</button>
 								</s:if>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-6">
+							<div data-bind="foreach: matchFlgs" style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenMatchFlgs,click:function(){$root.refresh();return true;}"
+									name="detail.match_flgs" /><label data-bind="text: $root.flgMapping[$data]"></label>
+								</em>
 							</div>
 						</div>
 					</div>
@@ -128,7 +138,15 @@
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.time"></td>
 								<!-- ko if: $data.type=='收入' -->
+								<!-- ko if:$data.match_flg=='N' -->
+								<td data-bind="text: $data.money" style="color:#FF9999" class="rmb"></td>
+								<!-- /ko --> 
+								<!-- ko if:$data.match_flg=='Y' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.match_flg=='O' -->
+								<td data-bind="text: $data.money" style="color:lightgreen" class="rmb"></td>
+								<!-- /ko -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.type=='支出' -->
@@ -220,6 +238,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/file-upload-plain.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/detail.js"></script>
+	<script src="<%=basePath%>static/js/finance/detail.js?v=1.001"></script>
 </body>
 </html>

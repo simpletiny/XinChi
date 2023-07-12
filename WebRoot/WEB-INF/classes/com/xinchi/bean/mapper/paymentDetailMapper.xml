@@ -56,14 +56,14 @@
 		from payment_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectByInnerPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from payment_detail
 		where inner_pk = #{inner_pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectByVoucherNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		A.account,
@@ -372,7 +372,7 @@
 		A.finance_flg
 		from payment_detail A
 		LEFT JOIN card B ON A.account=B.account
- 
+
 		<where>
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and A.account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
@@ -388,6 +388,12 @@
 			</if>
 			<if test='params.bo.match_flg != null and params.bo.match_flg =="Y"'>
 				and (A.match_flg = 'Y' OR A.match_flg='O')
+			</if>
+			<if test='params.bo.match_flgs != null and params.bo.match_flgs.size()>0'>
+				and A.match_flg in
+				<foreach item="item" index="index" collection="params.bo.match_flgs" open="(" separator="," close=")">
+					#{params.bo.match_flgs[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.time != null and params.bo.time !=''">
 				and left(A.time,10) = #{params.bo.time,jdbcType=VARCHAR}

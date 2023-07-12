@@ -20,7 +20,7 @@ var OrderContext = function() {
 	}, function(data) {
 		self.order(data.bnsOrder);
 		self.passengers(data.passengers);
-
+		
 		self.ticket_infos(data.ticketInfos);
 		self.air_comment(self.ticket_infos()[0].comment);
 		self.do_confirm_date(self.order().do_confirm_date);
@@ -182,9 +182,10 @@ var OrderContext = function() {
 			const sex = $(tr).find("[st='sex']").val();
 			const age = $(tr).find("[st='age']").val().trim();
 			const id_type = $(tr).find("[st='type']").val();
-
+			const pk = $(tr).find("[st='name-pk']").val();
 			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
+			const lock_flg = $(tr).find("[st='name-lock']").val();
 			const id = $(tr).find("[st='id']").val().trim();
 
 			if (name == "" && id == "") {
@@ -200,11 +201,11 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
 
-			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id,pk,lock_flg};
 			people.push(person);
 		}
 

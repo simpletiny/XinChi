@@ -62,7 +62,7 @@
 						<label class="col-md-1 control-label">项目</label>
 						<div class="col-md-2">
 							<select class="form-control"
-								data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+								data-bind="options: items, optionsText:function(item){return payTypeMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
 								name="wfp.item" required="required"></select>
 						</div>
 					</div>
@@ -104,7 +104,7 @@
 								<td><input type="checkbox" data-bind=" checkedValue:$data, checked: $root.chosenPaids" /></td>
 
 								<td data-bind="text: $data.pay_number"></td>
-								<td data-bind="text: $root.itemMapping[$data.item]"></td>
+								<td data-bind="text: payTypeMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: moment($data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
@@ -133,11 +133,11 @@
 	</div>
 
 	<script>
-		$(".finance").addClass("current").children("ol")
-				.css("display", "block");
+		$(".finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/finished-paid.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/finished-paid.js?v=1.001"></script>
 </body>
 </html>

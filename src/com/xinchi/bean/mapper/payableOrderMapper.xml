@@ -4,6 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.PayableOrderBean">
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="supplier_employee_pk" property="supplier_employee_pk" jdbcType="CHAR" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="CHAR" />
 		<result column="final_flg" property="final_flg" jdbcType="CHAR" />
 		<result column="budget_payable" property="budget_payable" jdbcType="DECIMAL" />
 		<result column="final_payable" property="final_payable" jdbcType="DECIMAL" />
@@ -153,11 +154,25 @@
 		from payable_order
 		<where>
 			<if test="team_number != null and team_number !='' ">
-			 	and team_number=#{team_number,jdbcType=VARCHAR}
+				and team_number=#{team_number,jdbcType=VARCHAR}
 			</if>
 			<if test="supplier_employee_pk != null and supplier_employee_pk !='' ">
-			 	and supplier_employee_pk=#{supplier_employee_pk,jdbcType=VARCHAR}
+				and supplier_employee_pk=#{supplier_employee_pk,jdbcType=VARCHAR}
 			</if>
 		</where>
+	</select>
+	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		A.team_number,
+		A.final_flg,
+		A.budget_payable,
+		A.final_payable,
+		B.name AS supplier_employee_name,
+		A.supplier_employee_pk
+		FROM
+		payable_order A
+		LEFT JOIN
+		supplier_employee B ON A.supplier_employee_pk = B.pk
+		where A.team_number=#{team_number,jdbcType=VARCHAR}
 	</select>
 </mapper>

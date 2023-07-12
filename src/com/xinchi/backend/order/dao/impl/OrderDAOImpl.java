@@ -106,4 +106,10 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectPayableInfoByParam", option);
 	}
 
+	@Override
+	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectFinalOrderByTeamNumber",
+				team_number);
+	}
+
 }

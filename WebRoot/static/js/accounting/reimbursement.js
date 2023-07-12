@@ -2,20 +2,7 @@ var ReimbursementContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q']);
-	self.itemMapping = {
-		'X' : '销售费用',
-		'H' : '客情费用',
-		'J' : '产品费用',
-		'T' : '唯品费',
-		'P' : '票务费用',
-		'B' : '办公费用',
-		'E' : '招待费',
-		'K' : '差旅费用',
-		'G' : '个人工资',
-		'C' : '分红分润',
-		'Q' : '其它支出'
-	};
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'Q']);
 
 	self.statusMapping = {
 		'I' : '待审批',
@@ -120,7 +107,7 @@ var ReimbursementContext = function() {
 	}
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

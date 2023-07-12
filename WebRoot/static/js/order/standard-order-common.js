@@ -35,7 +35,7 @@ function inputId() {
 }
 
 function inputPrice() {
-	fixAllPrice();
+	fixAllPrice(event);
 	autoPrice();
 }
 function inputAge(){
@@ -195,7 +195,7 @@ const nameModule = (function(){
 			<td><input type="text" class="ip-" style="width: 90%" maxlength="18" oninput="inputId()" st="id" /></td>
 			<td st='td-as-adult'><input type="checkbox" style="display:none" value='Y' onchange='checkAdult()' st='as-adult' /></td>
 			<td>
-				<input type="text" class="ip-" style="width: 90%" oninput="fixAllPrice(event);autoPrice()"  st="price" />
+				<input type="text" class="ip-" style="width: 90%" oninput="inputPrice()"  st="price" />
 			</td>
 			<td><input type="button" style="width: 60%" onclick="removeName(this)" alt="删除名单" value="—" /></td>
 		</tr>

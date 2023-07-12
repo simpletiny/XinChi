@@ -264,6 +264,12 @@ public class ResourcesConstants {
 
 	public static String CLIENT_RELATION_LEVEL_01 = "新增级";
 
+	// 订单决算类型
+	public static String FINAL_TYPE_NO_CHANGE = "1";
+	public static String FINAL_TYPE_CHANGE = "2";
+	public static String FINAL_TYPE_COMPLAIN = "3";
+	public static String FINAL_TYPE_CANCEL = "4";
+
 	// 文件下载类型
 
 	// 出团通知

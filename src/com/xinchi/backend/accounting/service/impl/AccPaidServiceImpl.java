@@ -17,6 +17,7 @@ import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.PaidDAO;
+import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.PaidService;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
 import com.xinchi.backend.receivable.service.ReceivedService;
@@ -154,6 +155,9 @@ public class AccPaidServiceImpl implements AccPaidService {
 	@Autowired
 	private ReimbursementService reimService;
 
+	@Autowired
+	private AirTicketPaidDetailService airTicketPaidDetailService;
+
 	public String rollBackPay(String voucher_number) {
 		// 更新待支付状态
 		WaitingForPaidBean wfp = dao.selectByPayNumber(voucher_number);
@@ -190,17 +194,14 @@ public class AccPaidServiceImpl implements AccPaidService {
 				detail.setStatus(ResourcesConstants.PAID_STATUS_YES);
 				paidService.update(detail);
 			}
-		}
-		// else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
-		// List<AirTicketPaidDetailBean> paids =
-		// airTicketPaidDetailService.selectByRelatedPk(related_pk);
-		// for (AirTicketPaidDetailBean paid : paids) {
-		// paid.setStatus(ResourcesConstants.PAID_STATUS_YES);
-		// paid.setTime(DateUtil.getDateStr(""));
-		// airTicketPaidDetailService.update(paid);
-		// }
-		// }
-		else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
+			List<AirTicketPaidDetailBean> paids = airTicketPaidDetailService.selectByRelatedPk(related_pk);
+			for (AirTicketPaidDetailBean paid : paids) {
+				paid.setStatus(ResourcesConstants.PAID_STATUS_YES);
+				paid.setTime(DateUtil.getDateStr(""));
+				airTicketPaidDetailService.update(paid);
+			}
+		} else if (wfp.getItem().equals(ResourcesConstants.PAY_TYPE_FLY)) {
 			ClientReceivedDetailBean detail = receivedService.selectByPk(related_pk);
 			detail.setConfirm_time(DateUtil.getTimeMillis());
 			detail.setStatus(ResourcesConstants.PAID_STATUS_YES);

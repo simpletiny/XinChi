@@ -16,4 +16,6 @@ public interface PayableOrderDAO {
 
 	public void deleteByTeamNumber(String t_n);
 
+	public List<PayableOrderBean> selectByTeamNumber(String team_number);
+
 }

@@ -13,6 +13,8 @@ var PayableContext = function() {
 	self.service_fees = ko.observableArray([]);
 	self.deposit_deducts = ko.observableArray([]);
 	self.none_business_payments = ko.observableArray([]);
+	self.deposits = ko.observableArray([]);
+	self.deposit = ko.observable({});
 	self.refresh = function() {
 
 		startLoadingSimpleIndicator("加载中……");
@@ -22,12 +24,18 @@ var PayableContext = function() {
 			self.service_fees(data.service_fees);
 			self.deposit_deducts(data.deposit_deducts);
 			self.none_business_payments(data.none_business_payments);
+			self.deposits(data.deposits);
+			self.deposit(data.deposit);
 
 			$("#main-table-1").tableSum({
 				title_index : 4
 			})
 			$("#main-table-2").tableSum({
 				title_index : 2
+			})
+			$("#main-table-3").tableSum({
+				title_index : 1,
+				accept : [2, 3, 4]
 			})
 
 			$(".rmb").formatCurrency();

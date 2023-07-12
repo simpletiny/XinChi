@@ -13,6 +13,17 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
+
+<style type="text/css">
+.detail-header .title {
+	color: #6fa8dc;
+	margin-left: 20px;
+}
+
+.detail-header .content {
+	margin-left: 10px;
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -159,7 +170,8 @@
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
 								<td data-bind="text: $data.people_count"></td>
-								<td data-bind="text: $data.receivable" class="rmb"></td>
+								<td><a href="javascript:void(0)" class="rmb"
+									data-bind="text: $data.receivable,event:{click:function(){$root.viewReceivable($data.team_number)}}"></a></td>
 								<td data-bind="text: $data.discount_receivable" class="rmb"></td>
 
 								<!-- ko if:($root.user_roles.indexOf('TICKET')>=0 ||$root.user_roles.indexOf('ADMIN')>=0)  && $data.air_ticket_cost==null -->
@@ -214,63 +226,125 @@
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFill() }">确认</button>
 		</div>
 	</div>
-	<div id="team-detail" style="display: none; width: 800px; padding-top: 30px;padding-bottom:20px">
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">团号</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().team_number"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">客户</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().client_employee_name" class="rmb"></p>
-				</div>
-			</div>
+	<div id="team-detail" style="display: none; width: 1000px; height:700px;overflow-y:scroll; padding-top: 30px; padding-bottom: 20px">
+		<div class="detail-header">
+			<span class="title">出团日期</span><span class="content" data-bind="text:order().departure_date"></span> <span
+				class="title">产品</span><span class="content" data-bind="text:order().product_name"></span> <span class="title">团号</span><span
+				class="content" data-bind="text:order().team_number"></span> <span class="title">销售</span><span class="content"
+				data-bind="text:order().create_user"></span>
 		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">产品</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().product_name"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">人数</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default"
-						data-bind="text:(isNaN(order().adult_count)?0:order().adult_count)+(isNaN(order().special_count)?0:order().special_count)"
-						class="rmb"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">确认日期</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().confirm_date"></p>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">出团日期</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().departure_date"></p>
-				</div>
-			</div>
-		</div>
-		<div class="input-row clearfloat">
-			<div class="col-md-6">
-				<label class="l" style="width: 30%">备注</label>
-				<div class="ip" style="width: 70%">
-					<p class="ip-default" data-bind="text:order().comment"></p>
-				</div>
-			</div>
-		</div>
-		<!-- ko if: order().independent_flg =='A' -->
 		<hr />
+		<h3 style="padding-left: 40px">预算团款</h3>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">预算价格</label>
+				<div class="ip" style="width: 70%" data-bind="text:order().receivable">
+					<p class="ip-default"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">其他费用</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().other_cost" class="rmb"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">总团款</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().receivable"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">团款备注</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().receivable_comment"></p>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<h3 style="padding-left: 40px">决算团款</h3>
+
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">决算总团款</label>
+				<div class="ip" style="width: 70%" data-bind="text:final_order().final_receivable">
+
+					<p class="ip-default"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">决算详情</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:final_order().final_comment" class="rmb"></p>
+				</div>
+			</div>
+		</div>
+
+		<hr />
+		<h3 style="padding-left: 40px">机票款</h3>
+		<div class="input-row clearfloat">
+			<table style="width: 100%; margin-left: 30px; margin-top: 20px;" id="table-ticket-price">
+				<thead>
+					<tr>
+						<th class="r" style="width: 5%">序号</th>
+						<th class="r" style="width: 10%">姓名</th>
+						<th class="r" style="width: 10%">预算价格</th>
+						<th class="r" style="width: 10%">决算价格</th>
+						<th class="r" style="width: 65%">票务备注</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: name_infos">
+					<tr>
+						<td st="index" data-bind="text:$index()+1" />
+						<td data-bind="text:$data.name" />
+						<td data-bind="text:$data.budget_cost" />
+						<td data-bind="text:$data.final_cost" />
+						<td data-bind="text:$data.detail_comment" />
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">总票款：</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:order().air_ticket_cost"></p>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<h3 style="padding-left: 40px">地接款</h3>
+		<!-- ko foreach:payable_orders -->
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">供应商</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:$data.supplier_employee_name"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">预算地接款</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:$data.budget_payable"></p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label class="l" style="width: 30%">决算地接款</label>
+				<div class="ip" style="width: 70%">
+					<p class="ip-default" data-bind="text:$data.final_payable"></p>
+				</div>
+			</div>
+		</div>
+
+		<!-- /ko -->
+		<!-- ko if: order().independent_flg =='A' -->
+		<!-- <hr />
 		<h3>航班信息</h3>
-		<table style="width: 100%;margin-left: 30px;margin-top: 20px;" id="table-ticket">
+		<table style="width: 100%; margin-left: 30px; margin-top: 20px;" id="table-ticket">
 			<thead>
 				<tr>
 					<th class="r" style="width: 10%">航段</th>
@@ -290,8 +364,39 @@
 					</td>
 				</tr>
 			</tbody>
-		</table>
+		</table> -->
 		<!-- /ko -->
+	</div>
+	<div style="display: none; width: 900px; padding-top: 30px; padding-bottom: 20px" id='div-receiveds'>
+		<table style="width: 100%; margin-left: 30px; margin-top: 20px;" id="table-ticket">
+			<thead>
+				<th>金额</th>
+				<th>类型</th>
+				<th>时间</th>
+				<th>我方账户</th>
+				<th>填报日期</th>
+				<th>状态</th>
+			</thead>
+			<tbody data-bind="foreach: receiveds">
+				<tr>
+					<td data-bind="text: $data.received" class="rmb"></td>
+					<td data-bind="text: $root.typeMapping[$data.type]"></td>
+					<td data-bind="text: $data.received_time"></td>
+					<td data-bind="text: $data.card_account"></td>
+					<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
+					<!-- ko if:$data.status=='I' || $data.status=='Y' -->
+					<td data-bind="text: $root.statusMapping[$data.status]"></td>
+					<!-- /ko -->
+					<!-- ko if:$data.status=='N' -->
+					<td><a href="javascript:void(0)" style="color: red"
+						data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data.related_pk)} "></a></td>
+					<!-- /ko -->
+					<!-- ko if:$data.status=='E' -->
+					<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
+					<!-- /ko -->
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	<script>
 		$(".product-manager").addClass("current").children("ol").css("display", "block");
@@ -300,6 +405,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.003"></script>
 </body>
 </html>

@@ -324,7 +324,7 @@ public class OrderServiceImpl implements OrderService {
 			budget_order.setConfirm_flg("Y");
 			bnsoDao.update(budget_order);
 
-			// 更新应付款
+			// 更新应收款
 			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(final_order.getTeam_number());
 			receivable.setFinal_flg("N");
 			receivable.setFinal_receivable(BigDecimal.ZERO);
@@ -355,7 +355,7 @@ public class OrderServiceImpl implements OrderService {
 			budget_order.setConfirm_flg("Y");
 			bsoDao.update(budget_order);
 
-			// 更新应付款
+			// 更新应收款
 			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(final_order.getTeam_number());
 			receivable.setFinal_flg("N");
 			receivable.setFinal_receivable(BigDecimal.ZERO);
@@ -772,5 +772,10 @@ public class OrderServiceImpl implements OrderService {
 		// }
 
 		return SUCCESS;
+	}
+
+	@Override
+	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
+		return dao.selectFinalOrderByTeamNumber(team_number);
 	}
 }

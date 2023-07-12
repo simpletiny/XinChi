@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
+import com.xinchi.backend.supplier.service.SupplierDepositService;
 import com.xinchi.backend.ticket.service.AirTicketNameListService;
 import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
 import com.xinchi.bean.AirOtherPaymentDto;
@@ -21,6 +22,7 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.PassengerTicketInfoBean;
+import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -190,6 +192,13 @@ public class AirTicketPayableAction extends BaseAction {
 
 	private AirServiceFeeDto summary_option;
 
+	@Autowired
+	private SupplierDepositService supplierDepositService;
+
+	private List<SupplierDepositBean> deposits;
+
+	private SupplierDepositBean deposit;
+
 	/**
 	 * 搜索票务财务汇总数据
 	 * 
@@ -199,7 +208,10 @@ public class AirTicketPayableAction extends BaseAction {
 		service_fees = service.searchServiceFees(summary_option);
 		deposit_deducts = service.searchDepositDeducts(summary_option);
 		none_business_payments = service.searchNoneBussinessPayment(summary_option);
-
+		SupplierDepositBean option = new SupplierDepositBean();
+		option.setCreate_month(summary_option.getFirst_month());
+		deposits = supplierDepositService.selectDepositSummary(option);
+		deposit = supplierDepositService.selectSumDeposit();
 		return SUCCESS;
 	}
 
@@ -329,5 +341,21 @@ public class AirTicketPayableAction extends BaseAction {
 
 	public void setNone_business_payments(List<AirOtherPaymentDto> none_business_payments) {
 		this.none_business_payments = none_business_payments;
+	}
+
+	public List<SupplierDepositBean> getDeposits() {
+		return deposits;
+	}
+
+	public SupplierDepositBean getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposits(List<SupplierDepositBean> deposits) {
+		this.deposits = deposits;
+	}
+
+	public void setDeposit(SupplierDepositBean deposit) {
+		this.deposit = deposit;
 	}
 }

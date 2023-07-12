@@ -51,7 +51,7 @@
 					<!-- ko if:$root.order().as_adult_flg=='Y' -->
 					<td st='td-as-adult'><input type="checkbox" style="display:none" onchange="checkAdult()" data-bind="checked:$data.as_adult" value='Y' st='as-adult' /></td> 
 					<!-- /ko -->
-					<td><input type="text" class="ip-" style="width: 90%" st="price" oninput="autoPrice()"
+					<td><input type="text" class="ip-" style="width: 90%" st="price" oninput="inputPrice()"
 						data-bind="value:$data.price" /></td>
 					<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
 				</tr>

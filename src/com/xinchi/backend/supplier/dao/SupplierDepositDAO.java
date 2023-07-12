@@ -48,4 +48,10 @@ public interface SupplierDepositDAO {
 	public BigDecimal selectSumBalanceByType(String type);
 
 	public SupplierDepositBean selectByDepositNumber(String deposit_number);
+
+	public List<SupplierDepositBean> selectDepositWithoutNumber();
+
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean);
+
+	public SupplierDepositBean selectSumDeposit();
 }

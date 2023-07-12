@@ -693,6 +693,74 @@
 			<comment>ALTER TABLE sale_order_name_list,budget_standard_order</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="22" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		 DROP VIEW IF EXISTS view_product_profit_a;
+				 CREATE VIEW view_product_profit_a AS
+				    SELECT 
+				        LEFT(A.departure_date, 7) AS departure_month,
+				        GROUP_CONCAT(DISTINCT X.approved
+				            SEPARATOR ',') AS status,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (D.final_type IS NULL
+				                OR D.final_type != 4),
+				            (IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+				            0)) AS people_count,
+				        SUM(IF(A.confirm_flg != 'N'
+				                AND (D.final_type IS NULL
+				                OR D.final_type != 4),
+				            IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', - 1),
+				            0)) AS score,
+				        A.product_manager_number,
+				        SUM(IF(X.discount_flg = 'Y',
+				            X.discount_receivable,
+				            IF(B.final_flg = 'Y',
+				                B.final_receivable,
+				                B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
+				            0,
+				            A.air_ticket_cost) - IF(ISNULL(A.other_cost),
+				            0,
+				            A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost) AS gross_profit
+				    FROM
+				        team_report X
+				            LEFT JOIN
+				        budget_order_view A ON A.team_number = X.team_number
+				            LEFT JOIN
+				        receivable B ON A.team_number = B.team_number
+				            LEFT JOIN
+				        view_team_payable C ON A.team_number = C.team_number
+				            LEFT JOIN
+				        final_order_view D ON A.team_number = D.team_number
+				    WHERE
+				        D.final_type <> 4
+				            OR D.final_type IS NULL
+				    GROUP BY LEFT(A.departure_date, 7) , A.product_manager_number;
+				
+				 DROP VIEW IF EXISTS view_product_profit;
+				 CREATE VIEW view_product_profit AS
+				    SELECT 
+				        A.departure_month,
+				        CASE A.status
+				            WHEN 'N' THEN 'N'
+				            WHEN 'Y' THEN 'Y'
+				            ELSE 'N'
+				        END AS status,
+				        A.people_count,
+				        A.score,
+				        A.product_manager_number AS user_number,
+				        A.gross_profit,
+				        B.product_cost,
+				        B.keep_cost
+				    FROM
+				        view_product_profit_a A
+				            LEFT JOIN
+				        view_product_profit_b B ON A.product_manager_number = B.user_number
+				            AND A.departure_month = B.departure_month;
+                 ]]>
+			<comment>ALTER VIEW view_product_profit_a,view_product_profit</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

@@ -53,4 +53,6 @@ public interface OrderService extends BaseService {
 
 	public String checkCanBeEdit(String order_pk);
 
+	public OrderDto selectFinalOrderByTeamNumber(String team_number);
+
 }

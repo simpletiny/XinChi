@@ -32,14 +32,16 @@
 						<div class="col-md-6 required">
 							<label class="l">项目</label>
 							<div class="ip">
-								<select class="form-control" data-bind=" options:itemMapping,optionsText: 'value',optionsValue:'key'"
+								<select class="form-control"
+									data-bind="options: items, optionsText:function(item){return payTypeMapping[item]}, optionsCaption: '-- 请选择 --'"
 									name="reimbursement.item" required="required"></select>
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">归属月份</label>
 							<div class="ip">
-								<input type="text" class="form-control month-picker-st" placeholder="归属月份" data-bind="value:reibursement().month" name="reimbursement.month" required="required" />
+								<input type="text" class="form-control month-picker-st" placeholder="归属月份"
+									data-bind="value:reibursement().month" name="reimbursement.month" required="required" />
 							</div>
 						</div>
 
@@ -54,8 +56,8 @@
 						<div class="col-md-6 required">
 							<label class="l">填报日期</label>
 							<div class="ip">
-								<input type="text" class="ip-default date-picker" data-bind="value:reibursement().date" placeholder="2013-10-19" name="reimbursement.date"
-									required="required" />
+								<input type="text" class="ip-default date-picker" data-bind="value:reibursement().date" placeholder="2013-10-19"
+									name="reimbursement.date" required="required" />
 							</div>
 						</div>
 					</div>
@@ -80,10 +82,11 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
-		<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/reimbursement-creation.js"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/reimbursement-creation.js?v=1.001"></script>
 </body>
 </html>

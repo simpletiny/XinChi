@@ -269,8 +269,11 @@ var PassengerContext = function() {
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
+							self.chosenPassengers.removeAll();
 							layer.close(changeLayer);
 							self.refresh();
+						} else {
+							fail_msg(str);
 						}
 					});
 

@@ -28,7 +28,7 @@ public interface OrderDAO {
 
 	public List<OrderDto> selectWithProductByParam(OrderDto order);
 
-	String selectMaxConfirmDateByEmployeePk(String employee_pk);
+	public String selectMaxConfirmDateByEmployeePk(String employee_pk);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
@@ -39,4 +39,6 @@ public interface OrderDAO {
 	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number);
 
 	public List<OrderDto> selectPayableInfoByParam(OrderDto option);
+
+	public OrderDto selectFinalOrderByTeamNumber(String team_number);
 }

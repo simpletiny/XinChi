@@ -70,4 +70,20 @@ public class SupplierDepositDAOImpl extends SqlSessionDaoSupport implements Supp
 				deposit_number);
 	}
 
+	@Override
+	public List<SupplierDepositBean> selectDepositWithoutNumber() {
+		return daoUtil.selectAll("com.xinchi.bean.mapper.SupplierDepositMapper.selectDepositWithoutNumber");
+	}
+
+	@Override
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierDepositMapper.selectDepositSummary", bean);
+	}
+
+	@Override
+	public SupplierDepositBean selectSumDeposit() {
+
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.SupplierDepositMapper.selectSumDeposit");
+	}
+
 }

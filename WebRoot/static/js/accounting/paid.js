@@ -6,22 +6,6 @@ var AgencyContext = function() {
 	self.supplier = ko.observable({});
 	self.genders = [];
 
-	// 项目映射
-	self.itemMapping = {
-		'D' : '地接款',
-		'X' : '销售费用',
-		'H' : '亲情费用',
-		'J' : '产品费用',
-		'T' : '唯品费',
-		'P' : '票务费用',
-		'B' : '办公费用',
-		'E' : '招待费',
-		'G' : '个人工资',
-		'C' : '分红分润',
-		'Q' : '其它支出',
-		'M' : '多付返款',
-		'F' : 'FLY'
-	};
 	var now = new Date();
 	self.current_min = now.Format("yyyy-MM-dd hh:mm:ss");
 	self.chosenAccount = ko.observable();

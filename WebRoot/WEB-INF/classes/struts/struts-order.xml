@@ -160,8 +160,15 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 根据团号搜索订单信息 -->
+		<!-- 根据团号搜索订单 -->
 		<action name="selectOrderByTeamNumber" class="orderAction" method="selectOrderByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据团号搜索订单信息 -->
+		<action name="selectOrderInfoByTeamNumber" class="orderAction" method="selectOrderInfoByTeamNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

@@ -60,4 +60,6 @@ public interface ReceivedService extends BaseService {
 	public String rejectRecived(String related_pks);
 
 	public List<ReceivedDetailDto> searchAllAboutReceivedByRelatedPks(String related_pk, String from_where);
+
+	public List<ClientReceivedDetailBean> selectByTeamNumber(String team_number);
 }

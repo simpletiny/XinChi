@@ -43,7 +43,8 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCard() }">新建</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { signPurpose() }">指定用途</button>
 								<s:if test="#session.user.user_roles.contains('ADMIN')">
-									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopUse() }">停用</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { switchUse('Y') }">停用</button>
+									<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { switchUse('N') }">启用</button>
 								</s:if>
 							</div>
 						</div>
@@ -139,6 +140,6 @@
 		$(".manager").addClass("current").children("ol")
 				.css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/finance/card.js"></script>
+	<script src="<%=basePath%>static/js/finance/card.js?v=1.001"></script>
 </body>
 </html>

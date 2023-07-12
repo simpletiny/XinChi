@@ -223,7 +223,7 @@ function startLoadingSimpleIndicator(msg) {
 	if (apiurl == null) {
 		apiurl = "../../";
 	}
-	if ($('.large-format-loader').length == 0) {
+	if ($('.large-format-loader-simple').length == 0) {
 		var uiCode = '<div class="large-format-loader-simple is-not-loading">\
                 <div id="loader-inside-infi" class="loader-inside-format">\
                     <p style="padding-top: 30px"><img height="50" width="50" src="'
@@ -546,7 +546,7 @@ function dataURLtoFile(dataurl, filename) {
 				}
 			}
 			if((''+sum[i]).indexOf(".")>-1){
-				td.text(sum[i].toFixed(2));D
+				td.text(sum[i].toFixed(2));
 			}else{
 				td.text(sum[i]);
 			}

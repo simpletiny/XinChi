@@ -4,6 +4,14 @@ var DetailContext = function() {
 	self.type = ['收入', '支出', '内转'];
 	self.chosenDetails = ko.observableArray([]);
 	self.accounts = ko.observableArray([]);
+	self.matchFlgs = ['N', 'Y', 'O'];
+	self.flgMapping = {
+		'N' : "未确认",
+		'Y' : "主营确认",
+		'O' : "其它确认"
+	};
+	self.chosenMatchFlgs = ko.observableArray([]);
+	self.chosenMatchFlgs.push(...self.matchFlgs);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
 			self.accounts(data.accounts);
@@ -410,7 +418,7 @@ var DetailContext = function() {
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

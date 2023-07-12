@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
@@ -20,6 +21,7 @@ import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 import com.xinchi.tools.Page;
@@ -48,6 +50,8 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private BudgetNonStandardOrderDAO bnsoDao;
+	@Autowired
+	private OrderReportDAO orderReportDao;
 
 	@Override
 	public String changFlight(String json) {
@@ -65,6 +69,12 @@ public class TicketServiceImpl implements TicketService {
 		String captain = first_name.getName();
 		String first_ticket_date = first_name.getFirst_ticket_date();
 		String from_to_city = first_name.getFirst_start_city() + "--" + first_name.getFirst_end_city();
+
+		// 判断单团核算单是否已经审核
+		TeamReportBean tr = orderReportDao.selectTeamReportByTn(team_number);
+		if (tr.getApproved().equals("Y")) {
+			return team_number + "单团核算单已审核，请联系产品经理！";
+		}
 
 		// 增加票务航变记录
 		AirTicketChangeLogBean atcl = new AirTicketChangeLogBean();
@@ -142,6 +152,12 @@ public class TicketServiceImpl implements TicketService {
 
 		AirTicketChangeLogBean log = changeLogDao.selectByPrimaryKey(name.getChange_pk());
 		return log;
+	}
+
+	@Override
+	public AirTicketChangeLogBean searchFlightChangeLogByPk(String change_pk) {
+
+		return changeLogDao.selectByPrimaryKey(change_pk);
 	}
 
 	@Override

@@ -279,4 +279,5 @@ public class SupplierServiceImpl implements SupplierService {
 		dao.update(s);
 		return SUCCESS;
 	}
+
 }

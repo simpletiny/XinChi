@@ -68,7 +68,7 @@ public class AccountingAction extends BaseAction {
 		else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
 			resultStr = service.agreeMoreBack(pa.getBack_pk());
 		}
-		// 票务费用
+		// 票务费用，还有被一种是票务端产生的费用，目前没有，
 		else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.agreeAirTicketPayApply(pa.getBack_pk());
 		}

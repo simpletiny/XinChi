@@ -156,6 +156,11 @@ public class ReceivedAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchReceivedByTeamNumber() {
+		receiveds = service.selectByTeamNumber(team_number);
+		return SUCCESS;
+	}
+
 	private List<PaymentDetailBean> paymentDetails;
 
 	@Autowired

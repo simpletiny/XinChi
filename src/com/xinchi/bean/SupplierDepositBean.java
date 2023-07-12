@@ -44,6 +44,12 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 	private BigDecimal money_from;
 	private BigDecimal money_to;
 
+	private String create_month;
+	private BigDecimal sum_money;
+	private BigDecimal balance_money;
+	private BigDecimal clear_money;
+	private String supplier_short_name;
+
 	public String getVoucher_number() {
 		return voucher_number;
 	}
@@ -202,6 +208,46 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setMoney_to(BigDecimal money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getCreate_month() {
+		return create_month;
+	}
+
+	public BigDecimal getSum_money() {
+		return sum_money;
+	}
+
+	public BigDecimal getBalance_money() {
+		return balance_money;
+	}
+
+	public BigDecimal getClear_money() {
+		return clear_money;
+	}
+
+	public String getSupplier_short_name() {
+		return supplier_short_name;
+	}
+
+	public void setCreate_month(String create_month) {
+		this.create_month = create_month;
+	}
+
+	public void setSum_money(BigDecimal sum_money) {
+		this.sum_money = sum_money;
+	}
+
+	public void setBalance_money(BigDecimal balance_money) {
+		this.balance_money = balance_money;
+	}
+
+	public void setClear_money(BigDecimal clear_money) {
+		this.clear_money = clear_money;
+	}
+
+	public void setSupplier_short_name(String supplier_short_name) {
+		this.supplier_short_name = supplier_short_name;
 	}
 
 }

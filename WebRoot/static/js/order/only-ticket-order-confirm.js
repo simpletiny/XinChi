@@ -111,7 +111,6 @@ var OrderContext = function() {
 	};
 
 	self.updateOrder = function() {
-
 		if (!$("form").valid()) {
 			return;
 		}
@@ -175,7 +174,7 @@ var OrderContext = function() {
 			const sex = $(tr).find("[st='sex']").val();
 			const age = $(tr).find("[st='age']").val().trim();
 			const id_type = $(tr).find("[st='type']").val();
-
+		
 			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			const id = $(tr).find("[st='id']").val().trim();
@@ -193,7 +192,7 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
 
