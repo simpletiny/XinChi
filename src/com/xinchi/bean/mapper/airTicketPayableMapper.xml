@@ -36,7 +36,15 @@
 		<result column="people_count" property="people_count" jdbcType="INTEGER" />
 		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
 		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="ticket_count" property="ticket_count" jdbcType="INTEGER" />
+		<result column="supplier_employee_name" property="supplier_employee_name" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="change_cnt" property="change_cnt" jdbcType="INTEGER" />
+		<result column="sum_fee" property="sum_fee" jdbcType="DECIMAL" />
+		<result column="paid_fee" property="paid_fee" jdbcType="DECIMAL" />
+		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 	</resultMap>
+
 	<sql id="Base_Column_List">
 		supplier_employee_pk,
 		PNR,
@@ -399,12 +407,74 @@
 			<if test="first_month != null and first_month !=''">
 				and LEFT(first_date, 7) = #{first_month,jdbcType=VARCHAR}
 			</if>
+			<if test="first_year != null and first_year !=''">
+				and LEFT(first_date, 4) = #{first_year,jdbcType=VARCHAR}
+			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP BY product_manager_number
+		GROUP BY product_manager_number,first_month
 		ORDER BY payable DESC
 	</select>
-
+	<select id="selectAirTicketFeeSummary" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="ServiceFeeMap">
+		SELECT
+		COUNT(A.pk) AS ticket_count,
+		S.supplier_name AS supplier_name,
+		LEFT(A.ticket_date, 7) AS first_month,
+		A.from_to_city,
+		COUNT(IF(C.pk IS NULL, NULL, B.pk)) AS change_cnt,
+		D.budget_payable AS sum_fee,
+		D.paid AS paid_fee
+		FROM
+		passenger_ticket_info A
+		LEFT JOIN
+		supplier_employee B ON ticket_source_pk = B.pk
+		LEFT JOIN
+		supplier S ON B.financial_body_pk = S.pk
+		LEFT JOIN
+		air_ticket_name_list C ON A.passenger_pk = C.pk AND C.status = 'C'
+		LEFT JOIN
+		(SELECT
+		SUM(A.budget_payable) AS budget_payable,
+		SUM(A.paid) AS paid,
+		B.financial_body_pk AS supplier_pk,
+		LEFT(A.first_date, 7) AS ticket_month,
+		A.from_to_city
+		FROM
+		air_ticket_payable A
+		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
+		WHERE
+		A.payable_type = 'B'
+		GROUP BY B.financial_body_pk , LEFT(A.first_date, 7) , A.from_to_city) D ON B.financial_body_pk = D.supplier_pk
+		AND LEFT(A.ticket_date, 7) = D.ticket_month
+		AND A.from_to_city = D.from_to_city
+		<where>
+			and A.ticket_index = 1
+			<if test="first_month !=null and first_month !=''">
+				and LEFT(A.ticket_date,7) = #{first_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY S.pk , LEFT(A.ticket_date, 7) , A.from_to_city;
+	</select>
+	<select id="selectAirTicketDeductSummary" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="ServiceFeeMap">
+		SELECT
+		C.supplier_name,
+		A.belong_month AS first_month,
+		B.supplier_pk,
+		SUM(A.money) AS deduct_money
+		FROM
+		air_ticket_paid_detail A
+		LEFT JOIN
+		supplier_deposit B ON A.base_pk = B.pk
+		LEFT JOIN
+		supplier C ON B.supplier_pk = C.pk
+		<where>
+			and A.type = 'DEDUCT'
+			<if test="first_month !=null and first_month !=''">
+				and A.belong_month = #{first_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY B.supplier_pk , A.belong_month
+	</select>
 </mapper>

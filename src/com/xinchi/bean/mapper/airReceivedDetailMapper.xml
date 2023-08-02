@@ -343,6 +343,15 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and LEFT(A.received_time,10) &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.received &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.received &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.received != null and params.bo.received !=''">
+				and A.received = #{params.bo.received,jdbcType=DECIMAL}
+			</if>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user= #{params.bo.create_user,jdbcType=VARCHAR}
 			</if>

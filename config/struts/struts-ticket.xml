@@ -94,6 +94,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 打回航变 -->
+		<action name="rollBackTicketChange" class="ticketAction" method="rollBackTicketChange">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<action name="rollBackNameDone" class="ticketAction" method="rollBackNameDone">
 			<result name="success" type="str">
 				resultStr

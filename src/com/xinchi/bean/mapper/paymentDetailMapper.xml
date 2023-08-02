@@ -377,6 +377,9 @@
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and A.account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.comment != null and params.bo.comment !=''">
+				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
+			</if>
 			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type !="内转"'>
 				and A.type = #{params.bo.type,jdbcType=VARCHAR}
 			</if>

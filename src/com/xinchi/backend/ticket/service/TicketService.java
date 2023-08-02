@@ -15,6 +15,8 @@ public interface TicketService extends BaseService {
 	 */
 	public String changFlight(String json);
 
+	public String rollBackTicketChange(String change_pk);
+
 	public AirTicketChangeLogBean searchFlightChangeLogByPassengerPk(String passenger_pk);
 
 	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page);

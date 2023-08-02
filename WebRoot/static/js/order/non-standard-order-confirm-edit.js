@@ -165,10 +165,11 @@ var OrderContext = function() {
 			var cellphone_A = $(tr).find("[st='cellphone_A']").val().trim();
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val().trim();
 			var id = $(tr).find("[st='id']").val().trim();
+			var pk = $(tr).find("[st='name-pk']").val();
 
 			const age = $(tr).find("[st='age']").val().trim();
 			const id_type = $(tr).find("[st='type']").val();
-
+			const lock_flg = $(tr).find("[st='name-lock']").val();
 			if (name == "" && id == "") {
 				continue;
 			}
@@ -186,7 +187,7 @@ var OrderContext = function() {
 				hasChairman = true;
 			}
 
-			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id,pk,lock_flg};
 			people.push(person);
 		}
 

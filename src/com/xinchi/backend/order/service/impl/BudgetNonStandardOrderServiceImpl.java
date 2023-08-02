@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
@@ -44,6 +45,7 @@ import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.PropertiesUtil;
@@ -57,6 +59,9 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 	@Autowired
 	private BudgetNonStandardOrderDAO dao;
+
+	@Autowired
+	private EmployeeService employeeService;
 
 	@Override
 	public String createOrder(BudgetNonStandardOrderBean bean, String json) {
@@ -102,6 +107,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 
 		bean.setPassenger_captain(passenger_captain);
 		dao.insertWithPk(bean);
+
+		employeeService.makePublicToSales(bean.getClient_employee_pk(), SimpletinyUser.user().getPk());
 		return SUCCESS;
 	}
 
@@ -181,7 +188,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		}
 
 		dao.insertWithPk(bean);
-
+		employeeService.makePublicToSales(bean.getClient_employee_pk(), SimpletinyUser.user().getPk());
 		return SUCCESS;
 	}
 

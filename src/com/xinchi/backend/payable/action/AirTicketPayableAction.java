@@ -187,6 +187,9 @@ public class AirTicketPayableAction extends BaseAction {
 	}
 
 	private List<AirServiceFeeDto> service_fees;
+	private List<AirServiceFeeDto> service_fee_summary;
+
+	private List<AirServiceFeeDto> service_deduct_summary;
 	private List<AirOtherPaymentDto> deposit_deducts;
 	private List<AirOtherPaymentDto> none_business_payments;
 
@@ -210,8 +213,12 @@ public class AirTicketPayableAction extends BaseAction {
 		none_business_payments = service.searchNoneBussinessPayment(summary_option);
 		SupplierDepositBean option = new SupplierDepositBean();
 		option.setCreate_month(summary_option.getFirst_month());
+		service_fee_summary = service.searchServiceFeeSummary(summary_option);
+		service_deduct_summary = service.searchAirTicketDeductSummary(summary_option);
+
 		deposits = supplierDepositService.selectDepositSummary(option);
 		deposit = supplierDepositService.selectSumDeposit();
+
 		return SUCCESS;
 	}
 
@@ -357,5 +364,21 @@ public class AirTicketPayableAction extends BaseAction {
 
 	public void setDeposit(SupplierDepositBean deposit) {
 		this.deposit = deposit;
+	}
+
+	public List<AirServiceFeeDto> getService_fee_summary() {
+		return service_fee_summary;
+	}
+
+	public void setService_fee_summary(List<AirServiceFeeDto> service_fee_summary) {
+		this.service_fee_summary = service_fee_summary;
+	}
+
+	public List<AirServiceFeeDto> getService_deduct_summary() {
+		return service_deduct_summary;
+	}
+
+	public void setService_deduct_summary(List<AirServiceFeeDto> service_deduct_summary) {
+		this.service_deduct_summary = service_deduct_summary;
 	}
 }

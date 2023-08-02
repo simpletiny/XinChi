@@ -761,6 +761,15 @@
 			<comment>ALTER VIEW view_product_profit_a,view_product_profit</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="23" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			 ALTER TABLE air_ticket_payable 
+				CHANGE COLUMN passenger passenger VARCHAR(45) NULL DEFAULT NULL ;
+		    ]]>
+			<comment> ALTER TABLE air_ticket_payable </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

@@ -420,6 +420,13 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String change_pk;
+
+	public String rollBackTicketChange() {
+		resultStr = service.rollBackTicketChange(change_pk);
+		return SUCCESS;
+	}
+
 	private AirTicketChangeLogBean changeLog;
 
 	private String passenger_pk;
@@ -704,6 +711,14 @@ public class TicketAction extends BaseAction {
 
 	public void setLock_flg(String lock_flg) {
 		this.lock_flg = lock_flg;
+	}
+
+	public String getChange_pk() {
+		return change_pk;
+	}
+
+	public void setChange_pk(String change_pk) {
+		this.change_pk = change_pk;
 	}
 
 }

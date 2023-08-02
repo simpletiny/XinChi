@@ -80,12 +80,12 @@
 
 						<label class="col-md-1 control-label">入账日期</label>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" id="option-data-from" data-bind="value: dateFrom" placeholder="from"
-								name="option.date_from" />
+							<input type="text" class="form-control date-picker" id="option-data-from" data-bind="value: dateFrom"
+								placeholder="from" name="option.date_from" />
 						</div>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" id="option-data-to" data-bind="value: dateTo" placeholder="to"
-								name="option.date_to" />
+							<input type="text" class="form-control date-picker" id="option-data-to" data-bind="value: dateTo"
+								placeholder="to" name="option.date_to" />
 						</div>
 						<div>
 							<label class="col-md-1 control-label">收款方</label>
@@ -110,7 +110,7 @@
 									name="option.type" required="required"></select>
 							</div>
 						</div>
-						<label class="col-md-1 control-label">归属月份</label> 
+						<label class="col-md-1 control-label">归属月份</label>
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control month-picker-st" id="option-belong-month" name="option.belong_month" />
 						</div>
@@ -119,6 +119,12 @@
 							<select class="form-control" name="option.product_manager"
 								data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
 						</div>
+						<label class="col-md-1 control-label">凭证号</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" placeholder='凭证号' name="option.voucher_number" />
+						</div>
+					</div>
+					<div class="form-group">
 						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
@@ -242,11 +248,14 @@
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">收支时间</label>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<label class="l" style="width: 100%">收款方账户</label>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-1">
 				<label class="l" style="width: 100%">收支金额</label>
+			</div>
+			<div class="col-md-2">
+				<label class="l" style="width: 100%">凭证号</label>
 			</div>
 			<div class="col-md-2">
 				<label class="l" style="width: 100%">凭证</label>
@@ -264,17 +273,21 @@
 					<p class="ip-default" data-bind="text:$data.time"></p>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<div class="ip">
 					<p class="ip-default" data-bind="text:$data.receiver"></p>
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-1">
 				<div class="ip">
 					<p class="ip-default" data-bind="text:$data.money"></p>
 				</div>
 			</div>
-
+			<div class="col-md-2">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.voucher_number"></p>
+				</div>
+			</div>
 			<div class="col-md-2">
 				<div class="ip">
 					<p class="ip-default">

@@ -32,8 +32,44 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
+						<div style="float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { rollBackChange() }">取消航变</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">首航日期</label>
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="from" name="changeLog.first_date_from" />
+							</div>
+						</div>
+						<div align="left">
+							<div class="col-md-2" style="float: left">
+								<input type="text" class="form-control date-picker" placeholder="to" name="changeLog.first_date_to" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">首航段</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="首航段" name="changeLog.from_to_city" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">航变原因</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="填写部分信息即可" name="changeLog.change_reason" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">备注</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="填写部分信息即可" name="changeLog.comment" />
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
 				</form>
@@ -55,9 +91,12 @@
 								<td><input type="checkbox" data-bind="attr: {'value':$data.pk}, checked: $root.chosenChanges" /></td>
 								<td data-bind="text: $data.change_reason"></td>
 								<td data-bind="text: $data.change_cost"></td>
-								<td><a href="javascript:void(0)" data-bind="text:$data.first_date,click:function(){$root.checkTicketInfo($data);}"></a></td>
-								<td><a href="javascript:void(0)" data-bind="text:$data.from_to_city,click:function(){$root.checkTicketInfo($data);}"></a></td>
-								<td><a href="javascript:void(0)" data-bind="text:$data.captain,click:function(){$root.checkPassengers($data);}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text:$data.first_date,click:function(){$root.checkTicketInfo($data);}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text:$data.from_to_city,click:function(){$root.checkTicketInfo($data);}"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text:$data.captain,click:function(){$root.checkPassengers($data);}"></a></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>
@@ -130,6 +169,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-change.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-change.js?v=1.001"></script>
 </body>
 </html>

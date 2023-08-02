@@ -12,6 +12,11 @@ public class AirOtherPaymentDto implements Serializable {
 	private String product_manager_number;
 	private String product_manager_name;
 
+	private String belong_month;
+
+	// option
+	private String belong_year;
+
 	public String getProduct_manager_number() {
 		return product_manager_number;
 	}
@@ -50,6 +55,22 @@ public class AirOtherPaymentDto implements Serializable {
 
 	public void setPay_money(BigDecimal pay_money) {
 		this.pay_money = pay_money;
+	}
+
+	public String getBelong_month() {
+		return belong_month;
+	}
+
+	public void setBelong_month(String belong_month) {
+		this.belong_month = belong_month;
+	}
+
+	public String getBelong_year() {
+		return belong_year;
+	}
+
+	public void setBelong_year(String belong_year) {
+		this.belong_year = belong_year;
 	}
 
 }

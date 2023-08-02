@@ -202,23 +202,6 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 							</tr>
 						</tbody>
-						<tr role="row">
-							<td></td>
-							<td>合计</td>
-							<td data-bind="text:totalReceived()" class="rmb"></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<td></td>
-							</s:if>
-							<td></td>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>

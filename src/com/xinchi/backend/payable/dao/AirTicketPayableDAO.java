@@ -55,4 +55,8 @@ public interface AirTicketPayableDAO {
 
 	public List<AirServiceFeeDto> searchServiceFees(AirServiceFeeDto summary_option);
 
+	public List<AirServiceFeeDto> selectServiceFeeSummary(AirServiceFeeDto summary_option);
+
+	public List<AirServiceFeeDto> selectAirTicketDeductSummary(AirServiceFeeDto summary_option);
+
 }

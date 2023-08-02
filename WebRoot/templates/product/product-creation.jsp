@@ -63,7 +63,7 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<div class="input-row clearfloat">
-						<label class="l"><input type="checkbox" checked="checked" value="Y" name="product.strict_price_flg" />严格执行定价</label>
+						<label class="l"><input type="checkbox" checked="checked" id="chk-strict" value="Y" name="product.strict_price_flg" />严格执行定价</label>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-1">&nbsp;</div>

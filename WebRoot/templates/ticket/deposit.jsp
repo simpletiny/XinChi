@@ -89,6 +89,10 @@ h2 {
 							<select class="form-control" name="deposit.account"
 								data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 						</div>
+						<label class="col-md-1 control-label">凭证号</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" name="deposit.voucher_number" placeholder="凭证号" />
+						</div>
 						<button type="submit" style="float:right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
@@ -106,6 +110,7 @@ h2 {
 								<th>到期时间</th>
 								<th>状态</th>
 								<th>退还途径</th>
+								<th>流水凭证号</th>
 								<th>备注</th>
 							</tr>
 						</thead>
@@ -126,6 +131,8 @@ h2 {
 								<td data-bind="text: $root.statusMapping[$data.status]" style="color: green"></td>
 								<!-- /ko -->
 								<td><a href="javascript:void(0)" data-bind="text: $data.return_way_cn,click:$root.viewDetail"></a></td>
+								
+								<td data-bind="text: $data.voucher_number"></td>
 								<td data-bind="text: $data.comment"></td>
 								<!-- ko if:$data.status=='I' -->
 								<!-- <td data-bind="text: $root.statusMapping[$data.status]"></td> -->
@@ -233,7 +240,7 @@ h2 {
 				<div class="col-md-6 required">
 					<label class="l">入账时间</label>
 					<div class="ip">
-						<input type="text" name="deposit.time" placeholder="请准确填写避免冲突" class="form-control datetime-picker"
+						<input type="text" name="deposit.time" placeholder="请准确填写避免冲突" class="form-control datesecond-picker"
 							required="required" />
 					</div>
 				</div>
@@ -591,6 +598,6 @@ h2 {
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
 	<script src="<%=basePath%>static/js/file-upload-office.js?v1.001"></script>
-	<script src="<%=basePath%>static/js/ticket/deposit.js?v1.003"></script>
+	<script src="<%=basePath%>static/js/ticket/deposit.js?v1.004"></script>
 </body>
 </html>

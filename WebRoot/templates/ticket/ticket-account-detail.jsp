@@ -76,6 +76,10 @@
 								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
+						<label class="col-md-1 control-label">备注</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="填写部分信息即可" name="detail.comment" />
+						</div>
 						<div style="padding-top: 3px;float:right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>

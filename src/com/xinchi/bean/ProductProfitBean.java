@@ -16,9 +16,9 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	private BigDecimal gross_profit;
 
-	private BigDecimal product_cost;
+	private BigDecimal product_cost = BigDecimal.ZERO;
 
-	private BigDecimal keep_cost;
+	private BigDecimal keep_cost = BigDecimal.ZERO;
 
 	private BigDecimal air_lose;
 
@@ -37,6 +37,12 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String option_year;
+
+	// DTO
+	// 手续费
+	private BigDecimal service_fees = BigDecimal.ZERO;
+	// 押金扣款
+	private BigDecimal deposit_deduct = BigDecimal.ZERO;
 
 	public String getDeparture_month() {
 		return departure_month;
@@ -156,6 +162,22 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	public void setScore(BigDecimal score) {
 		this.score = score;
+	}
+
+	public BigDecimal getService_fees() {
+		return service_fees;
+	}
+
+	public void setService_fees(BigDecimal service_fees) {
+		this.service_fees = service_fees;
+	}
+
+	public BigDecimal getDeposit_deduct() {
+		return deposit_deduct;
+	}
+
+	public void setDeposit_deduct(BigDecimal deposit_deduct) {
+		this.deposit_deduct = deposit_deduct;
 	}
 
 }

@@ -401,38 +401,42 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 		Set<String> name_pks = new HashSet<>();
 		for (String payable_pk : payable_pks) {
 			AirTicketPayableBean payable = airTicketPayableDao.selectByPrimaryKey(payable_pk);
-			BigDecimal money = BigDecimal.ZERO;
-			// 删除应付款
-			if (SimpletinyString.isEmpty(payable.getRelated_pk())) {
-				List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByBasePk(payable_pk);
-				if (null != paids && paids.size() > 0) {
-					if (transactionStatus != null && transactionStatus.isNewTransaction()) {
-						transactionStatus.setRollbackOnly();
-					}
-					return "首航日期为：" + payable.getFirst_date() + "，首航段为：" + payable.getFrom_to_city() + "乘客为："
-							+ payable.getPassenger() + "的应付款，已存在已付款，请处理后再进行操作！";
-				}
 
-				money = money.add(payable.getBudget_payable());
-				airTicketPayableDao.delete(payable_pk);
-			} else {
-				List<AirTicketPayableBean> payables = airTicketPayableDao.selectByRelatedPk(payable.getRelated_pk());
-				for (AirTicketPayableBean p : payables) {
+			BigDecimal money = BigDecimal.ZERO;
+			if (null != payable) {
+
+				// 删除应付款
+				if (SimpletinyString.isEmpty(payable.getRelated_pk())) {
 					List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByBasePk(payable_pk);
 					if (null != paids && paids.size() > 0) {
 						if (transactionStatus != null && transactionStatus.isNewTransaction()) {
 							transactionStatus.setRollbackOnly();
 						}
-						return "首航日期为：" + p.getFirst_date() + "，首航段为：" + p.getFrom_to_city() + "乘客为：" + p.getPassenger()
-								+ "的应付款，已存在已付款，请处理后再进行操作！";
+						return "首航日期为：" + payable.getFirst_date() + "，首航段为：" + payable.getFrom_to_city() + "乘客为："
+								+ payable.getPassenger() + "的应付款，已存在已付款，请处理后再进行操作！";
 					}
 
-					money = money.add(p.getBudget_payable());
+					money = money.add(payable.getBudget_payable());
+					airTicketPayableDao.delete(payable_pk);
+				} else {
+					List<AirTicketPayableBean> payables = airTicketPayableDao
+							.selectByRelatedPk(payable.getRelated_pk());
+					for (AirTicketPayableBean p : payables) {
+						List<AirTicketPaidDetailBean> paids = airTicketPaidDetailDao.selectByBasePk(payable_pk);
+						if (null != paids && paids.size() > 0) {
+							if (transactionStatus != null && transactionStatus.isNewTransaction()) {
+								transactionStatus.setRollbackOnly();
+							}
+							return "首航日期为：" + p.getFirst_date() + "，首航段为：" + p.getFrom_to_city() + "乘客为："
+									+ p.getPassenger() + "的应付款，已存在已付款，请处理后再进行操作！";
+						}
+
+						money = money.add(p.getBudget_payable());
+					}
+					airTicketPayableDao.deleteByRelatedPk(payable.getRelated_pk());
 				}
-				airTicketPayableDao.deleteByRelatedPk(payable.getRelated_pk());
 			}
 			payable_moneys.put(payable_pk, money);
-
 			// 删除详细的乘客信息
 			List<PassengerTicketInfoBean> infos = dao.selectAllByPayablePk(payable_pk);
 			for (PassengerTicketInfoBean info : infos) {

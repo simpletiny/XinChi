@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.common.SupperBO;
@@ -44,6 +45,8 @@ public class AirReceivedDetailBean extends SupperBO implements Serializable {
 	private List<String> statuses;
 	private String supplier_name;
 	private String received_month;
+	private BigDecimal money_from;
+	private BigDecimal money_to;
 
 	public String getBusiness_number() {
 		return business_number;
@@ -195,6 +198,22 @@ public class AirReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setConfirm_user_name(String confirm_user_name) {
 		this.confirm_user_name = confirm_user_name;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
 	}
 
 }

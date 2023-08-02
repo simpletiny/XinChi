@@ -33,7 +33,7 @@ var ReportContext = function() {
 	});
 
 	self.refresh = function() {
-		startLoadingIndicator("加载中...");
+		startLoadingSimpleIndicator("加载中...");
 		var param = $('form').serialize();
 		$.getJSON(self.apiurl + 'product/searchProductProfit', param, function(data) {
 			self.reports(data.productProfits);

@@ -85,4 +85,6 @@ public interface EmployeeService extends BaseService {
 
 	public String updateMarketLevel(List<String> employee_pks, String market_level);
 
+	public String makePublicToSales(String employee_pk, String user_pk);
+
 }

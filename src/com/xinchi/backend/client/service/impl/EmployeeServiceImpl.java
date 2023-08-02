@@ -524,4 +524,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return SUCCESS;
 	}
+
+	@Override
+	public String makePublicToSales(String employee_pk, String user_pk) {
+		ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
+
+		List<ClientEmployeeUserBean> ceubs = employeeUserDao.selectByEmployeePk(employee_pk);
+
+		if (null != ceubs) {
+			if (ceubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+				employeeUserDao.deleteByEmployeePk(employee_pk);
+				employee.setPublic_flg("N");
+				// 保存新的对应关系
+				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+				ceub.setEmployee_pk(employee_pk);
+				ceub.setUser_pk(user_pk);
+				employeeUserDao.insert(ceub);
+
+				dao.update(employee);
+			}
+		}
+		return SUCCESS;
+	}
 }

@@ -36,7 +36,8 @@ public class AutoDeleteTbcOrder {
 			}
 
 			int days = DateUtil.dateDiff(today, DateUtil.sdf1.format(c.getTime()));
-			if (days >= 5 && order.getReceivable_first_flg().equals("N")) {
+			// 2023-07-25从5天改为30天
+			if (days >= 30 && order.getReceivable_first_flg().equals("N")) {
 				if (order.getStandard_flg().equals("Y")) {
 					bsOrderService.delete(order.getPk());
 				} else {

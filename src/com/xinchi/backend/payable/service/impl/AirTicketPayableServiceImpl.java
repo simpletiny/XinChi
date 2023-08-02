@@ -236,4 +236,14 @@ public class AirTicketPayableServiceImpl implements AirTicketPayableService {
 		return airTicketPaidDetailDao.searchNoneBussinessPayment(summary_option);
 	}
 
+	@Override
+	public List<AirServiceFeeDto> searchServiceFeeSummary(AirServiceFeeDto summary_option) {
+		return dao.selectServiceFeeSummary(summary_option);
+	}
+
+	@Override
+	public List<AirServiceFeeDto> searchAirTicketDeductSummary(AirServiceFeeDto summary_option) {
+		return dao.selectAirTicketDeductSummary(summary_option);
+	}
+
 }

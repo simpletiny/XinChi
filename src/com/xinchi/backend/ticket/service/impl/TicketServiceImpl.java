@@ -1,7 +1,9 @@
 package com.xinchi.backend.ticket.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,14 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
+import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.service.TicketService;
 import com.xinchi.bean.AirTicketChangeLogBean;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
@@ -143,6 +147,74 @@ public class TicketServiceImpl implements TicketService {
 			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(cost));
 			bnsoDao.update(bnso);
 		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDao;
+
+	@Override
+	public String rollBackTicketChange(String change_pk) {
+		AirTicketChangeLogBean change_log = changeLogDao.selectByPrimaryKey(change_pk);
+
+		if (null == change_log)
+			return "no record";
+
+		List<AirTicketNameListBean> names = nameListDao.selectByChangePk(change_pk);
+		Map<String, BigDecimal> cost_map = new HashMap<>();
+		// 判断单团核算单是否已经审核
+		for (AirTicketNameListBean name : names) {
+			TeamReportBean tr = orderReportDao.selectTeamReportByTn(name.getTeam_number());
+			if (tr.getApproved().equals("Y")) {
+				return name.getTeam_number() + "单团核算单已审核，请联系产品经理！";
+			}
+		}
+
+		// 检查是否已付款
+		List<AirTicketPayableBean> atps = payableDao.selectByRelatedPk(change_pk);
+		for (AirTicketPayableBean atp : atps) {
+
+			List<AirTicketPaidDetailBean> details = airTicketPaidDetailDao.selectByBasePk(atp.getPk());
+			if (null != details && details.size() > 0)
+				return "往来详表已存在该航变的的付款记录，请先处理后再进行取消操作！";
+		}
+
+		// 修改名单航变状态
+		for (AirTicketNameListBean name : names) {
+
+			String team_number = name.getTeam_number();
+			if (cost_map.containsKey(team_number)) {
+				cost_map.put(team_number, cost_map.get(team_number).add(name.getChange_cost()));
+			} else {
+				cost_map.put(team_number, name.getChange_cost());
+			}
+			name.setStatus("Y");
+			name.setChange_pk("");
+			name.setChange_cost(BigDecimal.ZERO);
+			nameListDao.update(name);
+		}
+		// 删除付款记录
+		for (AirTicketPayableBean atp : atps) {
+			payableDao.delete(atp.getPk());
+		}
+
+		for (String team_number : cost_map.keySet()) {
+			// 更新订单票务费用
+			OrderDto saleOrder = orderDao.selectByTeamNumber(team_number);
+			if (saleOrder.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+				bso.setPk(saleOrder.getPk());
+				bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(cost_map.get(team_number)));
+				bsoDao.update(bso);
+			} else {
+				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+				bnso.setPk(saleOrder.getPk());
+				bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(cost_map.get(team_number)));
+				bnsoDao.update(bnso);
+			}
+		}
+		// 删除航变记录
+		changeLogDao.delete(change_pk);
 		return SUCCESS;
 	}
 

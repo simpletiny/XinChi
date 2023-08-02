@@ -26,7 +26,7 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<input type="button" class="btn btn-green" value="打回重报" style="float: right" data-bind="click: rollBack"/>
+						<input type="button" class="btn btn-green" value="打回重报" style="float: right" data-bind="click: rollBack" />
 					</div>
 					<div class="form-group">
 						<label class="col-md-1 control-label">单号</label>
@@ -46,7 +46,7 @@
 					<div class="form-group">
 						<label class="col-md-1 control-label">供应商</label>
 						<div class="col-md-2">
-							<input type="text" class="form-control" name="detail.supplier_name" placeholder="供应商简称"/>
+							<input type="text" class="form-control" name="detail.supplier_name" placeholder="供应商简称" />
 
 						</div>
 						<label class="col-md-1 control-label">收入时间</label>
@@ -58,12 +58,24 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-md-1 control-label">金额</label>
+						<div class="col-md-1" style="float: left">
+							<input type="number" class="form-control" placeholder="大于等于" name="detail.money_from" />
+						</div>
+						<div class="col-md-1" style="float: left">
+							<input type="number" class="form-control" placeholder="小于等于" name="detail.money_to" />
+						</div>
+						<label class="col-md-1 control-label">精确金额</label>
+						<div class="col-md-1" style="float: left">
+							<input type="number" class="form-control" placeholder="精确金额" name="detail.received" />
+						</div>
 						<label class="col-md-1 control-label">备注</label>
 						<div class="col-md-2">
 							<input type="text" class="form-control" name="detail.comment" placeholder="填写部分信息即可" />
 						</div>
 						<button type="submit" class="btn btn-green" style="float: right" data-bind="click: refresh">搜索</button>
 					</div>
+
 				</form>
 				<div class="list-result">
 					<table class="table table-striped table-hover">

@@ -57,8 +57,6 @@
 	</select>
 	<select id="selectDepositSummary" resultMap="BaseResultMap" parameterType="com.xinchi.bean.SupplierDepositBean">
 		SELECT
-		DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),
-		'%Y-%m') AS create_month,
 		A.supplier_pk,
 		SUM(money) AS sum_money,
 		SUM(IF(A.status = 'N', A.balance, 0)) AS balance_money,
@@ -67,18 +65,15 @@
 		B.supplier_short_name
 		FROM
 		supplier_deposit A
-		LEFT JOIN supplier B ON A.supplier_pk = B.pk
-		<where>
-			<if test="create_month != null and create_month !=''">
-				and DATE_FORMAT(FROM_UNIXTIME(A.create_time / 1000),'%Y-%m')=#{create_month,jdbcType=VARCHAR}
-			</if>
-		</where>
-		GROUP BY supplier_pk,create_month
+		LEFT JOIN
+		supplier B ON A.supplier_pk = B.pk
+		GROUP BY supplier_pk
+		HAVING balance_money > 0
 	</select>
 	<select id="selectSumDeposit" resultMap="BaseResultMap">
 		SELECT
 		SUM(money) AS sum_money,
-		SUM(balance) AS balance_money,
+		SUM(IF(status = 'N', balance, 0)) AS balance_money,
 		SUM(IF(status = 'Y', money, 0)) AS clear_money
 		FROM
 		supplier_deposit
@@ -332,6 +327,9 @@
 			</if>
 			<if test="params.bo.money_from != null and params.bo.money_from !=''">
 				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.voucher_number != null and params.bo.voucher_number !=''">
+				and A.voucher_number like CONCAT('%', #{params.bo.voucher_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.money_to != null and params.bo.money_to !=''">
 				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}

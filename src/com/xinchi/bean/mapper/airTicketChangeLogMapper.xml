@@ -162,6 +162,25 @@
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_change_log
+
+		<where>
+			<if test="params.bo.change_reason!=null and params.bo.change_reason!=''">
+				and change_reason like CONCAT('%',#{params.bo.change_reason,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.comment !=null and params.bo.comment !=''">
+				and comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.from_to_city !=null and params.bo.from_to_city !=''">
+				and from_to_city like CONCAT('%',#{params.bo.from_to_city,jdbcType=VARCHAR},'%')
+			</if>
+
+			<if test="params.bo.first_date_from !=null and params.bo.first_date_from !=''">
+				and first_date &gt;= #{params.bo.first_date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.first_date_to !=null and params.bo.first_date_to !=''">
+				and first_date &lt;= #{params.bo.first_date_to,jdbcType=VARCHAR}
+			</if>
+		</where>
 		ORDER BY create_time desc
 	</select>
 </mapper>

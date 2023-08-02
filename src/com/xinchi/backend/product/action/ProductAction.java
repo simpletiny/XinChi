@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.product.service.ProductReportService;
@@ -16,6 +17,8 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.sys.service.BaseDataService;
 import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductAirTicketBean;
@@ -79,6 +82,9 @@ public class ProductAction extends BaseAction {
 
 	private ProductProfitBean productProfit;
 
+	@Autowired
+	private AirTicketPayableService airTicketPayableService;
+
 	/**
 	 * 搜索产品利润
 	 * 
@@ -92,11 +98,33 @@ public class ProductAction extends BaseAction {
 		if (null == productProfit)
 			productProfit = new ProductProfitBean();
 
+		AirServiceFeeDto fee_option = new AirServiceFeeDto();
+
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			productProfit.setUser_number(sessionBean.getUser_number());
+			fee_option.setProduct_manager_number(sessionBean.getUser_number());
 		}
 
 		productProfits = service.searchProductProfit(productProfit);
+		// 手续费
+		fee_option.setFirst_year(productProfit.getOption_year());
+		List<AirServiceFeeDto> fees = airTicketPayableService.searchServiceFees(fee_option);
+
+		// 押金扣款
+		List<AirOtherPaymentDto> deducts = airTicketPayableService.searchDepositDeducts(fee_option);
+
+		for (ProductProfitBean pp : productProfits) {
+			for (AirServiceFeeDto asf : fees) {
+				if (pp.getDeparture_month().equals(asf.getFirst_month())) {
+					pp.setService_fees(asf.getPayable());
+				}
+			}
+			for (AirOtherPaymentDto deduct : deducts) {
+				if (pp.getDeparture_month().equals(deduct.getBelong_month())) {
+					pp.setDeposit_deduct(deduct.getMoney());
+				}
+			}
+		}
 		return SUCCESS;
 	}
 

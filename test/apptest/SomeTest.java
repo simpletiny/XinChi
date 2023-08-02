@@ -3,6 +3,7 @@ package apptest;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,9 +60,19 @@ public class SomeTest {
 	}
 
 	public static void main(String[] args) {
-		int a = Integer.MAX_VALUE;
-		System.out.println(a * 33 + a * 33);
+		Map<String, BigDecimal> map = new HashMap<>();
 
+		map.put("a", new BigDecimal(100));
+		map.put("b", new BigDecimal(200));
+		map.put("c", new BigDecimal(300));
+
+		if (map.containsKey("d")) {
+			map.put("a", map.get("a").add(new BigDecimal(10)));
+		} else {
+			map.put("d", new BigDecimal(400));
+		}
+
+		System.out.println(map.get("a"));
 	}
 
 	public static Detail random() {

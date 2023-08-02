@@ -59,12 +59,14 @@
 								<th>状态</th>
 								<th>实发人数</th>
 								<th>分数</th>
-								<th>毛利润</th>
+								<th>产品毛利</th>
+								<th>机票手续费</th>
+								<th>押金扣款</th>
 								<th>产品费用</th>
 								<th>唯品费</th>
-								<th>机票损失</th>
+								<th>投诉赔偿</th>
 								<th>其它费用</th>
-								<th>产品利润</th>
+								<th>产品净利</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: reports">
@@ -75,11 +77,13 @@
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.score"></td>
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
+								<td data-bind="text: $data.service_fees" class="rmb"></td>
+								<td data-bind="text: $data.deposit_deduct" class="rmb"></td>
 								<td data-bind="text: $data.product_cost" class="rmb"></td>
 								<td data-bind="text: $data.keep_cost" class="rmb"></td>
 								<td></td>
 								<td></td>
-								<td data-bind="text: $data.gross_profit" class="rmb"></td>
+								<td data-bind="text: $data.gross_profit-$data.service_fees- $data.deposit_deduct-$data.product_cost-$data.keep_cost" class="rmb"></td>
 							</tr> 
 						</tbody>
 					</table>
@@ -92,6 +96,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.001"></script>
 </body>
 </html>
