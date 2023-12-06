@@ -45,7 +45,7 @@
 						<div class="col-md-6 required">
 							<label class="l">收入金额</label>
 							<div class="ip">
-								<input type="number" id="txt-money" style="width:40%" class="ip-" data-bind="value: detail().money" max="100" placeholder="收入金额"
+								<input type="number" id="txt-money" style="width:40%" class="ip-" data-bind="value: detail().money" max="500" placeholder="收入金额"
 									name="detail.money" required="required" />
 							</div>
 						</div> 

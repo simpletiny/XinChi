@@ -24,6 +24,7 @@
 		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
 		<result column="exchange_flg" property="exchange_flg" jdbcType="CHAR" />
 		<result column="finance_flg" property="finance_flg" jdbcType="CHAR" />
+		<result column="other_match_comment" property="other_match_comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,7 +49,8 @@
 		voucher_file_name,
 		match_flg,
 		exchange_flg,
-		finance_flg
+		finance_flg,
+		other_match_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -299,6 +301,9 @@
 			<if test="finance_flg != null">
 				finance_flg = #{finance_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="other_match_comment != null">
+				other_match_comment = #{other_match_comment,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -355,7 +360,7 @@
 		A.money,
 		A.balance,
 		A.record_time,
-		A.record_user,
+		C.user_name AS record_user,
 		A.update_user,
 		A.create_user,
 		A.pk,
@@ -372,6 +377,7 @@
 		A.finance_flg
 		from payment_detail A
 		LEFT JOIN card B ON A.account=B.account
+		LEFT JOIN user_base C ON A.record_user = C.user_number
 
 		<where>
 			<if test="params.bo.account != null and params.bo.account !=''">

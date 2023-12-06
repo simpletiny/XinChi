@@ -370,7 +370,6 @@
 		A.update_user,
 		A.pk,
 		C.user_name AS user_name,
-		A.create_user,
 		A.create_time,
 		A.update_time,
 		D.name AS client_employee_name,

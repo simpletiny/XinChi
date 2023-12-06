@@ -14,6 +14,11 @@ var PaidContext = function() {
 		total : 0,
 		items : []
 	});
+	self.statuses = ['I', 'N', 'Y', 'P'];
+
+	self.chosenStatuses = ko.observableArray([]);
+	self.chosenStatuses.push('I');
+	self.chosenStatuses.push('N');
 
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
@@ -259,15 +264,20 @@ var PaidContext = function() {
 		var param = "related_pk=" + data.related_pk;
 		startLoadingSimpleIndicator("加载中");
 		$.getJSON(self.apiurl + 'payable/searchPaidDetailByRelatedPk', param, function(data) {
-
 			self.details(data.details);
 			self.paymentDetails(data.payment_details);
+			let title = "支付详情";
+			let dom = "#sum_detail";
+			if (data.details[0].type === "BACK") {
+				dom = "#received_detail";
+				title = "返款详情";
+			}
 
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 			viewDetailLayer = $.layer({
 				type : 1,
-				title : ['支付详情', ''],
+				title : [title, ''],
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
@@ -275,7 +285,7 @@ var PaidContext = function() {
 				offset : ['', ''],
 				scrollbar : true,
 				page : {
-					dom : '#sum_detail'
+					dom : dom
 				},
 				end : function() {
 				}
@@ -283,7 +293,7 @@ var PaidContext = function() {
 		});
 	};
 
-	self.checkVoucherPic = function(fileName, accountId) {
+	self.checkVoucherPic = function(fileName, fileType, subFolder) {
 		$("#img-pic").attr("src", "");
 		voucherCheckLayer = $.layer({
 			type : 1,
@@ -303,8 +313,8 @@ var PaidContext = function() {
 
 		$("#img-pic").attr(
 				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=VOUCHER&subFolder="
-						+ accountId);
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=" + fileType + "&subFolder="
+						+ subFolder);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(

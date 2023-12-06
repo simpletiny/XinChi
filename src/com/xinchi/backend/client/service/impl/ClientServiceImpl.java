@@ -18,6 +18,8 @@ import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyUser;
+import com.xinchi.common.UserSessionBean;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -34,13 +36,22 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public String createCompany(ClientBean client) {
 		ClientBean options = new ClientBean();
-		options.setSales(client.getSales());
+		// options.setSales(client.getSales());
 		options.setClient_name(client.getClient_name());
 
 		List<ClientBean> exists = dao.getAllByParam(options);
-		if (exists != null && exists.size() > 0)
-			return "exist";
+		// 改为验证公开状态下，和自己名下的重复
+		// if (exists != null && exists.size() > 0)
+		// return "exist";
 
+		if (exists != null && exists.size() > 0) {
+			for (ClientBean exist : exists) {
+				if (exist.getSales().equals(ResourcesConstants.USER_PUBLIC)
+						|| exist.getSales().equals(client.getSales())) {
+					return "exist";
+				}
+			}
+		}
 		dao.insert(client);
 		// 记录客户和销售对应关系
 		ClientUserBean cub = new ClientUserBean();
@@ -48,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
 		cub.setUser_pk(client.getSales());
 		clientUserDao.insert(cub);
 
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
@@ -79,22 +90,24 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public String updateCompany(ClientBean client) {
 		ClientBean options = new ClientBean();
-		options.setSales(client.getSales());
+		UserSessionBean user = SimpletinyUser.user();
+		// options.setSales(client.getSales());
 		options.setClient_name(client.getClient_name());
 
 		List<ClientBean> exists = dao.getAllByParam(options);
 
+		// 改为验证公开状态下，和自己名下的重复
 		if (exists != null && exists.size() > 0) {
-			if (exists.get(0).getPk().equals(client.getPk())) {
-				dao.update(client);
-				return "success";
-			} else {
-				return "exist";
+			for (ClientBean exist : exists) {
+				if ((exist.getSales().contains(ResourcesConstants.USER_PUBLIC)
+						|| exist.getSales().contains(user.getPk())) && !exist.getPk().equals(client.getPk())) {
+					return "exist";
+				}
 			}
-		} else {
-			dao.update(client);
-			return "success";
 		}
+
+		dao.update(client);
+		return SUCCESS;
 	}
 
 	@Override

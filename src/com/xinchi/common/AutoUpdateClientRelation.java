@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xinchi.backend.client.dao.ClientEmployeeTypeCountDAO;
 import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.util.dao.CommonDAO;
-import com.xinchi.bean.ClientEmployeeUserBean;
-import com.xinchi.bean.ClientRelationBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
+import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.SqlBean;
 
 @Service
@@ -26,10 +27,13 @@ public class AutoUpdateClientRelation {
 	@Autowired
 	private ClientEmployeeUserDAO employeeUserDao;
 
+	@Autowired
+	private ClientEmployeeTypeCountDAO clientEmployeeTypeCountDao;
+
 	/*
 	 * 1、新增客户。没有产生订单。 2、产生订单，成为尝试客户。（所有尝试客户都是只有一单的客户）
 	 * 3、尝试客户再增加一单，既只要客户给过两单就自动成为市场客户（目前没做时间限制，没做多长时间给两单。后期再再说吧，初步就是一年）
-	 * 4、市场客户，在21天内够4单（出团日计算，当天出团和未出团也计入）。 5、主力客户，一单不满足条件，自动划归为市场客户。
+	 * 4、市场客户，在21天内够4单（出团日计算，当天出团和未出团也计入）。 5、主力客户，一但不满足条件，自动划归为市场客户。
 	 * 6、市场客户到忽略，签单期间（以出团日计算）超过30天，化作忽略。 7、忽略客户，如果产生订单，重新划归市场客户。
 	 * 8、忽略客户，如果63天没有产生订单，强制公开。
 	 */
@@ -37,15 +41,19 @@ public class AutoUpdateClientRelation {
 		String sql1 = "update client_relation A  LEFT JOIN year_order_count B ON A.client_employee_pk = B.client_employee_pk set A.year_order_count = B.year_order_count;";
 		String sql2 = "update client_relation A  LEFT JOIN receivable B ON A.client_employee_pk = B.client_employee_pk set A.receivable = ifnull(B.final_balance,B.budget_balance);";
 		String sql3 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='尝试级' where B.order_count = 1;";
-		String sql4 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='主力级' where B.day21_count >= 4;";
-		String sql5 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day21_count < 4;";
-		String sql6 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='忽略级' where datediff(now(),B.last_confirm_date)>30;";
-		String sql7 = "UPDATE client_relation A LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk SET A.last_confirm_date = B.last_confirm_date, A.last_order_period = DATEDIFF(NOW(), B.last_confirm_date) WHERE B.last_confirm_date IS NOT NULL;";
+		String sql4 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='主力级' where B.day90_count >= 6 and B.day30_count<5;";
+		String sql5 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day90_count < 6 and B.day30_count<5;";
+		// 新增核心级
+		String sql14 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='核心级' where B.day30_count>=5;";
+		String sql6 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='忽略级' where(B.last_confirm_date is null OR datediff(now(),B.last_confirm_date)>60);";
+		String sql7 = "UPDATE client_relation A LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk SET A.last_confirm_date = B.last_confirm_date, A.last_order_period = IF(B.last_confirm_date is null,null,DATEDIFF(NOW(), B.last_confirm_date));";
 
 		String sql8 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='尝试级' where B.order_count = 1;";
-		String sql9 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='主力级' where B.day21_count >= 4;";
-		String sql10 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day21_count < 4;";
-		String sql11 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='忽略级' where datediff(now(),B.last_confirm_date)>30;";
+		String sql9 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='主力级' where B.day90_count >= 6 and B.day30_count<5;";
+		String sql10 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day90_count < 6 and B.day30_count<5;";
+		String sql11 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='忽略级' where(B.last_confirm_date is null OR datediff(now(),B.last_confirm_date)>60);";
+		// 新增核心级
+		String sql15 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='忽略级' where B.day30_count>=5;";
 
 		String sql12 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0;";
 		String sql13 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0;";
@@ -76,29 +84,36 @@ public class AutoUpdateClientRelation {
 		commonDao.exeBySql(ss);
 		ss.setSql(sql13);
 		commonDao.exeBySql(ss);
-
+		ss.setSql(sql14);
+		commonDao.exeBySql(ss);
+		ss.setSql(sql15);
+		commonDao.exeBySql(ss);
 		// 公开客户，条件签单期间大于63天的。
-		List<ClientRelationBean> crs = clientRelationDao.selectNeedPublic();
-		for (ClientRelationBean cr : crs) {
-			// 删除之前存在的对应关系
-			employeeUserDao.deleteByEmployeePk(cr.getClient_employee_pk());
-			// 保存新的对应关系
-			ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
-			ceub.setEmployee_pk(cr.getClient_employee_pk());
-			ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
-			ceub.setCreate_user(ResourcesConstants.USER_ADMIN_NUMBER);
-			employeeUserDao.insertWithoutLogin(ceub);
-
-			String sqlx = "update client_employee set public_flg='Y',update_time='" + DateUtil.getTimeMillis()
-					+ "',update_user='N00000' where pk='" + cr.getClient_employee_pk() + "';";
-			String sqly = "update client_relation set sales='public',sales_name='公开',update_time='"
-					+ DateUtil.getTimeMillis() + "',update_user='N00000' where client_employee_pk='"
-					+ cr.getClient_employee_pk() + "';";
-			ss.setSql(sqlx);
-			commonDao.exeBySql(ss);
-			ss.setSql(sqly);
-			commonDao.exeBySql(ss);
-		}
+		// 暂时不公开客户
+		// List<ClientRelationBean> crs = clientRelationDao.selectNeedPublic();
+		// for (ClientRelationBean cr : crs) {
+		// // 删除之前存在的对应关系
+		// employeeUserDao.deleteByEmployeePk(cr.getClient_employee_pk());
+		// // 保存新的对应关系
+		// ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+		// ceub.setEmployee_pk(cr.getClient_employee_pk());
+		// ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+		// ceub.setCreate_user(ResourcesConstants.USER_ADMIN_NUMBER);
+		// employeeUserDao.insertWithoutLogin(ceub);
+		//
+		// String sqlx = "update client_employee set public_flg='Y',update_time='" +
+		// DateUtil.getTimeMillis()
+		// + "',update_user='N00000' where pk='" + cr.getClient_employee_pk() + "';";
+		// String sqly = "update client_relation set
+		// sales='public',sales_name='公开',update_time='"
+		// + DateUtil.getTimeMillis() + "',update_user='N00000' where
+		// client_employee_pk='"
+		// + cr.getClient_employee_pk() + "';";
+		// ss.setSql(sqlx);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sqly);
+		// commonDao.exeBySql(ss);
+		// }
 
 		// List<ClientRelationSummaryBean> views =
 		// clientRelationDao.selectByParam(null);
@@ -127,5 +142,23 @@ public class AutoUpdateClientRelation {
 		// clientRelationDao.insert(two);
 		// }
 
+		// 更新月末数据
+		if (DateUtil.todayOfMonth() == 1) {
+			List<PotentialDto> lasts = clientRelationDao.selectTypeCount();
+			String month = DateUtil.lastMonth();
+			for (PotentialDto last : lasts) {
+				ClientEmployeeTypeCountBean cetc = new ClientEmployeeTypeCountBean();
+				cetc.setUser_pk(last.getUser_pk());
+				cetc.setCore_count(last.getCore_all());
+				cetc.setMain_count(last.getMain_all());
+				cetc.setMarket_count(last.getMarket_all());
+				cetc.setTry_count(last.getTry_all());
+				cetc.setIgnore_count(last.getIgnore_all());
+				cetc.setNew_count(last.getNew_all());
+				cetc.setMonth(month);
+
+				clientEmployeeTypeCountDao.insert(cetc);
+			}
+		}
 	}
 }

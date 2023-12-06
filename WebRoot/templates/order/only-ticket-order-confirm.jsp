@@ -140,6 +140,14 @@
 									class="ip- date-picker-confirm-date" id="txt-confirm-date" placeholder="确认日期" />
 							</div>
 						</div>
+						<div class="col-md-6 required">
+							<label class="l">产品经理</label>
+							<div class="ip">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--请选择--'"
+									name="bnsOrder.product_manager" required="required"></select>
+							</div>
+						</div>
 					</div>
 					<hr />
 					<h3>航班信息</h3>
@@ -223,7 +231,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm.js?v=1.002"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.001"></script>
 </body>

@@ -65,7 +65,7 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="200" name="reimbursement.comment" placeholder="备注"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="500" name="reimbursement.comment" placeholder="备注"></textarea>
 							</div>
 						</div>
 					</div>

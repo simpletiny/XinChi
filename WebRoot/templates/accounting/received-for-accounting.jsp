@@ -144,8 +144,8 @@ tr td {
 								<th>摘要</th>
 								<th>填报日期</th>
 								<th>入账日期</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>销售</th>
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('CASHIER')">
+									<th>填报人</th>
 								</s:if>
 								<th>状态</th>
 							</tr>
@@ -195,7 +195,7 @@ tr td {
 								<td data-bind="text: moment($data.confirm_time).format('YYYY-MM-DD')"></td>
 								<!-- /ko -->
 								<!-- /ko -->
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
+								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('CASHIER')">
 									<td data-bind="text: $data.user_name"></td>
 								</s:if>
 

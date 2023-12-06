@@ -41,6 +41,18 @@ public class ReimbursementAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String reimbursement_pk;
+
+	public String searchReimbursementByPk() {
+		reimbursement = service.selectByPk(reimbursement_pk);
+		return SUCCESS;
+	}
+
+	public String reApplyReimbursement() {
+		resultStr = service.reApply(reimbursement);
+		return SUCCESS;
+	}
+
 	private List<ReimbursementBean> reimbursements;
 
 	/**
@@ -91,5 +103,13 @@ public class ReimbursementAction extends BaseAction {
 
 	public void setReimbursement_pks(List<String> reimbursement_pks) {
 		this.reimbursement_pks = reimbursement_pks;
+	}
+
+	public String getReimbursement_pk() {
+		return reimbursement_pk;
+	}
+
+	public void setReimbursement_pk(String reimbursement_pk) {
+		this.reimbursement_pk = reimbursement_pk;
 	}
 }

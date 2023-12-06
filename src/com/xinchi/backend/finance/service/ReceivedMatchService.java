@@ -19,4 +19,6 @@ public interface ReceivedMatchService {
 	@LogDescription(ignore = true)
 	public List<ReceivedMatchBean> selectByDetailPk(String detailId);
 
+	public List<ReceivedMatchBean> selectByReceivedPk(String received_pk);
+
 }

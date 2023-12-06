@@ -150,14 +150,17 @@ public class PaginationInterceptor implements Interceptor {
 	 * @return
 	 */
 	private String getCountSql(String sql) {
-		int index = sql.indexOf("from");
-		if (index == -1) {
-			index = sql.indexOf("FROM");
-		}
-		String result = "select count(*) " + sql.substring(index);
-		if (sql.indexOf("GROUP BY") > -1 || sql.indexOf("group by") > -1) {
-			result = "select count(*) from (" + result + ") AA;";
-		}
+		// int index = sql.indexOf("from");
+		// if (index == -1) {
+		// index = sql.indexOf("FROM");
+		// }
+		// String result = "select count(*) " + sql.substring(index);
+		// if (sql.indexOf("GROUP BY") > -1 || sql.indexOf("group by") > -1) {
+		// result = "select count(*) from (" + result + ") AA;";
+		// }
+
+		String result = "select count(*) from (" + sql + ") AS simp";
+
 		return result;
 	}
 

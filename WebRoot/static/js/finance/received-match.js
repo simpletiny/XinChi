@@ -1,6 +1,7 @@
 var matchDetailLayer;
 var viewDetailLayer;
 var viewCommentLayer;
+var otherMatchLayer;
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -55,34 +56,63 @@ var DetailContext = function() {
 			fail_msg("请选择收入");
 			return;
 		} else {
-			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认标记为其他收入吗?',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
-						startLoadingSimpleIndicator("保存中...");
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'finance/matchOtherReceived',
-							data : "detailId=" + self.chosenDetails()
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.search();
-							} else {
-								fail_msg(str);
-							}
-							self.chosenDetails(null);
-						});
-						layer.close(index);
-					}
+			otherMatchLayer = $.layer({
+				type : 1,
+				title : ['其他收入匹配', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', 'auto'],
+				offset : ['150px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-other-match'
+				},
+				end : function() {
 				}
 			});
 		}
 	};
+
+	self.doOtherMatch = function() {
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认标记为其他收入吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingSimpleIndicator("保存中...");
+					const comment = $("#other-match-comment").val().trim();
+					let data = "detail.pk=" + self.chosenDetails();
+					if (comment != '') {
+						data += "&detail.other_match_comment=" + encodeURIComponent(comment);
+					}
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'finance/matchOtherReceived',
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.search();
+							layer.close(otherMatchLayer);
+						} else {
+							fail_msg(str);
+						}
+						self.chosenDetails(null);
+					});
+
+				}
+			}
+		});
+	}
+
+	self.cancelOtherMatch = function() {
+
+	}
 	self.received = ko.observable({});
 	self.sumDetails = ko.observableArray([]);
 	self.sumDetail = ko.observable({});

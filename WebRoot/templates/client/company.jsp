@@ -35,10 +35,9 @@
 					<div class="form-group">
 						<div style="width: 50%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
-							<s:if test="#session.user.user_roles.contains('ADMIN')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
-							</s:if>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { keepMySide() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')">
 								<button type="submit" class="btn btn-green col-md-1"
@@ -141,17 +140,12 @@
 							<label class="col-md-1 control-label">主营</label>
 							<div class="col-md-4">
 								<em class="small-box "> <input name="client.main_businesses" type="checkbox" value="组团" checked="checked"
-									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label>
-									<input name="client.main_businesses" type="checkbox" value="综合"
-									data-bind="event:{click:chkMainBusinessChk}" checked="checked"/><label>综合</label>
-									<input name="client.main_businesses" type="radio" value="地接"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
-									<input name="client.main_businesses" type="radio" value="同业"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
-									<input name="client.main_businesses" type="radio" value="其它"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
-									<input name="client.main_businesses" type="radio" value="全部"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
+									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label> <input name="client.main_businesses"
+									type="checkbox" value="综合" data-bind="event:{click:chkMainBusinessChk}" checked="checked" /><label>综合</label> <input
+									name="client.main_businesses" type="radio" value="地接" data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
+									<input name="client.main_businesses" type="radio" value="同业" data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
+									<input name="client.main_businesses" type="radio" value="其它" data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
+									<input name="client.main_businesses" type="radio" value="全部" data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
 								</em>
 							</div>
 						</div>
@@ -340,6 +334,6 @@
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
-	<script src="<%=basePath%>static/js/client/company.js"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.001"></script>
 </body>
 </html>

@@ -17,6 +17,7 @@ import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -208,6 +209,8 @@ public class ClientRelationAction extends BaseAction {
 
 	private IncomingCountDto incomingCount;
 
+	private ClientEmployeeTypeCountBean clientEmployeeTypeCount;
+
 	public String searchClientSummary() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -242,6 +245,11 @@ public class ClientRelationAction extends BaseAction {
 		workOrder = service.selectWorkOrderData(user_pk);
 		accurateSale = service.selectAccurateSaleData(user_pk);
 		incomingCount = service.selectIncomingDate(user_pk);
+
+		ClientEmployeeTypeCountBean optionType = new ClientEmployeeTypeCountBean();
+		optionType.setUser_pk(user_pk);
+		optionType.setMonth(DateUtil.lastMonth());
+		clientEmployeeTypeCount = service.selectTypeCount(optionType);
 
 		if (!SimpletinyString.isEmpty(user_pk)) {
 			point_money_deduct = service.caculatePointMoneyDeduct(user_pk);
@@ -471,5 +479,13 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setRelations(List<ClientRelationBean> relations) {
 		this.relations = relations;
+	}
+
+	public ClientEmployeeTypeCountBean getClientEmployeeTypeCount() {
+		return clientEmployeeTypeCount;
+	}
+
+	public void setClientEmployeeTypeCount(ClientEmployeeTypeCountBean clientEmployeeTypeCount) {
+		this.clientEmployeeTypeCount = clientEmployeeTypeCount;
 	}
 }

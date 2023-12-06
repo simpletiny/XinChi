@@ -207,7 +207,8 @@
 		SUM(gross_profit) AS gross_profit,
 		SUM(product_cost) AS product_cost,
 		SUM(keep_cost) AS keep_cost,
-		SUM(score) AS score
+		SUM(score) AS score,
+		group_concat(distinct user_number) AS user_number
 		FROM
 		view_product_profit
 

@@ -10,6 +10,13 @@ var OrderContext = function() {
 	self.ticket_infos = ko.observableArray([]);
 	self.air_comment = ko.observable();
 	self.current_date = $("#hidden-server-date").val();
+	// 获取产品经理信息
+	self.users = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.users(data.users);
+	});
 
 	self.do_confirm_date = ko.observable();
 

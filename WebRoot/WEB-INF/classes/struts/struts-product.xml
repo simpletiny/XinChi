@@ -41,7 +41,7 @@
 		<action name="createProduct" class="productAction" method="createProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<action name="updateProduct" class="productAction" method="updateProduct">
 			<result name="success" type="str">resultStr</result>
 		</action>
@@ -85,7 +85,25 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-	
+		<!-- 产品利润添加调账信息 -->
+		<action name="addReconciliation" class="productReconciliationAction" method="addReconciliation">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 产品扎账 -->
+		<action name="confirmProductAccounting" class="productReconciliationAction" method="confirmProductAccounting">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 产品调账分页查询 -->
+		<action name="searchReconciliationByPage" class="productReconciliationAction" method="searchReconciliationByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 删除调账明细 -->
+		<action name="deleteReconciliation" class="productReconciliationAction" method="deleteReconciliation">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 产品订单 -->
 		<action name="searchProductNeedByPage" class="productAction" method="searchProductNeedByPage">
 			<result name="success" type="json">

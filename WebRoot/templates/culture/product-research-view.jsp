@@ -33,7 +33,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品研发</h2>
+			<h2>售前必知</h2>
 		</div>
 
 		<div class="main-container">
@@ -62,24 +62,21 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th></th>
-								</s:if>
+								<th></th>
 								<th>标题</th>
 								<th>作者</th>
-								<th>日期</th>
+								<th>创建时间</th>
+								<th>最后更新</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: views">
 							<tr style="overflow: hidden">
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenViews" /></td>
-								</s:if>
-
+								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenViews" /></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.title,attr: {href: 'product-research-view-preview.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.create_user"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: moment($data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -122,11 +119,10 @@
 		</div>
 	</div>
 	<script>
-		$(".culture").addClass("current").children("ol")
-				.css("display", "block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/sortable/Sortable.js"></script>
-	<script src="<%=basePath%>static/js/culture/product-research-view.js?1.0"></script>
+	<script src="<%=basePath%>static/js/culture/product-research-view.js?v=1.001"></script>
 
 </body>
 </html>

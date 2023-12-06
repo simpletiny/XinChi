@@ -41,7 +41,7 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editSupplier() }">编辑</button>
 							</div>
 							<div>
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); searchResumes() }">删除</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {blockSupplier() }">终止合作</button>
 							</div>
 						</div>
 					</div>
@@ -114,6 +114,6 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/ticket/supplier.js"></script>
+	<script src="<%=basePath%>static/js/ticket/supplier.js?v=1.001"></script>
 </body>
 </html>

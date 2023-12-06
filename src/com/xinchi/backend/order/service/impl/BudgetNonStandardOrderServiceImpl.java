@@ -126,7 +126,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 		String passenger_captain = "";
 		bean.setPk(order_pk);
 		bean.setProduct_name("单机票");
-		bean.setProduct_manager(ResourcesConstants.UNREAL_USER_NUMBER_ONLY_TICKET);
+		// 产品经理变为指定方式 2023-11-9 09:22:32
+		// bean.setProduct_manager(ResourcesConstants.UNREAL_USER_NUMBER_ONLY_TICKET);
 
 		JSONObject obj = JSONObject.fromObject(json);
 
@@ -677,7 +678,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			tr.setTeam_number(bean.getTeam_number());
 			BigDecimal sale_cost = new BigDecimal(0);
 			// 非标订单 1人30元，2人起一律50元一单。
-			BigDecimal sys_cost = new BigDecimal(people_count > 1 ? 50 : 30);
+			BigDecimal sys_cost = new BigDecimal(people_count > 1 ? 30 : 10);
 
 			tr.setSale_cost(sale_cost);
 			tr.setSys_cost(sys_cost);
@@ -699,8 +700,8 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			// 更新team_report基础数据
 			TeamReportBean tr = orderReportDao.selectTeamReportByTn(bean.getTeam_number());
 			BigDecimal sale_cost = new BigDecimal(0);
-			// 非标订单 1人30元，2人起一律50元一单。
-			BigDecimal sys_cost = new BigDecimal(people_count > 1 ? 50 : 30);
+			// 非标订单 1人30元，2人起一律50元一单。改为1人10元，30元
+			BigDecimal sys_cost = new BigDecimal(people_count > 1 ? 30 : 10);
 			tr.setSale_cost(sale_cost);
 			tr.setSys_cost(sys_cost);
 			orderReportDao.updateTeamReport(tr);

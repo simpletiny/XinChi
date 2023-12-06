@@ -36,6 +36,8 @@
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 		<result column="useful_time" property="useful_time" jdbcType="VARCHAR" />
 		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
+		<result column="employee_area" property="employee_area" jdbcType="VARCHAR" />
+		<result column="employee_county" property="employee_county" jdbcType="VARCHAR" />
 		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
 		<result column="year_oder_count" property="year_oder_count" jdbcType="INTEGER" />
 	</resultMap>
@@ -97,7 +99,9 @@
 		market_level,
 		review_flg,
 		quit_flg,
-		head_photo
+		head_photo,
+		employee_county,
+		employee_area
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -133,7 +137,9 @@
 		A.market_level,
 		A.review_flg,
 		A.quit_flg,
-		A.head_photo
+		A.head_photo,
+		A.employee_area,
+		A.employee_county
 		from client_employee
 		A LEFT JOIN
 		client B ON
@@ -248,6 +254,13 @@
 			<if test="quit_flg != null">
 				quit_flg,
 			</if>
+			<if test="employee_area != null">
+				employee_area,
+			</if>
+			<if test="employee_county != null">
+				employee_county,
+			</if>
+
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -336,6 +349,12 @@
 			</if>
 			<if test="quit_flg != null">
 				#{quit_flg,jdbcType=CHAR},
+			</if>
+			<if test="employee_area != null">
+				#{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				#{employee_county,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -443,6 +462,12 @@
 			<if test="quit_flg != null">
 				quit_flg = #{quit_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="employee_area != null">
+				employee_area = #{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				employee_county = #{employee_county,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -469,6 +494,7 @@
 		B.client_area as area,
 		C.user_names AS
 		sales_name,
+		A.sales,
 		A.create_user,
 		A.update_user,
 		A.pk,
@@ -484,12 +510,15 @@
 		A.dimission_flg,
 		A.review_flg,
 		A.quit_flg,
-		A.head_photo
+		A.head_photo,
+		A.employee_area,
+		A.employee_county
 		from
 		client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk =
+		LEFT JOIN
+		view_client_employee_user C ON A.pk =
 		C.employee_pk
 		<where>
 			<if test="sales != null">
@@ -633,11 +662,14 @@
 		C.useful_time AS
 		useful_time,
 		A.head_photo,
+		A.employee_area,
+		A.employee_county,
 		D.last_order_period AS last_order_period,
 		D.year_order_count AS year_order_count
 		from
 		client_employee
-		A LEFT
+		A
+		LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
 		LEFT JOIN view_client_employee_user C ON A.pk =
 		C.employee_pk

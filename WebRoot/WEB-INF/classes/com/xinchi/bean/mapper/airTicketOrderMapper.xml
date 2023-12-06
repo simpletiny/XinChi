@@ -396,6 +396,12 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.first_month != null and params.bo.first_month !=''">
+				and left(A.departure_date,7) = #{params.bo.first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
+				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%', #{params.bo.first_from_to,jdbcType=VARCHAR},'%')
+			</if>
 		</where>
 		order by A.first_ticket_date DESC
 	</select>

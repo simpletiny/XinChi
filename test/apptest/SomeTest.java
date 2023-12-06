@@ -3,7 +3,6 @@ package apptest;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.xinchi.common.DateUtil;
 
 import generator.util.JdbcUtils;
 
@@ -60,19 +61,10 @@ public class SomeTest {
 	}
 
 	public static void main(String[] args) {
-		Map<String, BigDecimal> map = new HashMap<>();
+		String a = "2023-01-01";
+		String b = "2023-02";
 
-		map.put("a", new BigDecimal(100));
-		map.put("b", new BigDecimal(200));
-		map.put("c", new BigDecimal(300));
-
-		if (map.containsKey("d")) {
-			map.put("a", map.get("a").add(new BigDecimal(10)));
-		} else {
-			map.put("d", new BigDecimal(400));
-		}
-
-		System.out.println(map.get("a"));
+		System.out.println(DateUtil.lastMonth());
 	}
 
 	public static Detail random() {

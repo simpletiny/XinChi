@@ -94,6 +94,22 @@ var ReimbursementContext = function() {
 		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 
+	self.update = function() {
+		if (self.chosenReimbursements().length == 0) {
+			fail_msg("请选择要删除的数据！");
+		} else if (self.chosenReimbursements().length > 1) {
+			fail_msg("重新申报只能选择一条数据！");
+		} else {
+			let status = self.chosenReimbursements()[0].status;
+			if (status !== 'N') {
+				fail_msg("只能选择被驳回的申请！")
+				return;
+			}
+			let pk = self.chosenReimbursements()[0].pk;
+			window.location.href = self.apiurl + "templates/accounting/reimbursement-edit.jsp?key=" + pk;
+		}
+	}
+
 	self.viewRejectReason = function(back_pk) {
 		var data = "back_pk=" + back_pk;
 

@@ -40,7 +40,7 @@
 		X.sale_cost,
 		X.sys_cost,
 		X.approved,
-		A.product_name,
+        IF(A.independent_flg='A',CONCAT(E.from_city,'--',E.to_city,'（单）'),A.product_name) AS product_name,
 		A.client_employee_pk,
 		A.client_employee_name,
 		A.other_cost,
@@ -112,6 +112,7 @@
 		view_team_payable C ON A.team_number =
 		C.team_number
 		LEFT JOIN final_order_view D ON A.team_number=D.team_number
+        LEFT JOIN sale_order_ticket_info E ON A.pk=E.order_pk and E.ticket_index=1
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -120,7 +121,7 @@
 				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
-				and A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%')
+				and (A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%') OR CONCAT(E.from_city,'--',E.to_city) like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%'))
 			</if>
 			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
 				and A.departure_date &gt;= #{params.bo.departure_date_from,jdbcType=VARCHAR}

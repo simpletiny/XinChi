@@ -126,4 +126,8 @@ public class SimpletinyString {
 		result = result + replacer;
 		return result;
 	}
+
+	public static boolean isNumeric(String src) {
+		return null != src && src.matches("^\\d*\\.?\\d+$");
+	}
 }

@@ -42,4 +42,9 @@ public class ReceivedMatchDAOImpl extends SqlSessionDaoSupport implements Receiv
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ReceivedMatchMapper.selectByDetailPk", detail_pk);
 	}
 
+	@Override
+	public List<ReceivedMatchBean> selectByReceivedPk(String received_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ReceivedMatchMapper.selectByReceivedPk", received_pk);
+	}
+
 }

@@ -49,6 +49,7 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 	private BigDecimal balance_money;
 	private BigDecimal clear_money;
 	private String supplier_short_name;
+	private String back_comment;
 
 	public String getVoucher_number() {
 		return voucher_number;
@@ -248,6 +249,14 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setSupplier_short_name(String supplier_short_name) {
 		this.supplier_short_name = supplier_short_name;
+	}
+
+	public String getBack_comment() {
+		return back_comment;
+	}
+
+	public void setBack_comment(String back_comment) {
+		this.back_comment = back_comment;
 	}
 
 }

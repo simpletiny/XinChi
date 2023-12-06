@@ -34,6 +34,12 @@
 		from received_match
 		where detail_pk = #{detail_pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByReceivedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from received_match
+		where received_pk = #{received_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from received_match

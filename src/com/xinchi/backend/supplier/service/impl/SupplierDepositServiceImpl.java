@@ -332,6 +332,84 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 	}
 
 	@Override
+	public List<SupplierDepositBean> batUploadBack(String file_name, String deposit_type) throws IOException {
+		List<SupplierDepositBean> deposits = new ArrayList<SupplierDepositBean>();
+
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		String tem_file = tempFolder + File.separator + file_name;
+		File excelFile = new File(tem_file);
+
+		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(excelFile));
+		// 获得工作簿
+		@SuppressWarnings("resource")
+		XSSFWorkbook wb = new XSSFWorkbook(fs);
+
+		// 获得sheet
+		XSSFSheet sheet = wb.getSheetAt(0);
+		int rows = sheet.getPhysicalNumberOfRows();
+
+		// 获取标题行
+		XSSFRow titleRow = sheet.getRow(0);
+		int colnum = titleRow.getLastCellNum();
+		Map<String, Integer> colMapping = new HashMap<String, Integer>();
+
+		for (int i = 0; i < colnum; i++) {
+			Cell cell = titleRow.getCell(i);
+			String title = cell.getStringCellValue();
+			colMapping.put(title, i);
+		}
+		for (int i = 1; i < rows; i++) {
+			// 获取第i行
+			XSSFRow row = sheet.getRow(i);
+			if (row == null) {
+				continue;
+			}
+
+			// 押金单号
+			Cell cell1 = row.getCell(colMapping.get("押金单号"));
+			String deposit_number = SimpletinyExcel.getCellValueByCell(cell1);
+
+			if (SimpletinyString.isEmpty(deposit_number)) {
+				continue;
+			}
+			// 收款账户
+			Cell cell2 = row.getCell(colMapping.get("收款账户"));
+			String account = SimpletinyExcel.getCellValueByCell(cell2);
+
+			// 退还金额
+			Cell cell3 = row.getCell(colMapping.get("退还金额"));
+			String money = SimpletinyExcel.getCellValueByCell(cell3);
+
+			// 退还日期
+			Cell cell4 = row.getCell(colMapping.get("退还日期"));
+			String back_date = SimpletinyExcel.getCellValueByCell(cell4).substring(0, 10);
+
+			// 备注
+			Cell cell5 = row.getCell(colMapping.get("备注"));
+			String back_comment = SimpletinyExcel.getCellValueByCell(cell5);
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(deposit_number);
+			if (currentDeposit == null)
+				continue;
+
+			BigDecimal received = new BigDecimal(SimpletinyString.isNumeric(money) ? money : "0");
+
+			SupplierBean supplier = supplierDao.selectByPrimaryKey(currentDeposit.getSupplier_pk());
+			currentDeposit.setReceived(received);
+			currentDeposit.setTime(back_date);
+			currentDeposit.setAccount(account);
+
+			currentDeposit.setSupplier_pk(currentDeposit.getSupplier_pk());
+			currentDeposit.setSupplier_name(supplier.getSupplier_name());
+
+			currentDeposit.setBack_comment(back_comment);
+			deposits.add(currentDeposit);
+		}
+
+		excelFile.delete();
+		return deposits;
+	}
+
+	@Override
 	public String batSaveDeposit(String json) {
 		JSONArray array = JSONArray.fromObject(json);
 		Map<String, String> leader = new HashMap<String, String>();
@@ -472,7 +550,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			SupplierBean supplier = suppliers.get(0);
 
 			SupplierDepositBean deposit = new SupplierDepositBean();
-
+			String deposit_number = numberService.generateDepositNumber();
 			// 保存航司押金记录
 			deposit.setSupplier_pk(supplier.getPk());
 			deposit.setAccount(account);
@@ -481,9 +559,98 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			deposit.setReturn_date(return_date);
 			deposit.setComment(comment);
 			deposit.setReceived(BigDecimal.ZERO);
+			deposit.setDeposit_number(deposit_number);
 			deposit.setBalance(deposit.getMoney());
 			dao.insert(deposit);
 		}
+		return SUCCESS;
+	}
+
+	@Override
+	public String batSaveDepositBack(String json) {
+		JSONArray array = JSONArray.fromObject(json);
+		List<AirReceivedDetailBean> temps = new ArrayList<>();
+
+		String supplier_pk = "";
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+			String deposit_number = obj.getString("deposit_number");
+			String account = obj.getString("account");
+			String money = obj.getString("received");
+			String back_date = obj.getString("time");
+			String comment = obj.getString("back_comment");
+
+			if (SimpletinyString.isEmpty(deposit_number)) {
+				return "第" + (i + 1) + "行缺少押金单号！";
+			}
+
+			if (SimpletinyString.isEmpty(account)) {
+				return "第" + (i + 1) + "行缺少收款账户！";
+			}
+
+			if (!SimpletinyString.isNumeric(money)) {
+				return "第" + (i + 1) + "行退还金额不合法！";
+			}
+			if (SimpletinyString.isEmpty(back_date)) {
+				return "第" + (i + 1) + "行缺少退还时间！";
+			}
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(deposit_number);
+			BigDecimal received = new BigDecimal(money);
+
+			if (received.compareTo(currentDeposit.getBalance()) == 1) {
+				return "第" + (i + 1) + "行的退还金额大于余额！";
+			}
+			String related_pk = DBCommonUtil.genPk();
+			AirReceivedDetailBean detail = new AirReceivedDetailBean();
+			detail.setBusiness_number(deposit_number);
+			detail.setReceived(received);
+			detail.setReceived_time(back_date);
+			detail.setCard_account(account);
+			detail.setRelated_pk(related_pk);
+			detail.setSupplier_pk(currentDeposit.getSupplier_pk());
+
+			if (i == 0) {
+				supplier_pk = currentDeposit.getSupplier_pk();
+			} else {
+				if (!supplier_pk.equals(currentDeposit.getSupplier_pk())) {
+					return "第一行押金供应商与" + (i + 1) + "行押金供应商不同，不能批量上传！";
+				}
+			}
+
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			if (comment.length() > 195) {
+				comment = comment.substring(0, 195);
+			}
+			detail.setComment("批量上传；" + comment);
+			temps.add(detail);
+		}
+
+		for (AirReceivedDetailBean detail : temps) {
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(detail.getBusiness_number());
+			// 生成退还记录
+			detail.setSum_received(detail.getReceived());
+			detail.setReceived_type(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
+			airReceivedDao.insert(detail);
+			currentDeposit.setReceived(currentDeposit.getReceived() == null ? BigDecimal.ZERO
+					: currentDeposit.getReceived().add(detail.getReceived()));
+			currentDeposit.setBalance(currentDeposit.getBalance().subtract(detail.getReceived()));
+
+			String return_way = currentDeposit.getReturn_way();
+			if (SimpletinyString.isEmpty(return_way)) {
+				currentDeposit.setReturn_way("T");
+			} else {
+				if (currentDeposit.getReturn_way().indexOf("T") < 0) {
+					currentDeposit.setReturn_way(return_way + ",T");
+				}
+			}
+
+			if (currentDeposit.getBalance().compareTo(BigDecimal.ZERO) == 0) {
+				currentDeposit.setStatus("Y");
+			}
+			// 更新押金账
+			dao.update(currentDeposit);
+		}
+
 		return SUCCESS;
 	}
 

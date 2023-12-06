@@ -294,6 +294,6 @@
 				and A.month = #{params.bo.month,jdbcType=DECIMAL}
 			</if>
 		</where>
-		ORDER BY A.date DESC
+		ORDER BY FIELD(A.status,'N','I','Y','P'), A.date DESC
 	</select>
 </mapper>

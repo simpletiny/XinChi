@@ -42,6 +42,30 @@
 	border: dashed 2px white;
 	cursor: pointer;
 }
+#mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white; /* 根据需要设置文字颜色 */
+    background: transparent; /* 背景半透明 */
+    display: block;
+    z-index: 1000;
+    pointer-events: none; 
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+.mask-text {
+    color: rgba(0, 0, 0, 0.1); /* 白色文字，30% 不透明度 */
+    font-size: 20px; /* 字体大小 */ 
+    font-family: Arial, sans-serif; /* 字体 */
+    transform: rotate(-30deg); /* 文字倾斜 */
+    margin: 10px; /* 文字间距 */
+    white-space: nowrap; /* 防止文字换行 */
+    position: absolute; /* 文字也使用绝对定位 */
+    pointer-events: none; /* 防止文字捕获鼠标事件 */
+}
 </style>
 </head>
 <body>
@@ -160,6 +184,6 @@
 	<script src="<%=basePath%>static/js/utils.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/file-upload2.js"></script>
-	<script src="<%=basePath%>static/js/users/register.js"></script>
+	<script src="<%=basePath%>static/js/users/register.js?v=1.001"></script>
 </body>
 </html>

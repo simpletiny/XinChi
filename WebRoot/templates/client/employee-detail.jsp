@@ -47,8 +47,8 @@
 								<p class="ip-default" data-bind="text: employee().nick_name"></p>
 							</div>
 						</div>
-						<input type="hidden" data-bind="value:employee().head_photo" id="head"/>
-						<img style="width:100px;height:100px" src="<%=basePath%>static/img/head.jpg" id="avatar"/>
+						<input type="hidden" data-bind="value:employee().head_photo" id="head" /> <img
+							style="width: 100px; height: 100px" src="<%=basePath%>static/img/head.jpg" id="avatar" />
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
@@ -122,19 +122,25 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
+							<label class="l">地区</label>
+							<div class="ip">
+								<p class="ip- date-picker" data-bind="text: employee().employee_area+'-'+employee().employee_county"></p>
+							</div>
+						</div>
+						<div class="col-md-6">
 							<label class="l">电话</label>
 							<div class="ip">
 								<p class="ip- date-picker" data-bind="text: employee().telephone"></p>
 							</div>
 						</div>
+					</div>
+					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">传真</label>
 							<div class="ip">
 								<p class="ip-" data-bind="text: employee().fax"></p>
 							</div>
 						</div>
-					</div>
-					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<label class="l">QQ</label>
 							<div class="ip">

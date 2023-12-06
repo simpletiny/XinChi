@@ -10,7 +10,6 @@ import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
-import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCountDto;
@@ -122,6 +121,11 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	public PotentialDto selectPotentialData(String user_pk) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectPotentialData",
 				user_pk);
+	}
+
+	@Override
+	public List<PotentialDto> selectTypeCount() {
+		return daoUtil.selectAllOut("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectTypeCount");
 	}
 
 	@Override

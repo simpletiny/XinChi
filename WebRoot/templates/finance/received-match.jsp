@@ -137,10 +137,11 @@
 												<td data-bind="text: $data.money" class="rmb"></td>
 												<td data-bind="text: $data.comment"></td>
 												<!-- ko if: $data.match_flg =='Y' -->
-												<td ><a href="javascript:void(0)" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
+												<td><a href="javascript:void(0)"
+													data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
 												<!-- /ko -->
 												<!-- ko ifnot: $data.match_flg =='Y'  -->
-												<td  data-bind="text: $root.statusMapping[$data.match_flg]"></td>
+												<td data-bind="text: $root.statusMapping[$data.match_flg]"></td>
 												<!-- /ko -->
 											</tr>
 										</tbody>
@@ -353,7 +354,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px;padding-bottom: 30px">
+	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px; padding-bottom: 30px">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">账户</label>
@@ -408,7 +409,7 @@
 		<!-- /ko -->
 	</div>
 	<div id="comment1" style="display: none; width: 800px; padding-top: 30px;">
-		<div  data-bind="foreach: orders">
+		<div data-bind="foreach: orders">
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
 					<label class="l" style="width: 30%">团号</label>
@@ -433,7 +434,8 @@
 				<div class="col-md-6">
 					<label class="l" style="width: 30%">人数</label>
 					<div class="ip" style="width: 70%">
-						<p class="ip-default" data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)" class="rmb"></p>
+						<p class="ip-default" data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"
+							class="rmb"></p>
 					</div>
 				</div>
 			</div>
@@ -455,6 +457,25 @@
 			</div>
 		</div>
 	</div>
+	<div id="div-other-match" style="display: none; width: 800px; height: 300px; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-8">
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="7" maxlength="200" id="other-match-comment"
+						placeholder="需要备注说明的信息"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doOtherMatch">提交</a> <a type="button"
+						class="btn btn-green btn-r" data-bind="click: cancelOtherMatch">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
@@ -465,6 +486,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/received-match.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/finance/received-match.js?v=1.003"></script>
 </body>
 </html>

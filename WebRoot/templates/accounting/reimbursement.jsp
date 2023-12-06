@@ -64,6 +64,7 @@
 						</div>
 						<div align="right">
 							<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用申请</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { update() }">重新申请</button>
 							<button type="submit" class="btn btn-green" data-bind="click: delete_reimbursement">删除</button>
 						</div>
 
@@ -140,10 +141,10 @@
 								<!-- /ko -->
 
 								<td data-bind="text: $data.approval_name"></td>
-								<!-- ko if:$data.approval_time !=null -->
+								<!-- ko if:$data.approval_time !=null && $data.approval_time!="" -->
 								<td data-bind="text: moment($data.approval_time-0).format('YYYY-MM-DD HH:mm')"></td>
 								<!-- /ko -->
-								<!-- ko if:$data.approval_time ==null -->
+								<!-- ko if:$data.approval_time ==null || $data.approval_time=="" -->
 								<td></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.pay_name"></td>
@@ -196,6 +197,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/accounting/reimbursement.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/reimbursement.js?v=1.002"></script>
 </body>
 </html>

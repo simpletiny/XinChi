@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
-public class ProductProfitBean extends SupperBO implements Serializable {
+public class ProductProfitBean extends SupperBO implements Serializable, Comparable<ProductProfitBean> {
 	private static final long serialVersionUID = -6861985805862234005L;
 
 	private String departure_month;
@@ -22,7 +22,7 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	private BigDecimal air_lose;
 
-	private BigDecimal other_cost;
+	private BigDecimal other_cost = BigDecimal.ZERO;;
 
 	private BigDecimal profit;
 
@@ -178,6 +178,11 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	public void setDeposit_deduct(BigDecimal deposit_deduct) {
 		this.deposit_deduct = deposit_deduct;
+	}
+
+	@Override
+	public int compareTo(ProductProfitBean o) {
+		return this.getDeparture_month().compareTo(o.getDeparture_month());
 	}
 
 }

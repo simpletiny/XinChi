@@ -71,12 +71,10 @@
 						<div class="col-md-6 required">
 							<label class="l">地市</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control"
-									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',value: client().client_area,event:{change:ter}"
-									name="client.client_area" required="required"></select>
+								<select class="form-control heilongjiang-city" name="client.client_area" data-bind="value:client().client_area" required="required"></select>
 							</div>
 							<div class="ip" style="width: 35%">
-								<select class="form-control" id="county" name="client.client_county"></select>
+								<select class="form-control district" data-bind="value:client().client_county"  name="client.client_county"></select>
 							</div>
 						</div>
 					</div>
@@ -261,6 +259,7 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
-	<script src="<%=basePath%>static/js/client/company-edit.js"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.001"></script>
 </body>
 </html>

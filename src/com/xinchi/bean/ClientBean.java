@@ -47,8 +47,6 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private String comment;
 
-	private String pk;
-
 	private String delete_flg;
 	private String agency_name;
 	private String agency_pk;
@@ -71,7 +69,7 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private List<ClientUserBean> client_users;
 	// search options
-	
+
 	private List<String> public_flgs;
 	private List<String> statuses;
 	private List<String> relate_flgs;
@@ -220,14 +218,6 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getPk() {
-		return pk;
-	}
-
-	public void setPk(String pk) {
-		this.pk = pk;
 	}
 
 	public String getSales() {

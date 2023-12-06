@@ -268,6 +268,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		}
 
 		PaymentDetailBean oldDetail = dao.selectById(newDetail.getPk());
+		// 已匹配的不能修改
+		if (oldDetail.getMatch_flg().equals("Y") || oldDetail.getMatch_flg().equals("O")) {
+			return "matched";
+		}
+
 		List<PaymentDetailBean> oldAfterDetails = dao.selectAfterByParam(oldDetail);
 		BigDecimal wrong = oldDetail.getMoney();
 		if (oldDetail.getType().equals("收入")) {

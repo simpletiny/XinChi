@@ -45,10 +45,35 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	display: block;
 	background: white;
 }
+#mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white; /* 根据需要设置文字颜色 */
+    background: transparent; /* 背景半透明 */
+    display: block;
+    z-index: 1000;
+    pointer-events: none; 
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+.mask-text {
+    color: rgba(0, 0, 0, 0.1); /* 白色文字，30% 不透明度 */
+    font-size: 20px; /* 字体大小 */ 
+    font-family: Arial, sans-serif; /* 字体 */
+    transform: rotate(-30deg); /* 文字倾斜 */
+    margin: 10px; /* 文字间距 */
+    white-space: nowrap; /* 防止文字换行 */
+    position: absolute; /* 文字也使用绝对定位 */
+    pointer-events: none; /* 防止文字捕获鼠标事件 */
+}
 
 </style>
 </head>
 <body>
+	
 	<!--  	<div class="floatPanel timer">
 		<label>重启倒计时</label>
 		<h3><b id="reboot-timer">05:00</b></h3>
@@ -66,6 +91,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div class="user-time">
 				<input type="hidden" id="hidden-server-date" value='${user.current_date}' />
 				<s:property value="#session.user.current_date" />
+				<input type="hidden" id="user-nick-name" value = '${user.nick_name}' />
+				<input type="hidden" id="user-number" value = '${user.user_number}' />
+				<input type="hidden" id="user-roles" value = '${user.user_roles}' />
+				<input type="hidden" id="user-pk" value = '${user.pk}' />
 			</div>
 			<div class="user-status">
 				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
@@ -93,7 +122,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li class="culture" onclick="click_menu(this)"><a href="<%=basePath%>templates/culture/world-view.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>企业学院</a>
 					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/culture/history-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰历史</a></li>
+						<li><a href="<%=basePath%>templates/culture/history-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰学院</a></li>
 						<li><a href="<%=basePath%>templates/culture/world-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰故事</a></li>
 						<li><a href="<%=basePath%>templates/culture/value-view.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰价值观</a></li>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
@@ -106,11 +135,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						</s:if>
 						<li><a href="<%=basePath%>templates/culture/team-evolution.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>团质进化</a></li>
 
-						<s:if
-							test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')||#session.user.user_roles.contains('SALES')">
-							<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
-									class="fa fa-angle-right fa-lg fa-fw"></i>产品研发</a></li>
-						</s:if>
+
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
 							<li><a href="<%=basePath%>templates/culture/top-academy-view.jsp"><i
 									class="fa fa-angle-right fa-lg fa-fw"></i>高层学院</a></li>
@@ -145,6 +170,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					onclick="$('.client').addClass('current').children('ol').css('display', 'block')"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/culture/xinchi-promise.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰承诺</a></li>
 						<li><a href="<%=basePath%>templates/client/client-relation.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户关系</a></li>
 						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
 						<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
@@ -178,13 +204,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				</ol></li> --%>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="order-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
+				<li class="order-box"><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
 						<li><a href="<%=basePath%>templates/order/tbc-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待确认</a></li>
 						<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
 						<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
+						<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>售前必知</a></li>
 					</ol></li>
 			</s:if>
 			<%-- <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
@@ -216,6 +244,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>产品统计</a></li>
 						<li><a href="<%=basePath%>templates/order/order-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>单团核算单</a></li>
 						<li><a href="<%=basePath%>templates/product/product-profit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品利润</a></li>
+						<li><a href="<%=basePath%>templates/product/product-reconciliation.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>额外收支明细</a></li>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('PRODUCT')">
@@ -292,7 +322,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/air-received-detail.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>押金退还记录</a></li>
+						<li><a href="<%=basePath%>templates/ticket/air-received-detail.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>押金退还记录</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-payable-summary.jsp"><i
@@ -390,7 +421,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
 	<script src="<%=basePath%>static/js/utils.js?v1.003"></script>
-	<script src="<%=basePath%>static/js/layout.js"></script>
+	<script src="<%=basePath%>static/js/layout.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 </body>

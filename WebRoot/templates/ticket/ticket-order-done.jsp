@@ -11,6 +11,8 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css?v1.001" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -74,6 +76,20 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">首航段</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="首航段" name="airTicketOrder.first_from_to" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">首航月份</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control month-picker-st" placeholder="首航月份" name="airTicketOrder.first_month" />
+							</div>
 						</div>
 					</div>
 				</form>
@@ -201,6 +217,8 @@
 	<script>
 		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/ticket/ticket-order-done.js"></script>

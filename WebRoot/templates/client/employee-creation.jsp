@@ -42,11 +42,10 @@
 								<input type="text" class="ip- date-picker" maxlength="10" placeholder="昵称" name="employee.nick_name" />
 							</div>
 						</div>
-						<input type="hidden" name="employee.review_flg" value="N" /> 
-						<label class="label" style="cursor: pointer" data-toggle="tooltip" title="更换头像">
-						 	<img style="width: 100px; height: 100px" class="rounded" id="avatar" src="<%=basePath%>static/img/head.jpg" alt="avatar" /> 
-						 	<input type="file" class="sr-only" id="input" name="image" accept="image/*" />
-						 	<input type="hidden" name="employee.head_photo" id="head"/>
+						<input type="hidden" name="employee.review_flg" value="N" /> <label class="label" style="cursor: pointer"
+							data-toggle="tooltip" title="更换头像"> <img style="width: 100px; height: 100px" class="rounded" id="avatar"
+							src="<%=basePath%>static/img/head.jpg" title="更换头像" alt="avatar" /> <input type="file" class="sr-only"
+							id="input" name="image" accept="image/*" /> <input type="hidden" name="employee.head_photo" id="head" />
 						</label>
 						<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
@@ -90,14 +89,14 @@
 							<label class="l">手机号1</label>
 							<div class="ip">
 								<input type="text" class="ip- cellphone" maxlength="11" placeholder="手机号" name="employee.cellphone"
-									required="required" onblur="checkCellphone(this)" />
+									required="required" />
+								<!-- onblur="checkCellphone(this)" -->
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">手机号2</label>
 							<div class="ip">
-								<input type="text" class="ip- cellphone" maxlength="11" placeholder="手机号" name="employee.cellphone1"
-									onblur="checkCellphone(this)" />
+								<input type="text" class="ip- cellphone" maxlength="11" placeholder="手机号" name="employee.cellphone1" />
 							</div>
 						</div>
 
@@ -106,15 +105,16 @@
 						<div class="col-md-6 required">
 							<label class="l">微信号1</label>
 							<div class="ip">
-								<input type="text" class="ip-" required="required" maxlength="20" data-bind="value: employee().wechat" placeholder="微信"
-									name="employee.wechat" onblur="checkWechat(this)" />
+								<input type="text" class="ip-" required="required" maxlength="20" data-bind="value: employee().wechat"
+									placeholder="微信" name="employee.wechat" />
+									 <!-- onblur="checkWechat(this)" -->
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">微信号2</label>
 							<div class="ip">
 								<input type="text" class="ip-" maxlength="20" data-bind="value: employee().wechat1" placeholder="微信"
-									name="employee.wechat1" onblur="checkWechat(this)" />
+									name="employee.wechat1" />
 							</div>
 						</div>
 					</div>
@@ -131,6 +131,24 @@
 							<div class="ip">
 								<select class="form-control" data-bind="options: employeeType, value: employee().type" name="employee.type"
 									required="required"></select>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6 required">
+							<label class="l">地区</label>
+							<div class="ip" style="width: 35%">
+								<select class="form-control heilongjiang-city" name="employee.employee_area" required="required"></select>
+							</div>
+							<div class="ip" style="width: 35%">
+								<select class="form-control district" name="employee.employee_county"></select>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">电话</label>
+							<div class="ip">
+								<input type="text" class="ip-" maxlength="15" data-bind="value: employee().telephone" placeholder="电话"
+									name="employee.telephone" />
 							</div>
 						</div>
 					</div>
@@ -152,10 +170,10 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<label class="l">电话</label>
+							<label class="l">QQ</label>
 							<div class="ip">
-								<input type="text" class="ip-" maxlength="15" data-bind="value: employee().telephone" placeholder="电话"
-									name="employee.telephone" />
+								<input type="text" class="ip-" maxlength="15" data-bind="value: employee().qq" placeholder="QQ"
+									name="employee.qq" />
 							</div>
 						</div>
 						<div class="col-md-6 ">
@@ -163,15 +181,6 @@
 							<div class="ip">
 								<input type="text" class="ip-" maxlength="15" data-bind="value: employee().fax" placeholder="传真"
 									name="employee.fax" />
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">QQ</label>
-							<div class="ip">
-								<input type="text" class="ip-" maxlength="15" data-bind="value: employee().qq" placeholder="QQ"
-									name="employee.qq" />
 							</div>
 						</div>
 					</div>
@@ -201,6 +210,7 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/client/employee-creation.js"></script>
 </body>
 </html>

@@ -59,6 +59,9 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private Integer year_order_count;
 	private Integer last_order_period;
 	private List<ClientEmployeeUserBean> employee_users;
+	private String employee_area;
+	private String employee_county;
+
 	//
 	private String new_client_pk;
 	private String hopping_date;
@@ -373,6 +376,22 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setLast_order_period(Integer last_order_period) {
 		this.last_order_period = last_order_period;
+	}
+
+	public String getEmployee_area() {
+		return employee_area;
+	}
+
+	public String getEmployee_county() {
+		return employee_county;
+	}
+
+	public void setEmployee_area(String employee_area) {
+		this.employee_area = employee_area;
+	}
+
+	public void setEmployee_county(String employee_county) {
+		this.employee_county = employee_county;
 	}
 
 }

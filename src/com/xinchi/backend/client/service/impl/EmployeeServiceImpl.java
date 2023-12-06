@@ -78,30 +78,38 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ClientEmployeeBean option1 = new ClientEmployeeBean();
 		option1.setCellphone(employee.getCellphone());
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
-		if (exists1 != null && exists1.size() > 0)
-			return "existcellphone";
-
-		if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
-			ClientEmployeeBean option2 = new ClientEmployeeBean();
-			option2.setCellphone1(employee.getCellphone1());
-			List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
-			if (exists2 != null && exists2.size() > 0)
-				return "existcellphone";
+		if (exists1 != null && exists1.size() > 0) {
+			for (ClientEmployeeBean exist : exists1) {
+				if (exist.getSales().equals(employee.getSales()))
+					return "existcellphone";
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
+		// ClientEmployeeBean option2 = new ClientEmployeeBean();
+		// option2.setCellphone1(employee.getCellphone1());
+		// List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		// if (exists2 != null && exists2.size() > 0)
+		// return "existcellphone";
+		// }
 
 		ClientEmployeeBean option3 = new ClientEmployeeBean();
 		option3.setWechat(employee.getWechat());
 		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
-		if (exists3 != null && exists3.size() > 0)
-			return "existwechat";
-
-		if (!SimpletinyString.isEmpty(employee.getWechat1())) {
-			ClientEmployeeBean option4 = new ClientEmployeeBean();
-			option4.setWechat1(employee.getWechat1());
-			List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
-			if (exists4 != null && exists4.size() > 0)
-				return "existwechat";
+		if (exists3 != null && exists3.size() > 0) {
+			for (ClientEmployeeBean exist : exists3) {
+				if (exist.getSales().equals(employee.getSales()))
+					return "existwechat";
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getWechat1())) {
+		// ClientEmployeeBean option4 = new ClientEmployeeBean();
+		// option4.setWechat1(employee.getWechat1());
+		// List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		// if (exists4 != null && exists4.size() > 0)
+		// return "existwechat";
+		// }
 		if (SimpletinyString.isEmpty(employee.getHead_photo())) {
 			employee.setHead_photo(null);
 		} else {
@@ -121,36 +129,48 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public String updateEmployee(ClientEmployeeBean employee) {
+		ClientEmployeeBean old = dao.selectByPrimaryKey(employee.getPk());
 		ClientEmployeeBean option1 = new ClientEmployeeBean();
 		option1.setCellphone(employee.getCellphone());
+		option1.setSales(employee.getSales());
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
-		if (exists1 != null && exists1.size() > 0 && !exists1.get(0).getPk().equals(employee.getPk())
-				&& !employee.getPublic_flg().equals("Y"))
-			return "existcellphone";
-
-		if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
-			ClientEmployeeBean option2 = new ClientEmployeeBean();
-			option2.setCellphone1(employee.getCellphone1());
-			List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
-			if (exists2 != null && exists2.size() > 0 && !exists2.get(0).getPk().equals(employee.getPk())
-					&& !employee.getPublic_flg().equals("Y"))
-				return "existcellphone";
+		if (exists1 != null && exists1.size() > 0) {
+			for (ClientEmployeeBean exist : exists1) {
+				if (!exist.getPk().equals(old.getPk())) {
+					return "existcellphone";
+				}
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
+		// ClientEmployeeBean option2 = new ClientEmployeeBean();
+		// option2.setCellphone1(employee.getCellphone1());
+		// List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		// if (exists2 != null && exists2.size() > 0 &&
+		// !exists2.get(0).getPk().equals(employee.getPk())
+		// && !employee.getPublic_flg().equals("Y"))
+		// return "existcellphone";
+		// }
 		ClientEmployeeBean option3 = new ClientEmployeeBean();
 		option3.setWechat(employee.getWechat());
 		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
-		if (exists3 != null && exists3.size() > 0 && !exists3.get(0).getPk().equals(employee.getPk())
-				&& !employee.getPublic_flg().equals("Y"))
-			return "existwechat";
-
-		if (!SimpletinyString.isEmpty(employee.getWechat1())) {
-			ClientEmployeeBean option4 = new ClientEmployeeBean();
-			option4.setWechat1(employee.getWechat1());
-			List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
-			if (exists4 != null && exists4.size() > 0 && !exists4.get(0).getPk().equals(employee.getPk())
-					&& !employee.getPublic_flg().equals("Y"))
-				return "existwechat";
+		if (exists3 != null && exists3.size() > 0) {
+			for (ClientEmployeeBean exist : exists3) {
+				if (!exist.getPk().equals(old.getPk())) {
+					return "existwechat";
+				}
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getWechat1())) {
+		// ClientEmployeeBean option4 = new ClientEmployeeBean();
+		// option4.setWechat1(employee.getWechat1());
+		// List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		// if (exists4 != null && exists4.size() > 0 &&
+		// !exists4.get(0).getPk().equals(employee.getPk())
+		// && !employee.getPublic_flg().equals("Y"))
+		// return "existwechat";
+		// }
 		// 如果是公开维护修改所属销售
 		if (employee.getPublic_flg().equals("Y")) {
 			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext

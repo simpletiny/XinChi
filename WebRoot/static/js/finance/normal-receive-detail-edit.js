@@ -30,12 +30,12 @@ var DetailContext = function() {
 		}
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '是否确认提交?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					startLoadingSimpleIndicator("保存中");
 					$.ajax({
@@ -43,11 +43,13 @@ var DetailContext = function() {
 						url : self.apiurl + 'finance/updateDetail',
 						data : $("form").serialize() + "&detail.type=收入"
 					}).success(function(str) {
+						endLoadingIndicator();
 						if (str == "success") {
 							window.location.href = self.apiurl + "templates/finance/detail.jsp";
+						} else if (str == "matched") {
+							fail_msg("收入已匹配，不能修改！");
 						} else if (str == "time") {
 							fail_msg("同一账户下的明细账，时间不能相同，请调整时间。");
-							endLoadingIndicator();
 						}
 					});
 					layer.close(index);

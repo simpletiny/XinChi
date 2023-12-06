@@ -5,7 +5,6 @@ import java.util.List;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
-import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCountDto;
@@ -58,6 +57,8 @@ public interface ClientRelationDAO {
 	public IncomingCountDto selectIncomingData(String user_pk);
 
 	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);
+
+	public List<PotentialDto> selectTypeCount();
 
 	public List<ClientRelationBean> selectByParam(ClientRelationBean option);
 

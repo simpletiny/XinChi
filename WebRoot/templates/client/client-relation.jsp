@@ -135,16 +135,18 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
-								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3>努力度</h3></th>
+								<th colspan="5" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
+								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3
+										data-bind="text:month+'用心度'"></h3></th>
 								<th colspan="7" style="text-align: center"><h3>仪表盘</h3></th>
 							</tr>
 							<tr>
 								<th></th>
 								<th>全部</th>
-								<th>电话</th>
-								<th>微信</th>
-								<th style="border-right: solid 1px #ff0000;">广告</th>
+								<th>月初</th>
+								<th>电话级</th>
+								<th>微信级</th>
+								<th style="border-right: solid 1px #ff0000;">广告级</th>
 								<th>订单</th>
 								<th>拜访</th>
 								<th>电话</th>
@@ -162,6 +164,7 @@
 							<tr>
 								<td>全部</td>
 								<td data-bind="text:potential().all_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().all_count"></td>
 								<td data-bind="text:potential().all_tel"></td>
 								<td data-bind="text:potential().all_wechat"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().all_ad"></td>
@@ -177,15 +180,16 @@
 								<td data-bind="text:meter().bad_interest" class="rmb warning"></td>
 							</tr>
 							<tr>
-								<td>主力</td>
-								<td data-bind="text:potential().main_all"></td>
-								<td data-bind="text:potential().main_tel"></td>
-								<td data-bind="text:potential().main_wechat"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().main_ad"></td>
-								<td data-bind="text:workOrder().main_order"></td>
-								<td data-bind="text:accurateSale().main_accurate"></td>
-								<td data-bind="text:incomingCount().main_tel"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().main_wechat"></td>
+								<td>核心</td>
+								<td data-bind="text:potential().core_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().core_count"></td>
+								<td data-bind="text:potential().core_tel"></td>
+								<td data-bind="text:potential().core_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().core_ad"></td>
+								<td data-bind="text:workOrder().core_order"></td>
+								<td data-bind="text:accurateSale().core_accurate"></td>
+								<td data-bind="text:incomingCount().core_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().core_wechat"></td>
 								<th>发展基金</th>
 								<th>新增费用</th>
 								<th>新增基金</th>
@@ -194,15 +198,16 @@
 								<th></th>
 							</tr>
 							<tr>
-								<td>市场</td>
-								<td data-bind="text:potential().market_all"></td>
-								<td data-bind="text:potential().market_tel"></td>
-								<td data-bind="text:potential().market_wechat"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().market_ad"></td>
-								<td data-bind="text:workOrder().market_order"></td>
-								<td data-bind="text:accurateSale().market_accurate"></td>
-								<td data-bind="text:incomingCount().market_tel"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().market_wechat"></td>
+								<td>主力</td>
+								<td data-bind="text:potential().main_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().main_count"></td>
+								<td data-bind="text:potential().main_tel"></td>
+								<td data-bind="text:potential().main_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().main_ad"></td>
+								<td data-bind="text:workOrder().main_order"></td>
+								<td data-bind="text:accurateSale().main_accurate"></td>
+								<td data-bind="text:incomingCount().main_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().main_wechat"></td>
 								<td data-bind="text:meter().score * 1.07
 					- meter().sum_reimbursement" class="rmb"></td>
 								<td data-bind="text:meter().month_reimbursement" class="rmb"></td>
@@ -211,17 +216,17 @@
 								<td data-bind="text:meter().point_money_deduct" class="rmb"></td>
 								<td></td>
 							</tr>
-
 							<tr>
-								<td>尝试</td>
-								<td data-bind="text:potential().try_all"></td>
-								<td data-bind="text:potential().try_tel"></td>
-								<td data-bind="text:potential().try_wechat"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().try_ad"></td>
-								<td data-bind="text:workOrder().try_order"></td>
-								<td data-bind="text:accurateSale().try_accurate"></td>
-								<td data-bind="text:incomingCount().try_tel"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().try_wechat"></td>
+								<td>市场</td>
+								<td data-bind="text:potential().market_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().market_count"></td>
+								<td data-bind="text:potential().market_tel"></td>
+								<td data-bind="text:potential().market_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().market_ad"></td>
+								<td data-bind="text:workOrder().market_order"></td>
+								<td data-bind="text:accurateSale().market_accurate"></td>
+								<td data-bind="text:incomingCount().market_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().market_wechat"></td>
 								<th>收客分值</th>
 								<th>回款分值</th>
 								<th>当月分值</th>
@@ -229,16 +234,18 @@
 								<th>累计坏账</th>
 								<th></th>
 							</tr>
+
 							<tr>
-								<td>忽略</td>
-								<td data-bind="text:potential().ignore_all"></td>
-								<td data-bind="text:potential().ignore_tel"></td>
-								<td data-bind="text:potential().ignore_wechat"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().ignore_ad"></td>
-								<td data-bind="text:workOrder().ignore_order"></td>
-								<td data-bind="text:accurateSale().ignore_accurate"></td>
-								<td data-bind="text:incomingCount().ignore_tel"></td>
-								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().ignore_wechat"></td>
+								<td>尝试</td>
+								<td data-bind="text:potential().try_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().try_count"></td>
+								<td data-bind="text:potential().try_tel"></td>
+								<td data-bind="text:potential().try_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().try_ad"></td>
+								<td data-bind="text:workOrder().try_order"></td>
+								<td data-bind="text:accurateSale().try_accurate"></td>
+								<td data-bind="text:incomingCount().try_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().try_wechat"></td>
 								<td data-bind="text:meter().month_score"></td>
 								<td data-bind="text:meter().back_score"></td>
 								<td data-bind="text:meter().month_score+meter().back_score"></td>
@@ -247,8 +254,27 @@
 								<td></td>
 							</tr>
 							<tr>
+								<td>忽略</td>
+								<td data-bind="text:potential().ignore_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().ignore_count"></td>
+								<td data-bind="text:potential().ignore_tel"></td>
+								<td data-bind="text:potential().ignore_wechat"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().ignore_ad"></td>
+								<td data-bind="text:workOrder().ignore_order"></td>
+								<td data-bind="text:accurateSale().ignore_accurate"></td>
+								<td data-bind="text:incomingCount().ignore_tel"></td>
+								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().ignore_wechat"></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
 								<td>新增</td>
 								<td data-bind="text:potential().new_all"></td>
+								<td data-bind="text:clientEmployeeTypeCount().new_count"></td>
 								<td data-bind="text:potential().new_tel"></td>
 								<td data-bind="text:potential().new_wechat"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:potential().new_ad"></td>
@@ -514,6 +540,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/client-relation.js"></script>
+	<script src="<%=basePath%>static/js/client/client-relation.js?v=1.001"></script>
 </body>
 </html>

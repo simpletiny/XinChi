@@ -556,6 +556,14 @@ function dataURLtoFile(dataurl, filename) {
 	
 })(jQuery);
 
+
+(function($) {
+	$.fn.clear = function() {
+		$(this).each(function() {
+	        $(this).find('input, textarea').val('');
+	      });
+	}
+})(jQuery);
 function debounce(func, duration = 500) {
     let timer_id;
     return function (...args) {

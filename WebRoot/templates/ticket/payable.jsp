@@ -509,28 +509,31 @@
 	</div>
 
 	<!-- 选择航司押金 -->
-	<div id="deposit-pick" style="display: none; width: 1110px; height: 600px; overflow: auto">
+	<div id="deposit-pick" style="display: none; width: 1210px; height: 600px; overflow: auto">
 		<form class="form-horizontal search-panel" id="form-search-deposit">
 			<div class="form-group">
-				<div>
-					<label class="col-md-1 control-label">供应商</label>
-					<div class="col-md-2" style="float: left">
-						<input type="text" class="form-control" name="deposit.supplier_name" />
-					</div>
+				<label class="col-md-1 control-label">供应商</label>
+				<div class="col-md-2" style="float: left">
+					<input type="text" class="form-control" name="deposit.supplier_name" />
 				</div>
-				<div>
-					<label class="col-md-1 control-label">支出账户</label>
-					<div class="col-md-3" style="float: left">
-						<select class="form-control" name="deposit.account"
-							data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
-					</div>
+				<label class="col-md-1 control-label">支出账户</label>
+				<div class="col-md-3" style="float: left">
+					<select class="form-control" name="deposit.account"
+						data-bind="options: ticketAccounts,optionsText:'account',optionsValue:'account', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 				</div>
-
-				<div>
-					<label class="col-md-1 control-label">备注</label>
-					<div class="col-md-2" style="float: left">
-						<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
-					</div>
+				<label class="col-md-1 control-label">押金单号</label>
+				<div class="col-md-3" style="float: left">
+					<input type="text" class="form-control" name="deposit.deposit_number" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-1 control-label">押金金额</label>
+				<div class="col-md-2" style="float: left">
+					<input type="text" class="form-control" name="deposit.money" />
+				</div>
+				<label class="col-md-1 control-label">备注</label>
+				<div class="col-md-2" style="float: left">
+					<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
 				</div>
 				<div>
 					<button type="submit" class="btn btn-green" data-bind="click: searchDeposit">搜索</button>
@@ -543,6 +546,7 @@
 				<thead>
 					<tr role="row">
 						<th></th>
+						<th>押金单号</th>
 						<th>支出账户</th>
 						<th>收款方</th>
 						<th>金额</th>
@@ -555,6 +559,7 @@
 				<tbody data-bind="foreach: deposits">
 					<tr>
 						<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenDeposits" /></td>
+						<td data-bind="text: $data.deposit_number"></td>
 						<td data-bind="text: $data.account"></td>
 						<td data-bind="text: $data.supplier_name"></td>
 						<td data-bind="text: $data.money" class="rmb"></td>
@@ -590,6 +595,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/ticket/payable.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/payable.js?v=1.002"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ var uploadLayer;
 var uploadConfirmLayer;
 var deductLayer;
 var returnDetailLayer;
+
 var DepositContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -12,6 +13,7 @@ var DepositContext = function() {
 		total : 0,
 		items : []
 	});
+
 	// 获取所有账户
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {
@@ -102,8 +104,19 @@ var DepositContext = function() {
 	};
 
 	self.batDeposits = ko.observableArray([]);
-	// 批量上传
-	self.upload = function() {
+	let upload_type = "";
+	// 批量上传押金
+	self.uploadDeposit = function() {
+		upload_type = "DEPOSIT";
+		upload();
+	}
+	// 批量上传押金退还
+	self.uploadBack = function() {
+		upload_type = "BACK";
+		upload();
+	}
+
+	let upload = function() {
 		$(".file-path").val("");
 		$("#file-upload").val("");
 		uploadLayer = $.layer({
@@ -124,15 +137,24 @@ var DepositContext = function() {
 		});
 	}
 	// 对上传的文件进行操作
-	doUpload = function() {
+	self.doUpload = function() {
 		if ($("#file-upload").val() == "") {
 			fail_msg("请选择要上传的文件！");
 			return;
 		}
-		var data = "deposit_type=TICKET&file_name=" + $("#office-file").val();
+		if (upload_type === "DEPOSIT") {
+			doUploadDeposit();
+		} else if (upload_type === "BACK") {
+			doUploadBack();
+		} else {
+			fail_msg("unknown type!")
+		}
+	}
+
+	let doUploadDeposit = function() {
+		const data = "deposit_type=TICKET&file_name=" + $("#office-file").val();
 		layer.close(uploadLayer);
 		startLoadingSimpleIndicator("处理中...");
-
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'supplier/batUploadDeposit',
@@ -154,7 +176,37 @@ var DepositContext = function() {
 						dom : '#div-upload-confirm'
 					},
 					end : function() {
-						contentClear('div-create');
+					}
+				});
+			}
+		});
+	}
+	// 处理押金退还文件
+	let doUploadBack = function() {
+		const data = "deposit_type=TICKET&file_name=" + $("#office-file").val();
+		layer.close(uploadLayer);
+		startLoadingSimpleIndicator("处理中...");
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'supplier/batUploadBack',
+			data : data,
+			success : function(data) {
+				self.batDeposits(data.deposits);
+				endLoadingIndicator();
+
+				uploadConfirmLayer = $.layer({
+					type : 1,
+					title : ['上传确认', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['1200px', '750px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#div-upload-confirm-back'
+					},
+					end : function() {
 					}
 				});
 			}
@@ -194,10 +246,21 @@ var DepositContext = function() {
 			return;
 		}
 
+		let msg = "";
+		let url = "";
+		if (upload_type === "DEPOSIT") {
+			msg = "确认要新增这些航司押金吗？";
+			url = "batSaveDeposit";
+		} else if (upload_type === "BACK") {
+			msg = "确认要保存这些退还记录吗？";
+			url = "batSaveDepositBack";
+		} else {
+			return;
+		}
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
-				msg : "确认要新增这些航司押金吗？",
+				msg : msg,
 				btns : 2,
 				type : 4,
 				btn : ['确认', '取消'],
@@ -207,12 +270,10 @@ var DepositContext = function() {
 					var data = "json=" + JSON.stringify(confirmed, replacer);
 					$.ajax({
 						type : "POST",
-						url : self.apiurl + 'supplier/batSaveDeposit',
+						url : self.apiurl + 'supplier/' + url,
 						data : data,
 						success : function(str) {
-
 							endLoadingIndicator();
-
 							if (str == "success") {
 								layer.close(uploadConfirmLayer);
 								self.refresh();
@@ -225,13 +286,13 @@ var DepositContext = function() {
 				}
 			}
 		});
-
 	}
 
 	cancelSaveBat = function() {
 		layer.close(uploadConfirmLayer);
 		self.batDeposits.removeAll();
 	}
+
 	/**
 	 * 新建押金账
 	 */
@@ -417,6 +478,7 @@ var DepositContext = function() {
 				area : ['1000px', '650px'],
 				offset : ['', ''],
 				scrollbar : true,
+				zIndex : 9998,
 				page : {
 					dom : '#div-deduct'
 				},

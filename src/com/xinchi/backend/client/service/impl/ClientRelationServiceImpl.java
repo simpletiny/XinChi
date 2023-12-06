@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientEmployeeQuitConnectLogDAO;
+import com.xinchi.backend.client.dao.ClientEmployeeTypeCountDAO;
 import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.client.dao.ClientVisitDAO;
@@ -21,6 +22,7 @@ import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
@@ -309,5 +311,14 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	@Override
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk) {
 		return dao.selectSummaryByEmployeePk(employee_pk);
+	}
+
+	@Autowired
+	private ClientEmployeeTypeCountDAO clientEmployeeTypeCountDao;
+
+	@Override
+	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean) {
+		return clientEmployeeTypeCountDao.selectSumByParam(bean);
+
 	}
 }

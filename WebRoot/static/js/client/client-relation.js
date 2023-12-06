@@ -8,6 +8,9 @@ var queryLayer;
 var ClientContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
+	self.today = $("#hidden-server-date").val();
+
+	self.month = new Date(self.today).Format("yyyy年M月");
 
 	self.relations = ko.observable({
 		total : 0,
@@ -130,27 +133,24 @@ var ClientContext = function() {
 			return;
 		} else if (self.chosenEmployee().length == 1) {
 			var employeePk = self.chosenEmployee()[0].split(";")[0];
-			window.location.href = self.apiurl
-					+ "templates/client/employee-edit.jsp?key=" + employeePk;
+			window.location.href = self.apiurl + "templates/client/employee-edit.jsp?key=" + employeePk;
 		}
 	};
 
 	self.refresh = function() {
 		var param = $("form").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		startLoadingSimpleIndicator("加载中...");
-		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param,
-				function(data) {
-					self.relations(data.relations);
-					self.canEdit(false);
-					self.loadFiles();
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-					$(".rmb").formatCurrency();
-					$(".detail").showDetail();
-					endLoadingIndicator();
-				});
+		$.getJSON(self.apiurl + 'client/searchRelationsByPage', param, function(data) {
+			self.relations(data.relations);
+			self.canEdit(false);
+			self.loadFiles();
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+			$(".rmb").formatCurrency();
+			$(".detail").showDetail();
+			endLoadingIndicator();
+		});
 	};
 
 	self.saleScore = ko.observable();
@@ -173,17 +173,17 @@ var ClientContext = function() {
 	});
 	self.workOrder = ko.observable({});
 	self.accurateSale = ko.observable({});
+	self.clientEmployeeTypeCount = ko.observable({});
 
 	self.searchClientSummary = function() {
 		var param = $("form").serialize();
-		$.getJSON(self.apiurl + 'client/searchClientSummary', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchClientSummary', param, function(data) {
 			self.potential(data.potential);
 			self.meter(data.meter);
 			self.workOrder(data.workOrder);
 			self.accurateSale(data.accurateSale);
 			self.incomingCount(data.incomingCount);
-
+			self.clientEmployeeTypeCount(data.clientEmployeeTypeCount);
 			self.saleScore(data.sale_score);
 			self.todayPoint(data.today_point);
 			$(".rmb").formatCurrency();
@@ -198,14 +198,11 @@ var ClientContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenEmployee().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/visit-creation.jsp?key="
-					+ self.chosenEmployee();
+			window.location.href = self.apiurl + "templates/client/visit-creation.jsp?key=" + self.chosenEmployee();
 		}
 	};
 	self.createEmployee = function() {
-		window.location.href = self.apiurl
-				+ "templates/client/employee-creation.jsp"
+		window.location.href = self.apiurl + "templates/client/employee-creation.jsp"
 	}
 	// 新增精推
 	self.createAccurateSale = function() {
@@ -216,8 +213,7 @@ var ClientContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenEmployee().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/accurate-sale-creation.jsp?key="
+			window.location.href = self.apiurl + "templates/client/accurate-sale-creation.jsp?key="
 					+ self.chosenEmployee();
 		}
 	};
@@ -230,9 +226,7 @@ var ClientContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenEmployee().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/give-me-a-call.jsp?key="
-					+ self.chosenEmployee();
+			window.location.href = self.apiurl + "templates/client/give-me-a-call.jsp?key=" + self.chosenEmployee();
 		}
 	};
 	// 新增被动咨询
@@ -244,15 +238,12 @@ var ClientContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenEmployee().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/incoming-call.jsp?key="
-					+ self.chosenEmployee();
+			window.location.href = self.apiurl + "templates/client/incoming-call.jsp?key=" + self.chosenEmployee();
 		}
 	};
 
 	self.reimbursement = function() {
-		window.location.href = self.apiurl
-				+ "templates/accounting/reimbursement-creation.jsp";
+		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 	self.employee = ko.observable({
 		sales : []
@@ -385,40 +376,35 @@ var ClientContext = function() {
 			fail_msg("只能选中一个");
 			return;
 		} else if (self.chosenEmployee().length == 1) {
-			var param = "client_employee_pk="
-					+ self.chosenEmployee()[0].split(";")[0];
+			var param = "client_employee_pk=" + self.chosenEmployee()[0].split(";")[0];
 			// 判断尾款是否为0
-			$
-					.getJSON(self.apiurl + 'sale/fetchEmployeeBalance', param,
-							function(data) {
-								var balance = data.balance;
-								if (null == balance || 0 == balance) {
-									var quit_in = new Object();
-									quit_in.client_employee_pk = self
-											.chosenEmployee()[0].split(";")[0];
-									quit_in.client_employee_name = self
-											.chosenEmployee()[0].split(";")[1];
-									self.quit(quit_in);
+			$.getJSON(self.apiurl + 'sale/fetchEmployeeBalance', param, function(data) {
+				var balance = data.balance;
+				if (null == balance || 0 == balance) {
+					var quit_in = new Object();
+					quit_in.client_employee_pk = self.chosenEmployee()[0].split(";")[0];
+					quit_in.client_employee_name = self.chosenEmployee()[0].split(";")[1];
+					self.quit(quit_in);
 
-									quitLayer = $.layer({
-										type : 1,
-										title : ['放弃维护', ''],
-										maxmin : false,
-										closeBtn : [1, true],
-										shadeClose : false,
-										area : ['400px', '200px'],
-										offset : ['', ''],
-										scrollbar : true,
-										page : {
-											dom : '#quit-connect'
-										},
-										end : function() {
-										}
-									});
-								} else {
-									fail_msg("客户尾款不为0，不能放弃维护！");
-								}
-							});
+					quitLayer = $.layer({
+						type : 1,
+						title : ['放弃维护', ''],
+						maxmin : false,
+						closeBtn : [1, true],
+						shadeClose : false,
+						area : ['400px', '200px'],
+						offset : ['', ''],
+						scrollbar : true,
+						page : {
+							dom : '#quit-connect'
+						},
+						end : function() {
+						}
+					});
+				} else {
+					fail_msg("客户尾款不为0，不能放弃维护！");
+				}
+			});
 		}
 	};
 	/**
@@ -473,20 +459,16 @@ var ClientContext = function() {
 				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
-					var data = "clientRelation.pk=" + pk
-							+ "&clientRelation.client_employee_pk="
-							+ client_employee_pk
+					var data = "clientRelation.pk=" + pk + "&clientRelation.client_employee_pk=" + client_employee_pk
 							+ "&clientRelation.relation_level=朋友级";
 
 					startLoadingSimpleIndicator("保存中...");
-					$.ajax(
-							{
-								type : "POST",
-								url : self.apiurl
-										+ 'client/updateEmployeeRelationLevel',
-								traditional : true,
-								data : data
-							}).success(function(str) {
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/updateEmployeeRelationLevel',
+						traditional : true,
+						data : data
+					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
@@ -509,20 +491,16 @@ var ClientContext = function() {
 				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
-					var data = "clientRelation.pk=" + pk
-							+ "&clientRelation.client_employee_pk="
-							+ client_employee_pk
+					var data = "clientRelation.pk=" + pk + "&clientRelation.client_employee_pk=" + client_employee_pk
 							+ "&clientRelation.relation_level=市场级";
 
 					startLoadingSimpleIndicator("保存中...");
-					$.ajax(
-							{
-								type : "POST",
-								url : self.apiurl
-										+ 'client/updateEmployeeRelationLevel',
-								traditional : true,
-								data : data
-							}).success(function(str) {
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/updateEmployeeRelationLevel',
+						traditional : true,
+						data : data
+					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
@@ -560,11 +538,9 @@ var ClientContext = function() {
 
 	self.searchConnects = function(client_employee_pk) {
 		var param = "client_employee_pk=" + current_client_employee_pk;
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
 		startLoadingSimpleIndicator("加载中...");
-		$.getJSON(self.apiurl + 'client/searchConnectsByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchConnectsByPage', param, function(data) {
 			self.connects(data.connects);
 
 			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
@@ -608,8 +584,7 @@ var ClientContext = function() {
 	self.updateComment = function() {
 		var employee_pk = self.clientEmployee().pk;
 		var comment = $("#txt-comment").val();
-		var data = "employee.pk=" + employee_pk + "&" + "employee.comment="
-				+ comment;
+		var data = "employee.pk=" + employee_pk + "&" + "employee.comment=" + comment;
 
 		startLoadingIndicator("保存中");
 		$.ajax({
@@ -648,10 +623,8 @@ var ClientContext = function() {
 		if (fileName == "img") {
 			$("#img-pic").attr("src", self.apiurl + "static/img/head.jpg");
 		} else {
-			$("#img-pic").attr(
-					"src",
-					self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-							+ "&fileType=CLIENT_EMPLOYEE_HEAD");
+			$("#img-pic").attr("src",
+					self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");
 		}
 	};
 
@@ -719,8 +692,7 @@ var ClientContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -767,8 +739,7 @@ var ClientContext = function() {
 
 	self.setPageNums1 = function(curPage1) {
 		var startPage1 = curPage1 - 4 > 0 ? curPage1 - 4 : 1;
-		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self
-				.totalCount1();
+		var endPage1 = curPage1 + 4 <= self.totalCount1() ? curPage1 + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);

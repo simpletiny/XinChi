@@ -1,5 +1,8 @@
 package com.xinchi.backend.product.action;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductOrderService;
+import com.xinchi.backend.product.service.ProductReconciliationService;
 import com.xinchi.backend.product.service.ProductReportService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
@@ -27,6 +31,7 @@ import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductProfitBean;
+import com.xinchi.bean.ProductReconciliationBean;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.common.BaseAction;
@@ -85,6 +90,9 @@ public class ProductAction extends BaseAction {
 	@Autowired
 	private AirTicketPayableService airTicketPayableService;
 
+	@Autowired
+	private ProductReconciliationService productReconciliationService;
+
 	/**
 	 * 搜索产品利润
 	 * 
@@ -103,9 +111,32 @@ public class ProductAction extends BaseAction {
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			productProfit.setUser_number(sessionBean.getUser_number());
 			fee_option.setProduct_manager_number(sessionBean.getUser_number());
+		} else {
+			fee_option.setProduct_manager_number(productProfit.getUser_number());
 		}
 
+		String year = productProfit.getOption_year();
+		List<String> months = gainAllMonth(year);
+
 		productProfits = service.searchProductProfit(productProfit);
+
+		for (ProductProfitBean pp : productProfits) {
+			months.remove(pp.getDeparture_month());
+		}
+
+		for (String month : months) {
+			ProductProfitBean pp = new ProductProfitBean();
+			pp.setDeparture_month(month);
+			pp.setPeople_count(0);
+			pp.setStatus("Y");
+			pp.setGross_profit(BigDecimal.ZERO);
+			pp.setProduct_cost(BigDecimal.ZERO);
+			pp.setKeep_cost(BigDecimal.ZERO);
+			pp.setScore(BigDecimal.ZERO);
+			productProfits.add(pp);
+		}
+		Collections.sort(productProfits);
+
 		// 手续费
 		fee_option.setFirst_year(productProfit.getOption_year());
 		List<AirServiceFeeDto> fees = airTicketPayableService.searchServiceFees(fee_option);
@@ -113,19 +144,46 @@ public class ProductAction extends BaseAction {
 		// 押金扣款
 		List<AirOtherPaymentDto> deducts = airTicketPayableService.searchDepositDeducts(fee_option);
 
+		// 额外费用，调账
+		List<ProductReconciliationBean> reconciliations = productReconciliationService
+				.selectSumReconciliation(fee_option);
+
 		for (ProductProfitBean pp : productProfits) {
 			for (AirServiceFeeDto asf : fees) {
 				if (pp.getDeparture_month().equals(asf.getFirst_month())) {
-					pp.setService_fees(asf.getPayable());
+					// 应该将金额相加
+					pp.setService_fees(pp.getService_fees().add(asf.getPayable()));
 				}
 			}
 			for (AirOtherPaymentDto deduct : deducts) {
 				if (pp.getDeparture_month().equals(deduct.getBelong_month())) {
-					pp.setDeposit_deduct(deduct.getMoney());
+					pp.setDeposit_deduct(pp.getDeposit_deduct().add(deduct.getMoney()));
 				}
+			}
+
+			for (ProductReconciliationBean r : reconciliations) {
+				if (pp.getDeparture_month().equals(r.getBelong_month())) {
+					pp.setOther_cost(pp.getOther_cost().add(r.getMoney()));
+				}
+
 			}
 		}
 		return SUCCESS;
+	}
+
+	private List<String> gainAllMonth(String year) {
+		List<String> months = new ArrayList<>();
+		for (int i = 0; i < 12; i++) {
+			String month = "";
+			if (i < 9) {
+				month = year + "-" + "0" + (i + 1);
+			} else {
+				month = year + "-" + (i + 1);
+			}
+			months.add(month);
+		}
+
+		return months;
 	}
 
 	/**

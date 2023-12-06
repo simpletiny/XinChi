@@ -12,6 +12,8 @@
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/upload.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css?v1.001" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -45,8 +47,9 @@ h2 {
 					<div class="form-group">
 						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: create">新建</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: upload">批量上传</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: uploadDeposit">批量上传</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: receive">退还申请</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: uploadBack">批量退还</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: deduct">押金扣款</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: delete_deposit">删除</button>
 						</div>
@@ -73,11 +76,15 @@ h2 {
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control" name="deposit.supplier_name" />
 						</div>
+						<label class="col-md-1 control-label">押金单号</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" name="deposit.deposit_number" />
+						</div>
 						<label class="col-md-1 control-label">备注</label>
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control" name="deposit.comment" placeholder="填写部分信息即可" />
 						</div>
-						
+
 					</div>
 					<div class="form-group">
 						<label class="col-md-1 control-label">精确金额</label>
@@ -93,7 +100,8 @@ h2 {
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control" name="deposit.voucher_number" placeholder="凭证号" />
 						</div>
-						<button type="submit" style="float:right" class="btn btn-green" data-bind="click: refresh">搜索</button>
+
+						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
@@ -131,7 +139,7 @@ h2 {
 								<td data-bind="text: $root.statusMapping[$data.status]" style="color: green"></td>
 								<!-- /ko -->
 								<td><a href="javascript:void(0)" data-bind="text: $data.return_way_cn,click:$root.viewDetail"></a></td>
-								
+
 								<td data-bind="text: $data.voucher_number"></td>
 								<td data-bind="text: $data.comment"></td>
 								<!-- ko if:$data.status=='I' -->
@@ -173,6 +181,7 @@ h2 {
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelUpload">取消</button>
 		</div>
 	</div>
+
 	<div id="div-upload-confirm" style="display: none; width: 1200px; height: 700px; overflow-y: auto; padding-top: 30px;">
 		<div class="input-row clearfloat" style="height: 40px">
 			<label style="color: red">请确认每笔上传记录，不确认的视为错误数据，不进行记录!</label>
@@ -200,6 +209,48 @@ h2 {
 						<td data-bind="text: $data.time"></td>
 						<td data-bind="text: $data.return_date"></td>
 						<td data-bind="text: $data.comment"></td>
+						<td><a href="javascript:void(0)" data-bind="event:{click:confirmUpload}">确认</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doSaveBat">保存</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelSaveBat">取消</button>
+		</div>
+	</div>
+
+	<!-- 批量退还确认 -->
+	<div id="div-upload-confirm-back"
+		style="display: none; width: 1200px; height: 700px; overflow-y: auto; padding-top: 30px;">
+		<div class="input-row clearfloat" style="height: 40px">
+			<label style="color: red">请确认每笔上传记录，不确认的视为错误数据，不进行记录!</label>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>押金单号</th>
+						<th>供应商</th>
+						<th>剩余金额</th>
+						<th>押金备注</th>
+						<th>退还金额</th>
+						<th>收款账户</th>
+						<th>退还日期</th>
+						<th>退还备注</th>
+						<th>确认</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-data" data-bind="foreach:batDeposits">
+					<tr>
+						<td data-bind="text: $data.deposit_number"></td>
+						<td data-bind="text: $data.supplier_name"></td>
+						<td data-bind="text: $data.balance" class="rmb"></td>
+						<td data-bind="text: $data.comment"></td>
+						<td data-bind="text: $data.received"></td>
+						<td data-bind="text: $data.account"></td>
+						<td data-bind="text: $data.time"></td>
+						<td data-bind="text: $data.back_comment"></td>
 						<td><a href="javascript:void(0)" data-bind="event:{click:confirmUpload}">确认</a></td>
 					</tr>
 				</tbody>
@@ -594,10 +645,12 @@ h2 {
 	<script>
 		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
 	<script src="<%=basePath%>static/js/file-upload-office.js?v1.001"></script>
-	<script src="<%=basePath%>static/js/ticket/deposit.js?v1.004"></script>
+	<script src="<%=basePath%>static/js/ticket/deposit.js?v1.007"></script>
 </body>
 </html>

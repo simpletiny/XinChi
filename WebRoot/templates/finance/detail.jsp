@@ -133,6 +133,7 @@
 								<th>支出</th>
 								<th>余额</th>
 								<th>填报时间</th>
+								<th>填报人</th>
 								<th>备注</th>
 							</tr>
 						</thead>
@@ -159,6 +160,7 @@
 								<!-- /ko -->
 								<td data-bind="text: $data.balance" class="rmb"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: $data.record_user"></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>

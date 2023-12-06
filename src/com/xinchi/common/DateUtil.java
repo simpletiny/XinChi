@@ -66,6 +66,18 @@ public class DateUtil {
 		}
 	}
 
+	public static String lastMonth(String... format) {
+		SimpleDateFormat sdf = sdf2;
+		if (format.length > 0) {
+			sdf = new SimpleDateFormat(format[0]);
+		}
+		Calendar c = Calendar.getInstance();
+
+		// 减去一个月
+		c.add(Calendar.MONTH, -1);
+		return sdf.format(c.getTime());
+	}
+
 	/**
 	 * 按格式取得日期字符串
 	 * 

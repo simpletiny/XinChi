@@ -14,4 +14,6 @@ public interface ReceivedMatchDAO {
 
 	public List<ReceivedMatchBean> selectByDetailPk(String detailId);
 
+	public List<ReceivedMatchBean> selectByReceivedPk(String received_pk);
+
 }

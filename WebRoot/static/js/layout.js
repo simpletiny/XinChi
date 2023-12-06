@@ -83,7 +83,31 @@
 // }
 //
 // });
-function click_menu(li) {
-	// console.log(li);
-	// console.log("test");
+
+
+function addFixedPositionedText(text, horizontalSpacing, verticalSpacing) {
+    const mask = document.getElementById('mask');
+    const maskWidth = mask.offsetWidth;
+    const maskHeight = mask.offsetHeight;
+
+    for (let x = 0; x < maskWidth; x += horizontalSpacing) {
+        for (let y = 0; y < maskHeight; y += verticalSpacing) {
+            const textElement = document.createElement('div');
+            textElement.classList.add('mask-text');
+            textElement.textContent = text;
+
+            textElement.style.left = x + 'px';
+            textElement.style.top = y + 'px';
+
+            mask.appendChild(textElement);
+        }
+    }
 }
+
+window.onload = function() {
+ $("body").append(`<div id="mask">
+ </div>`)
+	
+	let nick_name = $("#user-nick-name").val();
+	addFixedPositionedText('欣驰国际'+nick_name, 400, 200);
+};

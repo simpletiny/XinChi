@@ -70,8 +70,18 @@ public class SupplierDepositAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String batUploadBack() throws IOException {
+		deposits = service.batUploadBack(file_name, deposit_type);
+		return SUCCESS;
+	}
+
 	public String batSaveDeposit() {
 		resultStr = service.batSaveDeposit(json);
+		return SUCCESS;
+	}
+
+	public String batSaveDepositBack() {
+		resultStr = service.batSaveDepositBack(json);
 		return SUCCESS;
 	}
 

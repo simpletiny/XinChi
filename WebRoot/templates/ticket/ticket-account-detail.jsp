@@ -104,7 +104,15 @@
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.time"></td>
 								<!-- ko if: $data.type=='收入' -->
+								<!-- ko if:$data.match_flg=='N' -->
+								<td data-bind="text: $data.money" style="color: #FF9999" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.match_flg=='Y' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.match_flg=='O' -->
+								<td data-bind="text: $data.money" style="color: lightgreen" class="rmb"></td>
+								<!-- /ko -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.type=='支出' -->

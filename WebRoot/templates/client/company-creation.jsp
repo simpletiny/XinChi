@@ -66,7 +66,7 @@
 									name="client.client_type" required="required"></select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<%-- 	<div class="col-md-6 required">
 							<label class="l">地市</label>
 							<div class="ip" style="width: 35%">
 								<select class="form-control"
@@ -75,6 +75,15 @@
 							</div>
 							<div class="ip" style="width: 35%">
 								<select class="form-control" id="county" name="client.client_county"></select>
+							</div>
+						</div> --%>
+						<div class="col-md-6 required">
+							<label class="l">地市</label>
+							<div class="ip" style="width: 35%">
+								<select class="form-control heilongjiang-city" name="client.client_area" required="required"></select>
+							</div>
+							<div class="ip" style="width: 35%">
+								<select class="form-control district" name="client.client_county"></select>
 							</div>
 						</div>
 					</div>
@@ -259,6 +268,8 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
+	
 	<script src="<%=basePath%>static/js/client/company-creation.js"></script>
 </body>
 </html>

@@ -770,6 +770,202 @@
 			<comment> ALTER TABLE air_ticket_payable </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="24" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			CREATE TABLE xin_chi_promise (
+				  title VARCHAR(20) NOT NULL,
+				  content MEDIUMTEXT NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  pk CHAR(22) NOT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '欣驰承诺';
+		    ]]>
+			<comment>CREATE TABLE xin_chi_promise</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="25" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			CREATE TABLE product_reconciliation (
+				  type CHAR(2) NOT NULL COMMENT '类型：收入，支出',
+				  belong_month VARCHAR(7) NOT NULL COMMENT '归属月份',
+				  money DECIMAL(12,2) NOT NULL COMMENT '发生金额',
+				  product_manager_number VARCHAR(10) NOT NULL COMMENT '产品经理编号',
+				  comment VARCHAR(200) NULL COMMENT '备注',
+				  pk CHAR(22) NOT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品调账记录表';
+		    ]]>
+			<comment>CREATE TABLE product_reconciliation</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="26" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			ALTER TABLE reimbursement 
+				CHANGE COLUMN comment comment VARCHAR(500) NULL DEFAULT NULL ;
+			ALTER TABLE pay_approval 
+				CHANGE COLUMN comment comment VARCHAR(500) NULL DEFAULT NULL ;
+			ALTER TABLE waiting_for_paid 
+				CHANGE COLUMN comment comment VARCHAR(500) NULL DEFAULT NULL ;
+		    ]]>
+			<comment>ALTER TABLE reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			CREATE TABLE product_accounting_firm (
+				  belong_month VARCHAR(7) NOT NULL COMMENT '归属月份',
+				  product_manager_number VARCHAR(10) NOT NULL COMMENT '产品经理',
+				  confirm_user VARCHAR(10) NOT NULL COMMENT '扎账人',
+				  confirm_time VARCHAR(19) NOT NULL COMMENT '扎账时间yyyy-mm-dd HH:MM:SS',
+				  pk CHAR(22) NOT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品会计扎账表';
+		    ]]>
+			<comment>CREATE TABLE product_accounting_firm</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			ALTER TABLE product_reconciliation 
+				ADD COLUMN status VARCHAR(1) NOT NULL DEFAULT 'I' COMMENT 'I:待确认，Y:已确认，N:驳回' AFTER money;
+		    ]]>
+			<comment>ALTER TABLE product_reconciliation </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			ALTER TABLE payment_detail 
+				ADD COLUMN other_match_comment VARCHAR(200) NULL COMMENT '匹配为其他收入时的备注' AFTER finance_flg;
+		    ]]>
+			<comment>ALTER TABLE payment_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+			 <![CDATA[
+			ALTER TABLE client_employee 
+				ADD COLUMN employee_area VARCHAR(10) NULL AFTER head_photo,
+				ADD COLUMN employee_county VARCHAR(20) NULL AFTER employee_area;
+		    ]]>
+			<comment>ALTER TABLE client_employee </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+			 <![CDATA[
+					DROP VIEW IF EXISTS view_client_year_order_count;
+					CREATE VIEW view_client_year_order_count AS 
+					SELECT C.client_name,C.body_name,C.pk AS client_pk, count(A.pk) AS client_year_order_count FROM budget_order_view A 
+					LEFT JOIN client_employee B ON A.client_employee_pk = B.pk
+					LEFT JOIN client C ON B.financial_body_pk = C.pk
+					WHERE LEFT(A.confirm_date,4) =  DATE_FORMAT(NOW(), '%Y')
+					GROUP BY C.pk;
+		    ]]>
+			<comment>ALTER VIEW view_client_year_order_count </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_client_last_order;
+					CREATE VIEW view_client_last_order AS
+					SELECT C.client_name,C.body_name,C.pk AS client_pk, MAX(confirm_date) as last_order_date ,A.pk AS order_pk FROM budget_order_view A
+					LEFT JOIN client_employee B ON A.client_employee_pk=B.pk
+					LEFT JOIN client C ON B.financial_body_pk = C.pk
+					group by C.pk;
+             ]]>
+			<comment>ALTER VIEW view_client_last_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_order_count;
+				CREATE VIEW view_order_count AS
+				    SELECT 
+				        A.client_employee_pk AS client_employee_pk,
+				        COUNT(IF(A.departure_date >= '2022-01-01',
+				            1,
+				            NULL)) AS order_count,
+				        COUNT(IF(A.departure_date >= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 89 DAY),
+				                    '%Y-%m-%d'),
+				            1,
+				            NULL)) AS day90_count,
+				        COUNT(IF(A.departure_date >= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 29 DAY),
+				                    '%Y-%m-%d'),
+				            1,
+				            NULL)) AS day30_count,
+				        MAX(IF(A.departure_date < '2022-01-01',
+				            NULL,
+				            A.departure_date)) AS last_confirm_date,
+				        MIN(IF(A.departure_date IS NULL
+				                OR A.departure_date = ''
+				                OR A.departure_date < '2022-01-01',
+				            NULL,
+				            A.departure_date)) AS first_confirm_date
+				    FROM
+				        budget_order_view A
+				            LEFT JOIN
+				        client_employee B ON A.client_employee_pk = B.pk
+				    WHERE
+				        B.pk IS NOT NULL
+				    GROUP BY A.client_employee_pk;
+             ]]>
+			<comment>ALTER VIEW view_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="34" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE client_employee_type_count (
+					  month CHAR(7) NOT NULL COMMENT '月份',
+					  user_pk CHAR(22) NOT NULL COMMENT '用户pk',
+					  core_count INT NOT NULL DEFAULT 0 COMMENT '核心个数',
+					  main_count INT NOT NULL DEFAULT 0 COMMENT '主力个数',
+					  market_count INT NOT NULL DEFAULT 0 COMMENT '市场个数',
+					  try_count INT NOT NULL DEFAULT 0 COMMENT '尝试个数',
+					  ignore_count INT NOT NULL DEFAULT 0 COMMENT '忽略个数',
+					  new_count INT NOT NULL DEFAULT 0 COMMENT '新增个数',
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  pk CHAR(22) NOT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '每月末客户每种类个数表';
+             ]]>
+			<comment>CREATE TABLE client_employee_type_count</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

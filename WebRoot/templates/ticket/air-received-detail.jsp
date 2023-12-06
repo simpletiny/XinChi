@@ -73,6 +73,12 @@
 						<div class="col-md-2">
 							<input type="text" class="form-control" name="detail.comment" placeholder="填写部分信息即可" />
 						</div>
+						<div data-bind="foreach: statuses" style="padding-top: 4px;">
+							<em class="small-box"> <input type="checkbox"
+								data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
+								name="detail.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
+							</em>
+						</div>
 						<button type="submit" class="btn btn-green" style="float: right" data-bind="click: refresh">搜索</button>
 					</div>
 
@@ -143,6 +149,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/air-received-detail.js"></script>
+	<script src="<%=basePath%>static/js/ticket/air-received-detail.js?v=1.002"></script>
 </body>
 </html>

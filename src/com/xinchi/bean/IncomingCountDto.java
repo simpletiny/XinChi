@@ -6,6 +6,7 @@ public class IncomingCountDto implements Serializable {
 
 	private static final long serialVersionUID = -7632183192048915660L;
 	private int all_wechat;
+	private int core_wechat;
 	private int main_wechat;
 	private int market_wechat;
 	private int try_wechat;
@@ -13,6 +14,7 @@ public class IncomingCountDto implements Serializable {
 	private int new_wechat;
 
 	private int all_tel;
+	private int core_tel;
 	private int main_tel;
 	private int market_tel;
 	private int try_tel;
@@ -113,6 +115,22 @@ public class IncomingCountDto implements Serializable {
 
 	public void setNew_tel(int new_tel) {
 		this.new_tel = new_tel;
+	}
+
+	public int getCore_wechat() {
+		return core_wechat;
+	}
+
+	public int getCore_tel() {
+		return core_tel;
+	}
+
+	public void setCore_wechat(int core_wechat) {
+		this.core_wechat = core_wechat;
+	}
+
+	public void setCore_tel(int core_tel) {
+		this.core_tel = core_tel;
 	}
 
 }

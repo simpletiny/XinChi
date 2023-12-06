@@ -280,7 +280,13 @@ public class UserServiceImpl implements UserService {
 
 			// 更新余额，余额=初始金额-应收款
 			ReceivableBalanceDto rb = receivableDao.selectUserReceivableBalanceByUserNumber(ubb.getUser_number());
-			uib.setCredit_balance(credit_limit.subtract(rb.getAll_balance()));
+
+			BigDecimal balance = BigDecimal.ZERO;
+			if (null != rb) {
+				balance = rb.getAll_balance();
+			}
+
+			uib.setCredit_balance(credit_limit.subtract(balance));
 
 			infoDao.update(uib);
 		}

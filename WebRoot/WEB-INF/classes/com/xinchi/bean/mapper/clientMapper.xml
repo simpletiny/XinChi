@@ -485,7 +485,8 @@
 		A.store_type,
 		A.back_level,
 		A.market_level,
-		A.talk_level
+		A.talk_level,
+		GROUP_CONCAT(B.user_pk) AS sales
 		from client A LEFT JOIN
 		client_user B ON A.pk = B.client_pk
 		<where>
@@ -496,6 +497,8 @@
 				and A.client_name = #{client_name,jdbcType=VARCHAR}
 			</if>
 		</where>
+		
+		group by B.client_pk
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select

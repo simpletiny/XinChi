@@ -3,6 +3,16 @@ var AirReceivedDetailContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 
 	self.details = ko.observableArray();
+
+	self.statuses = ['I', 'E'];
+	self.statusMapping = {
+		'I' : "待确认",
+		'E' : "已入账"
+	};
+
+	self.chosenStatuses = ko.observableArray([]);
+	self.chosenStatuses.push('I');
+
 	// 获取所有账户
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {
@@ -18,11 +28,6 @@ var AirReceivedDetailContext = function() {
 	});
 
 	self.chosenReceiveds = ko.observableArray();
-
-	self.statusMapping = {
-		I : '待确认',
-		E : '已入账'
-	}
 
 	self.typeMapping = {
 		SUM : '合账',
@@ -77,6 +82,7 @@ var AirReceivedDetailContext = function() {
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
+								self.chosenReceiveds.removeAll();
 								self.refresh();
 							} else {
 								fail_msg(str);

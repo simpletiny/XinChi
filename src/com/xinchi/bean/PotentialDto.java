@@ -6,6 +6,7 @@ public class PotentialDto implements Serializable {
 
 	private static final long serialVersionUID = -8690618172072447161L;
 
+	private String user_pk;
 	// 潜力值部分数据
 	private int all_all;
 	private int core_all;
@@ -15,6 +16,14 @@ public class PotentialDto implements Serializable {
 	private int try_all;
 	private int ignore_all;
 	private int new_all;
+
+	private int last_all;
+	private int last_core;
+	private int last_main;
+	private int last_market;
+	private int last_try;
+	private int last_ignore;
+	private int last_new;
 
 	private int all_tel;
 	private int core_tel;
@@ -370,6 +379,70 @@ public class PotentialDto implements Serializable {
 
 	public void setNew_unknow(int new_unknow) {
 		this.new_unknow = new_unknow;
+	}
+
+	public int getLast_all() {
+		return last_all;
+	}
+
+	public int getLast_core() {
+		return last_core;
+	}
+
+	public int getLast_main() {
+		return last_main;
+	}
+
+	public int getLast_market() {
+		return last_market;
+	}
+
+	public int getLast_try() {
+		return last_try;
+	}
+
+	public int getLast_ignore() {
+		return last_ignore;
+	}
+
+	public int getLast_new() {
+		return last_new;
+	}
+
+	public void setLast_all(int last_all) {
+		this.last_all = last_all;
+	}
+
+	public void setLast_core(int last_core) {
+		this.last_core = last_core;
+	}
+
+	public void setLast_main(int last_main) {
+		this.last_main = last_main;
+	}
+
+	public void setLast_market(int last_market) {
+		this.last_market = last_market;
+	}
+
+	public void setLast_try(int last_try) {
+		this.last_try = last_try;
+	}
+
+	public void setLast_ignore(int last_ignore) {
+		this.last_ignore = last_ignore;
+	}
+
+	public void setLast_new(int last_new) {
+		this.last_new = last_new;
+	}
+
+	public String getUser_pk() {
+		return user_pk;
+	}
+
+	public void setUser_pk(String user_pk) {
+		this.user_pk = user_pk;
 	}
 
 }

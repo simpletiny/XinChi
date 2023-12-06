@@ -474,7 +474,6 @@
 		A.update_user,
 		A.base_pk,
 		A.PNR,
-		A.voucher_number,
 		A.create_time,
 		A.update_time,
 		COALESCE(C.supplier_name, A.receiver) AS receiver,

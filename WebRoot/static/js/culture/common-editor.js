@@ -56,7 +56,7 @@ KindEditor.ready(function(K) {
 		items : ['fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|',
 				'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist',
 				'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', '|', 'selectall', '-', 'title',
-				'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold', 'italic', 'underline', 'strikethrough',
-				'removeformat', '|', 'image', 'advtable', 'hr', 'emoticons', 'link', 'unlink', '|', 'about']
+				'fontname', 'fontsize', '|', 'hilitecolor', 'forecolor', 'bold', 'italic', 'underline',
+				'strikethrough', 'removeformat', '|', 'image', 'advtable', 'hr', 'emoticons', 'link', 'unlink']
 	});
 });

@@ -13,6 +13,7 @@ import com.xinchi.bean.PayApprovalBean;
 import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -71,8 +72,30 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 				continue;
 			rei.setDelete_flg("Y");
 			dao.update(rei);
-
 		}
+		return SUCCESS;
+	}
+
+	@Override
+	public String reApply(ReimbursementBean reimbursement) {
+		UserSessionBean user = SimpletinyUser.user();
+		reimbursement.setStatus("I");
+		reimbursement.setApproval_user("");
+		reimbursement.setApproval_time("");
+		reimbursement.setApply_user(user.getUser_number());
+		dao.update(reimbursement);
+
+		// 生成支付审批
+		PayApprovalBean pa = new PayApprovalBean();
+		pa.setReceiver(user.getUser_name());
+		pa.setMoney(reimbursement.getMoney());
+		pa.setItem(reimbursement.getItem());
+		pa.setStatus(ResourcesConstants.PAID_STATUS_ING);
+		pa.setComment("归属月份：" + reimbursement.getMonth() + "\n" + reimbursement.getComment());
+		pa.setApply_user(user.getUser_number());
+		pa.setBack_pk(reimbursement.getPk());
+		pa.setApply_time(DateUtil.getTimeMillis());
+		payApprovalDao.insert(pa);
 		return SUCCESS;
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -68,9 +69,11 @@ public interface ClientRelationService extends BaseService {
 	public float caculateBackPoint(String user_pk);
 
 	public IncomingCountDto selectIncomingDate(String user_pk);
-	
+
 	public ClientRelationBean selectByEmployeePk(String employee_pk);
 
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
+
+	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean);
 
 }
