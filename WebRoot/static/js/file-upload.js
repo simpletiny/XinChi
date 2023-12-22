@@ -13,7 +13,7 @@ function changeFile(param) {
 	var initWidth = param.width == null ? K.width : param.width;
 	var type = param.type == null ? K.type : param.type;
 	
-	if(type=="image"){
+	if(type=="image"){ 
 		param.accept = K.accept;
 	}
 	var typeMapping = {

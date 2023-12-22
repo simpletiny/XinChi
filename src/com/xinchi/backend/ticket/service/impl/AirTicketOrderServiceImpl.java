@@ -401,8 +401,9 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 	}
 
 	@Override
-	public String checkCanEditByPassengerPks(List<String> passenger_pks) {
+	public String checkCanEditByPassengerPks(String passenger_pks_str) {
 		Set<String> order_numbers = new HashSet<>();
+		String[] passenger_pks = passenger_pks_str.split(",");
 		for (String passenger_pk : passenger_pks) {
 			AirTicketNameListBean name = airTicketNameListDao.selectByPrimaryKey(passenger_pk);
 			order_numbers.add(name.getOrder_number());

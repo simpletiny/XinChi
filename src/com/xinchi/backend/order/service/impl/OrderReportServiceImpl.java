@@ -1,7 +1,9 @@
 package com.xinchi.backend.order.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,10 @@ import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderReportService;
+import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
+import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
@@ -32,8 +38,28 @@ public class OrderReportServiceImpl implements OrderReportService {
 		return dao.selectOrderReportByPage(page);
 	}
 
+	@Autowired
+	private AirTicketNameListDAO airTicketNameListDao;
+
+	@Autowired
+	private AirTicketOrderDAO airTicketOrderDao;
+
 	@Override
 	public String apporveTeamReport(String team_number) {
+		// 检测是否可以确认单团。
+		// 检测票务订单是否已经决算。
+		List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(team_number);
+		Set<String> order_numbers = new HashSet<>();
+		for (AirTicketNameListBean name : names) {
+			order_numbers.add(name.getOrder_number());
+		}
+
+		for (String order_number : order_numbers) {
+			AirTicketOrderBean air_order = airTicketOrderDao.selectByOrderNumber(order_number);
+			if (air_order.getFinal_flg().equals("N"))
+				return "airnofinal";
+		}
+
 		TeamReportBean tr = dao.selectTeamReportByTn(team_number);
 		tr.setApproved("Y");
 		dao.updateTeamReport(tr);

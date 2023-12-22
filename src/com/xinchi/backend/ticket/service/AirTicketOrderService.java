@@ -58,5 +58,5 @@ public interface AirTicketOrderService extends BaseService {
 
 	public String finalTicketOrder(String order_number, String final_flg);
 
-	public String checkCanEditByPassengerPks(List<String> passenger_pks);
+	public String checkCanEditByPassengerPks(String passenger_pks_str);
 }

@@ -56,7 +56,7 @@
 							<label class="col-md-1 control-label">产品</label>
 							<div class="col-md-2">
 								<input type="text" class="form-control" placeholder="产品" name="airTicketOrder.product_name" />
-							</div>
+							</div> 
 						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
 							<div style="padding-top: 3px; float: right">

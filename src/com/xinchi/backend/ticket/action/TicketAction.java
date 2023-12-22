@@ -333,7 +333,7 @@ public class TicketAction extends BaseAction {
 	 * @return
 	 */
 	public String checkCanEditByPassengerPks() {
-		resultStr = airTicketOrderService.checkCanEditByPassengerPks(passenger_pks);
+		resultStr = airTicketOrderService.checkCanEditByPassengerPks(passenger_pks_str);
 		return SUCCESS;
 	}
 

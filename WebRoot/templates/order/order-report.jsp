@@ -139,6 +139,7 @@
 								<th>产品名称</th>
 								<th>人数</th>
 								<th>总团款</th>
+								<th>营收扣点</th>
 								<th>立款应收</th>
 								<th>机票</th>
 								<th>地接成本</th>
@@ -170,6 +171,7 @@
 								<td data-bind="text: $data.people_count"></td>
 								<td><a href="javascript:void(0)" class="rmb"
 									data-bind="text: $data.receivable,event:{click:function(){$root.viewReceivable($data.team_number)}}"></a></td>
+								<td></td>
 								<td data-bind="text: $data.discount_receivable" class="rmb"></td>
 
 								<!-- ko if:($root.user_roles.indexOf('TICKET')>=0 ||$root.user_roles.indexOf('ADMIN')>=0)  && $data.air_ticket_cost==null -->
@@ -424,6 +426,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.005"></script>
 </body>
 </html>
