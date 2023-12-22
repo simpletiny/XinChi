@@ -18,9 +18,9 @@ var ClientContext = function() {
 	});
 	// 维度
 	// self.level = [ '新增级', '忽略级', '尝试级', '市场级', '朋友级', '主力级', '核心级' ];
-	self.level = ['主力级', '市场级', '尝试级', '忽略级', '新增级'];
+	self.level = ['核心级', '主力级', '市场级', '尝试级', '忽略级', '新增级'];
 	// 关系度
-	self.relationLevel = ['主力级', '市场级', '尝试级', '忽略级', '新增级'];
+	self.relationLevel = ['核心级', '主力级', '市场级', '尝试级', '忽略级', '新增级'];
 
 	// 市场力
 	// self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
@@ -48,7 +48,7 @@ var ClientContext = function() {
 		'4' : '年单'
 	};
 
-	self.chosenSortType = ko.observable('3');
+	self.chosenSortType = ko.observable('2');
 
 	self.changeSortType = function() {
 		self.refresh();

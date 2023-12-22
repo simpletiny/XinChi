@@ -200,6 +200,10 @@
 		<action name="approveTeamReport" class="orderReportAction" method="approveTeamReport">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<!-- 单团添加额外收支 -->
+		<action name="addReconciliation" class="orderReportAction" method="addReconciliation">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 打回已审核的单团核算单 -->
 		<action name="rollBackTeamReport" class="orderReportAction" method="rollBackTeamReport">
 			<result name="success" type="str">resultStr</result>

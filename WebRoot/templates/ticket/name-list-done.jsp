@@ -95,23 +95,21 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span6">
-							<label class="col-md-1 control-label">客户</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
-							</div>
+						<label class="col-md-1 control-label">客户</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
-							</div>
+						<label class="col-md-1 control-label">订单号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="订单号" name="passenger.order_number" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">乘机人</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
-							</div>
+						<label class="col-md-1 control-label">团号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
+						</div>
+						<label class="col-md-1 control-label">乘机人</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
 						</div>
 					</div>
 

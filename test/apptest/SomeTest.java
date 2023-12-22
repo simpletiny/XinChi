@@ -10,10 +10,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import com.xinchi.common.DateUtil;
+import java.util.Set;
 
 import generator.util.JdbcUtils;
 
@@ -61,10 +61,15 @@ public class SomeTest {
 	}
 
 	public static void main(String[] args) {
-		String a = "2023-01-01";
-		String b = "2023-02";
+		Set<String> a = new HashSet<>();
+		a.add("A");
+		a.add("B");
+		a.add("A");
 
-		System.out.println(DateUtil.lastMonth());
+		for (String c : a) {
+			System.out.println(c);
+		}
+
 	}
 
 	public static Detail random() {

@@ -7,6 +7,8 @@
 		<result column="sys_cost" property="sys_cost" jdbcType="DECIMAL" />
 		<result column="discount_flg" property="discount_flg" jdbcType="CHAR" />
 		<result column="discount_receivable" property="discount_receivable" jdbcType="DECIMAL" />
+		<result column="other_pay" property="other_pay" jdbcType="DECIMAL" />
+		<result column="other_receive" property="other_receive" jdbcType="DECIMAL" />
 		<result column="approved" property="approved" jdbcType="CHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
@@ -26,7 +28,9 @@
 		update_user,
 		create_user,
 		create_time,
-		update_time
+		update_time,
+		other_pay,
+		other_receive
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -152,6 +156,12 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="other_pay != null">
+				other_pay = #{other_pay,jdbcType=DECIMAL},
+			</if>
+			<if test="other_receive != null">
+				other_receive = #{other_receive,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.OrderReportService;
 import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -129,6 +130,20 @@ public class OrderReportAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String reconciliation_type;
+	private BigDecimal money;
+
+	public String addReconciliation() {
+		TeamReportBean tr = service.selectTeamReportByTeamNumber(team_number);
+		if (reconciliation_type.equals(ResourcesConstants.SIMPLETINY_PAY)) {
+			tr.setOther_pay(money);
+		} else {
+			tr.setOther_receive(money);
+		}
+		resultStr = service.updateTeamReport(tr);
+		return SUCCESS;
+	}
+
 	public OrderReportDto getOption() {
 		return option;
 	}
@@ -167,5 +182,21 @@ public class OrderReportAction extends BaseAction {
 
 	public void setReport(OrderReportDto report) {
 		this.report = report;
+	}
+
+	public String getReconciliation_type() {
+		return reconciliation_type;
+	}
+
+	public BigDecimal getMoney() {
+		return money;
+	}
+
+	public void setReconciliation_type(String reconciliation_type) {
+		this.reconciliation_type = reconciliation_type;
+	}
+
+	public void setMoney(BigDecimal money) {
+		this.money = money;
 	}
 }

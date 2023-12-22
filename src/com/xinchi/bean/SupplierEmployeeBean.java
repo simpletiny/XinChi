@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class SupplierEmployeeBean extends SupperBO implements Serializable {
@@ -41,8 +43,12 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 	private String employee_provice;
 	private String employee_city;
 
+	private String delete_flg;
+
 	// 供应商财务主体种类
 	private String type;
+
+	private List<String> delete_flgs;
 
 	public String getName() {
 		return name;
@@ -202,6 +208,22 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
+	}
+
+	public List<String> getDelete_flgs() {
+		return delete_flgs;
+	}
+
+	public void setDelete_flgs(List<String> delete_flgs) {
+		this.delete_flgs = delete_flgs;
 	}
 
 }

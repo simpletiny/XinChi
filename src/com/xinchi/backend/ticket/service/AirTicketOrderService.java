@@ -55,4 +55,8 @@ public interface AirTicketOrderService extends BaseService {
 	public String lockAirTicketOrder(List<String> airTicketOrderPks);
 
 	public String rollBackOrder(String order_pk);
+
+	public String finalTicketOrder(String order_number, String final_flg);
+
+	public String checkCanEditByPassengerPks(List<String> passenger_pks);
 }

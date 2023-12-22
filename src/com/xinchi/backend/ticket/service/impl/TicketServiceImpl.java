@@ -17,9 +17,11 @@ import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
+import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.ticket.service.TicketService;
 import com.xinchi.bean.AirTicketChangeLogBean;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
@@ -57,6 +59,9 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private OrderReportDAO orderReportDao;
 
+	@Autowired
+	private AirTicketOrderDAO airTicketOrderDao;
+
 	@Override
 	public String changFlight(String json) {
 		JSONObject obj = JSONObject.fromObject(json);
@@ -90,13 +95,21 @@ public class TicketServiceImpl implements TicketService {
 		atcl.setFrom_to_city(from_to_city);
 		String change_pk = changeLogDao.insert(atcl);
 
+		Map<String, BigDecimal> ticket_order_change = new HashMap<String, BigDecimal>();
 		for (int i = 0; i < nameArr.size(); i++) {
 			JSONObject current = nameArr.getJSONObject(i);
 			String name_pk = current.getString("name_pk");
 			BigDecimal change_cost = new BigDecimal(current.getString("change_cost"));
+			AirTicketNameListBean name = nameListDao.selectByPrimaryKey(name_pk);
 
-			AirTicketNameListBean name = new AirTicketNameListBean();
-			name.setPk(name_pk);
+			// 记录票务订单的机票款变化
+			if (ticket_order_change.containsKey(name.getOrder_number())) {
+				ticket_order_change.put(name.getOrder_number(),
+						ticket_order_change.get(name.getOrder_number()).add(change_cost));
+			} else {
+				ticket_order_change.put(name.getOrder_number(), change_cost);
+			}
+
 			name.setStatus("C");
 			name.setChange_pk(change_pk);
 			name.setChange_cost(change_cost);
@@ -132,6 +145,14 @@ public class TicketServiceImpl implements TicketService {
 
 			}
 
+		}
+		// 更新票务订单机票款
+		for (String order_number : ticket_order_change.keySet()) {
+			BigDecimal change_cost = ticket_order_change.get(order_number);
+			AirTicketOrderBean ticket_order = airTicketOrderDao.selectByOrderNumber(order_number);
+			ticket_order.setTicket_cost(ticket_order.getTicket_cost().add(change_cost));
+
+			airTicketOrderDao.update(ticket_order);
 		}
 
 		// 更新订单票务费用

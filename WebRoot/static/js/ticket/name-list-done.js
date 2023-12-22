@@ -36,7 +36,7 @@ var PassengerContext = function() {
 	}
 
 	// 解锁名单
-	self.unlockName = function() {
+	 self.unlockName =  function() {
 		if (self.chosenPassengers().length < 1) {
 			fail_msg("请选择乘客！");
 			return;
@@ -47,6 +47,10 @@ var PassengerContext = function() {
 				passenger_pks += data[0] + ",";
 			}
 			passenger_pks.RTrim(",");
+			console.log(passenger_pks)
+				const isCan = checkCanEdit(passenger_pks);
+			
+			
 			let msg = "解锁名单意味着，销售可以对解锁的名单进行编辑或删除操作。确定解锁这些名单吗？"
 			$.layer({
 				area : ['auto', 'auto'],
@@ -505,6 +509,31 @@ function checkSameOrderNumber(tr) {
 
 }
 
+var checkCanEdit = function(passenger_pks) {
+	let param = "passenger_pks=" + passenger_pks;
+	let url= ctx.apiurl + 'ticket/checkCanEditByPassengerPks';
+	return new Promise((resolve, reject) => {
+	         $.ajax({
+	            url: url,
+	            method: 'POST', 
+	            data:param
+	            }).success(function(data) {
+	                // 假设您根据返回的数据判断是否返回 true
+	                if (data=="success") {
+	                    resolve(true);
+	                } else {
+	                    resolve(false);
+	                }
+	            })
+	        });
+}
+
+async function a() {
+let c= await checkCanEdit("123");
+console.log(c);
+}
+
+a()
 var toggleLockOrder = function(team_number, lock_flg) {
 	startLoadingSimpleIndicator("执行中……");
 	const param = "team_number=" + team_number + "&lock_flg=" + lock_flg;

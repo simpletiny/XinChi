@@ -27,6 +27,8 @@
 		<result column="sale_cost" property="sale_cost" jdbcType="DECIMAL" />
 		<result column="sys_cost" property="sys_cost" jdbcType="DECIMAL" />
 		<result column="tail98" property="tail98" jdbcType="DECIMAL" />
+		<result column="other_pay" property="other_pay" jdbcType="DECIMAL" />
+		<result column="other_receive" property="other_receive" jdbcType="DECIMAL" />
 		<result column="approved" property="approved" jdbcType="CHAR" />
 		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
 		<result column="product_final_flg" property="product_final_flg" jdbcType="VARCHAR" />
@@ -40,7 +42,7 @@
 		X.sale_cost,
 		X.sys_cost,
 		X.approved,
-        IF(A.independent_flg='A',CONCAT(E.from_city,'--',E.to_city,'（单）'),A.product_name) AS product_name,
+		IF(A.independent_flg='A',CONCAT(E.from_city,'--',E.to_city,'（单）'),A.product_name) AS product_name,
 		A.client_employee_pk,
 		A.client_employee_name,
 		A.other_cost,
@@ -64,7 +66,8 @@
 		0,
 		A.special_count)) AS people_count,
 		A.update_user,
-		A.create_user_number AS sale_number,
+		A.create_user_number AS
+		sale_number,
 		A.create_user AS sale_name,
 		IF(X.discount_flg = 'Y',
 		X.discount_receivable,
@@ -77,7 +80,7 @@
 		0,
 		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy),
 		0, A.fy) -
-		X.sys_cost-X.sale_cost AS gross_profit,
+		X.sys_cost-X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)  AS gross_profit,
 		(IF(X.discount_flg = 'Y',
 		X.discount_receivable,
 		IF(B.final_flg = 'Y',
@@ -88,7 +91,7 @@
 		IF(ISNULL(A.other_cost),
 		0,
 		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy)-
-		X.sys_cost-X.sale_cost) / (IF(A.confirm_flg = 'F',
+		X.sys_cost-X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)) / (IF(A.confirm_flg = 'F',
 		D.adult_count,
 		A.adult_count)+IF(A.confirm_flg = 'F',
 		IF(ISNULL(D.special_count),
@@ -99,20 +102,27 @@
 		A.special_count))) AS per_profit,
 		A.confirm_flg,
 		A.confirm_date,
-		C.final_flg AS product_final_flg,
-		A.independent_flg
+		C.final_flg AS
+		product_final_flg,
+		A.independent_flg,
+		X.other_pay,
+		X.other_receive
 		FROM
 		team_report X
 		LEFT JOIN
-		budget_order_view A ON A.team_number =
+		budget_order_view A ON
+		A.team_number =
 		X.team_number
 		LEFT JOIN
 		receivable B ON A.team_number = B.team_number
 		LEFT JOIN
-		view_team_payable C ON A.team_number =
+		view_team_payable C ON
+		A.team_number =
 		C.team_number
-		LEFT JOIN final_order_view D ON A.team_number=D.team_number
-        LEFT JOIN sale_order_ticket_info E ON A.pk=E.order_pk and E.ticket_index=1
+		LEFT JOIN
+		final_order_view D ON A.team_number=D.team_number
+		LEFT JOIN sale_order_ticket_info
+		E ON A.pk=E.order_pk and E.ticket_index=1
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -121,7 +131,8 @@
 				and A.team_number like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
-				and (A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%') OR CONCAT(E.from_city,'--',E.to_city) like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%'))
+				and (A.product_name like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%') OR
+				CONCAT(E.from_city,'--',E.to_city) like CONCAT('%',#{params.bo.product_name,jdbcType=VARCHAR},'%'))
 			</if>
 			<if test="params.bo.departure_date_from != null and params.bo.departure_date_from !=''">
 				and A.departure_date &gt;= #{params.bo.departure_date_from,jdbcType=VARCHAR}
@@ -162,7 +173,7 @@
 		SUM(X.sale_cost) AS
 		sale_cost,
 		SUM(X.sys_cost) AS sys_cost,
-		SUM(A.other_cost) AS other_cost,
+		SUM(COALESCE(A.other_cost,0) + COALESCE(X.other_pay,0) - COALESCE(X.other_receive,0)) AS other_cost,
 		SUM(A.fy) AS fy,
 		SUM(IF(B.final_flg = 'Y',
 		B.final_receivable,
@@ -194,7 +205,8 @@
 		0,
 		A.other_cost) - IF(ISNULL(C.payable), 0,
 		C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost
-		- X.sale_cost) AS gross_profit,
+		-
+		X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)) AS gross_profit,
 		SUM(IF(X.discount_flg = 'Y',
 		X.discount_receivable,
 		IF(B.final_flg = 'Y',
@@ -206,10 +218,11 @@
 		0,
 		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy),
 		0, A.fy) - X.sys_cost
-		- X.sale_cost) / SUM(IF(A.confirm_flg
+		- X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0) ) / SUM(IF(A.confirm_flg
 		= 'F',
 		D.adult_count,
-		A.adult_count) + IF(A.confirm_flg = 'F',
+		A.adult_count) + IF(A.confirm_flg
+		= 'F',
 		IF(ISNULL(D.special_count),
 		0,
 		D.special_count),

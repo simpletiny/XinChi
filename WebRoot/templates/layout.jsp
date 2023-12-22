@@ -45,35 +45,35 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	display: block;
 	background: white;
 }
+
 #mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: white; /* 根据需要设置文字颜色 */
-    background: transparent; /* 背景半透明 */
-    display: block;
-    z-index: 1000;
-    pointer-events: none; 
-    overflow: hidden; /* 防止内容溢出 */
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	color: white; /* 根据需要设置文字颜色 */
+	background: transparent; /* 背景半透明 */
+	display: block;
+	z-index: 1000;
+	pointer-events: none;
+	overflow: hidden; /* 防止内容溢出 */
 }
 
 .mask-text {
-    color: rgba(0, 0, 0, 0.1); /* 白色文字，30% 不透明度 */
-    font-size: 20px; /* 字体大小 */ 
-    font-family: Arial, sans-serif; /* 字体 */
-    transform: rotate(-30deg); /* 文字倾斜 */
-    margin: 10px; /* 文字间距 */
-    white-space: nowrap; /* 防止文字换行 */
-    position: absolute; /* 文字也使用绝对定位 */
-    pointer-events: none; /* 防止文字捕获鼠标事件 */
+	color: rgba(0, 0, 0, 0.1); /* 白色文字，30% 不透明度 */
+	font-size: 20px; /* 字体大小 */
+	font-family: Arial, sans-serif; /* 字体 */
+	transform: rotate(-30deg); /* 文字倾斜 */
+	margin: 10px; /* 文字间距 */
+	white-space: nowrap; /* 防止文字换行 */
+	position: absolute; /* 文字也使用绝对定位 */
+	pointer-events: none; /* 防止文字捕获鼠标事件 */
 }
-
 </style>
 </head>
 <body>
-	
+
 	<!--  	<div class="floatPanel timer">
 		<label>重启倒计时</label>
 		<h3><b id="reboot-timer">05:00</b></h3>
@@ -91,10 +91,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div class="user-time">
 				<input type="hidden" id="hidden-server-date" value='${user.current_date}' />
 				<s:property value="#session.user.current_date" />
-				<input type="hidden" id="user-nick-name" value = '${user.nick_name}' />
-				<input type="hidden" id="user-number" value = '${user.user_number}' />
-				<input type="hidden" id="user-roles" value = '${user.user_roles}' />
-				<input type="hidden" id="user-pk" value = '${user.pk}' />
+				<input type="hidden" id="user-nick-name" value='${user.nick_name}' /> <input type="hidden" id="user-number"
+					value='${user.user_number}' /> <input type="hidden" id="user-roles" value='${user.user_roles}' /> <input
+					type="hidden" id="user-pk" value='${user.pk}' />
 			</div>
 			<div class="user-status">
 				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
@@ -293,11 +292,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users1 fa-lg fa-fw"></i>票务操作</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作订单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已出票名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>已操作订单</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>已出票订单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order-final.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>已决算订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/deposit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航司押金</a></li>
 					</ol></li>
 			</s:if>

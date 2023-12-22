@@ -70,4 +70,6 @@ public interface AirTicketNameListDAO {
 	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> t_ns);
 
 	public AirTicketNameListBean selectByBasePk(String pk);
+
+	public List<AirTicketNameListBean> selectTicketCostInfo(AirTicketNameListBean passenger);
 }

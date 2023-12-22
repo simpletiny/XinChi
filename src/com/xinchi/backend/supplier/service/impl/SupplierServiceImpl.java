@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.supplier.dao.SupplierDAO;
+import com.xinchi.backend.supplier.dao.SupplierEmployeeDAO;
 import com.xinchi.backend.supplier.dao.SupplierFileDAO;
 import com.xinchi.backend.supplier.service.SupplierService;
 import com.xinchi.bean.SupplierBean;
+import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.SupplierFileBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
@@ -272,11 +274,20 @@ public class SupplierServiceImpl implements SupplierService {
 		supplierFileDAO.deleteFileByParam(sfb);
 	}
 
+	@Autowired
+	private SupplierEmployeeDAO supplierEmployeeDao;
+
 	@Override
 	public String blockSupplier(String supplier_pk) {
 		SupplierBean s = dao.selectByPrimaryKey(supplier_pk);
 		s.setIs_cooperate("N");
 		dao.update(s);
+		// 财务主体停用后，名下的员工也要停用。
+		List<SupplierEmployeeBean> employees = supplierEmployeeDao.selectBySupplierPk(supplier_pk);
+		for (SupplierEmployeeBean employee : employees) {
+			employee.setDelete_flg("Y");
+			supplierEmployeeDao.update(employee);
+		}
 		return SUCCESS;
 	}
 

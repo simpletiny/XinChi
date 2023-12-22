@@ -45,7 +45,7 @@ public class AutoUpdateClientRelation {
 		String sql5 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day90_count < 6 and B.day30_count<5;";
 		// 新增核心级
 		String sql14 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='核心级' where B.day30_count>=5;";
-		String sql6 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='忽略级' where(B.last_confirm_date is null OR datediff(now(),B.last_confirm_date)>60);";
+		String sql6 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='忽略级' where (B.last_confirm_date is null OR datediff(now(),B.last_confirm_date)>60) and B.order_count!=0;";
 		String sql7 = "UPDATE client_relation A LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk SET A.last_confirm_date = B.last_confirm_date, A.last_order_period = IF(B.last_confirm_date is null,null,DATEDIFF(NOW(), B.last_confirm_date));";
 
 		String sql8 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='尝试级' where B.order_count = 1;";
@@ -53,10 +53,10 @@ public class AutoUpdateClientRelation {
 		String sql10 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='市场级' where B.order_count>=2 and B.day90_count < 6 and B.day30_count<5;";
 		String sql11 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='忽略级' where(B.last_confirm_date is null OR datediff(now(),B.last_confirm_date)>60);";
 		// 新增核心级
-		String sql15 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='忽略级' where B.day30_count>=5;";
+		String sql15 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='核心级' where B.day30_count>=5;";
 
-		String sql12 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0;";
-		String sql13 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0;";
+		String sql12 = "update client_relation A  LEFT JOIN view_order_count B ON A.client_employee_pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0 or B.order_count is null;";
+		String sql13 = "update client_employee A  LEFT JOIN view_order_count B ON A.pk = B.client_employee_pk set A.relation_level='新增级' where B.order_count = 0 or B.order_count is null;";
 		SqlBean ss = new SqlBean();
 		ss.setSql(sql1);
 		commonDao.exeBySql(ss);

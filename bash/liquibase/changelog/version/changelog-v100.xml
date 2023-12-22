@@ -966,6 +966,55 @@
 			<comment>CREATE TABLE client_employee_type_count</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="35" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE budget_standard_order 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL COMMENT '队长名称' ;
+				ALTER TABLE budget_non_standard_order 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL COMMENT '队长名称' ;
+				ALTER TABLE air_ticket_need 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL ;
+				ALTER TABLE air_ticket_order 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL ;
+				ALTER TABLE final_non_standard_order 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL COMMENT '队长名称' ;
+				ALTER TABLE final_standard_order 
+				CHANGE COLUMN passenger_captain passenger_captain VARCHAR(45) NULL DEFAULT NULL COMMENT '队长名称' ;
+				ALTER TABLE air_ticket_change_log 
+				CHANGE COLUMN captain captain VARCHAR(45) NULL DEFAULT NULL ;
+             ]]>
+			<comment>ALTER TABLE which has column name passenger_catain</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="36" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE team_report 
+				ADD COLUMN other_pay DECIMAL(12,2) NULL DEFAULT NULL COMMENT '其他支出' AFTER create_user,
+				ADD COLUMN other_receive DECIMAL(12,2) NULL DEFAULT NULL COMMENT '其他收入' AFTER other_pay;
+             ]]>
+			<comment>ALTER TABLE team_report</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="37" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE supplier_employee 
+				ADD COLUMN delete_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否停用' AFTER fax;
+             ]]>
+			<comment>ALTER TABLE supplier_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="38" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_ticket_order 
+				ADD COLUMN final_flg CHAR(1) NULL DEFAULT 'N' COMMENT '决算标识' AFTER comment;
+             ]]>
+			<comment>ALTER TABLE air_ticket_order </comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

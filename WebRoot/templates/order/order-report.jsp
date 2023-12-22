@@ -45,10 +45,8 @@
 							</div>
 						</div>
 						<div style="float: right">
-							<div>
-								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">添加支出</button>
-								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">添加收入</button>
-							</div>
+							<button type="submit" st="btn-search" class="btn btn-green" data-bind="click: addReceive">添加收入</button>
+							<button type="submit" st="btn-search" class="btn btn-green" data-bind="click: addPay">添加支出</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -158,7 +156,7 @@
 						</thead>
 						<tbody data-bind="foreach: reports">
 							<tr>
-								<td><input type="checkbox" /></td>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders"/></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.team_number,event:{click:function(){$root.viewTeamDetail($data.team_number)}}"></a></td>
 								<!-- ko if:$data.order_type=="Y" -->
@@ -181,7 +179,7 @@
 								<td data-bind="text: $data.air_ticket_cost" class="rmb"></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.product_cost" class="rmb"></td>
-								<td data-bind="text: $data.other_cost" class="rmb"></td>
+								<td data-bind="text: $data.other_pay" class="rmb"></td>
 								<td data-bind="text: $data.other_receive" class="rmb"></td>
 								<td data-bind="text: $data.fy" class="rmb"></td>
 								<td data-bind="text: $data.sys_cost" class="rmb"></td>
@@ -226,7 +224,8 @@
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFill() }">确认</button>
 		</div>
 	</div>
-	<div id="team-detail" style="display: none; width: 1000px; height:700px;overflow-y:scroll; padding-top: 30px; padding-bottom: 20px">
+	<div id="team-detail"
+		style="display: none; width: 1000px; height: 700px; overflow-y: scroll; padding-top: 30px; padding-bottom: 20px">
 		<div class="detail-header">
 			<span class="title">出团日期</span><span class="content" data-bind="text:order().departure_date"></span> <span
 				class="title">产品</span><span class="content" data-bind="text:order().product_name"></span> <span class="title">团号</span><span
@@ -398,6 +397,26 @@
 			</tbody>
 		</table>
 	</div>
+	<div id="div-reconciliation" style="display: none; width: 500px; height: 150px; ">
+		<form id="form-reconciliation">
+			<div class="input-row clearfloat">
+				<div class="col-md-12 required">
+					<label class="l" data-bind="text:reconciliation_type()+'金额'"></label>
+					<div class="ip" style="width: 40%">
+						<input type="number" placeholder="金额" class="ip-" id="other-money" required="required" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-12" style="margin-top: 10px">
+					<div align="right">
+						<a type="button" class="btn btn-green btn-r" data-bind="click: doReconciliation">提交</a> <a type="button"
+							class="btn btn-green btn-r" data-bind="click: cancelReconciliation">取消</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
 	<script>
 		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -405,6 +424,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.004"></script>
 </body>
 </html>

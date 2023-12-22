@@ -4,12 +4,12 @@ var EmployeeContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.employeePk = $("#employee_key").val();
 	self.employee = ko.observable({});
-	self.genders = [ '男', '女' ];
+	self.genders = ['男', '女'];
 	self.suppliers = ko.observable({
 		total : 0,
 		items : []
 	});
-	
+
 	startLoadingSimpleIndicator("加载中");
 
 	$.getJSON(self.apiurl + 'supplier/searchOneEmployee', {
@@ -24,16 +24,16 @@ var EmployeeContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
+
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
 			type : 1,
-			title : [ '选择财务主体', '' ],
+			title : ['选择财务主体', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#financial_pick'
@@ -45,12 +45,11 @@ var EmployeeContext = function() {
 	};
 
 	self.refresh = function() {
-		var param = "supplier.supplier_short_name="+$("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-		+ self.perPage;
+		var param = "supplier.type=A&supplier.supplier_short_name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);
-			
+
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 		});
@@ -66,7 +65,6 @@ var EmployeeContext = function() {
 		layer.close(financialLayer);
 	};
 
-	
 	self.saveEmployee = function() {
 		if (!$("form").valid()) {
 			return;
@@ -76,12 +74,12 @@ var EmployeeContext = function() {
 			url : self.apiurl + 'supplier/updateEmployee',
 			data : $("form").serialize()
 		}).success(function(str) {
-			if(str=="success"){
-				window.location.href=self.apiurl+"templates/ticket/supplier-employee.jsp";
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/ticket/supplier-employee.jsp";
 			}
 		});
 	};
-	
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 10;
@@ -116,10 +114,9 @@ var EmployeeContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);

@@ -2,7 +2,9 @@ package com.xinchi.backend.ticket.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -387,6 +389,31 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 		// }
 		// }
 
+		return SUCCESS;
+	}
+
+	@Override
+	public String finalTicketOrder(String order_number, String final_flg) {
+		AirTicketOrderBean order = dao.selectByOrderNumber(order_number);
+		order.setFinal_flg(final_flg);
+		dao.update(order);
+		return SUCCESS;
+	}
+
+	@Override
+	public String checkCanEditByPassengerPks(List<String> passenger_pks) {
+		Set<String> order_numbers = new HashSet<>();
+		for (String passenger_pk : passenger_pks) {
+			AirTicketNameListBean name = airTicketNameListDao.selectByPrimaryKey(passenger_pk);
+			order_numbers.add(name.getOrder_number());
+		}
+
+		for (String order_number : order_numbers) {
+			AirTicketOrderBean order = dao.selectByOrderNumber(order_number);
+			if (order.getFinal_flg().equals("Y")) {
+				return "final";
+			}
+		}
 		return SUCCESS;
 	}
 

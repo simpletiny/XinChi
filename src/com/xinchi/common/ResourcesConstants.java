@@ -10,6 +10,9 @@ import com.xinchi.bean.TaskBean;
 public class ResourcesConstants {
 	public static String SIMPLETINY = "SIMPLETINY";
 
+	public static String SIMPLETINY_RECEIVE = "收入";
+	public static String SIMPLETINY_PAY = "支出";
+
 	public static String PLACE_HOLDER = "&&^^@@@";
 
 	public static String DELIMITER = "@@";

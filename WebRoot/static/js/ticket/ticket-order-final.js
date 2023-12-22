@@ -1,6 +1,5 @@
 var airTicketCheckLayer;
 var passengerCheckLayer;
-var finalDetailLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -9,8 +8,6 @@ var OrderContext = function() {
 		'0' : '未锁定',
 		'1' : '已锁定'
 	};
-	
-	
 
 	self.airTickets = ko.observable();
 	// 查看航段信息
@@ -98,79 +95,28 @@ var OrderContext = function() {
 		});
 	};
 
-	self.order = ko.observable({});
-	// 决算订单
-	self.statusMapping = {
-			'Y' : '正常出票',
-			'C' : '航变'
-		}
-	self.finalOrder = function() {
-		if (self.chosenOrders().length < 1) {
-			fail_msg("请选择订单！");
-			return;
-		} else if (self.chosenOrders().length > 1) {
-			fail_msg("只能选择一个订单！");
-			return;
-		} else {
-			let order = self.chosenOrders()[0];
-			self.order(order);
-			startLoadingIndicator("加载中...");
-			Promise.all([$.getJSON(self.apiurl + 'ticket/searchAirTicketOrderLegByOrderPk', {order_pk : order.pk}),
-				$.getJSON(self.apiurl + "ticket/searchPassengerTicketCostInfo", "passenger.order_number="+order.order_number)]).then((results)=>{
-				self.airTickets(results[0].air_tickets);
-				self.passengers(results[1].airTicketNameList);
-				endLoadingIndicator();
-				finalDetailLayer = $.layer({
-					type : 1,
-					title : ['决算详情', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['1000px', '750px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#final-detail'
-					},
-					end : function() {
-					}
-				});
-				
-				$("td:contains('航变')").css("color", "red");
-				$("td:contains('正常出票')").css("color", "green");
-			}).catch((error) => {
-				console.log("test");
-			});
-		}
-	};
-	self.cancelFinal = function(){
-		console.log("tt");
-		layer.close(finalDetailLayer);
-	}
-	self.doFinal = function(){
+	self.cancelFinal = function() {
 		let order = self.chosenOrders()[0];
-		
 		const order_number = order.order_number;
 		let param = "order_number=" + order_number;
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
-				msg : '订单决算后，不能在进行任何操作！确认要决算此订单吗？',
+				msg : '确认要将此订单打回至未决算状态吗？',
 				btns : 2,
 				type : 4,
 				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
-					startLoadingIndicator("决算中");
+					startLoadingIndicator("打回中");
 					$.ajax({
 						type : "POST",
-						url : self.apiurl + 'ticket/finalTicketOrder',
+						url : self.apiurl + 'ticket/cancelFinalTicketOrder',
 						data : param
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
-							layer.close(finalDetailLayer);
-							success_msg("决算成功！")
+							success_msg("取消成功！")
 							self.refresh();
 						} else {
 							fail_msg(str);
@@ -179,7 +125,6 @@ var OrderContext = function() {
 				}
 			}
 		});
-		
 	}
 
 	self.search = function() {

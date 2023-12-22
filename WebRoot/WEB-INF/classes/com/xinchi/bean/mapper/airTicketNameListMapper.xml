@@ -528,6 +528,9 @@
 			<if test="params.bo.order_number != null and params.bo.order_number !=''">
 				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.order_number != null and params.bo.order_number !=''">
+				and A.order_number like CONCAT('%',#{params.bo.order_number,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
 			</if>
@@ -547,6 +550,33 @@
 		</where>
 		ORDER BY A.first_ticket_date DESC,A.order_number,A.team_number,ticket_order_pk
 	</select>
+
+	<select id="selectTicketCostInfo" parameterType="com.xinchi.bean.AirTicketNameListBean" resultMap="BaseResultMap">
+		SELECT
+		A.team_number,
+		A.order_number,
+		A.comment,
+		A.name,
+		A.id,
+		A.status,
+		B.ticket_cost,
+		A.change_pk,
+		A.change_cost,
+		A.id_type
+		FROM
+		air_ticket_name_list A
+		LEFT JOIN
+		view_sum_ticket_cost B ON A.pk = B.passenger_pk
+		<where>
+			<if test="team_number != null and team_number !=''">
+				and A.team_number = #{team_number,jdbcType=VARCHAR}
+			</if>
+			<if test="order_number != null and order_number !=''">
+				and A.order_number =#{order_number,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
 	<select id="selectDoneByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.team_number,

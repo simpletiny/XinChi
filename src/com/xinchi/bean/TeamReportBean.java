@@ -16,7 +16,9 @@ public class TeamReportBean extends SupperBO implements Serializable {
 
 	private String discount_flg;
 
-	private java.math.BigDecimal discount_receivable;
+	private BigDecimal discount_receivable;
+	private BigDecimal other_pay;
+	private BigDecimal other_receive;
 
 	private String approved;
 
@@ -31,11 +33,11 @@ public class TeamReportBean extends SupperBO implements Serializable {
 		return team_number;
 	}
 
-	public java.math.BigDecimal getSale_cost() {
+	public BigDecimal getSale_cost() {
 		return sale_cost;
 	}
 
-	public java.math.BigDecimal getSys_cost() {
+	public BigDecimal getSys_cost() {
 		return sys_cost;
 	}
 
@@ -43,7 +45,7 @@ public class TeamReportBean extends SupperBO implements Serializable {
 		return discount_flg;
 	}
 
-	public java.math.BigDecimal getDiscount_receivable() {
+	public BigDecimal getDiscount_receivable() {
 		return discount_receivable;
 	}
 
@@ -63,11 +65,11 @@ public class TeamReportBean extends SupperBO implements Serializable {
 		this.team_number = team_number;
 	}
 
-	public void setSale_cost(java.math.BigDecimal sale_cost) {
+	public void setSale_cost(BigDecimal sale_cost) {
 		this.sale_cost = sale_cost;
 	}
 
-	public void setSys_cost(java.math.BigDecimal sys_cost) {
+	public void setSys_cost(BigDecimal sys_cost) {
 		this.sys_cost = sys_cost;
 	}
 
@@ -75,7 +77,7 @@ public class TeamReportBean extends SupperBO implements Serializable {
 		this.discount_flg = discount_flg;
 	}
 
-	public void setDiscount_receivable(java.math.BigDecimal discount_receivable) {
+	public void setDiscount_receivable(BigDecimal discount_receivable) {
 		this.discount_receivable = discount_receivable;
 	}
 
@@ -105,6 +107,22 @@ public class TeamReportBean extends SupperBO implements Serializable {
 
 	public void setUpdate_time(String update_time) {
 		this.update_time = update_time;
+	}
+
+	public BigDecimal getOther_pay() {
+		return other_pay;
+	}
+
+	public BigDecimal getOther_receive() {
+		return other_receive;
+	}
+
+	public void setOther_pay(BigDecimal other_pay) {
+		this.other_pay = other_pay;
+	}
+
+	public void setOther_receive(BigDecimal other_receive) {
+		this.other_receive = other_receive;
 	}
 
 }

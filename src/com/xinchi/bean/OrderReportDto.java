@@ -55,6 +55,8 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private int adult_count;
 	private int special_count;
 	private BigDecimal tail98;
+	private BigDecimal other_pay;
+	private BigDecimal other_receive;
 
 	public String getTeam_number() {
 		return team_number;
@@ -342,5 +344,21 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setIndependent_flg(String independent_flg) {
 		this.independent_flg = independent_flg;
+	}
+
+	public BigDecimal getOther_pay() {
+		return other_pay;
+	}
+
+	public BigDecimal getOther_receive() {
+		return other_receive;
+	}
+
+	public void setOther_pay(BigDecimal other_pay) {
+		this.other_pay = other_pay;
+	}
+
+	public void setOther_receive(BigDecimal other_receive) {
+		this.other_receive = other_receive;
 	}
 }

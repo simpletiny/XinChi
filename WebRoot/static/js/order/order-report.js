@@ -1,6 +1,7 @@
 var fillLayer;
 var viewDetailLayer;
 var receivedDetailLayer;
+var reconciliationLayer;
 var OrderReportContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -11,6 +12,7 @@ var OrderReportContext = function() {
 		'Y' : '预',
 		'F' : '决'
 	});
+	self.chosenOrders = ko.observableArray([]);
 	self.chosenStatuses = ko.observableArray([]);
 	self.chosenStatuses.push("N");
 	self.statuses = ['N', 'Y'];
@@ -164,6 +166,120 @@ var OrderReportContext = function() {
 			}
 		});
 	}
+
+	self.reconciliation_type = ko.observable();
+	self.addReceive = function() {
+		if (!checkCount())
+			return;
+
+		self.reconciliation_type("收入");
+		let order = self.chosenOrders()[0];
+		$("#other-money").val(order.other_receive);
+		reconciliationLayer = $.layer({
+			type : 1,
+			title : ['添加收入', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '200px'],
+			offset : ['', ''],
+			scrollbar : true,
+			zIndex : 887,
+			page : {
+				dom : '#div-reconciliation'
+			},
+			end : function() {
+				$("#div-reconciliation").clear();
+			}
+		});
+	}
+	self.addPay = function() {
+		if (!checkCount())
+			return;
+		self.reconciliation_type("支出");
+		let order = self.chosenOrders()[0];
+		$("#other-money").val(order.other_pay);
+		reconciliationLayer = $.layer({
+			type : 1,
+			title : ['添加支出', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '200px'],
+			offset : ['', ''],
+			scrollbar : true,
+			zIndex : 887,
+			page : {
+				dom : '#div-reconciliation'
+			},
+			end : function() {
+				$("#div-reconciliation").clear();
+			}
+		});
+	}
+
+	let checkCount = function() {
+		if (self.chosenOrders().length < 1) {
+			fail_msg("请选择订单！");
+			return false;
+		} else if (self.chosenOrders().length > 1) {
+			fail_msg("只能选择一个订单！");
+			return false;
+		} else {
+			let order = self.chosenOrders()[0];
+			if (order.approved == 'Y') {
+				fail_msg("不能选择已审核订单！");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	self.doReconciliation = function() {
+		if (!$("#form-reconciliation").valid()) {
+			return;
+		}
+
+		let msg = "确认添加" + self.reconciliation_type() + "吗？";
+
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : msg,
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("保存中");
+					let other_money = $("#other-money").val();
+					let team_number = self.chosenOrders()[0].team_number;
+					let data = "money=" + other_money + "&team_number=" + team_number;
+					data += "&reconciliation_type=" + self.reconciliation_type();
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'order/addReconciliation',
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.refresh();
+							self.chosenOrders.removeAll();
+							$("#div-reconciliation").clear();
+							layer.close(reconciliationLayer);
+						} else {
+							fail_msg(str);
+						}
+					});
+				}
+			}
+		});
+	}
+	self.cancelReconciliation = function() {
+		layer.close(reconciliationLayer);
+		$("#div-reconciliation").clear();
+	}
+
 	var current_report;
 	var current_td;
 	// 填报机票款

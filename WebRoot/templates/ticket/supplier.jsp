@@ -114,6 +114,6 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/ticket/supplier.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/supplier.js?v=1.002"></script>
 </body>
 </html>

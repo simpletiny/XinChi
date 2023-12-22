@@ -12,14 +12,14 @@ public interface SupplierEmployeeDAO {
 	 * 
 	 * @param bo
 	 */
-	public void insert(com.xinchi.bean.SupplierEmployeeBean bo);
+	public void insert(SupplierEmployeeBean bo);
 
 	/**
 	 * 修改
 	 * 
 	 * @param bo
 	 */
-	public void update(com.xinchi.bean.SupplierEmployeeBean bo);
+	public void update(SupplierEmployeeBean bo);
 
 	/**
 	 * 删除
@@ -33,18 +33,18 @@ public interface SupplierEmployeeDAO {
 	 * 
 	 * @param id
 	 */
-	public com.xinchi.bean.SupplierEmployeeBean selectByPrimaryKey(String id);
+	public SupplierEmployeeBean selectByPrimaryKey(String id);
+
+	public List<SupplierEmployeeBean> selectBySupplierPk(String supplier_pk);
 
 	/**
 	 * 根据条件查找
 	 * 
 	 * @param bo
 	 */
-	public List<com.xinchi.bean.SupplierEmployeeBean> getAllByParam(
-			com.xinchi.bean.SupplierEmployeeBean bo);
+	public List<SupplierEmployeeBean> getAllByParam(SupplierEmployeeBean bo);
 
-	public List<SupplierEmployeeBean> getAllByPage(
-			Page<SupplierEmployeeBean> page);
+	public List<SupplierEmployeeBean> getAllByPage(Page<SupplierEmployeeBean> page);
 
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
 }

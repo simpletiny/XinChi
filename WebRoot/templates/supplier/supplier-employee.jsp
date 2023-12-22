@@ -87,6 +87,7 @@
 								<th>供应商简称</th>
 								<th>手机号</th>
 								<th>QQ</th>
+								<th>状态</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: employees">
@@ -98,6 +99,7 @@
 								<td data-bind="text: $data.financial_body_name"></td>
 								<td data-bind="text: $data.ellphone"></td>
 								<td data-bind="text: $data.qq"></td>
+								<td data-bind="text: $root.isMapping[$data.delete_flg]"></td>
 							</tr>
 						</tbody>
 					</table>

@@ -134,4 +134,9 @@ public class AirTicketNameListServiceImpl implements AirTicketNameListService {
 	public List<AirTicketNameListBean> selectWithInfoByTeamNumbers(List<String> team_numbers) {
 		return dao.selectWithInfoByTeamNumbers(team_numbers);
 	}
+
+	@Override
+	public List<AirTicketNameListBean> selectTicketCostInfo(AirTicketNameListBean passenger) {
+		return dao.selectTicketCostInfo(passenger);
+	}
 }

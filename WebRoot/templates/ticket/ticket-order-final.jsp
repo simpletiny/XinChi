@@ -21,22 +21,13 @@
 .form-control {
 	height: 30px;
 }
-
-.detail-header .title {
-	color: #6fa8dc;
-	margin-left: 20px;
-}
-
-.detail-header .content {
-	margin-left: 10px;
-}
 </style>
 </head>
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>已出票订单</h2>
+			<h2>已决算订单</h2>
 		</div>
 
 		<div class="main-container">
@@ -47,7 +38,7 @@
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
 						</div>
 					</div> -->
-					<input name="airTicketOrder.final_flg" type="hidden" value="N" />
+					<input name="airTicketOrder.final_flg" type="hidden" value="Y" />
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -67,9 +58,11 @@
 								<input type="text" class="form-control" placeholder="产品" name="airTicketOrder.product_name" />
 							</div>
 						</div>
-						<div style="padding-top: 3px; float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: finalOrder">决算订单</button>
-						</div>
+						<s:if test="#session.user.user_roles.contains('ADMIN')">
+							<div style="padding-top: 3px; float: right">
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: cancelFinal">取消决算</button>
+							</div>
+						</s:if>
 					</div>
 					<div class="form-group">
 						<div align="left">
@@ -224,69 +217,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- 决算详情 -->
-	<div id="final-detail"
-		style="display: none; width: 1000px; height: 700px; overflow-y: scroll; padding-top: 30px; padding-bottom: 20px">
-		<div class="detail-header">
-			<span class="title">订单号</span><span class="content" data-bind="text:order().order_number"></span> <span class="title">机票款</span><span
-				class="content" data-bind="text:order().ticket_cost"></span> <span class="title">人数</span><span class="content"
-				data-bind="text:order().people_count"></span> <span class="title">首航段</span><span class="content"
-				data-bind="text:order().first_from_to"></span><span class="title">首航日期</span><span class="content"
-				data-bind="text:order().first_ticket_date"></span>
-		</div>
-		<hr />
-		<h3 style="padding-left: 40px">航段信息</h3>
-		<div class="input-row clearfloat">
-			<table style="width: 100%" class="table table-striped table-hover">
-				<thead>
-					<tr>
-						<th style="width: 10%">航段</th>
-						<th style="width: 15%">日期</th>
-						<th style="width: 15%">起飞城市</th>
-						<th style="width: 15%">抵达城市</th>
-					</tr>
-				</thead>
-				<tbody data-bind="foreach:airTickets">
-					<tr>
-						<td data-bind="text:$data.sort_index"></td>
-						<td data-bind="text:$data.date"></td>
-						<td data-bind="text:$data.from_city"></td>
-						<td data-bind="text:$data.to_city"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<hr />
-		<h3 style="padding-left: 40px">名单详情</h3>
-		<div class="input-row clearfloat">
-			<table style="width: 100%; margin-left: 30px; margin-top: 20px;" id="table-ticket-price">
-				<thead>
-					<tr>
-						<th class="r" style="width: 10%">序号</th>
-						<th class="r" style="width: 20%">姓名</th>
-						<th class="r" style="width: 40%">证件号</th>
-						<th class="r" style="width: 10%">出票状态</th>
-						<th class="r" style="width: 20%">机票价格</th>
-					</tr>
-				</thead>
-				<tbody data-bind="foreach:passengers">
-					<tr>
-						<td st="index" data-bind="text:$index()+1" />
-						<td data-bind="text:$data.name" />
-						<td data-bind="text:$data.id" />
-						<td data-bind="text:$root.statusMapping[$data.status]" />
-						<td data-bind="text:$data.ticket_cost" />
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<hr />
-		<div style="padding-top: 3px; float: right">
-			<button type="submit" class="btn btn-green col-md-1" data-bind="click: cancelFinal">取消</button>
-			<button type="submit" class="btn btn-green col-md-1" data-bind="click: doFinal">决算</button>
-		</div>
-	</div>
 	<script>
 		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -294,6 +224,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-order-done.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-order-final.js?v=1.001"></script>
 </body>
 </html>

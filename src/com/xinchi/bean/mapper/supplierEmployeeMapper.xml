@@ -23,6 +23,7 @@
 		<result column="birth_year" property="birth_year" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -45,13 +46,20 @@
 		comment,
 		birth_year,
 		create_time,
-		update_time
+		update_time,
+		delete_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from supplier_employee
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectBySupplierPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_employee
+		where financial_body_pk = #{supplier_pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -244,6 +252,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="delete_flg != null">
+				delete_flg = #{delete_flg,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -273,11 +284,10 @@
 		A.birth_year,
 		A.create_time,
 		A.update_time,
+		A.delete_flg,
 		B.supplier_city as employee_city
 		from supplier_employee A
-
 		LEFT JOIN supplier B ON A.financial_body_pk = B.pk
-
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
@@ -297,8 +307,17 @@
 			<if test="params.bo.type == null or params.bo.type ==''">
 				and B.type = 'D'
 			</if>
+			<if test="params.bo.delete_flgs != null and params.bo.delete_flgs !=''">
+				and A.delete_flg in 
+				<foreach item="item" index="index" collection="params.bo.delete_flgs" open="(" separator="," close=")">
+					#{params.bo.delete_flgs[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.delete_flgs == null or params.bo.delete_flgs.size()==0">
+				and A.delete_flg = 'N'
+			</if>
 		</where>
-
+		ORDER BY A.delete_flg 
 	</select>
 	<select id="selectBodyPksByEmployeePks" resultType="java.lang.String">
 		select distinct financial_body_pk from supplier_employee

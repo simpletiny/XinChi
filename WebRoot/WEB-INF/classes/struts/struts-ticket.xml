@@ -26,6 +26,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 查询名单机票价格信息 -->
+		<action name="searchPassengerTicketCostInfo" class="ticketAction" method="searchPassengerTicketCostInfo">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 查询航变名单 -->
 		<action name="searchPassengersByChangePk" class="ticketAction" method="searchPassengersByChangePk">
 			<result name="success" type="json">
@@ -65,6 +72,24 @@
 		</action>
 		<!-- 打回票务订单 -->
 		<action name="rollBackTicketOrder" class="ticketAction" method="rollBackTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 决算票务订单 -->
+		<action name="finalTicketOrder" class="ticketAction" method="finalTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 取消票务订单决算 -->
+		<action name="cancelFinalTicketOrder" class="ticketAction" method="cancelFinalTicketOrder">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 检查票务订单相关是否可以操作 -->
+		<action name="checkCanEditByPassengerPks" class="ticketAction" method="checkCanEditByPassengerPks">
 			<result name="success" type="str">
 				resultStr
 			</result>

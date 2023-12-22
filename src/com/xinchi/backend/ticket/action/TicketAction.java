@@ -226,6 +226,11 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchPassengerTicketCostInfo() {
+		airTicketNameList = airTicketNameListService.selectTicketCostInfo(passenger);
+		return SUCCESS;
+	}
+
 	private String json;
 
 	private List<TicketAllotDto> ticketAllots;
@@ -297,6 +302,38 @@ public class TicketAction extends BaseAction {
 	 */
 	public String rollBackNameDone() {
 		resultStr = passengerTicketInfoService.rollBackNameDone(passenger_pks);
+		return SUCCESS;
+	}
+
+	/**
+	 * 决算票务订单
+	 * 
+	 * @return
+	 */
+	public String finalTicketOrder() {
+		String final_flg = "Y";
+		resultStr = airTicketOrderService.finalTicketOrder(order_number, final_flg);
+		return SUCCESS;
+	}
+
+	/**
+	 * 取消票务订单决算
+	 * 
+	 * @return
+	 */
+	public String cancelFinalTicketOrder() {
+		String final_flg = "N";
+		resultStr = airTicketOrderService.finalTicketOrder(order_number, final_flg);
+		return SUCCESS;
+	}
+
+	/**
+	 * 检查是否可以操作
+	 * 
+	 * @return
+	 */
+	public String checkCanEditByPassengerPks() {
+		resultStr = airTicketOrderService.checkCanEditByPassengerPks(passenger_pks);
 		return SUCCESS;
 	}
 
