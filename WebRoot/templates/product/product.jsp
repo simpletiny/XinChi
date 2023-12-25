@@ -117,6 +117,12 @@ tr td {
 						</div>
 					</div>
 					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label" style="width: 5% !important">产品型号</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品型号" name="product.product_model"></input>
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label" style="width: 5% !important">产品经理</label>

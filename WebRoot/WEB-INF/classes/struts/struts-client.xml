@@ -47,6 +47,12 @@
 		<action name="searchEmployee" class="employeeAction" method="searchEmployee">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchEmployeeByFinancialBodyPk" class="employeeAction" method="searchEmployeeByFinancialBodyPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchEmployeeByPage" class="employeeAction" method="searchEmployeeByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>

@@ -40,15 +40,21 @@
 		<result column="back_level" property="back_level" jdbcType="VARCHAR" />
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 		<result column="talk_level" property="talk_level" jdbcType="VARCHAR" />
+		<result column="recipient" property="recipient" jdbcType="VARCHAR" />
+		<result column="recipient_phone1" property="recipient_phone1" jdbcType="VARCHAR" />
+		<result column="recipient_phone2" property="recipient_phone2" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="CountMap" type="com.xinchi.bean.ClientCountDto">
-		<result column="oneYearorderCnt" property="oneYearorderCnt" jdbcType="INTEGER" />
-		<result column="moreYearorderCnt" property="moreYearorderCnt" jdbcType="INTEGER" />
+		<result column="client_one_year_count" property="client_one_year_count" jdbcType="INTEGER" />
+		<result column="client_more_year_count" property="client_more_year_count" jdbcType="INTEGER" />
+		<result column="client_30day_count" property="client_30day_count" jdbcType="INTEGER" />
+		<result column="client_100day_count" property="client_100day_count" jdbcType="INTEGER" />
 	</resultMap>
 
 	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientBean">
-		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean" select="selectClientUserByClientPk">
+		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean"
+			select="selectClientUserByClientPk">
 			<result column="client_pk" property="client_pk" jdbcType="CHAR" />
 			<result column="user_pk" property="user_pk" jdbcType="CHAR" />
 			<result column="user_name" property="user_name" jdbcType="VACHAR" />
@@ -103,7 +109,10 @@
 		back_level,
 		market_level,
 		talk_level,
-		client_county
+		client_county,
+		recipient,
+		recipient_phone1,
+		recipient_phone2
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -238,6 +247,15 @@
 			<if test="client_county != null">
 				client_county,
 			</if>
+			<if test="recipient != null">
+				recipient,
+			</if>
+			<if test="recipient_phone1 != null">
+				recipient_phone1,
+			</if>
+			<if test="recipient_phone2 != null">
+				recipient_phone2,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="client_name != null">
@@ -342,6 +360,15 @@
 			</if>
 			<if test="client_county != null">
 				#{client_county,jdbcType=VARCHAR},
+			</if>
+			<if test="recipient != null">
+				#{recipient,jdbcType=VARCHAR},
+			</if>
+			<if test="recipient_phone1 != null">
+				#{recipient_phone1,jdbcType=VARCHAR},
+			</if>
+			<if test="recipient_phone2 != null">
+				#{recipient_phone2,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -449,6 +476,15 @@
 			<if test="client_county != null">
 				client_county=#{client_county,jdbcType=VARCHAR},
 			</if>
+			<if test="recipient != null">
+				recipient=#{recipient,jdbcType=VARCHAR},
+			</if>
+			<if test="recipient_phone1 != null">
+				recipient_phone1=#{recipient_phone1,jdbcType=VARCHAR},
+			</if>
+			<if test="recipient_phone2 != null">
+				recipient_phone2=#{recipient_phone2,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -486,6 +522,9 @@
 		A.back_level,
 		A.market_level,
 		A.talk_level,
+		A.recipient,
+		A.recipient_phone1,
+		A.recipient_phone2,
 		GROUP_CONCAT(B.user_pk) AS sales
 		from client A LEFT JOIN
 		client_user B ON A.pk = B.client_pk
@@ -497,7 +536,7 @@
 				and A.client_name = #{client_name,jdbcType=VARCHAR}
 			</if>
 		</where>
-		
+
 		group by B.client_pk
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -536,6 +575,9 @@
 		A.back_level,
 		A.market_level,
 		A.talk_level,
+		A.recipient,
+		A.recipient_phone1,
+		A.recipient_phone2,
 		C.client_employee_count,
 		D.sum_balance,
 		E.client_year_order_count,
@@ -611,18 +653,23 @@
 	</select>
 	<select id="selectCountByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="CountMap">
 		SELECT
-		COUNT(IF(C.client_year_order_count IS NOT NULL
-		AND C.client_year_order_count = 1,
-		TRUE,
-		NULL)) AS oneYearorderCnt,
-		COUNT(IF(C.client_year_order_count IS NOT NULL
-		AND C.client_year_order_count > 1,
-		TRUE,
-		NULL)) AS moreYearorderCnt
+		COUNT(IF(C.client_year_order_count = 1,
+		1,
+		NULL)) AS client_one_year_count,
+		COUNT(IF(C.client_year_order_count > 1,
+		1,
+		NULL)) AS client_more_year_count,
+		COUNT(IF(C.client_30day_order_count >= 1,
+		1,
+		NULL)) AS client_30day_count,
+		COUNT(IF(C.client_100day_order_count >= 1,
+		1,
+		NULL)) AS client_100day_count
 		FROM
 		client A
 		LEFT JOIN
-		view_client_user B ON A.pk = B.client_pk
+		view_client_user B ON
+		A.pk = B.client_pk
 		LEFT JOIN
 		view_client_year_order_count C ON A.pk = C.client_pk
 		<where>
@@ -668,7 +715,7 @@
 					#{item}
 				</foreach>
 			</if>
-		 	<if test="talk_levels != null and talk_levels !=''">
+			<if test="talk_levels != null and talk_levels !=''">
 				and A.talk_level in
 				<foreach item="item" index="index" collection="talk_levels" open="(" separator="," close=")">
 					#{item}
@@ -679,7 +726,7 @@
 				<foreach item="item" index="index" collection="main_businesses" open="(" separator="," close=")">
 					#{item}
 				</foreach>
-			</if> 
+			</if>
 		</where>
 	</select>
 	<select id="selectAdminByPage" parameterType="com.xinchi.tools.Page" resultMap="AdminResultMap">
@@ -716,6 +763,9 @@
 		A.back_level,
 		A.market_level,
 		A.talk_level,
+		A.recipient,
+		A.recipient_phone1,
+		A.recipient_phone2,
 		C.client_employee_count,
 		D.sum_balance,
 		E.client_year_order_count,
@@ -784,7 +834,8 @@
 		</where>
 		ORDER BY address DESC
 	</select>
-	<select id="selectClientUserByClientPk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientUserBean">
+	<select id="selectClientUserByClientPk" parameterType="java.lang.String"
+		resultType="com.xinchi.bean.ClientUserBean">
 		select
 		A.client_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
 		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user

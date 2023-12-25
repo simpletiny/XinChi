@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -300,17 +299,16 @@
 								<th></th>
 								<th>头像</th>
 								<th>客户姓名</th>
-								<th>昵称</th>
+								<th>客户贡献</th>
 								<th>年单</th>
 								<th>关系度</th>
-								<th>回款誉</th>
 								<th>销售力</th>
 								<th>签单期间</th>
 								<th>最近交流日期</th>
 								<th>交流方式</th>
 								<th>交流信息</th>
+								<th>回款誉</th>
 								<th>应收款总计</th>
-								<th>最长账期</th>
 								<th>备注</th>
 								<th>销售</th>
 							</tr>
@@ -324,11 +322,10 @@
 									st="st-file-name" data-bind="value:$data.head_photo" /></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.client_employee_name,attr: {href: 'employee-detail.jsp?key='+$data.client_employee_pk}"></a></td>
-
-								<td data-bind="text: $data.nick_name"></td>
+								<td></td>
 								<td data-bind="text: $data.year_order_count"></td>
 								<td data-bind="text: $data.relation_level"></td>
-								<td data-bind="text: $data.back_level"></td>
+								
 								<td data-bind="text: $data.market_level"></td>
 
 								<td data-bind="text: $data.last_order_period"></td>
@@ -336,8 +333,8 @@
 								<td data-bind="text: $root.connectTypeMapping[$data.type]"></td>
 								<td><a
 									data-bind="text: $data.extra_info,click:function(){$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
+								<td data-bind="text: $data.back_level"></td>
 								<td class="rmb" data-bind="text: $data.receivable"></td>
-								<td data-bind="text: $data.last_receivable_period"></td>
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->

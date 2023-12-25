@@ -10,8 +10,8 @@ var EmployeeContext = function() {
 	// self.clientType = [ '注册', '挂靠', '独立旅游人', '夫妻店', '其他' ];
 	// self.sales = ko.observableArray([]);
 	self.clients = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	// self.choosenSales = ko.observableArray([]);
 	self.publicFlg = ko.observable();
@@ -23,7 +23,7 @@ var EmployeeContext = function() {
 	// });
 
 	$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-		employee_pk : self.employeePk
+		employee_pk: self.employeePk
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
@@ -38,28 +38,30 @@ var EmployeeContext = function() {
 
 	self.choseFinancial = function() {
 		financialLayer = $.layer({
-			type : 1,
-			title : ['选择财务主体', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#financial_pick'
+			type: 1,
+			title: ['选择财务主体', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '650px'],
+			offset: ['50px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#financial_pick'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
 	};
 
 	self.refresh = function() {
+		startLoadingSimpleIndicator("加载中");
 		var param = "client.client_short_name=" + $("#client_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
+			endLoadingIndicator();
 			self.clients(data.clients);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -82,9 +84,9 @@ var EmployeeContext = function() {
 			return;
 		}
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'client/updateEmployee',
-			data : $("form").serialize()
+			type: "POST",
+			url: self.apiurl + 'client/updateEmployee',
+			data: $("form").serialize()
 		}).success(function(str) {
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/client/client-employee.jsp";
@@ -214,8 +216,8 @@ $(document).ready(function() {
 
 	$modal.on('shown.bs.modal', function() {
 		cropper = new Cropper(image, {
-			aspectRatio : 1,
-			viewMode : 3,
+			aspectRatio: 1,
+			viewMode: 3,
 		});
 	}).on('hidden.bs.modal', function() {
 		cropper.destroy();
@@ -230,8 +232,8 @@ $(document).ready(function() {
 
 		if (cropper) {
 			canvas = cropper.getCroppedCanvas({
-				width : 100,
-				height : 100,
+				width: 100,
+				height: 100,
 			});
 			initialAvatarURL = avatar.src;
 			avatar.src = canvas.toDataURL();
@@ -257,9 +259,9 @@ checkCellphone = function(input) {
 
 		var data = "employee.cellphone=" + cellphone + "&employee.pk=" + ctx.employee().pk;
 		$.ajax({
-			type : "POST",
-			url : ctx.apiurl + 'client/checkEmployeeCellphone',
-			data : data
+			type: "POST",
+			url: ctx.apiurl + 'client/checkEmployeeCellphone',
+			data: data
 		}).success(function(str) {
 			if (str == "success") {
 				fail_msg("已存在相同电话号码！");
@@ -274,9 +276,9 @@ checkWechat = function(input) {
 
 		var data = "employee.wechat=" + wechat + "&employee.pk=" + ctx.employee().pk;
 		$.ajax({
-			type : "POST",
-			url : ctx.apiurl + 'client/checkEmployeeWechat',
-			data : data
+			type: "POST",
+			url: ctx.apiurl + 'client/checkEmployeeWechat',
+			data: data
 		}).success(function(str) {
 			if (str == "success") {
 				fail_msg("已存在相同微信号！");

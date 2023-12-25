@@ -35,6 +35,8 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	private String deposit_number;
 
+	private String responsible_user;
+
 	// DTO
 	private List<String> statuses;
 	private String voucher_file_name;
@@ -50,6 +52,7 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 	private BigDecimal clear_money;
 	private String supplier_short_name;
 	private String back_comment;
+	private String responsible_user_name;
 
 	public String getVoucher_number() {
 		return voucher_number;
@@ -257,6 +260,22 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setBack_comment(String back_comment) {
 		this.back_comment = back_comment;
+	}
+
+	public String getResponsible_user() {
+		return responsible_user;
+	}
+
+	public void setResponsible_user(String responsible_user) {
+		this.responsible_user = responsible_user;
+	}
+
+	public String getResponsible_user_name() {
+		return responsible_user_name;
+	}
+
+	public void setResponsible_user_name(String responsible_user_name) {
+		this.responsible_user_name = responsible_user_name;
 	}
 
 }

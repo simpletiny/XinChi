@@ -62,12 +62,22 @@
 	<select id="selectSumBalance" resultType="java.math.BigDecimal">
 		select sum(money) from pay_approval where status = 'I'
 	</select>
+	<select id="selectSumSuspense" resultType="java.math.BigDecimal">
+		select sum(money) from pay_approval where status = 'S'
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from pay_approval
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
-
+	<update id="suspensePayApplyByPks" parameterType="java.util.List">
+		update pay_approval
+		set status='S'
+		where pk in
+		<foreach item="pk" collection="list" separator="," open="(" close=")">
+			#{pk}
+		</foreach>
+	</update>
 	<insert id="insert" parameterType="com.xinchi.bean.PayApprovalBean">
 
 		insert into pay_approval
@@ -291,7 +301,8 @@
 		A.receiver_card_number,
 		A.receiver_bank,
 		A.reject_reason
-		from pay_approval A LEFT JOIN user_base B ON A.apply_user =
+		from pay_approval A LEFT JOIN user_base B ON
+		A.apply_user =
 		B.user_number
 		<where>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">

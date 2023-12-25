@@ -67,4 +67,14 @@ public class PayApprovalDAOImpl extends SqlSessionDaoSupport implements PayAppro
 		return daoUtil.selectOneValue("com.xinchi.bean.mapper.PayApprovalMapper.selectSumBalance");
 	}
 
+	@Override
+	public void suspensePayApplyByPks(List<String> pks) {
+		daoUtil.updateByParam("com.xinchi.bean.mapper.PayApprovalMapper.suspensePayApplyByPks", pks);
+	}
+
+	@Override
+	public BigDecimal selectSumSuspense() {
+		return daoUtil.selectOneValue("com.xinchi.bean.mapper.PayApprovalMapper.selectSumSuspense");
+	}
+
 }

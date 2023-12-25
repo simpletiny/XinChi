@@ -10,9 +10,13 @@ var tail98Layer;
 
 var OrderContext = function() {
 	var today = new Date();
-	var tomorrow = today.addDate(1);
-
 	var self = this;
+
+	self.finalMapping = {
+		'Y': '是',
+		'N': '否'
+	}
+
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenOrders = ko.observableArray([]);
 	self.teamStatus = ['未出团', '已出团', '已回团'];
@@ -24,7 +28,7 @@ var OrderContext = function() {
 	// 获取摘要信息
 	self.fetchSummary = function() {
 		$.getJSON(self.apiurl + 'sale/searchReceivableSummary', {
-			user_number : self.chosenSales()
+			user_number: self.chosenSales()
 		}, function(data) {
 			self.recsum(data.summary);
 			$(".rmb").formatCurrency();
@@ -32,8 +36,8 @@ var OrderContext = function() {
 	};
 
 	self.receivables = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.accounts = ko.observableArray([]);
@@ -83,18 +87,18 @@ var OrderContext = function() {
 
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
-				type : 1,
-				title : ['抹零申请', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['1120px', '300px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#tail_submit'
+				type: 1,
+				title: ['抹零申请', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['1120px', '300px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#tail_submit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -107,10 +111,10 @@ var OrderContext = function() {
 		startLoadingSimpleIndicator("保存中");
 		var data = $("#form-tail").serialize();
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyRidTail',
-			data : data,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyRidTail',
+			data: data,
+			success: function(str) {
 				if (str != "success") {
 					fail_msg("申请失败，请联系管理员");
 				}
@@ -157,18 +161,18 @@ var OrderContext = function() {
 			self.client_employee_pk(current.client_employee_pk);
 			$(".rmb").formatCurrency();
 			tailLayer = $.layer({
-				type : 1,
-				title : ['代收申请', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['1120px', '600px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#collect-submit'
+				type: 1,
+				title: ['代收申请', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['1120px', '600px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#collect-submit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -185,10 +189,10 @@ var OrderContext = function() {
 		startLoadingSimpleIndicator("保存中");
 		var data = $("#form-collect").serialize();
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyCollect',
-			data : data,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyCollect',
+			data: data,
+			success: function(str) {
 				endLoadingIndicator();
 				layer.close(tailLayer);
 				if (str == "success") {
@@ -241,10 +245,10 @@ var OrderContext = function() {
 			startLoadingSimpleIndicator("检测中……");
 			// 2021-09-01之后要检查是否符合立款规则（即是否在两天内收齐了立款）
 			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/checkIs98',
-				data : "team_number=" + current.team_number,
-				success : function(str) {
+				type: "POST",
+				url: self.apiurl + 'sale/checkIs98',
+				data: "team_number=" + current.team_number,
+				success: function(str) {
 					endLoadingIndicator();
 					layer.close(tailLayer);
 					if (str == "success") {
@@ -254,18 +258,18 @@ var OrderContext = function() {
 						self.client_employee_pk(current.client_employee_pk);
 						$(".rmb").formatCurrency();
 						tail98Layer = $.layer({
-							type : 1,
-							title : ['立款98', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['1120px', '450px'],
-							offset : ['150px', ''],
-							scrollbar : true,
-							page : {
-								dom : '#tail98-clear'
+							type: 1,
+							title: ['立款98', ''],
+							maxmin: false,
+							closeBtn: [1, true],
+							shadeClose: false,
+							area: ['1120px', '450px'],
+							offset: ['150px', ''],
+							scrollbar: true,
+							page: {
+								dom: '#tail98-clear'
 							},
-							end : function() {
+							end: function() {
 								console.log("Done");
 							}
 						});
@@ -291,10 +295,10 @@ var OrderContext = function() {
 		startLoadingSimpleIndicator("保存中");
 		var data = $("#form-tail98").serialize();
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyTail98',
-			data : data,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyTail98',
+			data: data,
+			success: function(str) {
 				endLoadingIndicator();
 				layer.close(tail98Layer);
 				if (str == "success") {
@@ -345,18 +349,18 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 			caculateSumBack();
 			payLayer = $.layer({
-				type : 1,
-				title : ['退反申请', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['920px', '600px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#pay-sumbit'
+				type: 1,
+				title: ['退反申请', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['920px', '600px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#pay-sumbit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -384,7 +388,7 @@ var OrderContext = function() {
 			var r = $(current).find("[st='more-back-money']").val();
 			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
 			allot_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
-					+ client_employee_pk;
+				+ client_employee_pk;
 			if (i == allot.length - 1) {
 				allot_json += '"}';
 			} else {
@@ -398,10 +402,10 @@ var OrderContext = function() {
 		startLoadingSimpleIndicator("申请中...");
 		layer.close(payLayer);
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyIfMorePay',
-			data : data,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyIfMorePay',
+			data: data,
+			success: function(str) {
 				endLoadingIndicator();
 				if (str == "success") {
 					self.chosenOrders.removeAll();
@@ -474,18 +478,18 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 
 			strikeLayer = $.layer({
-				type : 1,
-				title : ['冲账申请', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['900px', '780px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#strike-submit'
+				type: 1,
+				title: ['冲账申请', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['900px', '780px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#strike-submit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -523,7 +527,7 @@ var OrderContext = function() {
 			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
 
 			strike_out_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
-					+ client_employee_pk;
+				+ client_employee_pk;
 
 			if (i == strike_out.length - 1) {
 				strike_out_json += '"}';
@@ -541,7 +545,7 @@ var OrderContext = function() {
 			var r = $(current).find("[st='strike-in-money']").val();
 			var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
 			strike_in_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
-					+ client_employee_pk;
+				+ client_employee_pk;
 			if (i == strike_in.length - 1) {
 				strike_in_json += '"}';
 			} else {
@@ -552,10 +556,10 @@ var OrderContext = function() {
 
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyReceiveStrike',
-			data : data + "&strike_out_json=" + strike_out_json + "&strike_in_json=" + strike_in_json,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyReceiveStrike',
+			data: data + "&strike_out_json=" + strike_out_json + "&strike_in_json=" + strike_in_json,
+			success: function(str) {
 				endLoadingIndicator();
 				if (str == "success") {
 					layer.close(strikeLayer);
@@ -595,18 +599,18 @@ var OrderContext = function() {
 			self.client_employee_pk(current.client_employee_pk);
 
 			receiveLayer = $.layer({
-				type : 1,
-				title : ['收入', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['1000px', '600px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#receive_submit'
+				type: 1,
+				title: ['收入', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['1000px', '600px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#receive_submit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -634,18 +638,18 @@ var OrderContext = function() {
 			$(".rmb").formatCurrency();
 
 			receiveLayer = $.layer({
-				type : 1,
-				title : ['收入', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['1200px', '600px'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#receive_sum_submit'
+				type: 1,
+				title: ['收入', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['1200px', '600px'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#receive_sum_submit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -663,10 +667,10 @@ var OrderContext = function() {
 			layer.close(receiveLayer);
 			startLoadingSimpleIndicator("保存中");
 			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/applyReceive',
-				data : data,
-				success : function(str) {
+				type: "POST",
+				url: self.apiurl + 'sale/applyReceive',
+				data: data,
+				success: function(str) {
 					endLoadingIndicator();
 					if (str != "success") {
 						fail_msg("申请失败，请联系管理员");
@@ -699,7 +703,7 @@ var OrderContext = function() {
 				var r = $(current).find("[st='receive_received']").val();
 				var client_employee_pk = $(current).find("[st='client-employee-pk']").val();
 				allot_json += '{"team_number":"' + n + '",' + '"received":"' + r + '","client_employee_pk":"'
-						+ client_employee_pk;
+					+ client_employee_pk;
 				if (i == allot.length - 1) {
 					allot_json += '"}';
 				} else {
@@ -710,10 +714,10 @@ var OrderContext = function() {
 
 			startLoadingSimpleIndicator("保存中");
 			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/applySum',
-				data : data + "&allot_json=" + allot_json,
-				success : function(str) {
+				type: "POST",
+				url: self.apiurl + 'sale/applySum',
+				data: data + "&allot_json=" + allot_json,
+				success: function(str) {
 					endLoadingIndicator();
 					layer.close(receiveLayer);
 					if (str != "success") {
@@ -741,9 +745,9 @@ var OrderContext = function() {
 			var team_number = current.team_number;
 			var data = "team_number=" + team_number;
 			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'sale/canApplyFly',
-				data : data
+				type: "POST",
+				url: self.apiurl + 'sale/canApplyFly',
+				data: data
 			}).success(function(str) {
 				if (str == "noexist") {
 					fail_msg("不存在fly信息，不能申请！	");
@@ -758,18 +762,18 @@ var OrderContext = function() {
 					self.flyMoney(str);
 					$(".rmb").formatCurrency();
 					flyLayer = $.layer({
-						type : 1,
-						title : ['fly申请', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['920px', '400px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#fly-submit'
+						type: 1,
+						title: ['fly申请', ''],
+						maxmin: false,
+						closeBtn: [1, true],
+						shadeClose: false,
+						area: ['920px', '400px'],
+						offset: ['', ''],
+						scrollbar: true,
+						page: {
+							dom: '#fly-submit'
 						},
-						end : function() {
+						end: function() {
 							console.log("Done");
 						}
 					});
@@ -794,10 +798,10 @@ var OrderContext = function() {
 		layer.close(flyLayer);
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'sale/applyFly',
-			data : data,
-			success : function(str) {
+			type: "POST",
+			url: self.apiurl + 'sale/applyFly',
+			data: data,
+			success: function(str) {
 				endLoadingIndicator();
 				if (str == "nomatch") {
 					fail_msg("申请金额于订单填报不符！");
@@ -988,10 +992,10 @@ $(document).ready(function() {
 	$("#sum-more-back").disabled();
 	$(':file').change(function() {
 		changeFile({
-			input : this,
-			size : 400,
-			width : 400,
-			required : "yes"
+			input: this,
+			size: 400,
+			width: 400,
+			required: "yes"
 		});
 	});
 

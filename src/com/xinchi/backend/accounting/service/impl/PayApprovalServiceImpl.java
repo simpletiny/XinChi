@@ -59,4 +59,10 @@ public class PayApprovalServiceImpl implements PayApprovalService {
 		return dao.selectByBackPk(back_pk);
 	}
 
+	@Override
+	public BigDecimal selectSumSuspense() {
+
+		return dao.selectSumSuspense();
+	}
+
 }

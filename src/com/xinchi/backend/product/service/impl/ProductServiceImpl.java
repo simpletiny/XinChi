@@ -43,6 +43,7 @@ import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -70,7 +71,10 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String createProduct(ProductBean product) {
 		ProductBean option = new ProductBean();
+		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(product.getProduct_model());
+		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		option.setCreate_user(user.getUser_number());
 
 		// 检测产品型号
 		List<ProductBean> exists = dao.selectByParam(option);
@@ -100,7 +104,10 @@ public class ProductServiceImpl implements ProductService {
 	public String update(ProductBean bean, ProductDelayBean delay) {
 		// 检测产品型号
 		ProductBean option = new ProductBean();
+		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(bean.getProduct_model());
+		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		option.setCreate_user(user.getUser_number());
 		List<ProductBean> exists = dao.selectByParam(option);
 		if (null != exists) {
 			for (ProductBean exist : exists) {

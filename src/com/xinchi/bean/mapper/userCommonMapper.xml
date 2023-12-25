@@ -70,14 +70,16 @@
 			and A.user_number !='N00000'
 		</where>
 	</select>
-	<select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
 		<include refid="Base_Column_List" />
 		from user_base A LEFT JOIN user_info B
 		ON A.id = B.id
-		where B.user_role like CONCAT('%',#{roles},'%')
-		AND
-		A.delete_flg='N'
+		where
+		<foreach item="role" collection="list" separator="OR" open="(" close=")">
+			B.user_role LIKE CONCAT('%', #{role}, '%')
+		</foreach>
+		AND A.delete_flg='N'
 	</select>
 	<select id="selectByPage" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean">
 		select

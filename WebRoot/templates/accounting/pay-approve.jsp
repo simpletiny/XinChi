@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -65,6 +64,7 @@
 									name="option.item" required="required"></select>
 							</div>
 						</div>
+						<button type="submit" style="float: right" " class="btn btn-green" data-bind="click: suspense">挂账</button>
 					</div>
 
 					<div class="form-group">
@@ -73,9 +73,6 @@
 							<div class="col-md-2" style="float: left">
 								<input type="text" class="form-control" name="option.apply_user" />
 							</div>
-						</div>
-						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">总余额</label>
@@ -95,6 +92,13 @@
 								<p class="ip-default rmb" data-bind="text:sumBalance()"></p>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">挂起</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sumSuspense()"></p>
+							</div>
+						</div>
+						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
@@ -116,7 +120,7 @@
 						<tbody id="tbody-data" data-bind="foreach: paids">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.status}, checked: $root.chosenPaids" /></td>
+									data-bind="checkedValue:$data, checked: $root.chosenPaids" /></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: payTypeMapping[$data.item]"></td>
 								<!-- ko if:$data.item!='M' -->
@@ -142,7 +146,7 @@
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<td data-bind="text: $data.apply_user"></td>
 
-								<!-- ko if:$data.status=='I' -->
+								<!-- ko if:$data.status=='I' || $data.status=='S'  -->
 								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.agree($data)}}">同意</a> <a
 									href="javascript:void(0)" data-bind="event:{click:function(){$root.reject($data)}}">驳回</a></td>
 								<!-- /ko -->
@@ -215,6 +219,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/accounting/pay-approve.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/pay-approve.js?v=1.002"></script>
 </body>
 </html>

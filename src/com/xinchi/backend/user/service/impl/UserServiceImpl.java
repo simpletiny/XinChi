@@ -3,6 +3,7 @@ package com.xinchi.backend.user.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -156,7 +157,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserCommonBean> getAllUsersByRole(String roles) {
-		return dao.getAllUsersByRole(roles);
+		List<String> arr_roles = Arrays.asList(roles.split(","));
+
+		return dao.getAllUsersByRole(arr_roles);
 	}
 
 	@Override

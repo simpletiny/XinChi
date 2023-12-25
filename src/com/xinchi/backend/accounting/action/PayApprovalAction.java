@@ -38,6 +38,7 @@ public class PayApprovalAction extends BaseAction {
 	private BigDecimal sum_balance;
 	private BigDecimal sum_card_balance;
 	private BigDecimal sum_waiting_for_paid;
+	private BigDecimal sum_suspense;
 
 	public String searchPaidApplyByPage() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -46,6 +47,7 @@ public class PayApprovalAction extends BaseAction {
 
 		payApprovals = service.selectByPage(page);
 		sum_balance = service.selectSumBalance();
+		sum_suspense = service.selectSumSuspense();
 
 		sum_waiting_for_paid = accPaidService.selectSumWFP();
 		String basePath = this.getClass().getClassLoader().getResource("").getPath();
@@ -103,5 +105,13 @@ public class PayApprovalAction extends BaseAction {
 
 	public void setSum_waiting_for_paid(BigDecimal sum_waiting_for_paid) {
 		this.sum_waiting_for_paid = sum_waiting_for_paid;
+	}
+
+	public BigDecimal getSum_suspense() {
+		return sum_suspense;
+	}
+
+	public void setSum_suspense(BigDecimal sum_suspense) {
+		this.sum_suspense = sum_suspense;
 	}
 }

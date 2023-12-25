@@ -113,6 +113,13 @@ public class AccountingAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String approval_pks;
+
+	public String suspensePayApply() {
+		resultStr = service.suspensePayApply(approval_pks);
+		return SUCCESS;
+	}
+
 	private String back_pk;
 
 	public String searchRejectReason() {
@@ -250,5 +257,13 @@ public class AccountingAction extends BaseAction {
 
 	public void setClient_employee(ClientEmployeeBean client_employee) {
 		this.client_employee = client_employee;
+	}
+
+	public String getApproval_pks() {
+		return approval_pks;
+	}
+
+	public void setApproval_pks(String approval_pks) {
+		this.approval_pks = approval_pks;
 	}
 }

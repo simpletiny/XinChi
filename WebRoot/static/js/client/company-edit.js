@@ -8,14 +8,14 @@ var CompanyContext = function() {
 
 	self.clientType = ['总公司', '分公司', '营业部', '包桌', '经纪人', '其他'];
 	self.storeTypes = ['未知', '门店', '写字间', '其它 '];
-	self.mainBusinesses = ['其它', '组团', '地接', '同业', '综合'];
+	self.mainBusinesses = ['组团', '户外', '线上', '综合', '地接', '同业', '其它'];
 	self.backLevels = ['未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱'];
 	self.marketLevels = ['未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级'];
 	self.talkLevels = ['核心', '主力', '市场', '排斥'];
 
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'client/searchOneCompany', {
-		client_pk : self.companyPk
+		client_pk: self.companyPk
 	}, function(data) {
 		if (data.client) {
 			self.client(data.client);
@@ -32,9 +32,9 @@ var CompanyContext = function() {
 			return;
 		}
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'client/updateCompany',
-			data : $("form").serialize()
+			type: "POST",
+			url: self.apiurl + 'client/updateCompany',
+			data: $("form").serialize()
 		}).success(function(str) {
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/client/company.jsp";
@@ -46,24 +46,24 @@ var CompanyContext = function() {
 
 	// 关联旅游公司相关
 	self.agencies = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.chooseAgency = function() {
 		agencyLayer = $.layer({
-			type : 1,
-			title : ['选择旅游公司', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#agency_pick'
+			type: 1,
+			title: ['选择旅游公司', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '650px'],
+			offset: ['50px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#agency_pick'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});

@@ -1,10 +1,9 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-	String key = request.getParameter("key");
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -69,35 +68,26 @@
 							</div>
 						</div>
 						<div class="col-md-6 required">
-							<label class="l">地市</label>
-							<div class="ip" style="width: 35%">
-								<select class="form-control heilongjiang-city" name="client.client_area" data-bind="value:client().client_area" required="required"></select>
-							</div>
-							<div class="ip" style="width: 35%">
-								<select class="form-control district" data-bind="value:client().client_county"  name="client.client_county"></select>
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-4 required">
 							<label class="l">门脸</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: storeTypes, optionsCaption: '-- 请选择 --', value: client().store_type"
 									name="client.store_type" required="required"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6 required">
 							<label class="l">主营</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: mainBusinesses, optionsCaption: '-- 请选择 --', value: client().main_business"
 									name="client.main_business" required="required"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+						<div class="col-md-6 required">
 							<label class="l">回款誉</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: backLevels, optionsCaption: '-- 请选择 --', value: client().back_level"
 									name="client.back_level" required="required"></select>
@@ -105,17 +95,17 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4 required">
+						<div class="col-md-6 required">
 							<label class="l">市场力</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: marketLevels, optionsCaption: '-- 请选择 --', value: client().market_level"
 									name="client.market_level" required="required"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+						<div class="col-md-6 required">
 							<label class="l">紧密度</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: talkLevels, optionsCaption: '-- 请选择 --', value: client().talk_level"
 									name="client.talk_level" required="required"></select>
@@ -123,12 +113,45 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12 required">
+						<div class="col-md-6 required">
+							<label class="l">地市</label>
+							<div class="ip" style="width: 35%">
+								<select class="form-control heilongjiang-city" name="client.client_area" data-bind="value:client().client_area"
+									required="required"></select>
+							</div>
+							<div class="ip" style="width: 35%">
+								<select class="form-control district" data-bind="value:client().client_county" name="client.client_county"></select>
+							</div>
+						</div>
+						<div class="col-md-6 required">
 							<label class="l">地址</label>
 							<div class="ip">
 								<input type="text" class="ip-" maxlength="100" data-bind="value: client().address" placeholder="地址"
 									required="required" name="client.address" />
 								</textarea>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4 required">
+							<label class="l">收件人</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="10" data-bind="value: client().recipient" placeholder="收件人"
+									name="client.recipient" required="required" />
+							</div>
+						</div>
+						<div class="col-md-4 required">
+							<label class="l">联系方式1</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="20" data-bind="value: client().recipient_phone1" placeholder="联系方式1"
+									name="client.recipient_phone1" required="required" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">联系方式2</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="20" data-bind="value: client().recipient_phone2" placeholder="联系方式2"
+									name="client.recipient_phone2" />
 							</div>
 						</div>
 					</div>
@@ -145,11 +168,11 @@
 					<hr noshade color="#0066cc" />
 					<h3>财务主体</h3>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">姓名</label>
 							<div class="ip">
 								<input type="text" class="ip- date-picker" maxlength="10" data-bind="value: client().body_name"
-									placeholder="财务主体姓名" name="client.body_name" required="required" />
+									placeholder="财务主体姓名" name="client.body_name" />
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -260,6 +283,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.002"></script>
 </body>
 </html>

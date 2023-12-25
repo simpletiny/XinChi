@@ -115,6 +115,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 		} else {
 			saveFile(employee.getHead_photo());
 		}
+		// 检测是否需要审核
+		String client_pk = employee.getFinancial_body_pk();
+
+		if (!SimpletinyString.isEmpty(client_pk)) {
+			ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+			String client_short_name = employee.getFinancial_body_name();
+
+			if (client.getClient_short_name().equals(client_short_name)) {
+				employee.setReview_flg("Y");
+			} else {
+				employee.setFinancial_body_pk(null);
+			}
+		}
 
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
@@ -194,6 +207,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (!oldCeb.getHead_photo().equals(employee.getHead_photo())) {
 			deleteOldHead(oldCeb.getHead_photo());
 			saveFile(employee.getHead_photo());
+		}
+
+		// 检测是否需要审核
+		if (oldCeb.getReview_flg().equals("N")) {
+			String client_pk = employee.getFinancial_body_pk();
+			if (!SimpletinyString.isEmpty(client_pk)) {
+				ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+				String client_short_name = employee.getFinancial_body_name();
+
+				if (client.getClient_short_name().equals(client_short_name)) {
+					employee.setReview_flg("Y");
+				} else {
+					employee.setFinancial_body_pk(null);
+				}
+			}
 		}
 
 		dao.update(employee);

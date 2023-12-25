@@ -1015,6 +1015,64 @@
 			<comment>ALTER TABLE air_ticket_order </comment>
 		</sql>
 	</changeSet>
+	<changeSet id="39" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE supplier_deposit 
+					ADD COLUMN responsible_user VARCHAR(10) NULL COMMENT '责任人' AFTER deposit_number;
+             ]]>
+			<comment>ALTER TABLE supplier_deposit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="40" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE OR REPLACE VIEW view_client_year_order_count AS
+			    SELECT 
+			        C.pk,
+			        C.client_name,
+			        C.body_name,
+			        C.pk AS client_pk,
+			        COUNT(IF(LEFT(A.departure_date, 4) = DATE_FORMAT(NOW(), '%Y'),
+			            1,
+			            NULL)) AS client_year_order_count,
+			        COUNT(IF(A.departure_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY),
+			            1,
+			            NULL)) AS client_30day_order_count,
+			        COUNT(IF(A.departure_date >= DATE_SUB(CURDATE(), INTERVAL 100 DAY),
+			            1,
+			            NULL)) AS client_100day_order_count
+			    FROM
+			        budget_order_view A
+			            LEFT JOIN
+			        client_employee B ON A.client_employee_pk = B.pk
+			            LEFT JOIN
+			        client C ON B.financial_body_pk = C.pk
+			    GROUP BY C.pk;
+             ]]>
+			<comment>ALTER VIEW view_client_year_order_count</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE client 
+					ADD COLUMN recipient VARCHAR(10) NULL COMMENT '收件人' AFTER client_county,
+					ADD COLUMN recipient_phone1 VARCHAR(20) NULL COMMENT '联系方式1' AFTER recipient,
+					ADD COLUMN recipient_phone2 VARCHAR(20) NULL COMMENT '联系方式2' AFTER recipient_phone1;
+             ]]>
+			<comment>ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE client_employee 
+				CHANGE COLUMN financial_body_name financial_body_name VARCHAR(30) NOT NULL ;
+             ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

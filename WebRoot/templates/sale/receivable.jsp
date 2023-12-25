@@ -199,7 +199,7 @@
 								<td><input type="checkbox" data-bind="checkedValue: $data, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.back_days"></td>
-								<td data-bind="text: $data.final_flg"></td>
+								<td data-bind="text: $root.finalMapping[$data.final_flg]"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.financial_body_name"></td>
 								<td data-bind="text: $data.departure_date"></td>
@@ -970,6 +970,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/sale/receivable.js"></script>
+	<script src="<%=basePath%>static/js/sale/receivable.js?v=1.001"></script>
 </body>
 </html>

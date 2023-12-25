@@ -76,7 +76,7 @@
 									data-bind="text: $data.title,attr: {href: 'product-research-view-preview.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.create_user"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
-								<td data-bind="text: moment($data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: moment(!$data.update_time?$data.create_time-0:$data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
 							</tr>
 						</tbody>
 					</table>

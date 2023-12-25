@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -35,6 +34,7 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form">
+					<input type="hidden" name="employee.review_flg" value="N"/>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">昵称</label>
@@ -42,10 +42,10 @@
 								<input type="text" class="ip- date-picker" maxlength="10" placeholder="昵称" name="employee.nick_name" />
 							</div>
 						</div>
-						<input type="hidden" name="employee.review_flg" value="N" /> <label class="label" style="cursor: pointer"
-							data-toggle="tooltip" title="更换头像"> <img style="width: 100px; height: 100px" class="rounded" id="avatar"
-							src="<%=basePath%>static/img/head.jpg" title="更换头像" alt="avatar" /> <input type="file" class="sr-only"
-							id="input" name="image" accept="image/*" /> <input type="hidden" name="employee.head_photo" id="head" />
+						<label class="label" style="cursor: pointer" data-toggle="tooltip" title="更换头像"> <img
+							style="width: 100px; height: 100px" class="rounded" id="avatar" src="<%=basePath%>static/img/head.jpg"
+							title="更换头像" alt="avatar" /> <input type="file" class="sr-only" id="input" name="image" accept="image/*" /> <input
+							type="hidden" name="employee.head_photo" id="head" />
 						</label>
 						<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
@@ -107,7 +107,7 @@
 							<div class="ip">
 								<input type="text" class="ip-" required="required" maxlength="20" data-bind="value: employee().wechat"
 									placeholder="微信" name="employee.wechat" />
-									 <!-- onblur="checkWechat(this)" -->
+								<!-- onblur="checkWechat(this)" -->
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -122,8 +122,11 @@
 						<div class="col-md-6 required">
 							<label class="l">财务主体</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: employee().financial_body_name" placeholder="财务主体"
-									name="employee.financial_body_name" maxlength="10" required="required" />
+								<input type="text" style="width: 60%" class="ip-" data-bind="value: employee().financial_body_name"
+									placeholder="财务主体（点选不用审核）" name="employee.financial_body_name" id="financial_body_name" maxlength="30"
+									required="required" /> <input type="hidden" name="employee.financial_body_pk" data-bind="value:employee().financial_body_pk"
+									id="financial_body_pk" />
+								<button type="submit" class="btn btn-green" data-bind="click: function() { choseFinancial()  }">选择</button>
 							</div>
 						</div>
 						<div class="col-md-6 required">
@@ -201,7 +204,53 @@
 			</div>
 		</div>
 	</div>
-
+	<div id="financial_pick" style="display: none;">
+		<div class="main-container">
+			<div class="main-box" style="width: 600px">
+				<div class="form-group">
+					<div class="span8">
+						<label class="col-md-2 control-label">主体简称</label>
+						<div class="col-md-6">
+							<input type="text" id="client_name" class="form-control" placeholder="主体简称" />
+						</div>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchFinancial }">搜索</button>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr role="row">
+								<th>简称</th>
+								<th>全称</th>
+								<th>负责人</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: clients">
+							<tr data-bind="event: {click: function(){ $parent.pickFinancial($data.client_short_name,$data.pk)}}">
+								<td data-bind="text: $data.client_short_name"></td>
+								<td data-bind="text: $data.client_name"></td>
+								<td data-bind="text: $data.body_name"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination clearfloat">
+						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+						<!-- ko foreach: pageNums -->
+						<!-- ko if: $data == $root.currentPage() -->
+						<span class="current" data-bind="text: $data"></span>
+						<!-- /ko -->
+						<!-- ko ifnot: $data == $root.currentPage() -->
+						<a data-bind="text: $data, click: $root.turnPage"></a>
+						<!-- /ko -->
+						<!-- /ko -->
+						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -211,6 +260,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/employee-creation.js"></script>
+	<script src="<%=basePath%>static/js/client/employee-creation.js?v=1.001"></script>
 </body>
 </html>

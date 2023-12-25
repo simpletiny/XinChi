@@ -48,4 +48,8 @@ public interface PayApprovalDAO {
 	public PayApprovalBean selectByBackPk(String pk);
 
 	public BigDecimal selectSumBalance();
+
+	public void suspensePayApplyByPks(List<String> pks);
+
+	public BigDecimal selectSumSuspense();
 }

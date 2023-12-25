@@ -1,10 +1,9 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-	String key = request.getParameter("key");
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -95,7 +94,7 @@
 							<label class="l">手机号1</label>
 							<div class="ip">
 								<input type="text" class="ip- cellphone" maxlength="11" data-bind="value: employee().cellphone"
-									placeholder="手机号" name="employee.cellphone" required="required"  />
+									placeholder="手机号" name="employee.cellphone" required="required" />
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -118,8 +117,7 @@
 						<div class="col-md-6">
 							<label class="l">微信2</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: employee().wechat1" placeholder="微信" name="employee.wechat1"
-									 />
+								<input type="text" class="ip-" data-bind="value: employee().wechat1" placeholder="微信" name="employee.wechat1" />
 							</div>
 						</div>
 					</div>
@@ -137,8 +135,11 @@
 							<!-- /ko -->
 							<!-- ko if: employee().review_flg == "N" -->
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: employee().financial_body_name" placeholder="财务主体"
-									name="employee.financial_body_name" maxlength="10" required="required" />
+								<input type="text" style="width: 60%" class="ip-" data-bind="value: employee().financial_body_name"
+									placeholder="财务主体（点选不用审核）" name="employee.financial_body_name" id="financial_body_name" maxlength="30"
+									required="required" /> <input type="hidden" name="employee.financial_body_pk"
+									data-bind="value:employee().financial_body_pk" id="financial_body_pk" />
+								<button type="submit" class="btn btn-green" data-bind="click: function() { choseFinancial()  }">选择</button>
 							</div>
 							<!-- /ko -->
 
@@ -172,10 +173,12 @@
 						<div class="col-md-6 required">
 							<label class="l">地区</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control heilongjiang-city" data-bind="value:employee().employee_area" name="employee.employee_area" required="required"></select>
+								<select class="form-control heilongjiang-city" data-bind="value:employee().employee_area"
+									name="employee.employee_area" required="required"></select>
 							</div>
 							<div class="ip" style="width: 35%">
-								<select class="form-control district"  data-bind="value:employee().employee_county"  name="employee.employee_county"></select>
+								<select class="form-control district" data-bind="value:employee().employee_county"
+									name="employee.employee_county"></select>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -236,13 +239,15 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr role="row">
-								<th>财务主体简称</th>
+								<th>简称</th>
+								<th>全称</th>
 								<th>负责人</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: clients">
 							<tr data-bind="event: {click: function(){ $parent.pickFinancial($data.client_short_name,$data.pk)}}">
 								<td data-bind="text: $data.client_short_name"></td>
+								<td data-bind="text: $data.client_name"></td>
 								<td data-bind="text: $data.body_name"></td>
 							</tr>
 						</tbody>
@@ -272,6 +277,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/employee-edit.js"></script>
+	<script src="<%=basePath%>static/js/client/employee-edit.js?v=1.001"></script>
 </body>
 </html>

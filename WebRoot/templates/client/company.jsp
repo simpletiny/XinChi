@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -56,12 +55,10 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">地市</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px"
-									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',value: client().client_area,event:{change:ter}"
-									name="client.client_area"></select>
+								<select class="form-control heilongjiang-city" style="height: 34px" name="client.client_area"></select>
 							</div>
 							<div class="col-md-2">
-								<select class="form-control" id="county" name="client.client_county"></select>
+								<select class="form-control district" id="county" name="client.client_county"></select>
 							</div>
 						</div>
 
@@ -125,7 +122,7 @@
 								</em>
 							</div>
 						</div>
-						<label class="col-md-1 control-label">沟通力</label>
+						<label class="col-md-1 control-label">关系强度</label>
 						<div class="span6">
 							<div data-bind="foreach: talkLevels" class="col-md-4">
 								<em class="small-box "> <input name="client.talk_levels" type="checkbox"
@@ -140,9 +137,12 @@
 							<label class="col-md-1 control-label">主营</label>
 							<div class="col-md-4">
 								<em class="small-box "> <input name="client.main_businesses" type="checkbox" value="组团" checked="checked"
-									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label> <input name="client.main_businesses"
-									type="checkbox" value="综合" data-bind="event:{click:chkMainBusinessChk}" checked="checked" /><label>综合</label> <input
-									name="client.main_businesses" type="radio" value="地接" data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
+									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label><input name="client.main_businesses"
+									type="checkbox" value="户外" checked="checked" data-bind="event:{click:chkMainBusinessChk}" /><label>户外</label>
+									<input name="client.main_businesses" type="checkbox" value="线上" checked="checked"
+									data-bind="event:{click:chkMainBusinessChk}" /><label>线上</label> <input name="client.main_businesses"
+									type="checkbox" value="综合" data-bind="event:{click:chkMainBusinessChk}" checked="checked" /><label>综合</label>
+									<input name="client.main_businesses" type="radio" value="地接" data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
 									<input name="client.main_businesses" type="radio" value="同业" data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
 									<input name="client.main_businesses" type="radio" value="其它" data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
 									<input name="client.main_businesses" type="radio" value="全部" data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
@@ -160,15 +160,17 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
-								<td width="11.11%">总数</td>
-								<td width="11.11%" data-bind="text:totalCompanies()"></td>
-								<td width="11.11%">年单1</td>
-								<td width="11.11%" data-bind="text:clientCount().oneYearorderCnt"></td>
-								<td width="11.11%">年单1+</td>
-								<td width="11.11%" data-bind="text:clientCount().moreYearorderCnt"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
+								<td width="5%">总数：</td>
+								<td width="10%" data-bind="text:totalCompanies()"></td>
+								<td width="5%">30天：</td>
+								<td width="10%" data-bind="text:clientCount().client_30day_count"></td>
+								<td width="5%">100天：</td>
+								<td width="10%" data-bind="text:clientCount().client_100day_count"></td>
+								<td width="5%">年单1：</td>
+								<td width="10%" data-bind="text:clientCount().client_one_year_count"></td>
+								<td width="7%">年单1+：</td>
+								<td width="10%" data-bind="text:clientCount().client_more_year_count"></td>
+								<td></td>
 							</tr>
 						</thead>
 					</table>
@@ -220,7 +222,7 @@
 									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
 								<!-- /ko -->
 
-								<td data-bind="text: $data.client_employee_count"></td>
+								<td><a href="javascript:void(0)" data-bind="text: $data.client_employee_count,click:$root.checkEmployee"></a></td>
 								<td class="rmb" data-bind="text: $data.sum_balance"></td>
 								<td data-bind="text: $data.client_year_order_count"></td>
 								<td data-bind="text: $data.last_order_date"></td>
@@ -283,10 +285,10 @@
 				class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
 		</div>
 	</div>
-	<div id="client-level" style="display: none; width: 800px">
+	<div id="client-level" style="display: none; width: 900px">
 		<form class="form-horizontal search-panel" id="form-level">
 			<input type="hidden" data-bind="value:client().pk" name="client.pk" />
-			<div class="form-group" style="width: 800px">
+			<div class="form-group" style="width: 900px">
 				<div class="span6">
 					<label class="col-md-1 control-label">回款誉</label>
 					<div class="col-md-3">
@@ -301,7 +303,7 @@
 					</div>
 				</div>
 				<div class="span6">
-					<label class="col-md-1 control-label">沟通力</label>
+					<label class="col-md-1 control-label">关系强度</label>
 					<div class="col-md-3">
 						<select class="form-control" data-bind="options: talkLevels, value:client().talk_level" name="client.talk_level"></select>
 					</div>
@@ -330,10 +332,31 @@
 			</div>
 		</div>
 	</div>
+	<div id="employee-detail" style="display: none; width: 500px; height: 400px; overflow-y: scroll">
+		<div class="input-row clearfloat">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>客户姓名</th>
+						<th>手机号</th>
+						<th>状态</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: employees">
+					<tr>
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.cellphone"></td>
+						<td data-bind="text: $data.sales_name"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
-	<script src="<%=basePath%>static/js/client/company.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.002"></script>
 </body>
 </html>

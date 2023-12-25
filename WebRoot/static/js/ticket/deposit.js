@@ -28,6 +28,14 @@ var DepositContext = function() {
 		fail_msg(reason.responseText);
 	});
 
+	// 获取产品经理和票务
+	self.users = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT,TICKET'
+	}, function(data) {
+		self.users(data.users);
+	});
+	
 	// 获取产品经理信息
 	self.product_managers = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchByRole', {

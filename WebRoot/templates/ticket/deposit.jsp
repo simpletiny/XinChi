@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -109,7 +108,6 @@ h2 {
 						<thead>
 							<tr role="row">
 								<th></th>
-								<th>押金单号</th>
 								<th>支出账户</th>
 								<th>收款方</th>
 								<th>金额</th>
@@ -120,12 +118,14 @@ h2 {
 								<th>退还途径</th>
 								<th>流水凭证号</th>
 								<th>备注</th>
+								<th>押金单号</th>
+								<th>责任人</th>
 							</tr>
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach:deposits">
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenDeposits" /></td>
-								<td data-bind="text: $data.deposit_number"></td>
+								
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
@@ -146,6 +146,8 @@ h2 {
 								<!-- <td data-bind="text: $root.statusMapping[$data.status]"></td> -->
 								<!-- /ko -->
 								<!-- <td><a href="javascript:void(0)" data-bind="click:$root.viewDetail">查看</a></td> -->
+								<td data-bind="text: $data.deposit_number"></td>
+								<td data-bind="text: $data.responsible_user_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -311,6 +313,17 @@ h2 {
 					</div>
 				</div>
 			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l">责任人</label>
+					<div class="ip">
+						<select class="form-control" style="height: 34px" required id="select-sales"
+							data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
+							name="deposit.responsible_user"></select>
+					</div>
+				</div>
+			</div>
+
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
 					<a href="javascript:;" class="a-upload">上传凭证<input type="file" required="required" class="file-img"
