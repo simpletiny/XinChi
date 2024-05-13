@@ -76,7 +76,7 @@ var OrderContext = function() {
 	self.totalCost = ko.observable();
 	self.refresh = function() {
 		startLoadingIndicator("加载中...");
-
+		self.chosenOrders.removeAll();
 		var totalPeople = 0;
 		var totalCost = 0;
 

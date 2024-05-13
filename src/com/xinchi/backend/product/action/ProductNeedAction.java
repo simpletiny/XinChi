@@ -38,6 +38,7 @@ public class ProductNeedAction extends BaseAction {
 		confirm_flgs.add("Y");
 		confirm_flgs.add("F");
 		option.setConfirm_flgs(confirm_flgs);
+		option.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO + ",");
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);

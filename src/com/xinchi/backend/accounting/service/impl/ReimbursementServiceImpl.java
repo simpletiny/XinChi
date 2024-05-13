@@ -1,6 +1,9 @@
 package com.xinchi.backend.accounting.service.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,6 +100,16 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		pa.setApply_time(DateUtil.getTimeMillis());
 		payApprovalDao.insert(pa);
 		return SUCCESS;
+	}
+
+	@Override
+	public Map<String, BigDecimal> searchSummaries(ReimbursementBean reimbursement) {
+		List<ReimbursementBean> results = dao.selectSummaries(reimbursement);
+		Map<String, BigDecimal> summaries = new HashMap<>();
+		for (ReimbursementBean rei : results) {
+			summaries.put(rei.getItem(), rei.getMoney());
+		}
+		return summaries;
 	}
 
 }

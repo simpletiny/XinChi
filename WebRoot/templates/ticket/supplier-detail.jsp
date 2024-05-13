@@ -20,7 +20,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				查看财务主体信息<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create">返回</a>
+				机票供应商信息<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create">返回</a>
 			</h2>
 		</div>
 

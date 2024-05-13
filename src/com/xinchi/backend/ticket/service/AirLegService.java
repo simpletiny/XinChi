@@ -46,7 +46,9 @@ public interface AirLegService extends BaseService {
 	public List<AirLegBean> selectByPage(Page<AirLegBean> page);
 
 	public String createLeg(AirLegBean leg);
-	
+
 	public String updateLeg(AirLegBean leg);
+
+	public String changeUse(List<String> leg_pks, String use_flg);
 
 }

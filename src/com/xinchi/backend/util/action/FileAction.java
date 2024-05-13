@@ -27,6 +27,7 @@ public class FileAction extends BaseAction {
 	private String subFolder;
 	private String fileName;
 	private String fileFileName;
+	private String fileContentType;
 	// 下载的文件类型，通过类型查找文件夹地址
 	private String fileType;
 
@@ -47,6 +48,7 @@ public class FileAction extends BaseAction {
 	private File file;
 
 	public String fileUpload() throws IOException {
+		System.out.println(fileContentType);
 		String ext = Utils.getFileExt(fileFileName);
 		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		File destfile = new File(fileFolder + File.separator + DBCommonUtil.genPk() + "." + ext);
@@ -93,6 +95,13 @@ public class FileAction extends BaseAction {
 			fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		}
 		resultStr = SimpletinyWord.Word2003ToHtml(fileFolder + File.separator + fileName);
+		return SUCCESS;
+	}
+
+	public String viewExcel() throws Exception {
+		String fileFolder = "";
+		fileFolder = PropertiesUtil.getProperty(FileFolder.valueOf(fileType).value());
+		resultStr = SimpletinyWord.ExcelXlsxToHtml(fileFolder + File.separator + fileName);
 		return SUCCESS;
 	}
 
@@ -150,5 +159,13 @@ public class FileAction extends BaseAction {
 
 	public void setViewType(String viewType) {
 		this.viewType = viewType;
+	}
+
+	public String getFileContentType() {
+		return fileContentType;
+	}
+
+	public void setFileContentType(String fileContentType) {
+		this.fileContentType = fileContentType;
 	}
 }

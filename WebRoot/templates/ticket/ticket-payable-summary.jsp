@@ -54,7 +54,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>票务财务汇总</h2>
+			<h2>账目汇总</h2>
 		</div>
 
 		<div class="main-container">

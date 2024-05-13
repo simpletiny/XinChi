@@ -11,8 +11,8 @@ var CompanyContext = function() {
 	};
 	self.client = ko.observable({});
 	self.clients = ko.observable({
-		total: 0,
-		items: []
+		total : 0,
+		items : []
 	});
 	self.storeTypes = ['未知', '门店', '写字间', '其它 '];
 	self.mainBusinesses = ['其它', '组团', '地接', '同业', '综合'];
@@ -26,8 +26,8 @@ var CompanyContext = function() {
 	self.chosenTalkLevels.push("市场");
 	self.chosenTalkLevels.push("排斥");
 	self.statusMapping = {
-		'N': '正常',
-		'Y': '已停用'
+		'N' : '正常',
+		'Y' : '已停用'
 	};
 
 	// self.chosenMainBusinesses = ko.observableArray([]);
@@ -38,8 +38,8 @@ var CompanyContext = function() {
 
 	self.relates = ['N', 'Y'];
 	self.relatesMapping = {
-		'N': '未关联',
-		'Y': '已关联'
+		'N' : '未关联',
+		'Y' : '已关联'
 	};
 
 	self.chosenRelates = ko.observableArray([]);
@@ -57,8 +57,8 @@ var CompanyContext = function() {
 	});
 
 	self.clientCount = ko.observable({
-		oneYearorderCnt: 0,
-		moreYearorderCnt: 0
+		oneYearorderCnt : 0,
+		moreYearorderCnt : 0
 	});
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
@@ -119,7 +119,7 @@ var CompanyContext = function() {
 			return;
 		} else if (self.chosenCompanies().length == 1) {
 			$.getJSON(self.apiurl + 'client/searchOneCompany', {
-				client_pk: self.chosenCompanies()[0]
+				client_pk : self.chosenCompanies()[0]
 			}, function(data) {
 				if (data.client) {
 					self.client(data.client);
@@ -131,18 +131,18 @@ var CompanyContext = function() {
 			});
 
 			levelLayer = $.layer({
-				type: 1,
-				title: ['客户评级', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['900px', '150px'],
-				offset: ['', ''],
-				scrollbar: true,
-				page: {
-					dom: '#client-level'
+				type : 1,
+				title : ['客户评级', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['900px', '150px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#client-level'
 				},
-				end: function() {
+				end : function() {
 
 				}
 			});
@@ -153,9 +153,9 @@ var CompanyContext = function() {
 		var param = $("#form-level").serialize();
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
-			type: "POST",
-			url: self.apiurl + 'client/pureUpdateCompany',
-			data: param
+			type : "POST",
+			url : self.apiurl + 'client/pureUpdateCompany',
+			data : param
 		}).success(function(str) {
 			layer.close(levelLayer);
 			endLoadingIndicator();
@@ -179,19 +179,19 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area: ['auto', 'auto'],
-				dialog: {
-					msg: '确认停用该财务主体吗?',
-					btns: 2,
-					type: 4,
-					btn: ['确认', '取消'],
-					yes: function(index) {
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '确认停用该财务主体吗?',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("停用中");
 						$.ajax({
-							type: "POST",
-							url: self.apiurl + 'client/deleteCompany',
-							data: "company_pks=" + self.chosenCompanies()
+							type : "POST",
+							url : self.apiurl + 'client/deleteCompany',
+							data : "company_pks=" + self.chosenCompanies()
 						}).success(function(str) {
 							if (str == "success") {
 								self.refresh();
@@ -215,19 +215,19 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area: ['auto', 'auto'],
-				dialog: {
-					msg: '注意：删除财务主体，会将此财务主体下的客户一并删除。如果你知道自己在做什么，请点确认?',
-					btns: 2,
-					type: 7,
-					btn: ['确认', '不了'],
-					yes: function(index) {
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '注意：删除财务主体，会将此财务主体下的客户一并删除。如果你知道自己在做什么，请点确认?',
+					btns : 2,
+					type : 7,
+					btn : ['确认', '不了'],
+					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中...");
 						$.ajax({
-							type: "POST",
-							url: self.apiurl + 'client/deleteCompanyReally',
-							data: "client_pk=" + self.chosenCompanies()
+							type : "POST",
+							url : self.apiurl + 'client/deleteCompanyReally',
+							data : "client_pk=" + self.chosenCompanies()
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
@@ -244,6 +244,46 @@ var CompanyContext = function() {
 			});
 		}
 	};
+	/**
+	 * 公开财务主体
+	 */
+	self.publicCompany = function() {
+		if (self.chosenCompanies().length == 0) {
+			fail_msg("请选择财务主体");
+			return;
+		} else if (self.chosenCompanies().length > 1) {
+			fail_msg("只能选择一个财务主体");
+			return;
+		} else {
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '注意：公开财务主体，会将此财务主体下的客户资料转到“公开的财务主体”名下。确认要公开吗？',
+					btns : 2,
+					type : 7,
+					btn : ['确认', '不了'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("更新中");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'client/publicCompany',
+							data : "client_pk=" + self.chosenCompanies()
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenCompanies.removeAll();
+							} else {
+								fail_msg("操作失败，请联系管理员");
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
 	self.chosenUser = ko.observableArray([]);
 
 	/**
@@ -255,18 +295,18 @@ var CompanyContext = function() {
 			return;
 		} else {
 			salesLayer = $.layer({
-				type: 1,
-				title: ['修改财务主体销售', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['600px', '400px'],
-				offset: ['200px', ''],
-				scrollbar: true,
-				page: {
-					dom: '#edit-sale'
+				type : 1,
+				title : ['修改财务主体销售', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['600px', '400px'],
+				offset : ['200px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#edit-sale'
 				},
-				end: function() {
+				end : function() {
 
 				}
 			});
@@ -286,24 +326,24 @@ var CompanyContext = function() {
 		}
 
 		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: '确认将选中的财务主体移至新销售名下吗?',
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认将选中的财务主体移至新销售名下吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
 					layer.close(index);
 					var data = {
-						company_pks: self.chosenCompanies(),
-						sale_pks: self.chosenUser()
+						company_pks : self.chosenCompanies(),
+						sale_pks : self.chosenUser()
 					};
 					startLoadingSimpleIndicator("转移中...");
 					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'client/changeClientSales',
-						traditional: true,
-						data: data
+						type : "POST",
+						url : self.apiurl + 'client/changeClientSales',
+						traditional : true,
+						data : data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -323,24 +363,24 @@ var CompanyContext = function() {
 	self.keepMySide = function() {
 		let user_pk = $("#user-pk").val();
 		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: '确认将选中的财务主体移至自己名下吗?',
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认将选中的财务主体移至自己名下吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
 					layer.close(index);
 					var data = {
-						company_pks: self.chosenCompanies(),
-						sale_pks: user_pk
+						company_pks : self.chosenCompanies(),
+						sale_pks : user_pk
 					};
 					startLoadingSimpleIndicator("转移中...");
 					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'client/changeClientSales',
-						traditional: true,
-						data: data
+						type : "POST",
+						url : self.apiurl + 'client/changeClientSales',
+						traditional : true,
+						data : data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -364,7 +404,7 @@ var CompanyContext = function() {
 	self.checkEmployee = function(data) {
 
 		$.getJSON(self.apiurl + 'client/searchEmployeeByFinancialBodyPk', {
-			financial_body_pk: data.pk
+			financial_body_pk : data.pk
 		}, function(data) {
 			if (data.employees) {
 				self.employees(data.employees);
@@ -372,18 +412,18 @@ var CompanyContext = function() {
 				fail_msg("不存在客户员工！");
 			}
 			employeeLayer = $.layer({
-				type: 1,
-				title: ['客户员工详情', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['500px', '450px'],
-				offset: ['200px', ''],
-				scrollbar: true,
-				page: {
-					dom: '#employee-detail'
+				type : 1,
+				title : ['客户员工详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['500px', '450px'],
+				offset : ['200px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#employee-detail'
 				},
-				end: function() {
+				end : function() {
 
 				}
 			});
@@ -417,22 +457,22 @@ var CompanyContext = function() {
 	// 添加/修改备注
 	self.editComment = function(client_pk) {
 		$.getJSON(self.apiurl + 'client/searchOneCompany', {
-			client_pk: client_pk
+			client_pk : client_pk
 		}, function(data) {
 			self.company(data.client);
 			commentLayer = $.layer({
-				type: 1,
-				title: ['备注', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['500px', '300px'],
-				offset: ['', ''],
-				scrollbar: true,
-				page: {
-					dom: '#comment-edit'
+				type : 1,
+				title : ['备注', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['500px', '300px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#comment-edit'
 				},
-				end: function() {
+				end : function() {
 					console.log("Done");
 				}
 			});
@@ -452,9 +492,9 @@ var CompanyContext = function() {
 
 		startLoadingIndicator("保存中");
 		$.ajax({
-			type: "POST",
-			url: self.apiurl + "client/pureUpdateCompany",
-			data: data
+			type : "POST",
+			url : self.apiurl + "client/pureUpdateCompany",
+			data : data
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {

@@ -147,6 +147,12 @@
 		B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByClientPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		*
+		from client_employee
+		where financial_body_pk = #{client_pk,jdbcType=CHAR}
+	</select>
 	<select id="selectByPks" resultMap="BaseResultMap">
 		select
 		*
@@ -156,7 +162,6 @@
 			#{item}
 		</foreach>
 	</select>
-
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from client_employee
 		where pk = #{pk,jdbcType=CHAR}
@@ -671,7 +676,8 @@
 		A
 		LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk =
+		LEFT JOIN
+		view_client_employee_user C ON A.pk =
 		C.employee_pk
 		LEFT JOIN
 		client_relation D ON A.pk = D.client_employee_pk

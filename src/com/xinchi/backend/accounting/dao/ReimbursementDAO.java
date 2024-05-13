@@ -17,4 +17,5 @@ public interface ReimbursementDAO {
 
 	public List<ReimbursementBean> selectByPage(Page page);
 
+	public List<ReimbursementBean> selectSummaries(ReimbursementBean reimbursement);
 }

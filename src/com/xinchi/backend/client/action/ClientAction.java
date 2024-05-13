@@ -25,6 +25,8 @@ public class ClientAction extends BaseAction {
 	@Autowired
 	private ClientService clientService;
 
+	private String json;
+
 	public String createCompany() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -33,7 +35,7 @@ public class ClientAction extends BaseAction {
 		if (!SimpletinyString.isEmpty(client.getAgency_pk())) {
 			client.setRelate_flg("Y");
 		}
-		resultStr = clientService.createCompany(client);
+		resultStr = clientService.createCompany(client, json);
 		return SUCCESS;
 	}
 
@@ -96,6 +98,11 @@ public class ClientAction extends BaseAction {
 
 	public String deleteCompany() {
 		resultStr = clientService.deleteClient(company_pks);
+		return SUCCESS;
+	}
+
+	public String publicCompany() {
+		resultStr = clientService.publicCompany(client_pk);
 		return SUCCESS;
 	}
 
@@ -163,6 +170,14 @@ public class ClientAction extends BaseAction {
 
 	public void setClientCount(ClientCountDto clientCount) {
 		this.clientCount = clientCount;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
 	}
 
 }

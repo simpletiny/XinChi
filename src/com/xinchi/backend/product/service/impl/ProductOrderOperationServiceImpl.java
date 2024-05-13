@@ -470,6 +470,7 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 				// 删除操作中订单
 				dao.deleteByTeamNumber(t_n);
 				// 删除应付款
+//TODO：需要判断应付款是否已经付款
 				payableDao.deleteByTeamNumber(t_n);
 
 				product_order.setStatus("N");

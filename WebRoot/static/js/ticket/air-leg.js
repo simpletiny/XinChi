@@ -7,37 +7,47 @@ var AirLegContext = function() {
 		total : 0,
 		items : []
 	});
-	self.hots = [ "N", "Y" ];
+	self.hots = ["N", "Y"];
 	self.hotMapping = {
 		"Y" : "是",
 		"N" : "否"
 	}
+
+	self.uses = ['Y', 'N'];
+	self.useMapping = {
+		"Y" : "正常",
+		"N" : "暂停使用"
+	}
+
+	self.chosenUses = ko.observableArray([]);
+	self.chosenUses.push("Y");
 
 	self.leg = ko.observable({});
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 
 		var param = $("#form-search").serialize();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(data) {
 			self.legs(data.legs);
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
+
+			$("td:contains('暂停使用')").css("color", "red");
+			$("td:contains('正常')").css("color", "green");
 			endLoadingIndicator();
 		});
 	};
 	self.createLeg = function() {
 		legLayer = $.layer({
 			type : 1,
-			title : [ '新建航段', '' ],
+			title : ['新建航段', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '800px', '260px' ],
-			offset : [ '', '' ],
+			area : ['800px', '260px'],
+			offset : ['', ''],
 			scrollbar : true,
 			page : {
 				dom : '#air-leg'
@@ -79,12 +89,12 @@ var AirLegContext = function() {
 			fail_msg("请选择！");
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : "是否要删除航段！",
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中");
@@ -110,6 +120,52 @@ var AirLegContext = function() {
 
 		}
 	}
+	self.changeUse = function(use_flg) {
+		if (self.chosenLegs().length < 1) {
+			fail_msg("请选择！");
+		} else {
+			let msg = "";
+			if (use_flg == "N") {
+				msg = "是否要暂停使用航段！"
+			} else {
+				msg = "是否要启用航段！"
+			}
+
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : msg,
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("停用中");
+						var data = "";
+						for (var i = 0; i < self.chosenLegs().length; i++) {
+							data += "leg_pks=" + self.chosenLegs()[i] + "&";
+						}
+						data += "use_flg=" + use_flg;
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'ticket/changeUseAirLeg',
+							data : data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.chosenLegs.removeAll();
+								self.refresh();
+							} else {
+								fail_msg("保存失败，联系管理员！");
+							}
+						});
+					}
+				}
+			});
+
+		}
+	}
+
 	self.switchHot = function(data, event) {
 		var leg_pk = data.pk;
 		var v = $(event.target).val();
@@ -136,12 +192,12 @@ var AirLegContext = function() {
 				endLoadingIndicator();
 				legEditLayer = $.layer({
 					type : 1,
-					title : [ '新建航段', '' ],
+					title : ['编辑航段', ''],
 					maxmin : false,
-					closeBtn : [ 1, true ],
+					closeBtn : [1, true],
 					shadeClose : false,
-					area : [ '800px', '260px' ],
-					offset : [ '', '' ],
+					area : ['800px', '260px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#air-leg-edit'
@@ -224,8 +280,7 @@ var AirLegContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);

@@ -138,8 +138,13 @@ public class ProductAction extends BaseAction {
 		Collections.sort(productProfits);
 
 		// 手续费
+		// fee_option.setFirst_year(productProfit.getOption_year());
+		// List<AirServiceFeeDto> fees =
+		// airTicketPayableService.searchServiceFees(fee_option);
+
+		// 机票其他费用
 		fee_option.setFirst_year(productProfit.getOption_year());
-		List<AirServiceFeeDto> fees = airTicketPayableService.searchServiceFees(fee_option);
+		List<AirOtherPaymentDto> no_b_payments = airTicketPayableService.searchNoneBussinessPayment(fee_option);
 
 		// 押金扣款
 		List<AirOtherPaymentDto> deducts = airTicketPayableService.searchDepositDeducts(fee_option);
@@ -149,10 +154,10 @@ public class ProductAction extends BaseAction {
 				.selectSumReconciliation(fee_option);
 
 		for (ProductProfitBean pp : productProfits) {
-			for (AirServiceFeeDto asf : fees) {
-				if (pp.getDeparture_month().equals(asf.getFirst_month())) {
+			for (AirOtherPaymentDto aop : no_b_payments) {
+				if (pp.getDeparture_month().equals(aop.getBelong_month())) {
 					// 应该将金额相加
-					pp.setService_fees(pp.getService_fees().add(asf.getPayable()));
+					pp.setTicket_other_cost(pp.getTicket_other_cost().add(aop.getMoney()));
 				}
 			}
 			for (AirOtherPaymentDto deduct : deducts) {

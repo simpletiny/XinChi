@@ -116,19 +116,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 			saveFile(employee.getHead_photo());
 		}
 		// 检测是否需要审核
-		String client_pk = employee.getFinancial_body_pk();
-
-		if (!SimpletinyString.isEmpty(client_pk)) {
-			ClientBean client = clientDao.selectByPrimaryKey(client_pk);
-			String client_short_name = employee.getFinancial_body_name();
-
-			if (client.getClient_short_name().equals(client_short_name)) {
-				employee.setReview_flg("Y");
-			} else {
-				employee.setFinancial_body_pk(null);
-			}
-		}
-
+		// String client_pk = employee.getFinancial_body_pk();
+		//
+		// if (!SimpletinyString.isEmpty(client_pk)) {
+		// ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+		// String client_short_name = employee.getFinancial_body_name();
+		//
+		// if (client.getClient_short_name().equals(client_short_name)) {
+		// employee.setReview_flg("Y");
+		// } else {
+		// employee.setFinancial_body_pk(null);
+		// }
+		// }
+		// 2024-05-12无需审核
+		employee.setReview_flg("Y");
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
@@ -137,7 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ceub.setUser_pk(employee.getSales());
 		employeeUserDao.insert(ceub);
 
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
@@ -209,20 +210,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 			saveFile(employee.getHead_photo());
 		}
 
-		// 检测是否需要审核
-		if (oldCeb.getReview_flg().equals("N")) {
-			String client_pk = employee.getFinancial_body_pk();
-			if (!SimpletinyString.isEmpty(client_pk)) {
-				ClientBean client = clientDao.selectByPrimaryKey(client_pk);
-				String client_short_name = employee.getFinancial_body_name();
-
-				if (client.getClient_short_name().equals(client_short_name)) {
-					employee.setReview_flg("Y");
-				} else {
-					employee.setFinancial_body_pk(null);
-				}
-			}
-		}
+		// 2024-05-12:无需审核
+		// // 检测是否需要审核
+		// if (oldCeb.getReview_flg().equals("N")) {
+		// String client_pk = employee.getFinancial_body_pk();
+		// if (!SimpletinyString.isEmpty(client_pk)) {
+		// ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+		// String client_short_name = employee.getFinancial_body_name();
+		//
+		// if (client.getClient_short_name().equals(client_short_name)) {
+		// employee.setReview_flg("Y");
+		// } else {
+		// employee.setFinancial_body_pk(null);
+		// }
+		// }
+		// }
 
 		dao.update(employee);
 		return SUCCESS;
@@ -262,6 +264,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		for (String employee_pk : employee_pks) {
 			ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
 			employee.setPublic_flg("Y");
+			// 这个ID是个需要解决的问题，要么改成SimpletinyPUblic,要么系统分发到其他公司时，这是个问题。
+			employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
 			// 删除之前存在的对应关系
 			employeeUserDao.deleteByEmployeePk(employee_pk);
 
@@ -414,9 +418,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			// 删除之前存在的对应关系
 			employeeUserDao.deleteByEmployeePk(employee_pk);
-
 			if (main_user.equals("public")) {
 				employee.setPublic_flg("Y");
+				employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
 				// 保存新的对应关系
 				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
 

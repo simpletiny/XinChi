@@ -120,7 +120,7 @@
 					<div>
 						<div class="input-row clearfloat">
 							<div class="col-md-3 required">
-								<label class="l" style="width: 70px !important">地接社</label>
+								<label class="l" style="width: 70px !important">地接操作</label>
 								<div class="fix-width1">
 									<input type="text" class="ip- required" st="supplier-name" data-bind="value:$data.supplier_employee_name"
 										onclick="choseSupplierEmployee(event)" /> <input type="text" class="need"
@@ -290,8 +290,8 @@
 				<div class="input-row clearfloat" style="text-align: right">
 					<div class="col-md-12">
 						<div class="ip">
-							<a type="submit" class="btn btn-r" href="javacript:void(0);" onclick="deleteSupplier()">-地接社</a> <a type="submit"
-								class="btn btn-r" href="javacript:void(0);" onclick="addSupplier()">+地接社</a>
+							<a type="submit" class="btn btn-r" href="javacript:void(0);" onclick="deleteSupplier()">-地接操作</a> <a type="submit"
+								class="btn btn-r" href="javacript:void(0);" onclick="addSupplier()">+地接操作</a>
 						</div>
 					</div>
 				</div>
@@ -377,6 +377,6 @@
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/order-operate-creation.js"></script>
+	<script src="<%=basePath%>static/js/product/order-operate-creation.js?v=1.001"></script>
 </body>
 </html>

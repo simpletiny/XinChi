@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientDAO;
+import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
+import com.xinchi.backend.client.dao.ClientInoutImgDAO;
 import com.xinchi.backend.client.dao.ClientUserDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.service.ClientService;
@@ -15,13 +17,21 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientCountDto;
 import com.xinchi.bean.ClientEmployeeBean;
+import com.xinchi.bean.ClientEmployeeUserBean;
+import com.xinchi.bean.ClientInoutImgBean;
 import com.xinchi.bean.ClientUserBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.common.FileFolder;
+import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 @Transactional
@@ -33,8 +43,11 @@ public class ClientServiceImpl implements ClientService {
 	@Autowired
 	private ClientUserDAO clientUserDao;
 
+	@Autowired
+	private ClientInoutImgDAO clientInoutImgDao;
+
 	@Override
-	public String createCompany(ClientBean client) {
+	public String createCompany(ClientBean client, String json) {
 		ClientBean options = new ClientBean();
 		// options.setSales(client.getSales());
 		options.setClient_name(client.getClient_name());
@@ -52,12 +65,47 @@ public class ClientServiceImpl implements ClientService {
 				}
 			}
 		}
-		dao.insert(client);
+		String client_pk = dao.insert(client);
 		// 记录客户和销售对应关系
 		ClientUserBean cub = new ClientUserBean();
 		cub.setClient_pk(client.getPk());
 		cub.setUser_pk(client.getSales());
 		clientUserDao.insert(cub);
+
+		// 记录内环境外环境图片
+
+		if (!SimpletinyString.isEmpty(json)) {
+			JSONObject imgs = JSONObject.fromObject(json);
+			JSONArray outImgs = imgs.getJSONArray("outImgs");
+			if (null != outImgs && outImgs.size() > 0) {
+				for (int i = 0; i < outImgs.size(); i++) {
+					String outImg = outImgs.getString(i);
+					ClientInoutImgBean inout = new ClientInoutImgBean();
+					inout.setClient_pk(client_pk);
+					inout.setImg_name(outImg);
+					inout.setImg_type(ClientInoutImgBean.IMG_TYPE_OUT);
+					clientInoutImgDao.insert(inout);
+
+					// 保存文件
+					FileUtil.saveFile(outImg, FileFolder.CLIENT_INOUT_IMG.value());
+				}
+			}
+			JSONArray inImgs = imgs.getJSONArray("inImgs");
+			if (null != inImgs && inImgs.size() > 0) {
+				for (int i = 0; i < inImgs.size(); i++) {
+					String inImg = inImgs.getString(i);
+					ClientInoutImgBean inout = new ClientInoutImgBean();
+					inout.setClient_pk(client_pk);
+					inout.setImg_name(inImg);
+					inout.setImg_type(ClientInoutImgBean.IMG_TYPE_IN);
+					clientInoutImgDao.insert(inout);
+
+					// 保存文件
+					FileUtil.saveFile(inImg, FileFolder.CLIENT_INOUT_IMG.value());
+				}
+			}
+
+		}
 
 		return SUCCESS;
 	}
@@ -75,6 +123,39 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public void delete(String id) {
 		dao.delete(id);
+	}
+
+	@Override
+	public String publicCompany(String pk) {
+		ClientBean client = dao.selectByPrimaryKey(pk);
+
+		// 删除之前存在的对应关系
+		clientUserDao.deleteByClientPk(pk);
+
+		// 公开财务主体名下的客户资料
+		List<ClientEmployeeBean> employees = employeeDao.selectByClientPk(pk);
+		for (ClientEmployeeBean employee : employees) {
+			employee.setPublic_flg("Y");
+			// 这个ID是个需要解决的问题，要么改成SimpletinyPUblic,要么系统分发到其他公司时，这是个问题。
+			employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
+			// 删除之前存在的对应关系
+			employeeUserDao.deleteByEmployeePk(employee.getPk());
+
+			// 保存新的对应关系
+			ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+			ceub.setEmployee_pk(employee.getPk());
+			ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+			employeeUserDao.insert(ceub);
+
+			employeeDao.update(employee);
+		}
+		client.setPublic_flg("Y");
+		// 保存新的对应关系
+		ClientUserBean cub = new ClientUserBean();
+		cub.setClient_pk(pk);
+		cub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+		clientUserDao.insert(cub);
+		return SUCCESS;
 	}
 
 	@Override
@@ -130,6 +211,9 @@ public class ClientServiceImpl implements ClientService {
 	@Autowired
 	private EmployeeDAO employeeDao;
 
+	@Autowired
+	private ClientEmployeeUserDAO employeeUserDao;
+
 	@Override
 	public String changeClientSales(List<String> company_pks, List<String> sale_pks) {
 		String main_user = sale_pks.get(0);
@@ -141,6 +225,22 @@ public class ClientServiceImpl implements ClientService {
 			clientUserDao.deleteByClientPk(company_pk);
 
 			if (main_user.equals("public")) {
+				List<ClientEmployeeBean> employees = employeeDao.selectByClientPk(company_pk);
+				for (ClientEmployeeBean employee : employees) {
+					employee.setPublic_flg("Y");
+					// 这个ID是个需要解决的问题，要么改成SimpletinyPUblic,要么系统分发到其他公司时，这是个问题。
+					employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
+					// 删除之前存在的对应关系
+					employeeUserDao.deleteByEmployeePk(employee.getPk());
+
+					// 保存新的对应关系
+					ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+					ceub.setEmployee_pk(employee.getPk());
+					ceub.setUser_pk(ResourcesConstants.USER_PUBLIC);
+					employeeUserDao.insert(ceub);
+
+					employeeDao.update(employee);
+				}
 				client.setPublic_flg("Y");
 				// 保存新的对应关系
 				ClientUserBean cub = new ClientUserBean();

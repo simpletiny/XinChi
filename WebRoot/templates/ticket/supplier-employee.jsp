@@ -54,7 +54,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">供应商简称</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="供应商简称" name="employee.financial_body_name" />
+								<input type="text" class="form-control" placeholder="供应商简称" name="employee.supplier_short_name" />
 							</div>
 						</div>
 
@@ -95,7 +95,7 @@
 								<td><a href="javascript:void(0)" data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.sex"></td>
 								<td data-bind="text: $data.employee_city"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
+								<td data-bind="text: $data.supplier_short_name"></td>
 								<td data-bind="text: $data.ellphone"></td>
 								<td data-bind="text: $data.qq"></td>
 								<td data-bind="text: $root.isMapping[$data.delete_flg]"></td>

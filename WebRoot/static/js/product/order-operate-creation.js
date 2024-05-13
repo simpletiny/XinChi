@@ -269,7 +269,7 @@ var ProductContext = function() {
 
 			if (supplier_cost != sum_money[i]) {
 
-				fail_msg("地接社" + (i + 1) + "的订单合计金额：￥" + sum_money[i] + "与结算价格：￥" + supplier_cost + "不符！");
+				fail_msg("地接操作" + (i + 1) + "的订单合计金额：￥" + sum_money[i] + "与结算价格：￥" + supplier_cost + "不符！");
 				return false;
 			}
 		}
@@ -455,7 +455,7 @@ function addSupplier() {
 	var timestamp = (new Date()).getTime();
 	var div_supplier = $('<div><div class="input-row clearfloat">'
 			+ '<div class="col-md-3 required">'
-			+ '<label class="l" style="width: 70px !important">地接社</label>'
+			+ '<label class="l" style="width: 70px !important">地接操作</label>'
 			+ '<div class="fix-width1">'
 			+ '<input type="text" class="ip-" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"'
 			+ 'class="need" st="supplier-pk" style="display: none" />' + '</div>' + '</div>'

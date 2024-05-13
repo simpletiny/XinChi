@@ -3,6 +3,7 @@
 <mapper namespace="com.xinchi.bean.mapper.SupplierEmployeeMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.SupplierEmployeeBean">
 		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
 		<result column="sex" property="sex" jdbcType="CHAR" />
 		<result column="wechat" property="wechat" jdbcType="VARCHAR" />
 		<result column="qq" property="qq" jdbcType="VARCHAR" />
@@ -275,6 +276,7 @@
 		A.id,
 		A.financial_body_pk,
 		A.financial_body_name,
+		B.supplier_short_name,
 		A.area,
 		A.sales,
 		A.create_user,
@@ -294,6 +296,9 @@
 			</if>
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 				and A.financial_body_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.supplier_short_name != null and params.bo.supplier_short_name !=''">
+				and B.supplier_short_name like CONCAT('%',#{params.bo.supplier_short_name,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.employee_provice != null and params.bo.employee_provice !=''">
 				and B.supplier_provice = #{params.bo.employee_provice,jdbcType=VARCHAR}
@@ -317,7 +322,7 @@
 				and A.delete_flg = 'N'
 			</if>
 		</where>
-		ORDER BY A.delete_flg 
+		ORDER BY A.delete_flg,B.supplier_short_name
 	</select>
 	<select id="selectBodyPksByEmployeePks" resultType="java.lang.String">
 		select distinct financial_body_pk from supplier_employee

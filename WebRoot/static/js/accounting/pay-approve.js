@@ -9,7 +9,7 @@ var PaidContext = function() {
 		total: 0,
 		items: []
 	});
-	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F'])
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'S', 'I', 'F'])
 
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();

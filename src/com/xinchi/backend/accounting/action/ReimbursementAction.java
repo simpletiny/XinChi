@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,18 @@ public class ReimbursementAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private Map<String, BigDecimal> summarise;
+
+	private ReimbursementBean option;
+
+	public String searchSumReimbursement() {
+		if (reimbursement == null)
+			reimbursement = new ReimbursementBean();
+
+		summarise = service.searchSummaries(option);
+		return SUCCESS;
+	}
+
 	public ReimbursementBean getReimbursement() {
 		return reimbursement;
 	}
@@ -111,5 +124,21 @@ public class ReimbursementAction extends BaseAction {
 
 	public void setReimbursement_pk(String reimbursement_pk) {
 		this.reimbursement_pk = reimbursement_pk;
+	}
+
+	public Map<String, BigDecimal> getSummarise() {
+		return summarise;
+	}
+
+	public void setSummarise(Map<String, BigDecimal> summarise) {
+		this.summarise = summarise;
+	}
+
+	public ReimbursementBean getOption() {
+		return option;
+	}
+
+	public void setOption(ReimbursementBean option) {
+		this.option = option;
 	}
 }

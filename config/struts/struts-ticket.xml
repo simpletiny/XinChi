@@ -20,7 +20,8 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="searchAirTicketDoneNameListByPage" class="ticketAction" method="searchAirTicketDoneNameListByPage">
+		<action name="searchAirTicketDoneNameListByPage" class="ticketAction"
+			method="searchAirTicketDoneNameListByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -53,13 +54,15 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="selectOrderAirInfoByProductOrderNumber" class="ticketAction" method="selectOrderAirInfoByProductOrderNumber">
+		<action name="selectOrderAirInfoByProductOrderNumber" class="ticketAction"
+			method="selectOrderAirInfoByProductOrderNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="selectOrderAirInfoByProductOrderNumbers" class="ticketAction" method="selectOrderAirInfoByProductOrderNumbers">
+		<action name="selectOrderAirInfoByProductOrderNumbers" class="ticketAction"
+			method="selectOrderAirInfoByProductOrderNumbers">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -131,7 +134,8 @@
 			</result>
 		</action>
 		<!-- 查询航变信息 -->
-		<action name="searchFlightChangeLogByPassengerPk" class="ticketAction" method="searchFlightChangeLogByPassengerPk">
+		<action name="searchFlightChangeLogByPassengerPk" class="ticketAction"
+			method="searchFlightChangeLogByPassengerPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -144,7 +148,8 @@
 			</result>
 		</action>
 		<!-- 搜索航变的乘客信息 -->
-		<action name="searchFlightChangeDataByPassengerPks" class="ticketAction" method="searchFlightChangeDataByPassengerPks">
+		<action name="searchFlightChangeDataByPassengerPks" class="ticketAction"
+			method="searchFlightChangeDataByPassengerPks">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -185,6 +190,12 @@
 			</result>
 		</action>
 		<action name="deleteAirLeg" class="airLegAction" method="deleteAirLeg">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 暂停使用航段 -->
+		<action name="changeUseAirLeg" class="airLegAction" method="changeUseAirLeg">
 			<result name="success" type="str">
 				resultStr
 			</result>
@@ -231,7 +242,8 @@
 			</result>
 		</action>
 		<!-- 查看乘客名单 -->
-		<action name="searchAirTicketNameListByOrderNumber" class="ticketAction" method="searchAirTicketNameListByOrderNumber">
+		<action name="searchAirTicketNameListByOrderNumber" class="ticketAction"
+			method="searchAirTicketNameListByOrderNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -267,6 +279,41 @@
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<!-- 航司名单模板 -->
+		<!-- 创建航司模板 -->
+		<action name="createTicketNameTemplet" class="tikcetNameTempletAction" method="createTicketNameTemplet">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 分页搜索 -->
+		<action name="searchTicketNameTempletByPage" class="tikcetNameTempletAction"
+			method="searchTicketNameTempletByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!--普通搜索 -->
+		<action name="searchTicketNameTemplet" class="tikcetNameTempletAction" method="searchTicketNameTemplet">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 删除航司名单模板 -->
+		<action name="deleteTicketNameTemplet" class="tikcetNameTempletAction" method="deleteTicketNameTemplet">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 更新航司模板 -->
+		<action name="updateTicketNameTemplet" class="tikcetNameTempletAction" method="updateTicketNameTemplet">
+			<result name="success" type="str">
+				resultStr
 			</result>
 		</action>
 	</package>

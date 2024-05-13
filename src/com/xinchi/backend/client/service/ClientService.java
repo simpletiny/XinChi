@@ -52,7 +52,7 @@ public interface ClientService extends BaseService {
 	public List<com.xinchi.bean.ClientBean> getAllCompaniesByParam(com.xinchi.bean.ClientBean bo);
 
 	@LogDescription(des = "新增财务主体")
-	public String createCompany(ClientBean client);
+	public String createCompany(ClientBean client, String json);
 
 	@LogDescription(des = "修改财务主体")
 	public String updateCompany(ClientBean client);
@@ -75,4 +75,6 @@ public interface ClientService extends BaseService {
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
 
 	public ClientCountDto selectCountByParam(ClientBean client);
+
+	public String publicCompany(String client_pk);
 }

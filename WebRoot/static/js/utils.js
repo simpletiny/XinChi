@@ -1,8 +1,8 @@
 var nanobar;
-var CHARACTER_ARRAY = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+var CHARACTER_ARRAY = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var changeValueByPath = function(obj, path, value) {
 	var ps = path.split('.'), co = obj;
-	for ( var i = 0; i < ps.length - 1; i++) {
+	for (var i = 0; i < ps.length - 1; i++) {
 		co = (co[ps[i]]) ? co[ps[i]] : co[ps[i]] = {};
 	}
 	co[ps[ps.length - 1]] = value;
@@ -18,7 +18,7 @@ var changeValueByPath = function(obj, path, value) {
 
 // to use this function pls impl changeRichText function.
 ko.bindingHandlers.richText = {
-	init : function(element, valueAccessor) {
+	init: function(element, valueAccessor) {
 
 		var modelValue = valueAccessor();
 		var value = ko.unwrap(valueAccessor());
@@ -50,7 +50,7 @@ ko.bindingHandlers.richText = {
 	/*
 	 * Hook and handle the binding updating so we write back to the observable
 	 */
-	update : function(element, valueAccessor) {
+	update: function(element, valueAccessor) {
 		var element$ = $(element);
 		var newValue = ko.unwrap(valueAccessor());
 		if (element$.ckeditorGet().getData() != newValue) {
@@ -61,21 +61,21 @@ ko.bindingHandlers.richText = {
 
 // change based on: https://gist.github.com/tyrsius/4157832
 ko.bindingHandlers.inlineSelect = {
-	init : function(element, valueAccessor, allBindingsAccessor, data) {
+	init: function(element, valueAccessor, allBindingsAccessor, data) {
 		var span = $(element);
 		var select = $('<select></select>', {
-			'style' : 'display: none',
-			'class' : 'form-control'
+			'style': 'display: none',
+			'class': 'form-control'
 		});
 		var changeFunc = allBindingsAccessor().changeFunc;
 		span.after(select);
 
 		ko.applyBindingsToNode(select.get(0), {
-			value : valueAccessor(),
-			options : allBindingsAccessor().inlineOptions
+			value: valueAccessor(),
+			options: allBindingsAccessor().inlineOptions
 		});
 		ko.applyBindingsToNode(span.get(0), {
-			text : valueAccessor()
+			text: valueAccessor()
 		});
 
 		span.click(function() {
@@ -93,13 +93,13 @@ ko.bindingHandlers.inlineSelect = {
 };
 
 ko.bindingHandlers.inlineDate = {
-	init : function(element, valueAccessor, allBindingsAccessor, data) {
+	init: function(element, valueAccessor, allBindingsAccessor, data) {
 		inlineTextFunc(element, valueAccessor, allBindingsAccessor, data, 'ip- date-picker');
 	}
 };
 
 ko.bindingHandlers.inline = {
-	init : function(element, valueAccessor, allBindingsAccessor, data) {
+	init: function(element, valueAccessor, allBindingsAccessor, data) {
 		inlineTextFunc(element, valueAccessor, allBindingsAccessor, data, 'ip-');
 	}
 };
@@ -107,18 +107,18 @@ ko.bindingHandlers.inline = {
 var inlineTextFunc = function(element, valueAccessor, allBindingsAccessor, data, clazz) {
 	var span = $(element);
 	var input = $('<input />', {
-		'type' : 'text',
-		'style' : 'display:none',
-		'class' : clazz
+		'type': 'text',
+		'style': 'display:none',
+		'class': clazz
 	});
 	var changeFunc = allBindingsAccessor().changeFunc;
 	span.after(input);
 
 	ko.applyBindingsToNode(input.get(0), {
-		value : valueAccessor()
+		value: valueAccessor()
 	});
 	ko.applyBindingsToNode(span.get(0), {
-		text : valueAccessor()
+		text: valueAccessor()
 	});
 
 	span.click(function() {
@@ -143,35 +143,35 @@ var inlineTextFunc = function(element, valueAccessor, allBindingsAccessor, data,
 };
 var msg = function(txt) {
 	$.layer({
-		type : 0,
-		closeBtn : [ 1, true ],
-		area : [ '300px', 'auto' ],
-		dialog : {
-			type : -1,
-			msg : txt
+		type: 0,
+		closeBtn: [1, true],
+		area: ['300px', 'auto'],
+		dialog: {
+			type: -1,
+			msg: txt
 		}
 	});
 };
 var success_msg = function(msg) {
 	$.layer({
-		type : 0,
-		closeBtn : [ 1, true ],
-		area : [ '300px', 'auto' ],
-		dialog : {
-			type : 9,
-			msg : msg
+		type: 0,
+		closeBtn: [1, true],
+		area: ['300px', 'auto'],
+		dialog: {
+			type: 9,
+			msg: msg
 		}
 	});
 };
 
 var fail_msg = function(msg) {
 	$.layer({
-		type : 0,
-		closeBtn : [ 1, true ],
-		area : [ '300px', 'auto' ],
-		dialog : {
-			type : 8,
-			msg : msg
+		type: 0,
+		closeBtn: [1, true],
+		area: ['300px', 'auto'],
+		dialog: {
+			type: 8,
+			msg: msg
 		}
 	});
 };
@@ -193,8 +193,8 @@ function startLoadingIndicator(msg) {
 		var uiCode = '<div class="large-format-loader is-not-loading">\
                 <div id="loader-inside-infi" class="loader-inside-format">\
                     <p style="padding-top: 30px"><img height="50" width="50" src="'
-				+ apiurl
-				+ 'static/img/loading.gif"/></p>\
+			+ apiurl
+			+ 'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
                 <div id="loader-inside-process" class="loader-inside-format" hidden>\
@@ -206,9 +206,9 @@ function startLoadingIndicator(msg) {
 
 		$('body').prepend(uiCode);
 		var options = {
-			bg : '#ff5722',
-			target : document.getElementById('loader-inside-bar-container'),
-			id : 'loader-inside-bar'
+			bg: '#ff5722',
+			target: document.getElementById('loader-inside-bar-container'),
+			id: 'loader-inside-bar'
 		};
 		nanobar = new Nanobar(options);
 	}
@@ -227,8 +227,8 @@ function startLoadingSimpleIndicator(msg) {
 		var uiCode = '<div class="large-format-loader-simple is-not-loading">\
                 <div id="loader-inside-infi" class="loader-inside-format">\
                     <p style="padding-top: 30px"><img height="50" width="50" src="'
-				+ apiurl
-				+ 'static/img/loading.gif"/></p>\
+			+ apiurl
+			+ 'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
                 <div id="loader-inside-process" class="loader-inside-format" hidden>\
@@ -240,9 +240,9 @@ function startLoadingSimpleIndicator(msg) {
 
 		$('body').prepend(uiCode);
 		var options = {
-			bg : '#ff5722',
-			target : document.getElementById('loader-inside-bar-container'),
-			id : 'loader-inside-bar'
+			bg: '#ff5722',
+			target: document.getElementById('loader-inside-bar-container'),
+			id: 'loader-inside-bar'
 		};
 		nanobar = new Nanobar(options);
 	}
@@ -263,51 +263,51 @@ var addTotalCountLabel = function(idLabel, total) {
 
 Date.prototype.Format = function(fmt) { // author: meizz
 	var o = {
-		"M+" : this.getMonth() + 1, // 月份
-		"d+" : this.getDate(), // 日
-		"h+" : this.getHours(), // 小时
-		"m+" : this.getMinutes(), // 分
-		"s+" : this.getSeconds(), // 秒
-		"q+" : Math.floor((this.getMonth() + 3) / 3), // 季度
-		"S" : this.getMilliseconds()
-	// 毫秒
+		"M+": this.getMonth() + 1, // 月份
+		"d+": this.getDate(), // 日
+		"h+": this.getHours(), // 小时
+		"m+": this.getMinutes(), // 分
+		"s+": this.getSeconds(), // 秒
+		"q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+		"S": this.getMilliseconds()
+		// 毫秒
 	};
 	if (/(y+)/.test(fmt))
 		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-	for ( var k in o)
+	for (var k in o)
 		if (new RegExp("(" + k + ")").test(fmt))
 			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-	 return fmt;
+	return fmt;
 };
 
-Date.prototype.before = function(date, format){
-	  if(!format) 
-		  return date.getTime() > this.getTime()
-	  let d1 = new Date(this.Format(format)),
-	      d2 = new Date(date.Format(format));
-	  return d2.getTime() > d1.getTime()
+Date.prototype.before = function(date, format) {
+	if (!format)
+		return date.getTime() > this.getTime()
+	let d1 = new Date(this.Format(format)),
+		d2 = new Date(date.Format(format));
+	return d2.getTime() > d1.getTime()
 };
 
-Date.prototype.after = function(date, format){
-	   return date.before(this, format)
-	};
+Date.prototype.after = function(date, format) {
+	return date.before(this, format)
+};
 
-Date.prototype.equal = function(date, format){
-	  if(!format)
-		  return date.getTime() === this.getTime()
+Date.prototype.equal = function(date, format) {
+	if (!format)
+		return date.getTime() === this.getTime()
 
-	  let d1 = new Date(this.Format(format)),
-	      d2 = new Date(date.Format(format));
-	  return d2.getTime() === d1.getTime()
-	};
+	let d1 = new Date(this.Format(format)),
+		d2 = new Date(date.Format(format));
+	return d2.getTime() === d1.getTime()
+};
 /**
  * 字符串占位符替换{0}{1}{2}
  */
-String.prototype.format = function(){
-	if(arguments.length==0)
+String.prototype.format = function() {
+	if (arguments.length == 0)
 		return this;
-	for(var s=this,i=0;i<arguments.length;i++){
-		s=s.replace(new RegExp("\\{"+i+"\\}","g"),arguments[i]);
+	for (var s = this, i = 0; i < arguments.length; i++) {
+		s = s.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
 	}
 	return s;
 }
@@ -321,27 +321,27 @@ Date.prototype.addDate = function(days) {
 Date.prototype.addMonth = function(months) {
 	var current = this.getMonth();
 	var x = new Date(this);
-	x.setMonth(current+months);
+	x.setMonth(current + months);
 	return x;
 };
-var dateDiff = function(date1,date2){
-	var date3 =Math.abs(date2.getTime()-date1.getTime());
-	var days=Math.floor(date3/(24*3600*1000));
-	
-	var leave1=date3%(24*3600*1000);   
-	var hours=Math.floor(leave1/(3600*1000));
+var dateDiff = function(date1, date2) {
+	var date3 = Math.abs(date2.getTime() - date1.getTime());
+	var days = Math.floor(date3 / (24 * 3600 * 1000));
 
-	var leave2=leave1%(3600*1000);        
-	var minutes=Math.floor(leave2/(60*1000));
+	var leave1 = date3 % (24 * 3600 * 1000);
+	var hours = Math.floor(leave1 / (3600 * 1000));
 
-	var leave3=leave2%(60*1000); 
-	var seconds=Math.round(leave3/1000);
-	
-	return (days==0?"":days+"天")+(hours==0?"":hours+"小时")+(minutes==0?"":minutes+"分钟")+(seconds==0?"":seconds+"秒");
+	var leave2 = leave1 % (3600 * 1000);
+	var minutes = Math.floor(leave2 / (60 * 1000));
+
+	var leave3 = leave2 % (60 * 1000);
+	var seconds = Math.round(leave3 / 1000);
+
+	return (days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (seconds == 0 ? "" : seconds + "秒");
 };
 String.prototype.isEmpty = function() {
 	return null == this || this.trim() == "";
-  };
+};
 
 String.prototype.LTrim = function(str) {
 	var pattern = new RegExp("(^\s*)", 'g');
@@ -361,7 +361,7 @@ String.prototype.RTrim = function(str) {
 
 Array.prototype.isRepeat = function() {
 	var hash = {};
-	for ( var i in this) {
+	for (var i in this) {
 		if (hash[this[i]]) {
 			return true;
 		}
@@ -370,7 +370,7 @@ Array.prototype.isRepeat = function() {
 	return false;
 };
 Array.prototype.contains = function(obj) {
-	for ( var i = 0; i < this.length; i++) {
+	for (var i = 0; i < this.length; i++) {
 		if (this[i] == obj) {
 			return true;
 		}
@@ -378,37 +378,37 @@ Array.prototype.contains = function(obj) {
 	return false;
 };
 function getServerTime() {
-	 return fetch($("#hidden_apiurl").val() + 'simpletiny/currentDate') 
-	    .then(response => {
-	      if (!response.ok) {
-	        throw new Error(`获取服务器时间失败，状态码：${response.status}`);
-	      }
-	      return response.json();
-	    })
-	    .then(data => {
-	    	console.log(data);
-	      return new Date(data.current_date);
-	    })
-	    .catch(error => {
-	      fail_msg(error);
-	      return new Date();
-	    });
-	 
-	}
+	return fetch($("#hidden_apiurl").val() + 'simpletiny/currentDate')
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`获取服务器时间失败，状态码：${response.status}`);
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			return new Date(data.current_date);
+		})
+		.catch(error => {
+			fail_msg(error);
+			return new Date();
+		});
 
-var isChild = function(birthday){
-	birthday = birthday.replace(/\-/gm,"");
-	var birthYear = birthday.substring(0,4)-0;
-	var birthMonth = birthday.substring(4,6)-0;
-	var birthDate = birthday.substring(6,9)-0;
+}
+
+var isChild = function(birthday) {
+	birthday = birthday.replace(/\-/gm, "");
+	var birthYear = birthday.substring(0, 4) - 0;
+	var birthMonth = birthday.substring(4, 6) - 0;
+	var birthDate = birthday.substring(6, 9) - 0;
 	var year12Date = new Date();
-	year12Date.setYear(birthYear+12);
-	year12Date.setMonth(birthMonth-1);
+	year12Date.setYear(birthYear + 12);
+	year12Date.setMonth(birthMonth - 1);
 	year12Date.setDate(birthDate);
-	var year12 = year12Date.Format("yyyyMMdd")-0;
+	var year12 = year12Date.Format("yyyyMMdd") - 0;
 	var x = new Date();
-	var now = x.Format("yyyyMMdd")-0;
-	if(year12>now){
+	var now = x.Format("yyyyMMdd") - 0;
+	if (year12 > now) {
 		return true;
 	}
 	return false;
@@ -416,34 +416,34 @@ var isChild = function(birthday){
 
 // jq 扩展
 jQuery.fn.extend({
-	disabled : function() {
+	disabled: function() {
 		this.addClass("disabled");
 		this.focus(function() {
 			this.blur();
 		});
 	},
-	enable:function(){
+	enable: function() {
 		this.removeClass("disabled");
 		this.unbind("focus");
 	},
-	showDetail : function() {
+	showDetail: function() {
 		this.click(function() {
 			msg($(this).html());
 		});
 	}
 });
-String.prototype.format = function(){    
-    var args = arguments;    
-    return this.replace(/\{(\d+)\}/g,                    
-        function(m,i){    
-            return args[i];    
-        });   
+String.prototype.format = function() {
+	var args = arguments;
+	return this.replace(/\{(\d+)\}/g,
+		function(m, i) {
+			return args[i];
+		});
 }
-String.prototype.addDate = function(days){
+String.prototype.addDate = function(days) {
 	var str = this.replace(/-/g, '/');
 	var date = new Date(str);
 	date.setDate(date.getDate() + days);
-	
+
 	return date.Format("yyyy-MM-dd");
 }
 
@@ -458,13 +458,13 @@ $(document).ready(function() {
 	var current_url = window.location.href;
 	var apiurl = $("#hidden_apiurl").val();
 	$.ajax({
-		url : apiurl + "user/updateUserCurrentPage",
-		type : "post",
-		data : "current_url=" + current_url,
-		success : function(data) {
-			
+		url: apiurl + "user/updateUserCurrentPage",
+		type: "post",
+		data: "current_url=" + current_url,
+		success: function(data) {
+
 		},
-		error : function(data) {
+		error: function(data) {
 			console.log(eval(data));
 		}
 	});
@@ -472,105 +472,211 @@ $(document).ready(function() {
 
 function dataURLtoFile(dataurl, filename) {
 	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(
-			n);
+		n);
 	while (n--) {
 		u8arr[n] = bstr.charCodeAt(n);
 	}
-	return new File([ u8arr ], filename, {
-		type : mime
+	return new File([u8arr], filename, {
+		type: mime
 	});
 }
 (function($) {
 	$.fn.tableSum = function(options) {
-		var default_options ={
-				title:"合计",
-				title_index:1,
-				accept:[],
-				except:[],
-				style:[],
+		var default_options = {
+			title: "合计",
+			title_index: 1,
+			accept: [],
+			except: [],
+			style: [],
 		}
-		
-		
-		if(options){
-			default_options.title = options.title||default_options.title;
-			default_options.title_index = options.title_index||default_options.title_index;
-			default_options.accept = options.accept||default_options.accept;
-			default_options.except = options.except ||default_options.except;
-			default_options.style = options.style ||default_options.style;
+
+
+		if (options) {
+			default_options.title = options.title || default_options.title;
+			default_options.title_index = options.title_index || default_options.title_index;
+			default_options.accept = options.accept || default_options.accept;
+			default_options.except = options.except || default_options.except;
+			default_options.style = options.style || default_options.style;
 		}
-		
+
 		default_options.except.push(default_options.title_index);
-		
+
 		$this = $(this);
 		var len = $this.find("tbody:first tr:first td").length;
 		var sum = new Array(len).fill(0);
-		
-		if(default_options.accept.length==0 && default_options.except.length==0){
+
+		if (default_options.accept.length == 0 && default_options.except.length == 0) {
 			default_options.except = [1];
-		}else{
-			if(default_options.accept.length!=0){
-				for(var i =0;i<len;i++){
-					if(default_options.accept.contains(i+1))
+		} else {
+			if (default_options.accept.length != 0) {
+				for (var i = 0; i < len; i++) {
+					if (default_options.accept.contains(i + 1))
 						continue;
-					default_options.except.push(i+1);
+					default_options.except.push(i + 1);
 				}
 			}
 		}
-		
-		var tbody =$($this.find("tbody.st-sum")[0]|| $("<tbody class='st-sum'></tbody>"));
+
+		var tbody = $($this.find("tbody.st-sum")[0] || $("<tbody class='st-sum'></tbody>"));
 		tbody.html("");
 		var tr = $("<tr></tr>");
 		tbody.append(tr);
-		
-		$this.find("tbody:eq(0) tr").each(function(){
+
+		$this.find("tbody:eq(0) tr").each(function() {
 			var tds = $(this).children();
-			for(var i =0;i<tds.length;i++){
-				
-				if(default_options.except.contains(i+1))
+			for (var i = 0; i < tds.length; i++) {
+
+				if (default_options.except.contains(i + 1))
 					continue;
 				var td = $(tds[i]);
-				if(typeof +td.text() === 'number' && !isNaN(td.text()))
-					sum[i] +=+td.text();
+				if (typeof +td.text() === 'number' && !isNaN(td.text()))
+					sum[i] += +td.text();
 			}
 		});
-		
-		for(var i = 0;i<len;i++){
+
+		for (var i = 0; i < len; i++) {
 			var td = $("<td></td>");
 			tr.append(td);
-			if(default_options.except.contains(i+1)){
-				if(i+1==default_options.title_index){
+			if (default_options.except.contains(i + 1)) {
+				if (i + 1 == default_options.title_index) {
 					td.text(default_options.title);
 					continue;
-				}else{
+				} else {
 					continue;
 				}
 			}
-			if((''+sum[i]).indexOf(".")>-1){
+			if (('' + sum[i]).indexOf(".") > -1) {
 				td.text(sum[i].toFixed(2));
-			}else{
+			} else {
 				td.text(sum[i]);
 			}
 		}
-		 $this.find("tbody:eq(0)").after(tbody);
+		$this.find("tbody:eq(0)").after(tbody);
 	}
-	
+
 })(jQuery);
 
 
 (function($) {
 	$.fn.clear = function() {
 		$(this).each(function() {
-	        $(this).find('input, textarea').val('');
-	      });
+			$(this).find('input, textarea').val('');
+		});
 	}
 })(jQuery);
 function debounce(func, duration = 500) {
-    let timer_id;
-    return function (...args) {
-        clearTimeout(timer_id);
-        timer_id = setTimeout(() => {
-            func.apply(this, args);
-        }, duration);
-    }
+	let timer_id;
+	return function(...args) {
+		clearTimeout(timer_id);
+		timer_id = setTimeout(() => {
+			func.apply(this, args);
+		}, duration);
+	}
 }
 
+function viewExcel(file, type) {
+	var data = "fileType=" + type + "&fileName=" + file;
+	$.ajax({
+		type: "POST",
+		url: ctx.apiurl + 'file/viewExcel',
+		data: data
+	}).success(function(str) {
+		window.open($("#hidden_apiurl").val() + "templates/temp/viewexcel/" + str)
+	});
+}
+
+function downloadFile(url, params) {
+	// 创建一个表单
+	let form = document.createElement("form");
+	form.action = url;
+	form.method = "POST";
+	// 添加参数
+	for (let key in params) {
+		if (params.hasOwnProperty(key)) {
+			if (Array.isArray(params[key])) {
+				for (let val of params[key]) {
+					let input = document.createElement("input");
+					input.type = "hidden";
+					input.name = key;
+					input.value = val;
+					form.appendChild(input);
+				}
+			} else {
+				let input = document.createElement("input");
+				input.type = "hidden";
+				input.name = key;
+				input.value = params[key];
+				form.appendChild(input);
+			}
+		}
+	}
+	// 将表单添加到页面中并提交
+	document.body.appendChild(form);
+	form.submit();
+	document.body.removeChild(form);
+}
+
+function inputFormatFromToTime(container) {
+	document.getElementById(container).addEventListener('input', function(event) {
+		let txt = event.target;
+		if (txt.classList.contains('from-to-time')) {
+			const regexSteps = [
+				/^[0-2]$/,
+				/^[0-2][0-9]$/,
+				/^[0-2][0-9]:$/,
+				/^[0-2][0-9]:[0-5]$/,
+				/^[0-2][0-9]:[0-5][0-9]$/,
+				/^[0-2][0-9]:[0-5][0-9]-$/,
+				/^[0-2][0-9]:[0-5][0-9]--$/,
+				/^[0-2][0-9]:[0-5][0-9]--[0-2]$/,
+				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]$/,
+				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]:$/,
+				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]:[0-5]$/,
+				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]:[0-5][0-9]$/
+			];
+			while (txt.value.length>0 && !regexSteps.some(regex => regex.test(txt.value))) {
+				txt.value = txt.value.slice(0, -1);
+		    }
+			
+			let v = txt.value;
+			switch (v.length) {
+				case 2:
+					txt.value = v + ":";
+					break;
+				case 5:
+					txt.value = v + "--";
+					break;
+				case 9:
+					txt.value = v + ":";
+					break;
+				default:
+			}
+		}
+	});
+}
+
+function inputFormatTime(container) {
+	document.getElementById(container).addEventListener('input', function(event) {
+		let txt = event.target;
+		if (txt.classList.contains('time')) {
+			const regexSteps = [
+				/^[0-2]$/,
+				/^[0-2][0-9]$/,
+				/^[0-2][0-9]:$/,
+				/^[0-2][0-9]:[0-5]$/,
+				/^[0-2][0-9]:[0-5][0-9]$/,
+			];
+			while (txt.value.length>0 && !regexSteps.some(regex => regex.test(txt.value))) {
+				txt.value = txt.value.slice(0, -1);
+		    }
+			let v = txt.value;
+			switch (v.length) {
+				case 2:
+					txt.value = v + ":";
+					break;
+				default:
+					break;
+			}
+		}
+	});
+}

@@ -2,13 +2,13 @@ var ReimbursementContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'Q']);
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'S', 'I', 'Q']);
 
 	self.statusMapping = {
-		'I' : '待审批',
-		'Y' : '待支付',
-		'N' : '已驳回',
-		'P' : '已入账'
+		'I': '待审批',
+		'Y': '待支付',
+		'N': '已驳回',
+		'P': '已入账'
 	};
 	// 申请人信息
 	self.sales = ko.observableArray([]);
@@ -61,19 +61,19 @@ var ReimbursementContext = function() {
 				data += "reimbursement_pks=" + rei.pk + "&";
 			}
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要删除这些费用数据吗？',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要删除这些费用数据吗？',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'accounting/deleteReibursement',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'accounting/deleteReibursement',
+							data: data
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
@@ -114,9 +114,9 @@ var ReimbursementContext = function() {
 		var data = "back_pk=" + back_pk;
 
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/searchRejectReason',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'accounting/searchRejectReason',
+			data: data
 		}).success(function(str) {
 			success_msg(str);
 		});

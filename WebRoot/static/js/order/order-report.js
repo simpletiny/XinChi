@@ -131,6 +131,8 @@ var OrderReportContext = function() {
 							self.refresh();
 						} else if (str == "airnofinal") {
 							fail_msg("票务订单未决算，不能审核！")
+						}else if(str="existreceived"){
+							fail_msg("存在未入账的收入，不能审核！")
 						} else {
 							fail_msg("请联系管理员！");
 						}

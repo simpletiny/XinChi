@@ -92,10 +92,6 @@ var AgencyContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
-		if (!self.caculateSum()) {
-			fail_msg("支付金额合计和应支付总金额不符！");
-			return;
-		}
 
 		var payableJson = '[';
 		var allPayables = $("#div-payable").children();

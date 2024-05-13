@@ -141,7 +141,7 @@
 								<th>总团款</th>
 								<th>营收扣点</th>
 								<th>立款应收</th>
-								<th>机票</th>
+								<th>机票成本</th>
 								<th>地接成本</th>
 								<th>其他支出</th>
 								<th>其他收入</th>
@@ -426,6 +426,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.006"></script>
 </body>
 </html>

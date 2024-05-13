@@ -5,12 +5,15 @@
 		<result column="ticket_source" property="ticket_source" jdbcType="VARCHAR" />
 		<result column="ticket_source_pk" property="ticket_source_pk" jdbcType="CHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="taxation" property="taxation" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
 		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
 		<result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
 		<result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
 		<result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
 		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
 		<result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
+		<result column="add_day_flg" property="add_day_flg" jdbcType="CHAR" />
 		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
 		<result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
 		<result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
@@ -27,12 +30,15 @@
 
 		ticket_source,
 		ticket_cost,
+		other_cost,
+		taxation,
 		PNR,
 		passenger_pk,
 		ticket_index,
 		ticket_date,
 		ticket_number,
 		from_to_time,
+		add_day_flg,
 		from_to_city,
 		from_airport,
 		to_airport,
@@ -94,6 +100,12 @@
 			<if test="ticket_cost != null">
 				ticket_cost,
 			</if>
+			<if test="taxation != null">
+				taxation,
+			</if>
+			<if test="other_cost != null">
+				other_cost,
+			</if>
 			<if test="PNR != null">
 				PNR,
 			</if>
@@ -111,6 +123,9 @@
 			</if>
 			<if test="from_to_time != null">
 				from_to_time,
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg,
 			</if>
 			<if test="from_to_city != null">
 				from_to_city,
@@ -153,6 +168,12 @@
 			<if test="ticket_cost != null">
 				#{ticket_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="taxation != null">
+				#{taxation,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				#{other_cost,jdbcType=DECIMAL},
+			</if>
 			<if test="PNR != null">
 				#{PNR,jdbcType=VARCHAR},
 			</if>
@@ -170,6 +191,9 @@
 			</if>
 			<if test="from_to_time != null">
 				#{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				#{add_day_flg,jdbcType=CHAR},
 			</if>
 			<if test="from_to_city != null">
 				#{from_to_city,jdbcType=VARCHAR},
@@ -217,6 +241,12 @@
 			<if test="ticket_cost != null">
 				ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="taxation != null">
+				taxation = #{taxation,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				other_cost = #{other_cost,jdbcType=DECIMAL},
+			</if>
 			<if test="PNR != null">
 				PNR = #{PNR,jdbcType=VARCHAR},
 			</if>
@@ -234,6 +264,9 @@
 			</if>
 			<if test="from_to_time != null">
 				from_to_time = #{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg = #{add_day_flg,jdbcType=VARCHAR},
 			</if>
 			<if test="from_to_city != null">
 				from_to_city = #{from_to_city,jdbcType=VARCHAR},

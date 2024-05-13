@@ -420,7 +420,7 @@
 	<select id="selectAirTicketFeeSummary" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="ServiceFeeMap">
 		SELECT
 		COUNT(A.pk) AS ticket_count,
-		S.supplier_name AS supplier_name,
+		S.supplier_short_name AS supplier_name,
 		LEFT(A.ticket_date, 7) AS first_month,
 		A.from_to_city,
 		COUNT(IF(C.pk IS NULL, NULL, B.pk)) AS change_cnt,

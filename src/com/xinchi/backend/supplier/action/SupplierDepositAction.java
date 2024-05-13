@@ -18,6 +18,8 @@ import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.SimpletinyUser;
+import com.xinchi.common.UserSessionBean;
 
 @Controller
 @Scope("prototype")
@@ -39,6 +41,15 @@ public class SupplierDepositAction extends BaseAction {
 	 */
 	public String searchDepositByPage() {
 		Map<String, Object> params = new HashMap<String, Object>();
+		UserSessionBean user = SimpletinyUser.user();
+		if (null == deposit) {
+			deposit = new SupplierDepositBean();
+		}
+
+		if (request_from.equals("PRODUCT")) {
+			deposit.setResponsible_user(user.getUser_number());
+		}
+
 		params.put("bo", deposit);
 		page.setParams(params);
 

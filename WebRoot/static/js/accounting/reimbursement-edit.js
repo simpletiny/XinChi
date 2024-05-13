@@ -4,7 +4,7 @@ var ClientContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.reimbursement_pk = $("#key").val();
 	self.reimbursement = ko.observable({});
-	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'Q']);
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'S','I','Q']);
 
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'accounting/searchReimbursementByPk', {

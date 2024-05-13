@@ -273,6 +273,8 @@ public class ProductFileAction extends BaseAction {
 			data.put("supplierproduct", supplier.getSupplier_product_name());
 			data.put("spdays", supplier.getDays().toString());
 			data.put("suppliercost", supplier.getSupplier_cost().toString());
+			data.put("teamnumber", team_number);
+			data.put("downloadtime", DateUtil.getDateStr(DateUtil.YYYY_MM_DD_HH_MM));
 
 			Map<String, String> pick_send_data = getPsData(supplier);
 

@@ -103,12 +103,19 @@ var CardContext = function() {
 	}
 
 	self.createChart = function(title, legend, xAxis, series) {
+		
+		let legend_selected = {};
+		for(let d of series){
+			legend_selected[d.name] = false;
+		}
 		option = {
 			tooltip : {
 				trigger : 'axis'
 			},
 			legend : {
-				data : legend
+				data : legend,
+				selected:legend_selected,
+				selector:true
 			},
 			grid : {
 				left : '3%',

@@ -41,19 +41,18 @@ public interface EmployeeDAO {
 	 * 
 	 * @param bo
 	 */
-	public List<com.xinchi.bean.ClientEmployeeBean> getAllByParam(
-			com.xinchi.bean.ClientEmployeeBean bo);
+	public List<com.xinchi.bean.ClientEmployeeBean> getAllByParam(com.xinchi.bean.ClientEmployeeBean bo);
 
 	public List<ClientEmployeeBean> getAllByPage(Page<ClientEmployeeBean> page);
 
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks);
 
 	public void deleteClientEmployeeByPks(List<String> employee_pks);
-	
+
 	public void recoveryClientEmployeeByPks(List<String> employee_pks);
-	
+
 	public RelationLevelDto selectRelationCntBySales(String sales);
-	
+
 	public RelationLevelDto selectRelationCntAdmin();
 
 	public void publicClientEmployee(List<String> employee_pks);
@@ -61,5 +60,7 @@ public interface EmployeeDAO {
 	public List<ClientEmployeeBean> selectSameTelEmployee(ClientEmployeeBean e);
 
 	public List<ClientEmployeeBean> selectByPks(List<String> employee_pks);
+
+	public List<ClientEmployeeBean> selectByClientPk(String client_pk);
 
 }

@@ -44,7 +44,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				机票供应商财务主体新建<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				机票供应商新建<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 

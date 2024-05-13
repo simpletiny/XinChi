@@ -8,7 +8,7 @@ var ClientContext = function() {
 		date : '',
 		month : ''
 	});
-	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'Q']);
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'S','I','Q']);
 	var x = new Date();
 	self.reibursement().date = ko.observable();
 	self.reibursement().month = ko.observable();

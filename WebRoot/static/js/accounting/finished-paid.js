@@ -4,8 +4,8 @@ var PaidContext = function() {
 	self.chosenPaids = ko.observableArray([]);
 
 	self.paids = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.dateFrom = ko.observable();
@@ -29,7 +29,7 @@ var PaidContext = function() {
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray(['Y']);
-	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F']);
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'S', 'I', 'F']);
 
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -83,19 +83,19 @@ var PaidContext = function() {
 			var current = self.chosenPaids()[0];
 			var voucher_number = current.pay_number;
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要打回此支付到待支付状态吗？',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要打回此支付到待支付状态吗？',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("打回中");
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'accounting/rollBackPay',
-							data : "voucher_number=" + voucher_number
+							type: "POST",
+							url: self.apiurl + 'accounting/rollBackPay',
+							data: "voucher_number=" + voucher_number
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {

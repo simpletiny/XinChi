@@ -135,11 +135,10 @@ String key = request.getParameter("key");
 							<!-- /ko -->
 							<!-- ko if: employee().review_flg == "N" -->
 							<div class="ip">
-								<input type="text" style="width: 60%" class="ip-" data-bind="value: employee().financial_body_name"
+								<input type="text" style="width: 60%" class="ip-" data-bind="value: employee().financial_body_name,event:{focus:choseFinancial}"
 									placeholder="财务主体（点选不用审核）" name="employee.financial_body_name" id="financial_body_name" maxlength="30"
 									required="required" /> <input type="hidden" name="employee.financial_body_pk"
 									data-bind="value:employee().financial_body_pk" id="financial_body_pk" />
-								<button type="submit" class="btn btn-green" data-bind="click: function() { choseFinancial()  }">选择</button>
 							</div>
 							<!-- /ko -->
 

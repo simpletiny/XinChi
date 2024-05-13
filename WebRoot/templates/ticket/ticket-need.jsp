@@ -196,24 +196,12 @@
 		</div>
 	</div>
 	<div id="order-create" style="display: none; width: 1200px">
+		<div class="input-row clearfloat" style="float:right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { chooseSeasonTicket() }">选择套票</button>
+		</div>
 		<div class="input-row clearfloat">
 			<h2>票务信息</h2>
 			<div style="margin-top: 20px; height: 300px">
-				<div class="input-row clearfloat">
-					<div class="col-md-4 required">
-						<label class="l" style="width: 25%">成人</label>
-						<div class="ip" style="width: 50%">
-							<input type="number" class="ip-" id="txt-ticket-price" placeholder="成人单价" required="required" />
-						</div>
-					</div> 
-					<div class="col-md-4 required">
-						<label class="l" style="width: 25%">儿童</label>
-						<div class="ip" style="width: 50%">
-							<input type="number" class="ip-" id="txt-ticket-special-price"  placeholder="儿童单价" required="required" />
-						</div>
-					</div>
-					<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { chooseSeasonTicket() }">选择套票</button>
-				</div>
 				<table id="leg-table" class="table table-striped table-hover" style="margin-top: 20px">
 					<thead>
 						<tr>
@@ -225,8 +213,8 @@
 							<th style="width: 7%">起飞时间</th>
 							<th style="width: 7%">降落时间</th>
 							<th style="width: 7%"></th>
-							<th style="width: 15%">起飞机场</th>
-							<th style="width: 15%">降落机场</th>
+							<th style="width: 15%">出发地</th>
+							<th style="width: 15%">降落地</th>
 						</tr>
 					</thead>
 					<tbody data-bind="foreach:airTickets">
@@ -234,13 +222,13 @@
 							<td data-bind="text:$data.info_index"></td>
 							<td data-bind="text:$data.air_date"></td>
 							<td data-bind="text:$data.from_to_city"></td>
-							<td><input type="text" st="ticket-number" /></td>
+							<td><input type="text" st="ticket-number" data-bind="value:$data.flight_number" /></td>
 							<td><input type="text" class="ticket-air-leg" st="ticket-air-leg" onclick="choseAirLeg(event)" /> <input
-								type="hidden" data-bind="value:$index()+1" st="leg-index" /> <input type="hidden"
+								type="hidden" data-bind="value:$data.info_index" st="leg-index" /> <input type="hidden"
 								data-bind="value:$data.air_date" st="leg-date" /> <input type="hidden" st="leg-from-city" /> <input
 								type="hidden" st="leg-to-city" /></td>
-							<td><input type="text" st="start-time" /></td>
-							<td><input type="text" st="end-time" /></td>
+							<td><input type="text" st="start-time" class="time" maxlength="5" /></td>
+							<td><input type="text" st="end-time" class="time" maxlength="5" /></td>
 							<td><input st="is-add-day" type="checkbox" />+1</td>
 							<td><input type="text" st="start-place" /></td>
 							<td><input type="text" st="end-place" /></td>
@@ -251,6 +239,7 @@
 		</div>
 		<div class="input-row clearfloat" style="float: right">
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doCreateOrder() }">确认</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { cancelCreateOrder() }">取消</button>
 		</div>
 	</div>
 	<div id="air-leg-pick" style="display: none;">
@@ -273,12 +262,16 @@
 							<tr role="row">
 								<th>出发城市</th>
 								<th>抵达城市</th>
+								<th>出发地</th>
+								<th>降落地</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: airLegs">
-							<tr data-bind="event: {click: function(){ $parent.pickAirLeg($data.from_city,$data.to_city)}}">
+							<tr data-bind="event: {click: function(){ $parent.pickAirLeg($data)}}">
 								<td data-bind="text: $data.from_city"></td>
 								<td data-bind="text: $data.to_city"></td>
+								<td data-bind="text: $data.from_place"></td>
+								<td data-bind="text: $data.to_place"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -358,6 +351,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.004"></script>
 </body>
 </html>

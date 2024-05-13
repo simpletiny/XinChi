@@ -65,11 +65,39 @@ var CompanyContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
+
+		startLoadingIndicator("保存中");
+		let data = $("form").serialize();
+
+		let imgs = {};
+		let outImgs = new Array();
+		let inImgs = new Array();
+
+		let out_img_files = $("#out-container").find("input");
+		console.log(out_img_files);
+
+		for (let i = 0; i < out_img_files.length; i++) {
+			let img_file_name = $(out_img_files.get(i)).val();
+			outImgs.push(img_file_name);
+		}
+		let in_img_files = $("#in-container").find("input");
+
+		for (let i = 0; i < in_img_files.length; i++) {
+			let img_file_name = $(in_img_files.get(i)).val();
+			inImgs.push(img_file_name);
+		}
+
+		imgs.outImgs = outImgs;
+		imgs.inImgs = inImgs;
+
+		let json = JSON.stringify(imgs);
+		data += "&json=" + json;
 		$.ajax({
-			type: "POST",
-			url: self.apiurl + 'client/createCompany',
-			data: $("form").serialize()
+			type : "POST",
+			url : self.apiurl + 'client/createCompany',
+			data : data
 		}).success(function(str) {
+			endLoadingIndicator();
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/client/company.jsp";
 			} else if (str = "exist") {
@@ -80,24 +108,24 @@ var CompanyContext = function() {
 
 	// 关联旅游公司相关
 	self.agencies = ko.observable({
-		total: 0,
-		items: []
+		total : 0,
+		items : []
 	});
 
 	self.chooseAgency = function() {
 		agencyLayer = $.layer({
-			type: 1,
-			title: ['选择旅游公司', ''],
-			maxmin: false,
-			closeBtn: [1, true],
-			shadeClose: false,
-			area: ['600px', '650px'],
-			offset: ['50px', ''],
-			scrollbar: true,
-			page: {
-				dom: '#agency_pick'
+			type : 1,
+			title : ['选择旅游公司', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#agency_pick'
 			},
-			end: function() {
+			end : function() {
 				console.log("Done");
 			}
 		});
@@ -176,4 +204,67 @@ var ctx = new CompanyContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+
+	Dropzone.autoDiscover = false;
+	let dropZoneOptions = {
+		paramName : 'file',
+		url : ctx.apiurl + "file/fileUpload",
+		maxFilesize : 1, // MB
+		maxFiles : 4,
+		dictDefaultMessage : '',
+		acceptedFiles : "image/*",
+		previewTemplate : document.querySelector('#tpl').innerHTML,
+		success : function(file, response) {
+			var fileName = file.xhr.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
+			let img_container = $(this.element).prev();
+			let img_group = $("<div></div>")
+			let img = document.createElement("img");
+			img.src = file.dataURL;
+			img_group.append(img);
+
+			let deleteButton = $("<div class='delete'>删除</div>");
+			deleteButton.hide();
+			deleteButton.click(function() {
+				img_group.remove();
+				$(this).remove();
+			});
+			deleteButton.mouseenter(function() {
+				$(this).show();
+			});
+
+			img_group.append(deleteButton);
+			img.onload = function(e) {
+				$(img).mouseenter(function() {
+					deleteButton.css("top", $(img).offset().top + img.height / 2 - 25);
+					deleteButton.css("left", $(img).offset().left + img.width / 2 - 50);
+					deleteButton.show();
+				});
+				$(img).mouseout(function() {
+					deleteButton.hide();
+				});
+			};
+
+			let txtFileName = $("<input type='hidden' />");
+			txtFileName.val(fileName);
+			img_group.append(txtFileName);
+			img_container.append(img_group)
+		},
+		error : function(file, errorMessage, xhr) {
+			if (xhr && xhr.status !== 200) {
+				console.log("HTTP Status:", xhr.status);
+				console.log("Response from server:", xhr.responseText);
+			}
+			// 也可以根据 errorMessage 或 xhr 的内容来判断错误类型
+			if (typeof errorMessage === 'string' && errorMessage.includes("File is too big")) {
+				fail_msg("文件不能大于1MB！");
+			} else if (xhr && xhr.status === 404) {
+				fail_msg("服务端接口未找到！");
+			} else if (xhr && xhr.status === 500) {
+				fail_msg("服务器内部错误！");
+			}
+		}
+	};
+
+	var myDropzone1 = new Dropzone("#dropzoneout", dropZoneOptions);
+	var myDropzone1 = new Dropzone("#dropzonein", dropZoneOptions);
 });

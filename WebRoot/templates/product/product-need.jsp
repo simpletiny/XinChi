@@ -281,18 +281,20 @@
 					<table style="width: 100%" id="table-ticket">
 						<thead>
 							<tr class="required">
-								<th class="r" style="width: 10%">航段</th>
-								<th class="r" style="width: 10%">天次</th>
-								<th class="r" style="width: 15%">起飞城市</th>
-								<th class="r" style="width: 15%">降落城市</th>
+								<th style="width: 10%">航段</th>
+								<th class="r" style="width: 6%">天次</th>
+								<th class="r" style="width: 10%">航班号</th>
+								<th class="r" style="width: 12%">起飞城市</th>
+								<th class="r" style="width: 12%">降落城市</th>
 								<th style="width: 10%"></th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach :flight()">
 							<tr>
 								<input type="hidden" st="flight-index" data-bind="value:$data.ticket_index" />
-								<td st="index" data-bind="text:$data.ticket_index"></td>
+								<td st="index" data-bind="text:alphabetMap[$data.ticket_index]"></td>
 								<td><input st="start-day" type="text" data-bind="value:$data.start_day" /></td>
+								<td><input st="flight-number" type="text" data-bind="value:$data.flight_number" /></td>
 								<td><input st="start-city" type="text" data-bind="value:$data.start_city"/></td>
 								<td><input st="end-city" type="text" data-bind="value:$data.end_city"/></td>
 								<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
@@ -334,6 +336,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.2"></script>
+	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.003"></script>
 </body>
 </html>

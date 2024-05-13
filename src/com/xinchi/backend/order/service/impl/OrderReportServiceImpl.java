@@ -1,6 +1,7 @@
 package com.xinchi.backend.order.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,15 +15,18 @@ import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderReportService;
+import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
+import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.TeamReportBean;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
 
 @Service
@@ -44,6 +48,9 @@ public class OrderReportServiceImpl implements OrderReportService {
 	@Autowired
 	private AirTicketOrderDAO airTicketOrderDao;
 
+	@Autowired
+	private ReceivedService receivedService;
+
 	@Override
 	public String apporveTeamReport(String team_number) {
 		// 检测是否可以确认单团。
@@ -58,6 +65,18 @@ public class OrderReportServiceImpl implements OrderReportService {
 			AirTicketOrderBean air_order = airTicketOrderDao.selectByOrderNumber(order_number);
 			if (air_order.getFinal_flg().equals("N"))
 				return "airnofinal";
+		}
+
+		// 检测是否还有未确认的收支
+		// 收入
+		List<ClientReceivedDetailBean> receiveds = receivedService.selectByTeamNumber(team_number);
+		List<String> receivedTyps = Arrays.asList(ResourcesConstants.RECEIVED_TYPE_RECEIVED,
+				ResourcesConstants.RECEIVED_TYPE_PAY, ResourcesConstants.RECEIVED_TYPE_SUM);
+		for (ClientReceivedDetailBean received : receiveds) {
+			if (receivedTyps.contains(received.getType())
+					&& !received.getStatus().equals(ResourcesConstants.RECEIVED_STATUS_ENTER)) {
+				return "existreceived";
+			}
 		}
 
 		TeamReportBean tr = dao.selectTeamReportByTn(team_number);

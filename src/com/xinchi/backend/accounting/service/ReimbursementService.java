@@ -1,6 +1,8 @@
 package com.xinchi.backend.accounting.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.common.BaseService;
@@ -24,5 +26,7 @@ public interface ReimbursementService extends BaseService {
 	public String deleteReibursement(List<String> reimbursement_pks);
 
 	public String reApply(ReimbursementBean reimbursement);
+
+	public Map<String, BigDecimal> searchSummaries(ReimbursementBean reimbursement);
 
 }

@@ -107,4 +107,9 @@ public class EmployeeDAOImpl extends SqlSessionDaoSupport implements EmployeeDAO
 		return list;
 	}
 
+	@Override
+	public List<ClientEmployeeBean> selectByClientPk(String client_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientEmployeeMapper.selectByClientPk", client_pk);
+	}
+
 }

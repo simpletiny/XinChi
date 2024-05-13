@@ -1073,6 +1073,130 @@
 			<comment>ALTER TABLE client_employee</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	CREATE TABLE ticket_name_templet (
+				  templet_name VARCHAR(10) NOT NULL COMMENT '模板名称',
+				  file_name VARCHAR(30) NOT NULL COMMENT '模板文件名',
+				  used_count INT NULL DEFAULT 0 COMMENT '模板使用次数',
+				  last_used_time VARCHAR(19) NULL COMMENT '上次使用时间',
+				  pk CHAR(22) NOT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '票务名单航司模板表';
+             ]]>
+			<comment>CREATE TABLE ticket_name_templet</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_leg
+				ADD COLUMN use_flg CHAR(1) NULL DEFAULT 'Y' COMMENT '是否在使用中，Y使用，N停用' AFTER sort_index;
+             ]]>
+			<comment>ALTER TABLE air_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE product_air_ticket 
+					ADD COLUMN flight_number VARCHAR(10) NULL COMMENT '航班号' AFTER ticket_index;
+             ]]>
+			<comment>ALTER TABLE product_air_ticket</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE passenger_ticket_info 
+					ADD COLUMN taxation DECIMAL(12,2) NULL DEFAULT 0 COMMENT '税款' AFTER base_pk,
+					ADD COLUMN other_cost DECIMAL(12,2) NULL DEFAULT 0 COMMENT '杂费' AFTER taxation;
+             ]]>
+			<comment>ALTER TABLE passenger_ticket_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	ALTER TABLE air_leg 
+					ADD COLUMN from_place VARCHAR(15) NULL COMMENT '起飞地' AFTER from_city,
+					ADD COLUMN to_place VARCHAR(15) NULL COMMENT '降落地' AFTER to_city;
+             ]]>
+			<comment>ALTER TABLE air_leg</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="48" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW IF EXISTS view_order_air_info;
+				CREATE VIEW view_order_air_info AS
+				   SELECT 				
+				   		A.product_order_number,
+				        A.flight_leg AS air_leg,
+				        A.flight_index AS info_index,
+						A.start_day AS day_index,
+				        CONCAT(A.start_city,'--',A.end_city) AS from_to_city,
+                           B.pk AS need_pk,
+				        B.ticket_client_number,
+				        B.departure_date,
+    					A.flight_number
+				    FROM
+				        product_order_air_info A 
+                           LEFT JOIN
+                           air_ticket_need B ON A.product_order_number = B.product_order_number;
+             ]]>
+			<comment>ALTER VIEW view_order_air_info</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="49" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP view if exists view_passenger_allot;
+			CREATE VIEW view_passenger_allot AS
+				    SELECT 
+				        A.pk AS passenger_pk,
+				        A.id,
+				        A.name,
+				        B.date,
+				        B.from_city,
+				        B.to_city,
+                        B.start_time,
+                        B.end_time,
+                        B.start_place,
+                        B.end_place,
+                        B.ticket_number,
+                        B.add_day_flg,
+				        A.ticket_order_pk,
+				        IF(C.pk IS NULL, 'N', 'Y') AS is_allot,
+                        A.team_number
+				    FROM
+				        air_ticket_name_list A
+				            LEFT JOIN
+				        air_ticket_order_leg B ON A.ticket_order_pk = B.ticket_order_pk
+				            LEFT JOIN
+				        passenger_ticket_info C ON A.pk = C.passenger_pk
+				            AND C.from_to_city = CONCAT(B.from_city, '--', B.to_city);
+             ]]>
+			<comment>ALTER VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="50" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE passenger_ticket_info 
+				ADD COLUMN add_day_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否隔天达' AFTER from_to_time;
+             ]]>
+			<comment>ALTER TABLE passenger_ticket_info</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

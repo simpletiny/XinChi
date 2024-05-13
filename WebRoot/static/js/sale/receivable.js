@@ -330,7 +330,9 @@ var OrderContext = function() {
 			return;
 		} else {
 			var check_result = true;
+			let client_employee_pks = "";
 			$(self.chosenOrders()).each(function(idx, data) {
+				client_employee_pks += data.client_employee_pk + ",";
 				if (data.final_flg == "Y") {
 					if (data.final_balance >= 0) {
 						fail_msg(data.team_number + "尾款必须为负");
@@ -346,24 +348,43 @@ var OrderContext = function() {
 			if (!check_result)
 				return;
 
-			$(".rmb").formatCurrency();
-			caculateSumBack();
-			payLayer = $.layer({
-				type: 1,
-				title: ['退反申请', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['920px', '600px'],
-				offset: ['150px', ''],
-				scrollbar: true,
-				page: {
-					dom: '#pay-sumbit'
-				},
-				end: function() {
-					console.log("Done");
+
+			console.log(client_employee_pks);
+			
+
+			startLoadingSimpleIndicator("检测中");
+			$.ajax({
+				type: "POST",
+				url: self.apiurl + 'sale/isSameFinancialBody',
+				data: "client_employee_pks=" + client_employee_pks,
+				success: function(data) {
+					endLoadingIndicator();
+					if (data == "NOT") {
+						fail_msg("客户不属于同一财务主体！");
+					} else {
+						$(".rmb").formatCurrency();
+						caculateSumBack();
+						payLayer = $.layer({
+							type: 1,
+							title: ['退反申请', ''],
+							maxmin: false,
+							closeBtn: [1, true],
+							shadeClose: false,
+							area: ['920px', '600px'],
+							offset: ['150px', ''],
+							scrollbar: true,
+							page: {
+								dom: '#pay-sumbit'
+							},
+							end: function() {
+								console.log("Done");
+							}
+						});
+					}
 				}
 			});
+
+
 		}
 	};
 	// 执行退反申请

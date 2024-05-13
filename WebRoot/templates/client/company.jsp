@@ -1,8 +1,9 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,11 +33,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<form class="form-horizontal search-panel" id="form-search">
 
 					<div class="form-group">
-						<div style="width: 50%; float: right">
+						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { keepMySide() }">维护</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicCompany() }">公开</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')">
 								<button type="submit" class="btn btn-green col-md-1"
@@ -183,9 +185,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<th>简称</th>
 								<th>门脸</th>
 								<th>主营</th>
-								<th>地市</th>
-								<th>区县</th>
-								<th>地址</th>
+								<th>地区</th>
 								<th>类型</th>
 								<th>负责人</th>
 								<th>关联</th>
@@ -196,6 +196,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<th>市场力</th>
 								<th>回款誉</th>
 								<th>紧密度</th>
+								<th>外环境</th>
+								<th>内环境</th>
+								<th>营销费</th>
+								<th>资质</th>
 								<th>备注</th>
 								<th>所属销售</th>
 							</tr>
@@ -207,19 +211,15 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 									data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.store_type"></td>
 								<td data-bind="text: $data.main_business"></td>
-								<td data-bind="text: $data.client_area"></td>
-								<td data-bind="text: $data.client_county"></td>
-								<td data-bind="text: $data.address"></td>
-
+								<td data-bind="text: $data.client_area+$data.client_county"></td>
 								<td data-bind="text: $data.client_type"></td>
 								<td data-bind="text: $data.body_name"></td>
 								<!-- ko if:$data.relate_flg =='N' -->
-								<td style="color: red">未关联</td>
+								<td style="color: red">未</td>
 								<!-- /ko -->
-
 								<!-- ko if:$data.relate_flg =='Y' -->
 								<td style="color: blue"><a href="javascript:void(0)"
-									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
+									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
 								<!-- /ko -->
 
 								<td><a href="javascript:void(0)" data-bind="text: $data.client_employee_count,click:$root.checkEmployee"></a></td>
@@ -229,6 +229,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td data-bind="text: $data.market_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.talk_level"></td>
+								<td><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
+								<td></td>
+								<!-- ko if:$data.relate_flg =='N' -->
+								<td></td>
+								<!-- /ko -->
+								<!-- ko if:$data.relate_flg =='Y' -->
+								<td style="color: blue"><a href="javascript:void(0)"
+									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
+								<!-- /ko -->
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
@@ -357,6 +367,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/company.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.003"></script>
 </body>
 </html>

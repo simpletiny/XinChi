@@ -11,7 +11,7 @@ var ProductContext = function() {
 	self.locations = ko.observableArray();
 
 	$.getJSON(self.apiurl + 'system/searchByType', {
-		type : "LINE"
+		type: "LINE"
 	}, function(data) {
 		self.locations(data.datas);
 	});
@@ -37,7 +37,7 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 			$.getJSON(self.apiurl + 'product/searchProductByPk', {
-				product_pk : self.chosenProducts()[0]
+				product_pk: self.chosenProducts()[0]
 			}, function(data) {
 				self.chosenProduct(data.product);
 				var t = self.chosenProduct().client_confirm_templet;
@@ -47,18 +47,18 @@ var ProductContext = function() {
 					$("#c-c-t-a").show();
 				}
 				ctLayer = $.layer({
-					type : 1,
-					title : ['上传组团确认模板', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['500px', '240px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#c-c-t'
+					type: 1,
+					title: ['上传组团确认模板', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['500px', '240px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#c-c-t'
 					},
-					end : function() {
+					end: function() {
 						self.clientConfirmType("D");
 						self.clientConfirmTemplet("");
 					}
@@ -84,11 +84,11 @@ var ProductContext = function() {
 		}
 
 		var data = "product.pk=" + product_pk
-				+ "&product.client_confirm_templet=" + cct_file;
+			+ "&product.client_confirm_templet=" + cct_file;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'product/uploadClientConfirmTemplet',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'product/uploadClientConfirmTemplet',
+			data: data
 		}).success(function(str) {
 			if (str == "success") {
 				layer.close(ctLayer);
@@ -111,7 +111,7 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 			$.getJSON(self.apiurl + 'product/searchProductByPk', {
-				product_pk : self.chosenProducts()[0]
+				product_pk: self.chosenProducts()[0]
 			}, function(data) {
 				self.chosenProduct(data.product);
 				var t = self.chosenProduct().out_notice_templet;
@@ -122,18 +122,18 @@ var ProductContext = function() {
 				}
 
 				ontLayer = $.layer({
-					type : 1,
-					title : ['上传出团通知模板', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['500px', '240px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#o-n-t'
+					type: 1,
+					title: ['上传出团通知模板', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['500px', '240px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#o-n-t'
 					},
-					end : function() {
+					end: function() {
 						self.outNoticeType("D");
 						self.outNoticeTemplet("");
 					}
@@ -160,11 +160,11 @@ var ProductContext = function() {
 		}
 
 		var data = "product.pk=" + product_pk + "&product.out_notice_templet="
-				+ ont_file;
+			+ ont_file;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'product/uploadOutNoticeTemplet',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'product/uploadOutNoticeTemplet',
+			data: data
 		}).success(function(str) {
 			if (str == "success") {
 				layer.close(ontLayer);
@@ -186,22 +186,22 @@ var ProductContext = function() {
 			return;
 		} else if (self.chosenProducts().length == 1) {
 			$
-					.getJSON(
-							self.apiurl + 'product/searchProductByPk',
-							{
-								product_pk : self.chosenProducts()[0]
-							},
-							function(data) {
-								if (data.product.supplier_upkeep_flg == "Y") {
-									window.location.href = self.apiurl
-											+ 'templates/product/supplier-management-edit.jsp?key='
-											+ self.chosenProducts()[0];
-								} else {
-									window.location.href = self.apiurl
-											+ 'templates/product/supplier-management.jsp?key='
-											+ self.chosenProducts()[0];
-								}
-							});
+				.getJSON(
+					self.apiurl + 'product/searchProductByPk',
+					{
+						product_pk: self.chosenProducts()[0]
+					},
+					function(data) {
+						if (data.product.supplier_upkeep_flg == "Y") {
+							window.location.href = self.apiurl
+								+ 'templates/product/supplier-management-edit.jsp?key='
+								+ self.chosenProducts()[0];
+						} else {
+							window.location.href = self.apiurl
+								+ 'templates/product/supplier-management.jsp?key='
+								+ self.chosenProducts()[0];
+						}
+					});
 		}
 	}
 
@@ -216,23 +216,23 @@ var ProductContext = function() {
 		} else if (self.chosenProducts().length == 1) {
 
 			$
-					.getJSON(
-							self.apiurl + 'product/searchProductByPk',
-							{
-								product_pk : self.chosenProducts()[0]
-							},
-							function(data) {
-								if (data.product.local_upkeep_flg == "Y") {
-									window.location.href = self.apiurl
-											+ 'templates/product/local-management-edit.jsp?key='
-											+ self.chosenProducts()[0];
-								} else {
+				.getJSON(
+					self.apiurl + 'product/searchProductByPk',
+					{
+						product_pk: self.chosenProducts()[0]
+					},
+					function(data) {
+						if (data.product.local_upkeep_flg == "Y") {
+							window.location.href = self.apiurl
+								+ 'templates/product/local-management-edit.jsp?key='
+								+ self.chosenProducts()[0];
+						} else {
 
-									window.location.href = self.apiurl
-											+ 'templates/product/local-management.jsp?key='
-											+ self.chosenProducts()[0];
-								}
-							});
+							window.location.href = self.apiurl
+								+ 'templates/product/local-management.jsp?key='
+								+ self.chosenProducts()[0];
+						}
+					});
 
 		}
 	}
@@ -250,25 +250,25 @@ var ProductContext = function() {
 		} else if (self.chosenProducts().length == 1) {
 
 			$.getJSON(self.apiurl
-					+ 'product/searchProductAirTicketInfoByProductPk', {
-				product_pk : self.chosenProducts()[0]
+				+ 'product/searchProductAirTicketInfoByProductPk', {
+				product_pk: self.chosenProducts()[0]
 			}, function(data) {
 				self.product(data.product);
 
 				self.airTickets(data.air_tickets);
 				airTicketLayer = $.layer({
-					type : 1,
-					title : ['添加机票信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['600px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#air-ticket'
+					type: 1,
+					title: ['添加机票信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['700px', '500px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#air-ticket'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
@@ -276,21 +276,21 @@ var ProductContext = function() {
 	};
 
 	self.products = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	self.refresh = function() {
 		var param = $("#form-search").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage + "&product.statuses=N&product.statuses=Y";
+			+ self.perPage + "&product.statuses=N&product.statuses=Y";
 
 		$.getJSON(self.apiurl + 'product/searchProductsByPage', param,
-				function(data) {
-					self.products(data.products);
+			function(data) {
+				self.products(data.products);
 
-					self.totalCount(Math.ceil(data.page.total / self.perPage));
-					self.setPageNums(self.currentPage());
-				});
+				self.totalCount(Math.ceil(data.page.total / self.perPage));
+				self.setPageNums(self.currentPage());
+			});
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
@@ -327,7 +327,7 @@ var ProductContext = function() {
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+			.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -370,8 +370,12 @@ function changeOntRadio(rad) {
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length + 1;
-	var tr = $('<tr><td st="index">1</td><td><input st="start-day" type="text" /></td><td><input st="start-city" type="text" /></td><td><input st="end-city" type="text" /></td></tr>');
-	$(tr).find("td[st='index']").html(index);
+	if (index > 10) {
+		fail_msg("最多添加10个航段！");
+		return;
+	}
+	var tr = $('<tr><td st="index"></td><td><input st="flight-number" type="text" maxlength="10" /></td><td><input st="start-day" type="text" /></td><td><input st="start-city" type="text" maxlength="10"/></td><td><input st="end-city" type="text" maxlength="10"/></td></tr>');
+	$(tr).find("td[st='index']").html(alphabetMap[index]);
 	tbody.append(tr);
 }
 
@@ -391,18 +395,23 @@ function saveTicket() {
 		var current = allTickets[i];
 		var index = i + 1;
 		var start_day = $(current).find("[st='start-day']").val();
-		var start_city = $(current).find("[st='start-city']").val();
-		var end_city = $(current).find("[st='end-city']").val();
+		if (start_day > 100) {
+			fail_msg("天次最大为100！");
+			return;
+		}
+		let flight_number = $(current).find("[st='flight-number']").val().trim();
+		var start_city = $(current).find("[st='start-city']").val().trim();
+		var end_city = $(current).find("[st='end-city']").val().trim();
 
-		if (start_day.trim() == "" || start_city.trim() == ""
-				|| end_city.trim() == "") {
+		if (start_day == "" || start_city == ""
+			|| end_city == "") {
 			fail_msg("请填写第" + index + "行非空项目！");
 			return;
 		}
 
 		ticketJson += '{"index":"' + index + '","start_day":"' + start_day
-				+ '","start_city":"' + start_city + '","end_city":"' + end_city
-				+ '"';
+			+ '","flight_number":"' + flight_number + '","start_city":"' + start_city
+			+ '","end_city":"' + end_city + '"';
 
 		if (i == allTickets.length - 1) {
 			ticketJson += '}';
@@ -416,9 +425,9 @@ function saveTicket() {
 	layer.close(airTicketLayer);
 	startLoadingIndicator("保存中！");
 	$.ajax({
-		type : "POST",
-		url : ctx.apiurl + 'product/saveAirTicket',
-		data : data
+		type: "POST",
+		url: ctx.apiurl + 'product/saveAirTicket',
+		data: data
 	}).success(function(str) {
 		endLoadingIndicator();
 		if (str == "success") {

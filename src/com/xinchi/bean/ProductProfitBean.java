@@ -22,6 +22,8 @@ public class ProductProfitBean extends SupperBO implements Serializable, Compara
 
 	private BigDecimal air_lose;
 
+	private BigDecimal ticket_other_cost = BigDecimal.ZERO;
+
 	private BigDecimal other_cost = BigDecimal.ZERO;;
 
 	private BigDecimal profit;
@@ -183,6 +185,14 @@ public class ProductProfitBean extends SupperBO implements Serializable, Compara
 	@Override
 	public int compareTo(ProductProfitBean o) {
 		return this.getDeparture_month().compareTo(o.getDeparture_month());
+	}
+
+	public BigDecimal getTicket_other_cost() {
+		return ticket_other_cost;
+	}
+
+	public void setTicket_other_cost(BigDecimal ticket_other_cost) {
+		this.ticket_other_cost = ticket_other_cost;
 	}
 
 }

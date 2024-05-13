@@ -1,0 +1,34 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="1" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE TABLE client_inout_img (
+				  pk CHAR(22) NOT NULL,
+				  img_name VARCHAR(30) NOT NULL COMMENT '图片名称',
+				  client_pk CHAR(22) NOT NULL COMMENT '财务主体pk',
+				  img_type CHAR(1) NOT NULL COMMENT 'O for out,I for in',
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk),
+				  INDEX client_pk (client_pk ASC))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '财务主体内外环境图片表';
+             ]]>
+			<comment>CREATE TABLE client_inout_img</comment>
+		</sql>
+	</changeSet>
+</databaseChangeLog>
+
+
+
+
+
+
+

@@ -16,6 +16,7 @@ public class OrderAirInfoBean extends SupperBO implements Serializable {
 	private String from_to_place;
 	private String ticket_client_number;
 	private String departure_date;
+	private String flight_number;
 
 	private String product_order_number;
 	private String need_pk;
@@ -116,6 +117,14 @@ public class OrderAirInfoBean extends SupperBO implements Serializable {
 
 	public void setProduct_order_number(String product_order_number) {
 		this.product_order_number = product_order_number;
+	}
+
+	public String getFlight_number() {
+		return flight_number;
+	}
+
+	public void setFlight_number(String flight_number) {
+		this.flight_number = flight_number;
 	}
 
 }

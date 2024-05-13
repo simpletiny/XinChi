@@ -48,4 +48,11 @@ public class ReimbursementDAOImpl extends SqlSessionDaoSupport implements Reimbu
 	public List<ReimbursementBean> selectByPage(Page page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectByPage", page);
 	}
+
+	@Override
+	public List<ReimbursementBean> selectSummaries(ReimbursementBean reimbursement) {
+		List<ReimbursementBean> result = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectSummaries", reimbursement);
+		return result;
+	}
 }

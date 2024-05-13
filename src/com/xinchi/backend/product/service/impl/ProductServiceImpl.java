@@ -886,6 +886,7 @@ public class ProductServiceImpl implements ProductService {
 			int start_day = obj.getInt("start_day");
 			String start_city = obj.getString("start_city");
 			String end_city = obj.getString("end_city");
+			String flight_number = obj.getString("flight_number");
 
 			ProductAirTicketBean ticket = new ProductAirTicketBean();
 
@@ -894,6 +895,7 @@ public class ProductServiceImpl implements ProductService {
 			ticket.setStart_day(start_day);
 			ticket.setStart_city(start_city);
 			ticket.setEnd_city(end_city);
+			ticket.setFlight_number(flight_number);
 			productAirTicketService.insert(ticket);
 
 		}

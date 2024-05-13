@@ -90,6 +90,12 @@
 		<action name="reApplyReimbursement" class="reimbursementAction" method="reApplyReimbursement">
 			<result name="success" type="str">resultStr</result>
 		</action>
+		<action name="searchSumReimbursement" class="reimbursementAction" method="searchSumReimbursement">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 
 </struts>

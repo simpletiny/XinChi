@@ -1,40 +1,41 @@
 var sourceLayer;
+var templetLayer;
 var PassengerContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenPassengers = ko.observableArray([]);
 	self.colors = ['#ffff99', '#ccffff', '#9999ff', '#00ffcc'];
 	self.passengers = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	self.allRoles = ['ADMIN', 'MANAGER', 'SALES', 'PRODUCT', 'FINANCE', 'TICKET'];
 
 	self.confirmStatusMapping = {
-		"1" : "未确认",
-		"2" : "待确认",
-		"3" : "产品确认",
-		"4" : "待确认",
-		"5" : "已确认",
+		"1": "未确认",
+		"2": "待确认",
+		"3": "产品确认",
+		"4": "待确认",
+		"5": "已确认",
 	}
 
 	self.deleteMapping = {
-		"N" : "否",
-		"Y" : "是"
+		"N": "否",
+		"Y": "是"
 	}
 
 	self.lockMapping = {
-		"N" : "未锁定",
-		"Y" : "已锁定"
+		"N": "未锁定",
+		"Y": "已锁定"
 	}
 
 	self.roleMapping = {
-		'MANAGER' : '经理',
-		'ADMIN' : '管理员',
-		'SALES' : '销售人员',
-		'PRODUCT' : '产品',
-		'FINANCE' : '财务',
-		'TICKET' : '票务'
+		'MANAGER': '经理',
+		'ADMIN': '管理员',
+		'SALES': '销售人员',
+		'PRODUCT': '产品',
+		'FINANCE': '财务',
+		'TICKET': '票务'
 	};
 	self.existsSources = ko.observableArray([]);
 	self.operate = function() {
@@ -86,18 +87,18 @@ var PassengerContext = function() {
 					self.existsSources.push(obj);
 				}
 				sourceLayer = $.layer({
-					type : 1,
-					title : ['选择票源', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['400px', '150px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#source-pick'
+					type: 1,
+					title: ['选择票源', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['400px', '150px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#source-pick'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			} else {
@@ -113,7 +114,7 @@ var PassengerContext = function() {
 						self.addTicketSource();
 					} else {
 						$("#div-table").animate({
-							width : '70%'
+							width: '70%'
 						}, "slow", function() {
 							// $(this).css("float", "left");
 							$(this).addClass("already");
@@ -137,10 +138,10 @@ var PassengerContext = function() {
 	self.checkHasSameLeg = function(param) {
 		var result = false;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'ticket/checkSameAirLeg',
-			async : false,
-			data : param
+			type: "POST",
+			url: self.apiurl + 'ticket/checkSameAirLeg',
+			async:false,
+			data: param
 		}).success(function(str) {
 			if (str == "success") {
 				result = true;
@@ -178,13 +179,13 @@ var PassengerContext = function() {
 			let team_number = data[3];
 			let msg = "解锁订单意味着销售可以新增乘客。确认要解锁订单" + team_number + "吗？"
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						toggleLockOrder(team_number, 'N');
 
@@ -206,13 +207,13 @@ var PassengerContext = function() {
 			let team_number = data[3];
 			let msg = "锁定订单，销售将不再能增加乘客。确认要锁定订单" + team_number + "吗？"
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						toggleLockOrder(team_number, 'Y');
 					}
@@ -234,13 +235,13 @@ var PassengerContext = function() {
 			passenger_pks.RTrim(",");
 			let msg = "解锁名单意味着，销售可以对解锁的名单进行编辑或删除操作。确定解锁这些名单吗？"
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						toggleLockName(passenger_pks, 'N');
 					}
@@ -262,13 +263,13 @@ var PassengerContext = function() {
 			passenger_pks.RTrim(",");
 			let msg = "锁定名单，销售将不再允许对这些名单进行操作。确认锁定这些名单吗？"
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						toggleLockName(passenger_pks, 'Y');
 					}
@@ -291,21 +292,20 @@ var PassengerContext = function() {
 			passenger_pks.LTrim("&");
 			let msg = "确认要删除这些名单吗？"
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
-						startLoadingSimpleIndicator("删除中……")
+						startLoadingSimpleIndicator("删除中")
 						const param = "passenger_pks=" + passenger_pks;
 						$.ajax({
-							type : "POST",
-							url : ctx.apiurl + 'ticket/deletePassengerByPassengerPks',
-							async : false,
-							data : param
+							type: "POST",
+							url: self.apiurl + 'ticket/deletePassengerByPassengerPks',
+							data: param
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
@@ -356,7 +356,7 @@ var PassengerContext = function() {
 				return;
 			}
 
-			outer : for (var i = 0; i < self.chosenPassengers().length; i++) {
+			outer: for (var i = 0; i < self.chosenPassengers().length; i++) {
 				var data = self.chosenPassengers()[i].split(":");
 				for (var j = 0; j < alreadyPks.length; j++) {
 					var passenger_pk = $(alreadyPks[j]).val();
@@ -414,14 +414,14 @@ var PassengerContext = function() {
 		$(passengerDiv).append(passengerBox);
 		$(sourceDiv).append(deleteDiv);
 		$(sourceDiv)
-				.append(
-						'<div class="input-row clearfloat" style="padding: 20px 10px 0 0px">'
-								+ '<div class="col-md-12">'
-								+ '<label class="l" style="width: 20%">票源</label>'
-								+ '<div class="ip" style="width: 80%">'
-								+ '<input  st="supplier-name" type="text" onclick="choseSupplierEmployee(event)"  class="ip- txt-ticket-source" placeholder="票源" maxlength="20"'
-								+ ' /><input type="text" st="supplier-pk" style="display: none" />' + '</div>'
-								+ '</div>');
+			.append(
+				'<div class="input-row clearfloat" style="padding: 20px 10px 0 0px">'
+				+ '<div class="col-md-12">'
+				+ '<label class="l" style="width: 20%">票源</label>'
+				+ '<div class="ip" style="width: 80%">'
+				+ '<input  st="supplier-name" type="text" onclick="choseSupplierEmployee(event)"  class="ip- txt-ticket-source" placeholder="票源" maxlength="20"'
+				+ ' /><input type="text" st="supplier-pk" style="display: none" />' + '</div>'
+				+ '</div>');
 
 		$(sourceDiv).append(passengerDiv);
 		$(".right-div").append(sourceDiv);
@@ -433,7 +433,7 @@ var PassengerContext = function() {
 		if (all.length < 1) {
 			$(".right-div").css("display", "none");
 			$("#div-table").animate({
-				width : '100%'
+				width: '100%'
 			}, "slow", function() {
 				$(this).removeClass("already");
 			});
@@ -452,12 +452,12 @@ var PassengerContext = function() {
 		$(div).addClass("deletePassenger");
 
 		$(div).offset({
-			top : X + 20,
-			left : Y
+			top: X + 20,
+			left: Y
 		})
 
 		$(a_name).click({
-			label : label
+			label: label
 		}, function(event) {
 			self.deleteRightPassenger(event.data.label);
 		});
@@ -527,7 +527,7 @@ var PassengerContext = function() {
 				}
 				passengerPks = passengerPks.substr(0, passengerPks.length - 1);
 				json += '{"sourceName":"' + sourceName + '","sourcePk":"' + sourcePk + '","passengerPks":"'
-						+ passengerPks + '"},';
+					+ passengerPks + '"},';
 			}
 			json = json.substr(0, json.length - 1);
 			json += ']';
@@ -540,6 +540,52 @@ var PassengerContext = function() {
 		}
 
 	};
+
+	self.templets = ko.observableArray([]);
+	//加载模板列表
+	self.download = function() {
+		const param = "";
+		if (self.chosenPassengers().length > 0) {
+			$.getJSON(self.apiurl + 'ticket/searchTicketNameTemplet', param, function(data) {
+				self.templets(data.templets);
+				templetLayer = $.layer({
+					type: 1,
+					title: ['选择模板', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['400px', '150px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#templet-pick'
+					},
+					end: function() {
+					}
+				});
+			});
+
+		} else {
+			fail_msg("请选择名单！");
+		}
+	}
+
+	self.pickTemplet = function() {
+		let templet_pk = $("#select-templet").val();
+		if (templet_pk === "") {
+			fail_msg("请选择模板！");
+			return;
+		}
+
+		let pks = new Array();
+		for (let i = 0; i < self.chosenPassengers().length; i++) {
+			pks.push(self.chosenPassengers()[i].split(":")[0]);
+		}
+		let params = { "name_pks": pks, "templet_pk": templet_pk, "fileType": "TICKET_NAME" };
+		downloadFile(self.apiurl + 'file/downloadTicketFile', params);
+		
+		layer.close(templetLayer);
+	}
 
 	self.search = function() {
 
@@ -600,18 +646,18 @@ var PassengerContext = function() {
 	self.supplierEmployees = ko.observable({});
 	function choseSupplierEmployee(event) {
 		supplierEmployeeLayer = $.layer({
-			type : 1,
-			title : ['选择供应商操作', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#supplier-pick'
+			type: 1,
+			title: ['选择供应商操作', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '650px'],
+			offset: ['50px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#supplier-pick'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
@@ -701,7 +747,7 @@ $(document).ready(function() {
 	});
 
 	var clipboard = new Clipboard('#copy', {
-		text : function() {
+		text: function() {
 			var text = "";
 			if (ctx.chosenPassengers().length > 0) {
 				for (var i = 0; i < ctx.chosenPassengers().length; i++) {
@@ -747,18 +793,18 @@ var currentSupplier;
 var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
-		type : 1,
-		title : ['选择供应商操作', ''],
-		maxmin : false,
-		closeBtn : [1, true],
-		shadeClose : false,
-		area : ['600px', '650px'],
-		offset : ['50px', ''],
-		scrollbar : true,
-		page : {
-			dom : '#supplier-pick'
+		type: 1,
+		title: ['选择供应商操作', ''],
+		maxmin: false,
+		closeBtn: [1, true],
+		shadeClose: false,
+		area: ['600px', '650px'],
+		offset: ['50px', ''],
+		scrollbar: true,
+		page: {
+			dom: '#supplier-pick'
 		},
-		end : function() {
+		end: function() {
 			console.log("Done");
 		}
 	});
@@ -772,15 +818,15 @@ function checkAll(chk) {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
 			ctx.chosenPassengers.push(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
-					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
-					+ passenger.cellphone_A)
+				+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+				+ passenger.cellphone_A)
 		}
 	} else {
 		for (var i = 0; i < ctx.passengers().length; i++) {
 			var passenger = ctx.passengers()[i];
 			ctx.chosenPassengers.remove(passenger.pk + ":" + passenger.name + ":" + passenger.id + ":"
-					+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
-					+ passenger.cellphone_A)
+				+ passenger.team_number + ":" + passenger.order_number + ":" + passenger.name_confirm_status + ":"
+				+ passenger.cellphone_A)
 		}
 	}
 }
@@ -792,7 +838,7 @@ function checkSameOrderNumber(tr) {
 
 		if (passenger.order_number == order_number) {
 			var xxstr = passenger.pk + ":" + passenger.name + ":" + passenger.id + ":" + passenger.team_number + ":"
-					+ passenger.order_number + ":" + passenger.name_confirm_status + ":" + passenger.cellphone_A;
+				+ passenger.order_number + ":" + passenger.name_confirm_status + ":" + passenger.cellphone_A;
 
 			if (ctx.chosenPassengers().contains(xxstr)) {
 				ctx.chosenPassengers.remove(xxstr);
@@ -809,10 +855,9 @@ var toggleLockOrder = function(team_number, lock_flg) {
 	startLoadingSimpleIndicator("执行中……");
 	const param = "team_number=" + team_number + "&lock_flg=" + lock_flg;
 	$.ajax({
-		type : "POST",
-		url : ctx.apiurl + 'ticket/toggleLockOrder',
-		async : false,
-		data : param
+		type: "POST",
+		url: ctx.apiurl + 'ticket/toggleLockOrder',
+		data: param
 	}).success(function(str) {
 		endLoadingIndicator();
 		if (str == "success") {
@@ -840,10 +885,9 @@ var toggleLockName = function(passenger_pks, lock_flg) {
 	}
 
 	$.ajax({
-		type : "POST",
-		url : ctx.apiurl + 'ticket/toggleLockName',
-		async : false,
-		data : param
+		type: "POST",
+		url: ctx.apiurl + 'ticket/toggleLockName',
+		data: param
 	}).success(function(str) {
 		endLoadingIndicator();
 		if (str == "success") {

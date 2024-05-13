@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class PassengerTicketInfoBean extends SupperBO implements Serializable {
@@ -10,7 +12,11 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	private String ticket_source_pk;
 
-	private java.math.BigDecimal ticket_cost;
+	private BigDecimal ticket_cost;
+	// 税费
+	private BigDecimal taxation;
+	// 杂费
+	private BigDecimal other_cost;
 
 	private String PNR;
 
@@ -21,6 +27,8 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 	private String ticket_number;
 
 	private String from_to_time;
+
+	private String add_day_flg;
 
 	private String from_to_city;
 
@@ -48,11 +56,11 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 		this.ticket_source = ticket_source;
 	}
 
-	public java.math.BigDecimal getTicket_cost() {
+	public BigDecimal getTicket_cost() {
 		return ticket_cost;
 	}
 
-	public void setTicket_cost(java.math.BigDecimal ticket_cost) {
+	public void setTicket_cost(BigDecimal ticket_cost) {
 		this.ticket_cost = ticket_cost;
 	}
 
@@ -174,6 +182,30 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	public void setBase_pk(String base_pk) {
 		this.base_pk = base_pk;
+	}
+
+	public BigDecimal getTaxation() {
+		return taxation;
+	}
+
+	public BigDecimal getOther_cost() {
+		return other_cost;
+	}
+
+	public void setTaxation(BigDecimal taxation) {
+		this.taxation = taxation;
+	}
+
+	public void setOther_cost(BigDecimal other_cost) {
+		this.other_cost = other_cost;
+	}
+
+	public String getAdd_day_flg() {
+		return add_day_flg;
+	}
+
+	public void setAdd_day_flg(String add_day_flg) {
+		this.add_day_flg = add_day_flg;
 	}
 
 }

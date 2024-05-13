@@ -286,6 +286,8 @@ public class ResourcesConstants {
 
 	public static String FILE_REPLACE_HOLDER_NO_CLIENT = "未审核客户";
 
+	public static String FILE_TICKET_NAME = "TICKET_NAME";
+
 	// ************************* 基础数据 类型*********************************
 	// 产品线
 	public static String BASE_DATA_TYPE_LINE = "LINE";

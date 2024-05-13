@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.ReimbursementMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.ReimbursementBean">
-		<id column="id" property="id" jdbcType="CHAR" />
 		<result column="item" property="item" jdbcType="CHAR" />
 		<result column="date" property="date" jdbcType="VARCHAR" />
 		<result column="month" property="month" jdbcType="VARCHAR" />
@@ -234,6 +233,19 @@
 		<include refid="Base_Column_List" />
 		from reimbursement
 	</select>
+	<select id="selectSummaries" parameterType="com.xinchi.bean.ReimbursementBean" resultMap="BaseResultMap">
+		select item,month,sum(money) AS money from reimbursement
+		<where>
+			<if test="date_from !=null and date_from !=''">
+				and month >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to !=null and date_to !=''">
+				and month &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+			and status = 'P'
+		</where>
+		group by item
+	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -267,7 +279,7 @@
 		user_base D ON
 		A.pay_user=D.user_number
 		<where>
-			and A.delete_flg='N' 
+			and A.delete_flg='N'
 			<if test="params.bo.apply_user != null and params.bo.apply_user !=''">
 				and A.apply_user = #{params.bo.apply_user,jdbcType=VARCHAR}
 			</if>

@@ -216,62 +216,81 @@
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4),
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		IFNULL(A.adult_count, 0) *
+		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
-		0)) AS score,
+		0))
+		AS score,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4)
-		AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
+		AND 11 >
+		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
 		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		0)) AS first_people,
+		0)) AS
+		first_people,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4)
-		AND 11 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		AND 11 >
+		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',',
+		1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0)) AS first_score,
-		SUM(IF(A.confirm_flg != 'N'
+		SUM(IF(A.confirm_flg !=
+		'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4)
 		AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
-		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
+		AND 21 >
+		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
 		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
-		0)) AS middle_people,
+		0)) AS
+		middle_people,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4)
-		AND (SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
-		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1)),
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		AND
+		(SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
+		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', -
+		1)),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) *
+		SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0)) AS middle_score,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
-		OR C.final_type != 4)
+		OR
+		C.final_type != 4)
 		AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
-		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
 		0)) AS last_people,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
-		OR C.final_type != 4)
+		OR C.final_type !=
+		4)
 		AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		IFNULL(A.adult_count, 0) *
+		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
-		0)) AS last_score,
+		0))
+		AS last_score,
 		LEFT(A.confirm_date, 7) AS confirm_month,
 		A.create_user AS sale_number,
 		B.user_name AS sale_name,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
 		OR C.final_type != 4),
-		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
 		0)) AS sum_people
 		FROM
 		budget_standard_order A
 		LEFT JOIN
-		user_base B ON A.create_user = B.user_number
+		user_base B ON A.create_user =
+		B.user_number
 		LEFT JOIN
 		final_standard_order C ON A.team_number = C.team_number
 		<where>
@@ -451,6 +470,9 @@
 			</if>
 			<if test="confirm_flg != null and confirm_flg !=''">
 				and A.confirm_flg =#{confirm_flg,jdbcType=VARCHAR}
+			</if>
+			<if test="operate_flg != null and operate_flg !=''">
+				and A.operate_flg like CONCAT('%', #{operate_flg,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="confirm_flgs != null and confirm_flgs.size()>0">
 				and A.confirm_flg in

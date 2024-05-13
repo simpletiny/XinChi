@@ -160,6 +160,8 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 			int flight_index = obj.getInt("flight_index");
 
+			String flight_number = obj.getString("flight_number");
+
 			int start_day = obj.getInt("start_day");
 			String start_city = obj.getString("start_city");
 			String end_city = obj.getString("end_city");
@@ -171,6 +173,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
 			ProductOrderAirInfoBean info = new ProductOrderAirInfoBean();
 
+			info.setFlight_number(flight_number);
 			info.setTicket_date(DateUtil.addDate(departure_date, start_day - 1));
 			info.setProduct_order_number(product_order_number);
 			info.setFlight_index(flight_index);

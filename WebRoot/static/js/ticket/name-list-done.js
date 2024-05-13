@@ -549,7 +549,6 @@ var toggleLockOrder = function(team_number, lock_flg) {
 	$.ajax({
 		type: "POST",
 		url: ctx.apiurl + 'ticket/toggleLockOrder',
-		async: false,
 		data: param
 	}).success(function(str) {
 		endLoadingIndicator();
@@ -587,7 +586,6 @@ var toggleLockName = async function(passenger_pks, lock_flg) {
 	$.ajax({
 		type: "POST",
 		url: ctx.apiurl + 'ticket/toggleLockName',
-		async: false,
 		data: param
 	}).success(function(str) {
 		endLoadingIndicator();

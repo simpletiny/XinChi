@@ -556,6 +556,8 @@ var PayableContext = function() {
 				self.store(self.store().concat(self.payables()));
 				pages.push(self.currentPage());
 			}
+			
+	
 			// 计算合计
 			$(self.payables()).each(function(idx, data) {
 				totalBudgetPayable += data.budget_payable;

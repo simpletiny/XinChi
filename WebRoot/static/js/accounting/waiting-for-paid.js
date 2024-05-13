@@ -6,8 +6,8 @@ var PaidContext = function() {
 	self.chosenPaids = ko.observableArray([]);
 
 	self.paids = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.dateFrom = ko.observable();
@@ -33,12 +33,12 @@ var PaidContext = function() {
 	self.chosenStatus = ko.observableArray(['I']);
 	self.allStatus = ['I', 'N', 'Y'];
 
-	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F']);
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'S', 'I', 'F']);
 
 	self.statusMapping = {
-		'I' : '待支付',
-		'Y' : '已支付',
-		'N' : '已驳回'
+		'I': '待支付',
+		'Y': '已支付',
+		'N': '已驳回'
 	};
 	// 计算合计
 	self.totalPaid = ko.observable(0);
@@ -87,21 +87,21 @@ var PaidContext = function() {
 		} else if (self.chosenPaids().length == 1) {
 
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要打回到待审批状态吗?',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要打回到待审批状态吗?',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						var wfpPk = self.chosenPaids()[0];
 						startLoadingSimpleIndicator("操作中");
 						layer.close(index);
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'accounting/rollBackWfp',
-							data : "wfp_pk=" + self.chosenPaids()[0],
-							success : function(str) {
+							type: "POST",
+							url: self.apiurl + 'accounting/rollBackWfp',
+							data: "wfp_pk=" + self.chosenPaids()[0],
+							success: function(str) {
 								if (str != "success") {
 									fail_msg("回滚失败，请联系管理员");
 								}

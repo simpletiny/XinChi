@@ -26,8 +26,8 @@ public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO {
 	}
 
 	@Override
-	public void insert(com.xinchi.bean.ClientBean bo) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.ClientMapper.insert", bo);
+	public String insert(com.xinchi.bean.ClientBean bo) {
+		return daoUtil.insertBO("com.xinchi.bean.mapper.ClientMapper.insert", bo);
 	}
 
 	@Override

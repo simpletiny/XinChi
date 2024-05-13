@@ -71,7 +71,7 @@
 								<th>分数</th>
 								<!-- /ko -->
 								<th>产品毛利</th>
-								<th>机票手续费</th>
+								<th>机票其他</th>
 								<th>押金扣款</th>
 								<th>产品费用</th>
 								<th>唯品费</th>
@@ -90,14 +90,14 @@
 								<td data-bind="text: $data.score"></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.gross_profit" class="rmb"></td>
-								<td data-bind="text: $data.service_fees" class="rmb"></td>
+								<td data-bind="text: $data.ticket_other_cost" class="rmb"></td>
 								<td data-bind="text: $data.deposit_deduct" class="rmb"></td>
 								<td data-bind="text: $data.product_cost" class="rmb"></td>
 								<td data-bind="text: $data.keep_cost" class="rmb"></td>
 								<td></td>
 								<td data-bind="text:$data.other_cost"></td>
 								<td
-									data-bind="text: $data.gross_profit-$data.service_fees- $data.deposit_deduct-$data.product_cost-$data.keep_cost-$data.other_cost"
+									data-bind="text: $data.gross_profit-$data.ticket_other_cost- $data.deposit_deduct-$data.product_cost-$data.keep_cost-$data.other_cost"
 									class="rmb"></td>
 							</tr>
 						</tbody>

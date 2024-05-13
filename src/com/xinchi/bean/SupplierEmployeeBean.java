@@ -45,6 +45,8 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 
 	private String delete_flg;
 
+	private String supplier_short_name;
+
 	// 供应商财务主体种类
 	private String type;
 
@@ -224,6 +226,14 @@ public class SupplierEmployeeBean extends SupperBO implements Serializable {
 
 	public void setDelete_flgs(List<String> delete_flgs) {
 		this.delete_flgs = delete_flgs;
+	}
+
+	public String getSupplier_short_name() {
+		return supplier_short_name;
+	}
+
+	public void setSupplier_short_name(String supplier_short_name) {
+		this.supplier_short_name = supplier_short_name;
 	}
 
 }

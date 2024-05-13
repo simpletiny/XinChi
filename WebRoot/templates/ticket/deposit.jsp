@@ -99,7 +99,14 @@ h2 {
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control" name="deposit.voucher_number" placeholder="凭证号" />
 						</div>
+						<label class="col-md-1 control-label">责任人</label>
+						<div class="col-md-2" style="float: left">
+							<select class="form-control" name="deposit.responsible_user"
+								data-bind="options: product_managers,optionsText:'user_name',optionsValue:'user_number', optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
+						</div>
 
+					</div>
+					<div class="form-group">
 						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
@@ -125,7 +132,7 @@ h2 {
 						<tbody id="tbody-data" data-bind="foreach:deposits">
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenDeposits" /></td>
-								
+
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
@@ -199,6 +206,7 @@ h2 {
 						<th>支付时间</th>
 						<th>到期时间</th>
 						<th>备注</th>
+						<th>责任人</th>
 						<th>确认</th>
 					</tr>
 				</thead>
@@ -211,6 +219,7 @@ h2 {
 						<td data-bind="text: $data.time"></td>
 						<td data-bind="text: $data.return_date"></td>
 						<td data-bind="text: $data.comment"></td>
+						<td data-bind="text: $data.responsible_user_name"></td>
 						<td><a href="javascript:void(0)" data-bind="event:{click:confirmUpload}">确认</a></td>
 					</tr>
 				</tbody>
@@ -656,7 +665,7 @@ h2 {
 
 
 	<script>
-		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
+		$(".ticket-finance").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>

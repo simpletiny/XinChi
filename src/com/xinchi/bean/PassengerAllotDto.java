@@ -25,6 +25,7 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 	private String start_place;
 	private String end_place;
 	private String ticket_number;
+	private String add_day_flg;
 	private String ticket_order_pk;
 
 	private String team_number;
@@ -150,6 +151,14 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public String getAdd_day_flg() {
+		return add_day_flg;
+	}
+
+	public void setAdd_day_flg(String add_day_flg) {
+		this.add_day_flg = add_day_flg;
 	}
 
 }

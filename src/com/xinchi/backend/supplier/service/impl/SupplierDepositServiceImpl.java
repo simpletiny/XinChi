@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -26,6 +28,7 @@ import com.xinchi.backend.supplier.dao.DepositTicketPaidDAO;
 import com.xinchi.backend.supplier.dao.SupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
+import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirReceivedDetailBean;
 import com.xinchi.bean.CardBean;
@@ -33,6 +36,7 @@ import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierDepositBean;
+import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileFolder;
@@ -312,6 +316,10 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			Cell cell9 = row.getCell(colMapping.get("序号"));
 			int pay_index = (int) Float.parseFloat(SimpletinyExcel.getCellValueByCell(cell9));
 
+			// 责任人
+			Cell cell10 = row.getCell(colMapping.get("责任人"));
+			String responsible_user_name = SimpletinyExcel.getCellValueByCell(cell10);
+
 			comment = "成交编号：" + dealNum + ";" + "航段：" + airLeg + ";" + "航班日期：" + air_date + ";" + excelComment;
 
 			deposit.setAccount(account);
@@ -324,6 +332,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			deposit.setTime(payTime);
 
 			deposit.setPay_index(pay_index);
+			deposit.setResponsible_user_name(responsible_user_name);
 
 			deposits.add(deposit);
 		}
@@ -409,17 +418,22 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		return deposits;
 	}
 
+	@Autowired
+	private UserDAO userDao;
+
 	@Override
 	public String batSaveDeposit(String json) {
 		JSONArray array = JSONArray.fromObject(json);
 		Map<String, String> leader = new HashMap<String, String>();
 
+		Set<String> responsible_user_names = new HashSet<>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
 			String supplier_name = obj.getString("supplier_name");
 			String account = obj.getString("account");
 			String pay_index = obj.getString("pay_index");
 			String pay_time = obj.getString("time");
+			String responsible_user_name = obj.getString("responsible_user_name");
 
 			if (SimpletinyString.isEmpty(supplier_name)) {
 				return "第" + (i + 1) + "行缺少供应商信息！";
@@ -435,7 +449,10 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			if (SimpletinyString.isEmpty(pay_time)) {
 				return "第" + (i + 1) + "行缺少支付时间！";
 			}
-
+			if (SimpletinyString.isEmpty(responsible_user_name)) {
+				return "第" + (i + 1) + "行缺少责任人！";
+			}
+			responsible_user_names.add(responsible_user_name);
 			if (!leader.keySet().contains(pay_index)) {
 				leader.put(pay_index, supplier_name + "##" + account + "##" + pay_time);
 			}
@@ -472,6 +489,16 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			pay_moneys.put(pay_index, pay_moneys.get(pay_index) == null ? BigDecimal.ZERO.add(money)
 					: pay_moneys.get(pay_index).add(money));
 
+		}
+
+		// 责任人员工号
+		Map<String, String> user_map = new HashMap<>();
+		for (String user : responsible_user_names) {
+			UserBaseBean user_base = userDao.selectUserByName(user);
+			if (null == user_base) {
+				return "责任人：系统不存在用户" + user;
+			}
+			user_map.put(user, user_base.getUser_number());
 		}
 
 		// 生成银行流水账
@@ -542,6 +569,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			String pay_index = obj.getString("pay_index");
 			BigDecimal money = new BigDecimal(obj.getString("money"));
 			String return_date = obj.getString("return_date");
+			String responsible_user_name = obj.getString("responsible_user_name");
 
 			SupplierBean option = new SupplierBean();
 			option.setSupplier_name(supplier_name);
@@ -561,6 +589,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			deposit.setReceived(BigDecimal.ZERO);
 			deposit.setDeposit_number(deposit_number);
 			deposit.setBalance(deposit.getMoney());
+			deposit.setResponsible_user(user_map.get(responsible_user_name));
 			dao.insert(deposit);
 		}
 		return SUCCESS;

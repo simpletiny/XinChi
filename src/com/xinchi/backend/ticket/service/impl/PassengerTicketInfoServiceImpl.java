@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -153,33 +152,29 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			JSONObject obj = arr.getJSONObject(i);
 			String ticket_source = obj.getString("ticket_source");
 			String ticket_source_pk = obj.getString("ticket_source_pk");
-
-			String ticket_cost = obj.getString("ticket_cost");
-			String ticket_charges = obj.getString("ticket_charges");
-			String sum_cost = obj.getString("sum_cost");
 			String ticket_PNR = obj.getString("ticket_PNR");
-			String passenger_pks = obj.getString("passenger_pks");
-			String pkkk[] = passenger_pks.split(",");
 
-			int people_count = pkkk.length;
+			JSONArray ticket_info = obj.getJSONArray("ticket_infos");
+			JSONArray name_info = obj.getJSONArray("name_infos");
+			int people_count = name_info.size();
+			String first_passenger = "";
+			String first_from_to_city = "";
+			String first_date = "";
+
+			BigDecimal sum_money = BigDecimal.ZERO;
 
 			// 保存机票供应商应付款
 			AirTicketPayableBean airTicketPayable = new AirTicketPayableBean();
 			String payable_pk = DBCommonUtil.genPk();
 			airTicketPayable.setPk(payable_pk);
 			airTicketPayable.setSupplier_employee_pk(ticket_source_pk);
-			airTicketPayable.setBudget_payable(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
+
 			airTicketPayable.setPNR(ticket_PNR);
-			airTicketPayable.setBudget_balance(null != sum_cost ? new BigDecimal(sum_cost) : BigDecimal.ZERO);
+
 			airTicketPayable.setPaid(BigDecimal.ZERO);
 			airTicketPayable.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_COST);
 
-			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(pkkk[0]);
-			airTicketPayable.setPassenger(passenger.getName());
 			airTicketPayable.setPeople_count(people_count);
-
-			BigDecimal cost = new BigDecimal(ticket_cost);
-			JSONArray ticket_info = obj.getJSONArray("ticket_info");
 
 			for (int j = 0; j < ticket_info.size(); j++) {
 				JSONObject info = ticket_info.getJSONObject(j);
@@ -187,24 +182,33 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 				String ticket_date = info.getString("ticket_date");
 				String ticket_number = info.getString("ticket_number");
 				String from_to_time = info.getString("from_to_time");
+				String add_day_flg = info.getString("add_day_flg");
 				String from_to_city = info.getString("from_to_city");
 				String from_airport = info.getString("from_airport");
 				String to_airport = info.getString("to_airport");
 
-				if (ticket_index == 1) {
-					airTicketPayable.setFrom_to_city(from_to_city);
-					airTicketPayable.setFirst_date(ticket_date);
-					airTicketPayable.setComment(
-							ticket_date + SimpletinyString.left(passenger.getName(), 4) + people_count + "人机票款。");
-				}
-
 				// 保存乘客详细信息
-				for (String pk : pkkk) {
-					if (SimpletinyString.isEmpty(pk))
-						continue;
+				for (int k = 0; k < name_info.size(); k++) {
+					JSONObject name = JSONObject.fromObject(name_info.get(k));
+					String passenger_pk = name.getString("passenger_pk");
+
+					BigDecimal ticket_cost = SimpletinyString.isNumeric(name.getString("ticket_cost"))
+							? new BigDecimal(name.getString("ticket_cost"))
+							: BigDecimal.ZERO;
+					BigDecimal taxation = SimpletinyString.isNumeric(name.getString("taxation"))
+							? new BigDecimal(name.getString("taxation"))
+							: BigDecimal.ZERO;
+					BigDecimal other_cost = SimpletinyString.isNumeric(name.getString("other_cost"))
+							? new BigDecimal(name.getString("other_cost"))
+							: BigDecimal.ZERO;
+
 					PassengerTicketInfoBean pti = new PassengerTicketInfoBean();
 
-					pti.setTicket_cost(cost);
+					SimpletinyString.isNumeric(ticket_source_pk);
+
+					pti.setTicket_cost(ticket_cost);
+					pti.setTaxation(taxation);
+					pti.setOther_cost(other_cost);
 					pti.setTicket_source(ticket_source);
 					pti.setTicket_source_pk(ticket_source_pk);
 					pti.setPNR(ticket_PNR);
@@ -212,26 +216,37 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					pti.setTicket_date(ticket_date);
 					pti.setTicket_number(ticket_number);
 					pti.setFrom_to_time(from_to_time);
+					pti.setAdd_day_flg(add_day_flg);
 					pti.setFrom_to_city(from_to_city);
 					pti.setFrom_airport(from_airport);
 					pti.setTo_airport(to_airport);
 
-					pti.setPassenger_pk(pk);
+					pti.setPassenger_pk(passenger_pk);
 					pti.setBase_pk(payable_pk);
 					dao.insert(pti);
 
-					AirTicketNameListBean atnl = airTicketNameListDAO.selectByPrimaryKey(pk);
+					AirTicketNameListBean atnl = airTicketNameListDAO.selectByPrimaryKey(passenger_pk);
 					if (j == 0) {
 						// 更新机票订单机票款
 						AirTicketOrderBean ato = airTicketOrderDao.selectByPrimaryKey(atnl.getTicket_order_pk());
-						ato.setTicket_cost(ato.getTicket_cost().add(cost));
+						ato.setTicket_cost(ato.getTicket_cost().add(ticket_cost).add(taxation).add(other_cost));
 						airTicketOrderDao.update(ato);
-
 						ticket_orders.add(atnl.getTicket_order_pk());
+
+						if (k == 0) {
+							first_passenger = passenger_pk;
+						}
+					}
+
+					if (ticket_index == 1) {
+						first_from_to_city = from_to_city;
+						first_date = ticket_date;
+						sum_money = sum_money.add(ticket_cost).add(taxation).add(other_cost);
 					}
 
 					// 校验名单是否已经完成操作所有航段
-					List<PassengerAllotDto> allots = airTicketNameListDAO.selectPassengerAllotByPassengerPk(pk);
+					List<PassengerAllotDto> allots = airTicketNameListDAO
+							.selectPassengerAllotByPassengerPk(passenger_pk);
 					boolean done = true;
 					for (PassengerAllotDto allot : allots) {
 						if (allot.getIs_allot().equals("N")) {
@@ -245,35 +260,18 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					}
 				}
 			}
-			if (!SimpletinyString.isEmpty(ticket_charges)) {
-				BigDecimal charges = new BigDecimal(ticket_charges);
-				if (charges.compareTo(BigDecimal.ZERO) == 1) {
-					String related_pk = DBCommonUtil.genPk();
-					airTicketPayable.setRelated_pk(related_pk);
 
-					AirTicketPayableBean payable_charges = new AirTicketPayableBean();
+			airTicketPayable.setBudget_payable(sum_money);
+			airTicketPayable.setBudget_balance(sum_money);
 
-					try {
-						PropertyUtils.copyProperties(payable_charges, airTicketPayable);
+			AirTicketNameListBean passenger = airTicketNameListDao.selectByPrimaryKey(first_passenger);
+			airTicketPayable.setPassenger(passenger.getName());
+			airTicketPayable.setFrom_to_city(first_from_to_city);
+			airTicketPayable.setFirst_date(first_date);
+			airTicketPayable
+					.setComment(first_date + SimpletinyString.left(passenger.getName(), 4) + people_count + "人机票款。");
 
-						payable_charges.setBudget_payable(charges);
-						payable_charges.setBudget_balance(charges);
-						payable_charges.setPaid(BigDecimal.ZERO);
-						payable_charges.setPayable_type(ResourcesConstants.TICKET_PAYABLE_TYPE_CHARGES);
-
-						payable_charges.setComment(payable_charges.getFirst_date()
-								+ SimpletinyString.left(passenger.getName(), 4) + people_count + "人票务手续费。");
-
-						airTicketPayableDao.insert(payable_charges);
-
-					} catch (Exception e) {
-						e.printStackTrace();
-						return FAIL;
-					}
-				}
-			}
 			airTicketPayableDao.insertWithPk(airTicketPayable);
-
 		}
 
 		// 验证ticketorder 是否完成所有乘客的出票
@@ -318,7 +316,8 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					List<PassengerTicketInfoBean> ptis = dao.selectByPassengerPk(name.getPk());
 					for (PassengerTicketInfoBean pti : ptis) {
 						if (pti.getTicket_index() == 1) {
-							airTicketCost = airTicketCost.add(pti.getTicket_cost());
+							airTicketCost = airTicketCost
+									.add(pti.getTicket_cost().add(pti.getTaxation()).add(pti.getOther_cost()));
 						}
 					}
 				}
@@ -356,9 +355,7 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					bnsoDao.update(nonStandardOrder);
 				}
 			}
-
 		}
-
 		return SUCCESS;
 	}
 

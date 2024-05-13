@@ -1,5 +1,6 @@
 package com.xinchi.common.office;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -19,6 +22,12 @@ import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.PicturesManager;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
 import org.apache.poi.hwpf.usermodel.PictureType;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.w3c.dom.Document;
 
@@ -86,6 +95,75 @@ public class SimpletinyWord {
 		serializer.transform(domSource, streamResult);
 		close(os);
 		close(is);
+
+		return htmlFileName;
+	}
+
+	public static String ExcelXlsxToHtml(String file) throws Exception {
+		String tempHtmlPath = ServletActionContext.getServletContext().getRealPath("/");
+		String htmlFileName = DBCommonUtil.genPk() + ".html";
+		String htmlFileFolder = tempHtmlPath + "templates" + File.separator + "temp" + File.separator + "viewexcel";
+		String htmlFilePath = htmlFileFolder + File.separator + htmlFileName;
+
+		File excelFolder = new File(htmlFileFolder);
+		if (!excelFolder.exists()) {// 图片目录不存在则创建
+			excelFolder.mkdirs();
+		}
+
+		InputStream is = new FileInputStream(new File(file));
+		Workbook workbook = new XSSFWorkbook(is);
+
+		// 假设我们只转换第一个工作表
+		Sheet sheet = workbook.getSheetAt(0);
+
+		StringBuilder htmlBuilder = new StringBuilder();
+		htmlBuilder.append(
+				"<!DOCTYPE html>\n<html>\n<head>\n<meta charset='utf-8'>\n<title>Excel Sheet to HTML</title>\n</head>\n<body>\n");
+		htmlBuilder.append("<table border='1'>");
+
+		Iterator<Row> rowIterator = sheet.iterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+			htmlBuilder.append("<tr>\n");
+
+			Iterator<Cell> cellIterator = row.cellIterator();
+			while (cellIterator.hasNext()) {
+				Cell cell = cellIterator.next();
+				htmlBuilder.append("<td>");
+
+				switch (cell.getCellType()) {
+				case STRING:
+					htmlBuilder.append(cell.getStringCellValue());
+					break;
+				case NUMERIC:
+					if (DateUtil.isCellDateFormatted(cell)) {
+						htmlBuilder.append(cell.getDateCellValue());
+					} else {
+						htmlBuilder.append(cell.getNumericCellValue());
+					}
+					break;
+				case BOOLEAN:
+					htmlBuilder.append(cell.getBooleanCellValue());
+					break;
+				case FORMULA:
+					htmlBuilder.append(cell.getCellFormula());
+					break;
+				default:
+					htmlBuilder.append(" ");
+				}
+				htmlBuilder.append("</td>\n");
+			}
+			htmlBuilder.append("</tr>\n");
+		}
+		htmlBuilder.append("</table>\n</body>\n</html>");
+		// 写入HTML文件
+		File htmlFile = new File(htmlFilePath);
+		try (BufferedWriter htmlWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(htmlFile), "UTF-8"))) {
+			htmlWriter.write(htmlBuilder.toString());
+		}
+		// 关闭资源
+		is.close();
 
 		return htmlFileName;
 	}

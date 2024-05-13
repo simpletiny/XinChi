@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,7 +30,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品单团报表</h2>
+			<h2>损益表</h2>
 		</div>
 
 		<div class="main-container">
@@ -130,21 +129,27 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
-							<label class="l">后台成本：</label>
+							<label class="l">后台划拨：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().sys_cost"></p>
 							</div>
 						</div>
 						<div class="col-md-3">
-							<label class="l">销售费用：</label>
+							<label class="l">销售划拨：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().sale_cost"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">提成立奖：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: 0.00"></p>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
-							<label class="l">毛利：</label>
+							<label class="l">产品毛利：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().gross_profit"></p>
 							</div>
@@ -157,6 +162,20 @@
 						</div>
 					</div>
 				</div>
+				<hr />
+				<h3 style="margin-bottom: 10px">费用申请汇总</h3>
+				<div class="form-box info-form">
+					<div class="input-row clearfloat">
+						<!-- ko foreach: items -->
+						<div class="col-md-3">
+							<label class="l" data-bind="text:payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.reiSummary().get($data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -167,6 +186,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/reports/product-team-report.js"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/reports/product-team-report.js?v=1.001"></script>
 </body>
 </html>

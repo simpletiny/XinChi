@@ -61,7 +61,8 @@
 	<select id="selectDepositSummary" resultMap="BaseResultMap" parameterType="com.xinchi.bean.SupplierDepositBean">
 		SELECT
 		A.supplier_pk,
-		SUM(money) AS sum_money,
+		SUM(money) AS
+		sum_money,
 		SUM(IF(A.status = 'N', A.balance, 0)) AS balance_money,
 		SUM(IF(A.status = 'Y', A.money, 0)) AS clear_money,
 		B.supplier_name,
@@ -70,13 +71,15 @@
 		supplier_deposit A
 		LEFT JOIN
 		supplier B ON A.supplier_pk = B.pk
-		GROUP BY supplier_pk
+		GROUP BY
+		supplier_pk
 		HAVING balance_money > 0
 	</select>
 	<select id="selectSumDeposit" resultMap="BaseResultMap">
 		SELECT
 		SUM(money) AS sum_money,
-		SUM(IF(status = 'N', balance, 0)) AS balance_money,
+		SUM(IF(status = 'N', balance, 0)) AS
+		balance_money,
 		SUM(IF(status = 'Y', money, 0)) AS clear_money
 		FROM
 		supplier_deposit
@@ -323,7 +326,8 @@
 		from
 		supplier_deposit A
 		LEFT JOIN supplier B ON A.supplier_pk = B.pk
-		LEFT JOIN user_base C ON A.responsible_user=C.user_number
+		LEFT JOIN user_base C ON
+		A.responsible_user=C.user_number
 		<where>
 			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
 				and B.supplier_short_name like CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
@@ -347,7 +351,7 @@
 				and A.voucher_number like CONCAT('%', #{params.bo.voucher_number,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.responsible_user != null and params.bo.responsible_user !=''">
-				and A.responsible_user like CONCAT('%', #{params.bo.responsible_user,jdbcType=VARCHAR},'%')
+				and A.responsible_user = #{params.bo.responsible_user,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.money_to != null and params.bo.money_to !=''">
 				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}

@@ -436,6 +436,7 @@
 		SUM(IF(type='RECEIVE',money,0)) AS receive_money,
 		SUM(IF(type='PAY',money,0)) AS pay_money,
 		SUM(IF(type='RECEIVE',-money,money)) AS money,
+		A.belong_month AS belong_month,
 		B.user_name  AS product_manager_name
 		FROM
 		air_ticket_paid_detail A
@@ -443,13 +444,16 @@
 		<where>
 			and (type = 'RECEIVE' OR type = 'PAY')
 			<if test="first_month != null and first_month !=''">
-				and belong_month = #{first_month,jdbcType=VARCHAR}
+				and A.belong_month = #{first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="first_year != null and first_year !=''">
+				and LEFT(A.belong_month,4) = #{first_year,jdbcType=VARCHAR}
 			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
-				and product_manager = #{product_manager_number,jdbcType=VARCHAR}
+				and A.product_manager = #{product_manager_number,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP BY product_manager
+		GROUP BY A.product_manager,A.belong_month
 		ORDER BY money DESC
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

@@ -3,9 +3,8 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -243,6 +242,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>产品统计</a></li>
 						<li><a href="<%=basePath%>templates/order/order-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>单团核算单</a></li>
 						<li><a href="<%=basePath%>templates/product/product-profit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品利润</a></li>
+						<li><a href="<%=basePath%>templates/product/deposit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>押金查看</a></li>
 						<li><a href="<%=basePath%>templates/product/product-reconciliation.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>额外收支明细</a></li>
 					</ol></li>
@@ -284,6 +284,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/sale/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>地接往来</a></li>
 						<li><a href="<%=basePath%>templates/sale/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
 						<li><a href="<%=basePath%>templates/sale/payable-summary.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>地接款汇总</a></li>
+
 					</ol></li>
 			</s:if>
 
@@ -292,43 +293,44 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users1 fa-lg fa-fw"></i>票务操作</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/ticket-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>需求列表</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票名单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已出票名单</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-change.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航变列表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/ticket-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待出票订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order-done.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已出票订单</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-order-final.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已决算订单</a></li>
-						<li><a href="<%=basePath%>templates/ticket/deposit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航司押金</a></li>
-					</ol></li>
-			</s:if>
-
-			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
-				<li class="ticket"><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
-					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务航段</a></li>
-						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
-						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>供应商财务主体</a></li>
-						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
-						<li><a href="<%=basePath%>templates/ticket/ticket-change.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航变列表</a></li>
-
-						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
 				<li class="ticket-finance"><a href="<%=basePath%>templates/ticket/payable.jsp"><i
-						class="fa fa-users1 fa-lg fa-fw"></i>票务财务</a>
+						class="fa fa-users1 fa-lg fa-fw"></i>票务账目</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/ticket/payable.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票往来</a></li>
 						<li><a href="<%=basePath%>templates/ticket/paid.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>往来详表</a></li>
+						<li><a href="<%=basePath%>templates/ticket/deposit.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航司押金</a></li>
 						<li><a href="<%=basePath%>templates/ticket/air-received-detail.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>押金退还记录</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>押金记录</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
+						
 						<li><a href="<%=basePath%>templates/ticket/ticket-payable-summary.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>财务汇总</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>账目汇总</a></li>
+					</ol></li>
+			</s:if>
+			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('TICKET')">
+				<li class="ticket"><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-users1 fa-lg fa-fw"></i>票务管理</a>
+					<ol style="display: none;">
+						<li><a href="<%=basePath%>templates/ticket/season-ticket.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>套票管理</a></li>
+						<li><a href="<%=basePath%>templates/ticket/name-templet.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>名单模板</a></li>
+						<li><a href="<%=basePath%>templates/ticket/supplier-employee.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>供应商员工</a></li>
+						<li><a href="<%=basePath%>templates/ticket/supplier.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>机票供应商</a></li>
+						<li><a href="<%=basePath%>templates/ticket/air-leg.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>航段管理</a></li>
+
+						<%-- 						<li><a href="<%=basePath%>templates/ticket/flight-management.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>航班维护</a></li> --%>
 					</ol></li>
 			</s:if>
 			<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('ACCOUNTING')">
@@ -392,7 +394,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						<li><a href="<%=basePath%>templates/product/product-group.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品小组</a></li>
 						<li><a href="<%=basePath%>templates/sale/sale-work-report.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售工作报表</a></li>
 						<li><a href="<%=basePath%>templates/reports/product-team-report.jsp"><i
-								class="fa fa-angle-right fa-lg fa-fw"></i>产品单团报表</a></li>
+								class="fa fa-angle-right fa-lg fa-fw"></i>损益表</a></li>
 					</ol></li>
 			</s:if>
 			<li class="system"><a href="<%=basePath%>templates/system/system-guide.jsp"><i
@@ -421,7 +423,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
-	<script src="<%=basePath%>static/js/utils.js?v1.003"></script>
+	<script src="<%=basePath%>static/js/utils.js?v1.005"></script>
 	<script src="<%=basePath%>static/js/layout.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

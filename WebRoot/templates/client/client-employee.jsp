@@ -106,6 +106,12 @@
 							<div class="col-md-2">
 								<em class="small-box "> <input type="checkbox" id="chk_public"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+									<input type="checkbox" name="employee.review_flg"
+									data-bind="event:{click:function(){refresh();return true;}}" value="N"/><label>未审核</label>
+								</em>
+							</div>
+							<div class="col-md-2">
+								<em class="small-box "> 
 								</em>
 							</div>
 						</div>

@@ -1,6 +1,5 @@
 package com.xinchi.backend.ticket.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -116,9 +115,7 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 		String[] need_pks = obj.getString("need_pk").split(",");
 
-		BigDecimal ticket_price = new BigDecimal(obj.getString("ticket_price"));
-		BigDecimal ticket_special_price = new BigDecimal(obj.getString("ticket_special_price"));
-		JSONArray arr = obj.getJSONArray("legJson");
+		JSONArray arr = obj.getJSONArray("legs");
 		boolean hasLeg = null != arr && arr.size() > 0;
 
 		for (String need_pk : need_pks) {
@@ -128,8 +125,6 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 			String first_end_city = "";
 			AirTicketOrderBean airTicketOrder = new AirTicketOrderBean();
 
-			airTicketOrder.setPrice(ticket_price);
-			airTicketOrder.setSpecial_price(ticket_special_price);
 			airTicketOrder.setNeed_pk(need_pk);
 
 			int adult_cnt = atn.getAdult_cnt() == null ? 0 : atn.getAdult_cnt();

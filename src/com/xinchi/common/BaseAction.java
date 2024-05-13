@@ -3,7 +3,6 @@ package com.xinchi.common;
 import com.opensymphony.xwork2.ActionSupport;
 import com.xinchi.tools.Page;
 
-
 /**
  * Action 基类
  * 
@@ -14,6 +13,7 @@ public class BaseAction extends ActionSupport {
 	private static final long serialVersionUID = -4887936515659054262L;
 	protected String resultStr;
 	protected final static String OK = "OK";
+	protected String request_from = "";
 	protected Page page = new Page();
 
 	public String getResultStr() {
@@ -30,5 +30,13 @@ public class BaseAction extends ActionSupport {
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public String getRequest_from() {
+		return request_from;
+	}
+
+	public void setRequest_from(String request_from) {
+		this.request_from = request_from;
 	}
 }

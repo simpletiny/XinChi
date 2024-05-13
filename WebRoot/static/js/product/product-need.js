@@ -361,35 +361,35 @@ var OrderContext = function() {
 					layer.close(airLayer);
 					layer.close(index);
 					startLoadingIndicator("保存中...");
-					var json = '{"air_comment":"' + $(".air_comment").val().replace(/\n/g, ";") + '","comment":"'
-							+ $(".comment").val().replace(/\n/g, ";") + '","has_ticket":"' + hasTicket
-							+ '","team_numbers":"' + $("#txt-team-numbers").val() + '","data":[';
+
+					let json_obj = {};
+
+					json_obj.air_comment = $(".air_comment").val().replace(/\n/g, ";");
+					json_obj.comment = $(".comment").val().replace(/\n/g, ";");
+					json_obj.has_ticket = hasTicket;
+					json_obj.team_numbers = $("#txt-team-numbers").val();
+
+					let datas = new Array();
+
 					var allTrs = tbody.children();
 					for (var i = 0; i < allTrs.length; i++) {
 						var current = allTrs[i];
+						let data = {};
+						data.flight_index = i + 1;
+						data.flight_number = $(current).find("[st='flight-number']").val().trim();
+						data.start_day = $(current).find("[st='start-day']").val().trim();
+						data.start_city = $(current).find("[st='start-city']").val().trim();
+						data.end_city = $(current).find("[st='end-city']").val().trim();
 
-						var flight_index = i + 1;
-
-						var start_day = $(current).find("[st='start-day']").val();
-						var start_city = $(current).find("[st='start-city']").val();
-						var end_city = $(current).find("[st='end-city']").val();
-
-						json += '{"flight_index":"' + flight_index + '","start_day":"' + start_day + '","start_city":"'
-								+ start_city + '","end_city":"' + end_city + '"';
-
-						if (i == allTrs.length - 1) {
-							json += '}';
-						} else {
-							json += '},';
-						}
+						datas.push(data);
 					}
+					json_obj.data = datas;
 
-					json += ']}';
-					var data = "json=" + json;
+					var param = "json=" + JSON.stringify(json_obj);
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'product/createProductOrder',
-						data : data
+						data : param
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -578,9 +578,10 @@ function addRow() {
 	var index = tbody.children().length;
 	if (index == 10)
 		return;
-	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td st="index"></td><td><input st="start-day" type="number" min="1" maxlength="2" /></td><td><input st="start-city" type="text" maxlength="10" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input type="button" value="-" onclick="deleteRow(this)"></input></td></tr>');
+	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td st="index"></td><td><input st="start-day" type="number" min="1" maxlength="2" /></td><td><input st="flight-number" type="text"/></td><td><input st="start-city" type="text" maxlength="10" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input type="button" value="-" onclick="deleteRow(this)"></input></td></tr>');
 
-	$(tr).find("td[st='index']").text(index + 1);
+	$(tr).find("input[st='flight-index']").val(index + 1);
+	$(tr).find("td[st='index']").text(alphabetMap[index + 1]);
 
 	tbody.append(tr);
 }
@@ -590,9 +591,10 @@ function deleteRow(txt) {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
 	var ins = $(tbody).find("td[st='index']");
-
+	let hid_ins = $(tbody).find("input[st='flight-index']");
 	for (var i = 0; i < ins.length; i++) {
-		$(ins[i]).text(i + 1);
+		$(ins[i]).text(alphabetMap[i + 1]);
+		$(hid_ins[i]).val(i + 1);
 	}
 }
 /* 切换是否有机票信息 */

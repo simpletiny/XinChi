@@ -25,7 +25,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>机票供应商财务主体</h2>
+			<h2>机票供应商</h2>
 		</div>
 
 		<div class="main-container">
