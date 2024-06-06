@@ -35,7 +35,7 @@ public class GenerateXMLMain {
 		 * List<String> tablelist = DatabaseUtil.getTableList(); for (String table :
 		 * tablelist) { createXmlAndBOByTabName(table); }
 		 */
-		String table = "client_inout_img";
+		String table = "product_order_name_air_need";
 		createXmlAndBOByTabName(table);
 	}
 

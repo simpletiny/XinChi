@@ -452,7 +452,7 @@
 		</where>
 	</select>
 	<select id="selectWithProductByParam" parameterType="com.xinchi.bean.OrderDto" resultMap="BaseResultMap">
-		select A.team_number,A.departure_date,A.product_name,B.product_model,B.pk AS product_pk
+		select A.*,B.product_model,B.pk AS product_pk
 		from budget_order_view A LEFT
 		JOIN product B ON A.product_pk = B.pk
 		<where>

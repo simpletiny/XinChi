@@ -64,6 +64,15 @@
 		from air_ticket_need
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByPks" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_need
+		where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 	<select id="selectByProductOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
@@ -159,7 +168,6 @@
 	<select id="selectOrderAirInfoByProductOrderNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select
 		product_order_number,
-		air_leg,
 		info_index,
 		day_index,
 		from_to_city,
@@ -179,7 +187,20 @@
 		#{product_order_number,jdbcType=CHAR}
 		ORDER BY info_index
 	</select>
-
+	<select id="selectOrderAirInfoByNeedPk" resultMap="OrderAirInfoMap" parameterType="java.lang.String">
+		select
+		product_order_number,
+		info_index,
+		day_index,
+		from_to_city,
+		departure_date AS air_date,
+		ticket_client_number,
+		flight_number
+		from
+		view_order_air_info
+		where need_pk = #{need_pk,jdbcType=CHAR}
+		ORDER BY info_index
+	</select>
 	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNeedBean">
 
 		insert into air_ticket_need

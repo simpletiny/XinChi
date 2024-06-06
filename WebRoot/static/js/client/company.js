@@ -2,6 +2,7 @@ var salesLayer;
 var levelLayer;
 var commentLayer;
 var employeeLayer;
+let imgLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -505,6 +506,38 @@ var CompanyContext = function() {
 		});
 	};
 
+	self.checkOutImg = function(data) {
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'client/searchOneCompany', {
+			client_pk : data.pk
+		}, function(data) {
+			if (data.client) {
+				downloadImg(data.client,"O");
+			} else {
+				fail_msg("公司不存在！");
+			}
+			endLoadingIndicator();
+		}).fail(function(reason) {
+			console.log(reason.responseText);
+		});
+	}
+
+	self.checkInImg = function(data) {
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'client/searchOneCompany', {
+			client_pk : data.pk
+		}, function(data) {
+			if (data.client) {
+				downloadImg(data.client,"I");
+			} else {
+				fail_msg("公司不存在！");
+			}
+			endLoadingIndicator();
+		}).fail(function(reason) {
+			console.log(reason.responseText);
+		});
+	}
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 100;
@@ -559,3 +592,69 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+function downloadImg(client,type) {
+	let title = type=="O"?"外环境":"内环境";
+	
+	imgLayer = $.layer({
+		type : 1,
+		title : [title, ''],
+		maxmin : false,
+		closeBtn : [1, true],
+		shadeClose : false,
+		area : ['1000px', '330px'],
+		offset : ['', ''],
+		scrollbar : true,
+		page : {
+			dom : '#check-img'
+		},
+		end : function() {
+
+		}
+	});
+	
+	let imgs = new Array();
+	for(const e of client.client_inouts){
+		if(e.img_type===type){
+			imgs.push(e);
+		}
+	}
+	for(const e of imgs){
+		let data = {
+			fileFileName :e.img_name,
+			fileType :"CLIENT_INOUT_IMG",
+			subFolder:e.client_pk
+		};
+		showImg(data);
+	}
+}
+
+function showImg(data){
+	let img_container = $("#img-container");
+	img_container.html('');
+	let params = new URLSearchParams(data).toString();
+	fetch(`${ctx.apiurl}file/getFileStream?${params}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // 创建一个 URL 对象
+        var url = URL.createObjectURL(blob);
+        
+        
+		let img_group = $("<div></div>")
+		let img = document.createElement("img");
+		img.src = url;
+		$(img).on(
+				'click',
+				function() {
+					showBigImg(url);
+				});
+		img_group.append(img);
+		img_container.append(img_group)
+    })
+    .catch(error => console.error('Error fetching image:', error));
+
+}

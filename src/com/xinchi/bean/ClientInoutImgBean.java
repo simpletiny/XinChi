@@ -7,7 +7,7 @@ import com.xinchi.common.SupperBO;
 public class ClientInoutImgBean extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 6578320468778555389L;
 	public static String IMG_TYPE_OUT = "O";
-	public static String IMG_TYPE_IN = "i";
+	public static String IMG_TYPE_IN = "I";
 
 	private String img_name;
 	private String client_pk;

@@ -1,6 +1,6 @@
 var operateLayer;
 var passengerCheckLayer;
-var airLayer;
+var createLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -183,10 +183,10 @@ var OrderContext = function() {
 		}
 	}
 
-	self.team_numbers = ko.observableArray([]);
 	self.flight = ko.observableArray([]);
+	self.sale_orders = ko.observableArray([]);
+	// 生成订单
 	self.createOrder = function() {
-		self.team_numbers.removeAll();
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
@@ -197,7 +197,6 @@ var OrderContext = function() {
 			var product_pk = data[1];
 			var departure_date = data[6];
 			var team_numbers = new Array();
-
 			for (var i = 0; i < self.chosenOrders().length; i++) {
 				var inner_data = self.chosenOrders()[i].split(";");
 				var inner_product_pk = inner_data[1];
@@ -238,14 +237,16 @@ var OrderContext = function() {
 				type : "POST",
 				url : self.apiurl + 'product/checkSameNeedOrder',
 				data : param
-			}).success(function(str) {
-				var result = str.split(",");
-				for (var i = result.length - 1; i >= 0; i--) {
-					for (var j = 0; j < team_numbers.length; j++) {
-						if (result[i] == team_numbers[j]) {
-							result.splice(i, 1);
-							break;
-						}
+			}).success(function(data) {
+				const orders = data.sale_orders;
+				let no_orders = new Array();
+				let result = new Array();
+				for (let i = 0; i < orders.length; i++) {
+					const order = orders[i];
+					if (!team_numbers.includes(order.team_number)) {
+						result.push(order.team_number);
+					} else {
+						no_orders.push(order);
 					}
 				}
 				endLoadingIndicator();
@@ -260,96 +261,85 @@ var OrderContext = function() {
 							btn : ['一并操作', '忽略'],
 							yes : function(index) {
 								layer.close(index);
-								self.team_numbers.push(str.split(","));
-								popAirLayer(product_pk);
+								popCreateLayer(orders);
 							},
 							no : function(index) {
-								popAirLayer(product_pk);
-								self.team_numbers.push(team_numbers);
+								layer.close(index);
+								popCreateLayer(no_orders);
 							}
 						}
 					});
 				} else {
-					self.team_numbers.push(team_numbers);
-					popAirLayer(product_pk);
+					popCreateLayer(orders);
 				}
 			});
-
 		}
 	}
-
-	function popAirLayer(product_pk) {
-		if (product_pk == "undefined") {
-			airLayer = $.layer({
+	self.product_orders = ko.observableArray([]);
+	function popCreateLayer(orders) {
+		self.sale_orders(orders);
+		let url = self.apiurl + "product/searchSameProductOrderByTeamNumber";
+		let team_number = orders[0].team_number;
+		startLoadingSimpleIndicator("加载中");
+		// 检测是否已存在同质未操作产品订单
+		$.getJSON(url, {
+			team_number : team_number
+		}, function(data) {
+			self.product_orders(data.orders);
+			endLoadingIndicator();
+			createLayer = $.layer({
 				type : 1,
-				title : ['票务信息', ''],
+				title : ['销售单信息', ''],
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', '550px'],
+				area : ['900px', '550px'],
 				offset : ['', ''],
 				page : {
-					dom : '#air-ticket-edit'
+					dom : '#div-order-create'
 				},
 				end : function() {
 				}
 			});
-		} else {
-			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-				product_pk : product_pk
-			}, function(data) {
-				self.flight(data.air_tickets);
-				airLayer = $.layer({
-					type : 1,
-					title : ['票务信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '750px'],
-					offset : ['', ''],
-					page : {
-						dom : '#air-ticket-edit'
-					},
-					end : function() {
-					}
-				});
-			});
-		}
+		});
 	}
 
 	self.doCreateOrder = function(isplus) {
-		if (!$("#form-air").valid()) {
+
+		if ($("#chk-combine").is(":checked") && $("#sel-product-order").val() == "") {
+			fail_msg("请选择要合并到的订单！");
 			return;
 		}
 
-		var msg = "";
-		var hasTicket = $("#chk-has-ticket").is(":checked") ? "NO" : "YES";
-		var tbody = $("#table-ticket tbody");
-		var index = tbody.children().length;
-		if (index == 0) {
-			hasTicket = "NO";
+		// 单地接信息
+		let trs = $("#table-sale-order tbody tr");
+		let order_prop = {};
+		let sale_order_status = new Array();
+		for (let i = 0; i < trs.length; i++) {
+			let tr = $(trs[i]);
+			let team_number = tr.find("[st='team-number']").val();
+			let is_only_dijie = tr.find("[st='is-only-dijie']").is(":checked") ? "Y" : "N";
+
+			let obj = {};
+			obj.team_number = team_number;
+			obj.is_only_dijie = is_only_dijie;
+			sale_order_status.push(obj);
+		}
+		order_prop.sale_order_status = sale_order_status;
+
+		// 合并订单信息
+		let is_combine = $("#chk-combine").is(":checked") ? "Y" : "N";
+		order_prop.is_combine = is_combine;
+		if (is_combine == "Y") {
+			let product_order_number = $("#sel-product-order").val();
+			order_prop.product_order_number = product_order_number;
 		}
 
-		if (hasTicket == "YES") {
-			var allTrs = tbody.children();
-			for (var i = 0; i < allTrs.length; i++) {
-				var current = allTrs[i];
-				var start_day = $(current).find("[st='start-day']").val();
-				var start_city = $(current).find("[st='start-city']").val();
-				var end_city = $(current).find("[st='end-city']").val();
+		// 备注
+		let comment = $(".comment").val().replace(/\n/g, ";");
+		order_prop.comment = comment;
 
-				if (start_day.trim() == "" || start_city.trim() == "" || end_city.trim() == "") {
-					fail_msg("请填写必须填写的项目！");
-					return;
-				}
-
-			}
-
-			msg = "提交后不能修改，确定提交给票务吗?";
-
-		} else {
-			msg = "没有机票信息，确定要生成订单吗?";
-		}
+		const msg = "确认要生成产品订单吗？";
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -358,34 +348,11 @@ var OrderContext = function() {
 				type : 4,
 				btn : ['确认', '取消'],
 				yes : function(index) {
-					layer.close(airLayer);
+					layer.close(createLayer);
 					layer.close(index);
-					startLoadingIndicator("保存中...");
+					startLoadingIndicator("保存中");
 
-					let json_obj = {};
-
-					json_obj.air_comment = $(".air_comment").val().replace(/\n/g, ";");
-					json_obj.comment = $(".comment").val().replace(/\n/g, ";");
-					json_obj.has_ticket = hasTicket;
-					json_obj.team_numbers = $("#txt-team-numbers").val();
-
-					let datas = new Array();
-
-					var allTrs = tbody.children();
-					for (var i = 0; i < allTrs.length; i++) {
-						var current = allTrs[i];
-						let data = {};
-						data.flight_index = i + 1;
-						data.flight_number = $(current).find("[st='flight-number']").val().trim();
-						data.start_day = $(current).find("[st='start-day']").val().trim();
-						data.start_city = $(current).find("[st='start-city']").val().trim();
-						data.end_city = $(current).find("[st='end-city']").val().trim();
-
-						datas.push(data);
-					}
-					json_obj.data = datas;
-
-					var param = "json=" + JSON.stringify(json_obj);
+					var param = "json=" + JSON.stringify(order_prop);
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'product/createProductOrder',
@@ -398,16 +365,14 @@ var OrderContext = function() {
 						} else {
 							fail_msg("提交失败，请联系管理员！");
 						}
-
 					});
 				}
 			}
 		});
-
 	}
 
-	self.cancelSendAir = function() {
-		layer.close(airLayer);
+	self.cancelCreateOrder = function() {
+		layer.close(createLayer);
 	}
 
 	// start pagination
@@ -607,4 +572,17 @@ function hasTicket(chk) {
 		$("#air-comment").show();
 	}
 
+}
+
+function checkCombine() {
+	if ($("#sel-product-order option").length < 2) {
+		fail_msg("不存在同质产品订单！");
+		$("#chk-combine").prop("checked", false);
+	} else {
+		if ($("#chk-combine").is(":checked")) {
+			$("#sel-product-order").prop("disabled", false);
+		} else {
+			$("#sel-product-order").prop("disabled", true);
+		}
+	};
 }

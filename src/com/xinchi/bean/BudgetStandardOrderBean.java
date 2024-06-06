@@ -14,6 +14,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String product_pk;
 
+	private String product_model;
+
 	private String product_name;
 
 	private String departure_date;
@@ -375,5 +377,13 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setAs_adult_flg(String as_adult_flg) {
 		this.as_adult_flg = as_adult_flg;
+	}
+
+	public String getProduct_model() {
+		return product_model;
+	}
+
+	public void setProduct_model(String product_model) {
+		this.product_model = product_model;
 	}
 }

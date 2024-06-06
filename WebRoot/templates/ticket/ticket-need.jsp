@@ -108,7 +108,7 @@
 								<!-- /ko -->
 								<!-- ko if: $data.first_ticket_date!=null -->
 								<td><a href="javascript:void(0)"
-									data-bind="click:function(){$root.checkTicketPart($data.product_order_number)}">查看</a></td>
+									data-bind="click:function(){$root.checkTicketPart($data.pk)}">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count==0 -->
 								<td></td>
@@ -351,6 +351,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.004"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.005"></script>
 </body>
 </html>

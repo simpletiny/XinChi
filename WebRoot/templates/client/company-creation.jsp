@@ -295,7 +295,7 @@ h3 {
 						<div class="preview-container"></div>
 						<div class="dropzone" id="dropzoneout">
 							<span class="plus-sign">+</span>
-							<span class="upload-title">上传图片（可拖拽）</span>
+							<span class="upload-title no-select">上传图片（可拖拽）</span>
 						</div>
 					</div>
 
@@ -305,7 +305,7 @@ h3 {
 						<div class="preview-container"></div>
 						<div class="dropzone" id="dropzonein">
 							<span class="plus-sign">+</span>
-							<span class="upload-title">上传图片（可拖拽）</span>
+							<span class="upload-title no-select">上传图片（可拖拽）</span>
 						</div>
 					</div>
 				</form>

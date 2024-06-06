@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.ClientInoutImgBeanMapper">
+<mapper namespace="com.xinchi.bean.mapper.ClientInoutImgMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.ClientInoutImgBean">
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="img_name" property="img_name" jdbcType="VARCHAR" />
@@ -27,6 +27,12 @@
 		<include refid="Base_Column_List" />
 		from client_inout_img
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByClientPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from client_inout_img
+		where client_pk = #{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">

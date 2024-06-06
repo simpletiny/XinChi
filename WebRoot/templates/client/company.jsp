@@ -19,6 +19,19 @@
 .form-control {
 	height: 30px;
 }
+#img-container {
+	min-height: 230px;
+	display: flex;
+	align-items: center;
+}
+
+#img-container img {
+	margin-left: 20px;
+	border: 1px dashed #ccc;
+	width: 200px;
+	height: 200px;
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -229,8 +242,8 @@
 								<td data-bind="text: $data.market_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.talk_level"></td>
-								<td><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
-								<td><a href="javascript:void(0)" data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkOutImg">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkInImg">查看</a></td>
 								<td></td>
 								<!-- ko if:$data.relate_flg =='N' -->
 								<td></td>
@@ -342,6 +355,12 @@
 			</div>
 		</div>
 	</div>
+	<div id="check-img" style="display: none; width: 500px">
+		<div class="input-row clearfloat">
+			<div class="upload-container" id="img-container">
+			</div>
+		</div>
+	</div>
 	<div id="employee-detail" style="display: none; width: 500px; height: 400px; overflow-y: scroll">
 		<div class="input-row clearfloat">
 			<table class="table table-striped table-hover">
@@ -367,6 +386,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/company.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.004"></script>
 </body>
 </html>

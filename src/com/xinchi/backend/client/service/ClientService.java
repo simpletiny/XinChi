@@ -55,7 +55,7 @@ public interface ClientService extends BaseService {
 	public String createCompany(ClientBean client, String json);
 
 	@LogDescription(des = "修改财务主体")
-	public String updateCompany(ClientBean client);
+	public String updateCompany(ClientBean client, String json);
 
 	@LogDescription(des = "财务主体搜索")
 	public List<ClientBean> getAllCompaniesByPage(Page<ClientBean> page);

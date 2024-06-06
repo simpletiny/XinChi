@@ -252,6 +252,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users1 fa-lg fa-fw"></i>产品操作</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品需求</a></li>
+						<li><a href="<%=basePath%>templates/product/product-order-name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务向待操作名单</a></li>
+						<li><a href="<%=basePath%>templates/product/product-order-name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务向已操作名单</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品订单</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-operating.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>操作中</a></li>

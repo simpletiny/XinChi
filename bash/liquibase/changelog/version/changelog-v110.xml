@@ -24,6 +24,273 @@
 			<comment>CREATE TABLE client_inout_img</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="2" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE budget_standard_order 
+				ADD COLUMN product_model VARCHAR(6) NULL COMMENT '产品型号' AFTER as_adult_flg;
+				ALTER TABLE final_standard_order 
+				ADD COLUMN product_model VARCHAR(6) CHARACTER SET 'big5' NULL COMMENT '产品型号' AFTER sale;
+             ]]>
+			<comment>ALTER TABLE budget_standard_order,final_standard_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="3" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE OR REPLACE VIEW budget_order_view AS
+				    SELECT 
+				        A.team_number,
+				        A.product_name,
+				        '' AS product_pk,
+				        '' AS product_model,
+				        A.client_employee_pk,
+				        C.name AS client_employee_name,
+				        A.independent_flg,
+				        A.comment,
+				        A.other_cost_comment,
+				        A.other_cost,
+				        A.fy,
+				        A.special_cost,
+				        A.special_count,
+				        A.adult_cost,
+				        A.adult_count,
+				        A.receivable,
+				        A.days,
+				        A.departure_date,
+				        A.pk,
+				        A.update_user,
+				        A.create_user AS create_user_number,
+				        B.user_name AS create_user,
+				        A.confirm_flg,
+				        A.create_time,
+				        A.update_time,
+				        A.confirm_date,
+				        A.confirm_file,
+				        'N' AS standard_flg,
+				        A.product_manager AS product_manager_number,
+				        D.user_name AS product_manager,
+				        A.air_ticket_cost,
+				        A.product_cost,
+				        A.operate_flg,
+				        A.name_list,
+				        A.lock_flg,
+				        A.cancel_flg,
+				        A.name_confirm_status,
+				        A.passenger_captain,
+				        '' AS receivable_comment,
+				        '' AS treat_comment,
+				        '' AS client_name,
+				        CASE
+				            WHEN A.departure_date='' OR A.departure_date > NOW() THEN 'no'
+				            WHEN
+				                NOW() >= A.departure_date
+				                    AND DATE_ADD(A.departure_date,
+				                    INTERVAL A.days - 1 DAY) > NOW()
+				            THEN
+				                'yes'
+				            WHEN
+				                NOW() >= DATE_ADD(A.departure_date,
+				                    INTERVAL A.days - 1 DAY)
+				            THEN
+				                'back'
+				        END AS status,
+				        0 AS product_value,
+				        A.receivable_first_flg,
+				        A.do_confirm_date
+				    FROM
+				        budget_non_standard_order A
+				            LEFT JOIN
+				        user_base B ON A.create_user = B.user_number
+				            LEFT JOIN
+				        client_employee C ON A.client_employee_pk = C.pk
+				            LEFT JOIN
+				        user_base D ON A.product_manager = D.user_number 
+				    UNION ALL SELECT 
+				        A.team_number,
+				        IFNULL(A.product_name, C.name) AS product_name,
+				        A.product_pk,
+				        A.product_model,
+				        A.client_employee_pk,
+				        D.name AS client_employee_name,
+				        A.independent_flg,
+				        A.comment,
+				        A.other_cost_comment,
+				        A.other_cost,
+				        A.fy,
+				        A.special_cost,
+				        A.special_count,
+				        A.adult_cost,
+				        A.adult_count,
+				        A.receivable,
+				        A.days,
+				        A.departure_date,
+				        A.pk,
+				        A.update_user,
+				        A.create_user AS create_user_number,
+				        B.user_name AS create_user,
+				        A.confirm_flg,
+				        A.create_time,
+				        A.update_time,
+				        A.confirm_date,
+				        A.confirm_file,
+				        'Y' AS standard_flg,
+				        C.product_manager AS product_manager_number,
+				        E.user_name AS product_manager,
+				        A.air_ticket_cost,
+				        A.product_cost,
+				        A.operate_flg,
+				        A.name_list,
+				        A.lock_flg,
+				        A.cancel_flg,
+				        A.name_confirm_status,
+				        A.passenger_captain,
+				        A.receivable_comment,
+				        A.treat_comment,
+				        F.client_short_name AS client_name,
+				        CASE
+				            WHEN A.departure_date='' OR A.departure_date > NOW() THEN 'no'
+				            WHEN
+				                NOW() >= A.departure_date
+				                    AND DATE_ADD(A.departure_date,
+				                    INTERVAL A.days - 1 DAY) > NOW()
+				            THEN
+				                'yes'
+				            WHEN
+				                NOW() >= DATE_ADD(A.departure_date,
+				                    INTERVAL A.days - 1 DAY)
+				            THEN
+				                'back'
+				        END AS status,
+				        A.product_value,
+				        A.receivable_first_flg,
+				        A.do_confirm_date
+				    FROM
+				        budget_standard_order A
+				            LEFT JOIN
+				        user_base B ON A.create_user = B.user_number
+				            LEFT JOIN
+				        product C ON A.product_pk = C.pk
+				            LEFT JOIN
+				        client_employee D ON A.client_employee_pk = D.pk
+				            LEFT JOIN
+				        user_base E ON C.product_manager = E.user_number
+				            LEFT JOIN
+				        client F ON D.financial_body_pk = F.pk;
+                 ]]>
+			<comment>REPLACE VIEW budget_order_view</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="4" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_order_name (
+				  product_order_number VARCHAR(10) NULL COMMENT '产品订单号',
+				  team_number VARCHAR(10) NULL COMMENT '团号',
+				  name_pk CHAR(22) NOT NULL COMMENT '销售名单表的pk',
+				  operate_status CHAR(1) NULL DEFAULT 'N' COMMENT '操作状态：N未操作，Y已操作，D单地接',
+				  ticked CHAR(1) NULL DEFAULT 'N' COMMENT '是否出票，Y,N',
+				  ticked_time VARCHAR(15) NULL COMMENT '出票时间,timestamp',
+				  ticked_user VARCHAR(10) NULL COMMENT '出票人',
+				  ticket_cost DECIMAL(12,2) NULL COMMENT '机票费用',
+				  status CHAR(1) NULL DEFAULT 'Y' COMMENT '状态。Y正常，其他状态预留',
+				  pk CHAR(22) NOT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk),
+				  INDEX name_pk (name_pk ASC))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品订单游客信息';
+                 ]]>
+			<comment>CREATE TABLE product_order_name</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="5" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_order_name_flight_segment (
+				  ticket_index INT(11) NOT NULL COMMENT '航段',
+				  ticket_date VARCHAR(10) NOT NULL COMMENT '航班日期',
+				  ticket_number VARCHAR(10) NULL DEFAULT NULL COMMENT '航班号',
+				  from_to_time VARCHAR(20) NULL DEFAULT NULL COMMENT '抵离时间',
+				  add_day_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否隔天达',
+				  from_to_city VARCHAR(50) NULL DEFAULT NULL COMMENT '城市对',
+				  from_to_airport VARCHAR(10) NULL DEFAULT NULL COMMENT '抵离机场',
+				  terminal VARCHAR(10) NULL DEFAULT NULL COMMENT '航站楼',
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  pk CHAR(22) NOT NULL,
+				  air_comment VARCHAR(200) NULL DEFAULT NULL,
+				  need_pk CHAR(22) NULL COMMENT '票务需求pk',
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '产品订单名单航段信息表';
+                 ]]>
+			<comment>CREATE TABLE product_order_name_flight_segment</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE product_order_name_air_need (
+					  need_pk CHAR(22) NOT NULL COMMENT '票务需求pk',
+					  name_pk CHAR(22) NOT NULL COMMENT '产品订单名单pk',
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  pk CHAR(22) NOT NULL,
+					  PRIMARY KEY (pk))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '产品订单名单和票务需求对应表';
+                 ]]>
+			<comment>CREATE TABLE product_order_name_air_need</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+			CREATE OR REPLACE VIEW view_order_air_info AS
+			    SELECT 
+			        A.product_order_number,
+			        A.flight_index AS info_index,
+					A.start_day AS day_index,
+			        CONCAT(A.start_city, '-', A.end_city) AS from_to_city,
+			        B.pk AS need_pk,
+			        B.ticket_client_number,
+			        B.departure_date,
+			        A.flight_number
+			    FROM
+			        product_order_air_info A
+			            LEFT JOIN
+			        air_ticket_need B ON A.product_order_number = B.product_order_number 
+			    UNION ALL SELECT 
+			        B.product_order_number,
+			        A.ticket_index AS info_index,
+			        null AS day_index,
+			        A.from_to_city,
+			        B.pk AS need_pk,
+			        B.ticket_client_number,
+			        A.ticket_date AS departure_date,
+			        A.ticket_number
+			    FROM
+			        product_order_name_flight_segment A
+			            LEFT JOIN
+			        air_ticket_need B ON A.need_pk = B.pk;
+                 ]]>
+			<comment>ALTER VIEW view_order_air_info</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

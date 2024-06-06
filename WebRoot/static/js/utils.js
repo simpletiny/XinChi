@@ -680,3 +680,21 @@ function inputFormatTime(container) {
 		}
 	});
 }
+function showBigImg(url){
+	 const newWindow = window.open('', '_blank');
+     // 在新窗口中写入 HTML 并嵌入大图
+     newWindow.document.write(`
+         <!DOCTYPE html>
+         <html lang="en">
+         <head>
+             <meta charset="UTF-8">
+             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+             <title>Large Image</title>
+         </head>
+         <body>
+             <img src="${url}" alt="Large Image" height: auto;">
+         </body>
+         </html>
+     `);
+     newWindow.document.close();
+}

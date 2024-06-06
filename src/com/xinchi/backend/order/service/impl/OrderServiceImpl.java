@@ -107,6 +107,8 @@ public class OrderServiceImpl implements OrderService {
 
 			final_order.setProduct_pk(budget_order.getProduct_pk());
 
+			final_order.setProduct_model(budget_order.getProduct_model());
+
 			final_order.setDeparture_date(budget_order.getDeparture_date());
 
 			final_order.setDays(budget_order.getDays());

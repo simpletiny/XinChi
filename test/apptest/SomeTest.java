@@ -1,10 +1,9 @@
 package apptest;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.DateUtil;
 
 public class SomeTest {
 
@@ -14,9 +13,10 @@ public class SomeTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String b = "";
-		BigDecimal a = new BigDecimal(SimpletinyString.isEmpty(b) ? "1" : b);
-		System.out.println(a);
+		String b = "1606724208441";
+		String a = "1606724208443";
+
+		System.out.println(Long.parseLong(DateUtil.getTimeMillis("2024-06-01")) > Long.parseLong(b));
 
 	}
 }

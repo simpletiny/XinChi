@@ -71,6 +71,7 @@ public class ClientBean extends SupperBO implements Serializable {
 	private String recipient_phone1;
 	private String recipient_phone2;
 
+	private List<ClientInoutImgBean> client_inouts;
 	private List<ClientUserBean> client_users;
 	// search options
 
@@ -430,6 +431,14 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setRecipient_phone2(String recipient_phone2) {
 		this.recipient_phone2 = recipient_phone2;
+	}
+
+	public List<ClientInoutImgBean> getClient_inouts() {
+		return client_inouts;
+	}
+
+	public void setClient_inouts(List<ClientInoutImgBean> client_inouts) {
+		this.client_inouts = client_inouts;
 	}
 
 }

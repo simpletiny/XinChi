@@ -48,7 +48,6 @@ public class FileAction extends BaseAction {
 	private File file;
 
 	public String fileUpload() throws IOException {
-		System.out.println(fileContentType);
 		String ext = Utils.getFileExt(fileFileName);
 		String fileFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		File destfile = new File(fileFolder + File.separator + DBCommonUtil.genPk() + "." + ext);

@@ -45,7 +45,7 @@ public class ClientAction extends BaseAction {
 		} else {
 			client.setRelate_flg("Y");
 		}
-		resultStr = clientService.updateCompany(client);
+		resultStr = clientService.updateCompany(client, json);
 		return SUCCESS;
 	}
 

@@ -5,6 +5,7 @@
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="product_model" property="product_model" jdbcType="CHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
 		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
@@ -49,6 +50,7 @@
 		team_number,
 		client_employee_pk,
 		product_pk,
+		product_model,
 		departure_date,
 		days,
 		receivable,
@@ -112,6 +114,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk,
+			</if>
+			<if test="product_model != null">
+				product_model,
 			</if>
 			<if test="departure_date != null">
 				departure_date,
@@ -234,6 +239,9 @@
 			</if>
 			<if test="product_pk != null">
 				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				#{product_model,jdbcType=VARCHAR},
 			</if>
 			<if test="departure_date != null">
 				#{departure_date,jdbcType=VARCHAR},
@@ -361,6 +369,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				product_model = #{product_model,jdbcType=CHAR},
 			</if>
 			<if test="departure_date != null">
 				departure_date = #{departure_date,jdbcType=VARCHAR},

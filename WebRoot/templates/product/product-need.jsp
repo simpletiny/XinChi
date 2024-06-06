@@ -49,8 +49,9 @@
 	font-weight: bold;
 	font-size: 20px;
 }
-.error{
-	color:red;
+
+.error {
+	color: red;
 }
 </style>
 </head>
@@ -68,8 +69,7 @@
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { createOrder() }">生成订单</button>
-
-								<button type="submit" class="btn btn-green" data-bind="click: function() { tipSales() }">提示销售确认</button>
+								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { tipSales() }">提示销售确认</button> -->
 								<button type="submit" class="btn btn-green" data-bind="click: function() { unlockOrder() }">解锁</button>
 							</div>
 						</div>
@@ -139,7 +139,6 @@
 								<th>销售</th>
 								<th>接待特请</th>
 								<th>销售锁定</th>
-								<th>名单确认</th>
 								<th>标/非标</th>
 							</tr>
 						</thead>
@@ -147,7 +146,7 @@
 							<tr>
 								<td><input type="checkbox"
 									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status+';'+$data.standard_flg+';'+$data.departure_date+';'+$data.product_name+';'+$data.product_model}, checked: $root.chosenOrders" /></td>
-								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td> 
+								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
@@ -158,16 +157,6 @@
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
 								<td data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
-
-								<!-- ko if:$data.name_confirm_status=="1" -->
-								<td style="color: red" class="status-no" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.name_confirm_status=="2" -->
-								<td data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.name_confirm_status=="3" -->
-								<td style="color: green" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
 								<td data-bind="text: $root.standardMapping[$data.standard_flg]"></td>
 							</tr>
 						</tbody>
@@ -261,57 +250,36 @@
 			</div>
 		</div>
 	</div>
-	<!-- 机票信息 -->
-	<div id="air-ticket-edit" style="display: none; width: 800px; height: 700px; overflow: auto">
+	<!-- 生成订单 -->
+	<div id="div-order-create" style="display: none; width: 900px; height: 500px; overflow: auto">
 		<form class="form-box info-form" id="form-air">
 			<div class="input-row clearfloat">
-				<label class="col-md-2 control-label">团号</label>
-				<div class="col-md-6">
-					<p data-bind="text:team_numbers()"></p>
-					<input type="hidden" name="team_numbers" id="txt-team-numbers" data-bind="value:team_numbers()" />
-
-				</div>
-			</div>
-			<div class="input-row clearfloat" style="float:right;padding-bottom: 20px">
-				<em class="small-box"> <input type="checkbox" onclick="hasTicket(this)" id="chk-has-ticket"/><label style="font:bold;color:red">无机票</label>
-				</em>
-			</div>
-			<div class="input-row clearfloat" id="air-ticket">
 				<div class="col-md-12">
-					<table style="width: 100%" id="table-ticket">
+					<table style="width: 100%" class="table table-striped table-hover" id="table-sale-order">
 						<thead>
-							<tr class="required">
-								<th style="width: 10%">航段</th>
-								<th class="r" style="width: 6%">天次</th>
-								<th class="r" style="width: 10%">航班号</th>
-								<th class="r" style="width: 12%">起飞城市</th>
-								<th class="r" style="width: 12%">降落城市</th>
-								<th style="width: 10%"></th>
+							<tr>
+								<th>团号</th>
+								<th>出团日期</th>
+								<th>产品名称</th>
+								<th>成人</th>
+								<th>儿童</th>
+								<th>游客信息</th>
+								<th>单地接</th>
 							</tr>
 						</thead>
-						<tbody data-bind="foreach :flight()">
+						<tbody data-bind="foreach :sale_orders">
 							<tr>
-								<input type="hidden" st="flight-index" data-bind="value:$data.ticket_index" />
-								<td st="index" data-bind="text:alphabetMap[$data.ticket_index]"></td>
-								<td><input st="start-day" type="text" data-bind="value:$data.start_day" /></td>
-								<td><input st="flight-number" type="text" data-bind="value:$data.flight_number" /></td>
-								<td><input st="start-city" type="text" data-bind="value:$data.start_city"/></td>
-								<td><input st="end-city" type="text" data-bind="value:$data.end_city"/></td>
-								<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
+								<input type="hidden" st="team-number" data-bind="value:$data.team_number" />
+								<td data-bind="text:$data.team_number"></td>
+								<td data-bind="text:$data.departure_date"></td>
+								<td data-bind="text:$data.product_name"></td>
+								<td data-bind="text:$data.adult_count"></td>
+								<td data-bind="text:$data.special_count"></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
+								<td><input type="checkbox" value="Y" st="is-only-dijie"/></td>
 							</tr>
 						</tbody>
 					</table>
-					<div style="margin-top: 20px; float: right">
-						<input type="button" value="+" onclick="addRow()"></input>
-					</div>
-				</div>
-			</div>
-			<div class="input-row clearfloat" id="air-comment">
-				<div class="col-md-12">
-					<label class="l">票务要求</label>
-					<div class="ip">
-						<textarea type="text" class="ip-default air_comment" rows="5" maxlength="200" placeholder="票务需求"></textarea>
-					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
@@ -323,20 +291,28 @@
 				</div>
 			</div>
 			<div class="input-row clearfloat">
+				<div class="col-md-2">
+					<label class="l"><input type="checkbox" id="chk-combine" onchange="checkCombine()"></input>合并至订单</label>
+				</div>
+				<div class="col-md-4">
+					<select class="form-control" id="sel-product-order" disabled style="height: 34px" 
+						data-bind="options: product_orders,  optionsText: 'order_number', optionsValue: 'order_number', optionsCaption: '--请选择--'" name="option.confirm_period"></select>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
 				<div class="col-md-12" style="text-align: right">
 					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doCreateOrder();}">提交</a> <a
-						type="submit" class="btn btn-green btn-r" data-bind="click: cancelSendAir">取消</a>
+						type="submit" class="btn btn-green btn-r" data-bind="click: cancelCreateOrder">取消</a>
 				</div>
 			</div>
 		</form>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.005"></script>
 </body>
 </html>

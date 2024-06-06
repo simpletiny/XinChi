@@ -24,4 +24,8 @@ public interface AirTicketNeedDAO {
 	public AirTicketNeedBean selectByProductOrderNumber(String order_number);
 
 	public void delete(String pk);
+
+	public List<AirTicketNeedBean> selectByPks(List<String> pks);
+
+	public List<OrderAirInfoBean> selectOrderAirInfoByNeedPk(String need_pk);
 }

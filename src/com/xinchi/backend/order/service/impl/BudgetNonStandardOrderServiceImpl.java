@@ -425,7 +425,7 @@ public class BudgetNonStandardOrderServiceImpl implements BudgetNonStandardOrder
 			passenger.setTeam_number(bean.getTeam_number());
 			nameListDao.insert(passenger);
 		}
-
+		bean.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
 		bean.setPassenger_captain(passenger_captain);
 		dao.update(bean);
 		return SUCCESS;

@@ -17,11 +17,11 @@ var NeedContext = function() {
 			startLoadingIndicator("加载中...");
 			var param = "";
 			for (var i = 0; i < self.chosenNeeds().length; i++) {
-				param += "product_order_numbers=" + self.chosenNeeds()[i].split(";")[1] + "&";
+				param += "need_pks=" + self.chosenNeeds()[i].split(";")[0] + "&";
 			}
 
 			param = param.RTrim("&");
-			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumbers', param, function(data) {
+			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByNeedPks', param, function(data) {
 				endLoadingIndicator();
 				if (data.commonResult.is_done == false) {
 					fail_msg(data.commonResult.msg);
@@ -66,7 +66,7 @@ var NeedContext = function() {
 
 			var old_leg = $(allLegTxt[i]).parent().prev().prev().text().trim();
 
-			if (old_leg != v)
+			if (old_leg != v.replace(/-/, ''))
 				isSame = false;
 		}
 
@@ -178,12 +178,11 @@ var NeedContext = function() {
 	self.airTickets = ko.observableArray([]);
 	self.airBase = ko.observable([]);
 	// 查看航段信息
-	self.checkTicketPart = function(order_number) {
+	self.checkTicketPart = function(need_pk) {
 		self.airTickets.removeAll();
-		console.log(order_number);
 		startLoadingIndicator("加载中...");
-		$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
-			product_order_number : order_number
+		$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByAirNeedPk', {
+			need_pk : need_pk
 		}, function(data) {
 			self.airTickets(data.order_air_infos);
 			endLoadingIndicator();
@@ -209,13 +208,13 @@ var NeedContext = function() {
 	self.checkPassengers = function(need_pk) {
 		self.passengers.removeAll();
 		startLoadingIndicator("加载中...");
-		var url = "order/selectSaleOrderNameListByAirNeedPk";
+		var url = "product/selectProductOrderNameByAirNeedPk";
 
 		$.getJSON(self.apiurl + url, {
-			need_pk : need_pk
+			air_need_pk : need_pk
 		}, function(data) {
 
-			self.passengers(data.passengers);
+			self.passengers(data.name_list);
 			endLoadingIndicator();
 			passengerCheckLayer = $.layer({
 				type : 1,
@@ -387,7 +386,7 @@ var NeedContext = function() {
 	self.refreshPage1 = function() {
 		self.refreshAirLeg();
 	};
-	// end pagination client
+	// end pagination air leg
 
 	/**
 	 * 选择套票

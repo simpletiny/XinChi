@@ -9,13 +9,17 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductOrderBean;
+import com.xinchi.bean.ProductOrderNameBean;
+import com.xinchi.bean.ProductOrderNameFlightSegmentBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -123,6 +127,67 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private OrderService orderService;
+
+	public String searchSameProductOrderByTeamNumber() {
+		ProductOrderBean option = new ProductOrderBean();
+		OrderDto sale_order = orderService.selectByTeamNumber(team_number);
+		option.setProduct_name(sale_order.getProduct_name());
+		option.setDeparture_date(sale_order.getDeparture_date());
+		option.setProduct_model(sale_order.getProduct_model());
+		UserSessionBean user = SimpletinyUser.user();
+		if (!SimpletinyUser.isAdmin()) {
+			option.setProduct_manager_number(user.getUser_number());
+		}
+		orders = service.selectByParam(option);
+		return SUCCESS;
+	}
+
+	private List<ProductOrderNameBean> name_list;
+	private ProductOrderNameBean name_option;
+
+	public String searchProductOrderNameByPage() {
+		UserSessionBean user = SimpletinyUser.user();
+		if (!SimpletinyUser.isAdmin()) {
+			name_option.setProduct_manager_number(user.getUser_number());
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("bo", name_option);
+		page.setParams(params);
+
+		name_list = service.searchProductOrderNameByPage(page);
+		return SUCCESS;
+	}
+
+	/**
+	 * 发送票务需求
+	 * 
+	 * @return
+	 */
+	public String sendAirTicketNeed() {
+		resultStr = service.sendAirTicketNeed(json);
+		return SUCCESS;
+	}
+
+	private String name_pk;
+
+	private Map<String, List<ProductOrderNameFlightSegmentBean>> flight_segments;
+
+	public String searchAirNeedByNamePk() {
+		flight_segments = service.searchAirNeedByNamePk(name_pk);
+		return SUCCESS;
+	}
+
+	private String air_need_pk;
+
+	public String selectProductOrderNameByAirNeedPk() {
+		name_list = service.selectProductOrderNameByAirNeedPk(air_need_pk);
+		return SUCCESS;
+	}
+
 	public String getJson() {
 		return json;
 	}
@@ -201,6 +266,46 @@ public class ProductOrderAction extends BaseAction {
 
 	public void setTicket_infos(List<AirTicketNameListBean> ticket_infos) {
 		this.ticket_infos = ticket_infos;
+	}
+
+	public List<ProductOrderNameBean> getName_list() {
+		return name_list;
+	}
+
+	public void setName_list(List<ProductOrderNameBean> name_list) {
+		this.name_list = name_list;
+	}
+
+	public ProductOrderNameBean getName_option() {
+		return name_option;
+	}
+
+	public void setName_option(ProductOrderNameBean name_option) {
+		this.name_option = name_option;
+	}
+
+	public String getName_pk() {
+		return name_pk;
+	}
+
+	public void setName_pk(String name_pk) {
+		this.name_pk = name_pk;
+	}
+
+	public Map<String, List<ProductOrderNameFlightSegmentBean>> getFlight_segments() {
+		return flight_segments;
+	}
+
+	public void setFlight_segments(Map<String, List<ProductOrderNameFlightSegmentBean>> flight_segments) {
+		this.flight_segments = flight_segments;
+	}
+
+	public String getAir_need_pk() {
+		return air_need_pk;
+	}
+
+	public void setAir_need_pk(String air_need_pk) {
+		this.air_need_pk = air_need_pk;
 	}
 
 }

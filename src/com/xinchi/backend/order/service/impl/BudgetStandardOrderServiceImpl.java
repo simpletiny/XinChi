@@ -239,6 +239,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 		ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
 		bean.setProduct_name(product.getName());
+		bean.setProduct_model(product.getProduct_model());
 		String departureDate = bean.getDeparture_date();
 		int days = bean.getDays();
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
@@ -365,7 +366,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setAs_adult(as_adult);
 			nameListDao.insert(passenger);
 		}
-
+		bean.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
 		bean.setPassenger_captain(passenger_captain);
 		bean.setConfirm_flg("Y");
 		bean.setDo_confirm_date(DateUtil.today());

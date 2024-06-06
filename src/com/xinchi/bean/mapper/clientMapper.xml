@@ -53,12 +53,23 @@
 	</resultMap>
 
 	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientBean">
-		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean"
-			select="selectClientUserByClientPk">
+		<collection column="pk" property="client_users" ofType="com.xinchi.bean.ClientUserBean" select="selectClientUserByClientPk">
 			<result column="client_pk" property="client_pk" jdbcType="CHAR" />
 			<result column="user_pk" property="user_pk" jdbcType="CHAR" />
 			<result column="user_name" property="user_name" jdbcType="VACHAR" />
 			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<resultMap id="WithInoutResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientBean">
+		<collection column="pk" property="client_inouts" ofType="com.xinchi.bean.ClientInoutImgBean" select="selectInoutImgByClientPk">
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="img_name" property="img_name" jdbcType="VARCHAR" />
+			<result column="img_type" property="img_type" jdbcType="CHAR" />
+			<result column="client_pk" property="client_pk" jdbcType="CHAR" />
 			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
@@ -114,7 +125,7 @@
 		recipient_phone1,
 		recipient_phone2
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectByPrimaryKey" resultMap="WithInoutResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from client
@@ -527,7 +538,8 @@
 		A.recipient_phone2,
 		GROUP_CONCAT(B.user_pk) AS sales
 		from client A LEFT JOIN
-		client_user B ON A.pk = B.client_pk
+		client_user B ON A.pk =
+		B.client_pk
 		<where>
 			<if test="sales != null">
 				and B.user_pk = #{sales,jdbcType=VARCHAR}
@@ -834,8 +846,7 @@
 		</where>
 		ORDER BY address DESC
 	</select>
-	<select id="selectClientUserByClientPk" parameterType="java.lang.String"
-		resultType="com.xinchi.bean.ClientUserBean">
+	<select id="selectClientUserByClientPk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientUserBean">
 		select
 		A.client_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
 		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user
@@ -843,6 +854,20 @@
 		JOIN user_base B ON
 		A.user_pk= B.pk
 		where A.client_pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<select id="selectInoutImgByClientPk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientInoutImgBean">
+		select
+		pk,
+		img_name,
+		client_pk,
+		img_type,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+		from client_inout_img
+		where client_pk = #{pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectTodayPoint" parameterType="java.lang.String" resultMap="DayPointMap">

@@ -87,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
 					clientInoutImgDao.insert(inout);
 
 					// 保存文件
-					FileUtil.saveFile(outImg, FileFolder.CLIENT_INOUT_IMG.value());
+					FileUtil.saveFile(outImg, FileFolder.CLIENT_INOUT_IMG.value(), client_pk);
 				}
 			}
 			JSONArray inImgs = imgs.getJSONArray("inImgs");
@@ -101,7 +101,7 @@ public class ClientServiceImpl implements ClientService {
 					clientInoutImgDao.insert(inout);
 
 					// 保存文件
-					FileUtil.saveFile(inImg, FileFolder.CLIENT_INOUT_IMG.value());
+					FileUtil.saveFile(inImg, FileFolder.CLIENT_INOUT_IMG.value(), client_pk);
 				}
 			}
 
@@ -169,7 +169,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public String updateCompany(ClientBean client) {
+	public String updateCompany(ClientBean client, String json) {
 		ClientBean options = new ClientBean();
 		UserSessionBean user = SimpletinyUser.user();
 		// options.setSales(client.getSales());
@@ -188,6 +188,69 @@ public class ClientServiceImpl implements ClientService {
 		}
 
 		dao.update(client);
+
+		List<ClientInoutImgBean> inouts = clientInoutImgDao.selectByClientPk(client.getPk());
+		// 记录内环境外环境图片
+		if (!SimpletinyString.isEmpty(json)) {
+			JSONObject imgs = JSONObject.fromObject(json);
+			JSONArray outImgs = imgs.getJSONArray("outImgs");
+			if (null != outImgs && outImgs.size() > 0) {
+				for (int i = 0; i < outImgs.size(); i++) {
+					String outImg = outImgs.getString(i);
+					boolean is_change = true;
+					for (int j = inouts.size() - 1; j >= 0; j--) {
+						if (inouts.get(j).getImg_name().equals(outImg)) {
+							inouts.remove(j);
+							is_change = false;
+							break;
+						}
+					}
+					if (is_change) {
+						ClientInoutImgBean inout = new ClientInoutImgBean();
+						inout.setClient_pk(client.getPk());
+						inout.setImg_name(outImg);
+						inout.setImg_type(ClientInoutImgBean.IMG_TYPE_OUT);
+						clientInoutImgDao.insert(inout);
+						// 保存文件
+						FileUtil.saveFile(outImg, FileFolder.CLIENT_INOUT_IMG.value(), client.getPk());
+					}
+				}
+			}
+			JSONArray inImgs = imgs.getJSONArray("inImgs");
+			if (null != inImgs && inImgs.size() > 0) {
+				for (int i = 0; i < inImgs.size(); i++) {
+					String inImg = inImgs.getString(i);
+					boolean is_change = true;
+					for (int j = inouts.size() - 1; j >= 0; j--) {
+						if (inouts.get(j).getImg_name().equals(inImg)) {
+							inouts.remove(j);
+							is_change = false;
+							break;
+						}
+					}
+					if (is_change) {
+						ClientInoutImgBean inout = new ClientInoutImgBean();
+						inout.setClient_pk(client.getPk());
+						inout.setImg_name(inImg);
+						inout.setImg_type(ClientInoutImgBean.IMG_TYPE_IN);
+						clientInoutImgDao.insert(inout);
+
+						// 保存文件
+						FileUtil.saveFile(inImg, FileFolder.CLIENT_INOUT_IMG.value(), client.getPk());
+					}
+				}
+			}
+		}
+
+		// 删除不存在的图片
+
+		for (int j = inouts.size() - 1; j >= 0; j--) {
+			ClientInoutImgBean inout = inouts.get(j);
+			String img_name = inout.getImg_name();
+			FileUtil.deleteFile(img_name, FileFolder.CLIENT_INOUT_IMG.value(), client.getPk());
+
+			clientInoutImgDao.delete(inout.getPk());
+		}
 		return SUCCESS;
 	}
 

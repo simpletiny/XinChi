@@ -181,8 +181,9 @@
 		<!-- 产品需求操作 start -->
 		<!-- 检查是否还有同团期同产品的订单 -->
 		<action name="checkSameNeedOrder" class="productNeedAction" method="checkSameNeedOrder">
-			<result name="success" type="str">
-				resultStr
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 		<!-- 产品需求操作 end -->
@@ -238,6 +239,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 搜索产品订单名单 -->
+		<action name="selectProductOrderNameByAirNeedPk" class="productOrderAction" method="selectProductOrderNameByAirNeedPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 
 		<action name="searchProductSuppliersByPk" class="productOrderOperationAction" method="searchProductSuppliersByPk">
 			<result name="success" type="json"></result>
@@ -251,7 +260,7 @@
 		</action>
 
 
-		<!-- 产品订单操作 start -->
+		<!-- 产品订单 start -->
 		<action name="createProductOrder" class="productOrderAction" method="createProductOrder">
 			<result name="success" type="str">
 				resultStr
@@ -264,8 +273,33 @@
 				resultStr
 			</result>
 		</action>
-
-		<!-- 产品订单操作 end -->
+		<action name="searchSameProductOrderByTeamNumber" class="productOrderAction" method="searchSameProductOrderByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 搜索产品订单名单 -->
+		<action name="searchProductOrderNameByPage" class="productOrderAction" method="searchProductOrderNameByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 发送票务需求 -->
+		<action name="sendAirTicketNeed" class="productOrderAction" method="sendAirTicketNeed">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 根据名单pk搜索发送的票务需求 -->
+		<action name="searchAirNeedByNamePk" class="productOrderAction" method="searchAirNeedByNamePk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 产品订单 end -->
 
 
 		<!-- 生成产品操作 -->

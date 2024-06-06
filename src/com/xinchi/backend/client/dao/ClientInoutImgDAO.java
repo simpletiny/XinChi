@@ -13,4 +13,8 @@ public interface ClientInoutImgDAO {
 	public void update(ClientInoutImgBean bean);
 
 	public List<ClientInoutImgBean> selectByParam(ClientInoutImgBean bean);
+
+	public List<ClientInoutImgBean> selectByClientPk(String pk);
+
+	public void delete(String pk);
 }

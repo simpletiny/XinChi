@@ -10,6 +10,62 @@ String key = request.getParameter("key");
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" href="<%=basePath%>static/css/dropzone.css" type="text/css" />
+<link rel="stylesheet" href="<%=basePath%>static/css/upload.css" type="text/css" />
+<style>
+h3 {
+	padding-left: 20px !important;
+}
+
+.preview-container {
+	min-height: 230px;
+	display: flex;
+	align-items: center;
+}
+
+.preview-container img {
+	margin-left: 20px;
+	border: 1px dashed #ccc;
+	width: 200px;
+	height: 200px;
+}
+
+.plus-sign {
+	display:inline-block;
+	font-size: 3em; /* 加号的大小 */
+	color: #000; /* 加号的颜色 */
+}
+.upload-title{
+	width:100%;	
+	font-size: 16px;
+}
+.upload-container {
+	width: 100%;
+	display: flex;
+}
+
+.dropzone {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	height: 230px;
+	width: 200px;
+	margin-left: 20px;
+	margin-top: 20px;
+	border: 2px dashed #ccc;
+	gap:5px;
+	flex-direction: column;
+	text-align:center;
+}
+
+.no-select {
+	user-select: none; /* 禁止选择 */
+	-webkit-user-select: none; /* 针对Safari和Chrome的前缀 */
+	-moz-user-select: none; /* 针对Firefox的前缀 */
+	-ms-user-select: none; /* 针对IE和Edge的前缀 */
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -223,6 +279,26 @@ String key = request.getParameter("key");
 							</div>
 						</div>
 					</div>
+					
+					<hr noshade color="#0066cc" />
+					<h3>外环境</h3>
+					<div class="upload-container " id="out-container">
+						<div class="preview-container"></div>
+						<div class="dropzone" id="dropzoneout">
+							<span class="plus-sign">+</span>
+							<span class="upload-title no-select">上传图片（可拖拽）</span>
+						</div>
+					</div>
+
+					<hr noshade color="#0066cc" />
+					<h3>内环境</h3>
+					<div class="upload-container" id="in-container">
+						<div class="preview-container"></div>
+						<div class="dropzone" id="dropzonein">
+							<span class="plus-sign">+</span>
+							<span class="upload-title no-select">上传图片（可拖拽）</span>
+						</div>
+					</div>
 				</form>
 
 				<div align="right">
@@ -276,13 +352,18 @@ String key = request.getParameter("key");
 			</div>
 		</div>
 	</div>
+	<script type="text/template" id="tpl">
+        <div class="dz-preview dz-file-preview">
+        </div>
+    </script>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
+	<script src="<%=basePath%>static/vendor/dropzone.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.003"></script>
 </body>
 </html>

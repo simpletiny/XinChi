@@ -1,10 +1,14 @@
 package com.xinchi.backend.product.service.impl;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,33 +17,34 @@ import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
 import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
-import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductNeedDAO;
 import com.xinchi.backend.product.dao.ProductOrderAirInfoDAO;
 import com.xinchi.backend.product.dao.ProductOrderDAO;
+import com.xinchi.backend.product.dao.ProductOrderNameAirNeedDAO;
+import com.xinchi.backend.product.dao.ProductOrderNameDAO;
+import com.xinchi.backend.product.dao.ProductOrderNameFlightSegmentDAO;
 import com.xinchi.backend.product.dao.ProductOrderTeamNumberDAO;
 import com.xinchi.backend.product.service.ProductOrderService;
 import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.util.service.NumberService;
-import com.xinchi.bean.AirNeedTeamNumberBean;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
-import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductOrderAirInfoBean;
 import com.xinchi.bean.ProductOrderBean;
+import com.xinchi.bean.ProductOrderNameAirNeedBean;
+import com.xinchi.bean.ProductOrderNameBean;
+import com.xinchi.bean.ProductOrderNameFlightSegmentBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
-import com.xinchi.common.UserSessionBean;
-import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
 
 import net.sf.json.JSONArray;
@@ -86,141 +91,117 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	private NumberService numberService;
 
 	@Autowired
-	private ProductDAO productDao;
+	private ProductOrderNameDAO productOrderNameDao;
 
 	@Override
 	public String createProductOrder(String json) {
 
 		JSONObject jsonObj = JSONObject.fromObject(json);
-
-		String air_comment = jsonObj.getString("air_comment");
 		String comment = jsonObj.getString("comment");
-		String team_numbers = jsonObj.getString("team_numbers");
-		String has_ticket = jsonObj.getString("has_ticket");
+
+		String isCombine = jsonObj.getString("is_combine");
+		JSONArray sale_order_status = jsonObj.getJSONArray("sale_order_status");
+
+		List<String> team_numbers = new ArrayList<>();
+
+		Map<String, String> t_d = new HashMap<>();
+		for (int i = 0; i < sale_order_status.size(); i++) {
+			JSONObject sale_obj = sale_order_status.getJSONObject(i);
+
+			String team_number = sale_obj.getString("team_number");
+			String is_only_dijie = sale_obj.getString("is_only_dijie");
+
+			team_numbers.add(team_number);
+
+			t_d.put(team_number, is_only_dijie);
+		}
 
 		// 生成产品订单
-		String product_order_number = numberService.generateProductOrderNumber();
-
-		ProductOrderBean productOrder = new ProductOrderBean();
-		productOrder.setOrder_number(product_order_number);
-
-		String[] ts = team_numbers.split(",");
-
-		if (ts.length > 1) {
-			productOrder.setSingle_flg("N");
-		}
-		List<OrderDto> orders = orderDao.selectByTeamNumbers(Arrays.asList(ts));
+		String product_order_number = "";
+		// 如果合并订单
+		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
 		int adult_count = 0;
 		int special_count = 0;
-
-		OrderDto o = orders.get(0);
-		int days = o.getDays();
-		String departure_date = o.getDeparture_date();
-		String product_name = o.getProduct_name();
-		String product_model = "";
-		String product_manager_number = o.getProduct_manager_number();
-		String passenger_captain = o.getPassenger_captain();
-		String standard_flg = o.getStandard_flg();
-
-		String product_pk = o.getProduct_pk();
-		if (!SimpletinyString.isEmpty(product_pk)) {
-			ProductBean product = productDao.selectByPrimaryKey(product_pk);
-			product_model = product.getProduct_model();
-		}
 
 		for (OrderDto order : orders) {
 			adult_count += order.getAdult_count();
 			special_count += order.getSpecial_count() == null ? 0 : order.getSpecial_count();
 		}
 
-		productOrder.setDays(days);
-		productOrder.setAdult_count(adult_count);
-		productOrder.setSpecial_count(special_count);
-		productOrder.setDeparture_date(departure_date);
-		productOrder.setProduct_name(product_name);
-		productOrder.setProduct_model(product_model);
-		productOrder.setProduct_manager_number(product_manager_number);
-		productOrder.setPassenger_captain(passenger_captain);
-		productOrder.setProduct_pk(product_pk);
+		// 如果是合并订单
+		if (isCombine.equals("Y")) {
+			product_order_number = jsonObj.getString("product_order_number");
+			ProductOrderBean product_order = dao.selectByOrderNumber(product_order_number);
 
-		productOrder.setAir_comment(air_comment);
-		productOrder.setComment(comment);
+			product_order.setSingle_flg("N");
+			String combine_comment = StringUtils.left(product_order.getComment() + ";" + comment, 200);
+			product_order.setComment(combine_comment);
+			product_order.setAdult_count(product_order.getAdult_count() + adult_count);
+			product_order.setSpecial_count(product_order.getSpecial_count() + special_count);
 
-		productOrder.setStandard_flg(standard_flg);
+			// 更新产品订单信息
+			dao.update(product_order);
+		}
+		// 如果是新生成订单
+		else {
+			// 生成产品订单
+			product_order_number = numberService.generateProductOrderNumber();
+			ProductOrderBean productOrder = new ProductOrderBean();
+			productOrder.setOrder_number(product_order_number);
 
-		dao.insert(productOrder);
-
-		String first_from_to = "";
-		int fly_day = 0;
-
-		JSONArray arr = jsonObj.getJSONArray("data");
-
-		for (int i = 0; i < arr.size(); i++) {
-			JSONObject obj = arr.getJSONObject(i);
-
-			int flight_index = obj.getInt("flight_index");
-
-			String flight_number = obj.getString("flight_number");
-
-			int start_day = obj.getInt("start_day");
-			String start_city = obj.getString("start_city");
-			String end_city = obj.getString("end_city");
-
-			if (SimpletinyString.isEmpty(first_from_to) && flight_index == 1) {
-				first_from_to += start_city + "-" + end_city;
-				fly_day = start_day;
+			// 是否为合单
+			if (sale_order_status.size() > 1) {
+				productOrder.setSingle_flg("N");
 			}
 
-			ProductOrderAirInfoBean info = new ProductOrderAirInfoBean();
+			OrderDto o = orders.get(0);
+			int days = o.getDays();
+			String departure_date = o.getDeparture_date();
+			String product_name = o.getProduct_name();
+			String product_model = o.getProduct_model();
+			String product_manager_number = o.getProduct_manager_number();
+			String passenger_captain = o.getPassenger_captain();
+			String standard_flg = o.getStandard_flg();
+			String product_pk = o.getProduct_pk();
 
-			info.setFlight_number(flight_number);
-			info.setTicket_date(DateUtil.addDate(departure_date, start_day - 1));
-			info.setProduct_order_number(product_order_number);
-			info.setFlight_index(flight_index);
-			info.setStart_day(start_day);
-			info.setStart_city(start_city);
-			info.setEnd_city(end_city);
+			productOrder.setDays(days);
+			productOrder.setAdult_count(adult_count);
+			productOrder.setSpecial_count(special_count);
+			productOrder.setDeparture_date(departure_date);
+			productOrder.setProduct_name(product_name);
+			productOrder.setProduct_model(product_model);
+			productOrder.setProduct_manager_number(product_manager_number);
+			productOrder.setPassenger_captain(passenger_captain);
+			productOrder.setProduct_pk(product_pk);
 
-			airInfoDao.insert(info);
+			productOrder.setComment(comment);
+
+			productOrder.setStandard_flg(standard_flg);
+
+			dao.insert(productOrder);
 		}
+		// 生成产品订单名单信息
+		for (String team_number : t_d.keySet()) {
+			String only_dijie = t_d.get(team_number);
 
-		// 如果有票务信息生成一条票务需求数据
-		if (has_ticket.equals("YES")) {
+			List<SaleOrderNameListBean> names = orderNameListDao.selectByTeamNumber(team_number);
 
-			AirTicketNeedBean atn = new AirTicketNeedBean();
+			for (SaleOrderNameListBean name : names) {
+				ProductOrderNameBean p_name = new ProductOrderNameBean();
+				p_name.setName_pk(name.getPk());
+				p_name.setProduct_order_number(product_order_number);
+				p_name.setTeam_number(team_number);
+				if (only_dijie.equals("Y")) {
+					p_name.setOperate_status("D");
+				}
 
-			String first_ticket_date = "";
-			String ticket_client_number = "";
-
-			atn.setPassenger_captain(passenger_captain);
-			atn.setComment(air_comment);
-			atn.setProduct_name(product_name);
-			atn.setDeparture_date(departure_date);
-			atn.setAdult_cnt(adult_count);
-			atn.setSpecial_cnt(special_count);
-			atn.setFirst_from_to(first_from_to);
-			atn.setProduct_order_number(product_order_number);
-
-			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-			ticket_client_number = sessionBean.getUser_number();
-
-			first_ticket_date = DateUtil.addDate(departure_date, fly_day - 1);
-			atn.setTicket_client_number(ticket_client_number);
-			atn.setFirst_ticket_date(first_ticket_date);
-
-			String need_pk = airTicketNeedDao.insert(atn);
-			for (String team_number : ts) {
-				// 生成团号和票务需求对应关系表
-				AirNeedTeamNumberBean ant = new AirNeedTeamNumberBean();
-				ant.setNeed_pk(need_pk);
-				ant.setTeam_number(team_number);
-				airNeedTeamNumberDao.insert(ant);
-
+				productOrderNameDao.insert(p_name);
 			}
 		}
-		for (String team_number : ts) {
-			// 生成产品订单订单号和团号对应关系表
+
+		// 生成产品订单订单号和团号对应关系表
+		for (String team_number : team_numbers) {
+
 			ProductOrderTeamNumberBean aoatn = new ProductOrderTeamNumberBean();
 
 			aoatn.setProduct_order_number(product_order_number);
@@ -229,24 +210,17 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		}
 		// 更新销售订单操作标识
 		for (OrderDto order : orders) {
-
 			if (order.getStandard_flg().equals("Y")) {
 				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
 				bsOrder.setPk(order.getPk());
 				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
 						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
-				if (has_ticket.equals("NO")) {
-					bsOrder.setAir_ticket_cost(BigDecimal.ZERO);
-				}
 				bsoDao.update(bsOrder);
 			} else {
 				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
 				bnsOrder.setPk(order.getPk());
 				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
 						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
-				if (has_ticket.equals("NO")) {
-					bnsOrder.setAir_ticket_cost(BigDecimal.ZERO);
-				}
 				bnsoDao.update(bnsOrder);
 			}
 		}
@@ -435,4 +409,158 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		return airTicketNameListDao.selectWithInfoByTeamNumbers(team_numbers);
 	}
 
+	@Override
+	public List<ProductOrderBean> selectByParam(ProductOrderBean option) {
+		return dao.selectByParam(option);
+	}
+
+	@Override
+	public List<ProductOrderNameBean> searchProductOrderNameByPage(Page<ProductOrderNameBean> page) {
+		return productOrderNameDao.selectByPage(page);
+	}
+
+	@Autowired
+	private ProductOrderNameFlightSegmentDAO productOrderNameFlightSegmentDao;
+
+	@Autowired
+	private ProductOrderNameAirNeedDAO productOrderNameAirNeedDao;
+
+	@Override
+	public String sendAirTicketNeed(String json) {
+		JSONObject jsonObj = JSONObject.fromObject(json);
+		String has_ticket = jsonObj.getString("has_ticket");
+		List<String> name_pks = new ArrayList<String>();
+		JSONArray json_name_pks = jsonObj.getJSONArray("name_pks");
+		for (int i = 0; i < json_name_pks.size(); i++) {
+			name_pks.add(json_name_pks.getString(i));
+		}
+		List<ProductOrderNameBean> names = productOrderNameDao.selectByPks(name_pks);
+		ProductOrderNameBean captain = names.get(0);
+		// 如果有票务信息，则发送票务需求
+		if (has_ticket.equals("YES")) {
+			String air_comment = jsonObj.getString("air_comment");
+
+			String first_from_to = "";
+			int fly_day = 0;
+
+			JSONArray data = jsonObj.getJSONArray("data");
+
+			for (int i = 0; i < data.size(); i++) {
+				JSONObject obj = data.getJSONObject(i);
+				int flight_index = obj.getInt("flight_index");
+				int start_day = obj.getInt("start_day");
+				String from_to_city = obj.getString("from_to_city");
+
+				if (SimpletinyString.isEmpty(first_from_to) && flight_index == 1) {
+					first_from_to += from_to_city;
+					fly_day = start_day;
+				}
+			}
+			int adult_count = 0;
+			int special_count = 0;
+			for (ProductOrderNameBean name : names) {
+				if (isAdult(name)) {
+					adult_count++;
+				} else {
+					special_count++;
+				}
+			}
+
+			// 保存票务需求
+			AirTicketNeedBean atn = new AirTicketNeedBean();
+			String first_ticket_date = "";
+			String ticket_client_number = "";
+
+			atn.setPassenger_captain(captain.getName());
+			atn.setComment(air_comment);
+			atn.setProduct_name(captain.getProduct_name());
+			atn.setDeparture_date(captain.getDeparture_date());
+			atn.setAdult_cnt(adult_count);
+			atn.setSpecial_cnt(special_count);
+			atn.setFirst_from_to(first_from_to);
+			atn.setProduct_order_number(captain.getProduct_order_number());
+			ticket_client_number = captain.getProduct_manager_number();
+
+			first_ticket_date = DateUtil.addDate(captain.getDeparture_date(), fly_day - 1);
+			atn.setTicket_client_number(ticket_client_number);
+			atn.setFirst_ticket_date(first_ticket_date);
+			String need_pk = airTicketNeedDao.insert(atn);
+
+			// 保存产品订单名单航段信息
+			for (int i = 0; i < data.size(); i++) {
+				JSONObject obj = data.getJSONObject(i);
+
+				int flight_index = obj.getInt("flight_index");
+				String flight_number = obj.getString("flight_number");
+				int start_day = obj.getInt("start_day");
+				String from_to_city = obj.getString("from_to_city");
+
+				ProductOrderNameFlightSegmentBean flight = new ProductOrderNameFlightSegmentBean();
+
+				flight.setTicket_index(flight_index);
+				flight.setTicket_date(DateUtil.addDate(captain.getDeparture_date(), start_day - 1));
+				flight.setFrom_to_city(from_to_city);
+				flight.setTicket_number(flight_number);
+				flight.setNeed_pk(need_pk);
+				flight.setAir_comment(air_comment);
+				productOrderNameFlightSegmentDao.insert(flight);
+			}
+
+			// 更新名单状态
+			for (ProductOrderNameBean name : names) {
+				// 保存名单和需求对应关系
+				ProductOrderNameAirNeedBean name_need = new ProductOrderNameAirNeedBean();
+				name_need.setName_pk(name.getPk());
+				name_need.setNeed_pk(need_pk);
+				productOrderNameAirNeedDao.insert(name_need);
+				// 更新名单操作信息
+				name.setOperate_status("Y");
+				productOrderNameDao.update(name);
+			}
+		}
+		// 如果没有票务需求，则标记名单为单地接
+		else {
+			for (ProductOrderNameBean name : names) {
+				name.setOperate_status("D");
+				productOrderNameDao.update(name);
+			}
+		}
+		return SUCCESS;
+	}
+
+	private boolean isAdult(ProductOrderNameBean name) {
+		if (name.getId_type().equals("P")) {
+			return true;
+		} else if (name.getId_type().equals("I")) {
+			String birthDateString = name.getId().substring(6, 14);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+			LocalDate birthDate = LocalDate.parse(birthDateString, formatter);
+
+			DateTimeFormatter checkDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate checkDate = LocalDate.parse(name.getDeparture_date(), checkDateFormatter);
+			// 计算年龄
+			int age = Period.between(birthDate, checkDate).getYears();
+			return age >= 18;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public Map<String, List<ProductOrderNameFlightSegmentBean>> searchAirNeedByNamePk(String name_pk) {
+		List<ProductOrderNameAirNeedBean> nans = productOrderNameAirNeedDao.selectByNamePk(name_pk);
+		Map<String, List<ProductOrderNameFlightSegmentBean>> result = new HashMap<>();
+		for (ProductOrderNameAirNeedBean nan : nans) {
+			String need_pk = nan.getNeed_pk();
+			List<ProductOrderNameFlightSegmentBean> nfs = productOrderNameFlightSegmentDao.selectByNeedPk(need_pk);
+			result.put(DateUtil.fromUnixTime(nan.getCreate_time(), DateUtil.YYYY_MM_DD_HH_MM), nfs);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<ProductOrderNameBean> selectProductOrderNameByAirNeedPk(String air_need_pk) {
+		return productOrderNameDao.selectByNeedPk(air_need_pk);
+	}
 }

@@ -23,7 +23,7 @@ public class ProductNeedAction extends BaseAction {
 	private String product_name;
 	private String product_model;
 	private String departure_date;
-
+	private List<OrderDto> sale_orders;
 	@Autowired
 	private OrderService orderService;
 
@@ -47,15 +47,8 @@ public class ProductNeedAction extends BaseAction {
 			option.setProduct_manager_number(sessionBean.getUser_number());
 		}
 
-		List<OrderDto> orders = orderService.selectWithProductByParam(option);
-		resultStr = "";
-		for (OrderDto order : orders) {
-			resultStr += "," + order.getTeam_number();
-		}
-
-		resultStr = resultStr.replaceFirst(",", "");
+		sale_orders = orderService.selectWithProductByParam(option);
 		return SUCCESS;
-
 	}
 
 	public String getProduct_name() {
@@ -80,5 +73,13 @@ public class ProductNeedAction extends BaseAction {
 
 	public void setDeparture_date(String departure_date) {
 		this.departure_date = departure_date;
+	}
+
+	public List<OrderDto> getSale_orders() {
+		return sale_orders;
+	}
+
+	public void setSale_orders(List<OrderDto> sale_orders) {
+		this.sale_orders = sale_orders;
 	}
 }

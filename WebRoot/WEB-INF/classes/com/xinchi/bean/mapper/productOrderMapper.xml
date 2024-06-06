@@ -261,6 +261,20 @@
 		select
 		<include refid="Base_Column_List" />
 		from product_order
+		<where>
+			<if test="product_name != null and product_name !=''">
+				and product_name = #{product_name,jdbcType=VARCHAR}
+			</if>
+			<if test="product_model != null and product_model !=''">
+				and product_model = #{product_model,jdbcType=VARCHAR}
+			</if>
+			<if test="departure_date != null and departure_date !=''">
+				and departure_date = #{departure_date,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -290,7 +304,8 @@
 		FROM
 		product_order A
 		LEFT JOIN
-		user_base B ON A.product_manager_number = B.user_number
+		user_base B ON A.product_manager_number =
+		B.user_number
 		left join product_order_team_number C ON A.order_number=C.product_order_number
 		<where>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">

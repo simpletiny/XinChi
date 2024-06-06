@@ -25,23 +25,32 @@ public class ClientInoutImgDAOImpl extends SqlSessionDaoSupport implements Clien
 
 	@Override
 	public void insert(ClientInoutImgBean bean) {
-		daoUtil.insertBO("com.xinchi.bean.mapper.ClientInoutImgBeanMapper.insert", bean);
+		daoUtil.insertBO("com.xinchi.bean.mapper.ClientInoutImgMapper.insert", bean);
 	}
 
 	@Override
 	public ClientInoutImgBean selectByPk(String pk) {
-		return (ClientInoutImgBean) daoUtil
-				.selectByPK("com.xinchi.bean.mapper.ClientInoutImgBeanMapper.selectByPrimaryKey", pk);
+		return (ClientInoutImgBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ClientInoutImgMapper.selectByPrimaryKey",
+				pk);
 	}
 
 	@Override
 	public void update(ClientInoutImgBean bean) {
-		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientInoutImgBeanMapper.updateByPrimaryKey", bean);
+		daoUtil.updateByPK("com.xinchi.bean.mapper.ClientInoutImgMapper.updateByPrimaryKey", bean);
 	}
 
 	@Override
 	public List<ClientInoutImgBean> selectByParam(ClientInoutImgBean bean) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientInoutImgBeanMapper.selectByPrimaryKey", bean);
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientInoutImgMapper.selectByPrimaryKey", bean);
 	}
 
+	@Override
+	public List<ClientInoutImgBean> selectByClientPk(String client_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientInoutImgMapper.selectByClientPk", client_pk);
+	}
+
+	@Override
+	public void delete(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.ClientInoutImgMapper.deleteByPrimaryKey", pk);
+	}
 }
