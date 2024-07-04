@@ -561,6 +561,7 @@ function dataURLtoFile(dataurl, filename) {
 	$.fn.clear = function() {
 		$(this).each(function() {
 			$(this).find('input, textarea').val('');
+			$(this).find('tbody').html('');
 		});
 	}
 })(jQuery);

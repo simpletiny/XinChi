@@ -292,6 +292,12 @@
 				resultStr
 			</result>
 		</action>
+		<!-- 删除票务需求 -->
+		<action name="deleteSendedAirNeed" class="productOrderAction" method="deleteSendedAirNeed">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<!-- 根据名单pk搜索发送的票务需求 -->
 		<action name="searchAirNeedByNamePk" class="productOrderAction" method="searchAirNeedByNamePk">
 			<result name="success" type="json">

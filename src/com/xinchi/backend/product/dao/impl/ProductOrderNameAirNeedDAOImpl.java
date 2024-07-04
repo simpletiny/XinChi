@@ -59,4 +59,14 @@ public class ProductOrderNameAirNeedDAOImpl extends SqlSessionDaoSupport impleme
 
 	}
 
+	@Override
+	public List<ProductOrderNameAirNeedBean> selectByNamePks(List<String> name_pks) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ProductOrderNameAirNeedMapper.selectByNamePks", name_pks);
+	}
+
+	@Override
+	public void deleteByNeedPk(String need_pk) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderNameAirNeedMapper.deleteByNeedPk", need_pk);
+	}
+
 }

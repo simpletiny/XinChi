@@ -172,6 +172,16 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 删除票务需求
+	 * 
+	 * @return
+	 */
+	public String deleteSendedAirNeed() {
+		resultStr = service.deleteSendedAirNeed(air_need_pk);
+		return SUCCESS;
+	}
+
 	private String name_pk;
 
 	private Map<String, List<ProductOrderNameFlightSegmentBean>> flight_segments;

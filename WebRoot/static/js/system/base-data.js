@@ -231,7 +231,7 @@ var DataContext = function() {
 				btn : ['确认', '取消'],
 				yes : function(index) {
 
-					startLoadingIndicator("清除中...");
+					startLoadingIndicator("清除中");
 					var pk = 'pk_clean_bad';
 					var ext1 = date;
 					var data = "baseData.type=BAD&baseData.pk=" + pk + "&baseData.ext1=" + ext1;
@@ -389,7 +389,6 @@ var DataContext = function() {
 		startLoadingIndicator("更新中……");
 		let count = $("#txt-count-limit").val().trim();
 		var pk = self.count_limit_config().pk;
-		console.log(count);
 		var data = "baseData.type=PRODUCT&baseData.pk=" + pk + "&baseData.ext1=" + count;
 		$.ajax({
 			type : "POST",
@@ -400,6 +399,30 @@ var DataContext = function() {
 			if (str == "success") {
 				self.refreshProductUrgentCountLimit();
 				success_msg("变更成功！")
+			}
+		});
+	}
+	self.dishonest_hold_config = ko.observable({});
+	self.refreshDishonestHold = function() {
+		var param = "type=DISHONEST";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.dishonest_hold_config(data.datas[0]);
+		});
+	};
+	self.updateDishonestHold = function() {
+		startLoadingIndicator("更新中");
+		let days = $("#txt-dishonest-hold").val().trim();
+		var pk = self.dishonest_hold_config().pk;
+		var data = "baseData.type=DISHONEST&baseData.pk=" + pk + "&baseData.ext1=" + days;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'system/updateBaseData',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refreshDishonestHold();
+				success_msg("修改成功！")
 			}
 		});
 	}
@@ -422,4 +445,5 @@ $(document).ready(function() {
 	ctx.refreshTeamConfig();
 	ctx.refreshSaleCreditConfig();
 	ctx.refreshProductUrgentCountLimit();
+	ctx.refreshDishonestHold();
 });

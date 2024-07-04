@@ -10,6 +10,8 @@ import com.xinchi.bean.TaskBean;
 public class ResourcesConstants {
 	public static String SIMPLETINY = "SIMPLETINY";
 
+	public static String API_APP_CODE = "f18ab727493f4cfa9135f90e67ef73f0";
+
 	public static String SIMPLETINY_RECEIVE = "收入";
 	public static String SIMPLETINY_PAY = "支出";
 
@@ -205,6 +207,7 @@ public class ResourcesConstants {
 	// 支付单号计数
 	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
 	public static String COUNT_TYPE_PRODUCT = "PRODUCT_NUMBER";
+	public static String COUNT_TYPE_FAKE_PHONE = "FAKE_NUMBER";
 
 	// ************************* 支付种类 *************************
 	// 地接款

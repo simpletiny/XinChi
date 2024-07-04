@@ -141,7 +141,7 @@ tr td {
 								<th>乘客</th>
 								<th>票务需求</th>
 								<th>出票</th>
-								<th>备注</th>
+								<th>订单备注</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>产品经理</th>
 								</s:if>
@@ -362,6 +362,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.002"></script>
 </body>
 </html>

@@ -178,60 +178,115 @@ var NeedContext = function() {
 	self.airTickets = ko.observableArray([]);
 	self.airBase = ko.observable([]);
 	// 查看航段信息
-	self.checkTicketPart = function(need_pk) {
-		self.airTickets.removeAll();
-		startLoadingIndicator("加载中...");
-		$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByAirNeedPk', {
-			need_pk : need_pk
-		}, function(data) {
-			self.airTickets(data.order_air_infos);
-			endLoadingIndicator();
-			airTicketCheckLayer = $.layer({
-				type : 1,
-				title : ['航段信息', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', '500px'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#air-ticket-check'
-				},
-				end : function() {
-				}
+	self.checkTicketPart = function(need_pk, order_number) {
+		if (order_number.startsWith('N')) {
+			self.airTickets.removeAll();
+			startLoadingIndicator("加载中...");
+			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
+				product_order_number : order_number
+			}, function(data) {
+				self.airTickets(data.order_air_infos);
+				endLoadingIndicator();
+				airTicketCheckLayer = $.layer({
+					type : 1,
+					title : ['航段信息', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '500px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#air-ticket-check'
+					},
+					end : function() {
+					}
+				});
 			});
-		});
+		} else {
+			self.airTickets.removeAll();
+			startLoadingIndicator("加载中...");
+			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByAirNeedPk', {
+				need_pk : need_pk
+			}, function(data) {
+				self.airTickets(data.order_air_infos);
+				endLoadingIndicator();
+				airTicketCheckLayer = $.layer({
+					type : 1,
+					title : ['航段信息', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '500px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#air-ticket-check'
+					},
+					end : function() {
+					}
+				});
+			});
+		}
 	};
 	self.passengers = ko.observableArray([]);
 	// 查看乘客信息
-	self.checkPassengers = function(need_pk) {
-		self.passengers.removeAll();
-		startLoadingIndicator("加载中...");
-		var url = "product/selectProductOrderNameByAirNeedPk";
+	self.checkPassengers = function(need_pk, order_number) {
+		if (order_number.startsWith('N')) {
+			self.passengers.removeAll();
+			startLoadingIndicator("加载中...");
+			var url = "order/selectSaleOrderNameListByAirNeedPk";
 
-		$.getJSON(self.apiurl + url, {
-			air_need_pk : need_pk
-		}, function(data) {
+			$.getJSON(self.apiurl + url, {
+				need_pk : need_pk
+			}, function(data) {
 
-			self.passengers(data.name_list);
-			endLoadingIndicator();
-			passengerCheckLayer = $.layer({
-				type : 1,
-				title : ['乘客信息', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', '500px'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#passengers-check'
-				},
-				end : function() {
-				}
+				self.passengers(data.passengers);
+				endLoadingIndicator();
+				passengerCheckLayer = $.layer({
+					type : 1,
+					title : ['乘客信息', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '500px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#passengers-check'
+					},
+					end : function() {
+					}
+				});
 			});
-		});
+		} else {
+			self.passengers.removeAll();
+			startLoadingIndicator("加载中...");
+			var url = "product/selectProductOrderNameByAirNeedPk";
+
+			$.getJSON(self.apiurl + url, {
+				air_need_pk : need_pk
+			}, function(data) {
+				self.passengers(data.name_list);
+				endLoadingIndicator();
+				passengerCheckLayer = $.layer({
+					type : 1,
+					title : ['乘客信息', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['800px', '500px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#passengers-check'
+					},
+					end : function() {
+					}
+				});
+			});
+		}
+
 	};
 	self.needs = ko.observable({
 		total : 0,

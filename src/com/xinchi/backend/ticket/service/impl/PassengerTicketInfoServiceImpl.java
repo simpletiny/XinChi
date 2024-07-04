@@ -21,6 +21,7 @@ import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
 import com.xinchi.backend.payable.dao.AirTicketPayableDAO;
+import com.xinchi.backend.product.dao.ProductOrderNameDAO;
 import com.xinchi.backend.ticket.dao.AirTicketChangeLogDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
@@ -35,10 +36,13 @@ import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
+import com.xinchi.bean.ProductOrderNameBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -143,6 +147,9 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 	@Autowired
 	private AirTicketNameListDAO airTicketNameListDao;
 
+	@Autowired
+	private ProductOrderNameDAO productOrderNameDao;
+
 	@Override
 	public String allotTicket(String json) {
 		JSONArray arr = JSONArray.fromObject(json);
@@ -224,7 +231,6 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 					pti.setPassenger_pk(passenger_pk);
 					pti.setBase_pk(payable_pk);
 					dao.insert(pti);
-
 					AirTicketNameListBean atnl = airTicketNameListDAO.selectByPrimaryKey(passenger_pk);
 					if (j == 0) {
 						// 更新机票订单机票款
@@ -235,6 +241,18 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 						if (k == 0) {
 							first_passenger = passenger_pk;
+						}
+						if (atnl.getTeam_number().startsWith("P")) {
+
+						}
+						// 更新机票订单名单为已出票状态
+						String name_pk = atnl.getBase_pk();
+						ProductOrderNameBean pon = productOrderNameDao.selectByNamePk(name_pk);
+						if (null != pon) {
+							pon.setTicked("Y");
+							pon.setTicked_time(DateUtil.getTimeMillis());
+							pon.setTicked_user(SimpletinyUser.user().getUser_number());
+							productOrderNameDao.update(pon);
 						}
 					}
 

@@ -3,8 +3,9 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -202,7 +203,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				</ol></li> --%>
 			<s:if
 				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
-				<li class="order-box"><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
+				<li class="order-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
@@ -251,14 +252,16 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<li class="order-operate"><a href="<%=basePath%>templates/product/product-need.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>产品操作</a>
 					<ol style="display: none;">
-						<li><a href="<%=basePath%>templates/product/product-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品需求</a></li>
-						<li><a href="<%=basePath%>templates/product/product-order-name-list.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务向待操作名单</a></li>
-						<li><a href="<%=basePath%>templates/product/product-order-name-list-done.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>票务向已操作名单</a></li>
-						<li><a href="<%=basePath%>templates/product/product-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品订单</a></li>
+						<li><a href="<%=basePath%>templates/product/product-need.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>销售订单</a></li>
+						<li><a href="<%=basePath%>templates/product/product-order-name-list.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>待发票务</a></li>
+						<li><a href="<%=basePath%>templates/product/product-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待操作</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-operating.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>操作中</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-operated.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已操作</a></li>
+						<li><a href="<%=basePath%>templates/product/product-order-name-list-done.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>已发票务</a></li>
 						<li><a href="<%=basePath%>templates/product/product-order-final.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
 						<li><a href="<%=basePath%>templates/product/drop-off.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>送机单</a></li>
@@ -316,7 +319,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 								class="fa fa-angle-right fa-lg fa-fw"></i>押金记录</a></li>
 						<li><a href="<%=basePath%>templates/ticket/ticket-account-detail.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>流水明细</a></li>
-						
+
 						<li><a href="<%=basePath%>templates/ticket/ticket-payable-summary.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>账目汇总</a></li>
 					</ol></li>
@@ -425,7 +428,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
-	<script src="<%=basePath%>static/js/utils.js?v1.005"></script>
+	<script src="<%=basePath%>static/js/utils.js?v1.006"></script>
 	<script src="<%=basePath%>static/js/layout.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

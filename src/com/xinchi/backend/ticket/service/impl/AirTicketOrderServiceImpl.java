@@ -142,9 +142,7 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 			airTicketOrder.setComment(atn.getComment());
 			// 如果有航段信息
 			if (hasLeg) {
-				// 查看是否有名单
-				List<ProductOrderNameBean> names = productOrderNameDao.selectByNeedPk(need_pk);
-
+				String product_order_number = atn.getProduct_order_number();
 				for (int i = 0; i < arr.size(); i++) {
 					JSONObject inobj = JSONObject.fromObject(arr.get(i));
 					int leg_index = inobj.getInt("leg_index");
@@ -162,7 +160,134 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 				airTicketOrder.setFirst_end_city(first_end_city);
 
 				String order_pk = airTicketDao.insert(airTicketOrder);
+				if (product_order_number.startsWith("P")) {
+					// 查看是否有名单
+					List<ProductOrderNameBean> names = productOrderNameDao.selectByNeedPk(need_pk);
 
+					Set<String> team_numbers = new HashSet<>();
+					// 生成待出票名单
+					for (ProductOrderNameBean name : names) {
+						// 更新销售名单锁定状态
+						SaleOrderNameListBean sale_name = saleOrderNameListDao.selectByPrimaryKey(name.getName_pk());
+						sale_name.setLock_flg(SimpletinyString.replaceCharFromRight(name.getLock_flg(), "Y", 1));
+						saleOrderNameListDao.update(sale_name);
+
+						// 更新产品名单出票状态为出票中
+						name.setTicked("I");
+						productOrderNameDao.update(name);
+
+						AirTicketNameListBean nn = new AirTicketNameListBean();
+						nn.setTeam_number(name.getTeam_number());
+						nn.setClient_number(atn.getTicket_client_number());
+						nn.setFirst_ticket_date(atn.getFirst_ticket_date());
+						nn.setFirst_start_city(first_start_city);
+						nn.setFirst_end_city(first_end_city);
+						nn.setTicket_order_pk(order_pk);
+						nn.setName(name.getName());
+						nn.setId(name.getId());
+						nn.setOrder_number(airTicketOrder.getOrder_number());
+						nn.setCellphone_A(name.getCellphone_A());
+						nn.setCellphone_B(name.getCellphone_B());
+						nn.setChairman(name.getChairman());
+						nn.setLock_flg("Y");
+						nn.setBase_pk(name.getName_pk());
+						nn.setAge(name.getAge());
+						nn.setId_type(name.getId_type());
+						airTicketNameListDao.insert(nn);
+
+						team_numbers.add(name.getTeam_number());
+					}
+
+					// 更新销售订单
+					for (String team_number : team_numbers) {
+						List<ProductOrderNameBean> operate_names = productOrderNameDao.selectByTeamNumber(team_number);
+						boolean is_done = true;
+						for (ProductOrderNameBean n : operate_names) {
+							if (n.getTicked().equals("N")) {
+								is_done = false;
+								break;
+							}
+						}
+						OrderDto order = orderDao.selectByTeamNumber(team_number);
+						if (order.getStandard_flg().equals("Y")) {
+							BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+							bso.setPk(order.getPk());
+							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+							if (is_done) {
+								bso.setName_confirm_status("4");
+							}
+							bsoDao.update(bso);
+						} else {
+							BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+							bnso.setPk(order.getPk());
+							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+							if (is_done) {
+								bnso.setName_confirm_status("4");
+							}
+							bnsoDao.update(bnso);
+						}
+					}
+				} else {
+					List<AirNeedTeamNumberBean> ants = airNeedTeamNumberDao.selectByNeedPk(need_pk);
+					List<String> team_numbers = new ArrayList<String>();
+					for (AirNeedTeamNumberBean ant : ants) {
+						team_numbers.add(ant.getTeam_number());
+					}
+					List<SaleOrderNameListBean> names = saleOrderNameListDao.selectByTeamNumbers(team_numbers);
+
+					// 更新销售订单
+					for (String team_number : team_numbers) {
+						OrderDto order = orderDao.selectByTeamNumber(team_number);
+						if (order.getStandard_flg().equals("Y")) {
+							BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+							bso.setPk(order.getPk());
+							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+							bso.setName_confirm_status("4");
+							bsoDao.update(bso);
+
+						} else {
+							BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+							bnso.setPk(order.getPk());
+							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+							bnso.setName_confirm_status("4");
+							bnsoDao.update(bnso);
+						}
+					}
+
+					// 生成待出票名单
+					for (SaleOrderNameListBean name : names) {
+						// 更新销售名单锁定状态
+						name.setLock_flg(SimpletinyString.replaceCharFromRight(name.getLock_flg(), "Y", 1));
+						saleOrderNameListDao.update(name);
+
+						AirTicketNameListBean nn = new AirTicketNameListBean();
+						nn.setTeam_number(name.getTeam_number());
+						nn.setClient_number(atn.getTicket_client_number());
+						nn.setFirst_ticket_date(atn.getFirst_ticket_date());
+						nn.setFirst_start_city(first_start_city);
+						nn.setFirst_end_city(first_end_city);
+						nn.setTicket_order_pk(order_pk);
+						nn.setName(name.getName());
+						nn.setId(name.getId());
+						nn.setOrder_number(airTicketOrder.getOrder_number());
+						nn.setCellphone_A(name.getCellphone_A());
+						nn.setCellphone_B(name.getCellphone_B());
+						nn.setChairman(name.getChairman());
+						nn.setLock_flg("Y");
+						nn.setBase_pk(name.getPk());
+						nn.setAge(name.getAge());
+						nn.setId_type(name.getId_type());
+						airTicketNameListDao.insert(nn);
+					}
+				}
 				for (int i = 0; i < arr.size(); i++) {
 
 					JSONObject inobj = JSONObject.fromObject(arr.get(i));
@@ -193,78 +318,9 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 					airTicketOrderLegDao.insert(atol);
 				}
-
-				Set<String> team_numbers = new HashSet<>();
-				// 生成待出票名单
-				for (ProductOrderNameBean name : names) {
-					// 更新销售名单锁定状态
-					SaleOrderNameListBean sale_name = saleOrderNameListDao.selectByPrimaryKey(name.getName_pk());
-					sale_name.setLock_flg(SimpletinyString.replaceCharFromRight(name.getLock_flg(), "Y", 1));
-					saleOrderNameListDao.update(sale_name);
-
-					// 更新产品名单出票状态为出票中
-					name.setTicked("I");
-					productOrderNameDao.update(name);
-
-					AirTicketNameListBean nn = new AirTicketNameListBean();
-					nn.setTeam_number(name.getTeam_number());
-					nn.setClient_number(atn.getTicket_client_number());
-					nn.setFirst_ticket_date(atn.getFirst_ticket_date());
-					nn.setFirst_start_city(first_start_city);
-					nn.setFirst_end_city(first_end_city);
-					nn.setTicket_order_pk(order_pk);
-					nn.setName(name.getName());
-					nn.setId(name.getId());
-					nn.setOrder_number(airTicketOrder.getOrder_number());
-					nn.setCellphone_A(name.getCellphone_A());
-					nn.setCellphone_B(name.getCellphone_B());
-					nn.setChairman(name.getChairman());
-					nn.setLock_flg("Y");
-					nn.setBase_pk(name.getPk());
-					nn.setAge(name.getAge());
-					nn.setId_type(name.getId_type());
-					airTicketNameListDao.insert(nn);
-
-					team_numbers.add(name.getTeam_number());
-				}
-
-				// 更新销售订单
-				for (String team_number : team_numbers) {
-					List<ProductOrderNameBean> operate_names = productOrderNameDao.selectByTeamNumber(team_number);
-					boolean is_done = true;
-					for (ProductOrderNameBean n : operate_names) {
-						if (n.getTicked().equals("N")) {
-							is_done = false;
-							break;
-						}
-					}
-					OrderDto order = orderDao.selectByTeamNumber(team_number);
-					if (order.getStandard_flg().equals("Y")) {
-						BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-						bso.setPk(order.getPk());
-						bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-								ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-						bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-						if (is_done) {
-							bso.setName_confirm_status("4");
-						}
-						bsoDao.update(bso);
-					} else {
-						BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-						bnso.setPk(order.getPk());
-						bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-								ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-						bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-						if (is_done) {
-							bnso.setName_confirm_status("4");
-						}
-						bnsoDao.update(bnso);
-					}
-				}
 			} else {
 				airTicketOrder.setFirst_start_city(first_start_city);
 				airTicketOrder.setFirst_end_city(first_end_city);
-
 				airTicketDao.insert(airTicketOrder);
 			}
 
@@ -302,29 +358,37 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 		// 删除待出票名单
 		airTicketNameListDao.deleteByOrderNumber(order.getOrder_number());
 
-		// 更新销售订单到产品确认状态
-		List<AirNeedTeamNumberBean> ants = airNeedTeamNumberDao.selectByNeedPk(order.getNeed_pk());
-		List<String> team_numbers = new ArrayList<String>();
-		for (AirNeedTeamNumberBean ant : ants) {
-			team_numbers.add(ant.getTeam_number());
+		AirTicketNeedBean need = airTicketNeedDao.selectByPk(order.getNeed_pk());
+		// 如果是产品订单
+		if (need.getProduct_order_number().startsWith("P")) {
+			// TODO:
 		}
+		// 如果是单机票
+		else {
+			// 更新销售订单到产品确认状态
+			List<String> team_numbers = new ArrayList<String>();
+			List<AirNeedTeamNumberBean> ants = airNeedTeamNumberDao.selectByNeedPk(order.getNeed_pk());
+			for (AirNeedTeamNumberBean ant : ants) {
+				team_numbers.add(ant.getTeam_number());
+			}
 
-		for (String team_number : team_numbers) {
-			OrderDto sale_order = orderDao.selectByTeamNumber(team_number);
-			if (sale_order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(sale_order.getPk());
-				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
-				bso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
-						ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(sale_order.getPk());
-				bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
-				bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
-						ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
-				bnsoDao.update(bnso);
+			for (String team_number : team_numbers) {
+				OrderDto sale_order = orderDao.selectByTeamNumber(team_number);
+				if (sale_order.getStandard_flg().equals("Y")) {
+					BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
+					bso.setPk(sale_order.getPk());
+					bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
+					bso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
+							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
+					bsoDao.update(bso);
+				} else {
+					BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
+					bnso.setPk(sale_order.getPk());
+					bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
+					bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
+							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
+					bnsoDao.update(bnso);
+				}
 			}
 		}
 

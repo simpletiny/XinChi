@@ -22,6 +22,7 @@ var PassengerContext = function() {
 				fail_msg("所选名单不属于同一产品订单！");
 				return;
 			}
+			
 				ticketLayer = $.layer({
 					type : 1,
 					title : ['票务信息', ''],
@@ -120,10 +121,10 @@ var PassengerContext = function() {
 	self.checkAirNeed = function(name_pk){
         // 打印转换后的数组
 		$.getJSON(self.apiurl + 'product/searchAirNeedByNamePk', {name_pk:name_pk}, function(data) {
-			
 			self.flight_segments(Object.keys(data.flight_segments).map(function(key) {
                 return { key: key, value: data.flight_segments[key] };
             }));
+			
 			checkAirNeedLayer= $.layer({
 				type : 1,
 				title : ['已发票务需求', ''],
@@ -136,6 +137,7 @@ var PassengerContext = function() {
 					dom : '#div-check-air-need'
 				},
 				end : function() {
+					
 				}
 			});
 		});
@@ -379,4 +381,43 @@ function choseAirLeg(event) {
 
 	currentAirLeg = event.target;
 	$(currentAirLeg).blur();
+}
+
+function deleteSendedAirNeed(data){
+	const need_count = ctx.flight_segments().length;
+	const air_need_pk = data.value[0].need_pk;
+	let msg = "";
+	if(need_count===1){
+		msg = "只有一个已发送票务需求，删除后名单将会打回至待发票务状态。";
+	}else {
+		msg =  "确认要删除当前票务需求吗？";
+	}
+	$.layer({
+		area : ['auto', 'auto'],
+		dialog : {
+			msg :msg,
+			btns : 2,
+			type : 4,
+			btn : ['确认', '取消'],
+			yes : function(index) {
+				layer.close(index);
+				startLoadingIndicator("删除中");
+				var param = "air_need_pk=" + air_need_pk;
+				$.ajax({
+					type : "POST",
+					url : ctx.apiurl + 'product/deleteSendedAirNeed',
+					data : param
+				}).success(function(str) {
+					endLoadingIndicator();
+					if (str == "success") {
+						layer.close(checkAirNeedLayer);
+						ctx.refresh();
+					} else {
+						fail_msg(str);
+					}
+				});
+			}
+		}
+	});
+
 }

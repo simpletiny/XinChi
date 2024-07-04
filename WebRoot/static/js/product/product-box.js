@@ -33,6 +33,10 @@ var ProductBoxContext = function() {
 		window.location.href = self.apiurl + "templates/order/non-standard-order-creation.jsp?independent_flg=N";
 	};
 
+	self.checkDishonest = function() {
+		window.location.href = self.apiurl + "templates/system/dishonest.jsp";
+	}
+
 	// 创建独立团
 	self.createIndependent = function() {
 		if (self.chosenProducts().length == 0) {

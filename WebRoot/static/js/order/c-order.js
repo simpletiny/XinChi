@@ -435,6 +435,9 @@ var ProductBoxContext = function() {
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#main-table td:last-child span:contains('是')").css("color", "red");
+			$("#main-table td:last-child span:contains('否')").css("color", "green");
+
 			endLoadingIndicator();
 		});
 	};

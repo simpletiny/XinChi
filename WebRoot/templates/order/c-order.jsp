@@ -50,7 +50,7 @@ tr td {
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-					<div class="form-group"> 
+					<div class="form-group">
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmNameList() }">名单确认</button>
@@ -153,7 +153,7 @@ tr td {
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th></th>
@@ -170,14 +170,14 @@ tr td {
 								<th>总团款</th>
 								<th>尾款</th>
 								<th>确认件</th>
-								<th>备注</th>
-								<th>接待备注</th>
+								<th>备注(仅自己可见)</th>
+								<th>销售特请</th>
 								<th>产品经理</th>
 								<th>文件下载</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
-								<th>锁定</th>
+								<th>锁定(产品/票务)</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -220,8 +220,9 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>
 								</s:if>
-								<td data-bind="text:$root.lockMapping[$data.lock_flg]"></td>
-							</tr>
+								<td><span data-bind="text:$root.lockMapping[$data.lock_flg.charAt(0)]"></span>/<span
+									data-bind="text:$root.lockMapping[$data.lock_flg.charAt(2)]"></span></td>
+							</tr> 
 						</tbody>
 					</table>
 					<div class="pagination clearfloat">
@@ -351,8 +352,7 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

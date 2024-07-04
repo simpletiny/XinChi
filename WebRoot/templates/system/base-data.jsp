@@ -153,11 +153,29 @@
 					<div class="form-group" style="padding-top: 20px">
 						<label class="col-md-1 control-label">次数/周</label>
 						<div class="col-md-2">
-							<input type="number" class="form-control" data-bind="value:count_limit_config().ext1" maxlength="2" id="txt-count-limit" />
+							<input type="number" class="form-control" data-bind="value:count_limit_config().ext1" maxlength="2"
+								id="txt-count-limit" />
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateCountLimit() }">保存</button>
 						</div>
+					</div>
+				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-dishonest-hold">
+					<h3>失信人记录保存时间</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-1 control-label">时长（天）</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" data-bind="value:dishonest_hold_config().ext1" maxlength="2"
+								id="txt-dishonest-hold" />
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateDishonestHold() }">保存</button>
+						</div>
+					</div>
+					<div class="form-group" style="padding-top: 20px">
+						<span style="color:red">每日凌晨00:05更新，只按日期相减判定。</span>
 					</div>
 				</form>
 			</div>
@@ -193,6 +211,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/sortable/Sortable.js"></script>
-	<script src="<%=basePath%>static/js/system/base-data.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/system/base-data.js?v=1.002"></script>
 </body>
 </html>

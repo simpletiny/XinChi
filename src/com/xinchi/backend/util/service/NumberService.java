@@ -26,4 +26,6 @@ public interface NumberService extends BaseService {
 
 	// 生成押金代码
 	public String generateDepositNumber();
+
+	public String generateFakePhoneNumber();
 }

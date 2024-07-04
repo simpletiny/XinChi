@@ -48,4 +48,8 @@ public interface ProductOrderNameDAO {
 	public List<ProductOrderNameBean> selectByNeedPk(String need_pk);
 
 	public List<ProductOrderNameBean> selectByTeamNumber(String team_number);
+
+	public ProductOrderNameBean selectByNamePk(String name_pk);
+
+	public void deleteByProductOrderNumber(String order_number);
 }

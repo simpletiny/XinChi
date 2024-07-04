@@ -5,8 +5,10 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,6 @@ import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductNeedDto;
-import com.xinchi.bean.ProductOrderAirInfoBean;
 import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductOrderNameAirNeedBean;
 import com.xinchi.bean.ProductOrderNameBean;
@@ -231,27 +232,45 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	@Override
 	public String rollBackOrder(String order_number) {
 		ProductOrderBean product_order = dao.selectByOrderNumber(order_number);
-		// 检测票务是否已经操作
-		AirTicketNeedBean atn = airTicketNeedDao.selectByProductOrderNumber(order_number);
 
-		// 如果票务已经生成票务订单，则不能打回。
-		if (atn != null && atn.getOrdered().equals("Y")) {
-			return "airlock";
-		}
+		// 检测是否已经发送票务需求
+		ProductOrderNameBean option = new ProductOrderNameBean();
+		option.setProduct_order_number(order_number);
+		option.setOperate_status("Y");
+		List<ProductOrderNameBean> names = productOrderNameDao.selectByParam(option);
+		if (null != names && names.size() > 0) {
+			List<String> name_pks = new ArrayList<>();
+			for (ProductOrderNameBean name : names) {
+				name_pks.add(name.getPk());
+			}
+			List<ProductOrderNameAirNeedBean> needs = productOrderNameAirNeedDao.selectByNamePks(name_pks);
 
-		// 如果存在票务需求
-		if (atn != null) {
-			// 删除票务需求和团号之间的对应关系
-			airNeedTeamNumberDao.deleteByNeedPk(atn.getPk());
-			// 删除票务需求
-			airTicketNeedDao.delete(atn.getPk());
-		}
+			Set<String> need_pks = new HashSet<>();
+			for (ProductOrderNameAirNeedBean need : needs) {
+				need_pks.add(need.getNeed_pk());
+			}
 
-		// 删除产品订单航班信息
-		List<ProductOrderAirInfoBean> airInfos = airInfoDao.selectByOrderNumber(order_number);
-		for (ProductOrderAirInfoBean aif : airInfos) {
-			airInfoDao.delete(aif.getPk());
+			List<AirTicketNeedBean> air_needs = airTicketNeedDao.selectByPks(new ArrayList<>(need_pks));
+			for (AirTicketNeedBean atn : air_needs) {
+				// 如果票务已经生成票务订单，则不能打回。
+				if (atn.getOrdered().equals("Y")) {
+					return "airlock";
+				}
+			}
+			for (AirTicketNeedBean atn : air_needs) {
+				// 如果没有生成票务订单
+				if (atn != null) {
+					// 删除票务需求和产品名单之间的对应关系
+					productOrderNameAirNeedDao.deleteByNeedPk(atn.getPk());
+					// 删除产品名单票务信息
+					productOrderNameFlightSegmentDao.deleteByNeedPk(atn.getPk());
+					// 删除票务需求
+					airTicketNeedDao.delete(atn.getPk());
+				}
+			}
 		}
+		// 删除产品名单
+		productOrderNameDao.deleteByProductOrderNumber(order_number);
 
 		// 删除产品订单
 		dao.delete(product_order.getPk());
@@ -562,5 +581,34 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	@Override
 	public List<ProductOrderNameBean> selectProductOrderNameByAirNeedPk(String air_need_pk) {
 		return productOrderNameDao.selectByNeedPk(air_need_pk);
+	}
+
+	@Override
+	public String deleteSendedAirNeed(String air_need_pk) {
+		AirTicketNeedBean air_need = airTicketNeedDao.selectByPk(air_need_pk);
+		if (air_need.getOrdered().equals("Y")) {
+			return "票务已操作，无法删除！";
+		} else {
+			// 删除票务需求
+			airTicketNeedDao.delete(air_need_pk);
+			// 删除票务需求和名单对应信息
+			productOrderNameAirNeedDao.deleteByNeedPk(air_need_pk);
+			// 删除已发送航段信息
+			productOrderNameFlightSegmentDao.deleteByNeedPk(air_need_pk);
+			// 查验名单是否还有票务需求，如果没有了则把名单操作状态更新至待发票务
+			List<ProductOrderNameBean> product_order_names = productOrderNameDao.selectByNeedPk(air_need_pk);
+
+			for (ProductOrderNameBean name : product_order_names) {
+				List<ProductOrderNameAirNeedBean> nans = productOrderNameAirNeedDao.selectByNamePk(name.getPk());
+				if (null == nans || nans.size() < 1) {
+					ProductOrderNameBean update_name = new ProductOrderNameBean();
+					update_name.setPk(name.getPk());
+					update_name.setOperate_status("N");
+					productOrderNameDao.update(update_name);
+				}
+			}
+
+			return SUCCESS;
+		}
 	}
 }

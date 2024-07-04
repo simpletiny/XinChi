@@ -41,4 +41,8 @@ public interface ProductOrderNameAirNeedDAO {
 	public List<ProductOrderNameAirNeedBean> selectByParam(ProductOrderNameAirNeedBean bean);
 
 	public List<ProductOrderNameAirNeedBean> selectByNamePk(String name_pk);
+
+	public List<ProductOrderNameAirNeedBean> selectByNamePks(List<String> name_pks);
+
+	public void deleteByNeedPk(String need_pk);
 }

@@ -59,4 +59,9 @@ public class ProductOrderNameFlightSegmentDAOImpl extends SqlSessionDaoSupport
 		return list;
 	}
 
+	@Override
+	public void deleteByNeedPk(String need_pk) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderNameFlightSegmentMapper.deleteByNeedPk", need_pk);
+	}
+
 }

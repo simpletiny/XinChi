@@ -56,6 +56,11 @@
 		where pk =
 		#{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByNeedPk" parameterType="java.lang.String">
+		delete from product_order_name_flight_segment
+		where need_pk =
+		#{need_pk,jdbcType=CHAR}
+	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderNameFlightSegmentBean">
 

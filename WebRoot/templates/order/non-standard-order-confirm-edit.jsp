@@ -144,11 +144,18 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12">
-							<label class="l">备注</label>
+						<div class="col-md-6">
+							<label class="l">备注（仅自己可见）</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: order().comment"
-									name="bnsOrder.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
+									name="bnsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="l">销售特请</label>
+							<div class="ip">
+								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().treat_comment"
+									name="bnsOrder.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
 					</div>
@@ -182,7 +189,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-		<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-confirm-edit.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
 </body>

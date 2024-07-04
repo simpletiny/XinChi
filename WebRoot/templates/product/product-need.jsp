@@ -59,7 +59,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品需求</h2>
+			<h2>销售订单</h2>
 		</div>
 
 		<div class="main-container">
@@ -137,7 +137,7 @@
 								<th>特殊</th>
 								<th>游客信息</th>
 								<th>销售</th>
-								<th>接待特请</th>
+								<th>销售特请</th>
 								<th>销售锁定</th>
 								<th>标/非标</th>
 							</tr>
@@ -284,9 +284,9 @@
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12">
-					<label class="l">订单备注</label>
+					<label class="l">订单备注（仅自己可见）</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default comment" rows="5" maxlength="200" placeholder="需要备注说明的信息"></textarea>
+						<textarea type="text" class="ip-default comment" rows="5" maxlength="200" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 					</div>
 				</div>
 			</div>

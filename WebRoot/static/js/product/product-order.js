@@ -85,49 +85,45 @@ var ProductContext = function() {
 				return;
 			}
 
-			$
-					.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/isAllOrdersLocked',
-						data : "order_number=" + order_number
-					})
-					.success(
-							function(result) {
-								endLoadingIndicator()
-								var str = result.split(",");
-								if (str[0] == "yes") {
-									if (standard_flg == "N") {
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'product/isAllOrdersLocked',
+				data : "order_number=" + order_number
+			}).success(
+					function(result) {
+						endLoadingIndicator()
+						var str = result.split(",");
+						if (str[0] == "yes") {
+							if (standard_flg == "N") {
 
-										window.location.href = self.apiurl
-												+ 'templates/product/order-operate-creation.jsp?standard_flg=N&order_number='
-												+ order_number;
+								window.location.href = self.apiurl
+										+ 'templates/product/order-operate-creation.jsp?standard_flg=N&order_number='
+										+ order_number;
 
-									} else {
+							} else {
+								window.location.href = self.apiurl
+										+ 'templates/product/order-operate-creation.jsp?standard_flg=Y&product_pk='
+										+ product_pk + '&order_number=' + order_number;
+								// $.getJSON(self.apiurl +
+								// 'product/searchProductByPk', {
+								// product_pk : product_pk
+								// }, function(data) {
+								// if (data && data.product.supplier_upkeep_flg
+								// == 'Y') {
+								//
+								// } else {
+								// fail_msg("产品未添加地接维护！不能操作");
+								// }
+								//
+								// });
 
-										$
-												.getJSON(
-														self.apiurl + 'product/searchProductByPk',
-														{
-															product_pk : product_pk
-														},
-														function(data) {
-															if (data && data.product.supplier_upkeep_flg == 'Y') {
-																window.location.href = self.apiurl
-																		+ 'templates/product/order-operate-creation.jsp?standard_flg=Y&product_pk='
-																		+ product_pk + '&order_number=' + order_number;
-															} else {
-																fail_msg("产品未添加地接维护！不能操作");
-															}
-
-														});
-
-									}
-								} else if (str[0] == "no") {
-									fail_msg("请锁定所有销售订单后继续操作！")
-								} else {
-									fail_msg(str[0]);
-								}
-							});
+							}
+						} else if (str[0] == "no") {
+							fail_msg("请锁定所有销售订单后继续操作！")
+						} else {
+							fail_msg(str[0]);
+						}
+					});
 
 		}
 	};

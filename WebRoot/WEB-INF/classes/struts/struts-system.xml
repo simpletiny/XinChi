@@ -33,7 +33,7 @@
 		<action name="sortData" class="baseDataAction" method="sortData">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 创建基础数据 -->
 		<action name="createBaseData" class="baseDataAction" method="createBaseData">
 			<result name="success" type="str">resultStr</result>
@@ -46,6 +46,13 @@
 		<action name="deleteBaseData" class="baseDataAction" method="deleteBaseData">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		<!-- 失信人查询 start -->
+		<action name="checkIsDishonest" class="dishonestAction" method="checkIsDishonest">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 失信人查询 end -->
 	</package>
 </struts>

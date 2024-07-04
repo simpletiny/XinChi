@@ -21,6 +21,7 @@ var PassengerContext = function() {
 				fail_msg("所选名单不属于同一产品订单！");
 				return;
 			}
+			$("#table-ticket").clear();
 			let product_pk = self.chosenPassengers()[0].product_pk
 			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
 				product_pk : product_pk
@@ -112,6 +113,7 @@ var PassengerContext = function() {
 						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
+							
 							self.chosenPassengers.removeAll();
 						} else {
 							fail_msg("提交失败，请联系管理员！");

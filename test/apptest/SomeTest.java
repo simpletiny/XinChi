@@ -1,22 +1,21 @@
 package apptest;
 
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
-import com.xinchi.common.DateUtil;
+import net.sf.json.JSONObject;
 
 public class SomeTest {
 
-	public static void replacePlaceholdersWithContent(String filePath,
-			Map<String, List<String>> placeholdersWithContents) throws Exception {
+	public static void main(String[] args) throws IOException {
+		String jsonString = "{\"code\":\"0\",\"message\":\"成功\",\"result\":{\"name\":\"牛世行\",\"idcard\":\"130123198703222714\",\"res\":\"1\",\"description\":\"一致\",\"sex\":\"男\",\"birthday\":\"19870322\",\"address\":\"河北省石家庄市正定县\"}}";
+		// "res": "1",核验结果状态码，1 一致；2 不一致；3 无记录
+		JSONObject obj = JSONObject.fromObject(jsonString);
+		String response_code = obj.getString("code");
+		if (response_code.equals("0")) {
+			JSONObject info = obj.getJSONObject("result");
+			System.out.println(info.getString("res"));
+		} else {
 
-	}
-
-	public static void main(String[] args) throws Exception {
-		String b = "1606724208441";
-		String a = "1606724208443";
-
-		System.out.println(Long.parseLong(DateUtil.getTimeMillis("2024-06-01")) > Long.parseLong(b));
-
+		}
 	}
 }

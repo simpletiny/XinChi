@@ -47,4 +47,6 @@ public interface ProductOrderService extends BaseService {
 
 	public List<ProductOrderNameBean> selectProductOrderNameByAirNeedPk(String air_need_pk);
 
+	public String deleteSendedAirNeed(String air_need_pk);
+
 }

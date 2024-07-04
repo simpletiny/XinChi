@@ -143,17 +143,17 @@
 							</div>
 						</div>
 						<div class="col-md-4">
-							<label class="l">接待备注</label>
+							<label class="l">销售特请</label>
 							<div class="ip">
 								<textarea type="text" class="ip-default" rows="10" data-bind="value:order().treat_comment" maxlength="200"
-									name="bsOrder.treat_comment" placeholder="接待备注"></textarea>
+									name="bsOrder.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
 						<div class="col-md-4">
-							<label class="l">订单备注</label>
+							<label class="l">订单备注（仅自己可见）</label>
 							<div class="ip">
 								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
-									name="bsOrder.comment" placeholder="需要备注说明的信息"></textarea>
+									name="bsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
 					</div>

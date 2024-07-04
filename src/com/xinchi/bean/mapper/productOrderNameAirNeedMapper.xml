@@ -33,11 +33,24 @@
 		from product_order_name_air_need
 		where name_pk = #{name_pk,jdbcType=CHAR}
 	</select>
-
+	<select id="selectByNamePks" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_name_air_need
+		where name_pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from product_order_name_air_need
 		where pk =
 		#{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByNeedPk" parameterType="java.lang.String">
+		delete from product_order_name_air_need
+		where need_pk =
+		#{need_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderNameAirNeedBean">

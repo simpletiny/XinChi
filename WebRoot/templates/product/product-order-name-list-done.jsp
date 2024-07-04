@@ -132,7 +132,15 @@
 								<!-- ko if:$data.operate_status=='Y' -->
 								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkAirNeed($data.pk)}">查看</a></td>
 								<!-- /ko -->
-								<td data-bind="text: $data.departure_date"></td>
+								<!-- ko if:$data.ticked=='N' -->
+								<td>未出票</td>
+								<!-- /ko -->
+								<!-- ko if:$data.ticked=='I' -->
+								<td>待出票</td>
+								<!-- /ko -->
+								<!-- ko if:$data.ticked=='Y' -->
+								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkAirNeed($data.pk)}">查看</a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.days"></td>
 							</tr>
 						</tbody>
@@ -202,7 +210,8 @@
 	<div id="div-check-air-need" style="display: none; width: 800px; height: 470px; overflow: auto">
 		<div data-bind="foreach:flight_segments">
 			<div class="input-row clearfloat">
-				<label class="l" data-bind="text:'发送时间：'+key" style="width:100% !important"></label>
+				<label class="l" data-bind="text:'发送时间：'+key" style="width:60% !important"></label>
+				<a href="javascript:void(0)" data-bind="click:deleteSendedAirNeed"  style="line-height:40px">删除</a>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12">

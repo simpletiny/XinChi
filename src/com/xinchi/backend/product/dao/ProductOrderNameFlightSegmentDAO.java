@@ -41,4 +41,6 @@ public interface ProductOrderNameFlightSegmentDAO {
 	public List<ProductOrderNameFlightSegmentBean> selectByParam(ProductOrderNameFlightSegmentBean bean);
 
 	public List<ProductOrderNameFlightSegmentBean> selectByNeedPk(String need_pk);
+
+	public void deleteByNeedPk(String need_pk);
 }

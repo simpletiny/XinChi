@@ -118,7 +118,7 @@ public class TicketAction extends BaseAction {
 
 		long min_create_time = Collections.min(create_times);
 		long max_create_time = Collections.max(create_times);
-		long check_time = Long.parseLong(DateUtil.getTimeMillis("2024-06-01"));
+		long check_time = Long.parseLong(DateUtil.getTimeMillis("2024-06-07"));
 		if (min_create_time < check_time && max_create_time > check_time) {
 			commonResult.setMsg("所选票务需求包含新旧两版数据！");
 			commonResult.setIs_done(false);
@@ -126,22 +126,22 @@ public class TicketAction extends BaseAction {
 			// 旧版数据处理方式
 			if (max_create_time < check_time) {
 				List<String> product_order_numbers = new ArrayList<>(set_order_numbers);
-				String order_number = product_order_numbers.get(0);
-				if (order_number.startsWith("P")) {
-					order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(order_number);
-				} else if (order_number.startsWith("N")) {
-					order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+				String c_order_number = product_order_numbers.get(0);
+				if (c_order_number.startsWith("P")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(c_order_number);
+				} else if (c_order_number.startsWith("N")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
 				}
 
 				if (product_order_numbers.size() > 1) {
 					for (int i = 1; i < product_order_numbers.size(); i++) {
-						order_number = product_order_numbers.get(i);
+						c_order_number = product_order_numbers.get(i);
 						List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
-						if (order_number.startsWith("P")) {
+						if (c_order_number.startsWith("P")) {
 							next_order_air_infos = airTicketNeedService
-									.selectOrderAirInfoByProductOrderNumber(order_number);
-						} else if (order_number.startsWith("N")) {
-							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+									.selectOrderAirInfoByProductOrderNumber(c_order_number);
+						} else if (c_order_number.startsWith("N")) {
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
 						}
 
 						String res = compareTwoInfos(order_air_infos, next_order_air_infos);
@@ -155,18 +155,37 @@ public class TicketAction extends BaseAction {
 			}
 			// 新版本数据处理方式
 			else if (min_create_time > check_time) {
-				String air_need_pk = need_pks.get(0);
-				order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(air_need_pk);
-				if (need_pks.size() > 1) {
-					for (int i = 1; i < need_pks.size(); i++) {
-						String current_need_pk = need_pks.get(i);
-						List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
-						next_order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(current_need_pk);
-						String res = compareTwoInfos(order_air_infos, next_order_air_infos);
-						if (!res.equals("")) {
-							commonResult.setMsg(res);
-							commonResult.setIs_done(false);
-							break;
+				List<String> product_order_numbers = new ArrayList<>(set_order_numbers);
+				String c_order_number = product_order_numbers.get(0);
+				if (c_order_number.startsWith("N")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
+					if (product_order_numbers.size() > 1) {
+						for (int i = 1; i < product_order_numbers.size(); i++) {
+							c_order_number = product_order_numbers.get(i);
+							List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
+							String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+							if (!res.equals("")) {
+								commonResult.setMsg(res);
+								commonResult.setIs_done(false);
+								break;
+							}
+						}
+					}
+				} else {
+					String air_need_pk = need_pks.get(0);
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(air_need_pk);
+					if (need_pks.size() > 1) {
+						for (int i = 1; i < need_pks.size(); i++) {
+							String current_need_pk = need_pks.get(i);
+							List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(current_need_pk);
+							String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+							if (!res.equals("")) {
+								commonResult.setMsg(res);
+								commonResult.setIs_done(false);
+								break;
+							}
 						}
 					}
 				}

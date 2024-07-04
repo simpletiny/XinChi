@@ -187,6 +187,8 @@ var OrderContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOperations.removeAll();
+							} else if (str == "haspaid") {
+								fail_msg("请先处理已付款！");
 							} else {
 								fail_msg(str);
 							}

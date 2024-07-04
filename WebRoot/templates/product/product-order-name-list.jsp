@@ -247,7 +247,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-name-list.js"></script>
+	<script src="<%=basePath%>static/js/product/product-order-name-list.js?v=0.001"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

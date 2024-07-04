@@ -401,6 +401,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.002"></script>
 </body>
 </html>

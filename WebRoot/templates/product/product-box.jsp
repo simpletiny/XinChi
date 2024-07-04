@@ -32,13 +32,14 @@ tr td {
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div style="float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() { checkDishonest() }">失信人查询</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createStandard() }">客户需求</button>
 							<!-- <div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
 							</div> -->
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createTicket() }">单机票</button>
-						</div> 
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createIndependent() }">独立团需求</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createTicket() }">单机票</button>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -174,9 +175,8 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/product/product-box.js"></script>
+	<script src="<%=basePath%>static/js/product/product-box.js?v=1.001"></script>
 </body>
 </html>

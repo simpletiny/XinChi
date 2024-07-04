@@ -155,7 +155,7 @@
 		team_number AS
 		product_order_number,
 		ticket_index as info_index,
-		CONCAT(from_city,'--',to_city) AS from_to_city,
+		CONCAT(from_city,'-',to_city) AS from_to_city,
 		ticket_date AS
 		air_date,
 		create_user AS ticket_client_number

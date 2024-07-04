@@ -71,4 +71,16 @@ public class ProductOrderNameDAOImpl extends SqlSessionDaoSupport implements Pro
 	public List<ProductOrderNameBean> selectByTeamNumber(String team_number) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ProductOrderNameMapper.selectByTeamNumber", team_number);
 	}
+
+	@Override
+	public ProductOrderNameBean selectByNamePk(String name_pk) {
+
+		return (ProductOrderNameBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ProductOrderNameMapper.selectByNamePk",
+				name_pk);
+	}
+
+	@Override
+	public void deleteByProductOrderNumber(String order_number) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderNameMapper.deleteByProductOrderNumber", order_number);
+	}
 }

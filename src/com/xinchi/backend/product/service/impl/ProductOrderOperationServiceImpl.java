@@ -434,6 +434,13 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			}
 			// 新产品操作下的订单号，开头为P的
 			else if (t_n.startsWith("P")) {
+				// 需要判断应付款是否已经付款
+				SupplierPaidDetailBean option = new SupplierPaidDetailBean();
+				option.setTeam_number(t_n);
+				List<SupplierPaidDetailBean> paids = paidDao.selectByParam(option);
+				if (null != paids && paids.size() > 0) {
+					return "haspaid";
+				}
 
 				List<ProductOrderTeamNumberBean> potns = productOrderTeamNumberDao.selectByOrderNumber(t_n);
 				for (ProductOrderTeamNumberBean potn : potns) {
@@ -470,7 +477,7 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 				// 删除操作中订单
 				dao.deleteByTeamNumber(t_n);
 				// 删除应付款
-//TODO：需要判断应付款是否已经付款
+
 				payableDao.deleteByTeamNumber(t_n);
 
 				product_order.setStatus("N");

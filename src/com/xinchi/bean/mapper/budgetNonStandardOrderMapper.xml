@@ -36,6 +36,8 @@
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -73,7 +75,8 @@
 		cancel_flg,
 		name_confirm_status,
 		passenger_captain,
-		receivable_first_flg
+		receivable_first_flg,
+		treat_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -191,6 +194,9 @@
 			<if test="passenger_captain != null">
 				passenger_captain,
 			</if>
+			<if test="treat_comment != null">
+				treat_comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -285,6 +291,9 @@
 			</if>
 			<if test="passenger_captain != null">
 				#{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				#{treat_comment,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -391,6 +400,9 @@
 			</if>
 			<if test="receivable_first_flg != null">
 				receivable_first_flg = #{receivable_first_flg,jdbcType=CHAR},
+			</if>
+			<if test="treat_comment != null">
+				treat_comment = #{treat_comment,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

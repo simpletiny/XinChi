@@ -63,7 +63,7 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 	private String passenger_captain;
 
 	private String receivable_first_flg;
-
+	private String treat_comment;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
@@ -342,6 +342,14 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
 	}
 
 }

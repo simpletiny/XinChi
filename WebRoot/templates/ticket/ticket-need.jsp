@@ -108,14 +108,14 @@
 								<!-- /ko -->
 								<!-- ko if: $data.first_ticket_date!=null -->
 								<td><a href="javascript:void(0)"
-									data-bind="click:function(){$root.checkTicketPart($data.pk)}">查看</a></td>
+									data-bind="click:function(){$root.checkTicketPart($data.pk,$data.product_order_number)}">查看</a></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count==0 -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.people_count!=0 -->
 								<td><a href="javascript:void(0)"
-									data-bind="text:$data.passenger_captain,click:function(){$root.checkPassengers($data.pk)}">查看</a></td>
+									data-bind="text:$data.passenger_captain,click:function(){$root.checkPassengers($data.pk,$data.product_order_number)}">查看</a></td>
 								<!-- /ko -->
 								<td data-bind="text:$data.comment"></td>
 								<td data-bind="text: $data.product_order_number"></td>
@@ -351,6 +351,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.005"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.006"></script>
 </body>
 </html>
