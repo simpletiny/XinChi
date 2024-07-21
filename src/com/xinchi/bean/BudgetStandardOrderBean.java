@@ -42,6 +42,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	private String assistant_number;
+
 	private String pk;
 	private String lock_flg;
 	private String cancel_flg;
@@ -72,6 +74,10 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String receivable_comment;
 
 	private String receivable_first_flg;
+	private String sale;
+
+	// DTO
+	private String client_employee_name;
 
 	// 航段信息
 	// private String ticket_number;
@@ -385,5 +391,29 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setProduct_model(String product_model) {
 		this.product_model = product_model;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
+	}
+
+	public String getClient_employee_name() {
+		return client_employee_name;
+	}
+
+	public void setClient_employee_name(String client_employee_name) {
+		this.client_employee_name = client_employee_name;
 	}
 }

@@ -42,14 +42,14 @@
 						data-bind="value:order().independent_flg" name="bsOrder.independent_flg"></input> <input type="hidden"
 						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" />
 					<div class="input-row clearfloat">
-						<div class="col-md-3 required">
+						<div class="col-md-3">
 							<label class="l">客户</label>
 							<div class="ip fix-width">
-								<input type="text" id="txt-client-employee-name" class="ip-" disabled="disabled"
-									data-bind="value: employee().name" required="required" />
+								<input type="text" id="txt-client-employee-name" class="ip-"
+									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
-								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" required="required" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk"
+								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" />
 						</div>
 						<div class="col-md-3">
 							<label class="l">财务主体</label>
@@ -60,14 +60,15 @@
 						<div class="col-md-4">
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
-								<p class="ip-default" data-bind="text:product().name"></p>
-								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" />
+								<input type="text" id="txt-product-name" class="ip-"
+									data-bind="value: product().name,event:{click:choseProduct}" placeholder="产品" /> <input type="hidden"
+									data-bind="value: product().pk" id="txt-product-pk" name="bsOrder.product_pk" />
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class="l">产品型号</label>
 							<div class="ip fix-width">
-								<p class="ip-default" data-bind="text:product().product_number"></p>
+								<p class="ip-default" data-bind="text:product().product_model" id="p-product-model"></p>
 							</div>
 						</div>
 					</div>
@@ -153,7 +154,7 @@
 					<h3>名单</h3>
 					<s:include value="common/name-bat.jsp"></s:include>
 					<s:include value="common/name-list.jsp"></s:include>
- 					<hr />
+					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input
@@ -170,6 +171,111 @@
 			</div>
 		</div>
 	</div>
+	<div id="client-pick" style="display: none;width:600px">
+		<div class="form-horizontal search-panel">
+			<div class="form-group">
+				<div class="input-row clearfloat">
+					<label class="col-md-2 control-label">姓名</label>
+					<div class="col-md-6">
+						<input type="text" id="client_name" class="form-control" placeholder="姓名" />
+					</div>
+					<button type="submit" class="btn btn-green col-md-1" style="float:right" data-bind="event:{click:searchClientEmployee }">搜索</button>
+				</div>
+			</div>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>姓名</th>
+						<th>财务主体</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: clientEmployees">
+					<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data)}}">
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.financial_body_name"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums -->
+				<!-- ko if: $data == $root.currentPage() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage() -->
+				<a data-bind="text: $data, click: $root.turnPage"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+			</div>
+		</div>
+	</div>
+	<div id="product-pick" style="display: none; width: 1200px">
+		<div class="form-horizontal search-panel">
+			<div class="input-row clearfloat">
+				<label class="col-md-1 control-label">产品名称</label>
+				<div class="col-md-3">
+					<input type="text" id="product-name" class="form-control" placeholder="产品名称" />
+				</div>
+				<label class="col-md-1 control-label">产品型号</label>
+				<div class="col-md-3">
+					<input type="text" id="product-model" class="form-control" placeholder="产品型号" />
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<button type="submit" class="btn btn-green col-md-1" style="float: right" data-bind="event:{click:searchProduct }">搜索</button>
+			</div>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>产品名称</th>
+						<th title="成人/儿童">分值</th>
+						<th>产品线</th>
+						<th>型号</th>
+						<th>天数</th>
+						<th>首段城市对</th>
+						<th>直客报价</th>
+						<th>儿童报价</th>
+						<th>同业返利</th>
+						<th>最大让利</th>
+						<th>产品经理</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: products">
+					<tr data-bind="event: {click: function(){ $parent.pickProduct($data)}}">
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+						<td data-bind="text: $data.location"></td>
+						<td data-bind="text: $data.product_model"></td>
+						<td data-bind="text: $data.days"></td>
+						<td
+							data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
+						<td data-bind="text: $data.adult_price"></td>
+						<td data-bind="text: $data.child_price"></td>
+						<td data-bind="text: $data.business_profit_substract"></td>
+						<td data-bind="text: $data.max_profit_substract"></td>
+						<td data-bind="text: $data.product_manager"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage1, enable: currentPage1() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums1 -->
+				<!-- ko if: $data == $root.currentPage1() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage1() -->
+				<a data-bind="text: $data, click: $root.turnPage1"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -180,7 +286,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-edit.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-edit.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.002"></script>
 </body>
 </html>

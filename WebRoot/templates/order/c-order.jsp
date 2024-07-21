@@ -177,6 +177,7 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
+								<th>助理</th>
 								<th>锁定(产品/票务)</th>
 							</tr>
 						</thead>
@@ -220,6 +221,7 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.create_user"></td>
 								</s:if>
+								<td data-bind="text:$data.assistant_name"></td>
 								<td><span data-bind="text:$root.lockMapping[$data.lock_flg.charAt(0)]"></span>/<span
 									data-bind="text:$root.lockMapping[$data.lock_flg.charAt(2)]"></span></td>
 							</tr> 
@@ -356,6 +358,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/c-order.js?v=1.2"></script>
+	<script src="<%=basePath%>static/js/order/c-order.js?v=1.002"></script>
 </body>
 </html>

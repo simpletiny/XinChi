@@ -1,4 +1,5 @@
 var passengerBatLayer;
+
 function cancelBat() {
 	layer.close(passengerBatLayer);
 }
@@ -29,9 +30,18 @@ function autoPrice() {
 
 }
 // var td = debounce(test, 1500);
-function inputId() {
+function inputId(txt) {
 	autoPrice();
 	autoPersonInfo();
+	whenChangeId(txt);
+}
+
+function inputName(txt){
+	whenChangeName(txt);
+}
+
+function whenChangeContent(txt){
+	
 }
 
 function inputPrice() {
@@ -174,9 +184,12 @@ const nameModule = (function(){
 		<tr>
 			<input type="hidden" st="name-pk" />
 			<input type="hidden" st="name-lock" />
+			<input type="hidden" data-bind="value:$data.id" st="ok_id"/>
+			<input type="hidden" data-bind="value:$data.name" st="ok_name"/>
+			<input type="hidden" st="is_ok"/>
 			<td><input type="radio" name="team_chairman" /></td>
 			<td st="name-index"></td>
-			<td><input type="text" class="ip-" style="width: 90%" st="name" /></td>
+			<td><input type="text" class="ip-" style="width: 90%" st="name" oninput="inputName(this)"/></td>
 			<td>
 				<select class="form-control" style="height: 34px" st="sex">
 					<option value="">选择</option>
@@ -192,11 +205,13 @@ const nameModule = (function(){
 					<option value="P">护照</option>
 			</select>
 			</td>
-			<td><input type="text" class="ip-" style="width: 90%" maxlength="18" oninput="inputId()" st="id" /></td>
+			<td><input type="text" class="ip-" style="width: 90%" maxlength="18" oninput="inputId(this)" st="id" />
+			</td>
 			<td st='td-as-adult'><input type="checkbox" style="display:none" value='Y' onchange='checkAdult()' st='as-adult' /></td>
 			<td>
 				<input type="text" class="ip-" style="width: 90%" oninput="inputPrice()"  st="price" />
 			</td>
+			<td><img src="" alt="" /></td> 
 			<td><input type="button" style="width: 60%" onclick="removeName(this)" alt="删除名单" value="—" /></td>
 		</tr>
 	`;
@@ -226,3 +241,179 @@ const nameModule = (function(){
 	}
 	return {nameFormat,addTr};
 })();
+let names;
+function writeNameFromSession(){
+	names = JSON.parse(sessionStorage.getItem('ok_names'));
+	if(names!=null){
+		let content = "";
+		names.forEach(function(name){
+			content+=name.name+name.id;
+		})
+		$("#txt-name-list").val(content);
+		doBat();
+		
+		let trs = $("#name-table tbody").children();
+		trs.each(function(index,tr){
+			let txt_id = $(tr).find("input[st='id']");
+			let txt_ok_id = $(tr).find("input[st='ok_id']");
+			let txt_name = $(tr).find("input[st='name']");
+			let txt_ok_name = $(tr).find("input[st='ok_name']");
+			let txt_is_ok = $(tr).find("input[st='is_ok']");
+			let img = $(tr).find("img");
+			txt_ok_id.val(txt_id.val());
+			txt_ok_name.val(txt_name.val());
+			txt_is_ok.val("Y");
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+		});
+	}
+}
+
+function whenChangeId(txt){
+	let txt_id = $(txt);
+	let tr = txt_id.parent().parent();
+	let txt_ok_id =  tr.find("input[st='ok_id']");
+	let txt_is_ok = tr.find("input[st='is_ok']");
+	let img = tr.find("img");
+	if(txt_ok_id.val()!=""||txt_is_ok.val()==="Y"){
+		if(txt_id.val()!=txt_ok_id.val()){
+			$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+			txt_is_ok.val("N");
+			
+		}else{
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+			txt_is_ok.val("Y");
+		
+		}
+	}
+}
+function whenChangeName(txt){
+	let txt_name = $(txt);
+	let tr = txt_name.parent().parent();
+	let txt_ok_name = tr.find("input[st='ok_name']");
+	let txt_is_ok = tr.find("input[st='is_ok']");
+	let img = tr.find("img");
+	if(txt_ok_name.val()!=""||txt_is_ok.val()==="Y"){
+		if(txt_name.val()!=txt_ok_name.val()){
+			$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+			txt_is_ok.val("N");
+		}else{
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+			txt_is_ok.val("Y");
+		}
+	}
+}
+
+function checkName(){
+	let trs = $("#name-table tbody").children();
+	const tbody = $("#table-result").find("tbody");
+	$(tbody).empty();
+	let validate_result = true;
+	trs.each(function(index,tr){
+		let txt_id = $(tr).find("input[st='id']");
+		let txt_ok_id = $(tr).find("input[st='ok_id']");
+		let txt_name = $(tr).find("input[st='name']");
+		let txt_ok_name = $(tr).find("input[st='ok_name']");
+		let txt_is_ok = $(tr).find("input[st='is_ok']");
+		let img = $(tr).find("img");
+		let name = txt_name.val();
+		let id= txt_id.val();
+		
+		if(name.trim()===""||id.trim()===""){
+			fail_msg("请填姓名或身份证号！");
+			return;
+		}
+		startLoadingSimpleIndicator("检验中");
+		let person_result = validateName(name,id);
+		let tr_len = $(tbody).children().length;
+		if(person_result.code==200){
+			if(person_result.dishonest_flg=="N"){
+				$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+				$(txt_is_ok).val('Y');
+				$(txt_ok_id).val(id);
+				$(txt_ok_name).val(name);
+				const status = "成功";
+				let tr = $(`<tr>
+							<td>${tr_len+1}</td>
+							<td>${name}</td>
+							<td style="color:green">成功</td>
+							<td style="color:green">否</td>
+							<td>没有找到 ${id}${name}相关的结果</td>
+							<td>---</td>
+						</tr>`);
+				$(tbody).append(tr);
+			}else if(person_result.dishonest_flg=="Y"){
+				$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+				$(txt_is_ok).val('N');
+				let person_cases = data.cases;
+				if(person_cases){
+					for(let i=0;i<person_cases.length;i++){
+						const person_case = person_cases[i];
+						const result_msg = "立案时间："+person_case.reg_date+"；案号："+person_case.case_code;
+						const sign = person_case.sign_flg=="Y"?"是":"否";
+						let tr = $(`<tr>
+									<td>${tr_len+1}</td>
+									<td>${name}</td>
+									<td style="color:green">成功</td>
+									<<td style="color:red">失信人</td>
+									<td>${result_msg}</td>
+									<td>${sign}</td>
+								</tr>`);
+						$(tbody).append(tr);
+						tr_len++;
+					}
+				}
+				validate_result = false;
+			}
+		}else{
+			$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+			$(txt_is_ok).val('N');
+			const result_msg = person_result.msg;
+			let tr = $(`<tr>
+						<td>${tr_len+1}</td>
+						<td>${name}</td>
+						<td style="color:red">失败</td>
+						<td>---</td>
+						<td>${result_msg}</td>
+						<td>---</td>
+					</tr>`);
+			$(tbody).append(tr);
+			validate_result = false;
+		}
+	});
+	
+	if(!validate_result){
+		showCheckMsg();
+	}else{
+		$("#span-msg").hide();
+	}
+	endLoadingIndicator();
+}
+
+function showCheckMsg(){
+	if($("#span-msg").length){
+		$("#span-msg").show();
+	}else{
+		let a_span = $(`<span id="span-msg"
+		style="color:green;margin-right:10px;vertical-align:bottom;"><a href="javascript:void(0)" onclick="checkValidateResult()">点击查看校验结果</a></span>`);
+		$("#div-btn-area").prepend(a_span);
+	}
+}
+let validateResultLayer;
+function checkValidateResult(){
+	validateResultLayer = $.layer({
+		type : 1,
+		title : ['名单校验结果', ''],
+		maxmin : false,
+		closeBtn : [1, true],
+		shadeClose : false,
+		area : ['700px', '450px'],
+		offset : ['50px', ''],
+		scrollbar : true,
+		page : {
+			dom : '#div-result'
+		},
+		end : function() {
+			console.log("Done");
+		}
+	});
+}

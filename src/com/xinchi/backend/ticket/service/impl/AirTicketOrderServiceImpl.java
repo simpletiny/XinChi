@@ -200,14 +200,6 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 					// 更新销售订单
 					for (String team_number : team_numbers) {
-						List<ProductOrderNameBean> operate_names = productOrderNameDao.selectByTeamNumber(team_number);
-						boolean is_done = true;
-						for (ProductOrderNameBean n : operate_names) {
-							if (n.getTicked().equals("N")) {
-								is_done = false;
-								break;
-							}
-						}
 						OrderDto order = orderDao.selectByTeamNumber(team_number);
 						if (order.getStandard_flg().equals("Y")) {
 							BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
@@ -215,9 +207,7 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
 									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
 							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							if (is_done) {
-								bso.setName_confirm_status("4");
-							}
+
 							bsoDao.update(bso);
 						} else {
 							BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
@@ -225,9 +215,7 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
 									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
 							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							if (is_done) {
-								bnso.setName_confirm_status("4");
-							}
+
 							bnsoDao.update(bnso);
 						}
 					}
@@ -248,7 +236,6 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
 									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
 							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							bso.setName_confirm_status("4");
 							bsoDao.update(bso);
 
 						} else {
@@ -257,7 +244,6 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
 									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
 							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							bnso.setName_confirm_status("4");
 							bnsoDao.update(bnso);
 						}
 					}
@@ -377,14 +363,12 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 				if (sale_order.getStandard_flg().equals("Y")) {
 					BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
 					bso.setPk(sale_order.getPk());
-					bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
 					bso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
 							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
 					bsoDao.update(bso);
 				} else {
 					BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
 					bnso.setPk(sale_order.getPk());
-					bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
 					bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
 							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
 					bnsoDao.update(bnso);

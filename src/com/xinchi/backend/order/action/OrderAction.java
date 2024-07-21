@@ -95,7 +95,7 @@ public class OrderAction extends BaseAction {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			option.setCreate_user(sessionBean.getUser_number());
+			option.setSale_number(sessionBean.getUser_number());
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -103,6 +103,26 @@ public class OrderAction extends BaseAction {
 		page.setParams(params);
 
 		tbcOrders = service.selectTbcByPage(page);
+		return SUCCESS;
+	}
+
+	private List<String> order_pks;
+	private String assistant_number;
+
+	/**
+	 * 授权助理
+	 * 
+	 * @return
+	 */
+	public String authorizeAssistant() {
+		resultStr = service.authorizeAssistant(order_pks, assistant_number);
+		return SUCCESS;
+	}
+
+	private String sale_number;
+
+	public String forwardOrder() {
+		resultStr = service.forwardOrder(order_pks, sale_number);
 		return SUCCESS;
 	}
 
@@ -118,7 +138,7 @@ public class OrderAction extends BaseAction {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			option.setCreate_user(sessionBean.getUser_number());
+			option.setSale_number(sessionBean.getUser_number());
 		}
 		String period = option.getConfirm_period();
 		String today = DateUtil.getDateStr("yyyy-MM-dd");
@@ -740,5 +760,29 @@ public class OrderAction extends BaseAction {
 
 	public void setPayable_orders(List<PayableOrderBean> payable_orders) {
 		this.payable_orders = payable_orders;
+	}
+
+	public List<String> getOrder_pks() {
+		return order_pks;
+	}
+
+	public void setOrder_pks(List<String> order_pks) {
+		this.order_pks = order_pks;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getSale_number() {
+		return sale_number;
+	}
+
+	public void setSale_number(String sale_number) {
+		this.sale_number = sale_number;
 	}
 }

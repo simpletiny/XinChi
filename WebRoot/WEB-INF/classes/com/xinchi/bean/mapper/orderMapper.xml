@@ -66,6 +66,8 @@
 		<result column="payable" property="payable" jdbcType="DECIMAL" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
 		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
+		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
+		<result column="assistant_name" property="assistant_name" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -126,14 +128,14 @@
 		AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
-		A.create_user AS sale_number,
+		A.sale AS sale_number,
 		B.user_name AS sale_name,
 		sum(IF(
 		A.confirm_flg!='N' AND(C.final_type is null OR
 		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
-		A.create_user = B.user_number
+		A.sale = B.user_number
 		LEFT JOIN final_standard_order C ON
 		A.team_number = C.team_number
 		where
@@ -278,7 +280,7 @@
 		0))
 		AS last_score,
 		LEFT(A.confirm_date, 7) AS confirm_month,
-		A.create_user AS sale_number,
+		A.sale AS sale_number,
 		B.user_name AS sale_name,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
@@ -289,7 +291,7 @@
 		FROM
 		budget_standard_order A
 		LEFT JOIN
-		user_base B ON A.create_user =
+		user_base B ON A.sale =
 		B.user_number
 		LEFT JOIN
 		final_standard_order C ON A.team_number = C.team_number
@@ -340,14 +342,14 @@
 		AS score,
 		LEFT(A.confirm_date,7) as
 		confirm_month,
-		A.create_user AS sale_number,
+		A.sale AS sale_number,
 		B.user_name AS sale_name,
 		sum(IF(
 		A.confirm_flg!='N' AND(C.final_type is null OR
 		C.final_type!=4),(IFNULL(A.adult_count,0)+IFNULL(A.special_count,0)),0)) AS sum_people
 		FROM budget_standard_order A
 		LEFT JOIN user_base B on
-		A.create_user = B.user_number
+		A.sale = B.user_number
 		LEFT JOIN final_standard_order C ON
 		A.team_number = C.team_number
 		<where>
@@ -355,7 +357,7 @@
 				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
 			</if>
 			<if test="sale_number != null and sale_number !=''">
-				and A.create_user= #{sale_number,jdbcType=VARCHAR}
+				and A.sale= #{sale_number,jdbcType=VARCHAR}
 			</if>
 		</where>
 		GROUP by LEFT(A.confirm_date,7),A.create_user
@@ -401,15 +403,19 @@
 		A.product_value,
 		A.lock_flg,
 		A.name_confirm_status,
-		A.receivable_first_flg
+		A.receivable_first_flg,
+		A.assistant_number,
+		A.assistant_name,
+		A.sale AS sale_number,
+		A.sale_name
 		from
 		budget_order_view A LEFT JOIN
 		receivable B
 		ON A.team_number =
 		B.team_number
 		<where>
-			<if test="params.bo.create_user != null and params.bo.create_user !=''">
-				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
+				and A.sale= #{params.bo.sale_number,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
 				and A.client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')
@@ -536,15 +542,19 @@
 		A.lock_flg,
 		A.name_confirm_status,
 		A.receivable_first_flg,
-		A.do_confirm_date
+		A.do_confirm_date,
+		A.assistant_number,
+		A.assistant_name,
+		A.sale AS sale_number,
+		A.sale_name
 		from
 		budget_order_view A LEFT JOIN
 		receivable B ON
 		A.team_number =
 		B.team_number
 		<where>
-			<if test="params.bo.create_user != null and params.bo.create_user !=''">
-				and A.create_user_number= #{params.bo.create_user,jdbcType=VARCHAR}
+			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
+				and A.sale= #{params.bo.sale_number,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.client_employee_name != null and params.bo.client_employee_name !=''">
 				and A.client_employee_name like CONCAT('%',#{params.bo.client_employee_name,jdbcType=VARCHAR},'%')

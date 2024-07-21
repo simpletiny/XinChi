@@ -224,6 +224,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 根据多个订单编号查找乘客信息 -->
+		<action name="searchSaleOrderNameListByProductOrderNumbers" class="productOrderAction" method="searchSaleOrderNameListByProductOrderNumbers">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<!-- 更新销售订单的锁定标识 -->
 		<action name="changeOrderLock" class="productOrderAction" method="changeOrderLock">
 			<result name="success" type="str">resultStr</result>

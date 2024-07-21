@@ -9,7 +9,7 @@ var UsersContext = function() {
 	});
 	self.chosenUserRoles = ko.observableArray([]);
 
-	self.allRoles = ['MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'CPRODUCT'];
+	self.allRoles = ['MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'SASSISTANT', 'CPRODUCT'];
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
@@ -19,6 +19,7 @@ var UsersContext = function() {
 		'ACCOUNTING' : '会计',
 		'CASHIER' : '出纳',
 		'TICKET' : '票务',
+		'SASSISTANT' : '销售助理',
 		// C for cooperate
 		'CPRODUCT' : '合作产品'
 	};

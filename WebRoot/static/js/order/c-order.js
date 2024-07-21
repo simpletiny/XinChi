@@ -2,6 +2,7 @@ var confirmCheckLayer;
 var commentLayer;
 var passengerCheckLayer;
 var firstAirLayer;
+let assistantLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -34,6 +35,7 @@ var ProductBoxContext = function() {
 	$.getJSON(self.apiurl + 'user/searchAllSales', {}, function(data) {
 		self.sales(data.users);
 	});
+
 	// 订单决算
 	self.finalOrder = function() {
 		if (self.chosenOrders().length == 0) {
@@ -57,7 +59,6 @@ var ProductBoxContext = function() {
 
 		}
 	};
-
 	/**
 	 * 跳转到名单确认页面
 	 */

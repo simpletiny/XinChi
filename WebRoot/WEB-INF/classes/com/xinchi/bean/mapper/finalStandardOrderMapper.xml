@@ -43,6 +43,7 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="CHAR" />
 		<result column="sale" property="sale" jdbcType="CHAR" />
+		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -87,7 +88,8 @@
 		update_time,
 		status,
 		voucher_file,
-		sale
+		sale,
+		assistant_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -229,6 +231,9 @@
 			<if test="sale != null">
 				sale,
 			</if>
+			<if test="assistant_number != null">
+				assistant_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -353,6 +358,9 @@
 			</if>
 			<if test="sale != null">
 				#{sale,jdbcType=CHAR},
+			</if>
+			<if test="assistant_number != null">
+				#{assistant_number,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -480,6 +488,9 @@
 			</if>
 			<if test="sale != null">
 				sale = #{sale,jdbcType=CHAR},
+			</if>
+			<if test="assistant_number != null">
+				assistant_number = #{assistant_number,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

@@ -31,8 +31,6 @@ import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketNameListBean;
-import com.xinchi.bean.AirTicketNeedBean;
-import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ProductBean;
@@ -70,11 +68,15 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			saveFile(bean);
 		}
 
+		UserSessionBean user = SimpletinyUser.user();
 		if (bean.getDeparture_date().equals(""))
 			bean.setDeparture_date(null);
 		String order_pk = DBCommonUtil.genPk();
 		String passenger_captain = "";
 		bean.setPk(order_pk);
+
+		bean.setSale(user.getUser_number());
+		bean.setAssistant_number(user.getUser_number());
 
 		JSONArray nameList = JSONArray.fromObject(json);
 		for (int i = 0; i < nameList.size(); i++) {
@@ -115,8 +117,6 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		}
 		bean.setPassenger_captain(passenger_captain);
 		dao.insertWithPk(bean);
-
-		employeeService.makePublicToSales(bean.getClient_employee_pk(), SimpletinyUser.user().getPk());
 
 		return SUCCESS;
 	}
@@ -172,7 +172,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			receivableDao.update(receivable);
 		}
 
-		bean.setCreate_user(old.getCreate_user());
+		// bean.setCreate_user(old.getCreate_user());
 		if (!SimpletinyString.isEmpty(bean.getConfirm_file())) {
 			if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
 				deleteFile(old);
@@ -233,8 +233,8 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 	public String confirmStandardOrder(BudgetStandardOrderBean bean, String json) {
 		BudgetStandardOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		// 判断是否有信用余额确认订单
-		if (!userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getCreate_user(),
-				old.getTeam_number(), bean.getReceivable()))
+		if (!userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(), old.getTeam_number(),
+				bean.getReceivable()))
 			return "noenoughcredit";
 
 		ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
@@ -266,8 +266,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 			receivable.setBudget_balance(bean.getReceivable());
 			receivable.setReceived(BigDecimal.ZERO);
-			receivable.setSales(old.getCreate_user());
-			receivable.setCreate_user(old.getCreate_user());
+			receivable.setSales(old.getSale());
 			receivableDao.insert(receivable);
 		}
 		// 如果已经生成了应收款，则更新应收款
@@ -315,9 +314,7 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 		} else {
 			orderReportDao.updateTeamReport(tr);
 		}
-
-		bean.setCreate_user(old.getCreate_user());
-
+		// bean.setCreate_user(old.getCreate_user());
 		// 保存新的确认单
 		if (!old.getConfirm_file().equals(bean.getConfirm_file())) {
 			deleteFile(old);
@@ -366,11 +363,12 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 			passenger.setAs_adult(as_adult);
 			nameListDao.insert(passenger);
 		}
-		bean.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTYES);
+		bean.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_YES);
 		bean.setPassenger_captain(passenger_captain);
 		bean.setConfirm_flg("Y");
 		bean.setDo_confirm_date(DateUtil.today());
 		dao.update(bean);
+		employeeService.makePublicToSales(bean.getClient_employee_pk(), old.getSale());
 		return SUCCESS;
 	}
 
@@ -459,21 +457,22 @@ public class BudgetStandardOrderServiceImpl implements BudgetStandardOrderServic
 
 			productOrderDao.update(po);
 
-			// 更新air_ticket_need
-			AirTicketNeedBean atn = airTicketNeedDao.selectByProductOrderNumber(pot.getProduct_order_number());
-			if (null != atn) {
-
-				atn.setAdult_cnt(po.getAdult_count());
-				atn.setSpecial_cnt(po.getSpecial_count());
-				airTicketNeedDao.update(atn);
-
-				// 更新air_ticket_order
-				AirTicketOrderBean ato = airTicketOrderDao.selectByNeedPk(atn.getPk());
-				if (null != ato) {
-					ato.setPeople_count(po.getAdult_count() + po.getSpecial_count());
-					airTicketOrderDao.update(ato);
-				}
-			}
+			// 更新air_ticket_need 2024-07-15注释掉，现在的票务需求与销售订单无关
+			// AirTicketNeedBean atn =
+			// airTicketNeedDao.selectByProductOrderNumber(pot.getProduct_order_number());
+			// if (null != atn) {
+			//
+			// atn.setAdult_cnt(po.getAdult_count());
+			// atn.setSpecial_cnt(po.getSpecial_count());
+			// airTicketNeedDao.update(atn);
+			//
+			// // 更新air_ticket_order
+			// AirTicketOrderBean ato = airTicketOrderDao.selectByNeedPk(atn.getPk());
+			// if (null != ato) {
+			// ato.setPeople_count(po.getAdult_count() + po.getSpecial_count());
+			// airTicketOrderDao.update(ato);
+			// }
+			// }
 		}
 
 		// 更新team_report数据

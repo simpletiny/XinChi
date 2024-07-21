@@ -1,4 +1,5 @@
 var confirmCheckLayer;
+let saleLayer;
 var ProductBoxContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -10,6 +11,13 @@ var ProductBoxContext = function() {
 		role : 'SALES'
 	}, function(data) {
 		self.sales(data.users);
+	});
+
+	self.assistants = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'ASSISTANT'
+	}, function(data) {
+		self.assistants(data.users);
 	});
 
 	// 删除订单
@@ -81,7 +89,66 @@ var ProductBoxContext = function() {
 			}
 		}
 	};
+	/**
+	 * 转发订单
+	 */
+	self.forwardOrder = function() {
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择订单！");
+			return;
+		} else {
+			saleLayer = $.layer({
+				type : 1,
+				title : ['选择销售', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['500px', '200px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-sales-pick'
+				},
+				end : function() {
+				}
+			});
 
+		}
+	}
+	self.doForward = function() {
+		startLoadingSimpleIndicator("转发中");
+		let param = "";
+		for (let i = 0; i < self.chosenOrders().length; i++) {
+			const current = self.chosenOrders()[i].split(";");
+			const order_pk = current[0];
+			param += "order_pks=" + order_pk + "&";
+		}
+
+		let sale_number = $("#sel-sale").val();
+
+		if (sale_number == "") {
+			endLoadingIndicator();
+			fail_msg("请选择销售！");
+			return;
+		}
+
+		param += "sale_number=" + sale_number;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'order/forwardOrder',
+			data : param
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				layer.close(saleLayer);
+				self.refresh();
+				self.chosenOrders.removeAll();
+			}
+		});
+	}
+	self.cancelForward = function() {
+		layer.close(saleLayer);
+	}
 	// 确认订单
 	self.confirmOrder = function() {
 		if (self.chosenOrders().length == 0) {

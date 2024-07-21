@@ -21,7 +21,7 @@ var OrderContext = function() {
 
 	self.chosenType = ko.observable();
 	self.chosenType("1");
-
+	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'order/searchCOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
@@ -34,6 +34,7 @@ var OrderContext = function() {
 			} else {
 				fail_msg("员工不存在！");
 			}
+			endLoadingIndicator();
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});

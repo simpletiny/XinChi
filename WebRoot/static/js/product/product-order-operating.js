@@ -332,7 +332,31 @@ var OrderContext = function() {
 			});
 		});
 	};
+	self.copyNameList = function() {
+		const url = "product/searchSaleOrderNameListByProductOrderNumbers";
+		if (self.chosenOperations().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else {
+			startLoadingSimpleIndicator("查询中");
+			let param = "";
+			for (let i = 0; i < self.chosenOperations().length; i++) {
+				let data = self.chosenOperations()[i].split(";");
+				param += "order_numbers=" + data[1] + "&";
+			}
 
+			$.getJSON(self.apiurl + url, param, function(data) {
+				let content = "";
+				if (data.passengers) {
+					data.passengers.forEach(function(name) {
+						content += name.name + " " + name.id + "\n";
+					})
+				}
+				copyToClipboard(content);
+				endLoadingIndicator();
+			});
+		}
+	}
 	self.downloadSc = function(team_number, supplier_employee_pk) {
 		window.location.href = self.apiurl + "file/downloadProductFile?team_number=" + team_number
 				+ "&supplier_employee_pk=" + supplier_employee_pk + "&fileType=C";

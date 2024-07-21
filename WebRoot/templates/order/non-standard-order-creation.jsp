@@ -18,6 +18,10 @@
 	text-align: center;
 	vertical-align: middle !important
 }
+
+.fix-width {
+	width: 40% !important;
+}
 </style>
 </head>
 <body>
@@ -35,15 +39,20 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-3">
 							<label class="l">客户</label>
-							<div class="ip">
-								<input type="text" id="txt-client-employee-name" class="ip-"
-									data-bind="value: order().client_employee_name,event:{click:choseClientEmployee}" placeholder="客户"
-									required="required" />
+							<div class="ip fix-width">
+								<input type="text" id="txt-client-employee-name" class="ip-" data-bind="event:{click:choseClientEmployee}"
+									placeholder="客户" />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
-								style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk" required="required" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" style="display: none"
+								name="bnsOrder.client_employee_pk" id="client-employee-pk" />
+						</div>
+						<div class="col-md-3">
+							<label class="l">财务主体</label>
+							<div class="ip fix-width">
+								<p class="ip-default" id="txt-financial-body-name"></p>
+							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">产品名称</label>
@@ -127,14 +136,14 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6"> 
+						<div class="col-md-6">
 							<label class="l">备注（仅自己可见）</label>
 							<div class="ip">
 								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
 									name="bnsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
-						<div class="col-md-6"> 
+						<div class="col-md-6">
 							<label class="l">销售特请</label>
 							<div class="ip">
 								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().treat_comment"
@@ -163,48 +172,45 @@
 			</div>
 		</div>
 	</div>
-	<div id="client-pick" style="display: none;">
-		<div class="main-container">
-			<div class="main-box" style="width: 600px">
-				<div class="form-group">
-					<div class="span8">
-						<label class="col-md-2 control-label">姓名</label>
-						<div class="col-md-6">
-							<input type="text" id="client_name" class="form-control" placeholder="姓名" />
-						</div>
+	<div id="client-pick" style="display: none; width: 600px">
+		<div class="form-horizontal search-panel">
+			<div class="form-group">
+				<div class="input-row clearfloat">
+					<label class="col-md-2 control-label">姓名</label>
+					<div class="col-md-6">
+						<input type="text" id="client_name" class="form-control" placeholder="姓名" />
 					</div>
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchClientEmployee }">搜索</button>
-					</div>
+					<button type="submit" class="btn btn-green col-md-1" style="float: right"
+						data-bind="event:{click:searchClientEmployee }">搜索</button>
 				</div>
-				<div class="list-result">
-					<table class="table table-striped table-hover">
-						<thead>
-							<tr role="row">
-								<th>姓名</th>
-								<th>财务主体</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: clientEmployees">
-							<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data.name,$data.pk)}}">
-								<td data-bind="text: $data.name"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="pagination clearfloat">
-						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums -->
-						<!-- ko if: $data == $root.currentPage() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage() -->
-						<a data-bind="text: $data, click: $root.turnPage"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
-					</div>
-				</div>
+			</div>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>姓名</th>
+						<th>财务主体</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: clientEmployees">
+					<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data)}}">
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.financial_body_name"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums -->
+				<!-- ko if: $data == $root.currentPage() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage() -->
+				<a data-bind="text: $data, click: $root.turnPage"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
 			</div>
 		</div>
 	</div>
@@ -218,7 +224,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.003"></script>
 </body>
 </html>

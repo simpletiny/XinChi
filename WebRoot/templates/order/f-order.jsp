@@ -142,6 +142,7 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
+								<th>助理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -169,6 +170,7 @@ tr td {
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.sale_name"></td>
 								</s:if>
+								<td data-bind="text: $data.assistant_name"></td>
 							</tr>
 						</tbody>
 					</table>

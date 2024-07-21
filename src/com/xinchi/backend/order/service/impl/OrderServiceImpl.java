@@ -35,6 +35,7 @@ import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -158,7 +159,8 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type(order.getFinal_type());
 			final_order.setStatus(ResourcesConstants.FINAL_ORDER_STATUS_ING);
-			final_order.setSale(budget_order.getCreate_user_number());
+			final_order.setSale(budget_order.getSale_number());
+			final_order.setAssistant_number(budget_order.getAssistant_number());
 
 			switch (order.getFinal_type()) {
 			case "1":
@@ -219,6 +221,7 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setSpecial_cost(budget_order.getSpecial_cost());
 
 			final_order.setFy(budget_order.getFy());
+			final_order.setAssistant_number(budget_order.getAssistant_number());
 
 			final_order.setOther_cost(budget_order.getOther_cost());
 
@@ -255,7 +258,7 @@ public class OrderServiceImpl implements OrderService {
 			final_order.setReceivable(order.getReceivable());
 			final_order.setFinal_type(order.getFinal_type());
 			final_order.setStatus(ResourcesConstants.FINAL_ORDER_STATUS_ING);
-			final_order.setSale(budget_order.getCreate_user_number());
+			final_order.setSale(budget_order.getSale_number());
 
 			switch (order.getFinal_type()) {
 			case "1":
@@ -779,5 +782,47 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
 		return dao.selectFinalOrderByTeamNumber(team_number);
+	}
+
+	@Override
+	public String authorizeAssistant(List<String> order_pks, String assistant_number) {
+
+		for (String order_pk : order_pks) {
+			OrderDto order = dao.searchOrderByPk(order_pk);
+			// 更新订单是否先生成团款标识
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bso = bsoDao.selectByPrimaryKey(order_pk);
+				bso.setAssistant_number(assistant_number);
+				bsoDao.update(bso);
+			} else {
+				BudgetNonStandardOrderBean bnso = bnsoDao.selectByPrimaryKey(order_pk);
+				bnso.setAssistant_number(assistant_number);
+				bnsoDao.update(bnso);
+			}
+		}
+
+		return SUCCESS;
+	}
+
+	@Override
+	public String forwardOrder(List<String> order_pks, String sale_number) {
+
+		for (String order_pk : order_pks) {
+			OrderDto order = dao.searchOrderByPk(order_pk);
+			// 更新订单是否先生成团款标识
+			if (order.getStandard_flg().equals("Y")) {
+				BudgetStandardOrderBean bso = bsoDao.selectByPrimaryKey(order_pk);
+				bso.setSale(sale_number);
+				bso.setAssistant_number(SimpletinyUser.user().getUser_number());
+				bsoDao.update(bso);
+			} else {
+				BudgetNonStandardOrderBean bnso = bnsoDao.selectByPrimaryKey(order_pk);
+				bnso.setSale(sale_number);
+				bnso.setAssistant_number(SimpletinyUser.user().getUser_number());
+				bnsoDao.update(bnso);
+			}
+		}
+
+		return SUCCESS;
 	}
 }

@@ -49,7 +49,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>待操作名单</h2>
+			<h2>待发票务</h2>
 		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box" style="overflow: hidden">

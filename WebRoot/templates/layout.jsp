@@ -96,10 +96,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					type="hidden" id="user-pk" value='${user.pk}' />
 			</div>
 			<div class="user-status">
-				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
+				<%-- 				<a href="<%=basePath%>templates/order/confirm-name-list.jsp"
 					style="margin-right: 100px; color: pink; font-size: 150%; text-decoration: none;">名单确认</a>
+ --%>
 				<s:property value="#session.user.nick_name" />
-				（
+				（ 	
 				<s:property value="#session.user.user_number" />
 				）&nbsp;&nbsp;&nbsp;&nbsp;授信额度：
 				<s:property value="#session.user.credit_limit" />
@@ -202,14 +203,18 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
 				</ol></li> --%>
 			<s:if
-				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
+				test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')||#session.user.user_roles.contains('SASSISTANT')">
 				<li class="order-box"><a href="<%=basePath%>templates/product/product-box.jsp"><i
 						class="fa fa-users1 fa-lg fa-fw"></i>订单管理</a>
 					<ol style="display: none;">
+
 						<li><a href="<%=basePath%>templates/product/product-box.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>产品架</a></li>
 						<li><a href="<%=basePath%>templates/order/tbc-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>待确认</a></li>
-						<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
-						<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
+						<s:if
+							test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SALES')">
+							<li><a href="<%=basePath%>templates/order/c-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已确认</a></li>
+							<li><a href="<%=basePath%>templates/order/f-order.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>已决算</a></li>
+						</s:if>
 						<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>售前必知</a></li>
 					</ol></li>
@@ -428,7 +433,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
-	<script src="<%=basePath%>static/js/utils.js?v1.006"></script>
+	<script src="<%=basePath%>static/js/utils.js?v1.008"></script>
 	<script src="<%=basePath%>static/js/layout.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

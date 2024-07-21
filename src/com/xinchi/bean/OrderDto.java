@@ -62,6 +62,8 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String product_manager_number;
 	private String product_manager;
 	private String confirm_file;
+	private String assistant_number;
+	private String assistant_name;
 
 	private String lock_flg;
 
@@ -727,6 +729,22 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setFinal_comment(String final_comment) {
 		this.final_comment = final_comment;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getAssistant_name() {
+		return assistant_name;
+	}
+
+	public void setAssistant_name(String assistant_name) {
+		this.assistant_name = assistant_name;
 	}
 
 }

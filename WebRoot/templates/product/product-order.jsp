@@ -50,13 +50,14 @@ tr td {
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品订单</h2>
+			<h2>待操作</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group" style="float: right">
+						<button type="submit" class="btn btn-green" data-bind="click: function() { copyNameList() }">复制名单</button>
 						<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
 						<button type="submit" class="btn btn-green" data-bind="click: function() { rollBack() }">打回订单</button>
 					</div>
@@ -362,6 +363,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.003"></script>
 </body>
 </html>

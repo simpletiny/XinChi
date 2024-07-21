@@ -155,6 +155,7 @@ var OrderContext = function() {
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
+		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
@@ -170,6 +171,12 @@ var OrderContext = function() {
 			const age = $(tr).find("[st='age']").val().trim();
 			const id_type = $(tr).find("[st='type']").val();
 			const lock_flg = $(tr).find("[st='name-lock']").val();
+			let is_ok = $(tr).find("[st='is_ok']").val();
+			
+			if(is_ok!='Y'){
+				not_ok_names.push(name);
+			}
+			
 			if (name == "" && id == "") {
 				continue;
 			}
@@ -199,7 +206,11 @@ var OrderContext = function() {
 			fail_msg("请指定团长！");
 			return;
 		}
-
+		if(not_ok_names.length>0){
+			fail_msg(not_ok_names.join(",")+"未通过验证！");
+			endLoadingIndicator();
+			return;
+		}
 		const json = JSON.stringify(people);
 		startLoadingSimpleIndicator("保存中");
 		data += "&json=" + json;
@@ -244,5 +255,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
-
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });

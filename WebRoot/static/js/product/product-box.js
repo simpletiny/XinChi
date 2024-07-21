@@ -155,9 +155,63 @@ var ProductBoxContext = function() {
 	};
 	// end pagination
 };
-
+let names;
+let nameCheckLayer;
 var ctx = new ProductBoxContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
+	names = JSON.parse(sessionStorage.getItem('ok_names'));
+	if (names != null) {
+		$("#btn-check-names").show();
+	}
 });
+
+function checkNames() {
+	let tbody = $("#tbody-name");
+	tbody.html('');
+	names.forEach(function(name) {
+		let tr = $(`<tr>
+				<td>${name.name}</td>
+				<td>${name.id}</td>
+			</tr>`);
+		tbody.append(tr);
+	})
+	
+	nameCheckLayer = $.layer({
+		type : 1,
+		title : ['已校验名单', ''],
+		maxmin : false,
+		closeBtn : [1, true],
+		shadeClose : false,
+		area : ['600px', '550px'],
+		offset : ['', ''],
+		scrollbar : true,
+		page : {
+			dom : '#div-name-check'
+		},
+		end : function() {
+		}
+	});
+}
+
+function deleteNames(){
+	$.layer({
+		area : ['auto', 'auto'],
+		dialog : {
+			msg : "确定要删除已校验的名单记录吗？",
+			btns : 2,
+			type : 4,
+			btn : ['确认', '取消'],
+			yes : function(index) {
+				layer.close(index);
+				startLoadingIndicator("删除中");
+				sessionStorage.removeItem("ok_names");
+				layer.close(nameCheckLayer);
+				$("#btn-check-names").hide();
+				endLoadingIndicator();
+				success_msg("删除成功！");
+			}
+		}
+	});
+}

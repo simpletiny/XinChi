@@ -78,16 +78,19 @@ th {
 					</div>
 					<div id="div-name-list">
 						<div class="input-row clearfloat">
+							<input type="hidden" name="ok_id" /> <input type="hidden" name="ok_name" /> <input type="hidden" name='is_ok' />
 							<div class="col-md-3 required">
 								<label class="l" style="width: 50px !important">姓名:</label>
 								<div class="ip fix-width">
-									<input type="text" name='name' required class="ip- date-picker" maxlength="10" placeholder="姓名" />
+									<input type="text" name='name' required class="ip-" oninput="whenChangeName(this)" maxlength="10"
+										placeholder="姓名" />
 								</div>
 							</div>
 							<div class="col-md-4 required">
 								<label class="l" style="width: 75px !important">身份证号:</label>
 								<div class="ip">
-									<input type="text" name='id' required class="ip- date-picker" maxlength="18" placeholder="身份证号" />
+									<input type="text" name='id' required class="ip-" oninput="whenChangeId(this)" maxlength="18"
+										placeholder="身份证号" />
 								</div>
 							</div>
 							<div class="col-md-1">
@@ -104,9 +107,10 @@ th {
 					</div>
 				</form>
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: check">查询</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: createOrder" id="a-create-order"
+						style="display: none">生成订单</a> <a type="submit" class="btn btn-green btn-r" data-bind="click: check">查询</a>
 				</div>
-				<div id="div-result" style="display:none">
+				<div id="div-result" style="display: none">
 					<hr />
 					<h2 style="color: red">查询结果</h2>
 					<table id="table-result" style="margin-top: 20px">
@@ -128,13 +132,12 @@ th {
 			</div>
 		</div>
 	</div>
-
 	<script>
 		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
-	<script src="<%=basePath%>static/js/system/dishonest.js"></script>
+	<script src="<%=basePath%>static/js/system/dishonest.js?v=1.001"></script>
 </body>
 </html>

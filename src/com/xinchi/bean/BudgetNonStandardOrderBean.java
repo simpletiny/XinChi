@@ -42,6 +42,8 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String update_user;
 
+	private String assistant_number;
+
 	private String lock_flg;
 	private String cancel_flg;
 	private String name_confirm_status;
@@ -69,6 +71,7 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String operate_flg;
 
+	private String sale;
 	// dto
 	private String confirm_type;
 
@@ -350,6 +353,22 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setTreat_comment(String treat_comment) {
 		this.treat_comment = treat_comment;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
 	}
 
 }

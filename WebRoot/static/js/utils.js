@@ -699,3 +699,47 @@ function showBigImg(url){
      `);
      newWindow.document.close();
 }
+
+function copyToClipboard(text) {
+    // Check if the browser supports the Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        // Use Clipboard API
+        navigator.clipboard.writeText(text).then(function() {
+            success_msg("已经成功复制到剪切板！");
+        }, function(err) {
+            fail_msg("复制失败！");
+        });
+    } else {
+        // Fallback for browsers that do not support the Clipboard API
+        var textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            var successful = document.execCommand('copy');
+            if(successful){
+                success_msg("已经成功复制到剪切板！");
+            }else{
+                fail_msg("复制失败！");
+            }
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+            document.getElementById('status').innerText = 'Fallback: Unable to copy text.';
+        }
+        document.body.removeChild(textArea);
+    }
+}
+function validateName(name,id){
+	var apiurl = $("#hidden_apiurl").val();
+	let result;
+	const param = "person.name="+name+"&person.id="+id;
+	$.ajax({
+		type : "POST",
+		url : apiurl + "system/checkIsDishonest",
+		async : false,
+		data : param
+	}).success(function(data) {
+		result = data.person_result;
+	});
+	return result;
+}

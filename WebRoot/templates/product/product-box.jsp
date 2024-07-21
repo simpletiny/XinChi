@@ -18,9 +18,30 @@ tr td {
 	white-space: nowrap;
 	text-align: left
 }
+
+.fixed {
+	font-size: 12px;
+	display: block;
+	position: fixed;
+	right: 20px;
+	top: 200px;
+	margin-left: 10px;
+	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
+}
 </style>
 </head>
 <body>
+	<div class="fixed">
+		<button type="submit" style="display: none" class="btn btn-green col-md-1"
+			data-bind="click: function() { checkNames() }" id='btn-check-names'>查看名单</button>
+	</div>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
@@ -172,6 +193,25 @@ tr td {
 					<!-- /ko -->
 				</table>
 			</div>
+		</div>
+	</div>
+	<div id="div-name-check" style="display: none; width: 600px; height: 500px; overflow-y: auto">
+		<div class="form-group" style="margin-top:10px">
+			<div style="float: right">
+				<button type="submit" class="btn btn-green" data-bind="click: function() { deleteNames() }">删除</button>
+			</div>
+		</div>
+		<div class="form-group">
+			<table style="width: 100%" class="table table-striped table-hover" style="padding:20px">
+				<thead> 
+					<tr>
+						<th style="width: 30%">姓名</th>
+						<th style="width: 70%">身份证号</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-name">
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<script>

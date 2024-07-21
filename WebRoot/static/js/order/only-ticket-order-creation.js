@@ -50,12 +50,13 @@ var OrderContext = function() {
 		});
 	}
 
-	self.pickClientEmployee = function(name, pk) {
-		$("#txt-client-employee-name").val(name);
-		$("#txt-client-employee-pk").val(pk);
+	self.pickClientEmployee = function(data) {
+		$("#txt-client-employee-name").val(data.name);
+		$("#txt-client-employee-pk").val(data.pk);
+		$("#txt-financial-body-name").text(data.financial_body_name);
 		layer.close(clientEmployeeLayer);
 	}
-
+	
 	self.createOrder = function() {
 		if (!$("form").valid()) {
 			return;
@@ -82,6 +83,7 @@ var OrderContext = function() {
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
+		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			const tr = trs[i];
 			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
@@ -95,6 +97,13 @@ var OrderContext = function() {
 			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			const id = $(tr).find("[st='id']").val().trim();
 
+			
+			let is_ok = $(tr).find("[st='is_ok']").val();
+			if(is_ok!='Y'){
+				not_ok_names.push(name);
+			}
+			
+			
 			if (name == "" || id == "") {
 				continue;
 			}
@@ -102,7 +111,11 @@ var OrderContext = function() {
 			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
 			people.push(person);
 		}
-		
+		if(not_ok_names.length>0){
+			fail_msg(not_ok_names.join(",")+"未通过验证！");
+			endLoadingIndicator();
+			return;
+		}
 		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
 		const json = JSON.stringify(info);
 		var data = $("form").serialize() + "&bnsOrder.independent_flg=A" + "&json=" + json;
@@ -114,6 +127,7 @@ var OrderContext = function() {
 			data : data
 		}).success(function(str) {
 			if (str == "success") {
+				sessionStorage.removeItem("ok_names");
 				window.location.href = self.apiurl + "templates/product/product-box.jsp";
 			}
 		});
@@ -191,4 +205,9 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	writeNameFromSession();
+	
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });

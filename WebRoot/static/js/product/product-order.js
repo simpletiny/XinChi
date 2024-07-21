@@ -267,6 +267,32 @@ var ProductContext = function() {
 			});
 		});
 	};
+
+	self.copyNameList = function() {
+		const url = "product/searchSaleOrderNameListByProductOrderNumbers";
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else {
+			startLoadingSimpleIndicator("查询中");
+			let param = "";
+			for (let i = 0; i < self.chosenOrders().length; i++) {
+				let data = self.chosenOrders()[i].split(";");
+				param += "order_numbers=" + data[0] + "&";
+			}
+
+			$.getJSON(self.apiurl + url, param, function(data) {
+				let content = "";
+				if (data.passengers) {
+					data.passengers.forEach(function(name) {
+						content += name.name + " " + name.id + "\n";
+					})
+				}
+				copyToClipboard(content);
+				endLoadingIndicator();
+			});
+		}
+	}
 	// 订单详情查看乘客信息
 	self.innerCheckPassengers = function(data, event) {
 		self.passengers.removeAll();

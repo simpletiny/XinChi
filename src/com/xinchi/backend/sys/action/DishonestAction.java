@@ -121,7 +121,6 @@ public class DishonestAction extends BaseAction {
 		} else {
 			person_result = new DishonestPersonBean();
 			String jsonStr = checkDishonestFromApi(person);
-			System.out.println(jsonStr);
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			int response_code = json.getInt("code");
 			String response_msg = json.getString("msg");

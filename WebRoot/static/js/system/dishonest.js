@@ -1,4 +1,4 @@
-var clientEmployeeLayer;
+
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -22,7 +22,6 @@ var OrderContext = function() {
 		});
 	};
 	self.check=function(){
-		
 		let valid_result = true;
 		$("#div-name-list").find("input[name='name'], input[name='id']").each(function(index,txt){
 			if($(txt).val().trim()==""){
@@ -38,25 +37,24 @@ var OrderContext = function() {
 		const tbody = $("#table-result").find("tbody");
 		$(tbody).empty();
 		let name_divs=	$("#div-name-list").children();
-		startLoadingSimpleIndicator("查询中...");
-		let count = 0;
+		startLoadingSimpleIndicator("查询中");
 		for(let i=0;i<name_divs.length;i++){
 			let name_div = $(name_divs[i]);
 			let name = name_div.find("input[name='name']").val().trim();
 			let id = name_div.find("input[name='id']").val().trim();
 			let img = name_div.find("img");
-			const param = "person.name="+name+"&person.id="+id;
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + "system/checkIsDishonest",
-				data : param
-			}).success(function(data) {
-				count++;
-				let person_result = data.person_result;
+			let txt_is_ok = name_div.find("input[name='is_ok']");
+			let txt_ok_id = name_div.find("input[name='ok_id']");
+			let txt_ok_name = name_div.find("input[name='ok_name']");
+			
+			let person_result = validateName(name,id);
 				let tr_len = $(tbody).children().length;
 				if(person_result.code==200){
 					if(person_result.dishonest_flg=="N"){
 						$(img).attr("src", self.apiurl + "static/img/dui.png");
+						$(txt_is_ok).val('Y');
+						$(txt_ok_id).val(id);
+						$(txt_ok_name).val(name);
 						const status = "成功";
 						let tr = $(`<tr>
 									<td>${tr_len+1}</td>
@@ -69,6 +67,7 @@ var OrderContext = function() {
 						$(tbody).append(tr);
 					}else if(person_result.dishonest_flg=="Y"){
 						$(img).attr("src", self.apiurl + "static/img/cuo.png");
+						$(txt_is_ok).val('N');
 						let person_cases = data.cases;
 						if(person_cases){
 							for(let i=0;i<person_cases.length;i++){
@@ -90,6 +89,7 @@ var OrderContext = function() {
 					}
 				}else{
 					$(img).attr("src", self.apiurl + "static/img/cuo.png");
+					$(txt_is_ok).val('N');
 					const result_msg = person_result.msg;
 					let tr = $(`<tr>
 								<td>${tr_len+1}</td>
@@ -101,23 +101,96 @@ var OrderContext = function() {
 							</tr>`);
 					$(tbody).append(tr);
 				}
-				if(count == name_divs.length){
-					endLoadingIndicator();
-				}
-			});
+				
 		}
+		endLoadingIndicator();
+		showOrHideCreate();
+	}
+	// 生成订单
+	self.createOrder = function(){
+		let result=	checkAllIsWell();
+		if(result.is_ok!='Y'){
+			fail_msg(result.not_ok_names.join(",")+"未通过检测！");
+			return;
+		}
+		
+		// 如果都通过了检测则开始生成订单操作
+        // 存储数据到 Session Storage
+		sessionStorage.setItem('ok_names', JSON.stringify(result.ok_names));
+        // 跳转到下一页面
+        window.location.href = self.apiurl + "templates/product/product-box.jsp";		
 	}
 };
 
 var ctx = new OrderContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
-	$(':file').change(function() {
-		changeFile(this);
-	});
-	// changeAutoType("Y");
 });
-
+function whenChangeId(txt){
+	let txt_id = $(txt);
+	let div_tr = txt_id.parent().parent().parent();
+	let txt_ok_id =  div_tr.find("input[name='ok_id']");
+	let txt_is_ok = div_tr.find("input[name='is_ok']");
+	let img = div_tr.find("img");
+	if(txt_ok_id.val()!=""||txt_is_ok.val()==="Y"){
+		if(txt_id.val()!=txt_ok_id.val()){
+			$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+			txt_is_ok.val("N");
+		}else{
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+			txt_is_ok.val("Y");
+		}
+	}
+}
+function whenChangeName(txt){
+	let txt_name = $(txt);
+	let div_tr = txt_name.parent().parent().parent();
+	let txt_ok_name = div_tr.find("input[name='ok_name']");
+	let txt_is_ok = div_tr.find("input[name='is_ok']");
+	let img = div_tr.find("img");
+	if(txt_ok_name.val()!=""||txt_is_ok.val()==="Y"){
+		if(txt_name.val()!=txt_ok_name.val()){
+			$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
+			txt_is_ok.val("N");
+		}else{
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+			txt_is_ok.val("Y");
+		}
+	}
+}
+function checkAllIsWell(){
+	let result = {};
+	let name_divs=	$("#div-name-list").children();
+	let not_ok_names = new Array();
+	let ok_names = new Array();
+	for(let i=0;i<name_divs.length;i++){
+		let name_div = $(name_divs[i]);
+		let name = name_div.find("input[name='name']").val().trim();
+		let id = name_div.find("input[name='id']").val().trim();
+		let is_ok = name_div.find("input[name='is_ok']").val();
+		if(is_ok!='Y'){
+			not_ok_names.push(name);
+		}else{
+			let ok_name = {};
+			ok_name.id=id;
+			ok_name.name=name;
+			ok_names.push(ok_name);
+		}
+	}
+	result.not_ok_names = not_ok_names;
+	result.ok_names = ok_names;
+	result.is_ok = not_ok_names.length > 0 ? 'N':'Y';
+	
+	return result;
+}
+function showOrHideCreate(){
+	let result=	checkAllIsWell();
+	if(result.is_ok=="Y"){
+		$("#a-create-order").show();
+	}else{
+		$("#a-create-order").hide();
+	}
+}
 var passengerBatLayer;
 function cancelBat() {
 	layer.close(passengerBatLayer);
@@ -133,6 +206,7 @@ var removeName = function(alink) {
 	let name_divs=	$("#div-name-list").children();
 	if(name_divs.length>1){
 		$(alink).parent().parent().remove();
+		showOrHideCreate();
 	}
 }
 // 判断是否已经存在重复的id乘客
@@ -185,26 +259,29 @@ function formatNameList(option) {
 }
 const nameModule = (function(){
 	let html = `
-		<div class="input-row clearfloat">
-			<div class="col-md-3 required">
-				<label class="l" style="width: 50px !important">姓名:</label>
-				<div class="ip fix-width">
-					<input type="text" name='name' required class="ip- date-picker" maxlength="10" placeholder="姓名" />
-				</div>
-			</div>
-			<div class="col-md-4 required">
-				<label class="l" style="width: 75px !important">身份证号:</label>
-				<div class="ip">
-					<input type="text" name='id' required class="ip- date-picker" maxlength="18" placeholder="身份证号" />
-				</div>
-			</div>
-			<div class="col-md-1">
-				<img src="" alt="" />
-			</div>
-			<div class="col-md-1">
-				<a href="javascript:void(0)" onclick="removeName(this)" style="line-height: 40px">删除</a>
+	<div class="input-row clearfloat">
+		<input type="hidden" name="ok_id"/>
+		<input type="hidden" name="ok_name"/>
+		<input type="hidden" name='is_ok'/>
+		<div class="col-md-3 required">
+			<label class="l" style="width: 50px !important">姓名:</label>
+			<div class="ip fix-width">
+				<input type="text" name='name' required class="ip-" oninput="whenChangeName(this)" maxlength="10" placeholder="姓名" />
 			</div>
 		</div>
+		<div class="col-md-4 required">
+			<label class="l" style="width: 75px !important">身份证号:</label>
+			<div class="ip">
+				<input type="text" name='id' required class="ip-" oninput="whenChangeId(this)" maxlength="18" placeholder="身份证号" />
+			</div>
+		</div>
+		<div class="col-md-1">
+			<img src="" alt="" />
+		</div>
+		<div class="col-md-1">
+			<a href="javascript:void(0)" onclick="removeName(this)" style="line-height: 40px">删除</a>
+		</div>
+	</div>
 	`;
 	function nameFormat(){
 		return formatNameList({

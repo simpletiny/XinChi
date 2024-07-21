@@ -50,7 +50,8 @@
 		A.name_confirm_status,
 		A.standard_flg
 
-		from budget_order_view A
+		from
+		budget_order_view A
 		LEFT JOIN product B ON A.product_pk=B.pk
 		LEFT
 		JOIN user_base C ON A.product_manager_number =
@@ -83,6 +84,6 @@
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
 		</where>
-		ORDER BY A.departure_date DESC
+		ORDER BY A.departure_date
 	</select>
 </mapper>

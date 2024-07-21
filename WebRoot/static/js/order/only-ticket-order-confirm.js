@@ -3,7 +3,6 @@ var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
-	self.clientEmployees = ko.observable({});
 	self.employee = ko.observable({});
 	self.order_pk = $("#key").val();
 	self.passengers = ko.observableArray([{
@@ -37,17 +36,20 @@ var OrderContext = function() {
 		self.ticket_infos(data.ticketInfos);
 		self.air_comment(self.ticket_infos()[0].comment);
 
-		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-			employee_pk : self.order().client_employee_pk
-		}, function(data) {
-			if (data.employee) {
-				self.employee(data.employee);
-			} else {
-				fail_msg("员工不存在！");
-			}
-		}).fail(function(reason) {
-			fail_msg(reason.responseText);
-		});
+		if(self.order().client_employee_pk){
+			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+				employee_pk : self.order().client_employee_pk
+			}, function(data) {
+				if (data.employee) {
+					self.employee(data.employee);
+				} else {
+					fail_msg("员工不存在！");
+				}
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
+			});
+		}
+		
 		reloadDatePicker();
 		self.loadFiles();
 
@@ -173,6 +175,7 @@ var OrderContext = function() {
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
+		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			const tr = trs[i];
 			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
@@ -185,7 +188,10 @@ var OrderContext = function() {
 			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			const id = $(tr).find("[st='id']").val().trim();
-
+			let is_ok = $(tr).find("[st='is_ok']").val();
+			if(is_ok!='Y'){
+				not_ok_names.push(name);
+			}
 			if (name == "" && id == "") {
 				continue;
 			}
@@ -214,6 +220,11 @@ var OrderContext = function() {
 
 		if (!hasChairman) {
 			fail_msg("请指定团长！");
+			return;
+		}
+		if(not_ok_names.length>0){
+			fail_msg(not_ok_names.join(",")+"未通过验证！");
+			endLoadingIndicator();
 			return;
 		}
 		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
@@ -256,6 +267,100 @@ var OrderContext = function() {
 			}
 		});
 	};
+	
+	self.clientEmployees = ko.observable({});
+	self.refreshClient = function() {
+		startLoadingSimpleIndicator("加载中……");
+		var param = "employee.name=" + $("#client_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
+			self.clientEmployees(data.employees);
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
+		});
+	};
+
+	self.searchClientEmployee = function() {
+		self.refreshClient();
+	};
+
+	self.choseClientEmployee = function() {
+		$("#txt-client-employee-name").blur();
+		clientEmployeeLayer = $.layer({
+			type : 1,
+			title : ['选择客户操作', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#client-pick'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
+
+	self.pickClientEmployee = function(data) {
+		$("#txt-client-employee-name").val(data.name);
+		$("#txt-client-employee-pk").val(data.pk);
+		$("#txt-financial-body-name").text(data.financial_body_name);
+		layer.close(clientEmployeeLayer);
+	};
+	
+	// start pagination
+	self.currentPage = ko.observable(1);
+	self.perPage = 10;
+	self.pageNums = ko.observableArray();
+	self.totalCount = ko.observable(1);
+	self.startIndex = ko.computed(function() {
+		return (self.currentPage() - 1) * self.perPage;
+	});
+
+	self.resetPage = function() {
+		self.currentPage(1);
+	};
+
+	self.previousPage = function() {
+		if (self.currentPage() > 1) {
+			self.currentPage(self.currentPage() - 1);
+			self.refreshPage();
+		}
+	};
+
+	self.nextPage = function() {
+		if (self.currentPage() < self.pageNums().length) {
+			self.currentPage(self.currentPage() + 1);
+			self.refreshPage();
+		}
+	};
+
+	self.turnPage = function(pageIndex) {
+		self.currentPage(pageIndex);
+		self.refreshPage();
+	};
+
+	self.setPageNums = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var pageNums = [];
+		for (var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums(pageNums);
+	};
+
+	self.refreshPage = function() {
+		self.searchClientEmployee();
+	};
+	
+	// end pagination
 
 };
 
@@ -279,4 +384,8 @@ $(document).ready(function() {
 		minDate : minDate,
 		maxDate : maxDate,
 	})
+	
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });

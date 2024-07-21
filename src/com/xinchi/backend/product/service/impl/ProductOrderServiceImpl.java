@@ -611,4 +611,16 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			return SUCCESS;
 		}
 	}
+
+	@Override
+	public List<SaleOrderNameListBean> searchSaleOrderNameListByProductOrderNumbers(List<String> order_numbers) {
+		List<String> team_numbers = new ArrayList<String>();
+		for (String order_number : order_numbers) {
+			List<String> tns = productOrderTeamNumberDao.selectTeamNumbersByOrderNumber(order_number);
+			if (null != tns && tns.size() > 0) {
+				team_numbers.addAll(tns);
+			}
+		}
+		return orderNameListDao.selectByTeamNumbers(team_numbers);
+	}
 }

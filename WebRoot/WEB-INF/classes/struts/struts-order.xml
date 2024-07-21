@@ -65,7 +65,14 @@
 		<action name="confirmBudgetStandardOrder" class="orderAction" method="confirmBudgetStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		<!-- 授权助理 -->
+		<action name="authorizeAssistant" class="orderAction" method="authorizeAssistant">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 转发订单 -->
+		<action name="forwardOrder" class="orderAction" method="forwardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 检测已确认订单是否能够修改 -->
 		<action name="checkCanBeEdit" class="orderAction" method="checkCanBeEdit">
 			<result name="success" type="str">resultStr</result>

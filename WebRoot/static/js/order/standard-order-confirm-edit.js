@@ -150,6 +150,7 @@ var OrderContext = function() {
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
+		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 
 			var tr = trs[i];
@@ -165,7 +166,11 @@ var OrderContext = function() {
 			var price = $(tr).find("[st='price']").val().trim();
 			var age = $(tr).find("[st='age']").val().trim();
 			var id_type = $(tr).find("[st='type']").val();
-
+			let is_ok = $(tr).find("[st='is_ok']").val();
+			
+			if(is_ok!='Y'){
+				not_ok_names.push(name);
+			}
 			
 			if (name == "" && id == "") {
 				continue;
@@ -201,6 +206,11 @@ var OrderContext = function() {
 
 		if (!chairman) {
 			fail_msg("请指定团长！");
+			return;
+		}
+		if(not_ok_names.length>0){
+			fail_msg(not_ok_names.join(",")+"未通过验证！");
+			endLoadingIndicator();
 			return;
 		}
 		let json = JSON.stringify(people);
@@ -249,4 +259,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });

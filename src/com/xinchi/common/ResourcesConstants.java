@@ -70,6 +70,7 @@ public class ResourcesConstants {
 	public static String USER_ROLE_ACCOUNTING = "ACCOUNTING";
 	public static String USER_ROLE_CASHIER = "CASHIER";
 	public static String USER_ROLE_TICKET = "TICKET";
+	public static String USER_ROLE_SALE_ASSISTANT = "SASSISTANT";
 
 	// 团队状态
 	public static String TEAM_STATUS_BEFORE = "未出团";

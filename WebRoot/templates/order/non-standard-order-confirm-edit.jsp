@@ -18,6 +18,9 @@
 	text-align: center;
 	vertical-align: middle !important
 }
+.fix-width {
+	width: 40% !important;
+}
 </style>
 </head>
 <body>
@@ -36,14 +39,20 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-3 required">
 							<label class="l">客户</label>
-							<div class="ip">
+							<div class="ip fix-width">
 								<input type="text" id="txt-client-employee-name" disabled="disabled" class="ip-"
-									data-bind="value: employee().name" placeholder="客户" required="required" />
+									data-bind="value: employee().name" placeholder="客户" required/>
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
-								style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk" required="required" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk"
+								style="display: none" name="bnsOrder.client_employee_pk" id="client-employee-pk" required/>
+						</div>
+						<div class="col-md-3">
+							<label class="l">财务主体</label>
+							<div class="ip fix-width">
+								<p class="ip-default" id="txt-financial-body-name" data-bind="text:employee().financial_body_name"></p>
+							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">产品名称</label>
@@ -190,7 +199,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-confirm-edit.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-confirm-edit.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.002"></script>
 </body>
 </html>

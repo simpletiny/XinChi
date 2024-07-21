@@ -49,4 +49,6 @@ public interface ProductOrderService extends BaseService {
 
 	public String deleteSendedAirNeed(String air_need_pk);
 
+	public List<SaleOrderNameListBean> searchSaleOrderNameListByProductOrderNumbers(List<String> order_numbers);
+
 }

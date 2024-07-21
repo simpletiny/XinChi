@@ -49,7 +49,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>已操作名单</h2>
+			<h2>已发票务</h2>
 		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box" style="overflow: hidden">
@@ -291,7 +291,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-name-list-done.js"></script>
+	<script src="<%=basePath%>static/js/product/product-order-name-list-done.js?v=1.001"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

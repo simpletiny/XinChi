@@ -120,6 +120,13 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private List<String> order_numbers;
+
+	public String searchSaleOrderNameListByProductOrderNumbers() {
+		passengers = service.searchSaleOrderNameListByProductOrderNumbers(order_numbers);
+		return SUCCESS;
+	}
+
 	private List<AirTicketNameListBean> ticket_infos;
 
 	public String searchTicketInfoByOrderNumber() {
@@ -316,6 +323,14 @@ public class ProductOrderAction extends BaseAction {
 
 	public void setAir_need_pk(String air_need_pk) {
 		this.air_need_pk = air_need_pk;
+	}
+
+	public List<String> getOrder_numbers() {
+		return order_numbers;
+	}
+
+	public void setOrder_numbers(List<String> order_numbers) {
+		this.order_numbers = order_numbers;
 	}
 
 }

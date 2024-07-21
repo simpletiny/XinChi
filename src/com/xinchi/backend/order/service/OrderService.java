@@ -55,4 +55,8 @@ public interface OrderService extends BaseService {
 
 	public OrderDto selectFinalOrderByTeamNumber(String team_number);
 
+	public String authorizeAssistant(List<String> order_pks, String assistant_number);
+
+	public String forwardOrder(List<String> order_pks, String sale_number);
+
 }
