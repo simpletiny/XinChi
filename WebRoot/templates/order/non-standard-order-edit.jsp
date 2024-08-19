@@ -21,6 +21,9 @@
 .fix-width {
 	width: 40% !important;
 }
+textarea {
+	width:200px !important;
+}
 </style>
 </head>
 <body>
@@ -37,6 +40,7 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk"></input>
+					<input type="hidden" data-bind="value:order().create_user" name="bnsOrder.create_user"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
 							<label class="l">客户</label>
@@ -134,18 +138,32 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6">
-							<label class="l">备注（仅自己可见）</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
-									name="bnsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
+						<div class="col-md-3">
+							<label class="l">团款备注</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().receivable_comment"
+									placeholder="团款备注" name="bnsOrder.receivable_comment"></textarea>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
+							<label class="l">用房说明</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
+									name="bnsOrder.hotel_comment" placeholder="用房说明"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
 							<label class="l">销售特请</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().treat_comment"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
 									name="bnsOrder.treat_comment" placeholder="销售特请"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">订单备注（仅自己可见）</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
+									name="bnsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
 					</div>

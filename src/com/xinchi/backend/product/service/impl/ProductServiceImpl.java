@@ -74,7 +74,9 @@ public class ProductServiceImpl implements ProductService {
 		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(product.getProduct_model());
 		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		// 2024-07-25,改为同一产品名称下型号不能重复
 		option.setCreate_user(user.getUser_number());
+		option.setName(product.getName());
 
 		// 检测产品型号
 		List<ProductBean> exists = dao.selectByParam(option);
@@ -107,7 +109,9 @@ public class ProductServiceImpl implements ProductService {
 		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(bean.getProduct_model());
 		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		// 2024-07-25,改为同一产品名称下型号不能重复
 		option.setCreate_user(user.getUser_number());
+		option.setName(bean.getName());
 		List<ProductBean> exists = dao.selectByParam(option);
 		if (null != exists) {
 			for (ProductBean exist : exists) {

@@ -68,6 +68,7 @@
 		<result column="operate_flg" property="operate_flg" jdbcType="CHAR" />
 		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
 		<result column="assistant_name" property="assistant_name" jdbcType="VARCHAR" />
+		<result column="hotel_comment" property="hotel_comment" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="SaleScoreMap" type="com.xinchi.bean.SaleScoreDto">
 		<result column="score" property="score" jdbcType="DECIMAL" />
@@ -81,7 +82,11 @@
 		<result column="middle_score" property="middle_score" jdbcType="DECIMAL" />
 		<result column="last_people" property="last_people" jdbcType="INTEGER" />
 		<result column="last_score" property="last_score" jdbcType="DECIMAL" />
-
+		<result column="ave_score" property="ave_score" jdbcType="DECIMAL" />
+		<result column="non_standard_people" property="non_standard_people" jdbcType="INTEGER" />
+		<result column="only_ticket_people" property="only_ticket_people" jdbcType="INTEGER" />
+		<result column="sale_cost" property="sale_cost" jdbcType="DECIMAL" />
+		<result column="sale_salary" property="sale_salary" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<resultMap id="NameResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderDto">
@@ -141,7 +146,7 @@
 		where
 		LEFT(A.confirm_date,7) in (date_format(now(),'%Y-%m'),date_format(date_sub(now(),interval 1
 		month),'%Y-%m'),date_format(date_sub(now(),interval 2 month),'%Y-%m'))
-		and A.create_user
+		and A.sale
 		=#{user_number,jdbcType=VARCHAR}
 		GROUP by LEFT(A.confirm_date,7)
 		ORDER by LEFT(A.confirm_date,7) DESC
@@ -159,11 +164,18 @@
 		name_confirm_status
 		from budget_order_view
 		<where>
-			<if test="create_user != null and create_user !=''">
-				and create_user_number= #{create_user,jdbcType=VARCHAR}
+			<if test="sale_number != null and sale_number !=''">
+				and sale= #{sale_number,jdbcType=VARCHAR}
 			</if>
 			and name_confirm_status in('2','4')
 		</where>
+	</select>
+	<select id="selectOrderWithNames" resultMap="NameResultMap" parameterType="com.xinchi.bean.OrderDto">
+		select * from budget_order_view
+		where team_number in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -173,9 +185,58 @@
 		#{team_number,jdbcType=VARCHAR}
 	</select>
 	<select id="searchOrderByPk" parameterType="java.lang.String" resultMap="BaseResultMap">
-		select * from budget_order_view
+		SELECT A.team_number,
+		A.product_name,
+		A.product_pk,
+		A.product_model,
+		A.client_employee_pk,
+		A.client_employee_name,
+		A.independent_flg,
+		A.comment,
+		A.other_cost_comment,
+		A.other_cost,
+		A.fy,
+		A.special_cost,
+		A.special_count,
+		A.adult_cost,
+		A.adult_count,
+		A.receivable,
+		A.days,
+		A.departure_date,
+		A.pk,
+		A.update_user,
+		A.create_user_number,
+		A.create_user,
+		A.confirm_flg,
+		A.create_time,
+		A.update_time,
+		A.confirm_date,
+		A.confirm_file,
+		A.standard_flg,
+		A.product_manager_number,
+		A.product_manager,
+		A.air_ticket_cost,
+		A.product_cost,
+		A.operate_flg,
+		A.name_list,
+		A.lock_flg,
+		A.cancel_flg,
+		A.name_confirm_status,
+		A.passenger_captain,
+		A.receivable_comment,
+		A.treat_comment,
+		A.client_name,
+		A.status,
+		A.product_value,
+		A.receivable_first_flg,
+		A.do_confirm_date,
+		A.assistant_number,
+		A.assistant_name,
+		A.sale AS sale_number,
+		A.hotel_comment,
+		A.sale_name from budget_order_view A
 		where
-		pk
+		A.pk
 		=
 		#{order_pk,jdbcType=CHAR}
 	</select>
@@ -213,7 +274,7 @@
 		</where>
 	</select>
 
-	<select id="searchSaleScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
+	<select id="selectSaleScore" parameterType="com.xinchi.bean.OrderDto" resultMap="SaleScoreMap">
 		SELECT
 		SUM(IF(A.confirm_flg != 'N'
 		AND (C.final_type IS NULL
@@ -287,27 +348,95 @@
 		OR C.final_type != 4),
 		(IFNULL(A.adult_count, 0) +
 		IFNULL(A.special_count, 0)),
-		0)) AS sum_people
+		0)) AS sum_people,
+		ROUND(SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR
+		C.final_type != 4),
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) *
+		SUBSTRING_INDEX(A.product_value, ',', -
+		1),
+		0)) / SUM(IF(A.confirm_flg != 'N'
+		AND (C.final_type IS NULL
+		OR C.final_type !=
+		4),
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)),
+		2) AS ave_score
 		FROM
 		budget_standard_order A
 		LEFT JOIN
 		user_base B ON A.sale =
 		B.user_number
 		LEFT JOIN
-		final_standard_order C ON A.team_number = C.team_number
+		final_standard_order C
+		ON A.team_number = C.team_number
 		<where>
-			<if test="params.bo.confirm_month != null and params.bo.confirm_month !=''">
-				and LEFT(A.confirm_date,7)= #{params.bo.confirm_month,jdbcType=VARCHAR}
-			</if>
-			<if test="params.bo.date_from != null and params.bo.date_from !=''">
-				and A.confirm_date >= #{params.bo.date_from,jdbcType=VARCHAR}
-			</if>
-			<if test="params.bo.date_to != null and params.bo.date_to !=''">
-				and A.confirm_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
+			<if test="confirm_month != null and confirm_month !=''">
+				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP by LEFT(A.confirm_date,7),A.create_user
+		GROUP by LEFT(A.confirm_date,7),A.sale
 		ORDER by score DESC
+	</select>
+
+	<select id="selectNonStandardSaleData" parameterType="com.xinchi.bean.OrderDto" resultMap="SaleScoreMap">
+		SELECT
+		SUM(IF(A.confirm_flg != 'N'
+		AND (B.final_type IS NULL
+		OR B.final_type != 4)
+		AND A.independent_flg != 'A',
+		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		0)) AS non_standard_people,
+		SUM(IF(A.confirm_flg != 'N'
+		AND
+		(B.final_type IS NULL
+		OR B.final_type != 4)
+		AND A.independent_flg = 'A',
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
+		0)) AS only_ticket_people,
+		LEFT(A.confirm_date, 7) AS confirm_month,
+		A.sale AS sale_number,
+		C.user_name AS sale_name
+		FROM
+		budget_non_standard_order A
+		LEFT JOIN
+		final_non_standard_order B ON A.team_number =
+		B.team_number
+		LEFT JOIN user_base C ON A.sale=C.user_number
+		<where>
+			<if test="confirm_month != null and confirm_month !=''">
+				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY LEFT(A.confirm_date, 7) , A.sale
+	</select>
+	<select id="selectSaleCost" parameterType="com.xinchi.bean.OrderDto" resultMap="SaleScoreMap">
+		SELECT
+		SUM(IF(A.item = 'X' AND A.status = 'P',
+		A.money,
+		0)) AS sale_cost,
+		SUM(IF(A.item = 'G' AND A.status = 'P',
+		A.money,
+		0)) AS sale_salary,
+		month AS confirm_month,
+		apply_user AS sale_number,
+		B.user_name AS sale_name
+		FROM
+		reimbursement A
+		LEFT
+		JOIN
+		user_base B ON
+		A.apply_user = B.user_number
+		<where>
+			A.item IN ('X' , 'G')
+			<if test="confirm_month != null and confirm_month !=''">
+				and A.month= #{confirm_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+		GROUP BY A.month,A.apply_user
+		HAVING sale_cost > 0 OR sale_salary > 0
 	</select>
 
 	<select id="searchBackMoneyScore" parameterType="com.xinchi.tools.Page" resultMap="SaleScoreMap">
@@ -360,7 +489,7 @@
 				and A.sale= #{sale_number,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP by LEFT(A.confirm_date,7),A.create_user
+		GROUP by LEFT(A.confirm_date,7),A.sale
 	</select>
 
 	<select id="selectTbcByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -406,8 +535,10 @@
 		A.receivable_first_flg,
 		A.assistant_number,
 		A.assistant_name,
-		A.sale AS sale_number,
-		A.sale_name
+		A.sale AS
+		sale_number,
+		A.sale_name,
+		A.hotel_comment
 		from
 		budget_order_view A LEFT JOIN
 		receivable B
@@ -545,8 +676,10 @@
 		A.do_confirm_date,
 		A.assistant_number,
 		A.assistant_name,
-		A.sale AS sale_number,
-		A.sale_name
+		A.sale AS
+		sale_number,
+		A.sale_name,
+		A.hotel_comment
 		from
 		budget_order_view A LEFT JOIN
 		receivable B ON

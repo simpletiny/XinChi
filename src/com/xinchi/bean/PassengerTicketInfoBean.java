@@ -48,6 +48,8 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	private String base_pk;
 
+	private int people_count;
+
 	public String getTicket_source() {
 		return ticket_source;
 	}
@@ -206,6 +208,14 @@ public class PassengerTicketInfoBean extends SupperBO implements Serializable {
 
 	public void setAdd_day_flg(String add_day_flg) {
 		this.add_day_flg = add_day_flg;
+	}
+
+	public int getPeople_count() {
+		return people_count;
+	}
+
+	public void setPeople_count(int people_count) {
+		this.people_count = people_count;
 	}
 
 }

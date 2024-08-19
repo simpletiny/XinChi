@@ -56,8 +56,8 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	}
 
 	@Override
-	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScore", page);
+	public List<SaleScoreDto> searchSaleScore(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectSaleScore", score);
 	}
 
 	@Override
@@ -110,6 +110,21 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectFinalOrderByTeamNumber",
 				team_number);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectNonStandardSaleData", score);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectSaleCost", score);
+	}
+
+	@Override
+	public List<OrderDto> selectOrderWithNames(List<String> team_numbers) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectOrderWithNames", team_numbers);
 	}
 
 }

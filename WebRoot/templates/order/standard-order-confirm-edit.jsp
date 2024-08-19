@@ -22,6 +22,9 @@
 .fix-width {
 	width: 40% !important;
 }
+textarea {
+	width:200px !important;
+}
 </style>
 </head>
 <body>
@@ -37,7 +40,8 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
-					<input type="hidden" id="key" value="<%=key%>" name="bsOrder.pk"></input>
+					<input type="hidden" id="key" value="<%=key%>" name="bsOrder.pk"></input> <input type="hidden"
+						data-bind="value:order().create_user" name="bsOrder.create_user" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>
@@ -79,8 +83,8 @@
 						<div class="col-md-6">
 							<label class="l">天数</label>
 							<div class="ip">
-								<p class="ip-default" data-bind="text:product().days"></p>
-								<input type="hidden" data-bind="value: product().days" placeholder="天数" name="bsOrder.days" />
+								<p class="ip-default" data-bind="text:product().days" id="p-days"></p>
+								<input type="hidden" data-bind="value: product().days" id="txt-days" placeholder="天数" name="bsOrder.days" />
 							</div>
 						</div>
 					</div>
@@ -133,24 +137,31 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4">
-							<label class="l">团款备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" id="receivable-comment" maxlength="200"
+						<div class="col-md-3">
+							<label class="l">团款备注</label> 
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" id="receivable-comment" maxlength="200"
 									data-bind="value: order().receivable_comment" placeholder="团款备注" name="bsOrder.receivable_comment"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
+							<label class="l">用房说明</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
+									name="bsOrder.hotel_comment" placeholder="用房说明"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
 							<label class="l">销售特请</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" data-bind="value:order().treat_comment" maxlength="200"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
 									name="bsOrder.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label class="l">订单备注（仅自己可见）</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
 									name="bsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
@@ -186,7 +197,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-confirm-edit.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-confirm-edit.js?v=1.003"></script>
 	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.002"></script>
 </body>
 </html>

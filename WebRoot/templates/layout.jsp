@@ -433,7 +433,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/nanobar.js"></script>
 
-	<script src="<%=basePath%>static/js/utils.js?v1.008"></script>
+	<script src="<%=basePath%>static/js/utils.js?v1.009"></script>
 	<script src="<%=basePath%>static/js/layout.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>

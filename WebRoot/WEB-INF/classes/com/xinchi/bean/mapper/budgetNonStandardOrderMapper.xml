@@ -39,6 +39,8 @@
 		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
 		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
 		<result column="sale" property="sale" jdbcType="VARCHAR" />
+		<result column="hotel_comment" property="hotel_comment" jdbcType="VARCHAR" />
+		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -79,7 +81,9 @@
 		receivable_first_flg,
 		treat_comment,
 		assistant_number,
-		sale
+		sale,
+		hotel_comment,
+		receivable_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -206,6 +210,12 @@
 			<if test="sale != null">
 				sale,
 			</if>
+			<if test="hotel_comment != null">
+				hotel_comment,
+			</if>
+			<if test="receivable_comment != null">
+				receivable_comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -309,6 +319,12 @@
 			</if>
 			<if test="sale != null">
 				#{sale,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				#{hotel_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable_comment != null">
+				#{receivable_comment,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -424,6 +440,12 @@
 			</if>
 			<if test="sale != null">
 				sale = #{sale,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				hotel_comment = #{hotel_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable_comment != null">
+				receivable_comment = #{receivable_comment,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

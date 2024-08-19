@@ -282,14 +282,14 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			if (order.getStandard_flg().equals("Y")) {
 				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
 				bsOrder.setPk(order.getPk());
-				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-						ResourcesConstants.ORDER_OPERATE_STATUS_NO));
+				bsOrder.setOperate_flg(
+						ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
 				bsoDao.update(bsOrder);
 			} else {
 				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
 				bnsOrder.setPk(order.getPk());
-				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-						ResourcesConstants.ORDER_OPERATE_STATUS_NO));
+				bnsOrder.setOperate_flg(
+						ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
 				bnsoDao.update(bnsOrder);
 			}
 		}
@@ -622,5 +622,62 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			}
 		}
 		return orderNameListDao.selectByTeamNumbers(team_numbers);
+	}
+
+	@Override
+	/**
+	 * A:完全出票。B：部分出票。C：有未发送。D：未出票
+	 */
+	public String searchProductOrderTicketStatusByOrderNumber(String product_order_number) {
+		ProductOrderNameBean option = new ProductOrderNameBean();
+		option.setProduct_order_number(product_order_number);
+		List<ProductOrderNameBean> orderNames = productOrderNameDao.selectByParam(option);
+		List<String> operate_statuses = new ArrayList<>();
+		List<String> tickeds = new ArrayList<>();
+		Set<String> team_numbers = new HashSet<>();
+		for (ProductOrderNameBean name : orderNames) {
+			if (!name.getOperate_status().equals("D")) {
+				operate_statuses.add(name.getOperate_status());
+				tickeds.add(name.getTicked());
+			}
+			team_numbers.add(name.getTeam_number());
+		}
+
+		List<String> t_ns = new ArrayList<>(team_numbers);
+
+		if (operate_statuses.contains("N")) {
+			return "C";
+		}
+
+		if (tickeds.contains("N") && tickeds.contains("Y")) {
+			return "B";
+		}
+
+		if (tickeds.contains("N") && !tickeds.contains("Y")) {
+			return "D";
+		}
+
+		List<String> air_statuses = new ArrayList<>();
+		List<AirTicketNameListBean> airNames = airTicketNameListDao.selectByTeamNumbers(t_ns);
+
+		if (null == airNames || airNames.size() < 1) {
+			return "D";
+		}
+
+		for (AirTicketNameListBean name : airNames) {
+			air_statuses.add(name.getStatus());
+		}
+
+		if (air_statuses.contains("I") && (air_statuses.contains("Y") || air_statuses.contains("C"))) {
+			return "B";
+		}
+
+		if (air_statuses.contains("I") && !(air_statuses.contains("Y") || air_statuses.contains("C"))) {
+			return "D";
+		}
+		if (!air_statuses.contains("I") && (air_statuses.contains("Y") || air_statuses.contains("C"))) {
+			return "A";
+		}
+		return "NO";
 	}
 }

@@ -13,13 +13,19 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.product.service.ProductOrderOperationService;
+import com.xinchi.backend.product.service.ProductOrderService;
+import com.xinchi.backend.product.service.ProductOrderSupplierService;
 import com.xinchi.backend.product.service.ProductOrderTeamNumberService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
 import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderSupplierBean;
+import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.PayableOrderBean;
+import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductOrderOperationBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ProductSupplierBean;
@@ -65,7 +71,18 @@ public class ProductOrderOperationAction extends BaseAction {
 	@Autowired
 	private ProductOrderTeamNumberService productOrderNumberService;
 
+	@Autowired
+	private ProductOrderService productOrderService;
+
+	private ProductOrderBean product_order;
+
+	private List<PassengerTicketInfoBean> ticket_infos;
+
+	@Autowired
+	private PassengerTicketInfoService passengerTicketInfoService;
+
 	public String searchProductDataForOrder() {
+		product_order = productOrderService.selectByOrderNumber(product_order_number);
 		List<ProductOrderTeamNumberBean> potns = productOrderNumberService.selectByOrderNumber(product_order_number);
 
 		List<String> t_ns = new ArrayList<String>();
@@ -73,14 +90,13 @@ public class ProductOrderOperationAction extends BaseAction {
 			t_ns.add(potn.getTeam_number());
 		}
 
-		orders = orderService.selectByTeamNumbers(t_ns);
+		List<OrderDto> sale_orders = orderService.selectByTeamNumbers(t_ns);
 
 		BigDecimal adult_price = BigDecimal.ZERO;
 		BigDecimal special_price = BigDecimal.ZERO;
 
 		if (standard_flg.equals("Y")) {
 			productSuppliers = productSupplierService.selectByProductPk(product_pk);
-
 			for (ProductSupplierBean psb : productSuppliers) {
 				adult_price = adult_price.add(psb.getAdult_cost());
 				special_price = special_price.add(psb.getChild_cost() == null ? BigDecimal.ZERO : psb.getChild_cost());
@@ -89,7 +105,7 @@ public class ProductOrderOperationAction extends BaseAction {
 			productSuppliers = new ArrayList<ProductSupplierBean>();
 		}
 
-		for (OrderDto o : orders) {
+		for (OrderDto o : sale_orders) {
 			BigDecimal product_cost = BigDecimal.ZERO;
 			product_cost = product_cost.add(adult_price.multiply(new BigDecimal(o.getAdult_count())).add(
 					special_price.multiply(new BigDecimal(o.getSpecial_count() == null ? 0 : o.getSpecial_count()))));
@@ -97,6 +113,56 @@ public class ProductOrderOperationAction extends BaseAction {
 			adult_count += o.getAdult_count();
 			special_count += o.getSpecial_count() == null ? 0 : o.getSpecial_count();
 		}
+
+		ticket_infos = passengerTicketInfoService.selectGroupInfoByTeamNumbers(t_ns);
+		return SUCCESS;
+	}
+
+	public String searchProductDataForOrderByOrderNumber() {
+		product_order = productOrderService.selectByOrderNumber(product_order_number);
+		List<ProductOrderTeamNumberBean> potns = productOrderNumberService.selectByOrderNumber(product_order_number);
+		List<String> t_ns = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			t_ns.add(potn.getTeam_number());
+		}
+		List<OrderDto> sale_orders = orderService.selectByTeamNumbers(t_ns);
+		for (OrderDto o : sale_orders) {
+			adult_count += o.getAdult_count();
+			special_count += o.getSpecial_count() == null ? 0 : o.getSpecial_count();
+		}
+		ticket_infos = passengerTicketInfoService.selectGroupInfoByTeamNumbers(t_ns);
+		return SUCCESS;
+	}
+
+	private List<OrderSupplierBean> order_suppliers;
+
+	@Autowired
+	private ProductOrderSupplierService productOrderSupplierService;
+
+	/**
+	 * 搜索产品订单供应商信息
+	 * 
+	 * @return
+	 */
+	public String searchOrderSuppliersByOrderNumber() {
+		order_suppliers = productOrderSupplierService.selectByProductOrderNumber(product_order_number);
+		return SUCCESS;
+	}
+
+	public String searchProductOrderTicketStatusByOrderNumber() {
+		resultStr = productOrderService.searchProductOrderTicketStatusByOrderNumber(product_order_number);
+		return SUCCESS;
+	}
+
+	public String searchSaleOrderWithNames() {
+		List<ProductOrderTeamNumberBean> potns = productOrderNumberService.selectByOrderNumber(product_order_number);
+
+		List<String> t_ns = new ArrayList<String>();
+		for (ProductOrderTeamNumberBean potn : potns) {
+			t_ns.add(potn.getTeam_number());
+		}
+
+		orders = orderService.selectOrderWithNames(t_ns);
 		return SUCCESS;
 	}
 
@@ -137,6 +203,16 @@ public class ProductOrderOperationAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 更新产品操作
+	 * 
+	 * @return
+	 */
+	public String udpateOrderOperation() {
+		resultStr = service.updateOrderOperation(json);
+		return SUCCESS;
+	}
+
 	private ProductOrderOperationBean operate_option;
 
 	private List<ProductOrderOperationBean> operations;
@@ -159,6 +235,24 @@ public class ProductOrderOperationAction extends BaseAction {
 
 		operations = service.selectByPage(page);
 
+		return SUCCESS;
+	}
+
+	private ProductOrderOperationBean product_order_operation;
+	private OrderSupplierBean supplier;
+
+	/**
+	 * 搜索产品订单操作信息
+	 * 
+	 * @return
+	 */
+	public String searchOrderSupplierByOperationPk() {
+		product_order_operation = service.selectByPrimaryKey(operate_pk);
+
+		ProductOrderBean productOrder = productOrderService
+				.selectByOrderNumber(product_order_operation.getTeam_number());
+		supplier = productOrderSupplierService.selectByOrderPkAndEmployeePk(productOrder.getPk(),
+				product_order_operation.getSupplier_employee_pk());
 		return SUCCESS;
 	}
 
@@ -444,5 +538,45 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setDrop_off(DropOffBean drop_off) {
 		this.drop_off = drop_off;
+	}
+
+	public ProductOrderBean getProduct_order() {
+		return product_order;
+	}
+
+	public void setProduct_order(ProductOrderBean product_order) {
+		this.product_order = product_order;
+	}
+
+	public List<PassengerTicketInfoBean> getTicket_infos() {
+		return ticket_infos;
+	}
+
+	public void setTicket_infos(List<PassengerTicketInfoBean> ticket_infos) {
+		this.ticket_infos = ticket_infos;
+	}
+
+	public List<OrderSupplierBean> getOrder_suppliers() {
+		return order_suppliers;
+	}
+
+	public void setOrder_suppliers(List<OrderSupplierBean> order_suppliers) {
+		this.order_suppliers = order_suppliers;
+	}
+
+	public ProductOrderOperationBean getProduct_order_operation() {
+		return product_order_operation;
+	}
+
+	public OrderSupplierBean getSupplier() {
+		return supplier;
+	}
+
+	public void setProduct_order_operation(ProductOrderOperationBean product_order_operation) {
+		this.product_order_operation = product_order_operation;
+	}
+
+	public void setSupplier(OrderSupplierBean supplier) {
+		this.supplier = supplier;
 	}
 }

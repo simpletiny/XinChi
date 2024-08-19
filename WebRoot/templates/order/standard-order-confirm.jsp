@@ -22,6 +22,9 @@
 .fix-width {
 	width: 40% !important;
 }
+textarea {
+	width:200px !important;
+}
 </style>
 </head>
 <body>
@@ -39,16 +42,18 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bsOrder.pk"></input> <input type="hidden"
 						data-bind="value:order().independent_flg" name="bsOrder.independent_flg"></input> <input type="hidden"
-						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" />
+						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" /> <input type="hidden"
+						data-bind="value:order().create_user" name="bsOrder.create_user" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>
 							<div class="ip fix-width">
 								<input type="text" id="txt-client-employee-name" class="ip-"
-									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" name="bsOrder.client_employee_name" required/>
+									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户"
+									name="bsOrder.client_employee_name" required />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk"
-								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" required/>
+							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk" style="display: none"
+								name="bsOrder.client_employee_pk" id="client-employee-pk" required />
 						</div>
 						<div class="col-md-3">
 							<label class="l">财务主体</label>
@@ -60,8 +65,9 @@
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
 								<input type="text" id="txt-product-name" class="ip-"
-									data-bind="value: product().name,event:{click:choseProduct}" placeholder="产品" name="bsOrder.product_name" required /> <input type="hidden"
-									data-bind="value: product().pk" id="txt-product-pk" name="bsOrder.product_pk" required/>
+									data-bind="value: product().name,event:{click:choseProduct}" placeholder="产品" name="bsOrder.product_name"
+									required /> <input type="hidden" data-bind="value: product().pk" id="txt-product-pk" name="bsOrder.product_pk"
+									required /><input type="hidden" data-bind="value: product().product_manager_name" id="txt-product-manager" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -82,8 +88,8 @@
 						<div class="col-md-6">
 							<label class="l">天数</label>
 							<div class="ip">
-								<p class="ip-default" data-bind="text:product().days"></p>
-								<input type="hidden" data-bind="value: product().days" placeholder="天数" name="bsOrder.days" />
+								<p class="ip-default" data-bind="text:product().days" id="p-days"></p>
+								<input type="hidden" data-bind="value: product().days" id="txt-days" placeholder="天数" name="bsOrder.days" />
 							</div>
 						</div>
 					</div>
@@ -136,24 +142,31 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4">
-							<label class="l">团款备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" id="receivable-comment" maxlength="200"
+						<div class="col-md-3">
+							<label class="l">团款备注</label> 
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" id="receivable-comment" maxlength="200"
 									data-bind="value: order().receivable_comment" placeholder="团款备注" name="bsOrder.receivable_comment"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
+							<label class="l">用房说明</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
+									name="bsOrder.hotel_comment" placeholder="用房说明"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
 							<label class="l">销售特请</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" data-bind="value:order().treat_comment" maxlength="200"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
 									name="bsOrder.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label class="l">订单备注（仅自己可见）</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
 									name="bsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
@@ -285,6 +298,78 @@
 			</div>
 		</div>
 	</div>
+	<div id="div-confirm" style="display: none; width: 900px">
+		<div class="input-row clearfloat">
+			<div class="col-md-4">
+				<label class="l">出团日期</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().departure_date"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">回团日期</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().back_date"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">天数</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().days"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-4">
+				<label class="l">产品名称</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().product_name"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">型号</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().product_model"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">产品经理</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().product_manager"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l fix-width">共计</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().sum_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">成人</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().adult_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">儿童</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().special_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">客户</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().client_employee"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelConfirm">取消</a> <a type="submit"
+				class="btn btn-green btn-r" data-bind="click: doConfirmOrder">确认</a>
+		</div>
+	</div>
 	<script>
 		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -295,7 +380,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-confirm.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-confirm.js?v=1.004"></script>
 	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.002"></script>
 </body>
 </html>

@@ -45,4 +45,8 @@ public interface ProductOrderSupplierService extends BaseService {
 	public List<OrderSupplierBean> selectByProductPk(String product_pk);
 
 	public void deleteByProductPk(String pk);
+
+	public List<OrderSupplierBean> selectByProductOrderNumber(String product_order_number);
+
+	public OrderSupplierBean selectByOrderPkAndEmployeePk(String pk, String supplier_employee_pk);
 }

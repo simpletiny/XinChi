@@ -563,4 +563,9 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 		return dao.selectByPassengerPk(passenger_pk);
 	}
 
+	@Override
+	public List<PassengerTicketInfoBean> selectGroupInfoByTeamNumbers(List<String> t_ns) {
+		return dao.selectGroupInfoByTeamNumbers(t_ns);
+	}
+
 }

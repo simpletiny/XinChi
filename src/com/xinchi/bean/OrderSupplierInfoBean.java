@@ -49,6 +49,9 @@ public class OrderSupplierInfoBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	// DTO
+	private String operate_date;
+
 	public String getPk() {
 		return pk;
 	}
@@ -215,6 +218,14 @@ public class OrderSupplierInfoBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getOperate_date() {
+		return operate_date;
+	}
+
+	public void setOperate_date(String operate_date) {
+		this.operate_date = operate_date;
 	}
 
 }

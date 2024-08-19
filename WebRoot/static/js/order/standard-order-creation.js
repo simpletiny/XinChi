@@ -248,6 +248,8 @@ var OrderContext = function() {
 		$("#txt-product-name").val(data.name);
 		$("#txt-product-pk").val(data.pk);
 		$("#p-product-model").text(data.product_model);
+		$("#txt-days").val(data.days);
+		$("#p-days").text(data.days);
 		layer.close(productLayer);
 	};
 	// start pagination1

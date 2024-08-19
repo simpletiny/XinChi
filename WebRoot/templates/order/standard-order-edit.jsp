@@ -23,6 +23,9 @@
 .fix-width {
 	width: 40% !important;
 }
+textarea {
+	width:200px !important;
+}
 </style>
 </head>
 <body>
@@ -40,7 +43,8 @@
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bsOrder.pk"></input> <input type="hidden"
 						data-bind="value:order().independent_flg" name="bsOrder.independent_flg"></input> <input type="hidden"
-						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" />
+						data-bind="value:order().team_number" id="team-number" name="bsOrder.team_number" /> <input type="hidden"
+						data-bind="value:order().create_user" name="bsOrder.create_user" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
 							<label class="l">客户</label>
@@ -48,8 +52,8 @@
 								<input type="text" id="txt-client-employee-name" class="ip-"
 									data-bind="value: employee().name,event:{click:choseClientEmployee}" placeholder="客户" />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk"
-								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: employee().pk" style="display: none"
+								name="bsOrder.client_employee_pk" id="client-employee-pk" />
 						</div>
 						<div class="col-md-3">
 							<label class="l">财务主体</label>
@@ -128,24 +132,31 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4">
-							<label class="l">团款备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" id="receivable-comment" maxlength="200"
+						<div class="col-md-3">
+							<label class="l">团款备注</label> 
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" id="receivable-comment" maxlength="200"
 									data-bind="value: order().receivable_comment" placeholder="团款备注" name="bsOrder.receivable_comment"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
+							<label class="l">用房说明</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
+									name="bsOrder.hotel_comment" placeholder="用房说明"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
 							<label class="l">销售特请</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" data-bind="value:order().treat_comment" maxlength="200"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
 									name="bsOrder.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label class="l">订单备注（仅自己可见）</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
 									name="bsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
@@ -171,7 +182,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="client-pick" style="display: none;width:600px">
+	<div id="client-pick" style="display: none; width: 600px">
 		<div class="form-horizontal search-panel">
 			<div class="form-group">
 				<div class="input-row clearfloat">
@@ -179,7 +190,8 @@
 					<div class="col-md-6">
 						<input type="text" id="client_name" class="form-control" placeholder="姓名" />
 					</div>
-					<button type="submit" class="btn btn-green col-md-1" style="float:right" data-bind="event:{click:searchClientEmployee }">搜索</button>
+					<button type="submit" class="btn btn-green col-md-1" style="float: right"
+						data-bind="event:{click:searchClientEmployee }">搜索</button>
 				</div>
 			</div>
 		</div>

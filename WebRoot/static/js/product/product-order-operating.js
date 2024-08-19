@@ -1,5 +1,6 @@
 var operateLayer;
 var passengerCheckLayer;
+let confirmLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -61,70 +62,107 @@ var OrderContext = function() {
 		});
 	};
 
-	self.productSuppliers = ko.observableArray([]);
-
+	self.supplier = ko.observable({});
+	self.operation = ko.observable({});
 	self.confirmOperation = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
-		} else if (self.chosenOperations().length > 0) {
-
-			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '是否要确认此订单！',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
-						layer.close(index);
-						startLoadingIndicator("校验中...");
-
-						var operate_pks = "";
-						var order_numbers = "";
-						for (var i = 0; i < self.chosenOperations().length; i++) {
-							var current = self.chosenOperations()[i].split(";");
-							operate_pks += current[0] + ",";
-							order_numbers = current[1] + ",";
-						}
-						operate_pks = operate_pks.RTrim(",");
-						order_numbers = order_numbers.RTrim(",");
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'product/isAllOrdersLocked',
-							data : "order_number=" + order_numbers
-						}).success(function(result) {
-							var str = result.split(",");
-							endLoadingIndicator()
-							if (str[0] == "yes") {
-								startLoadingIndicator("确认中...");
-								var data = "operate_pks=" + operate_pks;
-								$.ajax({
-									type : "POST",
-									url : self.apiurl + 'product/confirmOperation',
-									data : data
-								}).success(function(str) {
-									endLoadingIndicator();
-									if (str == "success") {
-										self.refresh();
-										self.chosenOperations.removeAll();
-									} else {
-										fail_msg(str);
-									}
-								});
-							} else if (str[0] == "no") {
-								fail_msg("请锁定" + str[1] + "所有销售订单后继续操作！")
-							} else {
-								fail_msg(str);
-							}
-						});
-
+		} else if (self.chosenOperations().length > 1) {
+			fail_msg("只能选择一个订单！")
+			return;
+		} else if (self.chosenOperations().length === 1) {
+			startLoadingSimpleIndicator("加载中")
+			const operate_pk = self.chosenOperations()[0].split(";")[0];
+			const param = "operate_pk=" + operate_pk;
+			$.ajax({
+				type : "GET",
+				url : self.apiurl + 'product/searchOrderSupplierByOperationPk',
+				data : param
+			}).success(function(data) {
+				self.supplier(data.supplier);
+				self.operation(data.product_order_operation);
+				endLoadingIndicator();
+				confirmLayer = $.layer({
+					type : 1,
+					title : ['游客信息', ''],
+					maxmin : false,
+					closeBtn : [1, true],
+					shadeClose : false,
+					area : ['1200px', '850px'],
+					offset : ['', ''],
+					scrollbar : true,
+					page : {
+						dom : '#div-confirm'
+					},
+					end : function() {
 					}
-				}
+				});
 			});
-
 		}
 	};
+
+	// 执行确认订单操作
+	self.doConfirm = function() {
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '是否要确认此订单！',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					startLoadingIndicator("校验中...");
+
+					var operate_pks = "";
+					var order_numbers = "";
+					for (var i = 0; i < self.chosenOperations().length; i++) {
+						var current = self.chosenOperations()[i].split(";");
+						operate_pks += current[0] + ",";
+						order_numbers = current[1] + ",";
+					}
+					operate_pks = operate_pks.RTrim(",");
+					order_numbers = order_numbers.RTrim(",");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'product/isAllOrdersLocked',
+						data : "order_number=" + order_numbers
+					}).success(function(result) {
+						var str = result.split(",");
+						endLoadingIndicator()
+						if (str[0] == "yes") {
+							startLoadingIndicator("确认中...");
+							var data = "operate_pks=" + operate_pks;
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'product/confirmOperation',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+									self.chosenOperations.removeAll();
+									layer.close(confirmLayer);
+								} else {
+									fail_msg(str);
+								}
+							});
+						} else if (str[0] == "no") {
+							fail_msg("请锁定" + str[1] + "所有销售订单后继续操作！")
+						} else {
+							fail_msg(str);
+						}
+					});
+
+				}
+			}
+		});
+	}
+	// 取消确认
+	self.cancelConfirm = function() {
+		layer.close(confirmLayer);
+	}
 	var current_order_number = "";
 	self.refreshSaleOrders = function() {
 		startLoadingSimpleIndicator("刷新中...");
@@ -199,8 +237,48 @@ var OrderContext = function() {
 		}
 	};
 	// 产品包含的供应商信息
-	self.operation = ko.observable({});
-	self.orders = ko.observableArray([]);
+	// self.operation = ko.observable({});
+	// self.orders = ko.observableArray([]);
+	// self.editOperation = function() {
+	// if (self.chosenOperations().length == 0) {
+	// fail_msg("请选择产品订单！");
+	// return;
+	// } else if (self.chosenOperations().length > 1) {
+	// fail_msg("只能选择一个订单！");
+	// return;
+	// } else if (self.chosenOperations().length == 1) {
+	//
+	// startLoadingSimpleIndicator("加载中……");
+	// $("#supplier-info input").val('');
+	// var current = self.chosenOperations()[0].split(";");
+	// var operate_pk = current[0];
+	// $.getJSON(self.apiurl + 'product/searchOpeartionDataByPk', {
+	// operate_pk : operate_pk
+	// }, function(data) {
+	// self.operation(data.operate_option);
+	// self.orders(data.orders);
+	//
+	// endLoadingIndicator();
+	// operateLayer = $.layer({
+	// type : 1,
+	// title : ['供应商信息', ''],
+	// maxmin : false,
+	// closeBtn : [1, true],
+	// shadeClose : false,
+	// area : ['800px', '500px'],
+	// offset : ['', ''],
+	// scrollbar : true,
+	// page : {
+	// dom : '#supplier-info'
+	// },
+	// end : function() {
+	// }
+	// });
+	//
+	// });
+	// }
+	// };
+
 	self.editOperation = function() {
 		if (self.chosenOperations().length == 0) {
 			fail_msg("请选择产品订单！");
@@ -209,38 +287,11 @@ var OrderContext = function() {
 			fail_msg("只能选择一个订单！");
 			return;
 		} else if (self.chosenOperations().length == 1) {
-
-			startLoadingSimpleIndicator("加载中……");
-			$("#supplier-info input").val('');
-			var current = self.chosenOperations()[0].split(";");
-			var operate_pk = current[0];
-			$.getJSON(self.apiurl + 'product/searchOpeartionDataByPk', {
-				operate_pk : operate_pk
-			}, function(data) {
-				self.operation(data.operate_option);
-				self.orders(data.orders);
-
-				endLoadingIndicator();
-				operateLayer = $.layer({
-					type : 1,
-					title : ['供应商信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#supplier-info'
-					},
-					end : function() {
-					}
-				});
-
-			});
+			const order_number = self.chosenOperations()[0].split(";")[1];
+			window.location.href = self.apiurl + 'templates/product/order-operate-edit.jsp?order_number='
+					+ order_number;
 		}
-	};
-
+	}
 	self.doEdit = function() {
 		var allNeeds = $("#supplier-info input");
 		for (var i = 0; i < allNeeds.length; i++) {

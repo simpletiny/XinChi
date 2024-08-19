@@ -72,6 +72,8 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 	private String operate_flg;
 
 	private String sale;
+	private String hotel_comment;
+	private String receivable_comment;
 	// dto
 	private String confirm_type;
 
@@ -369,6 +371,22 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setSale(String sale) {
 		this.sale = sale;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
+	}
+
+	public String getReceivable_comment() {
+		return receivable_comment;
+	}
+
+	public void setReceivable_comment(String receivable_comment) {
+		this.receivable_comment = receivable_comment;
 	}
 
 }

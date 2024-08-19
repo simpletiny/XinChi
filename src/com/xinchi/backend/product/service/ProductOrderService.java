@@ -51,4 +51,6 @@ public interface ProductOrderService extends BaseService {
 
 	public List<SaleOrderNameListBean> searchSaleOrderNameListByProductOrderNumbers(List<String> order_numbers);
 
+	public String searchProductOrderTicketStatusByOrderNumber(String product_order_number);
+
 }

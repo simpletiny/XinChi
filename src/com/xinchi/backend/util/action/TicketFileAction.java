@@ -31,6 +31,7 @@ import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileFolder;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.Utils;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -101,13 +102,31 @@ public class TicketFileAction extends BaseAction {
 		Map<String, List<String>> data = new HashMap<>();
 		List<String> name = new ArrayList<>();
 		List<String> id = new ArrayList<>();
+		List<String> gender = new ArrayList<>();
+		List<String> birthdate = new ArrayList<>();
+		List<String> idtype = new ArrayList<>();
+		List<String> passengertype = new ArrayList<>();
+		List<String> age = new ArrayList<>();
+		List<String> cellphone = new ArrayList<>();
 		for (AirTicketNameListBean n : names) {
 			name.add(n.getName());
 			id.add(n.getId());
+			cellphone.add(n.getCellphone_A());
+			Map<String, String> id_result = SimpletinyString.analysisId(n.getId());
+			idtype.add(id_result.get("idtype"));
+			gender.add(id_result.get("gender"));
+			age.add(id_result.get("age"));
+			birthdate.add(id_result.get("birthdate"));
+			passengertype.add(id_result.get("passengertype"));
 		}
 
 		data.put("${name}", name);
 		data.put("${id}", id);
+		data.put("${gender}", gender);
+		data.put("${birthdate}", birthdate);
+		data.put("${cellphone}", cellphone);
+		data.put("${idtype}", idtype);
+		data.put("${passengertype}", passengertype);
 		return data;
 	}
 

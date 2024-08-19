@@ -20,7 +20,7 @@ public interface OrderDAO {
 
 	public OrderDto searchOrderByPk(String order_pk);
 
-	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page);
+	public List<SaleScoreDto> searchSaleScore(SaleScoreDto score);
 
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
 
@@ -41,4 +41,10 @@ public interface OrderDAO {
 	public List<OrderDto> selectPayableInfoByParam(OrderDto option);
 
 	public OrderDto selectFinalOrderByTeamNumber(String team_number);
+
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score);
+
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
+
+	public List<OrderDto> selectOrderWithNames(List<String> team_numbers);
 }

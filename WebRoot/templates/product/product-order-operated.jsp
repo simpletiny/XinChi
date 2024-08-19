@@ -131,7 +131,8 @@ tr td {
 								<th>主体</th>
 								<th>总成本</th>
 								<th>产品名称</th>
-								<th>人数</th>
+								<th>成人</th>
+								<th>儿童</th>
 								<th>接团日期</th>
 								<th>接团方式</th>
 								<th>接团联系</th>
@@ -162,7 +163,8 @@ tr td {
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.supplier_cost"></td>
 								<td data-bind="text: $data.supplier_product_name"></td>
-								<td data-bind="text: $data.people_count"></td>
+								<td data-bind="text: $data.adult_count"></td>
+								<td data-bind="text: $data.special_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
 								<td class="detail" data-bind="text: $data.pick_type"></td>
 								<td data-bind="text: $data.picker_cellphone"></td>
@@ -283,7 +285,7 @@ tr td {
 						<tr>
 							<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
 							<td data-bind="text:$data.team_number"></td>
-							<td data-bind="text:$data.create_user"></td>
+							<td data-bind="text:$data.sale_name"></td>
 							<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
 							<td><a href="javascript:void(0)" style="color: blue"
 								data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
@@ -405,7 +407,7 @@ tr td {
 						<td data-bind="text: $data.adult_count"></td>
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-						<td data-bind="text:$data.create_user"></td>
+						<td data-bind="text:$data.sale_name"></td>
 						<td><a href="javascript:void(0)"
 							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.cancel_flg == "N" -->

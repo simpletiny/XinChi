@@ -52,7 +52,12 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 	private String supplier_employee_name;
 	private String supplier_name;
 	private String departure_date;
+	private String pick_date;
+	private String treat_comment;
+	private String payable_comment;
 	private List<OrderSupplierInfoBean> infos;
+
+	private List<OrderSupplierSaleOrderBean> sale_order_infos;
 
 	public String getOrder_pk() {
 		return order_pk;
@@ -268,6 +273,38 @@ public class OrderSupplierBean extends SupperBO implements Serializable {
 
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
+	}
+
+	public String getPick_date() {
+		return pick_date;
+	}
+
+	public void setPick_date(String pick_date) {
+		this.pick_date = pick_date;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public String getPayable_comment() {
+		return payable_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
+	}
+
+	public void setPayable_comment(String payable_comment) {
+		this.payable_comment = payable_comment;
+	}
+
+	public List<OrderSupplierSaleOrderBean> getSale_order_infos() {
+		return sale_order_infos;
+	}
+
+	public void setSale_order_infos(List<OrderSupplierSaleOrderBean> sale_order_infos) {
+		this.sale_order_infos = sale_order_infos;
 	}
 
 }

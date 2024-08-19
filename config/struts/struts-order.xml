@@ -221,7 +221,7 @@
 		</action>
 
 		<!-- 销售仪表盘 -->
-		<action name="searchSaleScoreByPage" class="saleDashBoardAction" method="searchSaleScoreByPage">
+		<action name="searchSaleScoreByParam" class="saleDashBoardAction" method="searchSaleScoreByParam">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

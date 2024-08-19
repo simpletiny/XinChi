@@ -30,6 +30,7 @@ import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductNeedDto;
+import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductReconciliationBean;
 import com.xinchi.bean.ProductReportDto;
@@ -286,7 +287,6 @@ public class ProductAction extends BaseAction {
 
 	public String searchProductByPk() {
 		product = service.selectByPrimaryKey(product_pk);
-		productSuppliers = productSupplierService.selectByProductPk(product_pk);
 		return SUCCESS;
 	}
 
@@ -407,6 +407,17 @@ public class ProductAction extends BaseAction {
 		product = service.selectByPrimaryKey(product_pk);
 
 		air_tickets = productAirTicketService.selectByProductPk(product_pk);
+		return SUCCESS;
+	}
+
+	private String product_order_number;
+
+	public String searchProductAirTicketInfoByProductOrderNumber() {
+		ProductOrderBean productOrder = productOrderService.selectByOrderNumber(product_order_number);
+		product = service.selectByPrimaryKey(productOrder.getProduct_pk());
+		if (null != product) {
+			air_tickets = productAirTicketService.selectByProductPk(product.getPk());
+		}
 		return SUCCESS;
 	}
 
@@ -674,6 +685,14 @@ public class ProductAction extends BaseAction {
 
 	public void setProductProfit(ProductProfitBean productProfit) {
 		this.productProfit = productProfit;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
 	}
 
 }

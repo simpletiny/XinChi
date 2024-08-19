@@ -52,6 +52,7 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk" />
+					<input type="hidden" data-bind="value:order().create_user" name="bnsOrder.create_user"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>

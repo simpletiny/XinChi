@@ -259,3 +259,4 @@ $(document).ready(function() {
 	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
 	$("#div-btn-area").prepend(a_btn);
 });
+

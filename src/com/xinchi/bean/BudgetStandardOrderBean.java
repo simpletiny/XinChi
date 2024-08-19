@@ -76,6 +76,7 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	private String receivable_first_flg;
 	private String sale;
 
+	private String hotel_comment;
 	// DTO
 	private String client_employee_name;
 
@@ -415,5 +416,13 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setClient_employee_name(String client_employee_name) {
 		this.client_employee_name = client_employee_name;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
 	}
 }

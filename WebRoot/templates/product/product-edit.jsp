@@ -286,6 +286,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 
-	<script src="<%=basePath%>static/js/product/product-edit.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-edit.js?v=1.002"></script>
 </body>
 </html>

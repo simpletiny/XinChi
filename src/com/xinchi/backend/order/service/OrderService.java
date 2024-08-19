@@ -27,7 +27,7 @@ public interface OrderService extends BaseService {
 
 	public String cancelOrder(OrderDto order);
 
-	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page);
+	public List<SaleScoreDto> searchSaleScoreByPage(SaleScoreDto score);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
@@ -58,5 +58,11 @@ public interface OrderService extends BaseService {
 	public String authorizeAssistant(List<String> order_pks, String assistant_number);
 
 	public String forwardOrder(List<String> order_pks, String sale_number);
+
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score);
+
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
+
+	public List<OrderDto> selectOrderWithNames(List<String> t_ns);
 
 }

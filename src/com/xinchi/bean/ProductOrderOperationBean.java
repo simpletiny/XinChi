@@ -22,7 +22,8 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	private String supplier_product_name;
 
-	private Integer people_count;
+	private int adult_count = 0;
+	private int special_count = 0;
 
 	private String pick_date;
 
@@ -109,14 +110,6 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setSupplier_product_name(String supplier_product_name) {
 		this.supplier_product_name = supplier_product_name;
-	}
-
-	public Integer getPeople_count() {
-		return people_count;
-	}
-
-	public void setPeople_count(Integer people_count) {
-		this.people_count = people_count;
 	}
 
 	public String getPick_date() {
@@ -285,6 +278,22 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setTeam_number1(String team_number1) {
 		this.team_number1 = team_number1;
+	}
+
+	public int getAdult_count() {
+		return adult_count;
+	}
+
+	public int getSpecial_count() {
+		return special_count;
+	}
+
+	public void setAdult_count(int adult_count) {
+		this.adult_count = adult_count;
+	}
+
+	public void setSpecial_count(int special_count) {
+		this.special_count = special_count;
 	}
 
 }

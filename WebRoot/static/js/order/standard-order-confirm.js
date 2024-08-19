@@ -1,4 +1,5 @@
 var clientEmployeeLayer;
+let confirmLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -123,37 +124,54 @@ var OrderContext = function() {
 		xhr.send(formData);
 	};
 
+	self.confirm_order = ko.observable({});
+	
 	self.confirmOrder = function() {
-		if (!$("form").valid()) {
+		let result = validateOrder();
+		if(result[0]!="SUCCESS"){
+			fail_msg(result.join("<br>"));
 			return;
 		}
-
-		var x = new Date($("#hidden-server-date").val());
-		var maxDate = new Date(x.Format("yyyy-MM-dd"));
-		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
-		var confirm_date = new Date($(".date-picker-confirm-date").val());
-		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
-			fail_msg("请选择允许的时间范围:" + minDate + "至" + maxDate);
-			return;
-		}
-
+		let departure_date = $('[name="bsOrder.departure_date"]').val();
+		let days = $("#txt-days").val();
+		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
+		let product_name = $('#txt-product-name').val();
+		let product_model = $("#p-product-model").text();
+		let product_manager = $("#txt-product-manager").val();
+	
+		let adult_count = $("#auto-adult-count").val()-0;
+		let special_count = $("#auto-children-count").val()-0;
+		let sum_count = adult_count+special_count;
+		let client_employee = $("#txt-client-employee-name").val();
 		
-		var confirm_file = $("#txt-confirm-file").val();
-		if (confirm_file == "") {
-			fail_msg("请上传确认件！");
-			return;
-		}
+		self.confirm_order({departure_date,back_date,days,product_name,product_model,product_manager,adult_count,special_count,sum_count,client_employee})
+		
+		confirmLayer = $.layer({
+			type : 1,
+			title : ['订单确认', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['900px', '300px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#div-confirm'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+		
+	}
 
+	self.doConfirmOrder = function(){
+		startLoadingSimpleIndicator("保存中");
 		var data = $("form").serialize();
-
 		// 名单json
-		// 判断是否有名单
-		var hasNames = false;
-		var hasChairman = false;
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
-		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
@@ -166,28 +184,6 @@ var OrderContext = function() {
 			var id_type = $(tr).find("[st='type']").val();
 			var id = $(tr).find("[st='id']").val().trim();
 			var price = $(tr).find("[st='price']").val();
-			let is_ok = $(tr).find("[st='is_ok']").val();
-			
-			if(is_ok!='Y'){
-				not_ok_names.push(name);
-			}
-			if (name == "" && id == "") {
-				continue;
-			}
-
-			if ((name != "" && id == "") || (name == "" && id != "")) {
-				fail_msg("请正确填写第" + index + "个名单!");
-				return;
-			}
-
-			if (name != "" && id != "" && !hasNames) {
-				hasNames = true;
-			}
-
-			if (chairman == "Y") {
-				hasChairman = true;
-			}
-			
 			let txt_as_adult = $(tr).find("[st='as-adult']");
 			let as_adult = 'N';
 			if(txt_as_adult){
@@ -200,38 +196,24 @@ var OrderContext = function() {
 			people.push(person);
 		}
 
-		if (!hasNames) {
-			fail_msg("没有名单，不能确认！");
-			return;
-		}
-
-		if (!hasChairman) {
-			fail_msg("请指定团长！");
-			return;
-		}
-
-		if(not_ok_names.length>0){
-			fail_msg(not_ok_names.join(",")+"未通过验证！");
-			endLoadingIndicator();
-			return;
-		}
 		json = JSON.stringify(people);
 		data += "&json=" + json;
-		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/confirmBudgetStandardOrder',
 			data : data
 		}).success(function(str) {
+			endLoadingIndicator();
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/order/tbc-order.jsp";
 			} else if (str == "noenoughcredit") {
-				endLoadingIndicator();
 				fail_msg("信用额度不足，不能确认订单！");
 			}
 		});
-	};
-
+	}
+	self.cancelConfirm = function(){
+		layer.close(confirmLayer);
+	}
 	// 批量导入
 	self.batName = function() {
 		passengerBatLayer = $.layer({
@@ -388,6 +370,9 @@ var OrderContext = function() {
 		$("#txt-product-name").val(data.name);
 		$("#txt-product-pk").val(data.pk);
 		$("#p-product-model").text(data.product_model);
+		$("#txt-product-manager").val(data.product_manager);
+		$("#txt-days").val(data.days);
+		$("#p-days").text(data.days);
 		layer.close(productLayer);
 	};
 	// start pagination1
@@ -462,3 +447,64 @@ $(document).ready(function() {
 	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
 	$("#div-btn-area").prepend(a_btn);
 });
+
+function validateOrder(){
+	startLoadingSimpleIndicator("校验订单");
+	let result = new Array();
+	if (!$("form").valid()) {
+		result.push("请填写非空项！");
+	}
+
+	var x = new Date($("#hidden-server-date").val());
+	var maxDate = new Date(x.Format("yyyy-MM-dd"));
+	var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+	var confirm_date = new Date($(".date-picker-confirm-date").val());
+	if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
+		result.push("请选择允许的时间范围:" + minDate + "至" + maxDate+"！");
+	}
+
+	
+	var confirm_file = $("#txt-confirm-file").val();
+	if (confirm_file == "") {
+		result.push("请上传确认件！");
+	}
+	var hasNames = false;
+	var hasChairman = false;
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	let not_ok_names = new Array();
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+		var name = $(tr).find("[st='name']").val().trim();
+		var id = $(tr).find("[st='id']").val().trim();
+		let is_ok = $(tr).find("[st='is_ok']").val();
+		if(is_ok!='Y'){
+			not_ok_names.push(name);
+		}
+		if (name != "" && id != "" && !hasNames) {
+			hasNames = true;
+		}
+
+		if (chairman == "Y") {
+			hasChairman = true;
+		}
+	}
+
+	if (!hasNames) {
+		result.push("没有名单，不能确认！");
+	}
+
+	if (!hasChairman) {
+		result.push("请指定团长！");
+	}
+
+	if(not_ok_names.length>0){
+		result.push(not_ok_names.join(",")+"未通过验证！");
+	}
+	
+	if(result.length==0)
+		result.push("SUCCESS");
+	endLoadingIndicator();
+	return result;
+}

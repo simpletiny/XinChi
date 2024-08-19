@@ -743,3 +743,74 @@ function validateName(name,id){
 	});
 	return result;
 }
+
+function initializeDatePicker() {
+	$('.date-picker').datetimepicker({
+		format : 'Y-m-d',
+		timepicker : false,
+		scrollInput : false,
+		defaultDate : new Date(),
+		lang : 'zh',
+	})
+}
+function isLetter(v) {
+	const regex = /^[A-Za-z]+$/; // 正则表达式，匹配只包含一个或多个字母的字符串
+	return regex.test(v);
+}
+/**
+ * 0：女;1:男；-1：无效
+ * 
+ * @param idCard
+ * @returns
+ */
+function determineGender(idCard) {
+    // 验证身份证号码长度是否为18位
+    if (!idCard && idCard.length !== 18) {
+        return "-1";
+    }
+
+    // 提取第17位字符
+    const genderDigit = idCard.charAt(16);
+
+    // 判断性别
+    if (!isNaN(genderDigit)) {
+        return genderDigit % 2 === 0 ? "0" : "1";
+    } else {
+        return "-1";
+    }
+}
+
+function calculateAge(idCard) {
+    // 验证身份证号码长度是否为18位
+    if (!idCard && idCard.length !== 18) {
+        return "-1";
+    }
+
+    // 提取出生日期
+    const birthDateString = idCard.substring(6, 14); // 格式为 YYYYMMDD
+    const birthYear = parseInt(birthDateString.substring(0, 4), 10);
+    const birthMonth = parseInt(birthDateString.substring(4, 6), 10);
+    const birthDay = parseInt(birthDateString.substring(6, 8), 10);
+
+    // 检查出生日期是否合法
+    if (isNaN(birthYear) || isNaN(birthMonth) || isNaN(birthDay)) {
+        return "-1";
+    }
+
+    // 创建出生日期对象
+    const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+
+    // 获取当前日期
+    const today = new Date();
+    let age = today.getFullYear() - birthYear;
+
+    // 检查是否已经过了今年的生日
+    if (
+        today.getMonth() < birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+    ) {
+        age--; // 如果今年还没过生日，则年龄减一
+    }
+
+    return age;
+}

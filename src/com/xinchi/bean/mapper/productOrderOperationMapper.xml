@@ -10,7 +10,8 @@
 		<result column="supplier_cost" property="supplier_cost" jdbcType="DECIMAL" />
 		<result column="final_supplier_cost" property="final_supplier_cost" jdbcType="DECIMAL" />
 		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
-		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
 		<result column="pick_date" property="pick_date" jdbcType="VARCHAR" />
 		<result column="pick_type" property="pick_type" jdbcType="VARCHAR" />
 		<result column="picker_cellphone" property="picker_cellphone" jdbcType="VARCHAR" />
@@ -41,7 +42,8 @@
 		supplier_cost,
 		final_supplier_cost,
 		supplier_product_name,
-		people_count,
+		special_count,
+		adult_count,
 		pick_date,
 		pick_type,
 		picker_cellphone,
@@ -68,7 +70,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.pick_type,
 		A.picker_cellphone,
@@ -123,8 +126,11 @@
 			<if test="supplier_product_name != null">
 				supplier_product_name,
 			</if>
-			<if test="people_count != null">
-				people_count,
+			<if test="adult_count != null">
+				adult_count,
+			</if>
+			<if test="special_count != null">
+				special_count,
 			</if>
 			<if test="pick_date != null">
 				pick_date,
@@ -191,8 +197,11 @@
 			<if test="supplier_product_name != null">
 				#{supplier_product_name,jdbcType=VARCHAR},
 			</if>
-			<if test="people_count != null">
-				#{people_count,jdbcType=INTEGER},
+			<if test="adult_count != null">
+				#{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_count != null">
+				#{special_count,jdbcType=INTEGER},
 			</if>
 			<if test="pick_date != null">
 				#{pick_date,jdbcType=VARCHAR},
@@ -267,8 +276,11 @@
 			<if test="supplier_product_name != null">
 				supplier_product_name = #{supplier_product_name,jdbcType=VARCHAR},
 			</if>
-			<if test="people_count != null">
-				people_count = #{people_count,jdbcType=INTEGER},
+			<if test="adult_count != null">
+				adult_count = #{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_count != null">
+				special_count = #{special_count,jdbcType=INTEGER},
 			</if>
 			<if test="pick_date != null">
 				pick_date = #{pick_date,jdbcType=VARCHAR},
@@ -330,7 +342,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.send_date,
 		A.pick_type,
@@ -399,7 +412,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.send_date,
 		A.pick_type,

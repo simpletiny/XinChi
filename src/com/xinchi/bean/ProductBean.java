@@ -97,6 +97,9 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	private String analysis_flg;
 
+	// DTO
+	private String product_manager_name;
+
 	// 产品维护相关标识
 	private String client_confirm_templet;
 	private String out_notice_templet;
@@ -550,6 +553,14 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setId_types(List<Integer> id_types) {
 		this.id_types = id_types;
+	}
+
+	public String getProduct_manager_name() {
+		return product_manager_name;
+	}
+
+	public void setProduct_manager_name(String product_manager_name) {
+		this.product_manager_name = product_manager_name;
 	}
 
 }

@@ -18,7 +18,6 @@ var ProductContext = function() {
 		product_pk : self.product_pk
 	}, function(data) {
 		self.product(data.product);
-		self.productSuppliers(data.productSuppliers);
 		if (self.product().strict_price_flg == "Y")
 			$("#chk-strict").attr("checked", true);
 

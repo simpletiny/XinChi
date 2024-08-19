@@ -233,7 +233,7 @@ tr td {
 						<td data-bind="text: $data.adult_count"></td>
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-						<td data-bind="text:$data.create_user"></td>
+						<td data-bind="text:$data.sale_name"></td>
 						<td><a href="javascript:void(0)"
 							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.cancel_flg == "N" -->

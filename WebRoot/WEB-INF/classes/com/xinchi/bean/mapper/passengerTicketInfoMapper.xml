@@ -24,6 +24,7 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -83,7 +84,31 @@
 
 		order by ticket_index
 	</select>
-
+	<select id="selectGroupInfoByTeamNumbers" resultMap="BaseResultMap" parameterType="java.util.List">
+		SELECT
+		COUNT(DISTINCT A.pk) AS people_count,
+		B.ticket_date,
+		B.from_to_city,
+		B.ticket_number,
+		B.from_to_time,
+		B.from_airport,
+		B.to_airport,
+		B.ticket_index
+		FROM
+		air_ticket_name_list A
+		LEFT JOIN
+		passenger_ticket_info B ON A.pk =
+		B.passenger_pk
+		<where>
+			A.team_number in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+		GROUP BY B.from_to_city , ticket_date , ticket_number , from_to_time , from_airport , to_airport
+		order by
+		people_count,ticket_index
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from passenger_ticket_info
 		where pk = #{pk,jdbcType=CHAR}

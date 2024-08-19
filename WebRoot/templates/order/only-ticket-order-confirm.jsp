@@ -50,6 +50,7 @@
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
 					<input type="hidden" id="key" value="<%=key%>" name="bnsOrder.pk" />
+					<input type="hidden" data-bind="value:order().create_user" name="bnsOrder.create_user"></input>
 					<div class="input-row clearfloat">
 						<div class="col-md-3 required">
 							<label class="l">客户</label>
@@ -86,7 +87,7 @@
 						<div class="col-md-6 required">
 							<label class="l">天数</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: order().days" required="required" placeholder="天数"
+								<input type="text" class="ip-" id="txt-days" data-bind="value: order().days" required="required" placeholder="天数"
 									name="bnsOrder.days" />
 							</div>
 						</div>
@@ -152,7 +153,7 @@
 							<div class="ip">
 								<select class="form-control" style="height: 34px"
 									data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--请选择--'"
-									name="bnsOrder.product_manager" required="required"></select>
+									name="bnsOrder.product_manager" id="sel-product-manager" required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -269,6 +270,72 @@
 			</div>
 		</div>
 	</div>
+	<div id="div-confirm" style="display:none;width:900px">
+		<div class="input-row clearfloat">
+			<div class="col-md-4">
+				<label class="l">出团日期</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().departure_date"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">回团日期</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().back_date"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">天数</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().days" ></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-4">
+				<label class="l">产品名称</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().product_name"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="l">产品经理</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().product_manager"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l fix-width">共计</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().sum_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">成人</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().adult_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">儿童</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().special_count+'人'"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<label class="l fix-width">客户</label>
+				<div class="ip fix-width">
+					<p class="ip-default" data-bind="text:confirm_order().client_employee"></p>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float:right">
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelConfirm">取消</a>
+			<a type="submit" class="btn btn-green btn-r" data-bind="click: doConfirmOrder">确认</a>
+		</div>
+	</div>
 	<script>
 		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -279,7 +346,7 @@
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/order/only-ticket-order-confirm.js?v=1.005"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.002"></script>
 	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.001"></script>
 </body>

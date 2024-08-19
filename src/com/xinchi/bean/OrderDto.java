@@ -130,6 +130,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private List<String> team_numbers;
 	private String supplier_employee_pk;
 	private String final_comment;
+	private String hotel_comment;
 
 	public String getTeam_number() {
 		return team_number;
@@ -745,6 +746,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setAssistant_name(String assistant_name) {
 		this.assistant_name = assistant_name;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
 	}
 
 }

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.OrderSupplierSaleOrderMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderSupplierSaleOrderBean">
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
+		<result column="contact_way" property="contact_way" jdbcType="VARCHAR" />
+		<result column="hotel_comment" property="hotel_comment" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="pick_send_info" property="pick_send_info" jdbcType="VARCHAR" />
+		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderSupplierSaleOrderBean">
+		<collection column="pk" property="infos" ofType="com.xinchi.bean.OrderSupplierSaleOrderNameInfoBean"
+			select="selectInfoBySaleOrderPk">
+			<result column="name_pk" property="name_pk" jdbcType="CHAR" />
+			<result column="price" property="price" jdbcType="DECIMAL" />
+			<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+			<result column="pk" property="pk" jdbcType="CHAR" />
+			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+			<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+			<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+			<result column="passenger_name" property="passenger_name" jdbcType="VARCHAR" />
+			<result column="passenger_id" property="passenger_id" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		team_number,
+		receivable_comment,
+		contact_way,
+		hotel_comment,
+		treat_comment,
+		pick_send_info,
+		base_pk,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from order_supplier_sale_order
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectInfoBySaleOrderPk" parameterType="java.lang.String" resultType="com.xinchi.bean.OrderSupplierSaleOrderNameInfoBean">
+		SELECT
+		A.name_pk,
+		A.price,
+		A.base_pk,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.name AS passenger_name,
+		B.id AS passenger_id
+		FROM
+		order_supplier_sale_order_name_info A
+		LEFT JOIN
+		sale_order_name_list B ON A.name_pk = B.pk
+		where A.base_pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByBasePk" parameterType="java.lang.String" resultMap="InfoResultMap">
+		select
+		A.team_number,
+		A.receivable_comment,
+		A.contact_way,
+		A.hotel_comment,
+		A.treat_comment,
+		A.pick_send_info,
+		A.base_pk,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time ,
+		B.sale_name,
+		B.sale AS sale_number,
+		B.adult_count,
+		B.special_count
+		from
+		order_supplier_sale_order A
+		LEFT JOIN budget_order_view B ON A.team_number = B.team_number
+		where A.base_pk =
+		#{pk,jdbcType=CHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from order_supplier_sale_order
+		where pk =
+		#{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByBasePk" parameterType="java.lang.String">
+		delete from order_supplier_sale_order
+		where base_pk =
+		#{base_pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.OrderSupplierSaleOrderBean">
+
+		insert into order_supplier_sale_order
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="receivable_comment != null">
+				receivable_comment,
+			</if>
+			<if test="contact_way != null">
+				contact_way,
+			</if>
+			<if test="hotel_comment != null">
+				hotel_comment,
+			</if>
+			<if test="treat_comment != null">
+				treat_comment,
+			</if>
+			<if test="pick_send_info != null">
+				pick_send_info,
+			</if>
+			<if test="base_pk != null">
+				base_pk,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable_comment != null">
+				#{receivable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="contact_way != null">
+				#{contact_way,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				#{hotel_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				#{treat_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_send_info != null">
+				#{pick_send_info,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				#{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.OrderSupplierSaleOrderBean">
+		update order_supplier_sale_order
+		<set>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="receivable_comment != null">
+				receivable_comment = #{receivable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="contact_way != null">
+				contact_way = #{contact_way,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				hotel_comment = #{hotel_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				treat_comment = #{treat_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_send_info != null">
+				pick_send_info = #{pick_send_info,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null">
+				base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.OrderSupplierSaleOrderBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from order_supplier_sale_order
+	</select>
+</mapper>

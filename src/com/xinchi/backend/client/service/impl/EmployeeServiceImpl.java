@@ -19,6 +19,7 @@ import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.dao.JobHoppingLogDAO;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.util.dao.CommonDAO;
 import com.xinchi.bean.AccurateSaleBean;
 import com.xinchi.bean.ClientBean;
@@ -30,6 +31,7 @@ import com.xinchi.bean.JobHoppingLogBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.bean.SqlBean;
+import com.xinchi.bean.UserCommonBean;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -577,8 +579,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private UserDAO userDao;
+
 	@Override
-	public String makePublicToSales(String employee_pk, String user_pk) {
+	public String makePublicToSales(String employee_pk, String user_number) {
 		ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
 
 		List<ClientEmployeeUserBean> ceubs = employeeUserDao.selectByEmployeePk(employee_pk);
@@ -590,7 +595,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				// 保存新的对应关系
 				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
 				ceub.setEmployee_pk(employee_pk);
-				ceub.setUser_pk(user_pk);
+				UserCommonBean user = userDao.selectUserCommonByUserNumber(user_number);
+				ceub.setUser_pk(user.getPk());
 				employeeUserDao.insert(ceub);
 
 				dao.update(employee);

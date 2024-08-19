@@ -565,10 +565,7 @@ function changeJieSongType(ra) {
 	}
 }
 
-function isLetter(v) {
-	const regex = /^[A-Za-z]+$/; // 正则表达式，匹配只包含一个或多个字母的字符串
-	return regex.test(v);
-}
+
 function fillFlight() {
 	let txt = event.target;
 	let txt_value = $(txt).val().trim().toUpperCase();

@@ -9,6 +9,7 @@
 		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
 		<result column="business_price" property="business_price" jdbcType="DECIMAL" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="sale_flg" property="sale_flg" jdbcType="CHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
@@ -115,9 +116,64 @@
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from product
-		where pk = #{pk,jdbcType=CHAR}
+		A.name,
+		A.product_number,
+		A.location,
+		A.days,
+		A.max_profit_substract,
+		A.business_price,
+		A.product_manager,
+		A.sale_flg,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.air_ticket_charge,
+		A.product_value,
+		A.air_ticket_cost,
+		A.other_cost,
+		A.gross_profit,
+		A.gross_profit_rate,
+		A.product_model,
+		A.adult_price,
+		A.child_price,
+		A.business_profit_substract,
+		A.air_ticket_child_cost,
+		A.local_adult_cost,
+		A.local_child_cost,
+		A.other_child_cost,
+		A.product_child_value,
+		A.cash_flow,
+		A.spot_cash,
+		A.first_air_start,
+		A.first_air_end,
+		A.sale_attention,
+		A.sale_strategy,
+		A.strict_price_flg,
+		A.cash_flow_air_flg,
+		A.cash_flow_local_flg,
+		A.cash_flow_other_flg,
+		A.create_time,
+		A.update_time,
+		A.off_shelves_date,
+		A.gross_child_profit,
+		A.cash_child_flow,
+		A.spot_child_cash,
+		A.gross_child_profit_rate,
+		A.client_confirm_templet,
+		A.out_notice_templet,
+		A.air_ticket_upkeep_flg,
+		A.supplier_upkeep_flg,
+		A.local_upkeep_flg,
+		A.keep_flg,
+		A.analysis_flg,
+		A.as_adult_flg,
+		A.id_type,
+		B.user_name AS product_manager_name
+		from product A
+		LEFT JOIN user_base B ON A.product_manager = B.user_number
+		where A.pk =
+		#{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -663,7 +719,8 @@
 		A.id_type
 		from
 		product A
-		LEFT JOIN user_base B on A.product_manager=B.user_number
+		LEFT JOIN user_base B on
+		A.product_manager=B.user_number
 		<where>
 			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
 				and A.product_manager = #{params.bo.product_manager,jdbcType=VARCHAR}

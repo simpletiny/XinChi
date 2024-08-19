@@ -47,4 +47,6 @@ public interface PassengerTicketInfoDAO {
 
 	public List<PassengerTicketInfoBean> selectAllByPayablePk(String payable_pk);
 
+	public List<PassengerTicketInfoBean> selectGroupInfoByTeamNumbers(List<String> t_ns);
+
 }

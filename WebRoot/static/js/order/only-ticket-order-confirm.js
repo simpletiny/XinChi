@@ -1,4 +1,5 @@
 var clientEmployeeLayer;
+let confirmLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -119,33 +120,44 @@ var OrderContext = function() {
 		xhr.send(formData);
 	};
 
+	self.confirm_order = ko.observable({});
 	self.updateOrder = function() {
-		if (!$("form").valid()) {
+		let result = validateOrder();
+		if(result[0]!="SUCCESS"){
+			fail_msg(result.join("<br>"));
 			return;
 		}
-
-		// 如果是确认订单编辑状态
-		var maxDate = new Date(d.Format("yyyy-MM-dd"));
-		var minDate = new Date(d.addDate(-2).Format("yyyy-MM-dd"));
-		var confirm_date = new Date($(".date-picker-confirm-date").val());
-		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
-			fail_msg("请选择允许的时间范围！" + minDate.Format("yyyy-MM-dd") + "至" + maxDate.Format("yyyy-MM-dd"));
-			return;
-		}
-
-		var confirm_file = $("#txt-confirm-file").val();
-		if (confirm_file == "") {
-			fail_msg("请上传确认件！");
-			return;
-		}
-
-		var other_cost = $(":input[name='bnsOrder.other_cost']").val().trim();
-		var other_comment = $(":input[name='bnsOrder.other_cost_comment']").val().trim();
-		if (other_cost != "" && other_comment == "") {
-			fail_msg("有其他费用，必须填写费用说明！")
-			return;
-		}
+		let departure_date = $('[name="bnsOrder.departure_date"]').val();
+		let days = $("#txt-days").val();
+		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
+		let product_name = "单机票";
+		let product_manager = $("#sel-product-manager option:selected").text();
+		let adult_count = $("#people-count").val()-0;
+		let special_count = $("#special-count").val()-0;
+		let sum_count = adult_count+special_count;
+		let client_employee = $("#txt-client-employee-name").val();
 		
+		self.confirm_order({departure_date,back_date,days,product_name,product_manager,adult_count,special_count,sum_count,client_employee})
+		
+		confirmLayer = $.layer({
+			type : 1,
+			title : ['订单确认', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['900px', '300px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#div-confirm'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	}
+	self.doConfirmOrder = function(){
+		startLoadingIndicator("保存中");
 		// 航班信息
 		var info_table = $("#table-ticket tbody");
 		var infos = $(info_table).children();
@@ -156,13 +168,6 @@ var OrderContext = function() {
 			const date = tr.find("input[st='date']").val().trim();
 			const from_city = tr.find("input[st='from-city']").val().trim();
 			const to_city = tr.find("input[st='to-city']").val().trim();
-			
-			// 判断是否有航班信息
-			if (date == '' || from_city == '' || to_city == '') {
-				fail_msg("请填写航班信息！")
-				return;
-			}
-			
 			let leg = {index,date,from_city,to_city};
 			legs.push(leg);
 		}
@@ -170,12 +175,9 @@ var OrderContext = function() {
 		var air_comment = $("#air-comment").val().trim();
 
 		// 名单
-		let hasNames = false;
-		let hasChairman = false;
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
 		let people = new Array();
-		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			const tr = trs[i];
 			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
@@ -188,51 +190,14 @@ var OrderContext = function() {
 			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
 			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
 			const id = $(tr).find("[st='id']").val().trim();
-			let is_ok = $(tr).find("[st='is_ok']").val();
-			if(is_ok!='Y'){
-				not_ok_names.push(name);
-			}
-			if (name == "" && id == "") {
-				continue;
-			}
-
-			if ((name != "" && id == "") || (name == "" && id != "")) {
-				fail_msg("请正确填写第" + index + "个名单!");
-				return;
-			}
-
-			if (name != "" && id != "" && !hasNames) {
-				hasNames = true;
-			}
-
-			if (chairman == "Y") {
-				hasChairman = true;
-			}
-
 			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
 			people.push(person);
-		}
-		// 判断是否有名单
-		if (!hasNames) {
-			fail_msg("没有名单，不能确认！");
-			return;
-		}
-
-		if (!hasChairman) {
-			fail_msg("请指定团长！");
-			return;
-		}
-		if(not_ok_names.length>0){
-			fail_msg(not_ok_names.join(",")+"未通过验证！");
-			endLoadingIndicator();
-			return;
 		}
 		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
 		const json = JSON.stringify(info);
 
 		var data = $("form").serialize() + "&json=" + json;
 
-		startLoadingIndicator("保存中……");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/confirmOnlyTicketOrder',
@@ -247,7 +212,10 @@ var OrderContext = function() {
 				fail_msg(str);
 			}
 		});
-	};
+	}
+	self.cancelConfirm = function(){
+		layer.close(confirmLayer);
+	}
 	// 批量导入
 	self.batName = function() {
 		passengerBatLayer = $.layer({
@@ -389,3 +357,84 @@ $(document).ready(function() {
 	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
 	$("#div-btn-area").prepend(a_btn);
 });
+
+function validateOrder(){
+	startLoadingSimpleIndicator("校验订单");
+	let result = new Array();
+	if (!$("form").valid()) {
+		result.push("请填写非空项！");
+	}
+	
+	var other_cost = $(":input[name='bnsOrder.other_cost']").val().trim();
+	var other_comment = $(":input[name='bnsOrder.other_cost_comment']").val().trim();
+	if (other_cost != "" && other_comment == "") {
+		result.push("有其他费用，必须填写费用说明！")
+	}
+	
+	// 航班信息
+	var info_table = $("#table-ticket tbody");
+	var infos = $(info_table).children();
+	let legs = new Array();
+	for (let i = 0; i < infos.length; i++) {
+		const tr = $(infos[i]);
+		const date = tr.find("input[st='date']").val().trim();
+		const from_city = tr.find("input[st='from-city']").val().trim();
+		const to_city = tr.find("input[st='to-city']").val().trim();
+		// 判断是否有航班信息
+		if (date == '' || from_city == '' || to_city == '') {
+			result.push("请填写航班信息！")
+		}
+	}
+
+
+	var x = new Date($("#hidden-server-date").val());
+	var maxDate = new Date(x.Format("yyyy-MM-dd"));
+	var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+	var confirm_date = new Date($(".date-picker-confirm-date").val());
+	if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
+		result.push("请选择允许的时间范围:" + minDate + "至" + maxDate+"！");
+	}
+	var confirm_file = $("#txt-confirm-file").val();
+	if (confirm_file == "") {
+		result.push("请上传确认件！");
+	}
+	var hasNames = false;
+	var hasChairman = false;
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	let not_ok_names = new Array();
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+		var name = $(tr).find("[st='name']").val().trim();
+		var id = $(tr).find("[st='id']").val().trim();
+		let is_ok = $(tr).find("[st='is_ok']").val();
+		if(is_ok!='Y'){
+			not_ok_names.push(name);
+		}
+		if (name != "" && id != "" && !hasNames) {
+			hasNames = true;
+		}
+
+		if (chairman == "Y") {
+			hasChairman = true;
+		}
+	}
+
+	if (!hasNames) {
+		result.push("没有名单，不能确认！");
+	}
+
+	if (!hasChairman) {
+		result.push("请指定团长！");
+	}
+
+	if(not_ok_names.length>0){
+		result.push(not_ok_names.join(",")+"未通过验证！");
+	}
+	
+	if(result.length==0)
+		result.push("SUCCESS");
+	endLoadingIndicator();
+	return result;
+}

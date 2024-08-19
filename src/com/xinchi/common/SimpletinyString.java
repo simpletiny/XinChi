@@ -2,6 +2,11 @@ package com.xinchi.common;
 
 import java.math.BigDecimal;
 import java.security.MessageDigest;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 字符串工具类
@@ -130,4 +135,79 @@ public class SimpletinyString {
 	public static boolean isNumeric(String src) {
 		return null != src && src.matches("^\\d*\\.?\\d+$");
 	}
+
+	public static Map<String, String> analysisId(String id) {
+		Map<String, String> result = new HashMap<>();
+		String id_type = getIdType(id);
+		result.put("idtype", id_type);
+		if (!id_type.equals("身份证")) {
+			result.put("age", "");
+			result.put("birthdate", "");
+			result.put("gender", "");
+			result.put("passengertype", "");
+			return result;
+		}
+		int age = getAgeFromId(id);
+		result.put("age", String.valueOf(age));
+		result.put("birthdate", getBirthDateFromId(id));
+		result.put("gender", getGenderFromId(id));
+		result.put("passengertype", getPassengerTypeFromAge(age));
+		return null;
+	}
+
+	public static String getPassengerTypeFromAge(int age) {
+		if (age >= 0 && age < 2) {
+			return "婴儿";
+		} else if (age >= 2 && age < 12) {
+			return "儿童";
+		} else if (age >= 12 && age < 22) {
+			return "青少年";
+		} else if (age >= 22 && age < 60) {
+			return "成人";
+		} else if (age >= 60 && age < 70) {
+			return "中老年";
+		} else if (age >= 70) {
+			return "老年";
+		} else {
+			return "妖怪";
+		}
+	}
+
+	private static String getIdType(String id) {
+		if (id == null) {
+			return "FAIL";
+		}
+		// 检查字符串的第一个字符是否为数字
+		char firstChar = id.charAt(0);
+		if (!Character.isDigit(firstChar) || id.length() != 18) {
+			return "护照";
+		} else {
+			return "身份证";
+		}
+	}
+
+	public static String getGenderFromId(String id) {
+		char ad = id.charAt(id.length() - 2);
+		return Character.getNumericValue(ad) % 2 == 0 ? "女" : "男";
+	}
+
+	public static String getBirthDateFromId(String id) {
+		String birthDateString = id.substring(6, 14);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDate birthDate = LocalDate.parse(birthDateString, formatter);
+		return birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	}
+
+	public static int getAgeFromId(String idCard) {
+		// 获取出生日期
+		String birthDateString = idCard.substring(6, 14);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDate birthDate = LocalDate.parse(birthDateString, formatter);
+		// 获取当前日期
+		LocalDate currentDate = LocalDate.now();
+
+		// 计算年龄
+		return Period.between(birthDate, currentDate).getYears();
+	}
+
 }

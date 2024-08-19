@@ -71,4 +71,6 @@ public interface ProductOrderOperationService extends BaseService {
 	public List<DropOffBean> selectDropOffByPage(Page<DropOffBean> page);
 
 	public List<PayableOrderBean> selectPayableOrderByTeamNumber(String team_number);
+
+	public String updateOrderOperation(String json);
 }

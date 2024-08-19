@@ -566,8 +566,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page) {
-		return dao.searchSaleScore(page);
+	public List<SaleScoreDto> searchSaleScoreByPage(SaleScoreDto score) {
+		return dao.searchSaleScore(score);
 	}
 
 	@Override
@@ -592,7 +592,7 @@ public class OrderServiceImpl implements OrderService {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			orderOption.setCreate_user(sessionBean.getUser_number());
+			orderOption.setSale_number(sessionBean.getUser_number());
 		}
 
 		return dao.selectConfirmingOrders(orderOption);
@@ -728,7 +728,7 @@ public class OrderServiceImpl implements OrderService {
 
 		receivable.setBudget_balance(order.getReceivable());
 		receivable.setReceived(BigDecimal.ZERO);
-		receivable.setSales(order.getCreate_user_number());
+		receivable.setSales(order.getSale_number());
 		receivable.setCreate_user(order.getCreate_user_number());
 
 		receivableDao.insert(receivable);
@@ -824,5 +824,20 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		return SUCCESS;
+	}
+
+	@Override
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score) {
+		return dao.searchNonStandardSaleData(score);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score) {
+		return dao.searchSaleCost(score);
+	}
+
+	@Override
+	public List<OrderDto> selectOrderWithNames(List<String> t_ns) {
+		return dao.selectOrderWithNames(t_ns);
 	}
 }
