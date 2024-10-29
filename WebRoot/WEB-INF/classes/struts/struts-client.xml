@@ -69,7 +69,10 @@
 			</result>
 		</action>
 		<action name="searchOneEmployee" class="employeeAction" method="searchOneEmployee">
-			<result name="success" type="json"></result>
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 		<action name="updateEmployee" class="employeeAction" method="updateEmployee">
 			<result name="success" type="str">resultStr</result>

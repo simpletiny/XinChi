@@ -1,9 +1,10 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-String key = request.getParameter("key");
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+	String key = request.getParameter("key");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -135,10 +136,11 @@ String key = request.getParameter("key");
 							<!-- /ko -->
 							<!-- ko if: employee().review_flg == "N" -->
 							<div class="ip">
-								<input type="text" style="width: 60%" class="ip-" data-bind="value: employee().financial_body_name,event:{focus:choseFinancial}"
-									placeholder="财务主体（点选不用审核）" name="employee.financial_body_name" id="financial_body_name" maxlength="30"
-									required="required" /> <input type="hidden" name="employee.financial_body_pk"
-									data-bind="value:employee().financial_body_pk" id="financial_body_pk" />
+								<input type="text" style="width: 60%" class="ip-"
+									data-bind="value: employee().financial_body_name,event:{focus:choseFinancial}" placeholder="财务主体（点选不用审核）"
+									name="employee.financial_body_name" id="financial_body_name" maxlength="30" required="required" /> <input
+									type="hidden" name="employee.financial_body_pk" data-bind="value:employee().financial_body_pk"
+									id="financial_body_pk" />
 							</div>
 							<!-- /ko -->
 
@@ -172,12 +174,10 @@ String key = request.getParameter("key");
 						<div class="col-md-6 required">
 							<label class="l">地区</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control heilongjiang-city" data-bind="value:employee().employee_area"
-									name="employee.employee_area" required="required"></select>
+								<select class="form-control heilongjiang-city" name="employee.employee_area" required="required"></select>
 							</div>
 							<div class="ip" style="width: 35%">
-								<select class="form-control district" data-bind="value:employee().employee_county"
-									name="employee.employee_county"></select>
+								<select class="form-control district" name="employee.employee_county"></select>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -275,7 +275,7 @@ String key = request.getParameter("key");
 	<script type="text/javascript" src="<%=basePath%>static/vendor/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
-	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/employee-edit.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/employee-edit.js?v=1.002"></script>
 </body>
 </html>

@@ -41,9 +41,10 @@ public class AutoUpdateProduct {
 		ss.setSql(sql2);
 		commonDao.exeBySql(ss);
 
-		String sql3 = "UPDATE product SET analysis_flg = 'N' WHERE analysis_flg = 'Y'";
-		ss.setSql(sql3);
-		commonDao.exeBySql(ss);
+		// String sql3 = "UPDATE product SET analysis_flg = 'N' WHERE analysis_flg =
+		// 'Y'";
+		// ss.setSql(sql3);
+		// commonDao.exeBySql(ss);
 
 		ProductBean option = new ProductBean();
 		option.setKeep_flg("Y");

@@ -82,7 +82,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
 		if (exists1 != null && exists1.size() > 0) {
 			for (ClientEmployeeBean exist : exists1) {
-				if (exist.getSales().equals(employee.getSales()))
+				if (exist.getSales().equals(employee.getSales())
+						|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
 					return "existcellphone";
 			}
 		}
@@ -100,7 +101,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
 		if (exists3 != null && exists3.size() > 0) {
 			for (ClientEmployeeBean exist : exists3) {
-				if (exist.getSales().equals(employee.getSales()))
+				if (exist.getSales().equals(employee.getSales())
+						|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
 					return "existwechat";
 			}
 		}
@@ -148,12 +150,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ClientEmployeeBean old = dao.selectByPrimaryKey(employee.getPk());
 		ClientEmployeeBean option1 = new ClientEmployeeBean();
 		option1.setCellphone(employee.getCellphone());
-		option1.setSales(employee.getSales());
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
 		if (exists1 != null && exists1.size() > 0) {
 			for (ClientEmployeeBean exist : exists1) {
 				if (!exist.getPk().equals(old.getPk())) {
-					return "existcellphone";
+					if (exist.getSales().equals(employee.getSales())
+							|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+						return "existcellphone";
 				}
 			}
 		}
@@ -173,7 +176,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (exists3 != null && exists3.size() > 0) {
 			for (ClientEmployeeBean exist : exists3) {
 				if (!exist.getPk().equals(old.getPk())) {
-					return "existwechat";
+					if (exist.getSales().equals(employee.getSales())
+							|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+						return "existwechat";
 				}
 			}
 		}
@@ -191,6 +196,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (employee.getPublic_flg().equals("Y")) {
 			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			// 查验财务主体合法性
+			if (!sessionBean.getUser_roles().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+				ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
+				if (client.getDelete_flg().equals("Y"))
+					return "bodyillegal0";
+
+				List<ClientUserBean> cubs = clientUserDao.selectByClientPk(employee.getFinancial_body_pk());
+				boolean legal = false;
+				if (null != cubs) {
+					for (ClientUserBean cub : cubs) {
+						if (sessionBean.getPk().equals(cub.getUser_pk())) {
+							legal = true;
+							break;
+						}
+					}
+				}
+
+				if (!legal) {
+					return "bodyillegal1";
+				}
+			}
 
 			employee.setPublic_flg("N");
 			employee.setRelation_level(ResourcesConstants.CLIENT_RELATION_LEVEL_01);
@@ -227,7 +253,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// }
 		// }
 		// }
-
+		employee.setReview_flg("Y");
 		dao.update(employee);
 		return SUCCESS;
 

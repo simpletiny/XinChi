@@ -30,13 +30,13 @@ function ter(city) {
 }
 $(document).ready(function() {
 	city.on("change", function() {
-
 		district.empty();
+		if (district.hasClass("empty")) {
+			district.append("<option value=''>--请选择--</option>");
+		}
 		if ($(this).val() != "") {
 			ter($(this).val());
 		}
-
-		console.log($(this).val())
 	})
 	if (city.prop("tagName") != "SELECT")
 		throw "wrong tab";
@@ -45,3 +45,8 @@ $(document).ready(function() {
 		city.append("<option value='" + cities[i] + "'>" + cities[i] + "</option>");
 	}
 });
+function setCC(str_city, str_county) {
+	city.val(str_city);
+	ter(str_city);
+	district.val(str_county);
+}

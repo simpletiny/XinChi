@@ -654,7 +654,7 @@
 					#{params.bo.talk_levels[${index}]}
 				</foreach>
 			</if>
-			<if test="params.bo.main_businesses != null and params.bo.main_businesses !=''">
+			<if test="params.bo.main_businesses!=null and params.bo.main_businesses.size()>0">
 				and A.main_business in
 				<foreach item="item" index="index" collection="params.bo.main_businesses" open="(" separator="," close=")">
 					#{params.bo.main_businesses[${index}]}

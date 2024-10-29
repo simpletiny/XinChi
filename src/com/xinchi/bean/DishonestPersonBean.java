@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -16,6 +17,7 @@ public class DishonestPersonBean extends SupperBO implements Serializable {
 	// DTO
 	private String code;
 	private String msg;
+	private List<DishonestLogBean> cases;
 
 	public String getName() {
 		return name;
@@ -55,6 +57,14 @@ public class DishonestPersonBean extends SupperBO implements Serializable {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public List<DishonestLogBean> getCases() {
+		return cases;
+	}
+
+	public void setCases(List<DishonestLogBean> cases) {
+		this.cases = cases;
 	}
 
 }

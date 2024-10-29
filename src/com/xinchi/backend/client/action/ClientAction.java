@@ -66,6 +66,12 @@ public class ClientAction extends BaseAction {
 			client.setSales(sessionBean.getPk());
 		}
 
+		if (client.getMain_businesses() != null && client.getMain_businesses().contains("全部")) {
+			client.setMain_businesses(null);
+		}
+		if (client.getTalk_levels() != null && client.getTalk_levels().contains("全部")) {
+			client.setTalk_levels(null);
+		}
 		params.put("bo", client);
 		page.setParams(params);
 		clients = clientService.getAllCompaniesByPage(page);
@@ -81,6 +87,14 @@ public class ClientAction extends BaseAction {
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
+		}
+
+		if (client.getMain_businesses() != null && client.getMain_businesses().contains("全部")) {
+			client.setMain_businesses(null);
+		}
+
+		if (client.getTalk_levels() != null && client.getTalk_levels().contains("全部")) {
+			client.setTalk_levels(null);
 		}
 
 		clientCount = clientService.selectCountByParam(client);

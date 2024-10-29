@@ -44,11 +44,14 @@ public class OrderReportAction extends BaseAction {
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
-				&& !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
+		// if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
+		// && !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
+		// option.setProduct_manager_number(sessionBean.getUser_number());
+		// }
+
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setProduct_manager_number(sessionBean.getUser_number());
 		}
-
 		if (!SimpletinyString.isEmpty(option.getConfirm_month())) {
 			option.setDeparture_date_from(option.getConfirm_month() + "-01");
 			option.setDeparture_date_to(DateUtil.getLastDay(option.getConfirm_month()));

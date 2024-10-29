@@ -36,6 +36,7 @@
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 		<result column="useful_time" property="useful_time" jdbcType="VARCHAR" />
 		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
+		<result column="body_public_flg" property="body_public_flg" jdbcType="VARCHAR" />
 		<result column="employee_area" property="employee_area" jdbcType="VARCHAR" />
 		<result column="employee_county" property="employee_county" jdbcType="VARCHAR" />
 		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
@@ -516,8 +517,8 @@
 		A.review_flg,
 		A.quit_flg,
 		A.head_photo,
-		A.employee_area,
-		A.employee_county
+		A.employee_county,
+		A.employee_area
 		from
 		client_employee
 		A LEFT
@@ -644,7 +645,7 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		IFNULL(B.client_short_name,A.financial_body_name) AS
+		if(A.review_flg='N',A.financial_body_name,B.client_short_name) AS
 		financial_body_name,
 		B.client_area as area,
 		C.user_names AS
@@ -670,7 +671,8 @@
 		A.employee_area,
 		A.employee_county,
 		D.last_order_period AS last_order_period,
-		D.year_order_count AS year_order_count
+		D.year_order_count AS year_order_count,
+        B.public_flg AS body_public_flg
 		from
 		client_employee
 		A
@@ -681,7 +683,6 @@
 		C.employee_pk
 		LEFT JOIN
 		client_relation D ON A.pk = D.client_employee_pk
-
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')

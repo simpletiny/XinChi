@@ -551,6 +551,8 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		if (name.getId_type().equals("P")) {
 			return true;
 		} else if (name.getId_type().equals("I")) {
+			if (name.getId().length() != 18 || !Character.isDigit(name.getId().charAt(0)))
+				return true;
 			String birthDateString = name.getId().substring(6, 14);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 			LocalDate birthDate = LocalDate.parse(birthDateString, formatter);

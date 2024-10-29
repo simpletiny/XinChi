@@ -155,6 +155,7 @@ public class ProductServiceImpl implements ProductService {
 			t = t == 0 ? 3 : t;
 			bean.setId_type(String.valueOf(t));
 		}
+		bean.setAnalysis_flg("N");
 		dao.update(bean);
 		return "success";
 	}

@@ -48,6 +48,7 @@ var OrderContext = function() {
 			let txt_ok_name = name_div.find("input[name='ok_name']");
 			
 			let person_result = validateName(name,id);
+			console.log(person_result);
 				let tr_len = $(tbody).children().length;
 				if(person_result.code==200){
 					if(person_result.dishonest_flg=="N"){
@@ -68,7 +69,7 @@ var OrderContext = function() {
 					}else if(person_result.dishonest_flg=="Y"){
 						$(img).attr("src", self.apiurl + "static/img/cuo.png");
 						$(txt_is_ok).val('N');
-						let person_cases = data.cases;
+						let person_cases = person_result.cases;
 						if(person_cases){
 							for(let i=0;i<person_cases.length;i++){
 								const person_case = person_cases[i];

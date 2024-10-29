@@ -54,6 +54,9 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String addDate(String date, int days) {
+		if (SimpletinyString.isEmpty(date)) {
+			return "";
+		}
 		try {
 			Date d = sdf1.parse(date);
 			Calendar c = Calendar.getInstance();

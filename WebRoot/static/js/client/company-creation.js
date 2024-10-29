@@ -41,7 +41,7 @@ var CompanyContext = function() {
 	// self.ter();
 
 	self.clientType = ['总公司', '分公司', '营业部', '包桌', '经纪人', '其他'];
-	self.storeTypes = ['未知', '门店', '写字间', '其它 '];
+	self.storeTypes = ['未知', '写字间', '路边店', '商超店', '社区店', '民居', '其它 '];
 	self.mainBusinesses = ['组团', '户外', '线上', '综合', '地接', '同业', '其它'];
 	self.backLevels = ['未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱'];
 	self.marketLevels = ['未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级'];
@@ -54,12 +54,8 @@ var CompanyContext = function() {
 	self.client().talk_level = ko.observable();
 	self.client().store_type = ko.observable();
 
-	self.client().main_business("组团");
 	self.client().back_level("未知");
-	self.client().market_level("普通级");
-	self.client().talk_level("市场");
 	self.client().store_type("未知");
-	self.client().client_type("总公司");
 
 	self.createCompany = function() {
 		if (!$("form").valid()) {

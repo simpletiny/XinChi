@@ -1285,6 +1285,17 @@
 			<comment>ALTER TABLE product_order_operation</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="27" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE client 
+				CHANGE COLUMN client_area client_area VARCHAR(10) NULL ,
+				CHANGE COLUMN client_type client_type VARCHAR(10) NULL ,
+				CHANGE COLUMN body_name body_name VARCHAR(10) NULL ;
+             ]]>
+			<comment>ALTER TABLE client</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

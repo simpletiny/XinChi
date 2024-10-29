@@ -13,6 +13,10 @@ var CompanyContext = function() {
 		if (!$("form").valid()) {
 			return;
 		}
+		if ($("#financial_body_pk").val() === "") {
+			fail_msg("请选择财务主体！");
+			return;
+		}
 		startLoadingIndicator("保存中");
 		$.ajax({
 			type : "POST",
@@ -55,7 +59,7 @@ var CompanyContext = function() {
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
 
-		var param = "client.client_short_name=" + $("#client_name").val();
+		var param = "client.client_short_name=" + $("#client_name").val() + "&client.public_flgs=N&client.statuses=N";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {

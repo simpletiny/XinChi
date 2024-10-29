@@ -27,6 +27,7 @@ var EmployeeContext = function() {
 	}, function(data) {
 		if (data.employee) {
 			self.employee(data.employee);
+			setCC(data.employee.employee_area, data.employee.employee_county)
 			self.loadFiles();
 		} else {
 			fail_msg("员工不存在！");
@@ -57,7 +58,7 @@ var EmployeeContext = function() {
 
 	self.refresh = function() {
 		startLoadingSimpleIndicator("加载中");
-		var param = "client.client_short_name=" + $("#client_name").val();
+		var param = "client.client_short_name=" + $("#client_name").val() + "&client.public_flgs=N&client.statuses=N";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
 		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
@@ -79,6 +80,13 @@ var EmployeeContext = function() {
 		layer.close(financialLayer);
 	};
 
+	let msg_map = {
+		existcellphone : "存在相同手机号！",
+		existwechat : "存在相同微信号！",
+		exist : "同一财务主体下存在同名客户！",
+		bodyillegal0 : "财务主体已停用！",
+		bodyillegal1 : "财务主体不合法！"
+	}
 	self.saveEmployee = function() {
 		if (!$("form").valid()) {
 			return;
@@ -90,12 +98,10 @@ var EmployeeContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/client/client-employee.jsp";
-			} else if (str == "existcellphone") {
-				fail_msg("存在相同手机号！")
-			} else if (str == "existwechat") {
-				fail_msg("存在相同微信号！")
-			} else if (str == "exist") {
-				fail_msg("同一财务主体下存在同名客户!");
+			} else if (msg_map.hasOwnProperty(str)) {
+				fail_msg(msg_map[str]);
+			} else {
+				fail_msg(str);
 			}
 		});
 	};

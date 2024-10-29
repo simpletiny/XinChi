@@ -65,9 +65,6 @@ var CompanyContext = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("#form-search").serialize();
 
-		if ($(":radio[name='client.main_businesses']:checked").val() == "全部") {
-			param += "&client.main_businesses=组团&client.main_businesses=综合&client.main_businesses=地接&client.main_businesses=同业&client.main_businesses=其它";
-		}
 		if ($("input[name='client.public_flgs']:checked").val() == "A") {
 			param += "&client.public_flgs=Y&client.public_flgs=N";
 		}
@@ -91,6 +88,11 @@ var CompanyContext = function() {
 
 	self.chkMainBusinessRad = function(data, event) {
 		$(":checkbox[name='client.main_businesses']").attr("checked", false);
+		self.refresh();
+		return true;
+	}
+	self.chkTalkLevelRad = function(data, event) {
+		$(":checkbox[name='client.talk_levels']").attr("checked", false);
 		self.refresh();
 		return true;
 	}

@@ -186,8 +186,15 @@
 								<!-- /ko -->
 
 								<td data-bind="text: $data.area"></td>
+								
+								<!-- ko if:$data.body_public_flg=='Y' -->
+								<td><a style="color:red" href="javascript:void(0)"
+									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
+								<!-- /ko -->
+								<!-- ko if:$data.body_public_flg!='Y' -->
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.year_order_count"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.last_order_period"></td>

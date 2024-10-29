@@ -66,6 +66,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String new_client_pk;
 	private String hopping_date;
 
+	private String body_public_flg;
+
 	public String getName() {
 		return name;
 	}
@@ -382,12 +384,20 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 		return employee_area;
 	}
 
-	public String getEmployee_county() {
-		return employee_county;
-	}
-
 	public void setEmployee_area(String employee_area) {
 		this.employee_area = employee_area;
+	}
+
+	public String getBody_public_flg() {
+		return body_public_flg;
+	}
+
+	public void setBody_public_flg(String body_public_flg) {
+		this.body_public_flg = body_public_flg;
+	}
+
+	public String getEmployee_county() {
+		return employee_county;
 	}
 
 	public void setEmployee_county(String employee_county) {

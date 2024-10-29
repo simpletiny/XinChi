@@ -33,13 +33,7 @@
 	font-weight: bold;
 }
 
-tr td {
-	text-overflow: ellipsis; /* for IE */
-	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: left
-}
+
 </style>
 </head>
 <body>
@@ -269,20 +263,19 @@ tr td {
 		<hr />
 		<div class="input-row clearfloat">
 			<h3>名单</h3>
-			<table style="width: 100%;" class="table table-order">
+			<table style="width: 1200px;" class="table table-order">
 				<thead>
 					<tr>
-						<th>序</th>
-						<th>订单信息</th>
-						<th>客人名单</th>
-						<th>性别</th>
-						<th>年龄</th>
-						<th>单价</th>
-						<th>团款备注</th>
-						<th>联系方式</th>
-						<th>用房说明</th>
-						<th>销售特请</th>
-						<th>接送信息</th>
+						<th style="width:5%">序</th>
+						<th style="width:15%">订单信息</th>
+						<th style="width:20%">客人名单</th>
+						<th style="width:5%">性别</th>
+						<th style="width:5%">年龄</th>
+						<th style="width:10%">单价</th>
+						<th style="width:10%">团款备注</th>
+						<th style="width:10%">联系方式</th>
+						<th style="width:10%">用房说明</th>
+						<th style="width:10%">销售特请</th>
 					</tr>
 				</thead>
 				<tbody data-bind="foreach:{data:supplier().sale_order_infos,as:'order'}">

@@ -7,7 +7,7 @@ var CompanyContext = function() {
 	self.genders = ['男', '女'];
 
 	self.clientType = ['总公司', '分公司', '营业部', '包桌', '经纪人', '其他'];
-	self.storeTypes = ['未知', '门店', '写字间', '其它 '];
+	self.storeTypes = ['未知', '写字间', '路边店', '商超店', '社区店', '民居', '其它 '];
 	self.mainBusinesses = ['组团', '户外', '线上', '综合', '地接', '同业', '其它'];
 	self.backLevels = ['未知', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱'];
 	self.marketLevels = ['未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级'];
@@ -19,6 +19,7 @@ var CompanyContext = function() {
 	}, function(data) {
 		if (data.client) {
 			self.client(data.client);
+			setCC(data.client.client_area, data.client.client_county)
 			downloadImg(data.client);
 		} else {
 			fail_msg("公司不存在！");

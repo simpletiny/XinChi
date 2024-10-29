@@ -125,7 +125,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<input type="text" style="width: 60%"  class="ip-"  data-bind="value: employee().financial_body_name,event:{focus:choseFinancial}"
 									placeholder="财务主体（点选）" name="employee.financial_body_name" id="financial_body_name" maxlength="30"
 									required="required" /> <input type="hidden" name="employee.financial_body_pk" data-bind="value:employee().financial_body_pk"
-									id="financial_body_pk" />
+									id="financial_body_pk" required/>
 							</div>
 						</div>
 						<div class="col-md-6 required">
@@ -259,6 +259,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	<script type="text/javascript" src="<%=basePath%>static/vendor/cropper/cropper.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/employee-creation.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/employee-creation.js?v=1.003"></script>
 </body>
 </html>

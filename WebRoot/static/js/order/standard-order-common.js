@@ -322,6 +322,16 @@ function checkName(){
 			fail_msg("请填姓名或身份证号！");
 			return;
 		}
+		let sel_type=$(tr).find("select[st='type']");
+		let type= sel_type.val();
+		if(type=="P"){
+			$(img).attr("src", ctx.apiurl + "static/img/dui.png");
+			$(txt_is_ok).val('Y');
+			$(txt_ok_id).val(id);
+			$(txt_ok_name).val(name);
+			return true;
+		}
+		
 		startLoadingSimpleIndicator("检验中");
 		let person_result = validateName(name,id);
 		let tr_len = $(tbody).children().length;
@@ -344,7 +354,7 @@ function checkName(){
 			}else if(person_result.dishonest_flg=="Y"){
 				$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
 				$(txt_is_ok).val('N');
-				let person_cases = data.cases;
+				let person_cases = person_result.cases;
 				if(person_cases){
 					for(let i=0;i<person_cases.length;i++){
 						const person_case = person_cases[i];

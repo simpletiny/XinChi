@@ -73,7 +73,7 @@
 								<select class="form-control heilongjiang-city" style="height: 34px" name="client.client_area"></select>
 							</div>
 							<div class="col-md-2">
-								<select class="form-control district" id="county" name="client.client_county"></select>
+								<select class="form-control district empty" id="county" name="client.client_county"></select>
 							</div>
 						</div>
 
@@ -139,10 +139,15 @@
 						</div>
 						<label class="col-md-1 control-label">关系强度</label>
 						<div class="span6">
-							<div data-bind="foreach: talkLevels" class="col-md-4">
+							<div class="col-md-4">
+								<!-- ko foreach:talkLevels-->
 								<em class="small-box "> <input name="client.talk_levels" type="checkbox"
 									data-bind="attr: {'value': $data}, checked: $root.chosenTalkLevels,event:{click:function(){$root.refresh();return true;}}" /><label
 									data-bind="text: $data"></label>
+								</em>
+								<!-- /ko -->
+								<em class="small-box ">
+									<input name="client.talk_levels" type="radio" value="全部" data-bind="event:{click:chkTalkLevelRad}" /><label>全部</label>
 								</em>
 							</div>
 						</div>
@@ -224,7 +229,7 @@
 									data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.store_type"></td>
 								<td data-bind="text: $data.main_business"></td>
-								<td data-bind="text: $data.client_area+$data.client_county"></td>
+								<td data-bind="text: $data.client_area+($data.client_county ? $data.client_county : '')"></td>
 								<td data-bind="text: $data.client_type"></td>
 								<td data-bind="text: $data.body_name"></td>
 								<!-- ko if:$data.relate_flg =='N' -->
@@ -385,7 +390,7 @@
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
-	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/client/company.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.005"></script>
 </body>
 </html>

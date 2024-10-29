@@ -117,6 +117,7 @@ public class DishonestAction extends BaseAction {
 			// 如果是失信人，查询案件
 			if (person_result.getDishonest_flg().equals("Y")) {
 				cases = dishonestLogService.selectByPersonId(person.getId());
+				person_result.setCases(cases);
 			}
 		} else {
 			person_result = new DishonestPersonBean();
@@ -166,6 +167,7 @@ public class DishonestAction extends BaseAction {
 				person_result.setName(person.getName());
 				person_result.setId(person.getId());
 				dishonestPersonService.insert(person_result);
+				person_result.setCases(cases);
 			} else {
 				person_result.setCode(String.valueOf(response_code));
 				person_result.setMsg(response_msg);

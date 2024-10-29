@@ -80,7 +80,7 @@
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px" id="select-sales"
 										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="option.create_user"></select>
+										name="option.sale_number"></select>
 								</div>
 							</div>
 						</s:if>
@@ -138,7 +138,7 @@
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.create_user"></td>
+									<td data-bind="text: $data.sale_name"></td>
 								</s:if>
 								<td data-bind="text: $data.assistant_name"></td>
 								<!-- ko if:$data.update_time==null -->

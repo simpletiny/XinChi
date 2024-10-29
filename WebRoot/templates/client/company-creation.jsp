@@ -115,12 +115,12 @@ h3 {
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">公司类型</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: clientType, optionsCaption: '-- 请选择 --', value: client().client_type"
-									name="client.client_type" required="required"></select>
+									name="client.client_type"></select>
 							</div>
 						</div>
 						<%-- 	<div class="col-md-6 required">
@@ -134,83 +134,83 @@ h3 {
 								<select class="form-control" id="county" name="client.client_county"></select>
 							</div>
 						</div> --%>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">门脸</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: storeTypes, optionsCaption: '-- 请选择 --', value: client().store_type"
-									name="client.store_type" required="required"></select>
+									name="client.store_type"></select>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">主营</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: mainBusinesses, optionsCaption: '-- 请选择 --', value: client().main_business"
-									name="client.main_business" required="required"></select>
+									name="client.main_business" ></select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6 ">
 							<label class="l">回款誉</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: backLevels, optionsCaption: '-- 请选择 --', value: client().back_level"
-									name="client.back_level" required="required"></select>
+									name="client.back_level"></select>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">市场力</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: marketLevels, optionsCaption: '-- 请选择 --', value: client().market_level"
-									name="client.market_level" required="required"></select>
+									name="client.market_level"></select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">紧密度</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: talkLevels, optionsCaption: '-- 请选择 --', value: client().talk_level"
-									name="client.talk_level" required="required"></select>
+									name="client.talk_level"></select>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">地市</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control heilongjiang-city" name="client.client_area" required="required"></select>
+								<select class="form-control heilongjiang-city" name="client.client_area"></select>
 							</div>
 							<div class="ip" style="width: 35%">
 								<select class="form-control district" name="client.client_county"></select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">地址</label>
 							<div class="ip">
 								<input type="text" class="ip-" maxlength="100" data-bind="value: client().address" placeholder="地址"
-									name="client.address" required="required" />
+									name="client.address" />
 								</textarea>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4 required">
+						<div class="col-md-4 ">
 							<label class="l">收件人</label>
 							<div class="ip" style="width: 60">
 								<input type="text" class="ip-" maxlength="10" data-bind="value: client().recipient" placeholder="收件人"
-									name="client.recipient" required="required" />
+									name="client.recipient" />
 							</div>
 						</div>
-						<div class="col-md-4 required">
+						<div class="col-md-4 ">
 							<label class="l">联系方式1</label>
 							<div class="ip" style="width: 60">
 								<input type="text" class="ip-" maxlength="20" data-bind="value: client().recipient_phone1" placeholder="联系方式1"
-									name="client.recipient_phone1" required="required" />
+									name="client.recipient_phone1"  />
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -222,7 +222,7 @@ h3 {
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12">
+						<div class="col-md-12 ">
 							<label class="l">旅游公司</label>
 							<div class="ip">
 								<input type="text" class="ip-" data-bind="click:chooseAgency" placeholder="点击选择" name="client.agency_name"
@@ -373,7 +373,7 @@ h3 {
 <script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 <script src="<%=basePath%>static/js/validation.js"></script>
 <script src="<%=basePath%>static/vendor/dropzone.js"></script>
-<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.001"></script>
-<script src="<%=basePath%>static/js/client/company-creation.js?v=1.001"></script>
+<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.002"></script>
+<script src="<%=basePath%>static/js/client/company-creation.js?v=1.003"></script>
 </body>
 </html>
