@@ -77,4 +77,6 @@ public interface ClientService extends BaseService {
 	public ClientCountDto selectCountByParam(ClientBean client);
 
 	public String publicCompany(String client_pk);
+
+	public List<ClientBean> searchClientByAgencyPk(String agency_pk);
 }

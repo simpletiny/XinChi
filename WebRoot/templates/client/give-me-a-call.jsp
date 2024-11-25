@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	String key = request.getParameter("key");
 %>
@@ -13,6 +12,7 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/upload.css" />
 </head>
 <body>
 	<div class="main-body">
@@ -20,7 +20,8 @@
 		<input type="hidden" id="client_key" value="<%=key%>" />
 		<div class="subtitle">
 			<h2>
-				新增电联<a  href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				新增电联<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -30,9 +31,9 @@
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<label class="l">客户</label>
-							
+
 							<div class="ip">
-								<p class="ip-default"  data-bind="text: mobile().client_employee_name"></p>
+								<p class="ip-default" data-bind="text: mobile().client_employee_name"></p>
 								<input type="text" class="ip-" data-bind="value: mobile().client_employee_pk" style="display: none"
 									name="mobile.client_employee_pk" required="required" />
 							</div>
@@ -41,8 +42,8 @@
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<div class="ip required" style="width: 30%">
-								<label class="l">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker" data-bind="value: mobile().date" placeholder="2013-10-19" name="mobile.date"
-									required="required" />
+								<label class="l">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker"
+									data-bind="value: mobile().date" placeholder="2013-10-19" name="mobile.date" required="required" />
 							</div>
 						</div>
 					</div>
@@ -50,7 +51,8 @@
 						<div class="col-md-12 required">
 							<label class="l">电联目的</label>
 							<div class="ip">
-								<input type="text" class="ip-default" data-bind="value: mobile().touch_target" maxlength="10" placeholder="10个字以内" name="mobile.touch_target" required="required" />
+								<input type="text" class="ip-default" data-bind="value: mobile().touch_target" maxlength="10"
+									placeholder="10个字以内" name="mobile.touch_target" required="required" />
 							</div>
 						</div>
 					</div>
@@ -58,10 +60,20 @@
 						<div class="col-md-12 required">
 							<label class="l">电联效果</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: mobile().summary" name="mobile.summary" placeholder="电联效果" required="required"></textarea>
+								<textarea type="text" id="txt-summary" class="ip-default" rows="15" maxlength="500" data-bind="value: mobile().summary"
+									name="mobile.summary" placeholder="电联效果（不少于20字）" required="required"></textarea>
 							</div>
 						</div>
 					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-2 required">
+							<label class="l">上传图片</label> <a href="javascript:;" class="a-upload">选择文件<input type="file"
+								required="required" class="file-img" accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden"
+								name="mobile.visit_img" />
+						</div>
+						<div class="col-md-6"></div>
+					</div>
+					<div class="input-row clearfloat"></div>
 				</form>
 				<div align="right">
 					<a type="submit" class="btn btn-green btn-r" id="btn_save" data-bind="click: saveMobileTouch">保存</a>
@@ -77,6 +89,7 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/give-me-a-call.js"></script>
+	<script src="<%=basePath%>static/js/file-upload.js"></script>
+	<script src="<%=basePath%>static/js/client/give-me-a-call.js?v=1.001"></script>
 </body>
 </html>

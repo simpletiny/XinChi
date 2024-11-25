@@ -24,16 +24,16 @@ var ClientContext = function() {
 
 	// 市场力
 	// self.marketLevel = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
-	self.marketLevel = ['电话级', '微信级', '广告级'];
+	self.marketLevel = ['普通', '主力', '核心', '未知'];
 	// 回款誉
 	self.backLevel = ['未知', '提前', '及时', '定期', '拖拉', '费劲', '垃圾'];
 	self.chosenLevel = ko.observableArray(['关系度']);
 
 	self.connectTypeMapping = {
 		"ORDER" : "订单",
-		"VISIT" : "拜访",
+		"VISIT" : "会见",
 		"TOUCH" : "电联",
-		"INCOMING" : "咨询"
+		"INCOMING" : "微聊"
 	};
 
 	self.chosenRelationLevel = ko.observableArray([]);
@@ -256,7 +256,7 @@ var ClientContext = function() {
 		} else if (self.chosenEmployee().length > 0) {
 			levelLayer = $.layer({
 				type : 1,
-				title : ['市场力调整', ''],
+				title : ['客户关系调整', ''],
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
@@ -600,7 +600,33 @@ var ClientContext = function() {
 			}
 		});
 	};
+	self.checkVisitImg = function(fileName, connect_date) {
+		$("#img-pic").attr("src", "");
+		headCheckLayer = $.layer({
+			type : 1,
+			title : ['交流图片', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['320px', '355px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#pic-check'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
 
+		let sub_folder = connect_date.substring(0, 4) + "/" + connect_date.substring(5, 7);
+		console.log(self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+				+ "&fileType=CLIENT_VISIT_IMG&subFolder" + sub_folder);
+		$("#img-pic").attr(
+				"src",
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_VISIT_IMG&subFolder="
+						+ sub_folder);
+	};
 	// 查看头像
 	self.checkHeadPhoto = function(fileName) {
 		$("#img-pic").attr("src", "");

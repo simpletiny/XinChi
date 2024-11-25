@@ -22,10 +22,10 @@ var CompanyContext = function() {
 	self.status = ['N', 'Y'];
 	self.talkLevels = ['核心', '主力', '市场', '排斥'];
 	self.chosenTalkLevels = ko.observableArray([]);
-	self.chosenTalkLevels.push("核心");
-	self.chosenTalkLevels.push("主力");
-	self.chosenTalkLevels.push("市场");
-	self.chosenTalkLevels.push("排斥");
+// self.chosenTalkLevels.push("核心");
+// self.chosenTalkLevels.push("主力");
+// self.chosenTalkLevels.push("市场");
+// self.chosenTalkLevels.push("排斥");
 	self.statusMapping = {
 		'N' : '正常',
 		'Y' : '已停用'
@@ -197,7 +197,9 @@ var CompanyContext = function() {
 							data : "company_pks=" + self.chosenCompanies()
 						}).success(function(str) {
 							if (str == "success") {
+							
 								self.refresh();
+								
 								self.chosenCompanies.removeAll();
 								endLoadingIndicator();
 							} else {

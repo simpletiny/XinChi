@@ -1296,6 +1296,125 @@
 			<comment>ALTER TABLE client</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="28" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE client_visit 
+				ADD COLUMN visit_img VARCHAR(30) NULL COMMENT '交流图片' AFTER create_time;
+             ]]>
+			<comment>ALTER TABLE client_visit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="29" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE mobile_touch 
+					ADD COLUMN visit_img VARCHAR(30) NULL COMMENT '电联图片' AFTER update_user;
+             ]]>
+			<comment>ALTER TABLE mobile_touch</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="30" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		ALTER TABLE incoming_call 
+					ADD COLUMN visit_img VARCHAR(30) NULL COMMENT '咨询图片' AFTER update_user;
+             ]]>
+			<comment>ALTER TABLE incoming_call</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="31" author="simpletiny">
+		<sql>
+            <![CDATA[
+	       		CREATE OR REPLACE VIEW view_all_connect AS
+					select date AS connect_date,client_employee_pk,summary AS extra_info,'VISIT' AS type,create_user,visit_img from client_visit where type='VISIT' and date is not null
+					union all 
+					select date AS connect_date,client_employee_pk,summary AS extra_info,'TOUCH' AS type,create_user,visit_img from mobile_touch  where date is not null
+					union all 
+					select date AS connect_date,client_employee_pk,summary AS extra_info,'INCOMING' AS type,create_user,visit_img from incoming_call where date is not null;
+             ]]>
+			<comment>ALTER VIEW view_all_connect</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="32" author="simpletiny">
+		<sql>
+            <![CDATA[
+	       		ALTER TABLE team_report 
+					ADD COLUMN cost_adjustment DECIMAL(12,2) NULL DEFAULT 0 COMMENT '成本修正：正为成本，负为利润' AFTER other_receive,
+					ADD COLUMN allocable_money DECIMAL(12,2) NULL COMMENT '应提应分金额' AFTER cost_adjustment,
+					ADD COLUMN allocable_applied DECIMAL(12,2) NULL COMMENT '已经申请的应提应分' AFTER allocable_money,
+					ADD COLUMN allocable_balance DECIMAL(12,2) NULL COMMENT '应分余额' AFTER allocable_applied;
+             ]]>
+			<comment>ALTER TABLE team_report</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="33" author="simpletiny">
+		<sql>
+            <![CDATA[
+	       		CREATE TABLE sale_order (
+					  team_number VARCHAR(10) NULL DEFAULT NULL COMMENT '团号',
+					  client_employee_pk CHAR(22) NULL DEFAULT NULL COMMENT '客户pk',
+					  product_pk CHAR(22) NULL DEFAULT NULL COMMENT '标准产品pk',
+					  product_name VARCHAR(20) NULL DEFAULT NULL COMMENT '产品名称',
+					  departure_date VARCHAR(10) NULL DEFAULT NULL COMMENT '出团日期',
+					  days INT(11) NULL DEFAULT NULL COMMENT '游玩天数',
+					  receivable DECIMAL(12,2) NULL DEFAULT NULL COMMENT '团款',
+					  receivable_comment VARCHAR(200) NULL DEFAULT NULL COMMENT '团款备注',
+					  adult_count INT(11) NULL DEFAULT NULL COMMENT '成人数',
+					  adult_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '成人费用',
+					  special_count INT(11) NULL DEFAULT NULL COMMENT '成人外人数',
+					  special_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '成人外费用',
+					  fy DECIMAL(12,2) NULL DEFAULT NULL COMMENT '返佣',
+					  other_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '其他费用',
+					  other_cost_comment VARCHAR(50) NULL DEFAULT NULL COMMENT '其他费用备注',
+					  comment VARCHAR(200) NULL DEFAULT NULL COMMENT '备注',
+					  passenger_captain VARCHAR(45) NULL DEFAULT NULL COMMENT '队长名称',
+					  independent_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否为独立团',
+					  confirm_flg CHAR(1) NULL DEFAULT 'N' COMMENT '是否确认',
+					  confirm_date VARCHAR(10) NULL DEFAULT NULL COMMENT '确认日期',
+					  budget_confirm_file VARCHAR(30) NULL DEFAULT NULL COMMENT '客户确认单预',
+					  air_ticket_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '机票成本',
+					  operate_flg VARCHAR(5) NULL DEFAULT 'N,N' COMMENT '操作状态，前者为产品(N,A,P,I)，后者为票务(N,P,I,Y)。',
+					  product_cost DECIMAL(12,2) NULL DEFAULT NULL COMMENT '产品费用',
+					  treat_comment VARCHAR(200) NULL DEFAULT NULL COMMENT '接待备注',
+					  product_value VARCHAR(10) NULL DEFAULT NULL COMMENT '产品分值,例10,2,代表成人10分其他2分',
+					  lock_flg VARCHAR(5) NULL DEFAULT 'N,N' COMMENT '锁定标识,前者产品锁定,后者票务锁定.',
+					  name_confirm_status CHAR(1) NULL DEFAULT '1' COMMENT '1,未确认，2：产品提示待确认，3：产品确认，4：票务提示待确认，5票务确认（最终确认）',
+					  receivable_first_flg CHAR(1) NULL DEFAULT 'N' COMMENT '先生成团款标识',
+					  cancel_flg CHAR(1) NULL DEFAULT 'N' COMMENT '订单取消标识，默认,未取消N,已取消Y',
+					  do_confirm_date VARCHAR(10) NULL DEFAULT NULL COMMENT '销售执行确认的日期。',
+					  as_adult_flg CHAR(1) NULL DEFAULT 'N' COMMENT '生成订单的时候，是否可以按成人操作',
+					  product_model VARCHAR(6) NULL DEFAULT NULL COMMENT '产品型号',
+					  assistant_number VARCHAR(10) NULL DEFAULT NULL COMMENT '助理员工号',
+					  sale VARCHAR(10) NULL DEFAULT NULL COMMENT '销售员工号',
+					  hotel_comment VARCHAR(200) NULL DEFAULT NULL COMMENT '用房说明',
+					  pk CHAR(22) NOT NULL,
+					  create_user VARCHAR(10) NULL DEFAULT NULL,
+					  create_time VARCHAR(15) NULL DEFAULT NULL,
+					  update_user VARCHAR(10) NULL DEFAULT NULL,
+					  update_time VARCHAR(15) NULL DEFAULT NULL,
+					  final_type CHAR(1) NULL DEFAULT 0 COMMENT '决算类型1：无变化。2：有变化。3：有投诉。4：取消',
+					  raise_money DECIMAL(12,2) NULL DEFAULT '0.00' COMMENT '升高费用',
+					  raise_comment VARCHAR(200) NULL DEFAULT NULL COMMENT '决算费用升高备注',
+					  reduce_money DECIMAL(12,2) NULL DEFAULT '0.00' COMMENT '减少费用',
+					  reduce_comment VARCHAR(200) NULL DEFAULT NULL COMMENT '决算减少费用备注',
+					  complain_money DECIMAL(12,2) NULL DEFAULT '0.00' COMMENT '投诉费用',
+					  complain_reason VARCHAR(200) NULL DEFAULT NULL COMMENT '投诉原因',
+					  complain_solution VARCHAR(200) NULL DEFAULT NULL COMMENT '解决方案',
+					  final_status CHAR(1) NULL DEFAULT 'I' COMMENT '决算状态',
+					  final_confirm_file VARCHAR(30) NULL DEFAULT NULL COMMENT '客户确认单决',
+					  final_voucher_file VARCHAR(30) NULL DEFAULT NULL COMMENT '决算凭证文件',
+					  product_manager VARCHAR(10) NULL COMMENT '产品经理',
+					  PRIMARY KEY (pk),
+					  INDEX team_number (team_number ASC))
+					ENGINE = InnoDB
+					DEFAULT CHARACTER SET = utf8
+					COLLATE = utf8_bin
+					COMMENT = '订单表';
+             ]]>
+			<comment>ACREATE TABLE order</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

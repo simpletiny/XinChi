@@ -78,6 +78,13 @@ public class ClientAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String agency_pk;
+
+	public String searchClientByAgencyPk() {
+		clients = clientService.searchClientByAgencyPk(agency_pk);
+		return SUCCESS;
+	}
+
 	private ClientCountDto clientCount;
 
 	public String searchClinetCount() {
@@ -192,6 +199,14 @@ public class ClientAction extends BaseAction {
 
 	public void setJson(String json) {
 		this.json = json;
+	}
+
+	public String getAgency_pk() {
+		return agency_pk;
+	}
+
+	public void setAgency_pk(String agency_pk) {
+		this.agency_pk = agency_pk;
 	}
 
 }

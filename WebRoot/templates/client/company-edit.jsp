@@ -364,6 +364,6 @@ h3 {
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/dropzone.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.003"></script>
-	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.006"></script>
 </body>
 </html>

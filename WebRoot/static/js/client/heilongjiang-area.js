@@ -46,7 +46,9 @@ $(document).ready(function() {
 	}
 });
 function setCC(str_city, str_county) {
-	city.val(str_city);
-	ter(str_city);
-	district.val(str_county);
+	if (str_city) {
+		city.val(str_city);
+		ter(str_city);
+		district.val(str_county);
+	}
 }

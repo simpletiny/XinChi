@@ -230,8 +230,8 @@ var OrderContext = function() {
 			var product_name = data[7];
 			var product_model = data[8];
 
-			var param = 'product_name=' + product_name + '&product_model=' + product_model + '&departure_date='
-					+ departure_date;
+			var param = 'product_name=' + encodeURIComponent(product_name) + '&product_model='
+					+ encodeURIComponent(product_model) + '&departure_date=' + encodeURIComponent(departure_date);
 
 			$.ajax({
 				type : "POST",

@@ -9,7 +9,7 @@ var OrderContext = function() {
 	self.independent_flg = ko.observable();
 	self.independent_flg($("#independent_flg").val());
 	self.independent_msg = ko.observable();
-	self.passengers = ko.observableArray([{}]);
+	self.passengers = ko.observableArray([]);
 	if (self.independent_flg() == 'Y') {
 		self.independent_msg("（独立团）");
 	} else {
@@ -20,8 +20,10 @@ var OrderContext = function() {
 		product_pk : self.product_pk
 	}, function(data) {
 		self.product(data.product);
-		self.passengers({name_index:1,chairman : 'Y',price:data.product.adult_price - data.product.business_profit_substract });
 		self.order({as_adult_flg:data.product.as_adult_flg});
+		addName();
+// self.passengers({name_index:1,chairman : 'Y',price:data.product.adult_price -
+// data.product.business_profit_substract });
 		writeNameFromSession();
 	});
 	self.createOrder = function() {

@@ -237,7 +237,7 @@
 					<tbody data-bind="foreach:supplier().infos">
 						<tr>
 							<td class="r">接：</td>
-							<td data-bind="text:$data.operate_date"></td>
+							<td data-bind="text:$data.pick_date"></td>
 							<td data-bind="text:$data.pick_traffic"></td>
 							<td data-bind="text:$data.pick_time"></td>
 							<td data-bind="text:$data.pick_city"></td>
@@ -245,7 +245,7 @@
 						</tr>
 						<tr>
 							<td class="r">送：</td>
-							<td data-bind="text:$data.operate_date"></td>
+							<td data-bind="text:$data.send_date"></td>
 							<td data-bind="text:$data.send_traffic"></td>
 							<td data-bind="text:$data.send_time"></td>
 							<td data-bind="text:$data.send_city"></td>

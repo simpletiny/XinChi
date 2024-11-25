@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 import com.xinchi.common.SupperBO;
 
-public class ConnectDto  extends SupperBO  implements Serializable{
+public class ConnectDto extends SupperBO implements Serializable {
 	private static final long serialVersionUID = 8193582185844547579L;
 	private String connect_date;
 	private String client_employee_pk;
 	private String extra_info;
 	private String type;
 	private String create_user;
+	private String visit_img;
 
 	public String getConnect_date() {
 		return connect_date;
@@ -50,5 +51,13 @@ public class ConnectDto  extends SupperBO  implements Serializable{
 
 	public void setCreate_user(String create_user) {
 		this.create_user = create_user;
+	}
+
+	public String getVisit_img() {
+		return visit_img;
+	}
+
+	public void setVisit_img(String visit_img) {
+		this.visit_img = visit_img;
 	}
 }

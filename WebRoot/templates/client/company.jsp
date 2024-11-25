@@ -19,6 +19,7 @@
 .form-control {
 	height: 30px;
 }
+
 #img-container {
 	min-height: 230px;
 	display: flex;
@@ -52,10 +53,10 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { keepMySide() }">维护</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicCompany() }">公开</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {stopCompany() }">停用</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')">
 								<button type="submit" class="btn btn-green col-md-1"
-									data-bind="click: function() { resetPage(); deleteCompany() }">删除</button>
+									data-bind="click: function() {deleteCompany() }">删除</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: changeSales">调整销售</button>
 							</s:if>
 						</div>
@@ -86,13 +87,10 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span6 col-md-3">
-							<label class="col-md-1 control-label">&nbsp;</label>
-							<div data-bind="foreach: relates">
-								<em class="small-box "> <input type="checkbox" name="client.relate_flgs"
-									data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
-									data-bind="text: $root.relatesMapping[$data]"></label>
-								</em>
+						<div class="span6">
+							<label class="col-md-1 control-label">负责人</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="负责人" name="client.body_name" />
 							</div>
 						</div>
 						<div class="span6">
@@ -146,8 +144,8 @@
 									data-bind="text: $data"></label>
 								</em>
 								<!-- /ko -->
-								<em class="small-box ">
-									<input name="client.talk_levels" type="radio" value="全部" data-bind="event:{click:chkTalkLevelRad}" /><label>全部</label>
+								<em class="small-box "> <input name="client.talk_levels" type="radio" checked value="全部"
+									data-bind="event:{click:chkTalkLevelRad}" /><label>全部</label>
 								</em>
 							</div>
 						</div>
@@ -156,16 +154,25 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">主营</label>
 							<div class="col-md-4">
-								<em class="small-box "> <input name="client.main_businesses" type="checkbox" value="组团" checked="checked"
+								<em class="small-box "> <input name="client.main_businesses" type="checkbox" checked value="组团"
 									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label><input name="client.main_businesses"
-									type="checkbox" value="户外" checked="checked" data-bind="event:{click:chkMainBusinessChk}" /><label>户外</label>
-									<input name="client.main_businesses" type="checkbox" value="线上" checked="checked"
-									data-bind="event:{click:chkMainBusinessChk}" /><label>线上</label> <input name="client.main_businesses"
-									type="checkbox" value="综合" data-bind="event:{click:chkMainBusinessChk}" checked="checked" /><label>综合</label>
+									type="checkbox" checked value="户外" data-bind="event:{click:chkMainBusinessChk}" /><label>户外</label> <input
+									name="client.main_businesses" type="checkbox" value="线上" checked data-bind="event:{click:chkMainBusinessChk}" /><label>线上</label>
+									<input name="client.main_businesses" type="checkbox" checked value="综合" data-bind="event:{click:chkMainBusinessChk}" /><label>综合</label>
 									<input name="client.main_businesses" type="radio" value="地接" data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
 									<input name="client.main_businesses" type="radio" value="同业" data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
 									<input name="client.main_businesses" type="radio" value="其它" data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
-									<input name="client.main_businesses" type="radio" value="全部" data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
+									<input name="client.main_businesses" type="radio" value="全部" data-bind="event:{click:chkMainBusinessRad}"
+									 /><label>全部</label>
+								</em>
+							</div>
+						</div>
+						<div class="span6 col-md-3">
+							<label class="col-md-1 control-label">&nbsp;</label>
+							<div data-bind="foreach: relates">
+								<em class="small-box "> <input type="checkbox" name="client.relate_flgs"
+									data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
+									data-bind="text: $root.relatesMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -362,8 +369,7 @@
 	</div>
 	<div id="check-img" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
-			<div class="upload-container" id="img-container">
-			</div>
+			<div class="upload-container" id="img-container"></div>
 		</div>
 	</div>
 	<div id="employee-detail" style="display: none; width: 500px; height: 400px; overflow-y: scroll">
@@ -391,6 +397,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
 	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.002"></script>
-	<script src="<%=basePath%>static/js/client/company.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.006"></script>
 </body>
 </html>

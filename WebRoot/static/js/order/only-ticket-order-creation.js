@@ -5,10 +5,7 @@ var OrderContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
 	self.clientEmployees = ko.observable({});
-	self.passengers = ko.observableArray([{
-		name_index : 1,
-		chairman : 'Y'
-	}]);
+	self.passengers = ko.observableArray([]);
 	self.current_date = $("#hidden-server-date").val();
 
 	var x = new Date(self.current_date);
@@ -205,6 +202,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	addName();
 	writeNameFromSession();
 	
 	let a_btn = $(`<a type="submit"

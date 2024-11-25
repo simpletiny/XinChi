@@ -295,7 +295,7 @@ textarea {
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.005"></script>
 	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.004"></script>
 </body>
 </html>

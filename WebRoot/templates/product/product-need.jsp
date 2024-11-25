@@ -313,6 +313,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.006"></script>
 </body>
 </html>

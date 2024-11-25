@@ -100,7 +100,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					style="margin-right: 100px; color: pink; font-size: 150%; text-decoration: none;">名单确认</a>
  --%>
 				<s:property value="#session.user.nick_name" />
-				（ 	
+				（
 				<s:property value="#session.user.user_number" />
 				）&nbsp;&nbsp;&nbsp;&nbsp;授信额度：
 				<s:property value="#session.user.credit_limit" />
@@ -171,10 +171,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						class="fa fa-users1 fa-lg fa-fw"></i>客户管理</a>
 					<ol style="display: none;">
 						<li><a href="<%=basePath%>templates/culture/xinchi-promise.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>欣驰承诺</a></li>
+						<li><a href="<%=basePath%>templates/client/precise-client-employee.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>精准客户</a></li>
 						<li><a href="<%=basePath%>templates/client/client-relation.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户关系</a></li>
 						<li><a href="<%=basePath%>templates/client/client-employee.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>客户资料</a></li>
 						<li><a href="<%=basePath%>templates/client/company.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>财务主体</a></li>
-						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SASSISTANT')">
+						<s:if
+							test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')||#session.user.user_roles.contains('SASSISTANT')">
 							<li><a href="<%=basePath%>templates/client/agency.jsp"><i class="fa fa-angle-right fa-lg fa-fw"></i>旅游公司</a></li>
 						</s:if>
 						<s:if test="#session.user.user_roles.contains('ADMIN')">
@@ -217,6 +220,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 						</s:if>
 						<li><a href="<%=basePath%>templates/culture/product-research-view.jsp"><i
 								class="fa fa-angle-right fa-lg fa-fw"></i>售前必知</a></li>
+						<li><a href="<%=basePath%>templates/order/non-standard-order-report.jsp"><i
+								class="fa fa-angle-right fa-lg fa-fw"></i>非标核算</a></li>
 					</ol></li>
 			</s:if>
 			<%-- <s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">

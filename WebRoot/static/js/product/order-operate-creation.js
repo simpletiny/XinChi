@@ -256,7 +256,7 @@ var ProductContext = function() {
 	}
 	// 查验表单
 	self.checkForm = function() {
-		var all = $("#input.required").find("input.required");
+		var all = $("#div-supplier").find("input.required");
 		var result = true;
 		for (var i = 0; i < all.length; i++) {
 			var current = all[i];
@@ -848,10 +848,13 @@ function adjustTextareaHeight() {
 
 function editAll(txt){
 	let table = $(txt).parent().parent().parent().parent();
-	
+	let val_price = $(txt).val().trim();
+	 if (!/^-?\d*$/.test(val_price)) {
+         val_price = val_price.slice(0, -1);
+         $(txt).val(val_price);
+     }
 	let all_flg = table.find("thead").find("input[st='chk-edit-all']").is(":checked");
 	if(all_flg){
-		const val_price = $(txt).val().trim();
 		let all_prices = table.find("tbody").find("input[st='price']");
 		all_prices.each(function(index,now_txt){
 			$(now_txt).val(val_price);

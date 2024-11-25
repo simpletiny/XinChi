@@ -289,6 +289,11 @@ public class DateUtil {
 		return c.get(Calendar.DATE);
 	}
 
+	public static int todayOfWeek() {
+		Calendar c = Calendar.getInstance();
+		return (c.get(Calendar.DAY_OF_WEEK) + 6) % 7;
+	}
+
 	public static int dayOfWeek(String date) {
 		try {
 			Date d = sdf1.parse(date);

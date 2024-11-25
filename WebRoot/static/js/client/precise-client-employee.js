@@ -51,7 +51,7 @@ var CompanyContext = function() {
 
 		var param = $("#form-search").serialize();
 		if ($("#chk_public").is(":checked")) {
-			param += "&employee.public_flgs=Y&employee.public_flgs=N";
+			param += "&employee.public_flgs=Y";
 		} else {
 			param += "&employee.public_flgs=N";
 		}

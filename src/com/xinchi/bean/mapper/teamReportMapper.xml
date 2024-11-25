@@ -15,8 +15,11 @@
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="cost_adjustment" property="cost_adjustment" jdbcType="DECIMAL" />
+		<result column="allocable_money" property="allocable_money" jdbcType="DECIMAL" />
+		<result column="allocable_applied" property="allocable_applied" jdbcType="DECIMAL" />
+		<result column="allocable_balance" property="allocable_balance" jdbcType="DECIMAL" />
 	</resultMap>
-
 	<sql id="Base_Column_List">
 		team_number,
 		sale_cost,
@@ -30,7 +33,11 @@
 		create_time,
 		update_time,
 		other_pay,
-		other_receive
+		other_receive,
+		cost_adjustment,
+		allocable_money,
+		allocable_applied,
+		allocable_balance
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -162,6 +169,18 @@
 			</if>
 			<if test="other_receive != null">
 				other_receive = #{other_receive,jdbcType=DECIMAL},
+			</if>
+			<if test="cost_adjustment != null">
+				cost_adjustment = #{cost_adjustment,jdbcType=DECIMAL},
+			</if>
+			<if test="allocable_money != null">
+				allocable_money = #{allocable_money,jdbcType=DECIMAL},
+			</if>
+			<if test="allocable_applied != null">
+				allocable_applied = #{allocable_applied,jdbcType=DECIMAL},
+			</if>
+			<if test="allocable_balance != null">
+				allocable_balance = #{allocable_balance,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

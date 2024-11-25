@@ -135,6 +135,7 @@ public class ProductFileAction extends BaseAction {
 					? ResourcesConstants.FILE_REPLACE_HOLDER_NONE
 					: DateUtil.addDate(order.getDeparture_date(), order.getDays() - 1);
 			data.put("backdate", back_date);
+			data.put("downloadtime", DateUtil.getDateStr(DateUtil.YYYY_MM_DD_HH_MM));
 
 			Map<String, String> name_data = getNameData(order.getPk());
 			data.putAll(name_data);
@@ -169,7 +170,7 @@ public class ProductFileAction extends BaseAction {
 			data.put("saleinfo", sale.getUser_name() + "：" + sale.getCellphone());
 			data.put("salename", sale.getUser_name());
 			data.put("saletel", sale.getCellphone());
-
+			data.put("downloadtime", DateUtil.getDateStr(DateUtil.YYYY_MM_DD_HH_MM));
 			// 名单信息
 			Map<String, String> name_data = getNameData(order.getPk());
 			data.putAll(name_data);

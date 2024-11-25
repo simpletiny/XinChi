@@ -719,7 +719,7 @@
 				and (A.wechat = #{params.bo.wechat,jdbcType=CHAR} OR A.wechat1 = #{params.bo.wechat,jdbcType=CHAR})
 			</if>
 		</where>
-		ORDER BY ISNULL(D.last_order_period), D.last_order_period,B.client_short_name,A.name
+		ORDER BY A.name,ISNULL(D.last_order_period), D.last_order_period,B.client_short_name
 	</select>
 	<select id="selectEmployeeUserByEmployeePk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientEmployeeUserBean">
 		select

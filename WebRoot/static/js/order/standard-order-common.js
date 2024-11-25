@@ -148,6 +148,7 @@ function doBat() {
 	autoPrice();
 }
 function addName() {
+	console.log("test");
 	nameModule.addTr();
 }
 var removeName = function(btn) {

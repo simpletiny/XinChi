@@ -81,4 +81,9 @@ public class ClientDAOImpl extends SqlSessionDaoSupport implements ClientDAO {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientMapper.selectCountByParam", client);
 	}
 
+	@Override
+	public List<ClientBean> selectByAgencyPk(String agency_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.ClientMapper.selectByAgencyPk", agency_pk);
+	}
+
 }

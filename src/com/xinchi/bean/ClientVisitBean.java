@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class ClientVisitBean extends SupperBO implements Serializable {
@@ -30,6 +31,8 @@ public class ClientVisitBean extends SupperBO implements Serializable {
 	private String pk;
 
 	private String update_user;
+
+	private String visit_img;
 
 	public String getClient_employee_pk() {
 		return client_employee_pk;
@@ -133,6 +136,14 @@ public class ClientVisitBean extends SupperBO implements Serializable {
 
 	public void setSub_target(String sub_target) {
 		this.sub_target = sub_target;
+	}
+
+	public String getVisit_img() {
+		return visit_img;
+	}
+
+	public void setVisit_img(String visit_img) {
+		this.visit_img = visit_img;
 	}
 
 }

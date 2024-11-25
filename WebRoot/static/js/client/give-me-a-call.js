@@ -16,14 +16,18 @@ var ClientContext = function() {
 	self.mobile().date = ko.observable();
 	self.mobile().date(x.Format("yyyy-MM-dd"));
 
-	var minDate= x.addDate(-2).Format("yyyy/MM/dd");
+	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
 	$('.date-picker').datetimepicker({
-		maxDate:0,
-		minDate:minDate
+		maxDate : 0,
+		minDate : minDate
 	});
-	
+
 	self.saveMobileTouch = function() {
 		if (!$("form").valid()) {
+			return;
+		}
+		if ($("#txt-summary").val().length < 21) {
+			fail_msg("电联效果不得少于20个字");
 			return;
 		}
 		startLoadingSimpleIndicator("保存中");
@@ -31,16 +35,14 @@ var ClientContext = function() {
 			type : "POST",
 			url : self.apiurl + 'client/createMobileTouch',
 			data : $("form").serialize()
-		}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/client/client-relation.jsp";
-					} else {
-						endLoadingIndicator();
-						fail_msg(str);
-					}
-				});
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/client/client-relation.jsp";
+			} else {
+				endLoadingIndicator();
+				fail_msg(str);
+			}
+		});
 
 	};
 };
@@ -49,4 +51,12 @@ var ctx = new ClientContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	$('.file-img').change(function() {
+		changeFile({
+			input : this,
+			size : 400,
+			width : 400,
+			required : "yes"
+		});
+	});
 });

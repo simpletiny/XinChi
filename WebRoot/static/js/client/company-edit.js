@@ -41,7 +41,6 @@ var CompanyContext = function() {
 		let inImgs = new Array();
 
 		let out_img_files = $("#out-container").find("input");
-		console.log(out_img_files);
 
 		for (let i = 0; i < out_img_files.length; i++) {
 			let img_file_name = $(out_img_files.get(i)).val();
@@ -66,7 +65,7 @@ var CompanyContext = function() {
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
-				window.location.href = self.apiurl + "templates/client/company.jsp";
+				history.back();
 			} else if (str == "exist") {
 				fail_msg("存在同名财务主体！");
 			}

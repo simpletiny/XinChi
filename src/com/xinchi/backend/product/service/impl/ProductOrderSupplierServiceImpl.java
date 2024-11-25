@@ -91,8 +91,11 @@ public class ProductOrderSupplierServiceImpl implements ProductOrderSupplierServ
 
 			List<OrderSupplierInfoBean> osInfos = supplier.getInfos();
 			String pick_date = supplier.getPick_date();
+
 			for (OrderSupplierInfoBean info : osInfos) {
 				info.setOperate_date(DateUtil.addDate(pick_date, info.getPick_day() - 1));
+				info.setPick_date(DateUtil.addDate(pick_date, info.getPick_day() - 1));
+				info.setSend_date(DateUtil.addDate(pick_date, info.getSend_day() - 1));
 			}
 
 			List<OrderSupplierSaleOrderBean> saleOrderInfos = productOrderSupplierSaleOrderDao

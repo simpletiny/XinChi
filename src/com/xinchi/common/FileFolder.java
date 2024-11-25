@@ -10,7 +10,8 @@ public enum FileFolder {
 													"clientEmployeeMinHeadFolder"), SUPPLIER_RECEIVED_VOUCHER(
 															"supplierReceivedVoucherFolder"), TICKET_NAME_TEMPLET(
 																	"ticketNameTempletFolder"), CLIENT_INOUT_IMG(
-																			"clientInoutImgFolder");
+																			"clientInoutImgFolder"), CLIENT_VISIT_IMG(
+																					"clientVisitImg");
 
 	private String value;
 

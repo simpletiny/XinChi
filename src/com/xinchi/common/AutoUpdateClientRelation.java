@@ -141,6 +141,58 @@ public class AutoUpdateClientRelation {
 		//
 		// clientRelationDao.insert(two);
 		// }
+		// 更新每周数据
+		// if (DateUtil.todayOfWeek() == 99) {
+		// String firstWeekDay = DateUtil.addDate(DateUtil.today(), -7);
+		// String lastWeekDay = DateUtil.addDate(DateUtil.today(), -1);
+		// String sql17 = "update client_employee set market_level='核心' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstWeekDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) >=2);";
+		// String sql18 = "update client_relation set market_level='核心' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstWeekDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) >=2);";
+		//
+		// String sql19 = "update client_employee set market_level='主力' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstWeekDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) =1);";
+		// String sql20 = "update client_relation set market_level='主力' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstWeekDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) =1);";
+		//
+		// String firstMonthDay = DateUtil.addDate(DateUtil.today(), -30);
+		//
+		// String sql21 = "update client_employee set market_level='普通' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstMonthDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) >=2);";
+		// String sql22 = "update client_relation set market_level='普通' where pk
+		// in(SELECT client_employee_pk FROM view_connect_info where connect_date>='"
+		// + firstMonthDay + "' and connect_date<='" + lastWeekDay
+		// + "' group by client_employee_pk having count(client_employee_pk) >=2);";
+		// String sql23 = "update client_employee set market_level = '未知';";
+		// String sql24 = "update client_relation set market_level = '未知';";
+		//
+		// ss.setSql(sql24);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql23);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql22);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql21);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql20);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql19);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql17);
+		// commonDao.exeBySql(ss);
+		// ss.setSql(sql18);
+		// commonDao.exeBySql(ss);
+		// }
 
 		// 更新月末数据
 		if (DateUtil.todayOfMonth() == 1) {
@@ -160,5 +212,6 @@ public class AutoUpdateClientRelation {
 				clientEmployeeTypeCountDao.insert(cetc);
 			}
 		}
+
 	}
 }

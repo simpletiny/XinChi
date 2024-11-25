@@ -32,6 +32,10 @@
 		<result column="approved" property="approved" jdbcType="CHAR" />
 		<result column="independent_flg" property="independent_flg" jdbcType="CHAR" />
 		<result column="product_final_flg" property="product_final_flg" jdbcType="VARCHAR" />
+		<result column="cost_adjustment" property="cost_adjustment" jdbcType="DECIMAL" />
+		<result column="allocable_money" property="allocable_money" jdbcType="DECIMAL" />
+		<result column="allocable_applied" property="allocable_applied" jdbcType="DECIMAL" />
+		<result column="allocable_balance" property="allocable_balance" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -106,7 +110,11 @@
 		product_final_flg,
 		A.independent_flg,
 		X.other_pay,
-		X.other_receive
+		X.other_receive,
+		X.cost_adjustment,
+		X.allocable_money,
+		X.allocable_applied,
+		X.allocable_balance
 		FROM
 		team_report X
 		LEFT JOIN
@@ -148,6 +156,12 @@
 			</if>
 			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
 				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.standard_flgs != null and params.bo.standard_flgs !=''">
+				and A.standard_flg in
+				<foreach item="item" index="index" collection="params.bo.standard_flgs" open="(" separator="," close=")">
+					#{params.bo.standard_flgs[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.report_statuses != null and params.bo.report_statuses !=''">
 				and X.approved in

@@ -52,4 +52,6 @@ public interface ClientDAO {
 	public List<ClientBean> selectCompaniesByPageAdmin(Page<ClientBean> page);
 
 	public ClientCountDto selectCountByParam(ClientBean client);
+
+	public List<ClientBean> selectByAgencyPk(String agency_pk);
 }

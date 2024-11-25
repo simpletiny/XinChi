@@ -606,6 +606,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 					ProductOrderNameBean update_name = new ProductOrderNameBean();
 					update_name.setPk(name.getPk());
 					update_name.setOperate_status("N");
+					update_name.setTicked("N");
 					productOrderNameDao.update(update_name);
 				}
 			}

@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+
 import com.xinchi.common.SupperBO;
 
 public class MobileTouchBean extends SupperBO implements Serializable {
@@ -17,6 +18,8 @@ public class MobileTouchBean extends SupperBO implements Serializable {
 	private String create_user;
 
 	private String update_user;
+
+	private String visit_img;
 
 	public String getClient_employee_pk() {
 		return client_employee_pk;
@@ -64,6 +67,14 @@ public class MobileTouchBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getVisit_img() {
+		return visit_img;
+	}
+
+	public void setVisit_img(String visit_img) {
+		this.visit_img = visit_img;
 	}
 
 }

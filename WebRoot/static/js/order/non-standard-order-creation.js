@@ -8,10 +8,7 @@ var OrderContext = function() {
 	self.independent_flg = ko.observable();
 	self.independent_flg($("#independent_flg").val());
 	self.independent_msg = ko.observable();
-	self.passengers = ko.observableArray([{
-		name_index : 1,
-		chairman : 'Y'
-	}]);
+	self.passengers = ko.observableArray([]);
 	if (self.independent_flg() == 'Y') {
 		self.independent_msg("（独立团）");
 	} else {
@@ -30,7 +27,6 @@ var OrderContext = function() {
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
-
 			endLoadingIndicator();
 		});
 	};
@@ -193,6 +189,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	addName();
 	writeNameFromSession();
 	let a_btn = $(`<a type="submit"
 	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);

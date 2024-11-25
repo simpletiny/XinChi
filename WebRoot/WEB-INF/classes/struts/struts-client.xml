@@ -38,6 +38,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="searchClientByAgencyPk" class="clientAction" method="searchClientByAgencyPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchOneCompany" class="clientAction" method="searchCompanyByPk">
 			<result name="success" type="json"></result>
 		</action>
@@ -130,6 +136,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+
 		<action name="searchOneAgency" class="travelAgencyAction" method="searchOneAgency">
 			<result name="success" type="json">
 			</result>

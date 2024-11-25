@@ -131,6 +131,32 @@
 		from client
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectByAgencyPk" resultMap="WithInoutResultMap" parameterType="java.lang.String">
+		select
+		A.client_name,
+		A.client_short_name,
+		A.client_area,
+		A.client_county,
+		A.client_type,
+		A.telephone,
+		A.fax,
+		A.address,
+		A.body_name,
+		A.body_sex,
+		A.body_id,
+		A.body_birth_year,
+		A.body_wechat,
+		A.body_cellphone,
+		A.create_user,
+		A.update_user,
+		A.approve_user,
+		A.update_reason,
+		A.comment,
+		B.user_names AS sales_name
+		from client A LEFT JOIN
+		view_client_user B ON A.pk = B.client_pk
+		where A.agency_pk = #{agency_pk,jdbcType=CHAR}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from client
@@ -618,6 +644,9 @@
 			<if test="params.bo.address != null and params.bo.address !=''">
 				and A.address like CONCAT('%',#{params.bo.address,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.body_name != null and params.bo.body_name !=''">
+				and A.body_name like CONCAT('%',#{params.bo.body_name,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.client_area != null and params.bo.client_area !=''">
 				and A.client_area = #{params.bo.client_area,jdbcType=VARCHAR}
 			</if>
@@ -661,7 +690,7 @@
 				</foreach>
 			</if>
 		</where>
-		ORDER BY address DESC
+		ORDER BY A.client_short_name,A.address 
 	</select>
 	<select id="selectCountByParam" parameterType="com.xinchi.bean.ClientBean" resultMap="CountMap">
 		SELECT

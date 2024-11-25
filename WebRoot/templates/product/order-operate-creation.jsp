@@ -540,7 +540,7 @@ h3 {
 					<td data-bind="text:$data.name+';'+$data.id"></td>
 					<td data-bind="text:determineGender($data.id)==0?'女':'男'"></td>
 					<td data-bind="text:calculateAge($data.id)"></td>
-					<td><input class="required" type="number" oninput="editAll(this)" st="price" /></td>
+					<td><input class="required" type="text" oninput="editAll(this)" st="price" /></td>
 					<td data-bind="attr: { rowspan:$parent.name_list.length }"><textarea maxlength="200" class="td-textarea"
 							data-bind="value:order.receivable_comment" st="receivable-comment"></textarea></td>
 					<td data-bind="attr: { rowspan:$parent.name_list.length }"><textarea maxlength="200" class="td-textarea"
@@ -559,7 +559,7 @@ h3 {
 					<td data-bind="text:$data.name+';'+$data.id"></td>
 					<td data-bind="text:determineGender($data.id)==0?'女':'男'"></td>
 					<td data-bind="text:calculateAge($data.id)"></td>
-					<td><input class="required" type="number" oninput="editAll(this)" st="price" /></td>
+					<td><input class="required" type="text" oninput="editAll(this)" st="price" /></td>
 				</tr>
 				<!-- /ko -->
 				<!-- /ko -->
@@ -573,6 +573,6 @@ h3 {
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/order-operate-creation.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/product/order-operate-creation.js?v=1.005"></script>
 </body>
 </html>

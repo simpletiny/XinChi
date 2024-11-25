@@ -35,7 +35,7 @@
 				<!-- /ko -->
 				<hr />
 				<button style="float: right; margin-top: 10px" type="submit" class="btn btn-green col-md-1"
-					data-bind="click:visitRecord">拜访记录</button>
+					data-bind="click:visitRecord">会见记录</button>
 				<button style="float: right; margin-top: 10px" type="submit" class="btn btn-green col-md-1"
 					data-bind="click:accurateSaleRecord">精推记录</button>
 				<div class="form-box info-form">

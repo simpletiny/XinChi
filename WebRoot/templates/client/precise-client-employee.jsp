@@ -25,7 +25,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>客户资料</h2>
+			<h2>精准客户</h2>
 		</div>
 
 		<div class="main-container">
@@ -33,20 +33,11 @@
 				<form id="form-search" class="form-horizontal search-panel">
 
 					<div class="form-group">
-						<div style="width: 85%; float: right">
+						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createClientEmployee() }">新建</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editEmployee() }">维护</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">停用</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicEmployee() }">公开</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { combineEmployee() }">合并</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { jobHopping() }">跳槽</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { dimission() }">离职</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { stopEmployee() }">编辑</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicEmployee() }">关联</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteEmployee()  }">删除</button>
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { changeSales()}">调整销售</button>
-								
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { reviewEmployee()  }">审核</button>
-							</s:if>
 						</div>
 					</div>
 					<div class="form-group">
@@ -62,22 +53,7 @@
 								<select class="form-control" data-bind="options: employeeArea, optionsCaption: '-- 请选择 --'" name="employee.area"></select>
 							</div>
 						</div>
-						<div class="span6">
-							<label class="col-md-2 control-label">财务主体简称</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="财务主体简称" name="employee.financial_body_name" />
-							</div>
-						</div>
-						<div class="span6">
-							<div data-bind="foreach: status">
-								<em class="small-box "> <input name="employee.delete_flgs" type="checkbox"
-									data-bind="attr: {'value': $data},checked:$root.chosenStatus, event:{click:function(){$root.refresh();return true}}" /><label
-									data-bind="text: $root.deleteMapping[$data]"></label>
-								</em>
-							</div>
-						</div>
 					</div>
-
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">手机号</label>
@@ -91,32 +67,7 @@
 								<input type="text" class="form-control" placeholder="微信号" maxlength="20" name="employee.wechat" />
 							</div>
 						</div>
-						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-
-							<div class="span6">
-								<label class="col-md-1 control-label">销售</label>
-								<div class="col-md-2">
-									<select class="form-control" style="height: 34px"
-										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'pk', optionsCaption: '--全部--',event:{change:function(){$root.refresh();$root.refreshSumCnt()}}"
-										name="employee.sales"></select>
-								</div>
-							</div>
-						</s:if>
 						<div class="span6">
-							<div class="col-md-2">
-								<em class="small-box "> <input type="checkbox" id="chk_public"
-									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
-									<input type="checkbox" name="employee.review_flg"
-									data-bind="event:{click:function(){refresh();return true;}}" value="N"/><label>未审核</label>
-								</em>
-							</div>
-							<div class="col-md-2">
-								<em class="small-box "> 
-								</em>
-							</div>
-						</div>
-
-						<div class="span6" style="float: right">
 							<div style="padding-top: 3px;">
 								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 							</div>
@@ -171,7 +122,9 @@
 						<tbody data-bind="foreach: employees">
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenEmployees" /></td>
-								<td><img style="width:25px;height:25px" data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" src="<%=basePath%>static/img/head.jpg" /><input type="hidden" st="st-file-name" data-bind="value:$data.head_photo"/></td>
+								<td><img style="width: 25px; height: 25px"
+									data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" src="<%=basePath%>static/img/head.jpg" /><input
+									type="hidden" st="st-file-name" data-bind="value:$data.head_photo" /></td>
 								<td data-bind="text: $data.nick_name"></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.name,attr: {href: 'employee-detail.jsp?key='+$data.pk}"></a></td>
@@ -186,9 +139,9 @@
 								<!-- /ko -->
 
 								<td data-bind="text: $data.area"></td>
-								
+
 								<!-- ko if:$data.body_public_flg=='Y' -->
-								<td><a style="color:red" href="javascript:void(0)"
+								<td><a style="color: red" href="javascript:void(0)"
 									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.body_public_flg!='Y' -->
@@ -418,9 +371,9 @@
 			</div>
 		</div>
 	</div>
-	<div id="pic-check" style="display:none">
- 		<jsp:include page="../common/check-picture.jsp" />
- 	</div>
+	<div id="pic-check" style="display: none">
+		<jsp:include page="../common/check-picture.jsp" />
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
@@ -429,6 +382,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/client-employee.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/client/precise-client-employee.js"></script>
 </body>
 </html>

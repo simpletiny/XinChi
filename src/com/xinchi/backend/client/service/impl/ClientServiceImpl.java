@@ -405,4 +405,9 @@ public class ClientServiceImpl implements ClientService {
 
 		return dao.selectCountByParam(client);
 	}
+
+	@Override
+	public List<ClientBean> searchClientByAgencyPk(String agency_pk) {
+		return dao.selectByAgencyPk(agency_pk);
+	}
 }
