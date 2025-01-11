@@ -111,7 +111,7 @@ var ProductContext = function() {
 		var data = "json=" + json;
 		 $.ajax({
 			 type : "POST",
-			 url : self.apiurl + 'product/udpateOrderOperation',
+			 url : self.apiurl + 'product/updateOrderOperation',
 			 data : data
 			 }).success(function(str) {
 				 endLoadingIndicator();

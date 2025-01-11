@@ -148,7 +148,7 @@ tr td {
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
-								<td data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td data-bind="text: $root.statusMapping[$data.final_status]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.client_employee_name"></td>
 								<td data-bind="text: $data.client_name"></td>
@@ -159,13 +159,13 @@ tr td {
 								<td class="rmb" data-bind="text: $data.budget_receivable"></td>
 								<td class="rmb" data-bind="text: $data.final_receivable"></td>
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkConfirmPic($data.confirm_file,$data.team_number)} ">查看</a></td>
+									data-bind="click: function() {$root.checkConfirmPic($data.final_confirm_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkBudgetConfirmPic($data.confirm_file,$data.create_user)} ">查看</a></td>
+									data-bind="click: function() {$root.checkBudgetConfirmPic($data.budget_confirm_file,$data.create_user)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkFinalDetail($data)} ">查看</a></td>
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.team_number)} ">查看</a></td>
+									data-bind="click: function() {$root.checkVoucherPic($data.final_voucher_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.sale_name"></td>
@@ -304,6 +304,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/f-order.js"></script>
+	<script src="<%=basePath%>static/js/order/f-order.js?v=1.001"></script>
 </body>
 </html>

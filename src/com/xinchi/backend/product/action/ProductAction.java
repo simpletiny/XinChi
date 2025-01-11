@@ -376,16 +376,6 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	/**
-	 * 提示销售确认名单
-	 * 
-	 * @return
-	 */
-	public String tipSalesConfirmName() {
-		resultStr = service.tipSalesConfirmName(team_numbers);
-		return SUCCESS;
-	}
-
 	@Autowired
 	private ProductAirTicketService productAirTicketService;
 

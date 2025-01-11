@@ -46,7 +46,9 @@
 		X.sale_cost,
 		X.sys_cost,
 		X.approved,
-		IF(A.independent_flg='A',CONCAT(E.from_city,'--',E.to_city,'（单）'),A.product_name) AS product_name,
+		IF(A.independent_flg = 'A',
+		CONCAT(E.from_city, '--', E.to_city, '（单）'),
+		A.product_name) AS product_name,
 		A.client_employee_pk,
 		A.client_employee_name,
 		A.other_cost,
@@ -55,23 +57,22 @@
 		B.final_receivable,
 		B.budget_receivable) AS receivable,
 		A.air_ticket_cost,
-		C.payable AS product_cost,
+		A.product_cost AS product_cost,
 		A.departure_date,
 		A.pk,
-		A.confirm_flg AS
-		order_type,
-		IF(A.confirm_flg = 'F',
-		D.adult_count,
-		A.adult_count)+IF(A.confirm_flg = 'F',
-		IF(ISNULL(D.special_count),
+		A.confirm_flg AS order_type,
+		IF(A.confirm_flg =
+		'F',
+		A.adult_count,
+		A.adult_count) + IF(A.confirm_flg = 'F',
+		IF(ISNULL(A.special_count),
 		0,
-		D.special_count),
+		A.special_count),
 		IF(ISNULL(A.special_count),
 		0,
 		A.special_count)) AS people_count,
 		A.update_user,
-		A.create_user_number AS
-		sale_number,
+		A.create_user_number AS sale_number,
 		A.create_user AS sale_name,
 		IF(X.discount_flg = 'Y',
 		X.discount_receivable,
@@ -79,35 +80,37 @@
 		B.final_receivable,
 		B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
 		0,
-		A.air_ticket_cost) -
-		IF(ISNULL(A.other_cost),
+		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		0,
-		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy),
-		0, A.fy) -
-		X.sys_cost-X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)  AS gross_profit,
+		A.other_cost) -
+		IF(ISNULL(A.product_cost),
+		0,
+		A.product_cost) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost -
+		COALESCE(X.other_pay, 0) + COALESCE(X.other_receive, 0) AS
+		gross_profit,
 		(IF(X.discount_flg = 'Y',
 		X.discount_receivable,
 		IF(B.final_flg = 'Y',
 		B.final_receivable,
 		B.budget_receivable)) - IF(ISNULL(A.air_ticket_cost),
 		0,
-		A.air_ticket_cost) -
-		IF(ISNULL(A.other_cost),
+		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		0,
-		A.other_cost) - IF(ISNULL(C.payable), 0, C.payable) - IF(ISNULL(A.fy), 0, A.fy)-
-		X.sys_cost-X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)) / (IF(A.confirm_flg = 'F',
-		D.adult_count,
-		A.adult_count)+IF(A.confirm_flg = 'F',
-		IF(ISNULL(D.special_count),
+		A.other_cost) - IF(ISNULL(A.product_cost),
 		0,
-		D.special_count),
+		A.product_cost) -
+		IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost - COALESCE(X.other_pay, 0) + COALESCE(X.other_receive, 0)) /
+		(IF(A.confirm_flg = 'F',
+		A.adult_count,
+		A.adult_count) + IF(A.confirm_flg = 'F',
+		IF(ISNULL(A.special_count),
+		0,
+		A.special_count),
 		IF(ISNULL(A.special_count),
 		0,
 		A.special_count))) AS per_profit,
 		A.confirm_flg,
 		A.confirm_date,
-		C.final_flg AS
-		product_final_flg,
 		A.independent_flg,
 		X.other_pay,
 		X.other_receive,
@@ -118,19 +121,12 @@
 		FROM
 		team_report X
 		LEFT JOIN
-		budget_order_view A ON
-		A.team_number =
-		X.team_number
+		budget_order_view A ON A.team_number = X.team_number
 		LEFT JOIN
-		receivable B ON A.team_number = B.team_number
+		receivable B
+		ON A.team_number = B.team_number
 		LEFT JOIN
-		view_team_payable C ON
-		A.team_number =
-		C.team_number
-		LEFT JOIN
-		final_order_view D ON A.team_number=D.team_number
-		LEFT JOIN sale_order_ticket_info
-		E ON A.pk=E.order_pk and E.ticket_index=1
+		sale_order_ticket_info E ON A.pk = E.order_pk AND E.ticket_index = 1
 		<where>
 			<if test="params.bo.sale_number != null and params.bo.sale_number !=''">
 				and A.create_user_number like CONCAT('%', #{params.bo.sale_number,jdbcType=VARCHAR},'%')
@@ -169,7 +165,7 @@
 					#{params.bo.report_statuses[${index}]}
 				</foreach>
 			</if>
-			and (A.confirm_flg='Y' or A.confirm_flg='F') and (D.final_type !=4 or D.final_type is null)
+			AND (A.confirm_flg = 'Y' OR A.confirm_flg = 'F') AND (A.final_type != 4 OR A.final_type IS NULL)
 		</where>
 		ORDER BY A.departure_date DESC
 	</select>
@@ -187,7 +183,8 @@
 		SUM(X.sale_cost) AS
 		sale_cost,
 		SUM(X.sys_cost) AS sys_cost,
-		SUM(COALESCE(A.other_cost,0) + COALESCE(X.other_pay,0) - COALESCE(X.other_receive,0)) AS other_cost,
+		SUM(COALESCE(A.other_cost,0) + COALESCE(X.other_pay,0) -
+		COALESCE(X.other_receive,0)) AS other_cost,
 		SUM(A.fy) AS fy,
 		SUM(IF(B.final_flg = 'Y',
 		B.final_receivable,
@@ -220,7 +217,8 @@
 		A.other_cost) - IF(ISNULL(C.payable), 0,
 		C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost
 		-
-		X.sale_cost - COALESCE(X.other_pay,0) + COALESCE(X.other_receive,0)) AS gross_profit,
+		X.sale_cost - COALESCE(X.other_pay,0) +
+		COALESCE(X.other_receive,0)) AS gross_profit,
 		SUM(IF(X.discount_flg = 'Y',
 		X.discount_receivable,
 		IF(B.final_flg = 'Y',
@@ -247,7 +245,8 @@
 		team_report X
 		LEFT JOIN
 		budget_order_view A ON A.team_number = X.team_number
-		LEFT JOIN
+		LEFT
+		JOIN
 		receivable B ON A.team_number =
 		B.team_number
 		LEFT JOIN

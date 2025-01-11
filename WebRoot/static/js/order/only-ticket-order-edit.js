@@ -12,10 +12,10 @@ var OrderContext = function() {
 	self.ticket_infos = ko.observableArray([]);
 	self.air_comment = ko.observable();
 
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 		if (data.passengers.length > 0) {
 			self.passengers(data.passengers);
 		}
@@ -64,7 +64,7 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();

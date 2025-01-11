@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
@@ -24,9 +22,8 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -51,11 +48,6 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private OrderDAO orderDao;
 
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
-
-	@Autowired
-	private BudgetNonStandardOrderDAO bnsoDao;
 	@Autowired
 	private OrderReportDAO orderReportDao;
 
@@ -156,18 +148,11 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		// 更新订单票务费用
-		OrderDto saleOrder = orderDao.selectByTeamNumber(team_number);
-		if (saleOrder.getStandard_flg().equals("Y")) {
-			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-			bso.setPk(saleOrder.getPk());
-			bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(cost));
-			bsoDao.update(bso);
-		} else {
-			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-			bnso.setPk(saleOrder.getPk());
-			bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().add(cost));
-			bnsoDao.update(bnso);
-		}
+		OrderDto odt = orderDao.selectByTeamNumber(team_number);
+		SaleOrderBean sale_order = new SaleOrderBean();
+		sale_order.setPk(odt.getPk());
+		sale_order.setAir_ticket_cost(odt.getAir_ticket_cost().add(cost));
+		orderDao.update(sale_order);
 		return SUCCESS;
 	}
 
@@ -221,18 +206,11 @@ public class TicketServiceImpl implements TicketService {
 
 		for (String team_number : cost_map.keySet()) {
 			// 更新订单票务费用
-			OrderDto saleOrder = orderDao.selectByTeamNumber(team_number);
-			if (saleOrder.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(saleOrder.getPk());
-				bso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(cost_map.get(team_number)));
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(saleOrder.getPk());
-				bnso.setAir_ticket_cost(saleOrder.getAir_ticket_cost().subtract(cost_map.get(team_number)));
-				bnsoDao.update(bnso);
-			}
+			OrderDto odt = orderDao.selectByTeamNumber(team_number);
+			SaleOrderBean sale_order = new SaleOrderBean();
+			sale_order.setPk(odt.getPk());
+			sale_order.setAir_ticket_cost(odt.getAir_ticket_cost().subtract(cost_map.get(team_number)));
+			orderDao.update(sale_order);
 		}
 		// 删除航变记录
 		changeLogDao.delete(change_pk);
@@ -261,17 +239,10 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public String toggleLockOrder(String team_number, String lock_flg) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
-		if (order.getStandard_flg().equals("Y")) {
-			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-			bso.setPk(order.getPk());
-			bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), lock_flg, 1));
-			bsoDao.update(bso);
-		} else {
-			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-			bnso.setPk(order.getPk());
-			bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), lock_flg, 1));
-			bnsoDao.update(bnso);
-		}
+		SaleOrderBean sale_order = new SaleOrderBean();
+		sale_order.setPk(order.getPk());
+		sale_order.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), lock_flg, 1));
+		orderDao.update(sale_order);
 		return SUCCESS;
 	}
 

@@ -9,48 +9,48 @@ var OrderReportContext = function() {
 	self.user_roles = $("#user_roles").val();
 	self.reports = ko.observable({});
 	self.orderTypeMapping = ({
-		'Y': '预',
-		'F': '决'
+		'Y' : '预',
+		'F' : '决'
 	});
 	self.chosenOrders = ko.observableArray([]);
 	self.chosenStatuses = ko.observableArray([]);
 	self.chosenStatuses.push("N");
 	self.statuses = ['N', 'Y'];
 	self.approvedMapping = ({
-		'Y': '已审核',
-		'N': '未审核'
+		'Y' : '已审核',
+		'N' : '未审核'
 	});
 
 	self.statusMapping = {
-		'I': '待确认',
-		'N': '被驳回',
-		'Y': '已确认',
-		'E': '已入账'
+		'I' : '待确认',
+		'N' : '被驳回',
+		'Y' : '已确认',
+		'E' : '已入账'
 	};
 	self.typeMapping = {
-		'TAIL': '抹零',
-		'SUM': '合账',
-		'STRIKE': '冲账',
-		'RECEIVED': '收入',
-		'PAY': '支出',
-		'STRIKEOUT': '冲账/出',
-		'STRIKEIN': '冲账/入',
-		'COLLECT': '代收',
-		'FLY': 'FLY',
-		'TAIL98': '98清尾'
+		'TAIL' : '抹零',
+		'SUM' : '合账',
+		'STRIKE' : '冲账',
+		'RECEIVED' : '收入',
+		'PAY' : '支出',
+		'STRIKEOUT' : '冲账/出',
+		'STRIKEIN' : '冲账/入',
+		'COLLECT' : '代收',
+		'FLY' : 'FLY',
+		'TAIL98' : '98清尾'
 	};
 
 	// 销售信息
 	self.sales = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchByRole', {
-		role: 'SALE'
+		role : 'SALE'
 	}, function(data) {
 		self.sales(data.users);
 	});
 	// 获取产品经理信息
 	self.product_managers = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'user/searchByRole', {
-		role: 'PRODUCT'
+		role : 'PRODUCT'
 	}, function(data) {
 		self.product_managers(data.users);
 	});
@@ -64,15 +64,14 @@ var OrderReportContext = function() {
 		startLoadingIndicator("加载中...");
 
 		var param = $("form").serialize();
-
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'order/searchOrderReportByPage', param, function(data) {
 			self.reports(data.reports);
 
 			$("#main-table").tableSum({
-				title: '汇总',
-				title_index: 5,
-				except: [1, 2, 3, 4, 18, 19, 20]
+				title : '汇总',
+				title_index : 5,
+				except : [1, 2, 3, 4, 18, 19, 20]
 			})
 
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
@@ -87,78 +86,77 @@ var OrderReportContext = function() {
 	// 确认单团核算单
 	self.confirmReport = function(report) {
 		// 检测是否可以审核
-		if (report.order_type != 'F') {
-			fail_msg("销售订单未决算，不能审核！");
-			return;
-		}
-		if (report.independent_flg != 'A') {
-			if (report.product_final_flg == null) {
+		startLoadingSimpleIndicator("检测中");
+		let data = "team_number=" + report.team_number;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'order/checkOrderReportCanBeApproved',
+			data : data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "notfinalorder") {
+				fail_msg("销售订单未决算，不能审核！");
+				return;
+			} else if (str == "noproductinfo") {
 				fail_msg("产品未操作，不能审核！");
 				return;
-			}
-
-			if (report.product_final_flg.indexOf("N") >= 0) {
-				fail_msg("地接款未决算，不能审核！");
+			} else if (str == "notfinaloperation") {
+				fail_msg("产品操作未决算，不能审核！");
 				return;
-			}
-		}
-
-		if (report.air_ticket_cost == null) {
-			fail_msg("请等待票务填报机票款！");
-			return;
-		}
-
-		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: "&nbsp;&nbsp;&nbsp;&nbsp;确认无误？&nbsp;&nbsp;&nbsp;&nbsp;",
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
-					layer.close(index);
-					startLoadingIndicator("确认中...");
-					var data = "team_number=" + report.team_number;
-
-					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'order/approveTeamReport',
-						data: data
-					}).success(function(str) {
-						endLoadingIndicator();
-						console.log(str);
-						if (str == "success") {
-							self.refresh();
-						} else if (str == "airnofinal") {
-							fail_msg("票务订单未决算，不能审核！")
-						}else if(str="existreceived"){
-							fail_msg("存在未入账的收入，不能审核！")
-						} else {
-							fail_msg("请联系管理员！");
+			} else if (str == "noairinfo") {
+				fail_msg("请等待票务填报机票款！");
+				return;
+			} else if (str == "success") {
+				$.layer({
+					area : ['auto', 'auto'],
+					dialog : {
+						msg : "&nbsp;&nbsp;&nbsp;&nbsp;确认无误？&nbsp;&nbsp;&nbsp;&nbsp;",
+						btns : 2,
+						type : 4,
+						btn : ['确认', '取消'],
+						yes : function(index) {
+							layer.close(index);
+							startLoadingIndicator("确认中");
+							$.ajax({
+								type : "POST",
+								url : self.apiurl + 'order/approveTeamReport',
+								data : data
+							}).success(function(str) {
+								endLoadingIndicator();
+								if (str == "success") {
+									self.refresh();
+								} else if (str == "airnofinal") {
+									fail_msg("票务订单未决算，不能审核！")
+								} else if (str = "existreceived") {
+									fail_msg("存在未入账的收入，不能审核！")
+								} else {
+									fail_msg("请联系管理员！");
+								}
+							});
 						}
-					});
-				}
+					}
+				});
 			}
 		});
 	}
 	// 打回已审核的单团核算单
 	self.rollBackReport = function(report) {
 		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: "&nbsp;&nbsp;&nbsp;&nbsp;确认打回重审吗？&nbsp;&nbsp;&nbsp;&nbsp;",
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : "&nbsp;&nbsp;&nbsp;&nbsp;确认打回重审吗？&nbsp;&nbsp;&nbsp;&nbsp;",
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("打回中...");
 					var data = "team_number=" + report.team_number;
 
 					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'order/rollBackTeamReport',
-						data: data
+						type : "POST",
+						url : self.apiurl + 'order/rollBackTeamReport',
+						data : data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -176,24 +174,23 @@ var OrderReportContext = function() {
 	self.addReceive = function() {
 		if (!checkCount())
 			return;
-
 		self.reconciliation_type("收入");
 		let order = self.chosenOrders()[0];
 		$("#other-money").val(order.other_receive);
 		reconciliationLayer = $.layer({
-			type: 1,
-			title: ['添加收入', ''],
-			maxmin: false,
-			closeBtn: [1, true],
-			shadeClose: false,
-			area: ['500px', '200px'],
-			offset: ['', ''],
-			scrollbar: true,
-			zIndex: 887,
-			page: {
-				dom: '#div-reconciliation'
+			type : 1,
+			title : ['添加收入', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '200px'],
+			offset : ['', ''],
+			scrollbar : true,
+			zIndex : 887,
+			page : {
+				dom : '#div-reconciliation'
 			},
-			end: function() {
+			end : function() {
 				$("#div-reconciliation").clear();
 			}
 		});
@@ -205,19 +202,19 @@ var OrderReportContext = function() {
 		let order = self.chosenOrders()[0];
 		$("#other-money").val(order.other_pay);
 		reconciliationLayer = $.layer({
-			type: 1,
-			title: ['添加支出', ''],
-			maxmin: false,
-			closeBtn: [1, true],
-			shadeClose: false,
-			area: ['500px', '200px'],
-			offset: ['', ''],
-			scrollbar: true,
-			zIndex: 887,
-			page: {
-				dom: '#div-reconciliation'
+			type : 1,
+			title : ['添加支出', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '200px'],
+			offset : ['', ''],
+			scrollbar : true,
+			zIndex : 887,
+			page : {
+				dom : '#div-reconciliation'
 			},
-			end: function() {
+			end : function() {
 				$("#div-reconciliation").clear();
 			}
 		});
@@ -248,13 +245,13 @@ var OrderReportContext = function() {
 		let msg = "确认添加" + self.reconciliation_type() + "吗？";
 
 		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: msg,
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : msg,
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中");
 					let other_money = $("#other-money").val();
@@ -262,9 +259,9 @@ var OrderReportContext = function() {
 					let data = "money=" + other_money + "&team_number=" + team_number;
 					data += "&reconciliation_type=" + self.reconciliation_type();
 					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'order/addReconciliation',
-						data: data
+						type : "POST",
+						url : self.apiurl + 'order/addReconciliation',
+						data : data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -292,18 +289,18 @@ var OrderReportContext = function() {
 		current_report = report;
 		current_td = $(event.target).parent();
 		fillLayer = $.layer({
-			type: 1,
-			title: ['机票款', ''],
-			maxmin: false,
-			closeBtn: [1, true],
-			shadeClose: false,
-			area: ['600px', '250px'],
-			offset: ['', ''],
-			scrollbar: true,
-			page: {
-				dom: '#fill-cost'
+			type : 1,
+			title : ['机票款', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '250px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#fill-cost'
 			},
-			end: function() {
+			end : function() {
 			}
 		});
 	}
@@ -318,19 +315,19 @@ var OrderReportContext = function() {
 
 		var data = "team_number=" + current_report.team_number + "&air_ticket_cost=" + cost;
 		$.layer({
-			area: ['auto', 'auto'],
-			dialog: {
-				msg: '确认填报机票款吗？',
-				btns: 2,
-				type: 4,
-				btn: ['确认', '取消'],
-				yes: function(index) {
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认填报机票款吗？',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
 					$.ajax({
-						type: "POST",
-						url: self.apiurl + 'order/fillAirTicketCost',
-						data: data
+						type : "POST",
+						url : self.apiurl + 'order/fillAirTicketCost',
+						data : data
 					}).success(function(str) {
 						layer.close(fillLayer);
 						endLoadingIndicator();
@@ -363,18 +360,18 @@ var OrderReportContext = function() {
 			endLoadingIndicator();
 
 			viewDetailLayer = $.layer({
-				type: 1,
-				title: ['摘要详情', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['1000px', '750px'],
-				offset: ['', ''],
-				scrollbar: true,
-				page: {
-					dom: '#team-detail'
+				type : 1,
+				title : ['摘要详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['1000px', '750px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#team-detail'
 				},
-				end: function() {
+				end : function() {
 				}
 			});
 		});
@@ -388,18 +385,18 @@ var OrderReportContext = function() {
 			endLoadingIndicator();
 
 			receivedDetailLayer = $.layer({
-				type: 1,
-				title: ['收入详情', ''],
-				maxmin: false,
-				closeBtn: [1, true],
-				shadeClose: false,
-				area: ['900px', 'auto'],
-				offset: ['', ''],
-				scrollbar: true,
-				page: {
-					dom: '#div-receiveds'
+				type : 1,
+				title : ['收入详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['900px', 'auto'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#div-receiveds'
 				},
-				end: function() {
+				end : function() {
 				}
 			});
 		});

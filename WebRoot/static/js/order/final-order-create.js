@@ -22,7 +22,7 @@ var OrderContext = function() {
 	self.chosenType = ko.observable();
 	self.chosenType("1");
 	startLoadingSimpleIndicator("加载中");
-	$.getJSON(self.apiurl + 'order/searchCOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.order);

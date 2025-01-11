@@ -276,7 +276,6 @@ tr td {
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" />
-	<input type="hidden" data-bind="value:order().standard_flg" id="txt-standard-flg" />
 	<div id="comment-edit" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div>
@@ -358,6 +357,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/c-order.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/order/c-order.js?v=1.003"></script>
 </body>
 </html>

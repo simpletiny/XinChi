@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductDelayDAO;
@@ -26,8 +25,6 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.dao.FlightDAO;
 import com.xinchi.backend.ticket.dao.FlightInfoDAO;
 import com.xinchi.backend.util.service.NumberService;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.FlightInfoBean;
 import com.xinchi.bean.OrderDto;
@@ -39,6 +36,7 @@ import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.ProductSupplierInfoBean;
 import com.xinchi.bean.ProductUrgentBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -213,9 +211,6 @@ public class ProductServiceImpl implements ProductService {
 		return dao.selectByPage(page);
 	}
 
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
-
 	@Override
 	public String onSale(String product_pks, String sale_flg, String force_flg, String urgent_flg) {
 		String[] pks = product_pks.split(",");
@@ -280,10 +275,11 @@ public class ProductServiceImpl implements ProductService {
 		else if (sale_flg.equals("N")) {
 			for (ProductBean product : products) {
 				// 判断是否存在待确认订单
-				BudgetStandardOrderBean option = new BudgetStandardOrderBean();
+
+				OrderDto option = new OrderDto();
 				option.setProduct_pk(product.getPk());
 				option.setConfirm_flg("N");
-				List<BudgetStandardOrderBean> orders = bsoDao.selectByParam(option);
+				List<OrderDto> orders = orderDao.selectByParam(option);
 				if (null != orders && orders.size() > 0) {
 					// 判断是否有经理权限
 					if (!user_roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -296,8 +292,8 @@ public class ProductServiceImpl implements ProductService {
 							product.setKeep_flg("N");
 							dao.update(product);
 							// 删除待确认订单
-							for (BudgetStandardOrderBean order : orders) {
-								bsoDao.delete(order.getPk());
+							for (OrderDto order : orders) {
+								orderDao.deleteByPk(order.getPk());
 							}
 						} else {
 							return "second&&" + product.getProduct_number() + product.getName() + "有待确认订单！";
@@ -836,43 +832,11 @@ public class ProductServiceImpl implements ProductService {
 	public String unlockOrders(List<String> team_numbers) {
 		for (String team_number : team_numbers) {
 			OrderDto order = orderDao.selectByTeamNumber(team_number);
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(order.getPk());
-				bso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(order.getPk());
-				bnso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
-				bnsoDao.update(bnso);
-			}
+			SaleOrderBean ready_order = new SaleOrderBean();
+			ready_order.setPk(order.getPk());
+			ready_order.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
+			orderDao.update(ready_order);
 		}
-
-		return SUCCESS;
-	}
-
-	@Override
-	public String tipSalesConfirmName(List<String> team_numbers) {
-		for (String team_number : team_numbers) {
-			OrderDto order = orderDao.selectByTeamNumber(team_number);
-
-			if (order.getName_confirm_status().equals("3") || order.getName_confirm_status().equals("5"))
-				continue;
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(order.getPk());
-
-				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(order.getPk());
-				bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
-				bnsoDao.update(bnso);
-			}
-		}
-
 		return SUCCESS;
 	}
 

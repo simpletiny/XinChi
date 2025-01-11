@@ -27,10 +27,10 @@ var OrderContext = function() {
 	var year_now = x.getFullYear();
 
 	self.confirm_date(self.current_date);
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 
 		if (data.passengers.length > 0) {
 			self.passengers(data.passengers);
@@ -74,9 +74,8 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 		
-		console.log(fileName,self.order().create_user)
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', url, true);
@@ -129,7 +128,7 @@ var OrderContext = function() {
 			fail_msg(result.join("<br>"));
 			return;
 		}
-		let departure_date = $('[name="bnsOrder.departure_date"]').val();
+		let departure_date = $('[name="sale_order.departure_date"]').val();
 		let days = $("#txt-days").val();
 		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
 		let product_name = $('#txt-product-name').val();

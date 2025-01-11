@@ -17,10 +17,10 @@ var OrderContext = function() {
 
 	var x = new Date();
 	self.confirm_date(x.Format('yyyy-MM-dd'));
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
 		}
@@ -103,7 +103,7 @@ var OrderContext = function() {
 		xhr.send(formData);
 	};
 	self.refreshClient = function() {
-		var param = "employee.name=" + $("#client_name").val()+"&employee.review_flg=Y";
+		var param = "employee.name=" + $("#client_name").val() + "&employee.review_flg=Y";
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.clientEmployees(data.employees);
@@ -121,12 +121,12 @@ var OrderContext = function() {
 		$("#txt-client-employee-name").blur();
 		clientEmployeeLayer = $.layer({
 			type : 1,
-			title : [ '选择客户操作', '' ],
+			title : ['选择客户操作', ''],
 			maxmin : false,
-			closeBtn : [ 1, true ],
+			closeBtn : [1, true],
 			shadeClose : false,
-			area : [ '600px', '650px' ],
-			offset : [ '50px', '' ],
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
 			scrollbar : true,
 			page : {
 				dom : '#client-pick'
@@ -201,7 +201,7 @@ var OrderContext = function() {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
-		for ( var i = startPage; i <= endPage; i++) {
+		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
 		}
 		self.pageNums(pageNums);
@@ -219,7 +219,7 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
-	
+
 	$(".disabled").disabled();
 });
 function formatNameList(txt) {
@@ -237,7 +237,7 @@ function formatNameList(txt) {
 		return;
 	}
 
-	for ( var i = 0; i < names.length; i++) {
+	for (var i = 0; i < names.length; i++) {
 		var name = names[i];
 		nameList = nameList.replace(name, ";" + name + ":");
 	}
@@ -245,7 +245,7 @@ function formatNameList(txt) {
 
 	var names = nameList.split(";");
 	var newNameList = "";
-	for ( var i = 0; i < names.length; i++) {
+	for (var i = 0; i < names.length; i++) {
 		if (names[i] == "")
 			continue;
 		if (i % 2 == 1) {

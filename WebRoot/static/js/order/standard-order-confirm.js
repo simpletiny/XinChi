@@ -17,10 +17,10 @@ var OrderContext = function() {
 	var year_now = x.getFullYear();
 
 	self.confirm_date(x.Format('yyyy-MM-dd'));
-	$.getJSON(self.apiurl + 'order/searchTbcBsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bsOrder);
+		self.order(data.order);
 		if (data.passengers.length>0) {
 			$(data.passengers).each(function(index,data){
 				data.as_adult = data.as_adult=='Y'?true:false;
@@ -132,7 +132,7 @@ var OrderContext = function() {
 			fail_msg(result.join("<br>"));
 			return;
 		}
-		let departure_date = $('[name="bsOrder.departure_date"]').val();
+		let departure_date = $('[name="sale_order.departure_date"]').val();
 		let days = $("#txt-days").val();
 		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
 		let product_name = $('#txt-product-name').val();

@@ -26,10 +26,10 @@ var OrderContext = function() {
 	var d = new Date(self.current_date);
 	self.confirm_date(d.Format('yyyy-MM-dd'));
 
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 		if (data.passengers.length > 0) {
 			self.passengers(data.passengers);
 		}
@@ -72,7 +72,7 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();
@@ -127,7 +127,7 @@ var OrderContext = function() {
 			fail_msg(result.join("<br>"));
 			return;
 		}
-		let departure_date = $('[name="bnsOrder.departure_date"]').val();
+		let departure_date = $('[name="sale_order.departure_date"]').val();
 		let days = $("#txt-days").val();
 		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
 		let product_name = "单机票";
@@ -365,8 +365,8 @@ function validateOrder(){
 		result.push("请填写非空项！");
 	}
 	
-	var other_cost = $(":input[name='bnsOrder.other_cost']").val().trim();
-	var other_comment = $(":input[name='bnsOrder.other_cost_comment']").val().trim();
+	var other_cost = $(":input[name='sale_order.other_cost']").val().trim();
+	var other_comment = $(":input[name='sale_order.other_cost_comment']").val().trim();
 	if (other_cost != "" && other_comment == "") {
 		result.push("有其他费用，必须填写费用说明！")
 	}

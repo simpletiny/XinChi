@@ -153,6 +153,7 @@
 		<mapper resource="com/xinchi/bean/mapper/identityMapper.xml"/>
 		<mapper resource="com/xinchi/bean/mapper/orderSupplierSaleOrderMapper.xml"/>
 		<mapper resource="com/xinchi/bean/mapper/orderSupplierSaleOrderNameInfoMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/saleOrderMapper.xml"/>
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

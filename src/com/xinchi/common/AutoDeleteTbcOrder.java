@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
-import com.xinchi.backend.order.service.BudgetStandardOrderService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.bean.OrderDto;
 
@@ -17,10 +15,6 @@ import com.xinchi.bean.OrderDto;
 public class AutoDeleteTbcOrder {
 	@Autowired
 	private OrderService service;
-	@Autowired
-	private BudgetNonStandardOrderService bnsOrderService;
-	@Autowired
-	private BudgetStandardOrderService bsOrderService;
 
 	public void delete5DaysAgoTbcOrder(String[] param) {
 
@@ -38,11 +32,7 @@ public class AutoDeleteTbcOrder {
 			int days = DateUtil.dateDiff(today, DateUtil.sdf1.format(c.getTime()));
 			// 2023-07-25从5天改为30天
 			if (days >= 30 && order.getReceivable_first_flg().equals("N")) {
-				if (order.getStandard_flg().equals("Y")) {
-					bsOrderService.delete(order.getPk());
-				} else {
-					bnsOrderService.delete(order.getPk());
-				}
+				service.deleteTbcOrder(order.getPk());
 			}
 		}
 

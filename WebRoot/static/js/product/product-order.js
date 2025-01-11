@@ -226,7 +226,6 @@ var ProductContext = function() {
 
 	self.lockOrder = function(team_number, lock_flg) {
 		var param = "team_number=" + team_number + "&lock_flg=" + lock_flg;
-
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/changeOrderLock',

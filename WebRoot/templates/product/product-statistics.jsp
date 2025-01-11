@@ -16,7 +16,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品销售统计</h2>
+			<h2>产品统计</h2>
 		</div>
 
 		<div class="main-container">

@@ -3,6 +3,7 @@ package com.xinchi.backend.order.service;
 import java.util.List;
 
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -23,7 +24,7 @@ public interface OrderService extends BaseService {
 
 	public String finalOrder(OrderDto order);
 
-	public String rollBackFinalOrder(String order_pk, String standard_flg);
+	public String rollBackFinalOrder(String order_pk);
 
 	public String cancelOrder(OrderDto order);
 
@@ -64,5 +65,35 @@ public interface OrderService extends BaseService {
 	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
 
 	public List<OrderDto> selectOrderWithNames(List<String> t_ns);
+
+	public String createBudgetStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String createBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String createOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String deleteTbcOrder(String order_pk);
+
+	public String deleteByPk(String order_pk);
+
+	public String updateBudgetStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String updateBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String update(SaleOrderBean sale_order);
 
 }

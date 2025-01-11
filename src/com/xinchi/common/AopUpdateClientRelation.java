@@ -3,6 +3,7 @@ package com.xinchi.common;
 import java.util.Date;
 import java.util.List;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -14,15 +15,13 @@ import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientVisitBean;
 import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MobileTouchBean;
-import com.xinchi.bean.ProductBean;
+import com.xinchi.bean.SaleOrderBean;
 
 @Aspect
 @Service
@@ -200,62 +199,31 @@ public class AopUpdateClientRelation {
 	}
 	// *********** 被动咨询 end***********
 
-	// *********** 标准订单确认 start***********
-	@Pointcut("(execution(* com.xinchi.backend.order.dao.BudgetStandardOrderDAO.update(..)) && args(order))")
-	public void confirmStandardOrderCut(BudgetStandardOrderBean order) {
+	// *********** 订单确认 start***********
 
-	}
-
-	@AfterReturning(value = "confirmStandardOrderCut(order)", returning = "res")
-	public void afterConfirmStandardOrder(BudgetStandardOrderBean order, Object res) {
-
-		if (null != order.getConfirm_flg() && order.getConfirm_flg().equals("Y")) {
+	@AfterReturning(value = "(execution(* com.xinchi.backend.order.service.OrderService.confirm*Order(..)))", returning = "res")
+	public void afterConfirmOrder(JoinPoint joinPoint, Object res) {
+		Object[] args = joinPoint.getArgs();
+		if (args.length > 0 && args[0] instanceof SaleOrderBean) {
+			SaleOrderBean order = (SaleOrderBean) args[0];
 			ClientRelationBean crb = clientRelationDao.selectByEmployeePk(order.getClient_employee_pk());
-
 			Date old = DateUtil.castStr2Date(crb.getConnect_date());
 			Date now = DateUtil.castStr2Date(order.getConfirm_date());
-
 			if (now.after(old)) {
 				crb.setConnect_date(order.getConfirm_date());
 				crb.setType("ORDER");
-				ProductBean product = productDao.selectByPrimaryKey(order.getProduct_pk());
+				String methodName = joinPoint.getSignature().getName();
+				String product_name = order.getProduct_name();
 				int peopleCnt = (null == order.getSpecial_count() ? 0 : order.getSpecial_count())
 						+ order.getAdult_count();
-				crb.setExtra_info(product.getName() + ":" + peopleCnt + "人");
+				if (methodName.indexOf("OnlyTicket") >= 0) {
+					product_name = "单机票";
+				}
+				crb.setExtra_info(product_name + ":" + peopleCnt + "人");
 
 				clientRelationDao.update(crb);
 			}
 		}
-
 	}
-	// *********** 标准订单确认end***********
-
-	// *********** 非标订单确认 start***********
-	@Pointcut("(execution(* com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO.update(..)) && args(order))")
-	public void confirmNonStandardOrderCut(BudgetNonStandardOrderBean order) {
-
-	}
-
-	@AfterReturning(value = "confirmNonStandardOrderCut(order)", returning = "res")
-	public void afterConfirmNonStandardOrder(BudgetNonStandardOrderBean order, Object res) {
-
-		if (null != order.getConfirm_flg() && order.getConfirm_flg().equals("Y")) {
-			ClientRelationBean crb = clientRelationDao.selectByEmployeePk(order.getClient_employee_pk());
-
-			Date old = DateUtil.castStr2Date(crb.getConnect_date());
-			Date now = DateUtil.castStr2Date(order.getConfirm_date());
-
-			if (now.after(old)) {
-				crb.setConnect_date(order.getConfirm_date());
-				crb.setType("ORDER");
-				int peopleCnt = (null == order.getSpecial_count() ? 0 : order.getSpecial_count())
-						+ order.getAdult_count();
-				crb.setExtra_info(order.getProduct_name() + ":" + peopleCnt + "人");
-
-				clientRelationDao.update(crb);
-			}
-		}
-
-	}
-	// *********** 非标订单确认end***********
+	// *********** 订单确认end***********
 }

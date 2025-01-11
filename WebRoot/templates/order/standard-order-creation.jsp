@@ -42,7 +42,7 @@ textarea {
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
-					<input type="hidden" data-bind="value:product().as_adult_flg" name="bsOrder.as_adult_flg" />
+					<input type="hidden" data-bind="value:product().as_adult_flg" name="sale_order.as_adult_flg" />
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
 							<label class="l">客户</label>
@@ -51,7 +51,7 @@ textarea {
 									placeholder="客户" />
 							</div>
 							<input type="text" class="ip-" id="txt-client-employee-pk" style="display: none"
-								name="bsOrder.client_employee_pk" id="client-employee-pk" />
+								name="sale_order.client_employee_pk" id="client-employee-pk" />
 						</div>
 						<div class="col-md-3">
 							<label class="l">财务主体</label>
@@ -63,7 +63,7 @@ textarea {
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
 								<input type="text" id="txt-product-name" class="ip-" data-bind="value:product().name,event:{click:choseProduct}" placeholder="产品" />
-								<input type="hidden" id="txt-product-pk" data-bind="value:product().pk" name="bsOrder.product_pk" />
+								<input type="hidden" id="txt-product-pk" data-bind="value:product().pk" name="sale_order.product_pk" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -78,14 +78,14 @@ textarea {
 							<label class="l">出团日期</label>
 							<div class="ip">
 								<input type="text" id="departure" class="ip- date-picker" data-bind="value: order().departure_date"
-									placeholder="出团日期" name="bsOrder.departure_date" />
+									placeholder="出团日期" name="sale_order.departure_date" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">天数</label>
 							<div class="ip">
 								<p class="ip-default" data-bind="text:product().days" id="p-days"></p>
-								<input type="hidden" data-bind="value: product().days" placeholder="天数" id="txt-days" name="bsOrder.days" />
+								<input type="hidden" data-bind="value: product().days" placeholder="天数" id="txt-days" name="sale_order.days" />
 							</div>
 						</div>
 					</div>
@@ -95,14 +95,14 @@ textarea {
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-sum-money">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-sum-money" data-bind="value: order().receivable"
-									name="bsOrder.receivable" />
+									name="sale_order.receivable" />
 							</div>
 						</div>
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
 								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoPrice()"
-									data-bind="value: order().other_cost" placeholder="其他费用" name="bsOrder.other_cost" />
+									data-bind="value: order().other_cost" placeholder="其他费用" name="sale_order.other_cost" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -110,7 +110,7 @@ textarea {
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-adult-count">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-adult-count" data-bind="value: order().adult_count"
-									placeholder="成人数" name="bsOrder.adult_count" />
+									placeholder="成人数" name="sale_order.adult_count" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -118,13 +118,13 @@ textarea {
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-children-count">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-children-count" data-bind="value: order().special_count"
-									placeholder="儿童数" name="bsOrder.special_count" />
+									placeholder="儿童数" name="sale_order.special_count" />
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class="l">FLY</label>
 							<div class="ip fix-width">
-								<input type="text" data-bind="value:order().fy" name="bsOrder.fy" class="ip-" placeholder="FLY" />
+								<input type="text" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FLY" />
 							</div>
 						</div>
 					</div>
@@ -133,28 +133,28 @@ textarea {
 							<label class="l">团款备注</label> 
 							<div class="ip fix-width">
 								<textarea type="text" class="ip-default" rows="7" id="receivable-comment" maxlength="200"
-									data-bind="value: order().receivable_comment" placeholder="团款备注" name="bsOrder.receivable_comment"></textarea>
+									data-bind="value: order().receivable_comment" placeholder="团款备注" name="sale_order.receivable_comment"></textarea>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<label class="l">用房说明</label>
 							<div class="ip fix-width">
 								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
-									name="bsOrder.hotel_comment" placeholder="用房说明"></textarea>
+									name="sale_order.hotel_comment" placeholder="用房说明"></textarea>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<label class="l">销售特请</label>
 							<div class="ip fix-width">
 								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
-									name="bsOrder.treat_comment" placeholder="销售特请"></textarea>
+									name="sale_order.treat_comment" placeholder="销售特请"></textarea>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<label class="l">订单备注（仅自己可见）</label>
 							<div class="ip fix-width">
 								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
-									name="bsOrder.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
+									name="sale_order.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
 					</div>
@@ -166,7 +166,7 @@ textarea {
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
 							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input
-								type="hidden" name="bsOrder.confirm_file" />
+								type="hidden" name="sale_order.budget_confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -295,7 +295,7 @@ textarea {
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.006"></script>
 	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.004"></script>
 </body>
 </html>

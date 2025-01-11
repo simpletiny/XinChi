@@ -10,21 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.order.service.OrderReportService;
+import com.xinchi.backend.payable.dao.PayableOrderDAO;
 import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketOrderDAO;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.PayableOrderBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.tools.Page;
@@ -96,27 +95,14 @@ public class OrderReportServiceImpl implements OrderReportService {
 	@Autowired
 	private OrderDAO orderDao;
 
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
-	@Autowired
-	private BudgetNonStandardOrderDAO bnsoDao;
-
 	@Override
 	public String fillAriTicketCost(String team_number, BigDecimal air_ticket_cost) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
 
-		if (order.getStandard_flg().equals("Y")) {
-			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-			bso.setPk(order.getPk());
-			bso.setAir_ticket_cost(air_ticket_cost);
-			bsoDao.update(bso);
-		} else {
-			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-			bnso.setPk(order.getPk());
-			bnso.setAir_ticket_cost(air_ticket_cost);
-			bnsoDao.update(bnso);
-		}
-
+		SaleOrderBean sale_order = new SaleOrderBean();
+		sale_order.setPk(order.getPk());
+		sale_order.setAir_ticket_cost(air_ticket_cost);
+		orderDao.update(sale_order);
 		return SUCCESS;
 	}
 
@@ -138,4 +124,37 @@ public class OrderReportServiceImpl implements OrderReportService {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private PayableOrderDAO payableOrderDao;
+
+	@Override
+	public String checkOrderReportCanBeApproved(String team_number) {
+		OrderDto order = orderDao.selectByTeamNumber(team_number);
+
+		// 检验销售订单是否决算
+		if (!order.getConfirm_flg().equals("F")) {
+			return "notfinalorder";
+		}
+
+		if (!order.getIndependent_flg().equals("A")) {
+			// 检测产品是否操作
+			if (order.getOperate_flg().startsWith("N")) {
+				return "noproductinfo";
+			}
+
+			// 检测所有产品操作是否已经决算。
+			List<PayableOrderBean> pos = payableOrderDao.selectByTeamNumber(team_number);
+			for (PayableOrderBean po : pos) {
+				if (po.getFinal_flg().equals("N")) {
+					return "notfinaloperation";
+				}
+			}
+		}
+
+		if (order.getAir_ticket_cost() == null) {
+			return "noairinfo";
+		}
+
+		return SUCCESS;
+	}
 }

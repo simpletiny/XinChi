@@ -38,7 +38,7 @@
 		delete from payable_order
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
-	<delete id="deleteTeamNumber" parameterType="java.lang.String">
+	<delete id="deleteByTeamNumber" parameterType="java.lang.String">
 		delete from payable_order
 		where team_number =
 		#{team_number,jdbcType=CHAR}

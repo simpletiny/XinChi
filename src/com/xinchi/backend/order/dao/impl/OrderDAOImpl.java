@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -127,4 +128,23 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectOrderWithNames", team_numbers);
 	}
 
+	@Override
+	public void insertWithPk(SaleOrderBean bean) {
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.SaleOrderMapper.insert", bean);
+	}
+
+	@Override
+	public void update(SaleOrderBean bean) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.SaleOrderMapper.updateByPrimaryKey", bean);
+	}
+
+	@Override
+	public SaleOrderBean selectByPrimaryKey(String pk) {
+		return (SaleOrderBean) daoUtil.selectByPK("com.xinchi.bean.mapper.SaleOrderMapper.selectByPrimaryKey", pk);
+	}
+
+	@Override
+	public void deleteByPk(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.SaleOrderMapper.deleteByPrimaryKey", pk);
+	}
 }

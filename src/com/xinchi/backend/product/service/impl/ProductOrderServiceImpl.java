@@ -15,26 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.product.dao.ProductNeedDAO;
-import com.xinchi.backend.product.dao.ProductOrderAirInfoDAO;
 import com.xinchi.backend.product.dao.ProductOrderDAO;
 import com.xinchi.backend.product.dao.ProductOrderNameAirNeedDAO;
 import com.xinchi.backend.product.dao.ProductOrderNameDAO;
 import com.xinchi.backend.product.dao.ProductOrderNameFlightSegmentDAO;
 import com.xinchi.backend.product.dao.ProductOrderTeamNumberDAO;
 import com.xinchi.backend.product.service.ProductOrderService;
-import com.xinchi.backend.ticket.dao.AirNeedTeamNumberDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
 import com.xinchi.backend.ticket.dao.AirTicketNeedDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductOrderBean;
@@ -42,6 +36,7 @@ import com.xinchi.bean.ProductOrderNameAirNeedBean;
 import com.xinchi.bean.ProductOrderNameBean;
 import com.xinchi.bean.ProductOrderNameFlightSegmentBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -68,25 +63,13 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	private ProductOrderDAO dao;
 
 	@Autowired
-	private ProductOrderAirInfoDAO airInfoDao;
-
-	@Autowired
 	private OrderDAO orderDao;
 
 	@Autowired
 	private AirTicketNeedDAO airTicketNeedDao;
 
 	@Autowired
-	private AirNeedTeamNumberDAO airNeedTeamNumberDao;
-
-	@Autowired
 	private ProductOrderTeamNumberDAO productOrderTeamNumberDao;
-
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
-
-	@Autowired
-	private BudgetNonStandardOrderDAO bnsoDao;
 
 	@Autowired
 	private NumberService numberService;
@@ -211,28 +194,18 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		}
 		// 更新销售订单操作标识
 		for (OrderDto order : orders) {
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
-				bsOrder.setPk(order.getPk());
-				bsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
-				bsoDao.update(bsOrder);
-			} else {
-				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
-				bnsOrder.setPk(order.getPk());
-				bnsOrder.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-						ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
-				bnsoDao.update(bnsOrder);
-			}
+			SaleOrderBean sale_order = new SaleOrderBean();
+			sale_order.setPk(order.getPk());
+			sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+					ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
+			orderDao.update(sale_order);
 		}
-
 		return SUCCESS;
 	}
 
 	@Override
 	public String rollBackOrder(String order_number) {
 		ProductOrderBean product_order = dao.selectByOrderNumber(order_number);
-
 		// 检测是否已经发送票务需求
 		ProductOrderNameBean option = new ProductOrderNameBean();
 		option.setProduct_order_number(order_number);
@@ -279,19 +252,11 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		// 更新销售订单操作标识
 		List<OrderDto> orders = orderDao.selectByTeamNumbers(team_numbers);
 		for (OrderDto order : orders) {
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bsOrder = new BudgetStandardOrderBean();
-				bsOrder.setPk(order.getPk());
-				bsOrder.setOperate_flg(
-						ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
-				bsoDao.update(bsOrder);
-			} else {
-				BudgetNonStandardOrderBean bnsOrder = new BudgetNonStandardOrderBean();
-				bnsOrder.setPk(order.getPk());
-				bnsOrder.setOperate_flg(
-						ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
-				bnsoDao.update(bnsOrder);
-			}
+			SaleOrderBean sale_order = new SaleOrderBean();
+			sale_order.setPk(order.getPk());
+			sale_order.setOperate_flg(
+					ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
+			orderDao.update(sale_order);
 		}
 		// 删除产品订单号和团号对应关系
 		productOrderTeamNumberDao.deleteByOrderNumber(order_number);
@@ -362,18 +327,10 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	@Override
 	public String changeOrderLock(String team_number, String lock_flg) {
 		OrderDto order = orderDao.selectByTeamNumber(team_number);
-		if (order.getStandard_flg().equals("Y")) {
-			BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-			bso.setPk(order.getPk());
-			bso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), lock_flg, 1));
-			bsoDao.update(bso);
-		} else {
-			BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-			bnso.setPk(order.getPk());
-			bnso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), lock_flg, 1));
-			bnsoDao.update(bnso);
-		}
-
+		SaleOrderBean sale_order = new SaleOrderBean();
+		sale_order.setPk(order.getPk());
+		sale_order.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), lock_flg, 1));
+		orderDao.update(sale_order);
 		return SUCCESS;
 	}
 

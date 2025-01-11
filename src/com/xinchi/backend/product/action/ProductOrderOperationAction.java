@@ -208,7 +208,7 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * 
 	 * @return
 	 */
-	public String udpateOrderOperation() {
+	public String updateOrderOperation() {
 		resultStr = service.updateOrderOperation(json);
 		return SUCCESS;
 	}
@@ -309,15 +309,6 @@ public class ProductOrderOperationAction extends BaseAction {
 	 */
 	public String rollBackOperation() {
 		resultStr = service.rollBackOperation(operate_pk);
-		return SUCCESS;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String updateOrderOperation() {
-		resultStr = service.modifyOrderOperation(json);
 		return SUCCESS;
 	}
 

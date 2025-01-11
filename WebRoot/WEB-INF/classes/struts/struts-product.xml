@@ -124,11 +124,6 @@
 		<action name="unlockOrders" class="productAction" method="unlockOrders">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
-		<action name="tipSalesConfirmName" class="productAction" method="tipSalesConfirmName">
-			<result name="success" type="str">resultStr</result>
-		</action>
-
 		<!-- 产品维护操作 start -->
 		<!-- 上传组团确认模板 -->
 		<action name="uploadClientConfirmTemplet" class="productAction" method="uploadClientConfirmTemplet">
@@ -359,7 +354,7 @@
 			</result>
 		</action>
 		<!-- 更新产品操作 -->
-		<action name="udpateOrderOperation" class="productOrderOperationAction" method="udpateOrderOperation">
+		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
 			<result name="success" type="str">
 				resultStr
 			</result>
@@ -402,12 +397,6 @@
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
-			</result>
-		</action>
-		<!-- 通过团号搜索操作 -->
-		<action name="updateOrderOperation" class="productOrderOperationAction" method="updateOrderOperation">
-			<result name="success" type="str">
-				resultStr
 			</result>
 		</action>
 		<!-- 删除产品订单操作 -->

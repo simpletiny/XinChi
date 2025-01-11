@@ -394,9 +394,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dao.update(main);
 
 		// 更新涉及到client_employee_pk的表
-		String[] tables = { "accurate_sale", "client_visit", "client_received_detail", "receivable", "budget_order",
-				"budget_standard_order", "final_order", "final_standard_order", "budget_non_standard_order",
-				"final_non_standard_order" };
+		String[] tables = { "accurate_sale", "client_visit", "client_received_detail", "receivable", "sale_order" };
 
 		SqlBean sqlbean = new SqlBean();
 		for (String table : tables) {

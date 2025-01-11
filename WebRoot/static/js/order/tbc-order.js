@@ -42,7 +42,7 @@ var ProductBoxContext = function() {
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
-						var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
+						var data = "order_pk=" + order_pk;
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'order/deleteTbcOrder',
@@ -189,8 +189,6 @@ var ProductBoxContext = function() {
 		} else if (self.chosenOrders().length == 1) {
 			var data = self.chosenOrders()[0].split(";");
 			var order_pk = data[0];
-			var standard_flg = data[1];
-
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
@@ -201,7 +199,7 @@ var ProductBoxContext = function() {
 					yes : function(index) {
 						layer.close(index);
 						startLoadingIndicator("生成中……");
-						var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
+						var data = "order_pk=" + order_pk;
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'order/createReceivable',

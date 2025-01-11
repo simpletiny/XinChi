@@ -25,22 +25,11 @@ var ProductBoxContext = function() {
 	self.order = ko.observable({});
 	// 添加/修改备注
 	self.editComment = function(order_pk, standard_flg) {
-		var url = "";
-		if (standard_flg == "Y") {
-			url = "order/searchTbcBsOrderByPk";
-		} else {
-			url = "order/searchTbcBnsOrderByPk";
-		}
-
+		var url = "order/searchOrderByPk";
 		$.getJSON(self.apiurl + url, {
 			order_pk : order_pk
 		}, function(data) {
-			if (standard_flg == "Y") {
-				self.order(data.bsOrder);
-			} else {
-				self.order(data.bnsOrder);
-			}
-
+			self.order(data.order);
 			commentLayer = $.layer({
 				type : 1,
 				title : ['备注', ''],
@@ -154,11 +143,10 @@ var ProductBoxContext = function() {
 			fail_msg("只能选择一个订单！");
 			return;
 		} else if (self.chosenOrders().length == 1) {
-
 			var current = self.chosenOrders()[0];
 			var order_pk = current.pk;
 			var standard_flg = current.standard_flg;
-			var data = "order_pk=" + order_pk + "&standard_flg=" + standard_flg;
+			var data = "order_pk=" + order_pk;
 			$.layer({
 				area : ['auto', 'auto'],
 				dialog : {
@@ -167,7 +155,7 @@ var ProductBoxContext = function() {
 					type : 4,
 					btn : ['确认', '取消'],
 					yes : function(index) {
-						startLoadingSimpleIndicator("打回中...");
+						startLoadingSimpleIndicator("打回中");
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + "order/rollBackFinalOrder",

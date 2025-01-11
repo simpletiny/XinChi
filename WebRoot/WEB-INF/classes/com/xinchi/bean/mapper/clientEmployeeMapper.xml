@@ -500,7 +500,7 @@
 		B.client_area as area,
 		C.user_names AS
 		sales_name,
-		A.sales,
+		C.user_pks AS sales,
 		A.create_user,
 		A.update_user,
 		A.pk,

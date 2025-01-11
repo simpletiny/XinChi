@@ -15,10 +15,10 @@ var OrderContext = function() {
 	var year_now = x.getFullYear();
 	self.do_confirm_date = ko.observable();
 	
-	$.getJSON(self.apiurl + 'order/searchTbcBsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bsOrder);
+		self.order(data.order);
 		if (data.passengers.length>0) {
 			$(data.passengers).each(function(index,data){
 				data.as_adult = data.as_adult=='Y'?true:false;
@@ -82,7 +82,7 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();

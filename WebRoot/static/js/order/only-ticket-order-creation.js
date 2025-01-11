@@ -115,7 +115,7 @@ var OrderContext = function() {
 		}
 		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
 		const json = JSON.stringify(info);
-		var data = $("form").serialize() + "&bnsOrder.independent_flg=A" + "&json=" + json;
+		var data = $("form").serialize() + "&sale_order.independent_flg=A" + "&json=" + json;
 		
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({

@@ -22,10 +22,10 @@ var OrderContext = function() {
 
 	var d = new Date(self.current_date);
 
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 		self.passengers(data.passengers);
 		
 		self.ticket_infos(data.ticketInfos);
@@ -78,7 +78,7 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();
@@ -146,8 +146,8 @@ var OrderContext = function() {
 			return;
 		}
 
-		var other_cost = $(":input[name='bnsOrder.other_cost']").val().trim();
-		var other_comment = $(":input[name='bnsOrder.other_cost_comment']").val().trim();
+		var other_cost = $(":input[name='sale_order.other_cost']").val().trim();
+		var other_comment = $(":input[name='sale_order.other_cost_comment']").val().trim();
 		if (other_cost != "" && other_comment == "") {
 			fail_msg("有其他费用，必须填写费用说明！")
 			return;

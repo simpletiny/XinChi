@@ -3,6 +3,7 @@ package com.xinchi.backend.order.dao;
 import java.util.List;
 
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.tools.Page;
 
@@ -47,4 +48,12 @@ public interface OrderDAO {
 	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
 
 	public List<OrderDto> selectOrderWithNames(List<String> team_numbers);
+
+	public void insertWithPk(SaleOrderBean bean);
+
+	public void update(SaleOrderBean order);
+
+	public SaleOrderBean selectByPrimaryKey(String order_pk);
+
+	public void deleteByPk(String order_pk);
 }

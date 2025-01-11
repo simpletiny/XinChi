@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderNameListDAO;
 import com.xinchi.backend.product.dao.ProductOrderNameDAO;
@@ -27,11 +25,10 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketNeedBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketOrderLegBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.ProductOrderNameBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -99,10 +96,6 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 
 	@Autowired
 	private OrderDAO orderDao;
-	@Autowired
-	private BudgetNonStandardOrderDAO bnsoDao;
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
 
 	@Autowired
 	private OrderNameListDAO saleOrderNameListDao;
@@ -201,23 +194,12 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 					// 更新销售订单
 					for (String team_number : team_numbers) {
 						OrderDto order = orderDao.selectByTeamNumber(team_number);
-						if (order.getStandard_flg().equals("Y")) {
-							BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-							bso.setPk(order.getPk());
-							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-
-							bsoDao.update(bso);
-						} else {
-							BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-							bnso.setPk(order.getPk());
-							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-
-							bnsoDao.update(bnso);
-						}
+						SaleOrderBean sale_order = new SaleOrderBean();
+						sale_order.setPk(order.getPk());
+						sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+								ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+						sale_order.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+						orderDao.update(sale_order);
 					}
 				} else {
 					List<AirNeedTeamNumberBean> ants = airNeedTeamNumberDao.selectByNeedPk(need_pk);
@@ -230,22 +212,13 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 					// 更新销售订单
 					for (String team_number : team_numbers) {
 						OrderDto order = orderDao.selectByTeamNumber(team_number);
-						if (order.getStandard_flg().equals("Y")) {
-							BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-							bso.setPk(order.getPk());
-							bso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-							bso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							bsoDao.update(bso);
 
-						} else {
-							BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-							bnso.setPk(order.getPk());
-							bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
-									ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
-							bnso.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
-							bnsoDao.update(bnso);
-						}
+						SaleOrderBean sale_order = new SaleOrderBean();
+						sale_order.setPk(order.getPk());
+						sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(order.getOperate_flg(),
+								ResourcesConstants.AIR_OPERATE_STATUS_ORDERD));
+						sale_order.setLock_flg(SimpletinyString.replaceCharFromRight(order.getLock_flg(), "Y"));
+						orderDao.update(sale_order);
 					}
 
 					// 生成待出票名单
@@ -359,20 +332,12 @@ public class AirTicketOrderServiceImpl implements AirTicketOrderService {
 			}
 
 			for (String team_number : team_numbers) {
-				OrderDto sale_order = orderDao.selectByTeamNumber(team_number);
-				if (sale_order.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-					bso.setPk(sale_order.getPk());
-					bso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
-							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
-					bsoDao.update(bso);
-				} else {
-					BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-					bnso.setPk(sale_order.getPk());
-					bnso.setOperate_flg(SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(),
-							ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
-					bnsoDao.update(bnso);
-				}
+				OrderDto odt = orderDao.selectByTeamNumber(team_number);
+				SaleOrderBean sale_order = new SaleOrderBean();
+				sale_order.setPk(odt.getPk());
+				sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(odt.getOperate_flg(),
+						ResourcesConstants.AIR_OPERATE_STATUS_NO, 1));
+				orderDao.update(sale_order);
 			}
 		}
 

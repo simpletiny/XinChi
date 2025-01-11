@@ -96,6 +96,11 @@ public class OrderReportAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String checkOrderReportCanBeApproved() {
+		resultStr = service.checkOrderReportCanBeApproved(team_number);
+		return SUCCESS;
+	}
+
 	private String team_number;
 
 	/**

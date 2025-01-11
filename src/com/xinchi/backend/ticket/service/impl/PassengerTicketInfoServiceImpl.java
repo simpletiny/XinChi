@@ -15,8 +15,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.order.dao.OrderReportDAO;
 import com.xinchi.backend.payable.dao.AirTicketPaidDetailDAO;
@@ -31,12 +29,11 @@ import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPayableBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PassengerAllotDto;
 import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.ProductOrderNameBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
@@ -137,12 +134,6 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 	@Autowired
 	private OrderDAO orderDao;
-
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
-
-	@Autowired
-	private BudgetNonStandardOrderDAO bnsoDao;
 
 	@Autowired
 	private AirTicketNameListDAO airTicketNameListDao;
@@ -328,7 +319,6 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 			for (String tn : tns) {
 				BigDecimal airTicketCost = BigDecimal.ZERO;
 
-				OrderDto sale_order = orderDao.selectByTeamNumber(tn);
 				List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(tn);
 				for (AirTicketNameListBean name : names) {
 					List<PassengerTicketInfoBean> ptis = dao.selectByPassengerPk(name.getPk());
@@ -339,39 +329,25 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 						}
 					}
 				}
+				OrderDto odt = orderDao.selectByTeamNumber(tn);
+				SaleOrderBean sale_order = new SaleOrderBean();
+				sale_order.setPk(odt.getPk());
+				sale_order.setAir_ticket_cost(airTicketCost);
+				// 更新订单票务操作状态为已出票
+				sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(odt.getOperate_flg(),
+						ResourcesConstants.AIR_OPERATE_STATUS_YES, 1));
 
-				// 更新销售订单
-				if (sale_order.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
-					standardOrder.setAir_ticket_cost(airTicketCost);
-					// 更新订单票务操作状态为已出票
-					standardOrder.setOperate_flg(SimpletinyString.replaceCharFromRight(standardOrder.getOperate_flg(),
-							ResourcesConstants.AIR_OPERATE_STATUS_YES, 1));
-					bsoDao.update(standardOrder);
-				} else {
-					BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
-					nonStandardOrder.setAir_ticket_cost(airTicketCost);
-					nonStandardOrder.setOperate_flg(SimpletinyString.replaceCharFromRight(
-							nonStandardOrder.getOperate_flg(), ResourcesConstants.AIR_OPERATE_STATUS_YES, 1));
-					bnsoDao.update(nonStandardOrder);
-				}
+				orderDao.update(sale_order);
 			}
 
 			for (String tn : unDoneTns) {
-				OrderDto sale_order = orderDao.selectByTeamNumber(tn);
-				// 更新销售订单
-				if (sale_order.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
-					// 更新订单票务操作状态为出票中
-					standardOrder.setOperate_flg(SimpletinyString.replaceCharFromRight(standardOrder.getOperate_flg(),
-							ResourcesConstants.AIR_OPERATE_STATUS_ING, 1));
-					bsoDao.update(standardOrder);
-				} else {
-					BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
-					nonStandardOrder.setOperate_flg(SimpletinyString.replaceCharFromRight(
-							nonStandardOrder.getOperate_flg(), ResourcesConstants.AIR_OPERATE_STATUS_ING, 1));
-					bnsoDao.update(nonStandardOrder);
-				}
+				OrderDto odt = orderDao.selectByTeamNumber(tn);
+				SaleOrderBean sale_order = new SaleOrderBean();
+				sale_order.setPk(odt.getPk());
+				// 更新订单票务操作状态为出票中
+				sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(odt.getOperate_flg(),
+						ResourcesConstants.AIR_OPERATE_STATUS_ING, 1));
+				orderDao.update(sale_order);
 			}
 		}
 		return SUCCESS;
@@ -538,20 +514,12 @@ public class PassengerTicketInfoServiceImpl implements PassengerTicketInfoServic
 
 			String operate_flg = statuses.get(team_number);
 			// 销售订单机票款设置为0
-			OrderDto sale_order = orderDao.selectByTeamNumber(team_number);
-			if (sale_order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean standardOrder = bsoDao.selectByPrimaryKey(sale_order.getPk());
-				standardOrder.setOperate_flg(
-						SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(), operate_flg, 1));
-				standardOrder.setAir_ticket_cost(BigDecimal.ZERO);
-				bsoDao.update(standardOrder);
-			} else {
-				BudgetNonStandardOrderBean nonStandardOrder = bnsoDao.selectByPrimaryKey(sale_order.getPk());
-				nonStandardOrder.setOperate_flg(
-						SimpletinyString.replaceCharFromRight(sale_order.getOperate_flg(), operate_flg, 1));
-				nonStandardOrder.setAir_ticket_cost(BigDecimal.ZERO);
-				bnsoDao.update(nonStandardOrder);
-			}
+			OrderDto odt = orderDao.selectByTeamNumber(team_number);
+			SaleOrderBean sale_order = new SaleOrderBean();
+			sale_order.setPk(odt.getPk());
+			sale_order.setOperate_flg(SimpletinyString.replaceCharFromRight(odt.getOperate_flg(), operate_flg, 1));
+			sale_order.setAir_ticket_cost(BigDecimal.ZERO);
+			orderDao.update(sale_order);
 		}
 
 		return SUCCESS;

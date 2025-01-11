@@ -144,45 +144,6 @@ var OrderContext = function() {
 
 		}
 	}
-	/**
-	 * 提示销售确认名单
-	 */
-	self.tipSales = function() {
-		if (self.chosenOrders().length == 0) {
-			fail_msg("请选择产品订单！");
-			return;
-		} else {
-
-			startLoadingIndicator("操作中...");
-
-			var param = "";
-			for (var i = 0; i < self.chosenOrders().length; i++) {
-				var inner_data = self.chosenOrders()[i].split(";");
-				var team_number = inner_data[2];
-				param += "team_numbers=" + team_number + "&";
-			}
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'product/tipSalesConfirmName',
-				data : param
-			}).success(function(str) {
-				endLoadingIndicator();
-				if (str == "success") {
-					$("input[type='checkbox']:checked").each(function() {
-						if ($(this).is(":checked")) {
-							$(this).parents("tr").find(".status-no").removeAttr("style").text("待确认");
-						}
-					})
-
-					self.chosenOrders.removeAll();
-					success_msg("提示成功，请等待销售确认后操作。")
-				} else {
-					fail_msg("操作失败，请联系管理员！");
-				}
-			});
-		}
-	}
-
 	self.flight = ko.observableArray([]);
 	self.sale_orders = ko.observableArray([]);
 	// 生成订单

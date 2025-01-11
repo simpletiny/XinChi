@@ -81,7 +81,7 @@ var OrderContext = function() {
 		}
 	
 		let json = JSON.stringify(people);
-		var data = $("form").serialize() + "&bsOrder.independent_flg=" + self.independent_flg() + "&json=" + json;
+		var data = $("form").serialize() + "&sale_order.independent_flg=" + self.independent_flg() + "&json=" + json;
 	
 		$.ajax({
 			type : "POST",

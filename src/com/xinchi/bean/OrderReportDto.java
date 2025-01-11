@@ -44,6 +44,10 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	private String product_manager_number;
 
+	private BigDecimal cost_adjustment;
+	private BigDecimal allocable_money;
+	private BigDecimal allocable_applied;
+	private BigDecimal allocable_balance;
 	private List<String> order_types;
 
 	private List<String> report_statuses;
@@ -370,5 +374,37 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setStandard_flgs(List<String> standard_flgs) {
 		this.standard_flgs = standard_flgs;
+	}
+
+	public BigDecimal getCost_adjustment() {
+		return cost_adjustment;
+	}
+
+	public void setCost_adjustment(BigDecimal cost_adjustment) {
+		this.cost_adjustment = cost_adjustment;
+	}
+
+	public BigDecimal getAllocable_money() {
+		return allocable_money;
+	}
+
+	public BigDecimal getAllocable_applied() {
+		return allocable_applied;
+	}
+
+	public BigDecimal getAllocable_balance() {
+		return allocable_balance;
+	}
+
+	public void setAllocable_money(BigDecimal allocable_money) {
+		this.allocable_money = allocable_money;
+	}
+
+	public void setAllocable_applied(BigDecimal allocable_applied) {
+		this.allocable_applied = allocable_applied;
+	}
+
+	public void setAllocable_balance(BigDecimal allocable_balance) {
+		this.allocable_balance = allocable_balance;
 	}
 }
