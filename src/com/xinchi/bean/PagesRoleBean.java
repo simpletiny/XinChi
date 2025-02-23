@@ -16,7 +16,7 @@ public class PagesRoleBean extends SupperBO implements Serializable {
 
 	private String role;
 
-	private String page_pk;
+	private int page_pk;
 
 	private String page_url;
 
@@ -24,10 +24,6 @@ public class PagesRoleBean extends SupperBO implements Serializable {
 
 	public String getRole() {
 		return role;
-	}
-
-	public String getPage_pk() {
-		return page_pk;
 	}
 
 	public String getPage_url() {
@@ -42,16 +38,20 @@ public class PagesRoleBean extends SupperBO implements Serializable {
 		this.role = role;
 	}
 
-	public void setPage_pk(String page_pk) {
-		this.page_pk = page_pk;
-	}
-
 	public void setPage_url(String page_url) {
 		this.page_url = page_url;
 	}
 
 	public void setIs_father(String is_father) {
 		this.is_father = is_father;
+	}
+
+	public int getPage_pk() {
+		return page_pk;
+	}
+
+	public void setPage_pk(int page_pk) {
+		this.page_pk = page_pk;
 	}
 
 }

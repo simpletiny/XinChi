@@ -342,6 +342,12 @@ public class DaoUtil {
 		}
 	}
 
+	public void batchUpdate(String mapper, List<? extends SupperBO> listBo) {
+		if (listBo == null || listBo.size() < 1)
+			return;
+		sqlSession.update(mapper, listBo);
+	}
+
 	/**
 	 * 查询单个结果集合
 	 * 

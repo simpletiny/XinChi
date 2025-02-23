@@ -21,7 +21,17 @@ var DetailContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-
+	self.sumCardBalance = ko.observable();
+	$.getJSON(self.apiurl + 'finance/searchCardBalance', {}, function(data) {
+		if (data.sum_balance) {
+			self.sumCardBalance(data.sum_balance);
+		} else {
+			fail_msg("无法获取余额信息！");
+		}
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+	
 	self.createDetail = function(type) {
 		window.location.href = self.apiurl + "templates/finance/" + type + "-detail-creation.jsp";
 	};

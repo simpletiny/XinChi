@@ -117,9 +117,9 @@ textarea {
 
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<label class="l">FY</label>
+							<label class="l">FLY</label>
 							<div class="ip">
-								<input type="number" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FY" />
+								<input type="number" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FLY" />
 							</div>
 						</div>
 					</div>
@@ -244,6 +244,6 @@ textarea {
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js?v=1.005"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.007"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.008"></script>
 </body>
 </html>

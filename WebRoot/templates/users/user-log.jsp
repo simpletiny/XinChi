@@ -78,7 +78,7 @@
 		</div>
 	</div>
 	<script>
-		$(".manage").addClass("current").children("ol").css("display", "block");
+		$(".manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	   <script src="<%=basePath %>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	    <script src="<%=basePath %>static/js/datepicker.js"></script>

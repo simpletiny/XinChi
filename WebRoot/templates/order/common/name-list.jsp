@@ -93,7 +93,7 @@
 		class="btn btn-green btn-r" data-bind="click: addName">添加名单</a>
 </div>
 
-<div id="div-result" style="display: none;width:700px;height:400px;overflow-y:auto ">
+<div id="div-result" style="display: none;width:1000px;height:400px;overflow-y:auto ">
 	<h2 style="color: red">查询结果</h2>
 	<table id="table-result" style="margin-top: 20px">
 		<thead>

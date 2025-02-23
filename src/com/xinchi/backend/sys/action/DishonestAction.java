@@ -2,8 +2,10 @@ package com.xinchi.backend.sys.action;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -114,11 +116,9 @@ public class DishonestAction extends BaseAction {
 		person_result = dishonestPersonService.selectByPersonId(person.getId());
 		if (null != person_result) {
 			person_result.setCode("200");
-			// 如果是失信人，查询案件
-			if (person_result.getDishonest_flg().equals("Y")) {
-				cases = dishonestLogService.selectByPersonId(person.getId());
-				person_result.setCases(cases);
-			}
+			// 不管是不是失信人，都查询案件，有下架案件
+			cases = dishonestLogService.selectByPersonId(person.getId());
+			person_result.setCases(cases);
 		} else {
 			person_result = new DishonestPersonBean();
 			String jsonStr = checkDishonestFromApi(person);
@@ -131,9 +131,9 @@ public class DishonestAction extends BaseAction {
 				if (case_count == 0) {
 					person_result.setDishonest_flg("N");
 				} else {
-					person_result.setDishonest_flg("Y");
 					cases = new ArrayList<>();
 					JSONArray case_list = data.getJSONArray("caseList");
+					Set<String> sign_flgs = new HashSet<>();
 					for (int i = 0; i < case_list.size(); i++) {
 						DishonestLogBean log = new DishonestLogBean();
 						JSONObject current_case = JSONObject.fromObject(case_list.get(i));
@@ -142,8 +142,9 @@ public class DishonestAction extends BaseAction {
 						String reg_date = current_case.getString("regdate");
 						// 发布时间
 						String publish_date = current_case.getString("publishdate");
-
+						// 是否下架
 						String sign_flg = current_case.getString("sign").equals("0") ? "Y" : "N";
+						sign_flgs.add(sign_flg);
 						String signal_rating = current_case.getString("signalRating");
 						String court_name = current_case.getString("courtname");
 
@@ -159,6 +160,11 @@ public class DishonestAction extends BaseAction {
 
 						// 保存log到本地数据库
 						dishonestLogService.insert(log);
+					}
+					if (sign_flgs.contains("N")) {
+						person_result.setDishonest_flg("Y");
+					} else {
+						person_result.setDishonest_flg("N");
 					}
 				}
 				// 保存为非失信人到本地数据库

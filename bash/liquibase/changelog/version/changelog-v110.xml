@@ -1747,6 +1747,88 @@
 			<comment>ALTER VIEW view_score</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="41" author="simpletiny">
+		<sql>
+            <![CDATA[
+           		CREATE OR REPLACE VIEW view_order_point AS
+				    SELECT 
+				        COUNT(pk) * 4 AS order_point,
+				        sale AS sale_number,
+				        confirm_date AS date
+				    FROM
+				        sale_order
+				    WHERE
+				        confirm_flg = 'Y'
+				            AND LEFT(confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+				    GROUP BY sale , confirm_date;
+				CREATE OR REPLACE VIEW view_visit_point AS
+				    SELECT 
+				        COUNT(pk) * 3 AS visit_point, create_user AS sale_number, date
+				    FROM
+				        client_visit
+				    WHERE
+				        type = 'VISIT'
+				            AND LEFT(date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+				    GROUP BY create_user , date;
+									
+				CREATE OR REPLACE VIEW view_touch_point AS
+				    SELECT 
+				        COUNT(pk) * 2 AS touch_point, create_user AS sale_number, date
+				    FROM
+				        mobile_touch
+				    WHERE
+				        LEFT(date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+				    GROUP BY create_user , date;
+									
+				CREATE OR REPLACE VIEW view_incoming_point AS
+				    SELECT 
+				        COUNT(pk) * 1 AS incoming_point, create_user AS sale_number, date
+				    FROM
+				        incoming_call
+				    WHERE
+				        LEFT(date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
+				    GROUP BY create_user , date;
+									
+				CREATE OR REPLACE VIEW view_point AS
+				    SELECT 
+				        order_point AS point, sale_number, date
+				    FROM
+				        view_order_point 
+				    UNION SELECT 
+				        visit_point AS point, sale_number, date
+				    FROM
+				        view_visit_point 
+				    UNION SELECT 
+				        touch_point AS point, sale_number, date
+				    FROM
+				        view_touch_point 
+				    UNION SELECT 
+				        incoming_point AS point, sale_number, date
+				    FROM
+				        view_incoming_point;
+             ]]>
+			<comment>alter view view_order_point view_visit_point view_touch_point view_incoming_point view_point</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="42" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE pages 
+				CHANGE COLUMN page_url page_url VARCHAR(50) NULL COMMENT '页面地址',
+				CHANGE COLUMN pk pk INT NOT NULL AUTO_INCREMENT ;
+	 		 ]]>
+			<comment>alter table pages</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="43" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE pages_role 
+				CHANGE COLUMN page_pk page_pk INT NOT NULL COMMENT '页面pk' ;
+	 		 ]]>
+			<comment>alter table pages_role</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

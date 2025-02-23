@@ -18,9 +18,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class GeneratePackage {
-	public static final String clazzName = "Identity";
+	public static final String clazzName = "PagesRole";
 	public static final String desc = "实名信息";
-	public static final String voName = "IdentityBean";
+	public static final String voName = "PagesRoleBean";
 	public static final String baseFolder = "src/com/xinchi/backend/sys";
 	public static final String basePackage = "com.xinchi.backend.sys";
 

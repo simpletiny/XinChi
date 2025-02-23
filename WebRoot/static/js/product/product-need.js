@@ -1,6 +1,7 @@
 var operateLayer;
 var passengerCheckLayer;
 var createLayer;
+let receivableCheckLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -93,6 +94,34 @@ var OrderContext = function() {
 				scrollbar : true,
 				page : {
 					dom : '#passengers-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
+
+	self.order = ko.observable({});
+
+	self.checkReceivable = function(data, event) {
+		var team_number = data.team_number;
+		var url = "order/selectOrderByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.order(data.option);
+			receivableCheckLayer = $.layer({
+				type : 1,
+				title : ['团款信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '700px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#receivable-check'
 				},
 				end : function() {
 				}

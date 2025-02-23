@@ -354,7 +354,7 @@ tr td {
 									+ '&fileType=VOUCHER&subFolder=' + $data.account_pk}" alt="图片" style="width: 590px; height: 600px; cursor: pointer" />
 	</div>
 	<script>
-		$(".sale").addClass("current").children("ol").css("display", "block");
+		$(".receivable").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>

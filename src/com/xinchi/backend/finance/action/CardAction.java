@@ -36,6 +36,11 @@ public class CardAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchCardBalance() throws Exception {
+		sum_balance = cardService.selectSumBalance(SimpletinyDataUtil.getAccounts());
+		return SUCCESS;
+	}
+
 	private List<String> accounts;
 
 	public String searchAllAccounts() {

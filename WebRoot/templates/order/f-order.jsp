@@ -161,7 +161,7 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="click: function() {$root.checkConfirmPic($data.final_confirm_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkBudgetConfirmPic($data.budget_confirm_file,$data.create_user)} ">查看</a></td>
+									data-bind="click: function() {$root.checkBudgetConfirmPic($data.budget_confirm_file,$data.create_user_number)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkFinalDetail($data)} ">查看</a></td>
 								<td><a href="javascript:void(0)"

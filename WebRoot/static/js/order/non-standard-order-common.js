@@ -236,42 +236,78 @@ function checkName(){
 		
 		startLoadingSimpleIndicator("检验中");
 		let person_result = validateName(name,id);
-		let tr_len = $(tbody).children().length;
 		if(person_result.code==200){
 			if(person_result.dishonest_flg=="N"){
 				$(img).attr("src", ctx.apiurl + "static/img/dui.png");
 				$(txt_is_ok).val('Y');
 				$(txt_ok_id).val(id);
 				$(txt_ok_name).val(name);
-				const status = "成功";
-				let tr = $(`<tr>
-							<td>${tr_len+1}</td>
+				let person_cases = person_result.cases;
+				if(person_cases&&person_cases.length>0){
+					let span = person_cases.length;
+					for(let j=0;j<span;j++){
+						const person_case = person_cases[j];
+						const result_msg = "立案时间："+person_case.reg_date+"；案号："+person_case.case_code;
+						const sign = person_case.sign_flg=="Y"?"是":"否";
+						const sign_color =  person_case.sign_flg=="Y"?"green":"red";
+						if(j==0){
+							let tr = $(`<tr>
+									<td rowspan="${span}">${index+1}</td>
+									<td rowspan="${span}">${name}</td>
+									<td style="color:green" rowspan="${span}">成功</td>
+									<td style="color:green" rowspan="${span}">否</td>
+									<td>${result_msg}</td>
+									<td style="color:${sign_color}">${sign}</td>
+									</tr>`);
+							$(tbody).append(tr);
+						}else{
+							let tr = $(`<tr>
+									<td>${result_msg}</td>
+									<td style="color:${sign_color}">${sign}</td>
+									</tr>`);
+						$(tbody).append(tr);
+						}
+					}
+					validate_result = false;
+				}else{
+					let tr = $(`<tr>
+							<td>${index+1}</td>
 							<td>${name}</td>
 							<td style="color:green">成功</td>
 							<td style="color:green">否</td>
 							<td>没有找到 ${id}${name}相关的结果</td>
 							<td>---</td>
 						</tr>`);
-				$(tbody).append(tr);
+					$(tbody).append(tr);
+				}
 			}else if(person_result.dishonest_flg=="Y"){
 				$(img).attr("src", ctx.apiurl + "static/img/cuo.png");
 				$(txt_is_ok).val('N');
 				let person_cases = person_result.cases;
 				if(person_cases){
-					for(let i=0;i<person_cases.length;i++){
-						const person_case = person_cases[i];
+					let span = person_cases.length;
+					for(let j=0;j<span;j++){
+						const person_case = person_cases[j];
 						const result_msg = "立案时间："+person_case.reg_date+"；案号："+person_case.case_code;
 						const sign = person_case.sign_flg=="Y"?"是":"否";
-						let tr = $(`<tr>
-									<td>${tr_len+1}</td>
-									<td>${name}</td>
-									<td style="color:green">成功</td>
-									<<td style="color:red">失信人</td>
+						const sign_color =  person_case.sign_flg=="Y"?"green":"red";
+						if(j==0){
+							let tr = $(`<tr>
+									<td rowspan="${span}">${index+1}</td>
+									<td rowspan="${span}">${name}</td>
+									<td style="color:green" rowspan="${span}">成功</td>
+									<td style="color:red" rowspan="${span}">失信人</td>
 									<td>${result_msg}</td>
-									<td>${sign}</td>
-								</tr>`);
+									<td style="color:${sign_color}">${sign}</td>
+									</tr>`);
+							$(tbody).append(tr);
+						}else{
+							let tr = $(`<tr>
+									<td>${result_msg}</td>
+									<td style="color:${sign_color}">${sign}</td>
+									</tr>`);
 						$(tbody).append(tr);
-						tr_len++;
+						}
 					}
 				}
 				validate_result = false;
@@ -281,7 +317,7 @@ function checkName(){
 			$(txt_is_ok).val('N');
 			const result_msg = person_result.msg;
 			let tr = $(`<tr>
-						<td>${tr_len+1}</td>
+						<td>${index+1}</td>
 						<td>${name}</td>
 						<td style="color:red">失败</td>
 						<td>---</td>
@@ -318,7 +354,7 @@ function checkValidateResult(){
 		maxmin : false,
 		closeBtn : [1, true],
 		shadeClose : false,
-		area : ['700px', '450px'],
+		area : ['1000px', '450px'],
 		offset : ['50px', ''],
 		scrollbar : true,
 		page : {

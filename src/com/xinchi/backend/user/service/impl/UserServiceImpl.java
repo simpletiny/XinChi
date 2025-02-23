@@ -3,23 +3,29 @@ package com.xinchi.backend.user.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sys.dao.BaseDataDAO;
+import com.xinchi.backend.sys.dao.PagesDAO;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.userinfo.dao.UserInfoDAO;
 import com.xinchi.backend.userinfo.service.UserInfoService;
 import com.xinchi.backend.util.UserUtilService;
 import com.xinchi.bean.BaseDataBean;
+import com.xinchi.bean.PagesBean;
 import com.xinchi.bean.ReceivableBalanceDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.UserBaseBean;
@@ -47,6 +53,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserInfoService userInfoService;
 
+	@Autowired
+	private PagesDAO pagesDao;
+
 	@Override
 	public String login(UserBaseBean ubb) {
 		List<UserBaseBean> users = dao.getAllByParam(ubb);
@@ -69,6 +78,7 @@ public class UserServiceImpl implements UserService {
 
 				UserInfoBean uib = infoDao.selectByUserId(user.getId());
 
+				// 存储用户基本信息
 				sessionBean.setPk(user.getPk());
 				sessionBean.setUser_number(user.getUser_number());
 				sessionBean.setUser_name(user.getUser_name());
@@ -82,6 +92,20 @@ public class UserServiceImpl implements UserService {
 
 				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 
+				// 存储用户导航信息
+				List<PagesBean> navigation = new ArrayList<>();
+				if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+					PagesBean admin_option = new PagesBean();
+					admin_option.setLevel(1);
+					navigation = pagesDao.selectByParam(admin_option);
+				} else {
+
+				}
+
+				XinChiApplicationContext.setSession(ResourcesConstants.NAVIGATION_SESSION_KEY, navigation);
+
+				String navigation_html = create_navigatioin_html(navigation);
+				XinChiApplicationContext.setSession(ResourcesConstants.NAVIGATION_HTML_SESSION_KEY, navigation_html);
 				if (uib.getUser_role().contains("SALE"))
 					return "sale";
 				return "success";
@@ -89,6 +113,53 @@ public class UserServiceImpl implements UserService {
 				return "input";
 			}
 		}
+	}
+
+	private String create_navigatioin_html(List<PagesBean> navigation) {
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/templates/";
+		String html = "";
+		StringBuilder sb = new StringBuilder();
+		if (navigation != null) {
+			for (PagesBean parent : navigation) {
+				// 假设父页面为 Map 类型
+				String parentTitle = parent.getPage_title();
+				PagesBean first_child = parent.getChild_pages().get(0);
+				String parentUrl = basePath + first_child.getPage_class() + "/" + first_child.getPage_url();
+				String parentClass = parent.getPage_class() != null ? parent.getPage_class() : "default";
+				List<PagesBean> childPages = parent.getChild_pages();
+
+				sb.append("<li class=\"").append(parentClass).append("\">");
+				sb.append("<a href=\"").append(parentUrl != null ? parentUrl : "#").append("\">");
+				sb.append("<i class=\"fa fa-users1 fa-lg fa-fw\"></i>");
+				sb.append(parentTitle);
+				sb.append("</a>");
+
+				// 如果存在子页面则生成子菜单（使用 <ol>）
+				if (childPages != null && !childPages.isEmpty()) {
+					sb.append("<ol style=\"display:none;\">");
+					for (PagesBean child : childPages) {
+						String childTitle = child.getPage_title();
+						String childUrl = basePath + child.getPage_class() + "/" + child.getPage_url();
+
+						sb.append("<li>");
+						sb.append("<a href=\"").append(childUrl).append("?page_title=").append(childTitle)
+								.append("\">");
+						sb.append("<i class=\"fa fa-angle-right fa-lg fa-fw\"></i>");
+						sb.append(childTitle);
+						sb.append("</a>");
+						sb.append("</li>");
+					}
+					sb.append("</ol>");
+				}
+				sb.append("</li>");
+			}
+		}
+		// 将生成的导航 HTML 保存到 session 中
+		html = sb.toString();
+		return html;
 	}
 
 	@Override

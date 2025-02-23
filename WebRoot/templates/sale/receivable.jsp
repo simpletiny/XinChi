@@ -960,7 +960,7 @@
 		</form>
 	</div>
 	<script>
-		$(".sale").addClass("current").children("ol").css("display", "block");
+		$(".receivable").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>

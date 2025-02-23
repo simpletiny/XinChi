@@ -200,7 +200,7 @@ tr td {
 								<td data-bind="text: $data.balance"></td>
 
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
+									data-bind="click: function() {$root.checkIdPic($data.budget_confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)"
 									data-bind="click:function() {$root.editComment($data.pk,$data.standard_flg)}">添加</a></td>

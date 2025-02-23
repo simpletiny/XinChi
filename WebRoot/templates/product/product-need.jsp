@@ -136,6 +136,7 @@
 								<th>成人</th>
 								<th>特殊</th>
 								<th>游客信息</th>
+								<th>团款</th>
 								<th>销售</th>
 								<th>销售特请</th>
 								<th>销售锁定</th>
@@ -154,6 +155,7 @@
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkReceivable,text: $data.receivable"></a></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
 								<td data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
@@ -250,6 +252,101 @@
 			</div>
 		</div>
 	</div>
+	<!-- 查看团款信息 -->
+	<div id="receivable-check" style="display: none; width: 800px; height: 650px; overflow-y: auto;">
+		<div class="form-box info-form">
+			<h3 style="padding-left:50px;">预算</h3>
+			<hr />
+			<div class="input-row clearfloat">
+				<div class="col-md-4">
+					<label class="l">总团款:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().receivable"></p>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<label class="l">团款说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().receivable_comment"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">FLY:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().fy"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">其他费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().other_cost"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().other_cost_comment"></p>
+					</div>
+				</div>
+			</div>
+			<h3 style="padding-left:50px;margin-top:40px">决算</h3>
+			<hr />
+			<div class="input-row clearfloat">
+				<div class="col-md-4">
+					<label class="l">决算团款:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().final_receivable"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">增加费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().raise_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().raise_comment"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">减少费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().reduce_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().reduce_comment"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">投诉费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().complain_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">投诉原因:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().complain_comment"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- 生成订单 -->
 	<div id="div-order-create" style="display: none; width: 900px; height: 500px; overflow: auto">
 		<form class="form-box info-form" id="form-air">
@@ -276,7 +373,7 @@
 								<td data-bind="text:$data.adult_count"></td>
 								<td data-bind="text:$data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
-								<td><input type="checkbox" value="Y" st="is-only-dijie"/></td>
+								<td><input type="checkbox" value="Y" st="is-only-dijie" /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -295,8 +392,9 @@
 					<label class="l"><input type="checkbox" id="chk-combine" onchange="checkCombine()"></input>合并至订单</label>
 				</div>
 				<div class="col-md-4">
-					<select class="form-control" id="sel-product-order" disabled style="height: 34px" 
-						data-bind="options: product_orders,  optionsText: 'order_number', optionsValue: 'order_number', optionsCaption: '--请选择--'" name="option.confirm_period"></select>
+					<select class="form-control" id="sel-product-order" disabled style="height: 34px"
+						data-bind="options: product_orders,  optionsText: 'order_number', optionsValue: 'order_number', optionsCaption: '--请选择--'"
+						name="option.confirm_period"></select>
 				</div>
 			</div>
 			<div class="input-row clearfloat">

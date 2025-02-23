@@ -814,3 +814,8 @@ function calculateAge(idCard) {
 
     return age;
 }
+
+function isChinese(str) {
+    const regex = /^[\u4e00-\u9fa5]+$/;
+    return regex.test(str);
+}

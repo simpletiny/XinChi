@@ -615,32 +615,32 @@
 	<select id="selectPointByParam" parameterType="com.xinchi.bean.PointDto" resultMap="PointMap">
 		select
 		sum(A.point) AS point,
-		A.create_user AS user_number,
+		A.sale_number AS user_number,
 		A.date,
 		B.pk AS user_pk
 		from view_point A
 		LEFT JOIN
 		user_base B
-		ON A.create_user = B.user_number
+		ON A.sale_number = B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
 			and LEFT(date,7)='2018-12'
 		</where>
-		GROUP BY A.create_user,A.date
+		GROUP BY A.sale_number,A.date
 	</select>
 	<select id="selectEnableBackPointByParam" parameterType="com.xinchi.bean.BackPointDto" resultMap="BackPointMap">
 		SELECT
 		A.team_number,
-		A.user_number,
+		A.sale AS user_number,
 		A.confirm_date,
 		B.pk AS user_pk,
 		A.product_point
 		FROM
 		view_back_money_balance A
 		LEFT JOIN
-		user_base B ON A.user_number = B.user_number
+		user_base B ON A.sale = B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}

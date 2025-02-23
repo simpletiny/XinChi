@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xinchi.bean.mapper.PagesBeanMapper">
+<mapper namespace="com.xinchi.bean.mapper.PagesMapper">
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.PagesBean">
+		<result column="page_url" property="page_url" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="father_pk" property="father_pk" jdbcType="CHAR" />
+		<result column="order_index" property="order_index" jdbcType="INTEGER" />
+		<result column="page_title" property="page_title" jdbcType="VARCHAR" />
+		<result column="page_class" property="page_class" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<collection property="child_pages" ofType="com.xinchi.bean.PagesBean" select="selectChildByFatherPk"
+			column="pk" />
+	</resultMap>
+
+	<resultMap id="ChildResultMap" type="com.xinchi.bean.PagesBean">
 		<result column="page_url" property="page_url" jdbcType="VARCHAR" />
 		<result column="level" property="level" jdbcType="INTEGER" />
 		<result column="father_pk" property="father_pk" jdbcType="CHAR" />
@@ -41,6 +57,12 @@
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
 
+	<select id="selectChildByFatherPk" parameterType="java.lang.Integer" resultMap="ChildResultMap">
+		SELECT * FROM pages
+		where
+		father_pk = #{value,jdbcType=INTEGER}
+		ORDER BY order_index
+	</select>
 	<insert id="insert" parameterType="com.xinchi.bean.PagesBean">
 
 		insert into pages
@@ -154,9 +176,50 @@
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
+
+	<update id="batchUpdateByPrimaryKey" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			UPDATE pages
+			<set>
+				<if test="item.page_url != null">
+					page_url = #{item.page_url,jdbcType=VARCHAR},
+				</if>
+				<if test="item.level != null">
+					level = #{item.level,jdbcType=INTEGER},
+				</if>
+				<if test="item.father_pk != null">
+					father_pk = #{item.father_pk,jdbcType=CHAR},
+				</if>
+				<if test="item.order_index != null">
+					order_index = #{item.order_index,jdbcType=INTEGER},
+				</if>
+				<if test="item.page_title != null">
+					page_title = #{item.page_title,jdbcType=VARCHAR},
+				</if>
+				<if test="item.page_class != null">
+					page_class = #{item.page_class,jdbcType=VARCHAR},
+				</if>
+				<if test="item.create_user != null">
+					create_user = #{item.create_user,jdbcType=VARCHAR},
+				</if>
+				<if test="item.update_user != null">
+					update_user = #{item.update_user,jdbcType=VARCHAR},
+				</if>
+				<if test="item.update_time != null">
+					update_time = #{item.update_time,jdbcType=VARCHAR},
+				</if>
+			</set>
+			WHERE pk = #{item.pk,jdbcType=CHAR}
+		</foreach>
+	</update>
+
 	<select id="selectByParam" parameterType="com.xinchi.bean.PagesBean" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from pages
+		select * from pages
+		<where>
+			<if test="level != null and level !=''">
+				and level = #{level,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by order_index
 	</select>
 </mapper>

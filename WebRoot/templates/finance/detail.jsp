@@ -121,6 +121,14 @@
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">总余额</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sumCardBalance()"></p>
+							</div>
+						</div>
+					</div>
 				</form>
 				<div class="list-result">
 					<table class="table table-striped table-hover">
@@ -245,6 +253,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/file-upload-plain.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/detail.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/finance/detail.js?v=1.002"></script>
 </body>
 </html>

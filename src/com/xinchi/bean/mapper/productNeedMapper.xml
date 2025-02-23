@@ -23,6 +23,7 @@
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="standard_flg" property="standard_flg" jdbcType="CHAR" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -48,7 +49,8 @@
 		A.treat_comment,
 		A.lock_flg,
 		A.name_confirm_status,
-		A.standard_flg
+		A.standard_flg,
+       	if(A.confirm_flg='F',A.final_receivable, A.receivable) As receivable
 		from
 		budget_order_view A
 		LEFT JOIN product B ON A.product_pk=B.pk

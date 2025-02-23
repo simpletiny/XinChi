@@ -127,11 +127,11 @@
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.balance"></td>
-								<!-- ko if:$data.confirm_file!=null && $data.confirm_file != '' -->
+								<!-- ko if:$data.budget_confirm_file!=null && $data.budget_confirm_file != '' -->
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
+									data-bind="click: function() {$root.checkIdPic($data.budget_confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- /ko -->
-								<!-- ko if: $data.confirm_file==null || $data.confirm_file == '' -->
+								<!-- ko if: $data.budget_confirm_file==null || $data.budget_confirm_file == '' -->
 								<td></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.comment"></td>

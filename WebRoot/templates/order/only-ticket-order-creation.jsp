@@ -114,9 +114,9 @@
 
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<label class="l">FY</label>
+							<label class="l">FLY</label>
 							<div class="ip">
-								<input type="number" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FY" />
+								<input type="number" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FLY" />
 							</div>
 						</div>
 					</div>

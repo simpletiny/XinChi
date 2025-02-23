@@ -28,6 +28,10 @@ public class ResourcesConstants {
 
 	public static String LOGIN_SESSION_KEY = "user";
 
+	public static String NAVIGATION_SESSION_KEY = "navigation";
+
+	public static String NAVIGATION_HTML_SESSION_KEY = "navigation_html";
+
 	public static String REBOOT_TIMER_KEY = "reboot";
 
 	// 定时任务列表

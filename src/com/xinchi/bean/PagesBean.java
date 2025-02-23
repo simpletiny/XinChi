@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -24,6 +25,8 @@ public class PagesBean extends SupperBO implements Serializable {
 	private String page_title;
 
 	private String page_class;
+
+	private List<PagesBean> child_pages;
 
 	public String getPage_url() {
 		return page_url;
@@ -71,6 +74,14 @@ public class PagesBean extends SupperBO implements Serializable {
 
 	public void setPage_class(String page_class) {
 		this.page_class = page_class;
+	}
+
+	public List<PagesBean> getChild_pages() {
+		return child_pages;
+	}
+
+	public void setChild_pages(List<PagesBean> child_pages) {
+		this.child_pages = child_pages;
 	}
 
 }

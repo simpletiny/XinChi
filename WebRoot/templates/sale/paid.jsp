@@ -401,7 +401,7 @@
 		</div>
 	</div>
 	<script>
-		$(".product").addClass("current").children("ol").css("display", "block");
+		$(".payable").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
