@@ -386,7 +386,6 @@ function getServerTime() {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
 			return new Date(data.current_date);
 		})
 		.catch(error => {
@@ -521,19 +520,19 @@ function dataURLtoFile(dataurl, filename) {
 		tbody.html("");
 		var tr = $("<tr></tr>");
 		tbody.append(tr);
-
 		$this.find("tbody:eq(0) tr").each(function() {
 			var tds = $(this).children();
 			for (var i = 0; i < tds.length; i++) {
-
-				if (default_options.except.contains(i + 1))
+				if (default_options.except.contains(i + 1)){
 					continue;
+				}
+				
 				var td = $(tds[i]);
-				if (typeof +td.text() === 'number' && !isNaN(td.text()))
+				if (typeof +td.text() === 'number' && !isNaN(td.text())){
 					sum[i] += +td.text();
+				}
 			}
 		});
-
 		for (var i = 0; i < len; i++) {
 			var td = $("<td></td>");
 			tr.append(td);

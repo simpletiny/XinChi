@@ -129,6 +129,7 @@
 				and A.product_order_number = #{params.bo.team_number,jdbcType=VARCHAR}
 			</if>
 		</where>
+		 order by A.first_ticket_date,A.first_from_to,A.product_name
 	</select>
 	<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select

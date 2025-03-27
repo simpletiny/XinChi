@@ -1,6 +1,7 @@
 var idCheckLayer;
 var userRoleLayer;
 var passwordLayer;
+let productChosenLayer;
 var UsersContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -10,12 +11,20 @@ var UsersContext = function() {
 	});
 	self.chosenUserRoles = ko.observableArray();
 	self.chosenUsers = ko.observableArray([]);
+	self.userRoles = ko.observableArray([]);
+	self.chosenProductManagers = ko.observableArray();
+	self.productManagers = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.productManagers(data.users);
+	});
 
-	self.allRoles = ['MANAGER', 'SALES', 'PRODUCT', 'ACCOUNTING', 'CASHIER', 'TICKET', 'SASSISTANT', 'CPRODUCT'];
-	self.sexMapping = {
-		'F' : '女',
-		'M' : '男'
-	};
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : 'ROLE'
+	}, function(data) {
+		self.userRoles(data.datas);
+	});
 
 	self.roleMapping = {
 		'MANAGER' : '经理',
@@ -27,14 +36,20 @@ var UsersContext = function() {
 		'CASHIER' : '出纳',
 		'TICKET' : '票务',
 		// C for cooperate
-		'CPRODUCT' : '合作产品'
+		'CPRODUCT' : '合作产品',
+		'PASSISTANT' : '产品助理'
+	};
+
+	self.sexMapping = {
+		'F' : '女',
+		'M' : '男'
 	};
 
 	self.refresh = function() {
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'user/searchUsersByPage', param, function(data) {
+		let a = $.getJSON(self.apiurl + 'user/searchUsersByPage', param, function(data) {
 			var users = data.users;
 			$(users).each(function(idx, user) {
 				var user_roles = user.user_roles;
@@ -93,8 +108,8 @@ var UsersContext = function() {
 					maxmin : false,
 					closeBtn : [1, true],
 					shadeClose : false,
-					area : ['600px', '200px'],
-					offset : ['200px', ''],
+					area : ['600px', '400px'],
+					offset : ['', ''],
 					scrollbar : true,
 					page : {
 						dom : '#edit-role'
@@ -109,7 +124,8 @@ var UsersContext = function() {
 	};
 	self.doSave = function() {
 		startLoadingSimpleIndicator("保存中");
-		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles();
+		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles() + "&product_managers="
+				+ self.chosenProductManagers();
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'user/updateUserRoles',
@@ -117,6 +133,7 @@ var UsersContext = function() {
 		}).success(function(str) {
 			if (str == "success") {
 				self.refresh();
+				self.chosenProductManagers.removeAll();
 				endLoadingIndicator();
 				layer.close(userRoleLayer);
 			}
@@ -126,6 +143,39 @@ var UsersContext = function() {
 	self.doCancel = function() {
 		layer.close(userRoleLayer);
 	};
+	let current_chk;
+	self.changeRole = function(data, event) {
+		let chk = event.target;
+		if ($(chk).val() === "PASSISTANT" && $(chk).is(":checked")) {
+			current_chk = chk;
+			productChosenLayer = $.layer({
+				type : 1,
+				title : ['选择产品经理', ''],
+				maxmin : false,
+				closeBtn : [1, false],
+				shadeClose : false,
+				area : ['600px', '300px'],
+				offset : ['', '800px'],
+				scrollbar : true,
+				page : {
+					dom : '#div-product-mananger'
+				},
+				end : function() {
+					console.log("done");
+				}
+			});
+		}
+	}
+
+	self.confirmProductManager = function() {
+		layer.close(productChosenLayer);
+	}
+	self.cancelProductManager = function() {
+		self.chosenProductManagers.removeAll();
+		$(current_chk).prop("checked", false);
+		self.chosenUserRoles.remove("PASSISTANT");
+		layer.close(productChosenLayer);
+	}
 
 	// 停用用户
 	self.stop = function() {

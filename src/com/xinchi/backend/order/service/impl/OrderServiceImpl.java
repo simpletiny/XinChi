@@ -1582,23 +1582,7 @@ public class OrderServiceImpl implements OrderService {
 			ProductOrderBean po = productOrderDao.selectByOrderNumber(pot.getProduct_order_number());
 			po.setAdult_count(po.getAdult_count() + add_adult_count);
 			po.setSpecial_count(po.getSpecial_count() + add_special_count);
-
 			productOrderDao.update(po);
-			// 更新air_ticket_need
-			AirTicketNeedBean atn = airTicketNeedDao.selectByProductOrderNumber(pot.getProduct_order_number());
-			if (null != atn) {
-
-				atn.setAdult_cnt(po.getAdult_count());
-				atn.setSpecial_cnt(po.getSpecial_count());
-				airTicketNeedDao.update(atn);
-
-				// 更新air_ticket_order
-				AirTicketOrderBean ato = airTicketOrderDao.selectByNeedPk(atn.getPk());
-				if (null != ato) {
-					ato.setPeople_count(po.getAdult_count() + po.getSpecial_count());
-					airTicketOrderDao.update(ato);
-				}
-			}
 		}
 
 		// 更新team_report数据
@@ -1607,65 +1591,29 @@ public class OrderServiceImpl implements OrderService {
 		tr.setSys_cost(sys_cost);
 		orderReportDao.updateTeamReport(tr);
 
-		if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
-			// 新增的名单
-			for (SaleOrderNameListBean n : addNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.insert(n);
-			}
+		// 新增的名单
+		for (SaleOrderNameListBean n : addNameList) {
+			n.setLock_flg(name_lock_flg);
+			nameListDao.insert(n);
+		}
 
-			// 删除的名单
-			for (SaleOrderNameListBean n : deleteNameList) {
-				nameListDao.delete(n.getPk());
-			}
-
-			// 修改的名单
-			for (SaleOrderNameListBean n : modifyNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.update(n);
-			}
-		} else {
-			// 新增的名单
-			List<AirTicketNameListBean> atns = airTicketNameListDao.selectByTeamNumber(team_number);
-			AirTicketNameListBean atn = (atns == null || atns.size() == 0) ? new AirTicketNameListBean() : atns.get(0);
-			for (SaleOrderNameListBean n : addNameList) {
-				n.setLock_flg(name_lock_flg);
-				String name_pk = nameListDao.insert(n);
-
-				AirTicketNameListBean nn = new AirTicketNameListBean();
-				nn.setTeam_number(team_number);
-				nn.setClient_number(atn.getClient_number());
-				nn.setFirst_ticket_date(atn.getFirst_ticket_date());
-				nn.setFirst_start_city(atn.getFirst_start_city());
-				nn.setFirst_end_city(atn.getFirst_end_city());
-				nn.setTicket_order_pk(atn.getTicket_order_pk());
-				nn.setName(n.getName());
-				nn.setId(n.getId());
-				nn.setOrder_number(atn.getOrder_number());
-				nn.setCellphone_A(n.getCellphone_A());
-				nn.setCellphone_B(n.getCellphone_B());
-				nn.setChairman(n.getChairman());
-				nn.setLock_flg(name_lock_flg.split(",")[1]);
-				nn.setBase_pk(name_pk);
-				nn.setAge(n.getAge());
-				nn.setId_type(n.getId_type());
-				airTicketNameListDao.insert(nn);
-			}
-
-			// 删除的名单
-			for (SaleOrderNameListBean n : deleteNameList) {
-				nameListDao.delete(n.getPk());
+		// 删除的名单
+		for (SaleOrderNameListBean n : deleteNameList) {
+			nameListDao.delete(n.getPk());
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean deleteAirName = airTicketNameListDao.selectByBasePk(n.getPk());
 
 				deleteAirName.setDelete_flg("Y");
 				deleteAirName.setLock_flg(name_lock_flg.split(",")[1]);
 				airTicketNameListDao.update(deleteAirName);
 			}
+		}
 
-			// 修改的名单
-			for (SaleOrderNameListBean n : modifyNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.update(n);
+		// 修改的名单
+		for (SaleOrderNameListBean n : modifyNameList) {
+			n.setLock_flg(name_lock_flg);
+			nameListDao.update(n);
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
 
 				modifyAirName.setName(n.getName());
@@ -1683,13 +1631,15 @@ public class OrderServiceImpl implements OrderService {
 		// 普通修改的名单
 		for (SaleOrderNameListBean n : normalModifyNames) {
 			nameListDao.update(n);
-			AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
-			if (null != modifyAirName) {
-				modifyAirName.setCellphone_A(n.getCellphone_A());
-				modifyAirName.setCellphone_B(n.getCellphone_B());
-				modifyAirName.setAge(n.getAge());
-				modifyAirName.setId_type(n.getId_type());
-				airTicketNameListDao.update(modifyAirName);
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
+				if (null != modifyAirName) {
+					modifyAirName.setCellphone_A(n.getCellphone_A());
+					modifyAirName.setCellphone_B(n.getCellphone_B());
+					modifyAirName.setAge(n.getAge());
+					modifyAirName.setId_type(n.getId_type());
+					airTicketNameListDao.update(modifyAirName);
+				}
 			}
 		}
 
@@ -1796,8 +1746,13 @@ public class OrderServiceImpl implements OrderService {
 				result.add(MessageFormat.format(msg_a, "票务", "锁定", "添加游客"));
 				return result;
 			}
-			if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_YES)) {
-				result.add(MessageFormat.format(msg_a, "票务", "出票", "添加游客"));
+			if (product_lock_flg.equals("Y")) {
+				result.add(MessageFormat.format(msg_a, "产品", "锁定", "添加游客"));
+				return result;
+			}
+
+			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+				result.add(MessageFormat.format(msg_a, "产品", "操作", "添加游客"));
 				return result;
 			}
 		}
@@ -1840,6 +1795,14 @@ public class OrderServiceImpl implements OrderService {
 				result.add(MessageFormat.format(msg_a, "票务", "出票", "修改名单内容"));
 				return result;
 			}
+			if (product_lock_flg.equals("Y")) {
+				result.add(MessageFormat.format(msg_a, "产品", "锁定", "修改名单内容"));
+				return result;
+			}
+			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+				result.add(MessageFormat.format(msg_a, "产品", "操作", "修改名单内容"));
+				return result;
+			}
 		}
 
 		// 如果deleteNames不为空，说明有删除名单。
@@ -1851,8 +1814,15 @@ public class OrderServiceImpl implements OrderService {
 					return result;
 				}
 			}
+			if (product_lock_flg.equals("Y")) {
+				result.add(MessageFormat.format(msg_a, "产品", "锁定", "删除名单"));
+				return result;
+			}
+			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+				result.add(MessageFormat.format(msg_a, "产品", "操作", "删除名单"));
+				return result;
+			}
 		}
-
 		result.add(SUCCESS);
 		result.add(addNames);
 		result.add(deleteNames);
@@ -1971,64 +1941,29 @@ public class OrderServiceImpl implements OrderService {
 		tr.setSys_cost(sys_cost);
 		orderReportDao.updateTeamReport(tr);
 
-		if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
-			// 新增的名单
-			for (SaleOrderNameListBean n : addNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.insert(n);
-			}
+		// 新增的名单
+		for (SaleOrderNameListBean n : addNameList) {
+			n.setLock_flg(name_lock_flg);
+			nameListDao.insert(n);
+		}
 
-			// 删除的名单
-			for (SaleOrderNameListBean n : deleteNameList) {
-				nameListDao.delete(n.getPk());
-			}
-
-			// 修改的名单
-			for (SaleOrderNameListBean n : modifyNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.update(n);
-			}
-
-		} else {
-			// 新增的名单
-			List<AirTicketNameListBean> atns = airTicketNameListDao.selectByTeamNumber(team_number);
-			AirTicketNameListBean atn = (atns == null || atns.size() == 0) ? new AirTicketNameListBean() : atns.get(0);
-			for (SaleOrderNameListBean n : addNameList) {
-				n.setLock_flg(name_lock_flg);
-				String name_pk = nameListDao.insert(n);
-
-				AirTicketNameListBean nn = new AirTicketNameListBean();
-				nn.setTeam_number(team_number);
-				nn.setClient_number(atn.getClient_number());
-				nn.setFirst_ticket_date(atn.getFirst_ticket_date());
-				nn.setFirst_start_city(atn.getFirst_start_city());
-				nn.setFirst_end_city(atn.getFirst_end_city());
-				nn.setTicket_order_pk(atn.getTicket_order_pk());
-				nn.setName(n.getName());
-				nn.setId(n.getId());
-				nn.setOrder_number(atn.getOrder_number());
-				nn.setCellphone_A(n.getCellphone_A());
-				nn.setCellphone_B(n.getCellphone_B());
-				nn.setChairman(n.getChairman());
-				nn.setLock_flg(name_lock_flg.split(",")[1]);
-				nn.setBase_pk(name_pk);
-				airTicketNameListDao.insert(nn);
-			}
-
-			// 删除的名单
-			for (SaleOrderNameListBean n : deleteNameList) {
-				nameListDao.delete(n.getPk());
+		// 删除的名单
+		for (SaleOrderNameListBean n : deleteNameList) {
+			nameListDao.delete(n.getPk());
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean deleteAirName = airTicketNameListDao.selectByBasePk(n.getPk());
 
 				deleteAirName.setDelete_flg("Y");
 				deleteAirName.setLock_flg(name_lock_flg.split(",")[1]);
 				airTicketNameListDao.update(deleteAirName);
 			}
+		}
 
-			// 修改的名单
-			for (SaleOrderNameListBean n : modifyNameList) {
-				n.setLock_flg(name_lock_flg);
-				nameListDao.update(n);
+		// 修改的名单
+		for (SaleOrderNameListBean n : modifyNameList) {
+			n.setLock_flg(name_lock_flg);
+			nameListDao.update(n);
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
 
 				modifyAirName.setName(n.getName());
@@ -2042,16 +1977,19 @@ public class OrderServiceImpl implements OrderService {
 				airTicketNameListDao.update(modifyAirName);
 			}
 		}
+
 		// 普通修改的名单
 		for (SaleOrderNameListBean n : normalModifyNames) {
 			nameListDao.update(n);
-			AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
-			if (null != modifyAirName) {
-				modifyAirName.setCellphone_A(n.getCellphone_A());
-				modifyAirName.setCellphone_B(n.getCellphone_B());
-				modifyAirName.setId_type(n.getId_type());
-				modifyAirName.setAge(n.getAge());
-				airTicketNameListDao.update(modifyAirName);
+			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
+				if (null != modifyAirName) {
+					modifyAirName.setCellphone_A(n.getCellphone_A());
+					modifyAirName.setCellphone_B(n.getCellphone_B());
+					modifyAirName.setAge(n.getAge());
+					modifyAirName.setId_type(n.getId_type());
+					airTicketNameListDao.update(modifyAirName);
+				}
 			}
 		}
 		// 更新订单信息

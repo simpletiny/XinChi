@@ -361,9 +361,6 @@
 		product_order C ON
 		A.product_order_number = C.order_number
 		<where>
-			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
-				and C.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
-			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
 				and C.product_name like concat('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
@@ -389,6 +386,12 @@
 				and A.operate_status in
 				<foreach item="item" index="index" collection="params.bo.operate_statuses" open="(" separator="," close=")">
 					#{params.bo.operate_statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size()>0">
+				and C.product_manager_number IN 
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator="," close=")">
+					#{params.bo.product_manager_numbers[${index}]}
 				</foreach>
 			</if>
 		</where>

@@ -57,7 +57,7 @@
 		B.final_receivable,
 		B.budget_receivable) AS receivable,
 		A.air_ticket_cost,
-		A.product_cost AS product_cost,
+		C.payable AS product_cost,
 		A.departure_date,
 		A.pk,
 		A.confirm_flg AS order_type,
@@ -83,9 +83,9 @@
 		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		0,
 		A.other_cost) -
-		IF(ISNULL(A.product_cost),
+		IF(ISNULL(C.payable),
 		0,
-		A.product_cost) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost -
+		C.payable) - IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost -
 		COALESCE(X.other_pay, 0) + COALESCE(X.other_receive, 0) AS
 		gross_profit,
 		(IF(X.discount_flg = 'Y',
@@ -96,9 +96,9 @@
 		0,
 		A.air_ticket_cost) - IF(ISNULL(A.other_cost),
 		0,
-		A.other_cost) - IF(ISNULL(A.product_cost),
+		A.other_cost) - IF(ISNULL(C.payable),
 		0,
-		A.product_cost) -
+		C.payable) -
 		IF(ISNULL(A.fy), 0, A.fy) - X.sys_cost - X.sale_cost - COALESCE(X.other_pay, 0) + COALESCE(X.other_receive, 0)) /
 		(IF(A.confirm_flg = 'F',
 		A.adult_count,
@@ -125,6 +125,7 @@
 		LEFT JOIN
 		receivable B
 		ON A.team_number = B.team_number
+		LEFT JOIN view_team_payable C ON A.team_number=C.team_number
 		LEFT JOIN
 		sale_order_ticket_info E ON A.pk = E.order_pk AND E.ticket_index = 1
 		<where>

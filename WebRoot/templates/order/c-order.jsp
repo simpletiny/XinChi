@@ -357,6 +357,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/c-order.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/order/c-order.js?v=1.004"></script>
 </body>
 </html>

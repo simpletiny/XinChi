@@ -42,4 +42,6 @@ public interface PagesDAO {
 	public List<PagesBean> selectByParam(PagesBean bean);
 
 	public void batchUpdate(List<PagesBean> update_pages);
+
+	public List<PagesBean> selectByRoles(PagesBean bean);
 }

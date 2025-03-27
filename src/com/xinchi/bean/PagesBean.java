@@ -28,6 +28,9 @@ public class PagesBean extends SupperBO implements Serializable {
 
 	private List<PagesBean> child_pages;
 
+	// option
+	private List<String> roles;
+
 	public String getPage_url() {
 		return page_url;
 	}
@@ -84,4 +87,11 @@ public class PagesBean extends SupperBO implements Serializable {
 		this.child_pages = child_pages;
 	}
 
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
 }

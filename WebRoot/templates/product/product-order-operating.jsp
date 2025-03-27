@@ -32,8 +32,6 @@
 	color: red;
 	font-weight: bold;
 }
-
-
 </style>
 </head>
 <body>
@@ -132,6 +130,8 @@
 								<th>游客信息</th>
 								<th>备注</th>
 								<th>下载</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -161,6 +161,8 @@
 								<td><a href="javascript:void(0)"
 									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
 									style="cursor: pointer; margin-right: 10px">确认件</a></td>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -266,16 +268,16 @@
 			<table style="width: 1200px;" class="table table-order">
 				<thead>
 					<tr>
-						<th style="width:5%">序</th>
-						<th style="width:15%">订单信息</th>
-						<th style="width:20%">客人名单</th>
-						<th style="width:5%">性别</th>
-						<th style="width:5%">年龄</th>
-						<th style="width:10%">单价</th>
-						<th style="width:10%">团款备注</th>
-						<th style="width:10%">联系方式</th>
-						<th style="width:10%">用房说明</th>
-						<th style="width:10%">销售特请</th>
+						<th style="width: 5%">序</th>
+						<th style="width: 15%">订单信息</th>
+						<th style="width: 20%">客人名单</th>
+						<th style="width: 5%">性别</th>
+						<th style="width: 5%">年龄</th>
+						<th style="width: 10%">单价</th>
+						<th style="width: 10%">团款备注</th>
+						<th style="width: 10%">联系方式</th>
+						<th style="width: 10%">用房说明</th>
+						<th style="width: 10%">销售特请</th>
 					</tr>
 				</thead>
 				<tbody data-bind="foreach:{data:supplier().sale_order_infos,as:'order'}">
@@ -309,7 +311,7 @@
 
 		</div>
 		<hr class="hr-big-dash" />
-		<div class="input-row clearfloat" style="float:right">
+		<div class="input-row clearfloat" style="float: right">
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click:function(){doConfirm()}">确定</button>
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click:function(){cancelConfirm()}">取消</button>
 		</div>

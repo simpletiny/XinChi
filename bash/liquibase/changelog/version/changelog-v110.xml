@@ -1829,6 +1829,46 @@
 			<comment>alter table pages_role</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="44" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE assistant_manager (
+				  assistant_number VARCHAR(10) NOT NULL COMMENT '助理员工号',
+				  manager_number VARCHAR(10) NOT NULL COMMENT '经理员工号',
+				  assistant_type VARCHAR(10) NOT NULL COMMENT '助理种类',
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  pk VARCHAR(45) NOT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '助理对应经理页面';
+	 		 ]]>
+			<comment>CREATE TABLE assistant_manager</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="45" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product_order 
+					ADD COLUMN operator_number VARCHAR(10) NULL DEFAULT NULL COMMENT '操作人' AFTER days;
+	 		 ]]>
+			<comment>ALTER TABLE product_order</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="46" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE product_order_operation 
+				ADD COLUMN product_manager_number VARCHAR(10) NULL DEFAULT NULL COMMENT '产品经理' AFTER special_count,
+				ADD COLUMN operator_number VARCHAR(10) NULL DEFAULT NULL COMMENT '操作人' AFTER product_manager_number;
+	 		 ]]>
+			<comment>ALTER TABLE product_order_operation</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

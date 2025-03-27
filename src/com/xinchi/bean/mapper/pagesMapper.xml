@@ -30,7 +30,20 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 	</resultMap>
-
+	
+	<resultMap id="RoleResultMap" type="com.xinchi.bean.PagesBean">
+		<result column="page_url" property="page_url" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="father_pk" property="father_pk" jdbcType="CHAR" />
+		<result column="order_index" property="order_index" jdbcType="INTEGER" />
+		<result column="page_title" property="page_title" jdbcType="VARCHAR" />
+		<result column="page_class" property="page_class" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
 	<sql id="Base_Column_List">
 
 		page_url,
@@ -221,5 +234,35 @@
 			</if>
 		</where>
 		order by order_index
+	</select>
+	<select id="selectByRoles" parameterType="com.xinchi.bean.PagesBean" resultMap="RoleResultMap">
+		SELECT 		
+		    A.page_url,
+		    B.level,
+		    B.father_pk,
+		    B.order_index,
+		    B.page_title,
+		    B.page_class,
+		    B.pk,
+		    B.create_user,
+		    B.create_time,
+		    B.update_user,
+		    B.update_time
+		FROM
+		    pages_role A
+		        LEFT JOIN
+		    pages B ON A.page_pk = B.pk
+            LEFT JOIN base_data C ON A.role = C.code and C.type='ROLE'
+            
+		<where>
+			<if test="roles != null and roles.size()>0">
+				A.role in
+				<foreach item="item" collection="roles" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		 group by B.level,B.pk,A.page_url
+         order by C.order_index
 	</select>
 </mapper>

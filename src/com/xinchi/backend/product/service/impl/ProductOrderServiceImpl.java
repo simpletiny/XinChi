@@ -41,6 +41,7 @@ import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.tools.Page;
 
 import net.sf.json.JSONArray;
@@ -161,7 +162,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 			productOrder.setComment(comment);
 
 			productOrder.setStandard_flg(standard_flg);
-
+			productOrder.setOperator_number(SimpletinyUser.user().getUser_number());
 			dao.insert(productOrder);
 		}
 		// 生成产品订单名单信息

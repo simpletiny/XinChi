@@ -50,6 +50,12 @@ public class PagesDAOImpl extends SqlSessionDaoSupport implements PagesDAO {
 	}
 
 	@Override
+	public List<PagesBean> selectByRoles(PagesBean bean) {
+		List<PagesBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.PagesMapper.selectByRoles", bean);
+		return list;
+	}
+
+	@Override
 	public void batchUpdate(List<PagesBean> list) {
 		daoUtil.updateBOList("com.xinchi.bean.mapper.PagesMapper.updateByPrimaryKey", list);
 

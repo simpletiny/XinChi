@@ -19,6 +19,8 @@ import com.xinchi.backend.product.service.ProductOrderTeamNumberService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.ticket.service.FlightService;
 import com.xinchi.backend.ticket.service.PassengerTicketInfoService;
+import com.xinchi.backend.user.service.AssistantManagerService;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.DropOffBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.OrderDto;
@@ -217,6 +219,9 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	private List<ProductOrderOperationBean> operations;
 
+	@Autowired
+	private AssistantManagerService assistantManagerService;
+
 	public String searchProductOrderOperationByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -225,7 +230,20 @@ public class ProductOrderOperationAction extends BaseAction {
 			operate_option = new ProductOrderOperationBean();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			operate_option.setCreate_user(sessionBean.getUser_number());
+
+			List<String> product_manager_numbers = new ArrayList<>();
+			product_manager_numbers.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					product_manager_numbers.add(amb.getManager_number());
+				}
+			}
+			operate_option.setProduct_manager_numbers(product_manager_numbers);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -264,14 +282,7 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String confirmOperation() {
-		String[] o_pks = operate_pks.split(",");
-		for (String operate_pk : o_pks) {
-			ProductOrderOperationBean operation = service.selectByPrimaryKey(operate_pk);
-			operation.setStatus("Y");
-			service.update(operation);
-		}
-
-		resultStr = SUCCESS;
+		resultStr = service.confirmOperation(operate_pks);
 		return SUCCESS;
 	}
 
@@ -360,7 +371,19 @@ public class ProductOrderOperationAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			drop_off.setClient_number(sessionBean.getUser_number());
+			List<String> client_numbers = new ArrayList<>();
+			client_numbers.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					client_numbers.add(amb.getManager_number());
+				}
+			}
+			drop_off.setClient_numbers(client_numbers);
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 

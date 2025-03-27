@@ -25,7 +25,6 @@ var OrderContext = function() {
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		startLoadingIndicator("加载中...");
 		$.getJSON(self.apiurl + 'product/searchDropOff', param, function(data) {
-			console.log(data.drop_offs);
 			for (var i = 0; i < data.drop_offs.length; i++) {
 				var obj = new Object();
 				var info = data.drop_offs[i];

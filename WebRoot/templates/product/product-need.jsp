@@ -93,7 +93,7 @@
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px"
 										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="order_option.product_manager_number"></select>
+										name="order_option.product_manager_numbers"></select>
 								</div>
 							</div>
 						</s:if>
@@ -146,7 +146,7 @@
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status+';'+$data.standard_flg+';'+$data.departure_date+';'+$data.product_name+';'+$data.product_model}, checked: $root.chosenOrders" /></td>
+									data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
 								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
@@ -411,6 +411,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.006"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.007"></script>
 </body>
 </html>

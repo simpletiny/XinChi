@@ -143,9 +143,8 @@ tr td {
 								<th>票务需求</th>
 								<th>出票</th>
 								<th>订单备注</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>产品经理</th>
-								</s:if>
+								<th>操作人</th>
+								<th>产品经理</th> 
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -184,9 +183,8 @@ tr td {
 									data-bind="text: $data.air_comment, click:function(){msg($data.air_comment)}"></a></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfos">查看</a></td>
 								<td><a href="javascript:void(0)" data-bind="text: $data.comment, click:function(){msg($data.comment)}"></a></td>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.product_manager"></td>
-								</s:if>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -240,7 +238,7 @@ tr td {
 						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.cancel_flg == "Y" -->
-						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<td style="color: red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>

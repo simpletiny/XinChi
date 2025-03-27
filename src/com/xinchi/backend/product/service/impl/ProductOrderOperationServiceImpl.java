@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.tools.Page;
 import com.xinchi.tools.PropertiesUtil;
 
@@ -330,7 +333,7 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 				sale_order.setPk(order.getPk());
 				sale_order.setProduct_cost(value);
 				sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-						ResourcesConstants.ORDER_OPERATE_STATUS_YES));
+						ResourcesConstants.ORDER_OPERATE_STATUS_OPERATING));
 				orderDao.update(sale_order);
 			}
 
@@ -352,6 +355,8 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			poo.setOff_day(off_day);
 			poo.setLand_day(land_day);
 			poo.setPassenger_captain(passenger_captain);
+			poo.setOperator_number(SimpletinyUser.user().getUser_number());
+			poo.setProduct_manager_number(product_order.getProduct_manager_number());
 			dao.insert(poo);
 
 			// 生成应付款
@@ -651,6 +656,8 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			poo.setOff_day(off_day);
 			poo.setLand_day(land_day);
 			poo.setPassenger_captain(passenger_captain);
+			poo.setOperator_number(SimpletinyUser.user().getUser_number());
+			poo.setProduct_manager_number(product_order.getProduct_manager_number());
 			dao.insert(poo);
 
 			// 删除之前的应付款
@@ -741,7 +748,6 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	public String deleteOperation(String team_numbers) {
 		String[] t_ns = team_numbers.split(",");
 		for (String t_n : t_ns) {
-
 			// 如果是老数据，订单号是团号的，T0****
 			if (t_n.startsWith("N")) {
 				OrderDto order = orderDao.selectByTeamNumber(t_n);
@@ -808,9 +814,8 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	@Override
 	public String finalOperation(String operate_pk, BigDecimal final_supplier_cost, String json) {
 		ProductOrderOperationBean operation = dao.selectByPrimaryKey(operate_pk);
-		operation.setStatus("F");
+		operation.setStatus(ResourcesConstants.ORDER_OPERATE_STATUS_FINAL);
 		operation.setFinal_supplier_cost(final_supplier_cost);
-
 		dao.update(operation);
 
 		// 更新应付款
@@ -863,6 +868,28 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 
 			}
 		}
+		// 更新销售订单产品端操作状态
+		List<ProductOrderOperationBean> operations = dao.selectByTeamNumber(operation.getTeam_number());
+		boolean all_confirmed = true;
+		for (ProductOrderOperationBean o : operations) {
+			if (!o.getStatus().equals(ResourcesConstants.ORDER_OPERATE_STATUS_FINAL)) {
+				all_confirmed = false;
+				break;
+			}
+		}
+		if (all_confirmed) {
+			List<ProductOrderTeamNumberBean> potns = productOrderTeamNumberDao
+					.selectByOrderNumber(operation.getTeam_number());
+			for (ProductOrderTeamNumberBean potn : potns) {
+				OrderDto order = orderDao.selectByTeamNumber(potn.getTeam_number());
+				// 更新订单状态
+				SaleOrderBean sale_order = new SaleOrderBean();
+				sale_order.setPk(order.getPk());
+				sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+						ResourcesConstants.ORDER_OPERATE_STATUS_FINAL));
+				orderDao.update(sale_order);
+			}
+		}
 		return SUCCESS;
 	}
 
@@ -885,9 +912,8 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 		}
 
 		// 更新产品订单操作
-		operation.setStatus("Y");
+		operation.setStatus(ResourcesConstants.ORDER_OPERATE_STATUS_YES);
 		operation.setFinal_supplier_cost(BigDecimal.ZERO);
-
 		dao.update(operation);
 
 		// 更新应付款
@@ -903,12 +929,10 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			payableDao.update(payable);
 		}
 
-		// 更新每个订单的应付款
-
 		if (null == potns || potns.size() == 0)
 			return SUCCESS;
-
 		for (ProductOrderTeamNumberBean potn : potns) {
+			// 更新每个订单的应付款
 			PayableOrderBean option = new PayableOrderBean();
 			option.setTeam_number(potn.getTeam_number());
 			option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
@@ -920,6 +944,14 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 				po.setFinal_payable(BigDecimal.ZERO);
 				payableOrderDao.update(po);
 			}
+			// 更新每个订单的产品端操作状态。
+			OrderDto order = orderDao.selectByTeamNumber(potn.getTeam_number());
+			// 更新订单状态
+			SaleOrderBean sale_order = new SaleOrderBean();
+			sale_order.setPk(order.getPk());
+			sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+					ResourcesConstants.ORDER_OPERATE_STATUS_YES));
+			orderDao.update(sale_order);
 		}
 
 		return SUCCESS;
@@ -940,6 +972,44 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	@Override
 	public List<PayableOrderBean> selectPayableOrderByTeamNumber(String team_number) {
 		return payableOrderDao.selectByTeamNumber(team_number);
+	}
+
+	@Override
+	public String confirmOperation(String operate_pks) {
+		String[] o_pks = operate_pks.split(",");
+
+		Set<String> product_order_numbers = new HashSet<>();
+		for (String operate_pk : o_pks) {
+			ProductOrderOperationBean operation = dao.selectByPrimaryKey(operate_pk);
+			operation.setStatus(ResourcesConstants.ORDER_OPERATE_STATUS_YES);
+			dao.update(operation);
+			product_order_numbers.add(operation.getTeam_number());
+		}
+
+		for (String product_order_number : product_order_numbers) {
+			List<ProductOrderOperationBean> operations = dao.selectByTeamNumber(product_order_number);
+			boolean all_confirmed = true;
+			for (ProductOrderOperationBean operation : operations) {
+				if (operation.getStatus().equals(ResourcesConstants.ORDER_OPERATE_STATUS_OPERATING)) {
+					all_confirmed = false;
+					break;
+				}
+			}
+			if (all_confirmed) {
+				List<ProductOrderTeamNumberBean> potns = productOrderTeamNumberDao
+						.selectByOrderNumber(product_order_number);
+				for (ProductOrderTeamNumberBean potn : potns) {
+					OrderDto order = orderDao.selectByTeamNumber(potn.getTeam_number());
+					// 更新订单状态
+					SaleOrderBean sale_order = new SaleOrderBean();
+					sale_order.setPk(order.getPk());
+					sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
+							ResourcesConstants.ORDER_OPERATE_STATUS_YES));
+					orderDao.update(sale_order);
+				}
+			}
+		}
+		return SUCCESS;
 	}
 
 }

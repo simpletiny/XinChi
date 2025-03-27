@@ -21,8 +21,10 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
 import com.xinchi.backend.sys.service.BaseDataService;
 import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.backend.user.service.AssistantManagerService;
 import com.xinchi.bean.AirOtherPaymentDto;
 import com.xinchi.bean.AirServiceFeeDto;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductAirTicketBean;
@@ -339,6 +341,9 @@ public class ProductAction extends BaseAction {
 
 	private List<ProductNeedDto> productOrders;
 
+	@Autowired
+	private AssistantManagerService assistantManagerService;
+
 	/**
 	 * 搜索产品订单
 	 * 
@@ -352,14 +357,25 @@ public class ProductAction extends BaseAction {
 			order_option = new ProductNeedDto();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			order_option.setProduct_manager_number(sessionBean.getUser_number());
+			List<String> product_manager_numbers = new ArrayList<>();
+			product_manager_numbers.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					product_manager_numbers.add(amb.getManager_number());
+				}
+			}
+			order_option.setProduct_manager_numbers(product_manager_numbers);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("bo", order_option);
 		page.setParams(params);
-
 		productOrders = productOrderService.selectNeedByPage(page);
 		return SUCCESS;
 	}

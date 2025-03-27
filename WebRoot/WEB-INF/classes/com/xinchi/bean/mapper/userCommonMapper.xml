@@ -93,7 +93,7 @@
 			<if test="params.bo.user_roles != null and params.bo.user_roles !=''">
 				and B.user_role like CONCAT('%',#{params.bo.user_roles,jdbcType=VARCHAR},'%')
 			</if>
-			and A.user_number not in ('N00000','OT')
+			and A.user_number not in ('N00000','OT','N00001')
 		</where>
 		ORDER BY delete_flg,user_number
 	</select>

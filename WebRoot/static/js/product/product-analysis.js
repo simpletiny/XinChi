@@ -14,7 +14,9 @@ var ProductContext = function() {
 	});
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
 		self.users(data.users);
 	});
 

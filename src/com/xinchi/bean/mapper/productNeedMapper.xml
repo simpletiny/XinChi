@@ -39,7 +39,8 @@
 		A.departure_date,
 		A.adult_count,
 		A.special_count,
-		A.sale_name AS sale_name,
+		A.sale_name
+		AS sale_name,
 		A.product_manager_number,
 		A.operate_flg,
 		C.user_name AS product_manager,
@@ -50,18 +51,16 @@
 		A.lock_flg,
 		A.name_confirm_status,
 		A.standard_flg,
-       	if(A.confirm_flg='F',A.final_receivable, A.receivable) As receivable
+		if(A.confirm_flg='F',A.final_receivable, A.receivable) As receivable
 		from
 		budget_order_view A
-		LEFT JOIN product B ON A.product_pk=B.pk
+		LEFT JOIN product B ON
+		A.product_pk=B.pk
 		LEFT
 		JOIN user_base C ON A.product_manager_number =
 		C.user_number
 		<where>
 			and A.confirm_flg in ('Y','F') and (A.final_type is null or A.final_type!=4) and A.independent_flg != 'A'
-			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
-				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
-			</if>
 			<if test="params.bo.product_model!= null and params.bo.product_model !=''">
 				and B.product_model like CONCAT('%',#{params.bo.product_model,jdbcType=VARCHAR},'%')
 			</if>
@@ -83,7 +82,13 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size() > 0 and params.bo.product_manager_numbers[0] != ''">
+				AND A.product_manager_number IN
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator="," close=")">
+					#{params.bo.product_manager_numbers[${index}]}
+				</foreach>
+			</if>
 		</where>
-		ORDER BY A.departure_date
+		ORDER BY A.departure_date,A.product_name,product_model
 	</select>
 </mapper>

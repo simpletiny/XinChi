@@ -105,8 +105,10 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String product_managers;
+
 	public String updateUserRoles() {
-		resultStr = userService.updateUserRoles(user_pk, user_roles);
+		resultStr = userService.updateUserRoles(user_pk, user_roles, product_managers);
 		return SUCCESS;
 	}
 
@@ -287,6 +289,14 @@ public class UserAction extends BaseAction {
 
 	public void setCredit_limit(BigDecimal credit_limit) {
 		this.credit_limit = credit_limit;
+	}
+
+	public String getProduct_managers() {
+		return product_managers;
+	}
+
+	public void setProduct_managers(String product_managers) {
+		this.product_managers = product_managers;
 	}
 
 }

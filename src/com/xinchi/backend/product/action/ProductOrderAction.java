@@ -1,5 +1,6 @@
 package com.xinchi.backend.product.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.product.service.ProductOrderService;
+import com.xinchi.backend.user.service.AssistantManagerService;
 import com.xinchi.bean.AirTicketNameListBean;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductOrderNameBean;
@@ -53,6 +56,9 @@ public class ProductOrderAction extends BaseAction {
 
 	private ProductOrderBean order;
 
+	@Autowired
+	private AssistantManagerService assistantManagerService;
+
 	public String searchProductOrderByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -62,7 +68,19 @@ public class ProductOrderAction extends BaseAction {
 			order = new ProductOrderBean();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			order.setProduct_manager_number(sessionBean.getUser_number());
+			List<String> product_manager_numbers = new ArrayList<>();
+			product_manager_numbers.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					product_manager_numbers.add(amb.getManager_number());
+				}
+			}
+			order.setProduct_manager_numbers(product_manager_numbers);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -157,7 +175,19 @@ public class ProductOrderAction extends BaseAction {
 	public String searchProductOrderNameByPage() {
 		UserSessionBean user = SimpletinyUser.user();
 		if (!SimpletinyUser.isAdmin()) {
-			name_option.setProduct_manager_number(user.getUser_number());
+			List<String> product_manager_numbers = new ArrayList<>();
+			product_manager_numbers.add(user.getUser_number());
+			// 如果是产品助理
+			if (user.getUser_roles().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(user.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					product_manager_numbers.add(amb.getManager_number());
+				}
+			}
+			name_option.setProduct_manager_numbers(product_manager_numbers);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();

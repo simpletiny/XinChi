@@ -75,6 +75,7 @@ public class ResourcesConstants {
 	public static String USER_ROLE_CASHIER = "CASHIER";
 	public static String USER_ROLE_TICKET = "TICKET";
 	public static String USER_ROLE_SALE_ASSISTANT = "SASSISTANT";
+	public static String USER_ROLE_PRODUCT_ASSISTANT = "PASSISTANT";
 
 	// 团队状态
 	public static String TEAM_STATUS_BEFORE = "未出团";
@@ -335,8 +336,13 @@ public class ResourcesConstants {
 	public static String ORDER_OPERATE_STATUS_AIR = "A";
 	// 产品订单状态
 	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
-	// 操作中/已操作
-	public static String ORDER_OPERATE_STATUS_YES = "I";
+	// 操作中
+	public static String ORDER_OPERATE_STATUS_OPERATING = "I";
+	// 已操作
+	public static String ORDER_OPERATE_STATUS_YES = "Y";
+	// 已决算
+	public static String ORDER_OPERATE_STATUS_FINAL = "F";
+
 	// 票务端
 	// 未操作
 	public static String AIR_OPERATE_STATUS_NO = "N";

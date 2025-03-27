@@ -93,7 +93,7 @@ public interface UserService extends BaseService {
 	public UserCommonBean selectUserCommonByPk(String user_pk);
 
 	@LogDescription(des = "修改用户角色")
-	public String updateUserRoles(String user_pk, String user_roles);
+	public String updateUserRoles(String user_pk, String user_roles, String product_managers);
 
 	public String checkPassword(UserCommonBean ucb);
 

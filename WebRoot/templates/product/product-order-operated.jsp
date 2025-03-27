@@ -143,6 +143,8 @@ tr td {
 								<th>联系方式</th>
 								<th>备注</th>
 								<th>下载</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -177,6 +179,8 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
 									style="cursor: pointer; margin-right: 10px">确认件</a></td>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -414,7 +418,7 @@ tr td {
 						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.cancel_flg == "Y" -->
-						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<td style="color: red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
@@ -461,8 +465,7 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>

@@ -37,7 +37,9 @@ var OrderContext = function() {
 
 	// 获取用户信息
 	self.users = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
 		self.users(data.users);
 	});
 
@@ -149,8 +151,8 @@ var OrderContext = function() {
 						startLoadingIndicator("解锁中...");
 						var param = "";
 						for (var i = 0; i < self.chosenOrders().length; i++) {
-							var inner_data = self.chosenOrders()[i].split(";");
-							var team_number = inner_data[2];
+							var inner_data = self.chosenOrders()[i];
+							var team_number = inner_data.team_number;
 							param += "team_numbers=" + team_number + "&";
 						}
 						$.ajax({
@@ -162,6 +164,7 @@ var OrderContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOrders.removeAll();
+								$("#chk-all").prop("checked", false);
 							} else {
 								fail_msg("解锁失败，请联系管理员！");
 							}
@@ -183,17 +186,17 @@ var OrderContext = function() {
 		} else {
 
 			// 判断是否是相同产品
-			var data = self.chosenOrders()[0].split(";");
-			var product_pk = data[1];
-			var departure_date = data[6];
+			var data = self.chosenOrders()[0];
+			var product_pk = data.product_pk;
+			var departure_date = data.departure_date;
 			var team_numbers = new Array();
 			for (var i = 0; i < self.chosenOrders().length; i++) {
-				var inner_data = self.chosenOrders()[i].split(";");
-				var inner_product_pk = inner_data[1];
-				var inner_operate_flg = inner_data[3];
-				var inner_name_confirm_status = inner_data[4];
-				var inner_departure_date = inner_data[6];
-				var inner_team_number = inner_data[2];
+				var inner_data = self.chosenOrders()[i];
+				var inner_product_pk = inner_data.product_pk;
+				var inner_operate_flg = inner_data.operate_flg;
+				var inner_name_confirm_status = inner_data.name_confirm_status;
+				var inner_departure_date = inner_data.departure_date;
+				var inner_team_number = inner_data.team_number;
 				team_numbers.push(inner_team_number);
 
 				if (product_pk != inner_product_pk) {
@@ -217,11 +220,12 @@ var OrderContext = function() {
 				}
 			}
 			startLoadingSimpleIndicator("检测中……");
-			var product_name = data[7];
-			var product_model = data[8];
-
+			var product_name = data.product_name;
+			var product_model = data.product_model;
+			const product_manager_number = data.product_manager_number;
 			var param = 'product_name=' + encodeURIComponent(product_name) + '&product_model='
-					+ encodeURIComponent(product_model) + '&departure_date=' + encodeURIComponent(departure_date);
+					+ encodeURIComponent(product_model) + '&departure_date=' + encodeURIComponent(departure_date)
+					+ '&product_manager_number=' + product_manager_number;
 
 			$.ajax({
 				type : "POST",
@@ -352,6 +356,7 @@ var OrderContext = function() {
 						if (str == "success") {
 							self.refresh();
 							self.chosenOrders.removeAll();
+							$("chk-all").prop("checked", false);
 						} else {
 							fail_msg("提交失败，请联系管理员！");
 						}
@@ -491,16 +496,12 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.push(order.pk + ";" + order.product_pk + ";" + order.team_number + ';' + order.operate_flg
-					+ ';' + order.name_confirm_status + ';' + order.standard_flg + ';' + order.departure_date + ';'
-					+ order.product_name + ';' + order.product_model);
+			ctx.chosenOrders.push(order);
 		}
 	} else {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.remove(order.pk + ";" + order.product_pk + ";" + order.team_number + ';'
-					+ order.operate_flg + ';' + order.name_confirm_status + ';' + order.standard_flg + ';'
-					+ order.departure_date + ';' + order.product_name + ';' + order.product_model);
+			ctx.chosenOrders.remove(order);
 		}
 	}
 }

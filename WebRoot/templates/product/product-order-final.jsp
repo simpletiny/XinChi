@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -15,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
-#table-supplier th,#table-supplier td {
+#table-supplier th, #table-supplier td {
 	text-align: center;
 }
 
@@ -87,7 +86,8 @@ tr td {
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
-									<select class="form-control" style="height: 34px" data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
+									<select class="form-control" style="height: 34px"
+										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
 										name="operate_option.create_user"></select>
 								</div>
 							</div>
@@ -144,12 +144,16 @@ tr td {
 								<th>联系方式</th>
 								<th>备注</th>
 								<th>下载</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
 							<tr>
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_employee_pk}, checked: $root.chosenOperations" /></td>
-								<td ><a data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}" ></a></td>
+								<td><input type="checkbox"
+									data-bind="attr: {'value': $data.pk+';'+$data.team_number+';'+$data.supplier_employee_pk}, checked: $root.chosenOperations" /></td>
+								<td><a
+									data-bind="text: $data.team_number+'&nbsp;&nbsp;&nbsp;&nbsp;'+$data.operate_index+'/'+$data.supplier_count, click:function(){$root.checkOrders($data.team_number)}"></a></td>
 								<!-- ko if: $data.single_flg == "N" -->
 								<td><a href="javascript:void(0)"
 									data-bind="text: $root.singleMapping[$data.single_flg], click:function(){$root.checkOrders($data.team_number)}"></a></td>
@@ -173,7 +177,11 @@ tr td {
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td></td>
 								<td></td>
-								<td><a href="javascript:void(0)" data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}" style="cursor:pointer;margin-right:10px">确认件</a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
+									style="cursor: pointer; margin-right: 10px">确认件</a></td>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -216,9 +224,11 @@ tr td {
 					<tbody data-bind="foreach:productSuppliers">
 						<tr>
 							<td st="index" data-bind="text:$data.supplier_index"></td>
-							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name" onclick="choseSupplierEmployee(event)" /> <input type="text"
-								data-bind="value:$data.supplier_employee_pk" st="supplier-pk" style="display: none" /></td>
-							<td><input st="supplier-product-name" maxlength="10" data-bind="value:$data.supplier_product_name" type="text" /></td>
+							<td><input type="text" st="supplier-name" data-bind="value:$data.supplier_employee_name"
+								onclick="choseSupplierEmployee(event)" /> <input type="text" data-bind="value:$data.supplier_employee_pk"
+								st="supplier-pk" style="display: none" /></td>
+							<td><input st="supplier-product-name" maxlength="10" data-bind="value:$data.supplier_product_name"
+								type="text" /></td>
 							<td><input st="supplier-cost" data-bind="value:$data.supplier_cost" type="number" /></td>
 							<td><input st="land-day" data-bind="value:$data.land_day" type="number" /></td>
 							<td><input st="pick-type" data-bind="value:$data.pick_type" maxlength="50" type="text" /></td>
@@ -234,7 +244,8 @@ tr td {
 					<tbody>
 						<tr>
 							<td st="index">1</td>
-							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text" st="supplier-pk" style="display: none" /></td>
+							<td><input type="text" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"
+								st="supplier-pk" style="display: none" /></td>
 							<td><input st="supplier-product-name" maxlength="10" type="text" /></td>
 							<td><input st="supplier-cost" type="number" /></td>
 							<td><input st="land-day" type="number" /></td>
@@ -254,7 +265,8 @@ tr td {
 			</div>
 
 			<div style="margin-top: 50px; width: 700px; float: right">
-				<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:function(){cancelOperate()}">取消</button>
+				<button type="submit" style="float: right" class="btn btn-green col-md-1"
+					data-bind="click:function(){cancelOperate()}">取消</button>
 				<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:function(){doOperate()}">确定</button>
 			</div>
 		</div>
@@ -317,7 +329,7 @@ tr td {
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
-	<div id="passengers-check" style="display: none; width: 800px;height:650px;overflow-y: scroll;">
+	<div id="passengers-check" style="display: none; width: 800px; height: 650px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">

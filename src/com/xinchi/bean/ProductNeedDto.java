@@ -27,6 +27,7 @@ public class ProductNeedDto extends SupperBO implements Serializable {
 	private String sale_name;
 	private String product_manager;
 	private String product_manager_number;
+	private List<String> product_manager_numbers;
 	private String treat_comment;
 	private String air_info;
 	private String product_model;
@@ -235,6 +236,14 @@ public class ProductNeedDto extends SupperBO implements Serializable {
 
 	public void setReceivable(BigDecimal receivable) {
 		this.receivable = receivable;
+	}
+
+	public List<String> getProduct_manager_numbers() {
+		return product_manager_numbers;
+	}
+
+	public void setProduct_manager_numbers(List<String> product_manager_numbers) {
+		this.product_manager_numbers = product_manager_numbers;
 	}
 
 }

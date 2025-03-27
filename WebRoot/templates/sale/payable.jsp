@@ -198,40 +198,9 @@
 								<td data-bind="text: $data.product"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.team_number"></td>
-
-								<td st="budget" style="display: none" data-bind="text:$data.budget_payable" class="rmb"></td>
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="final" style="display: none" data-bind="text:$data.final_payable" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="final" style="display: none">未决算</td>
-								<!-- /ko -->
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="all" data-bind="text:$data.final_payable" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="all" data-bind="text:$data.budget_payable" class="rmb"></td>
-								<!-- /ko -->
-
-								<td data-bind="text: $data.paid"></td>
-
-								<td st="budget" style="display: none" data-bind="text:$data.budget_balance" class="rmb"></td>
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="final" style="display: none" data-bind="text:$data.final_balance" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="final" style="display: none">未决算</td>
-								<!-- /ko -->
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="all" data-bind="text:$data.final_balance" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="all" data-bind="text:$data.budget_balance" class="rmb"></td>
-								<!-- /ko -->
+								<td st="payable" data-bind="attr:{'final-flg':$data.final_flg,'budget':$data.budget_payable,'final':$data.final_payable}" class="rmb"></td>
+								<td data-bind="text: $data.paid" class="rmb"></td>
+								<td st="balance" data-bind="attr:{'final-flg':$data.final_flg,'budget':$data.budget_balance,'final':$data.final_balance}" class="rmb"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
@@ -753,6 +722,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/sale/payable.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/sale/payable.js?v=1.003"></script>
 </body>
 </html>

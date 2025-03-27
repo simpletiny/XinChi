@@ -76,8 +76,12 @@
 			<if test="params.bo.first_ticket_date != null and params.bo.first_ticket_date !=''">
 				and A.first_ticket_date = #{params.bo.first_ticket_date,jdbcType=VARCHAR}
 			</if>
-			<if test="params.bo.client_number != null and params.bo.client_number !=''">
-				and A.client_number = #{params.bo.client_number,jdbcType=VARCHAR}
+			<if test="params.bo.client_numbers != null and params.bo.client_numbers.size()>0">
+				and A.client_number IN
+				<foreach item="item" index="index" collection="params.bo.client_numbers" open="(" separator=","
+					close=")">
+					#{params.bo.client_numbers[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.from_city != null and params.bo.from_city !=''">
 				and A.first_start_city like CONCAT('%', #{params.bo.from_city,jdbcType=VARCHAR},'%')

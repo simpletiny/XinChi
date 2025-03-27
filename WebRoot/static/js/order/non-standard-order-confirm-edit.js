@@ -219,6 +219,7 @@ var OrderContext = function() {
 			url : url,
 			data : data
 		}).success(function(str) {
+			console.log(str);
 			endLoadingIndicator();
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/order/c-order.jsp";

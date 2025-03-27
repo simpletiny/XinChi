@@ -94,7 +94,6 @@ public class TicketAction extends BaseAction {
 		} else if (product_order_number.startsWith("N")) {
 			order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(product_order_number);
 		}
-
 		return SUCCESS;
 	}
 

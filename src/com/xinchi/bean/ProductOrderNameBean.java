@@ -68,6 +68,8 @@ public class ProductOrderNameBean extends SupperBO implements Serializable {
 	private String product_model;
 	private String product_name;
 
+	private List<String> product_manager_numbers;
+
 	private List<String> operate_statuses;
 
 	public String getProduct_order_number() {
@@ -316,6 +318,14 @@ public class ProductOrderNameBean extends SupperBO implements Serializable {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public List<String> getProduct_manager_numbers() {
+		return product_manager_numbers;
+	}
+
+	public void setProduct_manager_numbers(List<String> product_manager_numbers) {
+		this.product_manager_numbers = product_manager_numbers;
 	}
 
 }

@@ -99,7 +99,11 @@ let selectPages = function(chk){
 		}else{
 			addedPages.add(pk);
 		}
-		removedPages.delete(father_pk);
+		if(removedPages.has(father_pk)){
+			removedPages.delete(father_pk);
+			$("h2[data-pk='"+father_pk+"']").find("small.first-page").text($("h3 span[data-pk='"+initialFirstPages.get(father_pk)+"']").text());
+		}
+		
 	}else{
 		if(initialPages.has(pk)){
 			removedPages.add(pk);
@@ -215,7 +219,7 @@ let save = function() {
 				}).success(function(str) {
 					endLoadingIndicator();
 					if (str == "success") {
-						init_map();
+						ctx.refreshRolePages();
 						endLoadingIndicator();
 						showButton();
 					} else {
@@ -249,6 +253,25 @@ let validateBeforeSave = function(){
 		});
 		if(need_check!==""){
 			const msg = "请选择["+need_check.RTrim(",")+"]的首页指向页面！";
+			fail_msg(msg);
+			return false;
+		}
+	}
+	
+	if(addedPages.size>0&&removedPages.size>0){
+		const father_pk1 = $("h3 input[type='checkbox']").filter(function(){return addedPages.has($(this).attr('data-pk'))}).map(function(){return $(this).attr("father-pk")}).get();
+		const father_pk2 = $("h3 input[type='checkbox']").filter(function(){return removedPages.has($(this).attr('data-pk'))}).map(function(){return $(this).attr("father-pk")}).get();
+		const father_pk = father_pk1.filter(item => father_pk2.contains(item));
+		let need_check = "";
+		$(father_pk).each(function(index,pk){
+			father=	$("h2[data-pk='"+pk+"']");
+			father_title = father.find("small").text();
+			if(!father.next().find("h3 input[page-title='"+father_title+"']").is(":checked")){
+				need_check +=father_title+",";
+			}
+		});
+		if(need_check!=""){
+			const msg = "["+need_check.RTrim(",")+"]的首页指向页面未选中！";
 			fail_msg(msg);
 			return false;
 		}

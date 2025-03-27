@@ -127,35 +127,17 @@ var ProductBoxContext = function() {
 			var independent_flg = data[4];
 
 			// 检测是否能够修改订单
-			startLoadingIndicator("检测中……");
-			var data = "order_pk=" + order_pk;
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'order/checkCanBeEdit',
-				data : data
-			}).success(
-					function(str) {
-						endLoadingIndicator();
-						if (str == "success") {
-							if (standard_flg == "Y") {
-								window.location.href = self.apiurl
-										+ "templates/order/standard-order-confirm-edit.jsp?key=" + order_pk;
-							} else if (standard_flg == "N") {
-								if (independent_flg == "A") {
-									window.location.href = self.apiurl
-											+ "templates/order/only-ticket-order-confirm-edit.jsp?key=" + order_pk
-											+ "&type=edit";
-								} else {
-									window.location.href = self.apiurl
-											+ "templates/order/non-standard-order-confirm-edit.jsp?key=" + order_pk;
-								}
-
-							}
-						} else {
-							fail_msg(str);
-						}
-					});
-
+			if (standard_flg == "Y") {
+				window.location.href = self.apiurl + "templates/order/standard-order-confirm-edit.jsp?key=" + order_pk;
+			} else if (standard_flg == "N") {
+				if (independent_flg == "A") {
+					window.location.href = self.apiurl + "templates/order/only-ticket-order-confirm-edit.jsp?key="
+							+ order_pk + "&type=edit";
+				} else {
+					window.location.href = self.apiurl + "templates/order/non-standard-order-confirm-edit.jsp?key="
+							+ order_pk;
+				}
+			}
 		}
 	}
 
