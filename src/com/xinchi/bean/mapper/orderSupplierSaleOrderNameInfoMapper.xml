@@ -4,6 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderSupplierSaleOrderNameInfoBean">
 		<result column="name_pk" property="name_pk" jdbcType="CHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="final_price" property="final_price" jdbcType="DECIMAL" />
 		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -16,6 +17,7 @@
 
 		name_pk,
 		price,
+		final_price,
 		base_pk,
 		pk,
 		create_user,
@@ -108,6 +110,9 @@
 			</if>
 			<if test="price != null">
 				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="final_price != null">
+				final_price = #{final_price,jdbcType=DECIMAL},
 			</if>
 			<if test="base_pk != null">
 				base_pk = #{base_pk,jdbcType=CHAR},

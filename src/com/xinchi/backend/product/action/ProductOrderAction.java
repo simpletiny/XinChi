@@ -105,6 +105,11 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String updateProductOrder() {
+		resultStr = service.updateProductOrder(order);
+		return SUCCESS;
+	}
+
 	/**
 	 * 检验产品订单下的所有销售订单是否已经锁定
 	 * 

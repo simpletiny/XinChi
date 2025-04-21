@@ -125,39 +125,22 @@ public class DishonestAction extends BaseAction {
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			int response_code = json.getInt("code");
 			String response_msg = json.getString("msg");
+			boolean needHighCheck = false;
 			if (response_code == 200) {
 				JSONObject data = JSONObject.fromObject(json.get("data"));
 				int case_count = data.getInt("caseCount");
+
 				if (case_count == 0) {
-					person_result.setDishonest_flg("N");
+					needHighCheck = true;
 				} else {
 					cases = new ArrayList<>();
 					JSONArray case_list = data.getJSONArray("caseList");
 					Set<String> sign_flgs = new HashSet<>();
 					for (int i = 0; i < case_list.size(); i++) {
-						DishonestLogBean log = new DishonestLogBean();
 						JSONObject current_case = JSONObject.fromObject(case_list.get(i));
-						String case_code = current_case.getString("casecode");
-						// 立案时间
-						String reg_date = current_case.getString("regdate");
-						// 发布时间
-						String publish_date = current_case.getString("publishdate");
-						// 是否下架
-						String sign_flg = current_case.getString("sign").equals("0") ? "Y" : "N";
-						sign_flgs.add(sign_flg);
-						String signal_rating = current_case.getString("signalRating");
-						String court_name = current_case.getString("courtname");
-
-						log.setName(person.getName());
-						log.setId(person.getId());
-						log.setCase_code(case_code);
-						log.setReg_date(reg_date);
-						log.setPublish_date(publish_date);
-						log.setSign_flg(sign_flg);
-						log.setSignal_rating(signal_rating);
-						log.setCourt_name(court_name);
+						DishonestLogBean log = parseCaseToLog(current_case, person);
+						sign_flgs.add(log.getSign_flg());
 						cases.add(log);
-
 						// 保存log到本地数据库
 						dishonestLogService.insert(log);
 					}
@@ -165,21 +148,86 @@ public class DishonestAction extends BaseAction {
 						person_result.setDishonest_flg("Y");
 					} else {
 						person_result.setDishonest_flg("N");
+						needHighCheck = true;
 					}
 				}
-				// 保存为非失信人到本地数据库
-				person_result.setCode(String.valueOf(response_code));
-				person_result.setMsg(response_msg);
-				person_result.setName(person.getName());
-				person_result.setId(person.getId());
-				dishonestPersonService.insert(person_result);
-				person_result.setCases(cases);
+
+				if (needHighCheck) {
+					String highJsonStr = checkHighFromApi(person);
+					JSONObject high_json = JSONObject.fromObject(highJsonStr);
+					int high_response_code = high_json.getInt("code");
+					String high_response_msg = high_json.getString("msg");
+					if (high_response_code == 200) {
+						JSONObject high_data = JSONObject.fromObject(high_json.get("data"));
+						int high_case_count = high_data.getInt("caseCount");
+
+						if (high_case_count == 0) {
+							person_result.setDishonest_flg("N");
+						} else {
+							cases = new ArrayList<>();
+							JSONArray case_list = high_data.getJSONArray("caseList");
+							Set<String> sign_flgs = new HashSet<>();
+							for (int i = 0; i < case_list.size(); i++) {
+								JSONObject current_case = JSONObject.fromObject(case_list.get(i));
+								DishonestLogBean log = parseCaseToLog(current_case, person);
+								sign_flgs.add(log.getSign_flg());
+								cases.add(log);
+								// 保存log到本地数据库
+								dishonestLogService.insert(log);
+							}
+							if (sign_flgs.contains("N")) {
+								person_result.setDishonest_flg("H");
+							} else {
+								person_result.setDishonest_flg("N");
+							}
+						}
+					}
+
+					person_result.setCode(String.valueOf(high_response_code));
+					person_result.setMsg(high_response_msg);
+					person_result.setName(person.getName());
+					person_result.setId(person.getId());
+					dishonestPersonService.insert(person_result);
+					person_result.setCases(cases);
+				} else {
+					// 保存为非失信人到本地数据库
+					person_result.setCode(String.valueOf(response_code));
+					person_result.setMsg(response_msg);
+					person_result.setName(person.getName());
+					person_result.setId(person.getId());
+					dishonestPersonService.insert(person_result);
+					person_result.setCases(cases);
+				}
 			} else {
 				person_result.setCode(String.valueOf(response_code));
 				person_result.setMsg(response_msg);
 			}
 		}
 		return SUCCESS;
+	}
+
+	private DishonestLogBean parseCaseToLog(JSONObject current_case, DishonestPersonBean person) {
+		DishonestLogBean log = new DishonestLogBean();
+		String case_code = current_case.getString("casecode");
+		// 立案时间
+		String reg_date = current_case.getString("regdate");
+		// 发布时间
+		String publish_date = current_case.getString("publishdate");
+		// 是否下架
+		String sign_flg = current_case.getString("sign").equals("0") ? "Y" : "N";
+		String signal_rating = current_case.getString("signalRating");
+		String court_name = current_case.getString("courtname");
+
+		log.setName(person.getName());
+		log.setId(person.getId());
+		log.setCase_code(case_code);
+		log.setReg_date(reg_date);
+		log.setPublish_date(publish_date);
+		log.setSign_flg(sign_flg);
+		log.setSignal_rating(signal_rating);
+		log.setCourt_name(court_name);
+
+		return log;
 	}
 
 	@Autowired
@@ -241,6 +289,42 @@ public class DishonestAction extends BaseAction {
 		} catch (Exception e) {
 			return "none";
 		}
+	}
+
+	private String checkHighFromApi(DishonestPersonBean person) {
+		String cellphone = numberService.generateFakePhoneNumber();
+		String host = "https://jumfrite.market.alicloudapi.com";
+		String path = "/personal/limit-high-consumption";
+		String method = "POST";
+		String appcode = ResourcesConstants.API_APP_CODE;
+		Map<String, String> headers = new HashMap<String, String>();
+		// 最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+		headers.put("Authorization", "APPCODE " + appcode);
+		// 根据API的要求，定义相对应的Content-Type
+		headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		Map<String, String> querys = new HashMap<String, String>();
+		Map<String, String> bodys = new HashMap<String, String>();
+		bodys.put("idcard_number", person.getId());
+		bodys.put("mobile_number", cellphone);
+		bodys.put("name", person.getName());
+
+		try {
+			/**
+			 * 重要提示如下: HttpUtils请从
+			 * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+			 * 下载
+			 *
+			 * 相应的依赖请参照
+			 * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+			 */
+			HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
+			// 获取response的body
+			String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+			return jsonStr;
+		} catch (Exception e) {
+			return "none";
+		}
+
 	}
 
 	public DishonestPersonBean getPerson() {

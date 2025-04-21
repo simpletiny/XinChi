@@ -36,5 +36,7 @@ public interface ProductOrderSupplierSaleOrderDAO {
 
 	public List<OrderSupplierSaleOrderBean> selectByBasePk(String base_pk);
 
+	public List<OrderSupplierSaleOrderBean> selectByParam(OrderSupplierSaleOrderBean option);
+
 	public void deleteByBasePk(String base_pk);
 }

@@ -53,4 +53,6 @@ public interface ProductOrderService extends BaseService {
 
 	public String searchProductOrderTicketStatusByOrderNumber(String product_order_number);
 
+	public String updateProductOrder(ProductOrderBean order);
+
 }

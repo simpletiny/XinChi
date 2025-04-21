@@ -244,6 +244,6 @@ textarea {
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/non-standard-order-creation.js?v=1.005"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.008"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.010"></script>
 </body>
 </html>

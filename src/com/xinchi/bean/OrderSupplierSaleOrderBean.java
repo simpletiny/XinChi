@@ -22,6 +22,9 @@ public class OrderSupplierSaleOrderBean extends SupperBO implements Serializable
 
 	private String base_pk;
 
+	private String final_payable_comment;
+	private String final_comment;
+
 	// DTO
 	private String sale_number;
 	private String sale_name;
@@ -124,6 +127,22 @@ public class OrderSupplierSaleOrderBean extends SupperBO implements Serializable
 
 	public void setSpecial_count(int special_count) {
 		this.special_count = special_count;
+	}
+
+	public String getFinal_payable_comment() {
+		return final_payable_comment;
+	}
+
+	public String getFinal_comment() {
+		return final_comment;
+	}
+
+	public void setFinal_payable_comment(String final_payable_comment) {
+		this.final_payable_comment = final_payable_comment;
+	}
+
+	public void setFinal_comment(String final_comment) {
+		this.final_comment = final_comment;
 	}
 
 }

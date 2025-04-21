@@ -398,6 +398,13 @@
 			<if test='params.bo.zero_flg == null or params.bo.zero_flg !="Y"'>
 				and if(A.final_flg='N',A.budget_balance!=0,A.final_balance!=0)
 			</if>
+			<if test="params.bo.create_users != null and params.bo.create_users.size()>0">
+				and A.create_user in
+				<foreach item="item" index="index" collection="params.bo.create_users" open="(" separator=","
+					close=")">
+					#{params.bo.create_users[${index}]}
+				</foreach>
+			</if>
 		</where>
 
 		<if test='params.bo.sort_type!=null and params.bo.sort_type=="D"'>

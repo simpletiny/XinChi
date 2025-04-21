@@ -126,6 +126,7 @@ var UsersContext = function() {
 		startLoadingSimpleIndicator("保存中");
 		var data = 'user_pk=' + self.chosenUsers()[0] + "&user_roles=" + self.chosenUserRoles() + "&product_managers="
 				+ self.chosenProductManagers();
+
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'user/updateUserRoles',

@@ -55,4 +55,9 @@ public class ProductOrderSupplierSaleOrderDAOImpl extends SqlSessionDaoSupport
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.OrderSupplierSaleOrderMapper.deleteByBasePk", base_pk);
 	}
 
+	@Override
+	public List<OrderSupplierSaleOrderBean> selectByParam(OrderSupplierSaleOrderBean option) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderSupplierSaleOrderMapper.selectByParam", option);
+	}
+
 }

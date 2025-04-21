@@ -1,5 +1,6 @@
 package com.xinchi.backend.payable.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,14 @@ import com.xinchi.backend.accounting.service.AccPaidService;
 import com.xinchi.backend.finance.service.CardService;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.payable.service.PaidService;
+import com.xinchi.backend.user.service.AssistantManagerService;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.CardBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierPaidDetailBean;
 import com.xinchi.bean.WaitingForPaidBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 
@@ -62,6 +64,9 @@ public class PaidAction extends BaseAction {
 
 	private List<SupplierPaidDetailBean> paids;
 
+	@Autowired
+	private AssistantManagerService assistantManagerService;
+
 	public String searchPaidByPage() {
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
@@ -69,8 +74,32 @@ public class PaidAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN) && SimpletinyString.isEmpty(detail.getCreate_user())) {
-			detail.setCreate_user(sessionBean.getUser_number());
+		if (null == detail)
+			detail = new SupplierPaidDetailBean();
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			List<String> create_users = new ArrayList<>();
+			create_users.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					create_users.add(amb.getManager_number());
+				}
+			}
+			// 如果是产品经理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setManager_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					create_users.add(amb.getAssistant_number());
+				}
+			}
+			detail.setCreate_users(create_users);
 		}
 
 		params.put("bo", detail);

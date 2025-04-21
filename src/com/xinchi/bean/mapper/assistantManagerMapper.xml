@@ -140,6 +140,9 @@
 			<if test="assistant_number != null and assistant_number !=''">
 				and assistant_number = #{assistant_number,jdbcType=VARCHAR}
 			</if>
+			<if test="manager_number != null and manager_number !=''">
+				and manager_number = #{manager_number,jdbcType=VARCHAR}
+			</if>
 			<if test="assistant_type != null and assistant_type !=''">
 				and assistant_type = #{assistant_type,jdbcType=VARCHAR}
 			</if>

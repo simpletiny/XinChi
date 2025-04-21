@@ -84,117 +84,104 @@ var OrderContext = function() {
 		} else if (self.chosenOperations().length == 1) {
 
 			startLoadingSimpleIndicator("校验中...");
+			let operation_pk = self.chosenOperations()[0].split(";")[0];
 			var order_number = self.chosenOperations()[0].split(";")[1];
 			var cost = self.chosenOperations()[0].split(";")[2];
 			var supplier_employee_pk = self.chosenOperations()[0].split(";")[3];
-			$("#final-supplier-cost").val(cost);
+
 			self.order_number(order_number);
 			$.ajax({
 				type : "POST",
 				url : self.apiurl + 'product/isAllOrdersLocked',
 				data : "order_number=" + order_number
-			}).success(function(result) {
-				endLoadingIndicator()
-				var str = result.split(",");
-				if (str[0] == "yes") {
-					startLoadingSimpleIndicator("加载中...");
-					var param = "order_number=" + order_number + "&supplier_employee_pk=" + supplier_employee_pk;
-					$.getJSON(self.apiurl + 'product/searchSaleOrderInfoByProductOrderInfo', param, function(data) {
-						self.final_sale_orders(data.sale_orders);
-
-						endLoadingIndicator();
-						finalLayser = $.layer({
-							type : 1,
-							title : ['决算', ''],
-							maxmin : false,
-							closeBtn : [1, true],
-							shadeClose : false,
-							area : ['800px', '600px'],
-							offset : ['', ''],
-							scrollbar : true,
-							page : {
-								dom : '#order-final'
-							},
-							end : function() {
-							}
-						});
-					});
-				} else if (str[0] == "no") {
-					fail_msg("请锁定所有销售订单后继续操作！")
-				} else {
-					fail_msg(str[0]);
-				}
-			});
+			})
+					.success(
+							function(result) {
+								endLoadingIndicator()
+								var str = result.split(",");
+								if (str[0] == "yes") {
+									const order_number = self.chosenOperations()[0].split(";")[1];
+									window.location.href = self.apiurl
+											+ 'templates/product/final-order-operate.jsp?order_number=' + order_number
+											+ "&supplier_employee_pk=" + supplier_employee_pk + "&operation_pk="
+											+ operation_pk;
+								} else if (str[0] == "no") {
+									fail_msg("请锁定所有销售订单后继续操作！")
+								} else {
+									fail_msg(str[0]);
+								}
+							});
 		}
 	};
-	// 确认决算
-	self.doFinal = function() {
-		var cost = $("#final-supplier-cost").val();
-		if (cost.trim() == "") {
-			fail_msg("请填写决算总成本！");
-			return;
-		}
-
-		var current = self.chosenOperations()[0].split(";");
-		var operate_pk = current[0];
-
-		var data = "final_supplier_cost=" + cost + "&operate_pk=" + operate_pk;
-
-		if (self.order_number().indexOf("P") == 0) {
-			var json = '[';
-			var trs = $("#table-order tbody tr");
-			var sum_payable = 0;
-			for (var i = 0; i < trs.length; i++) {
-				var tr = trs[i];
-				var team_number = $(tr).find("input[st='team-number']").val();
-				var team_payable = $(tr).find("input[st='team-payable']").val().trim();
-
-				if (team_payable == "") {
-					fail_msg("请填写" + team_number + "的决算价格!");
-					return;
-				}
-				sum_payable = sum_payable + (team_payable - 0);
-				var oneJson = '{"team_number":"' + team_number + '","team_payable":"' + team_payable + '"}';
-				json += oneJson + ',';
-			}
-			json = json.RTrim(',') + ']';
-
-			if (sum_payable != (cost - 0)) {
-				fail_msg("地接总成本与合计不符！");
-				return;
-			}
-			data += "&json=" + json;
-		}
-
-		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认要决算吗?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
-					layer.close(index);
-					startLoadingIndicator("保存中...");
-					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/finalOperation',
-						data : data
-					}).success(function(str) {
-						endLoadingIndicator();
-						layer.close(finalLayser);
-						if (str == "success") {
-							self.chosenOperations.removeAll();
-							self.refresh();
-						} else {
-							fail_msg(str);
-							self.chosenOperations.removeAll();
-						}
-					});
-				}
-			}
-		});
-	};
+	// // 确认决算
+	// self.doFinal = function() {
+	// var cost = $("#final-supplier-cost").val();
+	// if (cost.trim() == "") {
+	// fail_msg("请填写决算总成本！");
+	// return;
+	// }
+	//
+	// var current = self.chosenOperations()[0].split(";");
+	// var operate_pk = current[0];
+	//
+	// var data = "final_supplier_cost=" + cost + "&operate_pk=" + operate_pk;
+	//
+	// if (self.order_number().indexOf("P") == 0) {
+	// var json = '[';
+	// var trs = $("#table-order tbody tr");
+	// var sum_payable = 0;
+	// for (var i = 0; i < trs.length; i++) {
+	// var tr = trs[i];
+	// var team_number = $(tr).find("input[st='team-number']").val();
+	// var team_payable = $(tr).find("input[st='team-payable']").val().trim();
+	//
+	// if (team_payable == "") {
+	// fail_msg("请填写" + team_number + "的决算价格!");
+	// return;
+	// }
+	// sum_payable = sum_payable + (team_payable - 0);
+	// var oneJson = '{"team_number":"' + team_number + '","team_payable":"' +
+	// team_payable + '"}';
+	// json += oneJson + ',';
+	// }
+	// json = json.RTrim(',') + ']';
+	//
+	// if (sum_payable != (cost - 0)) {
+	// fail_msg("地接总成本与合计不符！");
+	// return;
+	// }
+	// data += "&json=" + json;
+	// }
+	//
+	// $.layer({
+	// area : ['auto', 'auto'],
+	// dialog : {
+	// msg : '确认要决算吗?',
+	// btns : 2,
+	// type : 4,
+	// btn : ['确认', '取消'],
+	// yes : function(index) {
+	// layer.close(index);
+	// startLoadingIndicator("保存中...");
+	// $.ajax({
+	// type : "POST",
+	// url : self.apiurl + 'product/finalOperation',
+	// data : data
+	// }).success(function(str) {
+	// endLoadingIndicator();
+	// layer.close(finalLayser);
+	// if (str == "success") {
+	// self.chosenOperations.removeAll();
+	// self.refresh();
+	// } else {
+	// fail_msg(str);
+	// self.chosenOperations.removeAll();
+	// }
+	// });
+	// }
+	// }
+	// });
+	// };
 	// 删除订单操作
 	self.deleteOperation = function() {
 		if (self.chosenOperations().length == 0) {

@@ -49,4 +49,6 @@ public interface ProductOrderSupplierService extends BaseService {
 	public List<OrderSupplierBean> selectByProductOrderNumber(String product_order_number);
 
 	public OrderSupplierBean selectByOrderPkAndEmployeePk(String pk, String supplier_employee_pk);
+
+	public OrderSupplierBean searchOneOrderSupplier(OrderSupplierBean option);
 }

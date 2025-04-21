@@ -353,22 +353,31 @@ public class UserServiceImpl implements UserService {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
 
-		// 如果之前就包含产品助理角色，则删除对应经理数据
-		if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+		// 如果之前包含产品助理角色，现在不包含，则删除对应经理数据
+		if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)
+				&& !user_roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
 			assistantManagerDao.deleteByAssistantNumber(ubb.getUser_number());
 		}
-		uib.setUser_role(user_roles);
-		infoDao.update(uib);
-		// 如果现在包含产品助理角色，则写入对应的经理数据
-		if (user_roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
-			for (String manager_number : product_managers.split(",")) {
-				AssistantManagerBean amb = new AssistantManagerBean();
-				amb.setAssistant_number(ubb.getUser_number());
-				amb.setManager_number(manager_number);
-				amb.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
-				assistantManagerDao.insert(amb);
+		// 有选择的产品经理才进行更新
+		if (!SimpletinyString.isEmpty(product_managers)) {
+			// 如果之前就包含产品助理角色，则删除对应经理数据
+			if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				assistantManagerDao.deleteByAssistantNumber(ubb.getUser_number());
+			}
+			// 如果现在包含产品助理角色，则写入对应的经理数据
+			if (user_roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				for (String manager_number : product_managers.split(",")) {
+					AssistantManagerBean amb = new AssistantManagerBean();
+					amb.setAssistant_number(ubb.getUser_number());
+					amb.setManager_number(manager_number);
+					amb.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+					assistantManagerDao.insert(amb);
+				}
 			}
 		}
+
+		uib.setUser_role(user_roles);
+		infoDao.update(uib);
 		return SUCCESS;
 	}
 

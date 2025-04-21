@@ -1869,6 +1869,18 @@
 			<comment>ALTER TABLE product_order_operation</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="47" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE order_supplier_sale_order 
+					ADD COLUMN final_payable_comment VARCHAR(200) NULL COMMENT '决算团款备注' AFTER update_user,
+					ADD COLUMN final_comment VARCHAR(200) NULL COMMENT '决算备注' AFTER final_payable_comment;
+				ALTER TABLE order_supplier_sale_order_name_info 
+					ADD COLUMN final_price DECIMAL(12,2) NULL COMMENT '决算价格' AFTER update_user;
+	 		 ]]>
+			<comment>ALTER TABLE order_supplier_sale_order,order_supplier_sale_order_name_info</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

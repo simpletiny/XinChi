@@ -271,45 +271,6 @@ tr td {
 		</div>
 
 	</div>
-	<div id="order-final" style="display: none; width: 800px; height: 550px; overflow-y: auto">
-		<!-- ko if:order_number().indexOf('P')==0 -->
-		<div class="input-row clearfloat">
-			<div class="col-md-12">
-				<table style="width: 100%" class="table table-striped table-hover" id="table-order">
-					<thead>
-						<tr>
-							<th style="width: 20%">团号</th>
-							<th style="width: 20%">销售</th>
-							<th style="width: 10%">人数</th>
-							<th style="width: 30%">游客</th>
-							<th style="color: red">决算价格</th>
-						</tr>
-					</thead>
-					<tbody data-bind="foreach:final_sale_orders">
-						<tr>
-							<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
-							<td data-bind="text:$data.team_number"></td>
-							<td data-bind="text:$data.sale_name"></td>
-							<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
-							<td><a href="javascript:void(0)" style="color: blue"
-								data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-							<td><input type="number" class="required intdtext" data-bind="value:$data.payable" st="team-payable" /></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<!-- /ko -->
-		<div class="input-row clearfloat">
-			<label class="col-md-2 control-label" style="color: red">决算总成本</label>
-			<div class="col-md-4">
-				<input type="number" class="form-control" placeholder="决算总成本" id="final-supplier-cost" />
-			</div>
-		</div>
-		<div class="input-row clearfloat" style="float: right">
-			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFinal() }">确认</button>
-		</div>
-	</div>
 	<div id="supplier-pick" style="display: none;">
 		<div class="main-container">
 			<div class="main-box" style="width: 600px">
@@ -471,6 +432,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.003"></script>
 </body>
 </html>

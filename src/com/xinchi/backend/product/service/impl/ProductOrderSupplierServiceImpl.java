@@ -80,6 +80,19 @@ public class ProductOrderSupplierServiceImpl implements ProductOrderSupplierServ
 	}
 
 	@Override
+	public OrderSupplierBean searchOneOrderSupplier(OrderSupplierBean option) {
+		List<OrderSupplierBean> orderSuppliers = dao.selectByParam(option);
+
+		for (OrderSupplierBean supplier : orderSuppliers) {
+			List<OrderSupplierSaleOrderBean> saleOrderInfos = productOrderSupplierSaleOrderDao
+					.selectByBasePk(supplier.getPk());
+			supplier.setSale_order_infos(saleOrderInfos);
+		}
+
+		return (orderSuppliers != null && orderSuppliers.size() > 0) ? orderSuppliers.get(0) : null;
+	}
+
+	@Override
 	public OrderSupplierBean selectByOrderPkAndEmployeePk(String order_pk, String supplier_employee_pk) {
 		OrderSupplierBean option = new OrderSupplierBean();
 		option.setOrder_pk(order_pk);

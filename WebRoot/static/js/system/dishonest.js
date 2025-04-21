@@ -91,7 +91,7 @@ var OrderContext = function() {
 								</tr>`);
 							$(tbody).append(tr);
 						}
-					}else if(person_result.dishonest_flg=="Y"){
+					}else if(person_result.dishonest_flg=="Y" || person_result.dishonest_flg=="H"){
 						$(img).attr("src", self.apiurl + "static/img/cuo.png");
 						$(txt_is_ok).val('N');
 						let person_cases = person_result.cases;
@@ -102,12 +102,13 @@ var OrderContext = function() {
 								const result_msg = "立案时间："+person_case.reg_date+"；案号："+person_case.case_code;
 								const sign = person_case.sign_flg=="Y"?"是":"否";
 								const sign_color =  person_case.sign_flg=="Y"?"green":"red";
+								const dis_type = person_result.dishonest_flg=="H"? "限高":"失信人";
 								if(j==0){
 									let tr = $(`<tr>
 											<td rowspan="${span}">${i+1}</td>
 											<td rowspan="${span}">${name}</td>
 											<td style="color:green" rowspan="${span}">成功</td>
-											<td style="color:red" rowspan="${span}">失信人</td>
+											<td style="color:red" rowspan="${span}">${dis_type}</td>
 											<td>${result_msg}</td>
 											<td style="color:${sign_color}">${sign}</td>
 											</tr>`);

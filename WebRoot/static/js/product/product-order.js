@@ -2,6 +2,7 @@ var orderCheckLayer;
 var passengerCheckLayer;
 var innerPassengerCheckLayer;
 var ticketInfoCheckLayer;
+let commentLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -268,6 +269,49 @@ var ProductContext = function() {
 			});
 		});
 	};
+
+	// 编辑备注
+	self.editComment = function(data, event) {
+		$("#txt-order-pk").val(data.pk);
+		$("#txt-comment").val(data.comment);
+		commentLayer = $.layer({
+			type : 1,
+			title : ['备注', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '300px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#comment-edit'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	}
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+	}
+	self.updateComment = function() {
+		const product_order_pk = $("#txt-order-pk").val();
+		const comment = encodeURIComponent($("#txt-comment").val().trim());
+		var param = "order.pk=" + product_order_pk + "&order.comment=" + comment;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/updateProductOrder',
+			data : param
+		}).success(function(str) {
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+			} else {
+				fail_msg(str);
+			}
+		});
+	}
 
 	self.copyNameList = function() {
 		const url = "product/searchSaleOrderNameListByProductOrderNumbers";

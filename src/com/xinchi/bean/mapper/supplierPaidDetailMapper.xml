@@ -443,6 +443,12 @@
 			<if test="params.bo.order_number != null and params.bo.order_number !=''">
 				and A.order_number like concat('%', #{params.bo.order_number,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.create_users != null and params.bo.create_users.size()>0">
+				and A.create_user in
+				<foreach item="item" index="index" collection="params.bo.create_users" open="(" separator="," close=")">
+					#{params.bo.create_users[${index}]}
+				</foreach>
+			</if>
 		</where>
 		order by A.create_time DESC
 	</select>

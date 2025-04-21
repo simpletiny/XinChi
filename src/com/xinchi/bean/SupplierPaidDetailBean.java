@@ -65,6 +65,8 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 	private java.math.BigDecimal money_from;
 	private java.math.BigDecimal money_to;
 
+	private List<String> create_users;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -311,6 +313,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setIsOne(String isOne) {
 		this.isOne = isOne;
+	}
+
+	public List<String> getCreate_users() {
+		return create_users;
+	}
+
+	public void setCreate_users(List<String> create_users) {
+		this.create_users = create_users;
 	}
 
 }

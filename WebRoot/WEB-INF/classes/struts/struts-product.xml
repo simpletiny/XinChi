@@ -208,6 +208,9 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="updateProductOrder" class="productOrderAction" method="updateProductOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<action name="searchTicketInfoByOrderNumber" class="productOrderAction" method="searchTicketInfoByOrderNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -334,6 +337,13 @@
 		<!-- 已操作产品订单编辑 -->
 		<!-- 搜索操作供应商信息 -->
 		<action name="searchOrderSuppliersByOrderNumber" class="productOrderOperationAction" method="searchOrderSuppliersByOrderNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 搜索已操作供应商信息 -->
+		<action name="searchOneOrderSupplier" class="productOrderOperationAction" method="searchOneOrderSupplier">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

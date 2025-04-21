@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xinchi.bean.mapper.OrderSupplierSaleOrderMapper">
+
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.OrderSupplierSaleOrderBean">
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="receivable_comment" property="receivable_comment" jdbcType="VARCHAR" />
@@ -16,6 +17,8 @@
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="sale_name" property="sale_name" jdbcType="VARCHAR" />
 		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="final_payable_comment" property="final_payable_comment" jdbcType="VARCHAR" />
+		<result column="final_comment" property="final_comment" jdbcType="VARCHAR" />
 		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
 		<result column="special_count" property="special_count" jdbcType="INTEGER" />
 	</resultMap>
@@ -24,6 +27,7 @@
 			select="selectInfoBySaleOrderPk">
 			<result column="name_pk" property="name_pk" jdbcType="CHAR" />
 			<result column="price" property="price" jdbcType="DECIMAL" />
+			<result column="final_price" property="final_price" jdbcType="DECIMAL" />
 			<result column="base_pk" property="base_pk" jdbcType="CHAR" />
 			<result column="pk" property="pk" jdbcType="CHAR" />
 			<result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -46,7 +50,9 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		final_payable_comment,
+		final_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -58,6 +64,7 @@
 		SELECT
 		A.name_pk,
 		A.price,
+		A.final_price,
 		A.base_pk,
 		A.pk,
 		A.create_user,
@@ -65,12 +72,14 @@
 		A.create_time,
 		A.update_time,
 		B.name AS passenger_name,
-		B.id AS passenger_id
+		B.id AS
+		passenger_id
 		FROM
 		order_supplier_sale_order_name_info A
 		LEFT JOIN
 		sale_order_name_list B ON A.name_pk = B.pk
-		where A.base_pk = #{pk,jdbcType=CHAR}
+		where
+		A.base_pk = #{pk,jdbcType=CHAR}
 	</select>
 	<select id="selectByBasePk" parameterType="java.lang.String" resultMap="InfoResultMap">
 		select
@@ -89,7 +98,9 @@
 		B.sale_name,
 		B.sale AS sale_number,
 		B.adult_count,
-		B.special_count
+		B.special_count,
+		A.final_payable_comment,
+		A.final_comment
 		from
 		order_supplier_sale_order A
 		LEFT JOIN budget_order_view B ON A.team_number = B.team_number
@@ -226,6 +237,12 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="final_payable_comment != null">
+				final_payable_comment = #{final_payable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="final_comment != null">
+				final_comment = #{final_comment,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -233,5 +250,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from order_supplier_sale_order
+		<where>
+			<if test="team_number != null and team_number !=''">
+				and team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="base_pk != null and base_pk !=''">
+				and base_pk = #{base_pk,jdbcType=CHAR},
+			</if>
+		</where>
 	</select>
 </mapper>

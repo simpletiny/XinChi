@@ -641,4 +641,10 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		}
 		return "NO";
 	}
+
+	@Override
+	public String updateProductOrder(ProductOrderBean order) {
+		dao.update(order);
+		return SUCCESS;
+	}
 }

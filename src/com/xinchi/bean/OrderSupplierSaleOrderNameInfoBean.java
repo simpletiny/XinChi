@@ -15,6 +15,8 @@ public class OrderSupplierSaleOrderNameInfoBean extends SupperBO implements Seri
 
 	private String base_pk;
 
+	private BigDecimal final_price;
+
 	// DTO
 	private String passenger_id;
 	private String passenger_name;
@@ -57,6 +59,14 @@ public class OrderSupplierSaleOrderNameInfoBean extends SupperBO implements Seri
 
 	public void setPassenger_name(String passenger_name) {
 		this.passenger_name = passenger_name;
+	}
+
+	public BigDecimal getFinal_price() {
+		return final_price;
+	}
+
+	public void setFinal_price(BigDecimal final_price) {
+		this.final_price = final_price;
 	}
 
 }

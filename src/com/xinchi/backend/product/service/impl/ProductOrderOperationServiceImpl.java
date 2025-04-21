@@ -812,8 +812,14 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 	}
 
 	@Override
-	public String finalOperation(String operate_pk, BigDecimal final_supplier_cost, String json) {
-		ProductOrderOperationBean operation = dao.selectByPrimaryKey(operate_pk);
+	public String finalOperation(String json) {
+
+		JSONObject obj = JSONObject.fromObject(json);
+		String operation_pk = obj.getString("operation_pk");
+		BigDecimal final_supplier_cost = SimpletinyString.isEmpty(obj.getString("final_supplier_cost"))
+				? BigDecimal.ZERO
+				: new BigDecimal(obj.getString("final_supplier_cost"));
+		ProductOrderOperationBean operation = dao.selectByPrimaryKey(operation_pk);
 		operation.setStatus(ResourcesConstants.ORDER_OPERATE_STATUS_FINAL);
 		operation.setFinal_supplier_cost(final_supplier_cost);
 		dao.update(operation);
@@ -831,13 +837,12 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 			payableDao.update(payable);
 		}
 		if (operation.getTeam_number().startsWith("P")) {
-
 			// 更新每个订单的应付款
-			JSONArray arr = JSONArray.fromObject(json);
+			JSONArray arr = obj.getJSONArray("orders");
 			for (int i = 0; i < arr.size(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-				String team_number = obj.getString("team_number");
-				BigDecimal final_payable = new BigDecimal(obj.getString("team_payable"));
+				JSONObject obj_order = arr.getJSONObject(i);
+				String team_number = obj_order.getString("team_number");
+				BigDecimal final_payable = new BigDecimal(obj_order.getString("team_payable"));
 				PayableOrderBean option = new PayableOrderBean();
 				option.setTeam_number(team_number);
 				option.setSupplier_employee_pk(operation.getSupplier_employee_pk());
@@ -849,7 +854,32 @@ public class ProductOrderOperationServiceImpl implements ProductOrderOperationSe
 					po.setFinal_payable(final_payable);
 					po.setFinal_flg("Y");
 					payableOrderDao.update(po);
+				}
 
+				// 更新决算备注
+				String order_supplier_sale_order_pk = obj_order.getString("order_supplier_sale_order_pk");
+				String final_payable_comment = obj_order.getString("final_payable_comment");
+				String final_comment = obj_order.getString("final_comment");
+				OrderSupplierSaleOrderBean osso = new OrderSupplierSaleOrderBean();
+				osso.setPk(order_supplier_sale_order_pk);
+				osso.setFinal_payable_comment(final_payable_comment);
+				osso.setFinal_comment(final_comment);
+
+				productOrderSupplierSaleOrderDao.update(osso);
+
+				// 更新每个名单的决算价格
+				JSONArray name_arr = obj_order.getJSONArray("names");
+				for (int j = 0; j < name_arr.size(); j++) {
+					JSONObject obj_name = name_arr.getJSONObject(j);
+					String order_name_pk = obj_name.getString("order_name_pk");
+					BigDecimal final_price = SimpletinyString.isEmpty(obj_name.getString("final_price"))
+							? BigDecimal.ZERO
+							: new BigDecimal(obj_name.getString("final_price"));
+
+					OrderSupplierSaleOrderNameInfoBean ossoni = new OrderSupplierSaleOrderNameInfoBean();
+					ossoni.setPk(order_name_pk);
+					ossoni.setFinal_price(final_price);
+					productOrderSupplierSaleOrderNameInfoDao.update(ossoni);
 				}
 			}
 

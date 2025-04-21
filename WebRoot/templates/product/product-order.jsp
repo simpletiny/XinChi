@@ -144,7 +144,7 @@ tr td {
 								<th>出票</th>
 								<th>订单备注</th>
 								<th>操作人</th>
-								<th>产品经理</th> 
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -182,7 +182,14 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.air_comment, click:function(){msg($data.air_comment)}"></a></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfos">查看</a></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.comment, click:function(){msg($data.comment)}"></a></td>
+								<!-- ko if: $data.comment==null || $data.comment==''-->
+								<td><a href="javascript:void(0)"
+									data-bind="click:$root.editComment">添加</a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment!=null && $data.comment!=''-->
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:$root.editComment">添加</a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.operator_name"></td>
 								<td data-bind="text: $data.product_manager"></td>
 							</tr>
@@ -257,6 +264,24 @@ tr td {
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+	<!-- 备注编辑 -->
+	<div id="comment-edit" style="display: none; width: 500px">
+		<input type="hidden" id="txt-order-pk"/>
+		<div class="input-row clearfloat">
+			<div>
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment" placeholder="备注"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
@@ -361,6 +386,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.004"></script>
 </body>
 </html>

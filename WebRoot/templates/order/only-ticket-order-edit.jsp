@@ -264,7 +264,7 @@
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
 	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
 	<script src="<%=basePath%>static/js/order/only-ticket-order-edit.js?v=1.004"></script>
-	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/order/non-standard-order-common.js?v=1.006"></script>
 	<script src="<%=basePath%>static/js/order/only-ticket-order-common.js?v=1.001"></script>
 </body>
 </html>

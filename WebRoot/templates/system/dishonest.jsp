@@ -137,6 +137,6 @@ th {
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
-	<script src="<%=basePath%>static/js/system/dishonest.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/system/dishonest.js?v=1.003"></script>
 </body>
 </html>

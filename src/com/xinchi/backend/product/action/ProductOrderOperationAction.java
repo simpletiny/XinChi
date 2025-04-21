@@ -151,6 +151,19 @@ public class ProductOrderOperationAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String supplier_employee_pk;
+
+	private OrderSupplierBean order_supplier;
+
+	public String searchOneOrderSupplier() {
+		ProductOrderBean productOrder = productOrderService.selectByOrderNumber(product_order_number);
+		OrderSupplierBean option = new OrderSupplierBean();
+		option.setOrder_pk(productOrder.getPk());
+		option.setSupplier_employee_pk(supplier_employee_pk);
+		order_supplier = productOrderSupplierService.searchOneOrderSupplier(option);
+		return SUCCESS;
+	}
+
 	public String searchProductOrderTicketStatusByOrderNumber() {
 		resultStr = productOrderService.searchProductOrderTicketStatusByOrderNumber(product_order_number);
 		return SUCCESS;
@@ -308,8 +321,8 @@ public class ProductOrderOperationAction extends BaseAction {
 	 * @return
 	 */
 	public String finalOperation() {
-
-		resultStr = service.finalOperation(operate_pk, final_supplier_cost, json);
+		/// operate_pk, final_supplier_cost,
+		resultStr = service.finalOperation(json);
 		return SUCCESS;
 	}
 
@@ -381,6 +394,16 @@ public class ProductOrderOperationAction extends BaseAction {
 				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
 				for (AssistantManagerBean amb : ambs) {
 					client_numbers.add(amb.getManager_number());
+				}
+			}
+			// 如果是产品经理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setManager_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					client_numbers.add(amb.getAssistant_number());
 				}
 			}
 			drop_off.setClient_numbers(client_numbers);
@@ -592,5 +615,21 @@ public class ProductOrderOperationAction extends BaseAction {
 
 	public void setSupplier(OrderSupplierBean supplier) {
 		this.supplier = supplier;
+	}
+
+	public String getSupplier_employee_pk() {
+		return supplier_employee_pk;
+	}
+
+	public void setSupplier_employee_pk(String supplier_employee_pk) {
+		this.supplier_employee_pk = supplier_employee_pk;
+	}
+
+	public OrderSupplierBean getOrder_supplier() {
+		return order_supplier;
+	}
+
+	public void setOrder_supplier(OrderSupplierBean order_supplier) {
+		this.order_supplier = order_supplier;
 	}
 }
