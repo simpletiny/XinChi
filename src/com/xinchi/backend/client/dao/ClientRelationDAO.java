@@ -11,6 +11,7 @@ import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.tools.Page;
 
@@ -75,5 +76,7 @@ public interface ClientRelationDAO {
 	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option);
 
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
+
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option);
 
 }

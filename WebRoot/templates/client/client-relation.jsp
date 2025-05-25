@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -91,8 +90,7 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">关系度</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px"
-									data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:refresh}"
+								<select class="form-control" style="height: 34px" data-bind="options: level, optionsCaption: '全部',value:chosenLevel,event:{change:refresh}"
 									name="relation.relation_level"></select>
 							</div>
 						</div>
@@ -136,8 +134,7 @@
 							<tr>
 								<th></th>
 								<th colspan="5" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
-								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3
-										data-bind="text:month+'用心度'"></h3></th>
+								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3 data-bind="text:month+'用心度'"></h3></th>
 								<th colspan="7" style="text-align: center"><h3>仪表盘</h3></th>
 							</tr>
 							<tr>
@@ -264,12 +261,8 @@
 								<td data-bind="text:accurateSale().ignore_accurate"></td>
 								<td data-bind="text:incomingCount().ignore_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().ignore_wechat"></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="6"
+									data-bind="text:'上月排名：'+rankLastMonth().rank_score+'--上旬：'+rankLastMonth().rank_first_score+'||中旬：'+rankLastMonth().rank_middle_score+'||下旬：'+rankLastMonth().rank_last_score"></td>
 							</tr>
 							<tr>
 								<td>新增</td>
@@ -282,12 +275,9 @@
 								<td data-bind="text:accurateSale().new_accurate"></td>
 								<td data-bind="text:incomingCount().new_tel"></td>
 								<td style="border-right: solid 1px #ff0000;" data-bind="text:incomingCount().new_wechat"></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td colspan="6"
+									data-bind="text:'本月排名：'+rankThisMonth().rank_score+'--上旬：'+rankThisMonth().rank_first_score+'||中旬：'+rankThisMonth().rank_middle_score+'||下旬：'+rankThisMonth().rank_last_score"></td>
+
 							</tr>
 						</tbody>
 
@@ -327,16 +317,15 @@
 									data-bind="attr: {'value': $data.client_employee_pk+';'+$data.client_employee_name}, checked: $root.chosenEmployee" /></td>
 								<td data-bind="text: $data.market_level"></td>
 								<td><img style="width: 25px; height: 25px" src="<%=basePath%>static/img/head.jpg"
-									data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" /> <input type="hidden"
-									st="st-file-name" data-bind="value:$data.head_photo" /></td>
+									data-bind="click: function() {$parent.checkHeadPhoto($data.head_photo)}" /> <input type="hidden" st="st-file-name"
+									data-bind="value:$data.head_photo" /></td>
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.client_employee_name, attr: {href: 'employee-detail.jsp?key='+$data.client_employee_pk}"></a></td>
 								<td data-bind="text: $data.year_order_count"></td>
 								<td data-bind="text: $data.last_order_period"></td>
 								<td data-bind="text: $data.connect_date"></td>
 								<td data-bind="text: $root.connectTypeMapping[$data.type]"></td>
-								<td><a
-									data-bind="text: $data.extra_info, click:function() {$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
+								<td><a data-bind="text: $data.extra_info, click:function() {$root.checkConnectInfo($data.client_employee_pk);}"></a></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.relation_level"></td>
 								<td class="rmb" data-bind="text: $data.receivable"></td>
@@ -412,14 +401,13 @@
 	<div id="todo-create" style="display: none">
 		<div class="input-row clearfloat" style="width: 400px;">
 			<div class="ip">
-				<input type="text" id="todo_content" class="form-control" maxlength="10" placeholder="十个字以内" /> <input
-					type="hidden" id="client_employee_pk" />
+				<input type="text" id="todo_content" class="form-control" maxlength="10" placeholder="十个字以内" /> <input type="hidden" id="client_employee_pk" />
 			</div>
 		</div>
 		<div class="input-row clearfloat" style="width: 400px;">
 			<div class="ip" style="float: right">
-				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doCreateToDo}" value="保存"></input> <input
-					type="button" data-bind="event:{click:cancelCreateToDo}" class="btn btn-green col-md-1" value="取消"></input>
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doCreateToDo}" value="保存"></input> <input type="button"
+					data-bind="event:{click:cancelCreateToDo}" class="btn btn-green col-md-1" value="取消"></input>
 			</div>
 		</div>
 	</div>
@@ -434,8 +422,8 @@
 				</div>
 			</div>
 			<div class="form-group" style="float: right">
-				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doSetClientLevel}" value="保存"></input> <input
-					type="button" data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doSetClientLevel}" value="保存"></input> <input type="button"
+					data-bind="event:{click:cancelSetClientLevel}" class="btn btn-green col-md-1" value="取消"></input>
 			</div>
 		</div>
 	</div>
@@ -458,8 +446,8 @@
 				</div>
 			</div>
 			<div class="form-group col-md-6" style="float: right">
-				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doQuery}" value="查询"></input> <input
-					type="button" data-bind="event:{click:cancelQuery}" class="btn btn-green col-md-1" value="取消"></input>
+				<input type="button" class="btn btn-green col-md-1" data-bind="event:{click:doQuery}" value="查询"></input> <input type="button"
+					data-bind="event:{click:cancelQuery}" class="btn btn-green col-md-1" value="取消"></input>
 			</div>
 		</div>
 	</div>
@@ -512,8 +500,8 @@
 			</div>
 			<div class="input-row clearfloat" style="width: 400px;">
 				<div class="ip" style="float: right">
-					<input type="button" class="btn btn-green col-md-1" data-bind="click:doQuit" value="确定"></input> <input
-						type="button" data-bind="click:cancelQuit" class="btn btn-green col-md-1" value="取消"></input>
+					<input type="button" class="btn btn-green col-md-1" data-bind="click:doQuit" value="确定"></input> <input type="button"
+						data-bind="click:cancelQuit" class="btn btn-green col-md-1" value="取消"></input>
 				</div>
 			</div>
 		</form>
@@ -523,15 +511,14 @@
 			<div>
 				<label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment"
-						data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="100" id="txt-comment" data-bind="value: clientEmployee().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
-					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r"
+					data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>
@@ -548,6 +535,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/client-relation.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/client-relation.js?v=1.003"></script>
 </body>
 </html>

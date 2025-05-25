@@ -39,6 +39,7 @@ import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -375,5 +376,10 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean) {
 		return clientEmployeeTypeCountDao.selectSumByParam(bean);
 
+	}
+
+	@Override
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option) {
+		return dao.selectRankScore(rank_option);
 	}
 }

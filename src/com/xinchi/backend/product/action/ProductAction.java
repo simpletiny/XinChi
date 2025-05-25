@@ -110,12 +110,15 @@ public class ProductAction extends BaseAction {
 			productProfit = new ProductProfitBean();
 
 		AirServiceFeeDto fee_option = new AirServiceFeeDto();
+		ProductReconciliationBean pr_option = new ProductReconciliationBean();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			productProfit.setUser_number(sessionBean.getUser_number());
 			fee_option.setProduct_manager_number(sessionBean.getUser_number());
+			pr_option.setProduct_manager_number(sessionBean.getUser_number());
 		} else {
 			fee_option.setProduct_manager_number(productProfit.getUser_number());
+			pr_option.setProduct_manager_number(productProfit.getUser_number());
 		}
 
 		String year = productProfit.getOption_year();
@@ -153,8 +156,10 @@ public class ProductAction extends BaseAction {
 		List<AirOtherPaymentDto> deducts = airTicketPayableService.searchDepositDeducts(fee_option);
 
 		// 额外费用，调账
+		pr_option.setProduct_line(productProfit.getProduct_line());
+		pr_option.setBelong_year(year);
 		List<ProductReconciliationBean> reconciliations = productReconciliationService
-				.selectSumReconciliation(fee_option);
+				.selectSumReconciliation(pr_option);
 
 		for (ProductProfitBean pp : productProfits) {
 			for (AirOtherPaymentDto aop : no_b_payments) {

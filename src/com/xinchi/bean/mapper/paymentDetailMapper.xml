@@ -91,7 +91,8 @@
 		A.exchange_flg,
 		A.finance_flg
 		from payment_detail A
-		LEFT JOIN card B ON A.account = B.account
+		LEFT JOIN card B ON A.account =
+		B.account
 		where voucher_number =
 		#{voucher_number,jdbcType=CHAR}
 	</select>
@@ -352,6 +353,20 @@
 		</where>
 		order by time desc limit 1
 	</select>
+	<select id="selectExchangeByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultType="java.math.BigDecimal">
+		select
+		sum(money)
+		from payment_detail
+		<where>
+			and exchange_flg = 'Y' and type='支出'
+			<if test="from_month != null and from_month !=''">
+				and left(time,7) &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and left(time,7) &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.account,
@@ -375,13 +390,14 @@
 		A.match_flg,
 		A.exchange_flg,
 		A.finance_flg
-		from payment_detail A
+		from
+		payment_detail A
 		LEFT JOIN card B ON A.account=B.account
 		LEFT JOIN user_base C ON A.record_user = C.user_number
 
 		<where>
 			<if test="params.bo.account != null and params.bo.account !=''">
-				and A.account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
+				and A.account =#{params.bo.account,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.comment != null and params.bo.comment !=''">
 				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')

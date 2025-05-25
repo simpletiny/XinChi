@@ -109,6 +109,9 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 
 	private BigDecimal final_receivable;
 	private String final_receivable_comment;
+	
+	private String product_line;
+	private String product_bonus;
 	// DTO
 	private String client_employee_name;
 
@@ -705,6 +708,22 @@ public class SaleOrderBean extends SupperBO implements Serializable {
 
 	public void setFinal_receivable_comment(String final_receivable_comment) {
 		this.final_receivable_comment = final_receivable_comment;
+	}
+
+	public String getProduct_line() {
+		return product_line;
+	}
+
+	public void setProduct_line(String product_line) {
+		this.product_line = product_line;
+	}
+
+	public String getProduct_bonus() {
+		return product_bonus;
+	}
+
+	public void setProduct_bonus(String product_bonus) {
+		this.product_bonus = product_bonus;
 	}
 
 }

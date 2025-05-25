@@ -91,7 +91,8 @@
 		A.payable_pk,
 		A.voucher_file,
 		B.name AS supplier_employee_name
-		from supplier_paid_detail A
+		from
+		supplier_paid_detail A
 		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		where A.related_pk = #{related_pk,jdbcType=CHAR}
 	</select>
@@ -374,10 +375,13 @@
 		A.voucher_file
 		from paid_detail A left join supplier_employee B on
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN user_base C ON A.approve_user = C.user_number
+		LEFT
+		JOIN user_base C ON A.approve_user = C.user_number
 		LEFT JOIN user_base D ON A.paid_user
 		= D.user_number
-		where A.related_pk = #{related_pk,jdbcType=VARCHAR}
+		where A.related_pk =
+		#{related_pk,jdbcType=VARCHAR}
+		AND type NOT LIKE '%STRIKE%'
 	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">

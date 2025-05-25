@@ -424,6 +424,12 @@
 			<if test="first_year != null and first_year !=''">
 				and LEFT(A.belong_month,4) = #{first_year,jdbcType=VARCHAR}
 			</if>
+			<if test="from_month != null and from_month !=''">
+				and A.belong_month &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and A.belong_month &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and A.product_manager = #{product_manager_number,jdbcType=VARCHAR}
 			</if>

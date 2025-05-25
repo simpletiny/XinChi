@@ -84,7 +84,7 @@ public class ProductReconciliationServiceImpl implements ProductReconciliationSe
 	}
 
 	@Override
-	public List<ProductReconciliationBean> selectSumReconciliation(AirServiceFeeDto bean) {
+	public List<ProductReconciliationBean> selectSumReconciliation(ProductReconciliationBean bean) {
 		return dao.selectSumReconciliation(bean);
 	}
 }

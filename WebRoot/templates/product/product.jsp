@@ -155,6 +155,7 @@ tr td {
 								<th>同业返利</th>
 								<th>最大让利</th>
 								<th title="成人/儿童">销售分值</th>
+								<th title="成人/儿童">立奖</th>
 								<th>首段城市对</th>
 								<th>销售注意</th>
 								<th>儿童策略</th>
@@ -189,6 +190,7 @@ tr td {
 								<td data-bind="text: $data.max_profit_substract"></td>
 
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+								<td data-bind="text: $data.adult_instant_bonus +'/'+$data.child_instant_bonus"></td>
 								<td
 									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
 								<td><a href="javascript:void(0)"

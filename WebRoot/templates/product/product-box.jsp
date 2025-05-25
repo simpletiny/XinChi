@@ -106,6 +106,7 @@ tr td {
 								<th></th>
 								<th>产品编号</th>
 								<th title="成人/儿童">分值</th>
+								<th title="成人/儿童">立奖</th>
 								<th>产品线</th>
 								<th>产品名称</th>
 								<th>型号</th>
@@ -126,6 +127,7 @@ tr td {
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenProducts" /></td>
 								<td data-bind="text: $data.product_number"></td>
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+								<td data-bind="text: $data.adult_instant_bonus +'/'+$data.child_instant_bonus"></td>
 								<td data-bind="text: $data.location"></td>
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.product_model"></td>

@@ -45,5 +45,5 @@ public interface ProductReconciliationDAO {
 
 	public List<ProductReconciliationBean> selectByPage(Page<ProductReconciliationBean> page);
 
-	public List<ProductReconciliationBean> selectSumReconciliation(AirServiceFeeDto bean);
+	public List<ProductReconciliationBean> selectSumReconciliation(ProductReconciliationBean bean);
 }

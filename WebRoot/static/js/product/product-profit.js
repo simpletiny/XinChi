@@ -11,6 +11,13 @@ var ReportContext = function() {
 	$.getJSON(self.apiurl + 'user/searchByRole', 'role=PRODUCT', function(data) {
 		self.users(data.users);
 	});
+	
+	self.locations = ko.observableArray();
+	$.getJSON(self.apiurl + 'system/searchByType', {
+		type : "LINE"
+	}, function(data) {
+		self.locations(data.datas);
+	});
 
 	self.years = ko.observableArray();
 

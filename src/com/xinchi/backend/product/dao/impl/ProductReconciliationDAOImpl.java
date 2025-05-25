@@ -54,7 +54,7 @@ public class ProductReconciliationDAOImpl extends SqlSessionDaoSupport implement
 	}
 
 	@Override
-	public List<ProductReconciliationBean> selectSumReconciliation(AirServiceFeeDto bean) {
+	public List<ProductReconciliationBean> selectSumReconciliation(ProductReconciliationBean bean) {
 		List<ProductReconciliationBean> list = daoUtil
 				.selectByParam("com.xinchi.bean.mapper.ProductReconciliationMapper.selectSumReconciliation", bean);
 		return list;

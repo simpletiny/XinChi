@@ -28,6 +28,9 @@ public class AirServiceFeeDto implements Serializable {
 
 	// option
 	private String first_year;
+	
+	private String from_month;
+	private String to_month;
 
 	public String getPayable_pk() {
 		return payable_pk;
@@ -171,6 +174,22 @@ public class AirServiceFeeDto implements Serializable {
 
 	public void setFirst_year(String first_year) {
 		this.first_year = first_year;
+	}
+
+	public String getFrom_month() {
+		return from_month;
+	}
+
+	public void setFrom_month(String from_month) {
+		this.from_month = from_month;
+	}
+
+	public String getTo_month() {
+		return to_month;
+	}
+
+	public void setTo_month(String to_month) {
+		this.to_month = to_month;
 	}
 
 }

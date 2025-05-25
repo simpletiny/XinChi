@@ -14,6 +14,7 @@ import com.xinchi.backend.client.service.AccurateSaleService;
 import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.user.service.UserService;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
@@ -29,6 +30,8 @@ import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.SaleScoreDto;
+import com.xinchi.bean.ScoreRankDto;
+import com.xinchi.bean.UserBaseBean;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -91,8 +94,7 @@ public class ClientRelationAction extends BaseAction {
 	}
 
 	public String searchRelationsByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -211,9 +213,13 @@ public class ClientRelationAction extends BaseAction {
 
 	private ClientEmployeeTypeCountBean clientEmployeeTypeCount;
 
+	private ScoreRankDto rankLastMonth;
+	private ScoreRankDto rankThisMonth;
+
+	@Autowired
+	private UserService userService;
 	public String searchClientSummary() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		SaleScoreDto ssd = new SaleScoreDto();
@@ -234,10 +240,14 @@ public class ClientRelationAction extends BaseAction {
 		float back_score = 0;
 
 		String user_pk = "";
+		ScoreRankDto rank_option = new ScoreRankDto();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			user_pk = sessionBean.getPk();
+			rank_option.setSale_number(sessionBean.getUser_number());
 		} else {
 			user_pk = relation.getSales();
+			UserBaseBean user =	userService.selectByPrimaryKey(user_pk);
+			rank_option.setSale_number(user.getUser_number());
 		}
 
 		potential = service.selectPotentialData(user_pk);
@@ -271,9 +281,17 @@ public class ClientRelationAction extends BaseAction {
 
 		meter.setPoint_money_deduct(point_money_deduct);
 		meter.setBack_score(back_score);
-		// clientSummary = service.getClientSummary(relation);
-		// employeeCount = service.selectClientEmployeeCount(relation);
-		// monthOrderCount = service.selectMonthOrderCount(relation);
+		
+		rank_option.setConfirm_month(DateUtil.lastMonth());
+		rankLastMonth = service.selectRankScore(rank_option);
+		rank_option.setConfirm_month(DateUtil.thisMonth());
+		rankThisMonth = service.selectRankScore(rank_option);
+		if(null!=rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.FIRST_OF_MONTH)) {
+			rankThisMonth.setRank_last_score(0);
+			rankThisMonth.setRank_middle_score(0);
+		}else if(null!=rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.MIDDLE_OF_MONTH)) {
+			rankThisMonth.setRank_last_score(0);
+		}
 		return SUCCESS;
 	}
 
@@ -487,5 +505,21 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setClientEmployeeTypeCount(ClientEmployeeTypeCountBean clientEmployeeTypeCount) {
 		this.clientEmployeeTypeCount = clientEmployeeTypeCount;
+	}
+
+	public ScoreRankDto getRankLastMonth() {
+		return rankLastMonth;
+	}
+
+	public void setRankLastMonth(ScoreRankDto rankLastMonth) {
+		this.rankLastMonth = rankLastMonth;
+	}
+
+	public ScoreRankDto getRankThisMonth() {
+		return rankThisMonth;
+	}
+
+	public void setRankThisMonth(ScoreRankDto rankThisMonth) {
+		this.rankThisMonth = rankThisMonth;
 	}
 }

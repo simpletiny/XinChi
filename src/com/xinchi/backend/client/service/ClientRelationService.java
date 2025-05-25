@@ -16,6 +16,7 @@ import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
@@ -75,5 +76,7 @@ public interface ClientRelationService extends BaseService {
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
 
 	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean);
+
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option);
 
 }

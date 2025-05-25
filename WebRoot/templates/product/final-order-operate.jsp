@@ -366,6 +366,6 @@ h3 {
 		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/final-order-operate.js?v=1.000"></script>
+	<script src="<%=basePath%>static/js/product/final-order-operate.js?v=1.001"></script>
 </body>
 </html>

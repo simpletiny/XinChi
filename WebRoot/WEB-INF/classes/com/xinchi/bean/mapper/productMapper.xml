@@ -56,8 +56,9 @@
 		<result column="analysis_flg" property="analysis_flg" jdbcType="CHAR" />
 		<result column="as_adult_flg" property="as_adult_flg" jdbcType="CHAR" />
 		<result column="id_type" property="id_type" jdbcType="CHAR" />
+		<result column="adult_instant_bonus" property="adult_instant_bonus" jdbcType="DECIMAL" />
+		<result column="child_instant_bonus" property="child_instant_bonus" jdbcType="DECIMAL" />
 	</resultMap>
-
 	<sql id="Base_Column_List">
 		name,
 		product_number,
@@ -111,7 +112,9 @@
 		keep_flg,
 		analysis_flg,
 		as_adult_flg,
-		id_type
+		id_type,
+		adult_instant_bonus,
+		child_instant_bonus
 
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -169,9 +172,12 @@
 		A.analysis_flg,
 		A.as_adult_flg,
 		A.id_type,
+		A.adult_instant_bonus,
+		A.child_instant_bonus,
 		B.user_name AS product_manager_name
 		from product A
-		LEFT JOIN user_base B ON A.product_manager = B.user_number
+		LEFT JOIN user_base B ON
+		A.product_manager = B.user_number
 		where A.pk =
 		#{pk,jdbcType=CHAR}
 	</select>
@@ -324,6 +330,12 @@
 			<if test="id_type != null">
 				id_type,
 			</if>
+			<if test="adult_instant_bonus != null">
+				adult_instant_bonus,
+			</if>
+			<if test="child_instant_bonus != null">
+				child_instant_bonus,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -463,6 +475,12 @@
 			</if>
 			<if test="id_type != null">
 				#{id_type,jdbcType=CHAR},
+			</if>
+			<if test="adult_instant_bonus != null">
+				#{adult_instant_bonus,jdbcType=DECIMAL},
+			</if>
+			<if test="child_instant_bonus != null">
+				#{child_instant_bonus,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>
@@ -627,6 +645,12 @@
 			<if test="id_type != null">
 				id_type = #{id_type,jdbcType=CHAR},
 			</if>
+			<if test="adult_instant_bonus != null">
+				adult_instant_bonus = #{adult_instant_bonus,jdbcType=DECIMAL},
+			</if>
+			<if test="child_instant_bonus != null">
+				child_instant_bonus = #{child_instant_bonus,jdbcType=DECIMAL},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -716,7 +740,9 @@
 		A.keep_flg,
 		A.analysis_flg,
 		A.as_adult_flg,
-		A.id_type
+		A.id_type,
+		A.adult_instant_bonus,			
+		A.child_instant_bonus
 		from
 		product A
 		LEFT JOIN user_base B on
@@ -756,7 +782,6 @@
 				and A.product_value >= 9
 			</if>
 		</where>
-
 		order by A.product_value DESC,A.name,A.product_model
 	</select>
 </mapper>

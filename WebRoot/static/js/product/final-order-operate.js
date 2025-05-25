@@ -109,7 +109,7 @@ var ProductContext = function() {
 			 }).success(function(str) {
 				 endLoadingIndicator();
 				 if (str == "success") {
-					 window.location.href = self.apiurl + "templates/product/product-order-operated.jsp";
+					 window.history.go(-1);
 				 } else {
 					 fail_msg(str);
 				 }

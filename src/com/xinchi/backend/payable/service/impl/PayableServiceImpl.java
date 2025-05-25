@@ -346,7 +346,6 @@ public class PayableServiceImpl implements PayableService {
 
 	@Override
 	public void updatePayablePaid(SupplierPaidDetailBean detail) {
-
 		PayableBean payable = dao.selectByPk(detail.getPayable_pk());
 		payable.setPaid(payable.getPaid().add(detail.getMoney()));
 		payable.setBudget_balance(payable.getBudget_balance().subtract(detail.getMoney()));

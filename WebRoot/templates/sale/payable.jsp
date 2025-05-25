@@ -382,7 +382,7 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">支付总额</label>
 					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.allot_money" class="ip-" st="sum_paid" required="required" />
+						<input type="number" name="detail.allot_money" data-bind="value:totalPay()" class="ip-" st="sum_paid" required="required" />
 					</div>
 				</div>
 			</div>
@@ -439,11 +439,11 @@
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
 						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" oninput="caculateSumPay()" required="required" />
 						<!-- /ko -->
 						<!-- ko if:$data.final_flg=="N" -->
 						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" oninput="caculateSumPay()" required="required" />
 						<!-- /ko -->
 
 					</div>
@@ -722,6 +722,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/sale/payable.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/sale/payable.js?v=1.006"></script>
 </body>
 </html>

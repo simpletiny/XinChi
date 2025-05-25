@@ -2,6 +2,7 @@ package com.xinchi.backend.payable.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,39 +264,63 @@ public class PaidServiceImpl implements PaidService {
 
 	@Override
 	public String applyPay(SupplierPaidDetailBean detail, String allot_json) {
-		detail.setType(ResourcesConstants.PAID_TYPE_PAID);
-		detail.setStatus(ResourcesConstants.PAID_STATUS_ING);
-
 		JSONArray array = JSONArray.fromObject(allot_json);
-
 		String related_pk = DBCommonUtil.genPk();
-		detail.setRelated_pk(related_pk);
 		String supplier_employee_pk = "";
 		BigDecimal sum_money = BigDecimal.ZERO;
+		// 获得支付详情数组
+		List<SupplierPaidDetailBean> positive_details = new ArrayList<>();
+		List<SupplierPaidDetailBean> negative_details = new ArrayList<>();
 		for (int i = 0; i < array.size(); i++) {
+			SupplierPaidDetailBean one_detail = new SupplierPaidDetailBean();
+			one_detail.setRelated_pk(related_pk);
 			JSONObject obj = JSONObject.fromObject(array.get(i));
 			String payable_pk = obj.getString("payable_pk");
 			String t = obj.getString("team_number");
 			String r = obj.getString("paid");
 			String m = obj.getString("supplier_employee_name");
 			String p = obj.getString("supplier_employee_pk");
-
 			if (supplier_employee_pk.equals(""))
 				supplier_employee_pk = p;
+			one_detail.setAllot_money(detail.getAllot_money());
+			one_detail.setLimit_time(detail.getLimit_time());
+			one_detail.setTeam_number(t);
+			one_detail.setSupplier_employee_name(m);
+			one_detail.setSupplier_employee_pk(p);
+			one_detail.setPayable_pk(payable_pk);
 
-			detail.setTeam_number(t);
-			detail.setSupplier_employee_name(m);
-			detail.setSupplier_employee_pk(p);
-			detail.setPayable_pk(payable_pk);
+			BigDecimal paid = !SimpletinyString.isEmpty(r) ? new BigDecimal(r) : BigDecimal.ZERO;
+			one_detail.setMoney(paid);
+			sum_money = sum_money.add(paid);
 
-			if (!SimpletinyString.isEmpty(r)) {
-				detail.setMoney(new BigDecimal(r));
-				sum_money = sum_money.add(new BigDecimal(r));
+			if (paid.compareTo(BigDecimal.ZERO) == 1) {
+				positive_details.add(one_detail);
+			} else if (paid.compareTo(BigDecimal.ZERO) == -1) {
+				negative_details.add(one_detail);
+			} else {
+				// donoting
 			}
-
-			dao.insert(detail);
-			payableService.updatePayablePaid(detail);
 		}
+
+		if (negative_details.size() == 0) {
+			for (SupplierPaidDetailBean d : positive_details) {
+				d.setStatus(ResourcesConstants.PAID_STATUS_ING);
+				d.setType(ResourcesConstants.PAID_TYPE_PAID);
+				dao.insert(d);
+				payableService.updatePayablePaid(d);
+			}
+		} else if (negative_details.size() > 0) {
+
+			List<SupplierPaidDetailBean> details = processDetails(positive_details, negative_details);
+			for (SupplierPaidDetailBean d : details) {
+				dao.insert(d);
+				if (d.getType().equals(ResourcesConstants.PAID_TYPE_STRIKE_OUT)) {
+					d.setMoney(d.getMoney().negate());
+				}
+				payableService.updatePayablePaid(d);
+			}
+		}
+		
 		// 生成支出审批数据
 		PayApprovalBean pa = new PayApprovalBean();
 		SupplierEmployeeBean supplierEmployee = supplierEmployeeDao.selectByPrimaryKey(supplier_employee_pk);
@@ -311,7 +336,71 @@ public class PaidServiceImpl implements PaidService {
 		pa.setBack_pk(related_pk);
 		pa.setComment(detail.getComment());
 		payApprovalDao.insert(pa);
-
 		return SUCCESS;
+	}
+
+	private List<SupplierPaidDetailBean> processDetails(List<SupplierPaidDetailBean> positive_details,
+			List<SupplierPaidDetailBean> negative_details) {
+		List<SupplierPaidDetailBean> transfer_details = new ArrayList<>();
+		int ne_index = 0;
+		List<SupplierPaidDetailBean> need_remove = new ArrayList<>();
+		for (SupplierPaidDetailBean po : positive_details) {
+			BigDecimal need_amount = po.getMoney();
+			while (need_amount.compareTo(BigDecimal.ZERO) == 1 && ne_index < negative_details.size()) {
+				SupplierPaidDetailBean ne = negative_details.get(ne_index);
+				BigDecimal can_provide = ne.getMoney().negate();
+				if (can_provide.compareTo(BigDecimal.ZERO) < 1) {
+					ne_index++;
+					continue;
+				}
+
+				BigDecimal strike_amount = can_provide.min(need_amount);
+
+				SupplierPaidDetailBean in_detail = new SupplierPaidDetailBean();
+				in_detail.setRelated_pk(po.getRelated_pk());
+				in_detail.setTeam_number(po.getTeam_number());
+				in_detail.setSupplier_employee_name(po.getSupplier_employee_name());
+				in_detail.setSupplier_employee_pk(po.getSupplier_employee_pk());
+				in_detail.setPayable_pk(po.getPayable_pk());
+				in_detail.setMoney(strike_amount);
+				in_detail.setComment("冲账");
+				in_detail.setStatus(ResourcesConstants.PAID_STATUS_ING);
+				in_detail.setType(ResourcesConstants.PAID_TYPE_STRIKE_IN);
+
+				SupplierPaidDetailBean out_detail = new SupplierPaidDetailBean();
+				out_detail.setRelated_pk(ne.getRelated_pk());
+				out_detail.setTeam_number(ne.getTeam_number());
+				out_detail.setSupplier_employee_name(ne.getSupplier_employee_name());
+				out_detail.setSupplier_employee_pk(ne.getSupplier_employee_pk());
+				out_detail.setPayable_pk(ne.getPayable_pk());
+				out_detail.setMoney(strike_amount);
+				out_detail.setComment("冲账");
+				out_detail.setStatus(ResourcesConstants.PAID_STATUS_ING);
+				out_detail.setType(ResourcesConstants.PAID_TYPE_STRIKE_OUT);
+
+				transfer_details.add(in_detail);
+				transfer_details.add(out_detail);
+
+				need_amount = need_amount.subtract(strike_amount);
+				can_provide = can_provide.subtract(strike_amount);
+				
+				ne.setMoney(can_provide.negate());
+				if (can_provide.compareTo(BigDecimal.ZERO) < 1) {
+					ne_index++;
+				}
+			}
+			po.setMoney(need_amount);
+			if (need_amount.compareTo(BigDecimal.ZERO) < 1) {
+				need_remove.add(po);
+			}
+		}
+		positive_details.removeAll(need_remove);
+		for (SupplierPaidDetailBean po : positive_details) {
+			po.setStatus(ResourcesConstants.PAID_STATUS_ING);
+			po.setType(ResourcesConstants.PAID_TYPE_PAID);
+		}
+
+		transfer_details.addAll(positive_details);
+		return transfer_details;
 	}
 }

@@ -14,6 +14,10 @@ import java.util.Date;
  * 
  */
 public class DateUtil {
+	public static String FIRST_OF_MONTH ="FIRST";
+	public static String MIDDLE_OF_MONTH ="MIDDLE";
+	public static String LAST_OF_MONTH ="LAST";
+	
 	public static String YYYYMMDD = "yyyyMMdd";
 	public static String YYYY_MM_DD = "yyyy-MM-dd";
 	public static String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
@@ -69,6 +73,15 @@ public class DateUtil {
 		}
 	}
 
+	public static String thisMonth(String... format) {
+		SimpleDateFormat sdf = sdf2;
+		if (format.length > 0) {
+			sdf = new SimpleDateFormat(format[0]);
+		}
+		Calendar c = Calendar.getInstance();
+		return sdf.format(c.getTime());
+	}
+
 	public static String lastMonth(String... format) {
 		SimpleDateFormat sdf = sdf2;
 		if (format.length > 0) {
@@ -79,6 +92,25 @@ public class DateUtil {
 		// 减去一个月
 		c.add(Calendar.MONTH, -1);
 		return sdf.format(c.getTime());
+	}
+
+	public static String getTenDayPeriod(String... date) {
+		Date date2;
+		if (date.length > 0) {
+			date2 = castStr2Date(date[0]);
+		} else {
+			date2 = new Date();
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(date2);
+		int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+		if (dayOfMonth <= 10) {
+			return FIRST_OF_MONTH;
+		} else if (dayOfMonth <= 20) {
+			return MIDDLE_OF_MONTH;
+		} else {
+			return LAST_OF_MONTH;
+		}
 	}
 
 	/**

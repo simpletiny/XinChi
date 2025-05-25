@@ -22,26 +22,31 @@ var OrderContext = function() {
 
 
 	self.refresh = function() {
+		startLoadingSimpleIndicator("查询中");
 		var param = $("form").serialize();
-		$.getJSON(self.apiurl + 'order/searchSumReport', param, function(data) {
+		const p1 = $.getJSON(self.apiurl + 'order/searchSumReport', param, function(data) {
 			self.report(data.report);
 			$(".rmb").formatCurrency();
 		});
 		const date_from = $('input[name="option.date_from"]').val();
 		const date_to = $('input[name="option.date_to"]').val();
-		$.getJSON(self.apiurl + 'accounting/searchSumReimbursement', { "option.date_from": date_from, "option.date_to": date_to }, function(data) {
+		const p2 = $.getJSON(self.apiurl + 'accounting/searchSumReimbursement', { "option.date_from": date_from, "option.date_to": date_to }, function(data) {
 			let results = new Map(self.items().map(item => [item, 0]));
 			let sum_money = 0;
-			for (let [key, value] of results) {
+			for (let [key, _] of results) {
 				if (data.summarise[key]) {
 					results.set(key, data.summarise[key]);
 
 					if (key !== "Q") { sum_money += data.summarise[key]; }
 				}
 			}
-			results.set("SUM",sum_money);
+			results.set("SUM", sum_money);
 			self.reiSummary(results);
 			$(".rmb").formatCurrency();
+		});
+
+		Promise.all([p1, p2]).then(() => {
+			endLoadingIndicator();
 		});
 	};
 
@@ -53,10 +58,6 @@ var OrderContext = function() {
 	}, function(data) {
 		self.sales(data.users);
 	});
-
-
-
-
 };
 
 var ctx = new OrderContext();
@@ -64,6 +65,4 @@ var ctx = new OrderContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
-
-
 });

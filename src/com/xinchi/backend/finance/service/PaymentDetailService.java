@@ -1,6 +1,7 @@
 package com.xinchi.backend.finance.service;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.InnerTransferBean;
@@ -49,4 +50,6 @@ public interface PaymentDetailService extends BaseService {
 	public List<PaymentDetailBean> batUploadReceived(File file);
 
 	public String batSaveReceived(String json, String json2);
+
+	public BigDecimal selectExchangeByParam(PaymentDetailBean pd_option);
 }

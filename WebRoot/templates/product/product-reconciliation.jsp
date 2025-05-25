@@ -87,6 +87,7 @@
 								<th>产品经理</th>
 								<th>录入人</th>
 								<th>状态</th>
+								<th>产品线</th>
 								<th>备注</th>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>操作</th>
@@ -102,6 +103,7 @@
 								<td data-bind="text: $data.product_manager_name"></td>
 								<td data-bind="text: $data.create_user_name"></td>
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td data-bind="text: $data.product_line"></td>
 								<td data-bind="text: $data.comment"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td></td>

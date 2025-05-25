@@ -58,6 +58,8 @@
 		<result column="standard_flg" property="standard_flg" jdbcType="CHAR" />
 		<result column="final_receivable" property="final_receivable" jdbcType="DECIMAL" />
 		<result column="final_receivable_comment" property="final_receivable_comment" jdbcType="VARCHAR" />
+		<result column="product_line" property="product_line" jdbcType="VARCHAR" />
+		<result column="product_bonus" property="product_bonus" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -116,7 +118,9 @@
 		update_time,
 		standard_flg,
 		final_receivable,
-		final_receivable_comment
+		final_receivable_comment,
+		product_line,
+		product_bonus
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -474,8 +478,6 @@
 			</if>
 		</trim>
 	</insert>
-
-
 	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.SaleOrderBean">
 		update sale_order
 		<set>
@@ -643,6 +645,12 @@
 			</if>
 			<if test="final_receivable_comment != null">
 				final_receivable_comment = #{final_receivable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="product_line != null">
+				product_line = #{product_line,jdbcType=VARCHAR},
+			</if>
+			<if test="product_bonus != null">
+				product_bonus = #{product_bonus,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

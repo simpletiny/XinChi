@@ -91,6 +91,9 @@ public class ProductBean extends SupperBO implements Serializable {
 	private float gross_child_profit_rate;
 	private String id_type;
 	private String as_adult_flg;
+	
+	private BigDecimal adult_instant_bonus; 
+	private BigDecimal child_instant_bonus;
 
 	// 保持上架标识
 	private String keep_flg;
@@ -561,6 +564,22 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setProduct_manager_name(String product_manager_name) {
 		this.product_manager_name = product_manager_name;
+	}
+
+	public BigDecimal getAdult_instant_bonus() {
+		return adult_instant_bonus;
+	}
+
+	public void setAdult_instant_bonus(BigDecimal adult_instant_bonus) {
+		this.adult_instant_bonus = adult_instant_bonus;
+	}
+
+	public BigDecimal getChild_instant_bonus() {
+		return child_instant_bonus;
+	}
+
+	public void setChild_instant_bonus(BigDecimal child_instant_bonus) {
+		this.child_instant_bonus = child_instant_bonus;
 	}
 
 }

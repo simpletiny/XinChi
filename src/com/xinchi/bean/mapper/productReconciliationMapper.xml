@@ -8,6 +8,7 @@
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
 		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="product_line" property="product_line" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="CHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
@@ -28,7 +29,8 @@
 		update_user,
 		create_time,
 		update_time,
-		status
+		status,
+		product_line
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -75,6 +77,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="product_line != null">
+				product_line,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="type != null">
@@ -106,6 +111,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="product_line != null">
+				#{product_line,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -144,6 +152,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="product_line != null">
+				product_line = #{product_line,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -152,7 +163,7 @@
 		<include refid="Base_Column_List" />
 		from product_reconciliation
 	</select>
-	<select id="selectSumReconciliation" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="BaseResultMap">
+	<select id="selectSumReconciliation" parameterType="com.xinchi.bean.ProductReconciliationBean" resultMap="BaseResultMap">
 		SELECT
 		SUM(IF(type = '支出', money, -money)) AS money, belong_month,product_manager_number
 		FROM
@@ -161,11 +172,14 @@
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
 			</if>
-			<if test="first_month != null and first_month !=''">
-				and belong_month = #{first_month,jdbcType=VARCHAR}
+			<if test="belong_year != null and belong_year !=''">
+				and LEFT(belong_month,4) = #{belong_year,jdbcType=VARCHAR}
+			</if>
+			<if test="product_line != null and product_line !=''">
+				and product_line = #{product_line,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP BY product_manager_number , belong_month
+		GROUP BY product_manager_number,belong_month,product_line
 	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -179,7 +193,8 @@
 		A.create_user,
 		C.user_name AS create_user_name,
 		A.status,
-		A.comment
+		A.comment,
+		A.product_line
 		FROM
 		product_reconciliation A
 		LEFT JOIN
@@ -205,6 +220,9 @@
 			</if>
 			<if test="params.bo.create_user != null and params.bo.create_user !=''">
 				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.product_line != null and params.bo.product_line !=''">
+				and A.product_line = #{params.bo.product_line,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.statuses != null and params.bo.statuses !=''">
 				and A.status in

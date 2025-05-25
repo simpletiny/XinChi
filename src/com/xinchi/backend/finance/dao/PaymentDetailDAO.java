@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.PaymentDetailBean;
@@ -29,4 +30,6 @@ public interface PaymentDetailDAO {
 	public List<PaymentDetailBean> selectByVoucherNumber(String voucher_number);
 
 	public List<PaymentDetailBean> selectByInnerPk(String inner_pk);
+
+	public BigDecimal selectExchangeByParam(PaymentDetailBean option);
 }

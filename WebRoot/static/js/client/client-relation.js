@@ -174,10 +174,13 @@ var ClientContext = function() {
 	self.workOrder = ko.observable({});
 	self.accurateSale = ko.observable({});
 	self.clientEmployeeTypeCount = ko.observable({});
+	self.rankLastMonth = ko.observable({rank_score:0,rank_first_score:0,rank_middle_score:0,rank_last_score:0});
+	self.rankThisMonth = ko.observable({rank_score:0,rank_first_score:0,rank_middle_score:0,rank_last_score:0});
 
 	self.searchClientSummary = function() {
 		var param = $("form").serialize();
 		$.getJSON(self.apiurl + 'client/searchClientSummary', param, function(data) {
+			console.log(data);
 			self.potential(data.potential);
 			self.meter(data.meter);
 			self.workOrder(data.workOrder);
@@ -186,6 +189,9 @@ var ClientContext = function() {
 			self.clientEmployeeTypeCount(data.clientEmployeeTypeCount);
 			self.saleScore(data.sale_score);
 			self.todayPoint(data.today_point);
+			self.rankLastMonth(data.rankLastMonth);
+			self.rankThisMonth(data.rankThisMonth);
+			
 			$(".rmb").formatCurrency();
 		});
 	};

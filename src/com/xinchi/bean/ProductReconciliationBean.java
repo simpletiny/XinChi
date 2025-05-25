@@ -19,9 +19,11 @@ public class ProductReconciliationBean extends SupperBO implements Serializable 
 
 	private String status;
 	private String comment;
+	private String product_line;
 	// DTO
 	private String create_user_name;
 	private String product_manager_name;
+	private String belong_year;
 
 	// options
 	private List<String> statuses;
@@ -115,6 +117,22 @@ public class ProductReconciliationBean extends SupperBO implements Serializable 
 
 	public void setMoney_to(BigDecimal money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getProduct_line() {
+		return product_line;
+	}
+
+	public void setProduct_line(String product_line) {
+		this.product_line = product_line;
+	}
+
+	public String getBelong_year() {
+		return belong_year;
+	}
+
+	public void setBelong_year(String belong_year) {
+		this.belong_year = belong_year;
 	}
 
 }

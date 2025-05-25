@@ -15,6 +15,7 @@ var AirLegContext = function() {
 
 	self.uses = ['Y', 'N'];
 	self.useMapping = {
+		
 		"Y" : "正常",
 		"N" : "暂停使用"
 	}

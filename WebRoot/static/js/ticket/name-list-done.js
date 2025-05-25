@@ -48,8 +48,6 @@ var PassengerContext = function() {
 			}
 			passenger_pks.RTrim(",");
 			console.log(passenger_pks)
-			const isCan = checkCanEdit(passenger_pks);
-
 
 			let msg = "解锁名单意味着，销售可以对解锁的名单进行编辑或删除操作。确定解锁这些名单吗？"
 			$.layer({
@@ -67,6 +65,7 @@ var PassengerContext = function() {
 			});
 		}
 	}
+	
 	// 锁定名单
 	self.lockName = function() {
 		if (self.chosenPassengers().length < 1) {

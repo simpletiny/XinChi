@@ -39,8 +39,8 @@
 						<div class="col-md-6">
 							<div data-bind="foreach: statuses" style="padding-top: 4px;">
 								<em class="small-box"> <input type="checkbox"
-									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
-									name="option.report_statuses" /><label data-bind="text: $root.approvedMapping[$data]"></label>
+									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="option.report_statuses" /><label
+									data-bind="text: $root.approvedMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -63,17 +63,14 @@
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)"
-								name="radio_date" />出团日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" name="radio_date" />出团日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
-									name="option.departure_date_from" disabled="disabled" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" disabled="disabled" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
-									name="option.departure_date_to" disabled="disabled" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" disabled="disabled" />
 							</div>
 						</div>
 					</div>
@@ -81,30 +78,26 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">出团月</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control month-picker-st" st="st-month" placeholder="出团月"
-									data-bind="value:confirm_month()" name="option.confirm_month" />
+								<input type="text" class="form-control month-picker-st" st="st-month" placeholder="出团月" data-bind="value:confirm_month()"
+									name="option.confirm_month" />
 							</div>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">销售</label>
 							<div class="col-md-2">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'"
-									name="option.sale_number"></select>
+									data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--全部--'" name="option.sale_number"></select>
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" checked
-								name="radio_date" />确认日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" checked name="radio_date" />确认日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" placeholder="from"
-									name="option.confirm_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-2" placeholder="from" name="option.confirm_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" placeholder="to"
-									name="option.confirm_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-2" placeholder="to" name="option.confirm_date_to" />
 							</div>
 						</div>
 						<div style="float: right">
@@ -113,9 +106,9 @@
 							</div>
 						</div>
 					</div>
-					<s:if test="#session.user.user_roles.contains('ADMIN')">
-						<div class="form-group">
 
+					<div class="form-group">
+						<s:if test="#session.user.user_roles.contains('ADMIN')">
 							<div class="span6">
 								<label class="col-md-1 control-label">产品经理</label>
 								<div class="col-md-2">
@@ -124,9 +117,21 @@
 										name="option.product_manager_number"></select>
 								</div>
 							</div>
-
+						</s:if>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品线</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: locations,optionsText:'name',optionsValue:'name', optionsCaption: '--请选择--'" name="option.product_line"></select>
+							</div>
 						</div>
-					</s:if>
+						<div class="span6">
+							<label class="col-md-1 control-label">操作单号</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品操作单号" name="option.product_order_number"></input>
+							</div>
+						</div>
+					</div>
 				</form>
 				<div class="list-result" id="main-table">
 					<table class="table table-striped table-hover">
@@ -152,14 +157,14 @@
 								<th>人均毛利</th>
 								<th>确认日期</th>
 								<th>销售</th>
+								<th>操作单号</th>
 								<th>操作</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: reports">
 							<tr>
-								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders"/></td>
-								<td><a href="javascript:void(0)"
-									data-bind="text: $data.team_number,event:{click:function(){$root.viewTeamDetail($data.team_number)}}"></a></td>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
+								<td><a href="javascript:void(0)" data-bind="text: $data.team_number,event:{click:function(){$root.viewTeamDetail($data.team_number)}}"></a></td>
 								<!-- ko if:$data.order_type=="Y" -->
 								<td data-bind="text: $root.orderTypeMapping[$data.order_type]"></td>
 								<!-- /ko -->
@@ -190,6 +195,7 @@
 								<td data-bind="text: $data.per_profit" class="rmb"></td>
 								<td data-bind="text: $data.confirm_date"></td>
 								<td data-bind="text: $data.sale_name"></td>
+								<td data-bind="text: $data.product_order_number"></td>
 								<!-- ko if: $data.approved == "Y" -->
 								<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.rollBackReport($data)}}">打回</a></td>
 								<!-- /ko -->
@@ -226,13 +232,11 @@
 			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFill() }">确认</button>
 		</div>
 	</div>
-	<div id="team-detail"
-		style="display: none; width: 1000px; height: 700px; overflow-y: scroll; padding-top: 30px; padding-bottom: 20px">
+	<div id="team-detail" style="display: none; width: 1000px; height: 700px; overflow-y: scroll; padding-top: 30px; padding-bottom: 20px">
 		<div class="detail-header">
-			<span class="title">出团日期</span><span class="content" data-bind="text:order().departure_date"></span> <span
-				class="title">产品</span><span class="content" data-bind="text:order().product_name"></span> <span class="title">团号</span><span
-				class="content" data-bind="text:order().team_number"></span> <span class="title">销售</span><span class="content"
-				data-bind="text:order().create_user"></span>
+			<span class="title">出团日期</span><span class="content" data-bind="text:order().departure_date"></span> <span class="title">产品</span><span
+				class="content" data-bind="text:order().product_name"></span> <span class="title">团号</span><span class="content"
+				data-bind="text:order().team_number"></span> <span class="title">销售</span><span class="content" data-bind="text:order().create_user"></span>
 		</div>
 		<hr />
 		<h3 style="padding-left: 40px">预算团款</h3>
@@ -399,7 +403,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div id="div-reconciliation" style="display: none; width: 500px; height: 150px; ">
+	<div id="div-reconciliation" style="display: none; width: 500px; height: 150px;">
 		<form id="form-reconciliation">
 			<div class="input-row clearfloat">
 				<div class="col-md-12 required">
@@ -412,20 +416,21 @@
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
-						<a type="button" class="btn btn-green btn-r" data-bind="click: doReconciliation">提交</a> <a type="button"
-							class="btn btn-green btn-r" data-bind="click: cancelReconciliation">取消</a>
+						<a type="button" class="btn btn-green btn-r" data-bind="click: doReconciliation">提交</a> <a type="button" class="btn btn-green btn-r"
+							data-bind="click: cancelReconciliation">取消</a>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.007"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.009"></script>
 </body>
 </html>

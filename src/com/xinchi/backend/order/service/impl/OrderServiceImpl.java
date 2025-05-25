@@ -150,13 +150,11 @@ public class OrderServiceImpl implements OrderService {
 		if (!SimpletinyString.isEmpty(final_order.getFinal_confirm_file()))
 
 		{
-			FileUtil.saveFile(final_order.getFinal_confirm_file(), FileFolder.CLIENT_FINAL.value(),
-					final_order.getTeam_number());
+			FileUtil.saveFile(final_order.getFinal_confirm_file(), FileFolder.CLIENT_FINAL.value(), final_order.getTeam_number());
 		}
 		// 保存凭证文件
 		if (!SimpletinyString.isEmpty(final_order.getFinal_voucher_file())) {
-			FileUtil.saveFile(final_order.getFinal_voucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(),
-					final_order.getTeam_number());
+			FileUtil.saveFile(final_order.getFinal_voucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(), final_order.getTeam_number());
 		}
 		return SUCCESS;
 	}
@@ -210,13 +208,11 @@ public class OrderServiceImpl implements OrderService {
 
 		// 保存决算单文件
 		if (!SimpletinyString.isEmpty(order.getFinal_confirm_file())) {
-			FileUtil.saveFile(order.getFinal_confirm_file(), FileFolder.CLIENT_FINAL.value(),
-					budget_order.getTeam_number());
+			FileUtil.saveFile(order.getFinal_confirm_file(), FileFolder.CLIENT_FINAL.value(), budget_order.getTeam_number());
 		}
 		// 保存凭证文件
 		if (!SimpletinyString.isEmpty(order.getFinal_voucher_file())) {
-			FileUtil.saveFile(order.getFinal_voucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(),
-					budget_order.getTeam_number());
+			FileUtil.saveFile(order.getFinal_voucher_file(), FileFolder.CLIENT_FINAL_VOUCHER.value(), budget_order.getTeam_number());
 		}
 
 		// 更新应收款
@@ -271,8 +267,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderDto> selectConfirmingOrders() {
 		OrderDto orderOption = new OrderDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			orderOption.setSale_number(sessionBean.getUser_number());
@@ -384,8 +379,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		if (order.getAdult_count() != null) {
-			int people_count = order.getAdult_count()
-					+ (order.getSpecial_count() == null ? 0 : order.getSpecial_count());
+			int people_count = order.getAdult_count() + (order.getSpecial_count() == null ? 0 : order.getSpecial_count());
 			receivable.setPeople_count(people_count);
 		}
 
@@ -518,8 +512,7 @@ public class OrderServiceImpl implements OrderService {
 			String as_adult = obj.getString("as_adult");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
-			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
-					: new BigDecimal(obj.getString("price"));
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO : new BigDecimal(obj.getString("price"));
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
@@ -548,8 +541,7 @@ public class OrderServiceImpl implements OrderService {
 	private void saveFile(SaleOrderBean bean) {
 		String user_number = "";
 		if (null == bean.getCreate_user()) {
-			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 			user_number = sessionBean.getUser_number();
 		} else {
 			user_number = bean.getCreate_user();
@@ -558,8 +550,7 @@ public class OrderServiceImpl implements OrderService {
 		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
 		File sourceFile = new File(tempFolder + File.separator + bean.getBudget_confirm_file());
-		File destfile = new File(
-				fileFolder + File.separator + user_number + File.separator + bean.getBudget_confirm_file());
+		File destfile = new File(fileFolder + File.separator + user_number + File.separator + bean.getBudget_confirm_file());
 		try {
 			FileUtils.copyFile(sourceFile, destfile);
 		} catch (IOException e) {
@@ -571,8 +562,7 @@ public class OrderServiceImpl implements OrderService {
 	private void deleteFile(SaleOrderBean old) {
 		String user_number = old.getCreate_user();
 		String fileFolder = PropertiesUtil.getProperty("clientConfirmFileFolder");
-		File oldFile = new File(
-				fileFolder + File.separator + user_number + File.separator + old.getBudget_confirm_file());
+		File oldFile = new File(fileFolder + File.separator + user_number + File.separator + old.getBudget_confirm_file());
 		oldFile.delete();
 	}
 
@@ -756,8 +746,7 @@ public class OrderServiceImpl implements OrderService {
 				receivable.setReturn_date(returnDate);
 			}
 			if (bean.getAdult_count() != null) {
-				int people_count = bean.getAdult_count()
-						+ (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+				int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 				receivable.setPeople_count(people_count);
 			}
 
@@ -797,8 +786,7 @@ public class OrderServiceImpl implements OrderService {
 			String age_string = obj.getString("age");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
 
-			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
-					: new BigDecimal(obj.getString("price"));
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO : new BigDecimal(obj.getString("price"));
 
 			SaleOrderNameListBean passenger = new SaleOrderNameListBean();
 			passenger.setName(name);
@@ -917,8 +905,7 @@ public class OrderServiceImpl implements OrderService {
 				receivable.setReturn_date(returnDate);
 			}
 			if (bean.getAdult_count() != null) {
-				int people_count = bean.getAdult_count()
-						+ (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+				int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 				receivable.setPeople_count(people_count);
 			}
 
@@ -952,8 +939,7 @@ public class OrderServiceImpl implements OrderService {
 				receivable.setReturn_date(returnDate);
 			}
 			if (bean.getAdult_count() != null) {
-				int people_count = bean.getAdult_count()
-						+ (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
+				int people_count = bean.getAdult_count() + (bean.getSpecial_count() == null ? 0 : bean.getSpecial_count());
 				receivable.setPeople_count(people_count);
 			}
 
@@ -1027,8 +1013,7 @@ public class OrderServiceImpl implements OrderService {
 	public String confirmStandardOrder(SaleOrderBean bean, String json) {
 		SaleOrderBean old = dao.selectByPrimaryKey(bean.getPk());
 		// 判断是否有信用余额确认订单
-		if (!userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(), old.getTeam_number(),
-				bean.getReceivable()))
+		if (!userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(), old.getTeam_number(), bean.getReceivable()))
 			return "noenoughcredit";
 
 		ProductBean product = productDao.selectByPrimaryKey(bean.getProduct_pk());
@@ -1080,6 +1065,10 @@ public class OrderServiceImpl implements OrderService {
 		String product_value = product.getProduct_value().floatValue() + ","
 				+ (null == product.getProduct_child_value() ? "0" : product.getProduct_child_value().floatValue());
 		bean.setProduct_value(product_value);
+		// 保存产品线路和产品立奖信息
+		bean.setProduct_line(product.getLocation());
+		String product_bonus = product.getAdult_instant_bonus().toPlainString() + "," + product.getChild_instant_bonus().toPlainString();
+		bean.setProduct_bonus(product_bonus);
 
 		// 生成或者更新team_report基础数据
 		TeamReportBean tr = orderReportDao.selectTeamReportByTn(bean.getTeam_number());
@@ -1093,13 +1082,10 @@ public class OrderServiceImpl implements OrderService {
 		BaseDataBean option = baseDataDao.selectByPk(ResourcesConstants.BASE_DATA_PK_TEAM);
 
 		// 修改系统费用计算逻辑
-		BigDecimal sale_cost = new BigDecimal(option.getExt1())
-				.multiply(product.getProduct_child_value().multiply(new BigDecimal(special_count))
-						.add(product.getProduct_value().multiply(new BigDecimal(bean.getAdult_count()))))
-				.setScale(2, BigDecimal.ROUND_UP);
+		BigDecimal sale_cost = new BigDecimal(option.getExt1()).multiply(product.getProduct_child_value().multiply(new BigDecimal(special_count))
+				.add(product.getProduct_value().multiply(new BigDecimal(bean.getAdult_count())))).setScale(2, BigDecimal.ROUND_UP);
 
-		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
-				BigDecimal.ROUND_UP);
+		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2, BigDecimal.ROUND_UP);
 
 		tr.setSale_cost(sale_cost);
 		tr.setSys_cost(sys_cost);
@@ -1131,8 +1117,7 @@ public class OrderServiceImpl implements OrderService {
 			String cellphone_B = obj.getString("cellphone_B");
 			String id = obj.getString("id");
 			String as_adult = obj.getString("as_adult");
-			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO
-					: new BigDecimal(obj.getString("price"));
+			BigDecimal price = SimpletinyString.isEmpty(obj.getString("price")) ? BigDecimal.ZERO : new BigDecimal(obj.getString("price"));
 			String id_type = obj.getString("id_type");
 			String age_string = obj.getString("age");
 			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
@@ -1177,15 +1162,14 @@ public class OrderServiceImpl implements OrderService {
 		String order_pk = bean.getPk();
 		SaleOrderBean old = dao.selectByPrimaryKey(order_pk);
 		// 判断是否有信用余额确认订单
-		boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(),
-				old.getTeam_number(), bean.getReceivable());
+		boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(), old.getTeam_number(),
+				bean.getReceivable());
 
 		if (!canConfirm) {
 			return "noenoughcredit";
 		}
 
-		bean.setTeam_number(SimpletinyString.isEmpty(old.getTeam_number()) ? numberService.generateTeamNumber()
-				: old.getTeam_number());
+		bean.setTeam_number(SimpletinyString.isEmpty(old.getTeam_number()) ? numberService.generateTeamNumber() : old.getTeam_number());
 		bean.setCreate_user(old.getCreate_user());
 
 		if (!SimpletinyString.isEmpty(bean.getBudget_confirm_file())) {
@@ -1375,15 +1359,14 @@ public class OrderServiceImpl implements OrderService {
 		String returnDate = DateUtil.addDate(departureDate, days - 1);
 
 		// 判断是否有信用余额确认订单
-		boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(),
-				old.getTeam_number(), bean.getReceivable());
+		boolean canConfirm = userService.hasEnoughCreditToConfirm(old.getReceivable_first_flg(), old.getSale(), old.getTeam_number(),
+				bean.getReceivable());
 
 		if (!canConfirm) {
 			return "noenoughcredit";
 		}
 
-		bean.setTeam_number(SimpletinyString.isEmpty(old.getTeam_number()) ? numberService.generateTeamNumber()
-				: old.getTeam_number());
+		bean.setTeam_number(SimpletinyString.isEmpty(old.getTeam_number()) ? numberService.generateTeamNumber() : old.getTeam_number());
 
 		bean.setLock_flg("Y,N");
 		bean.setConfirm_flg("Y");
@@ -1567,8 +1550,7 @@ public class OrderServiceImpl implements OrderService {
 		receivable.setReturn_date(returnDate);
 		receivable.setPeople_count(people_count);
 		receivable.setBudget_receivable(bean.getReceivable());
-		receivable.setBudget_balance(bean.getReceivable()
-				.subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
 		receivableDao.update(receivable);
 
 		List<ProductOrderTeamNumberBean> relations = productOrderTeamNumberDao.selectByTeamNumber(team_number);
@@ -1692,8 +1674,7 @@ public class OrderServiceImpl implements OrderService {
 		// 新增名单
 		Set<SaleOrderNameListBean> addNames = new HashSet<SaleOrderNameListBean>();
 
-		JSONArray nameList = old.getIndependent_flg().equals("A")
-				? JSONObject.fromObject(json).getJSONArray("name_json")
+		JSONArray nameList = old.getIndependent_flg().equals("A") ? JSONObject.fromObject(json).getJSONArray("name_json")
 				: JSONArray.fromObject(json);
 
 		String passenger_captain = "";
@@ -1887,8 +1868,7 @@ public class OrderServiceImpl implements OrderService {
 		receivable.setReturn_date(returnDate);
 		receivable.setPeople_count(people_count);
 		receivable.setBudget_receivable(bean.getReceivable());
-		receivable.setBudget_balance(bean.getReceivable()
-				.subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
+		receivable.setBudget_balance(bean.getReceivable().subtract(receivable.getReceived() == null ? BigDecimal.ZERO : receivable.getReceived()));
 		receivableDao.update(receivable);
 
 		List<ProductOrderTeamNumberBean> relations = productOrderTeamNumberDao.selectByTeamNumber(team_number);
@@ -1929,15 +1909,12 @@ public class OrderServiceImpl implements OrderService {
 		String[] product_value = old.getProduct_value().split(",");
 
 		if (product_value.length == 2) {
-			BigDecimal sale_cost = new BigDecimal(option.getExt1())
-					.multiply(new BigDecimal(product_value[1]).multiply(new BigDecimal(special_count))
-							.add(new BigDecimal(product_value[0]).multiply(new BigDecimal(bean.getAdult_count()))))
-					.setScale(2, BigDecimal.ROUND_UP);
+			BigDecimal sale_cost = new BigDecimal(option.getExt1()).multiply(new BigDecimal(product_value[1]).multiply(new BigDecimal(special_count))
+					.add(new BigDecimal(product_value[0]).multiply(new BigDecimal(bean.getAdult_count())))).setScale(2, BigDecimal.ROUND_UP);
 			tr.setSale_cost(sale_cost);
 		}
 
-		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2,
-				BigDecimal.ROUND_UP);
+		BigDecimal sys_cost = new BigDecimal(option.getExt2()).multiply(new BigDecimal(people_count)).setScale(2, BigDecimal.ROUND_UP);
 		tr.setSys_cost(sys_cost);
 		orderReportDao.updateTeamReport(tr);
 

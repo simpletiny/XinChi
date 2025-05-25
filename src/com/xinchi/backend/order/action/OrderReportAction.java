@@ -1,6 +1,7 @@
 package com.xinchi.backend.order.action;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,13 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.order.service.OrderReportService;
+import com.xinchi.backend.payable.service.AirTicketPayableService;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -40,8 +46,7 @@ public class OrderReportAction extends BaseAction {
 	public String searchOrderReportByPage() {
 		if (null == option)
 			option = new OrderReportDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		// if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
@@ -67,6 +72,12 @@ public class OrderReportAction extends BaseAction {
 
 	private OrderReportDto report;
 
+	@Autowired
+	private AirTicketPayableService airTicketPayableService;
+
+	@Autowired
+	private PaymentDetailService paymentDetailService;
+
 	/**
 	 * 单团核算单汇总
 	 * 
@@ -75,10 +86,12 @@ public class OrderReportAction extends BaseAction {
 	public String searchSumReport() {
 		if (null == option)
 			option = new OrderReportDto();
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
+		String from_month = option.getDate_from();
+		String to_month = option.getDate_to();
+		String product_manager_number = option.getProduct_manager_number();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setProduct_manager_number(sessionBean.getUser_number());
 		}
@@ -91,8 +104,45 @@ public class OrderReportAction extends BaseAction {
 		}
 
 		report = service.searchSumReport(option);
-		if (report == null)
+		boolean no_data = false;
+		if (report == null) {
 			report = new OrderReportDto();
+			no_data = true;
+		}
+
+		// 搜索押金扣款
+		AirServiceFeeDto summary_option = new AirServiceFeeDto();
+		summary_option.setProduct_manager_number(option.getProduct_manager_number());
+		summary_option.setFrom_month(from_month);
+		summary_option.setTo_month(to_month);
+		List<AirOtherPaymentDto> deposit_deducts = airTicketPayableService.searchDepositDeducts(summary_option);
+		BigDecimal air_deduct = BigDecimal.ZERO;
+		if (null != deposit_deducts && deposit_deducts.size() > 0) {
+			for (AirOtherPaymentDto aopd : deposit_deducts) {
+				air_deduct = air_deduct.add(aopd.getMoney());
+			}
+		}
+		report.setAir_deduct(air_deduct);
+		// 搜索汇兑
+		BigDecimal exchange = BigDecimal.ZERO;
+		if (roles.contains(ResourcesConstants.USER_ROLE_ADMIN) && SimpletinyString.isEmpty(product_manager_number)) {
+			PaymentDetailBean pd_option = new PaymentDetailBean();
+			pd_option.setFrom_month(from_month);
+			pd_option.setTo_month(to_month);
+			exchange = paymentDetailService.selectExchangeByParam(pd_option);
+		}
+		report.setExchange(exchange);
+
+		BigDecimal gross_profit = BigDecimal.ZERO;
+		BigDecimal per_profit = BigDecimal.ZERO;
+		if (!no_data) {
+			gross_profit = report.getReceivable().subtract(report.getTail98()).subtract(report.getAir_ticket_cost())
+					.subtract(report.getProduct_cost()).subtract(report.getOther_cost()).subtract(report.getFy()).subtract(report.getSys_cost())
+					.subtract(report.getSale_cost()).subtract(report.getAir_deduct()).subtract(report.getExchange());
+			per_profit = gross_profit.divide(BigDecimal.valueOf(report.getAdult_count() + report.getSpecial_count()), 2, RoundingMode.HALF_UP);
+		}
+		report.setGross_profit(gross_profit);
+		report.setPer_profit(per_profit);
 		return SUCCESS;
 	}
 
@@ -126,12 +176,10 @@ public class OrderReportAction extends BaseAction {
 	private BigDecimal air_ticket_cost;
 
 	public String fillAirTicketCost() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
-				&& !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN) && !roles.contains(ResourcesConstants.USER_ROLE_TICKET)) {
 			return "noright";
 		}
 		resultStr = service.fillAriTicketCost(team_number, air_ticket_cost);

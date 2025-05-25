@@ -1,6 +1,7 @@
 package apptest;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,21 +9,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
 import com.xinchi.bean.DishonestPersonBean;
+import com.xinchi.common.DateUtil;
 import com.xinchi.common.HttpUtils;
 import com.xinchi.common.ResourcesConstants;
 
 public class SomeTest {
 
 	public static void main(String[] args) throws IOException {
-		SomeTest d = new SomeTest();
-
-		DishonestPersonBean person = new DishonestPersonBean();
-		person.setId("230903197504120026");
-		person.setName("曹庆香");
-
-		String result = d.checkHighFromApi(person);
-
-		System.out.println(result);
+		BigDecimal a = new BigDecimal("12.333");
+		System.out.print(a.toPlainString());
+		
 	}
 
 	public String checkHighFromApi(DishonestPersonBean person) {

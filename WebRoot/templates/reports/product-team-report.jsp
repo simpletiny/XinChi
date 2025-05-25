@@ -146,8 +146,20 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<p class="ip-default rmb" data-bind="text: 0.00"></p>
 							</div>
 						</div>
+						<div class="col-md-3">
+							<label class="l">押金扣款：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().air_deduct"></p>
+							</div>
+						</div>
 					</div>
 					<div class="input-row clearfloat">
+						<div class="col-md-3">
+							<label class="l">汇兑：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().exchange"></p>
+							</div>
+						</div>
 						<div class="col-md-3">
 							<label class="l">产品毛利：</label>
 							<div class="ip fix_width">
@@ -180,13 +192,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		</div>
 	</div>
 	<script>
-		$(".manager").addClass("current").children("ol").css("display", "block");
+		$(".data").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/reports/product-team-report.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/reports/product-team-report.js?v=1.002"></script>
 </body>
 </html>

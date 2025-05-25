@@ -42,6 +42,13 @@
 								</div>
 							</div>
 						</s:if>
+						<div class="span6">
+							<label class="col-md-1 control-label">产品线</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px"
+									data-bind="options: locations,optionsText:'name',optionsValue:'name', optionsCaption: '--请选择--'" name="productProfit.product_line"></select>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div align="left">
@@ -96,8 +103,7 @@
 								<td data-bind="text: $data.keep_cost" class="rmb"></td>
 								<td></td>
 								<td data-bind="text:$data.other_cost"></td>
-								<td
-									data-bind="text: $data.gross_profit-$data.ticket_other_cost- $data.deposit_deduct-$data.product_cost-$data.keep_cost-$data.other_cost"
+								<td data-bind="text: $data.gross_profit-$data.ticket_other_cost- $data.deposit_deduct-$data.product_cost-$data.keep_cost-$data.other_cost"
 									class="rmb"></td>
 							</tr>
 						</tbody>
@@ -123,6 +129,15 @@
 				</div>
 			</div>
 			<div class="input-row clearfloat">
+				<div class="col-md-6 required">
+					<label class="l">产品线</label>
+					<div class="ip" style="width: 40%">
+						<select class="form-control" style="height: 34px"
+							data-bind="options: locations,optionsText:'name',optionsValue:'name', optionsCaption: '--请选择--'" name="reconciliation.product_line"></select>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
 				<div class="col-md-8 required">
 					<label class="l">备注</label>
 					<div class="ip">
@@ -133,20 +148,21 @@
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="margin-top: 10px">
 					<div align="right">
-						<a type="button" class="btn btn-green btn-r" data-bind="click: doReconciliation">提交</a> <a type="button"
-							class="btn btn-green btn-r" data-bind="click: cancelReconciliation">取消</a>
+						<a type="button" class="btn btn-green btn-r" data-bind="click: doReconciliation">提交</a> <a type="button" class="btn btn-green btn-r"
+							data-bind="click: cancelReconciliation">取消</a>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display", "block");
+		$(".product-manager").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.005"></script>
 </body>
 </html>

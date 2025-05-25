@@ -748,4 +748,10 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 
 		return SUCCESS;
 	}
+
+	@Override
+	public BigDecimal selectExchangeByParam(PaymentDetailBean option) {
+		
+		return dao.selectExchangeByParam(option);
+	}
 }

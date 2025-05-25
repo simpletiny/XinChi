@@ -169,6 +169,14 @@
 		<result column="product_point" property="product_point" jdbcType="INTEGER" />
 		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="ScoreRankMap" type="com.xinchi.bean.ScoreRankDto">
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
+		<result column="rank_first_score" property="rank_first_score" jdbcType="INTEGER" />
+		<result column="rank_middle_score" property="rank_middle_score" jdbcType="INTEGER" />
+		<result column="rank_last_score" property="rank_last_score" jdbcType="INTEGER" />
+		<result column="rank_score" property="rank_score" jdbcType="INTEGER" />
+	</resultMap>
 
 	<sql id="Base_Column_List">
 		client_employee_name,
@@ -205,7 +213,8 @@
 		COUNT(IF(A.relation_level='市场级',1,NULL)) AS market_all,
 		COUNT(IF(A.relation_level='尝试级',1,NULL)) AS try_all,
 		COUNT(IF(A.relation_level='忽略级',1,NULL)) AS ignore_all,
-		COUNT(IF(A.relation_level='新增级',1,NULL)) AS new_all,
+		COUNT(IF(A.relation_level='新增级',1,NULL))
+		AS new_all,
 
 		COUNT(IF(A.market_level='核心' and A.relation_level!='新增级',1,NULL))
 		AS all_tel,
@@ -214,7 +223,8 @@
 		COUNT(IF(A.relation_level='主力级' and
 		A.market_level='核心',1,NULL)) AS
 		main_tel,
-		COUNT(IF(A.relation_level='市场级' and
+		COUNT(IF(A.relation_level='市场级'
+		and
 		A.market_level='核心',1,NULL)) AS
 		market_tel,
 		COUNT(IF(A.relation_level='尝试级' and A.market_level='核心',1,NULL)) AS try_tel,
@@ -226,7 +236,8 @@
 
 		COUNT(IF(A.market_level='主力' and A.relation_level!='新增级',1,NULL)) AS
 		all_wechat,
-		COUNT(IF(A.relation_level='核心级' and A.market_level='主力',1,NULL)) AS core_wechat,
+		COUNT(IF(A.relation_level='核心级' and
+		A.market_level='主力',1,NULL)) AS core_wechat,
 		COUNT(IF(A.relation_level='主力级' and
 		A.market_level='主力',1,NULL)) AS main_wechat,
 		COUNT(IF(A.relation_level='市场级' and
@@ -246,11 +257,13 @@
 		COUNT(IF(A.relation_level='核心级' and
 		A.market_level='普通',1,NULL)) AS core_ad,
 		COUNT(IF(A.relation_level='主力级' and
-		A.market_level='普通',1,NULL)) AS main_ad,
+		A.market_level='普通',1,NULL)) AS
+		main_ad,
 		COUNT(IF(A.relation_level='市场级' and
 		A.market_level='普通',1,NULL)) AS
 		market_ad,
-		COUNT(IF(A.relation_level='尝试级' and A.market_level='普通',1,NULL)) AS try_ad,
+		COUNT(IF(A.relation_level='尝试级' and A.market_level='普通',1,NULL))
+		AS try_ad,
 		COUNT(IF(A.relation_level='忽略级'
 		and A.market_level='普通',1,NULL)) AS ignore_ad,
 		COUNT(IF(A.relation_level='新增级' and
@@ -279,7 +292,8 @@
 		COUNT(IF(A.relation_level='市场级',1,NULL)) AS market_all,
 		COUNT(IF(A.relation_level='尝试级',1,NULL)) AS try_all,
 		COUNT(IF(A.relation_level='忽略级',1,NULL)) AS ignore_all,
-		COUNT(IF(A.relation_level='新增级',1,NULL)) AS new_all,
+		COUNT(IF(A.relation_level='新增级',1,NULL))
+		AS new_all,
 		B.user_pks AS user_pk
 		FROM
 		client_employee A LEFT JOIN
@@ -302,7 +316,8 @@
 		SUM(IF(A.relation_level='新增级',A.month_order_count,NULL)) AS new_order
 		from month_order_count A
 		LEFT JOIN
-		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
+		view_client_employee_user B ON
+		A.client_employee_pk = B.employee_pk
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -323,7 +338,8 @@
 		SUM(IF(A.relation_level='新增级',A.visit_count,NULL)) AS new_accurate
 		from view_visit_count A
 		LEFT JOIN
-		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
+		view_client_employee_user B ON
+		A.client_employee_pk = B.employee_pk
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -346,7 +362,8 @@
 		SUM(IF(A.relation_level='新增级',A.wechat_count,NULL)) AS new_wechat,
 
 		SUM(A.tel_count) AS all_tel,
-		SUM(IF(A.relation_level='主力级',A.tel_count,NULL)) AS main_tel,
+		SUM(IF(A.relation_level='主力级',A.tel_count,NULL)) AS
+		main_tel,
 		SUM(IF(A.relation_level='市场级',A.tel_count,NULL)) AS
 		market_tel,
 		SUM(IF(A.relation_level='尝试级',A.tel_count,NULL))
@@ -373,7 +390,8 @@
 		SUM(B.receivable) AS receivable,
 		SUM(B.warning) AS
 		warning,
-		SUM(C.sum_reimbursement) AS sum_reimbursement,
+		SUM(C.sum_reimbursement) AS
+		sum_reimbursement,
 		SUM(D.sum_reimbursement) AS month_reimbursement,
 		SUM(B.bad) AS
 		bad,
@@ -391,7 +409,8 @@
 		view_receivable_meter B ON X.pk = B.user_pk
 		LEFT JOIN
 		view_sum_reimbursement C ON
-		X.user_number = C.apply_user
+		X.user_number =
+		C.apply_user
 		LEFT JOIN
 		view_month_reimbursement D ON X.user_number = D.apply_user
 		LEFT JOIN
@@ -430,7 +449,8 @@
 			and A.confirm_date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
 			and A.confirm_date
 			&lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) -
-			6 DAY)
+			6
+			DAY)
 			<if test="_parameter != null and _parameter !=''">
 				and B.user_name = #{_parameter,jdbcType=VARCHAR}
 			</if>
@@ -566,7 +586,8 @@
 		WHEN A.market_level = '普通' THEN 3
 		WHEN
 		A.market_level = '未知' THEN 4
-		WHEN A.market_level IS NULL OR A.market_level = '' THEN 5
+		WHEN
+		A.market_level IS NULL OR A.market_level = '' THEN 5
 		ELSE 6
 		END
 		<if test='params.bo.sort_type != null and params.bo.sort_type == "1"'>
@@ -607,7 +628,8 @@
 		B.comment
 		from
 		client_relation A
-		LEFT JOIN client_employee B ON A.client_employee_pk =
+		LEFT JOIN client_employee B ON
+		A.client_employee_pk =
 		B.pk
 		WHERE A.client_employee_pk = #{employee_pk,jdbcType=VARCHAR}
 	</select>
@@ -640,13 +662,74 @@
 		FROM
 		view_back_money_balance A
 		LEFT JOIN
-		user_base B ON A.sale = B.user_number
+		user_base B ON A.sale
+		= B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
 			and LEFT(A.confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
 			and A.balance &lt;= (A.receivable-A.receivable*0.98)
+		</where>
+	</select>
+	<select id="selectRankScore" parameterType="com.xinchi.bean.ScoreRankDto" resultMap="ScoreRankMap">
+		SELECT
+		(
+		SELECT COUNT(*) + 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.first_score > A.first_score
+		OR (B.first_score = A.first_score AND B.first_people > A.first_people)
+		)
+		) AS rank_first_score,
+		(
+		SELECT COUNT(*) + 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.middle_score >
+		A.middle_score
+		OR
+		(B.middle_score = A.middle_score AND B.middle_people > A.middle_people)
+		)
+		) AS rank_middle_score,
+
+		(
+		SELECT COUNT(*)
+		+ 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.last_score > A.last_score
+		OR
+		(B.last_score = A.last_score AND
+		B.last_people > A.last_people)
+		)
+		) AS rank_last_score,
+
+		(
+		SELECT COUNT(*) + 1
+		FROM
+		view_score_from_last_month B
+		WHERE
+		B.confirm_month = A.confirm_month
+		AND (
+		B.score > A.score
+		OR (B.score = A.score AND B.sum_people > A.sum_people)
+		)
+		) AS
+		rank_score
+
+		FROM
+		view_score_from_last_month A
+		<where>
+			<if test="sale_number != null and sale_number !=''">
+				AND A.sale_number = #{sale_number,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_month != null and confirm_month !=''">
+				AND A.confirm_month = #{confirm_month,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 </mapper>	

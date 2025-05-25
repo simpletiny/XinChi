@@ -39,6 +39,8 @@ public class ProductProfitBean extends SupperBO implements Serializable, Compara
 	private String update_user;
 
 	private String option_year;
+	
+	private String product_line;
 
 	// DTO
 	// 手续费
@@ -193,6 +195,14 @@ public class ProductProfitBean extends SupperBO implements Serializable, Compara
 
 	public void setTicket_other_cost(BigDecimal ticket_other_cost) {
 		this.ticket_other_cost = ticket_other_cost;
+	}
+
+	public String getProduct_line() {
+		return product_line;
+	}
+
+	public void setProduct_line(String product_line) {
+		this.product_line = product_line;
 	}
 
 }

@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,8 +53,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				新建产品<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
-					class="ic-cancel"></i>取消</a>
+				新建产品<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -79,22 +77,20 @@
 						<div class="col-md-3 required">
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
-								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8"
-									name="product.name" required="required" />
+								<input type="text" class="ip-" data-bind="value: product().name" placeholder="8字以内" maxlength="8" name="product.name" required="required" />
 							</div>
 						</div>
 						<div class="col-md-3 required">
 							<label class="l">型号</label>
 							<div class="ip fix-width">
-								<input type="text" class="ip-" maxlength="6" data-bind="value: product().product_model" placeholder="6字以内"
-									name="product.product_model" required="required" />
+								<input type="text" class="ip-" maxlength="6" data-bind="value: product().product_model" placeholder="6字以内" name="product.product_model"
+									required="required" />
 							</div>
 						</div>
 						<div class="col-md-3 required">
 							<label class="l">天数</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip-" data-bind="value: product().days" placeholder="天数" name="product.days"
-									required="required" />
+								<input type="number" class="ip-" data-bind="value: product().days" placeholder="天数" name="product.days" required="required" />
 							</div>
 						</div>
 					</div>
@@ -119,15 +115,15 @@
 									<div class="required">
 										<label class="l">直客报价</label>
 										<div class="ip fix-width">
-											<input type="number" class="ip-" id="adult-price" onkeyup="caculateGrossProfit()"
-												data-bind="value: product().adult_price" placeholder="成人报价" name="product.adult_price" required="required" />
+											<input type="number" class="ip-" id="adult-price" onkeyup="caculateGrossProfit()" data-bind="value: product().adult_price"
+												placeholder="成人报价" name="product.adult_price" required="required" />
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" id="child-price" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().child_price" placeholder="儿童报价" name="product.child_price" />
+										<input type="number" class="ip-" id="child-price" onkeyup="caculateGrossProfit()" data-bind="value: product().child_price"
+											placeholder="儿童报价" name="product.child_price" />
 									</div>
 								</td>
 								<td>
@@ -135,8 +131,7 @@
 										<label class="l">同业返利</label>
 										<div class="ip fix-width">
 											<input type="number" class="ip-" id="business-profit-substract" onkeyup="caculateGrossProfit()"
-												data-bind="value: product().business_profit_substract" placeholder="同业返利"
-												name="product.business_profit_substract" required="required" />
+												data-bind="value: product().business_profit_substract" placeholder="同业返利" name="product.business_profit_substract" required="required" />
 										</div>
 									</div>
 								</td>
@@ -144,9 +139,8 @@
 									<div>
 										<label class="l">最大让利</label>
 										<div class="ip fix-width">
-											<input type="number" class="ip-" id="max-profit-substract"
-												onkeyup="caculateGrossProfit()" data-bind="value: product().max_profit_substract" placeholder="最大让利"
-												name="product.max_profit_substract" />
+											<input type="number" class="ip-" id="max-profit-substract" onkeyup="caculateGrossProfit()"
+												data-bind="value: product().max_profit_substract" placeholder="最大让利" name="product.max_profit_substract" />
 										</div>
 									</div>
 								</td>
@@ -154,24 +148,22 @@
 							<tr>
 								<td><label class="l">其他成本</label>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().other_cost" placeholder="成人" name="product.other_cost" />
+										<input type="number" class="ip-" id="other-cost" onkeyup="caculateGrossProfit()" data-bind="value: product().other_cost" placeholder="成人"
+											name="product.other_cost" />
 									</div></td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" id="other-child-cost" onkeyup="caculateGrossProfit()"
-											data-bind="value: product().other_child_cost" placeholder="儿童" name="product.other_child_cost" />
+										<input type="number" class="ip-" id="other-child-cost" onkeyup="caculateGrossProfit()" data-bind="value: product().other_child_cost"
+											placeholder="儿童" name="product.other_child_cost" />
 									</div>
 								</td>
 								<td><label class="l">首段出港</label>
 									<div class="ip fix-width">
-										<input type="text" class="ip-" data-bind="value: product().first_air_start" maxlength="10" placeholder="首段出港"
-											name="product.first_air_start" />
+										<input type="text" class="ip-" data-bind="value: product().first_air_start" maxlength="10" placeholder="首段出港" name="product.first_air_start" />
 									</div></td>
 								<td><label class="l">首段目的</label>
 									<div class="ip fix-width">
-										<input type="text" class="ip-" maxlength="10" data-bind="value: product().first_air_end" placeholder="首段目的"
-											name="product.first_air_end" />
+										<input type="text" class="ip-" maxlength="10" data-bind="value: product().first_air_end" placeholder="首段目的" name="product.first_air_end" />
 									</div></td>
 							</tr>
 							<tr>
@@ -179,33 +171,46 @@
 									<div class="required">
 										<label class="l">产品分值</label>
 										<div class="ip fix-width">
-											<input type="number" class="ip-" required="required" step="1" min="0" max="20"
-												data-bind="value: product().product_value" placeholder="0-20整数" name="product.product_value" />
+											<input type="number" class="ip-" required="required" step="1" min="0" max="20" data-bind="value: product().product_value"
+												placeholder="0-20整数" name="product.product_value" />
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="ip fix-width">
-										<input type="number" class="ip-" step="1" min="0" max="20" data-bind="value: product().product_child_value"
-											placeholder="0-20整数" name="product.product_child_value" required="required" />
+										<input type="number" class="ip-" step="1" min="0" max="20" data-bind="value: product().product_child_value" placeholder="0-20整数"
+											name="product.product_child_value" required="required" />
 									</div>
 								</td>
-								<td><label class="l">证件类型</label><label class="l"><input type="checkbox" checked value="1" name="product.id_types" />身份证</label><label class="l"><input type="checkbox" value="2" name="product.id_types" />护照</label></td>
+								<td><label class="l">证件类型</label><label class="l"><input type="checkbox" checked value="1" name="product.id_types" />身份证</label><label
+									class="l"><input type="checkbox" value="2" name="product.id_types" />护照</label></td>
 							</tr>
 							<tr>
-								<td colspan="2"><label class="l" style="width:100%" title="儿童价格和分值将按照成人标准"><input type="checkbox" value="Y" name="product.as_adult_flg" />允许儿童按成人操作</label></td>
-								<td></td>
+								<td>
+									<div>
+										<label class="l">立奖</label>
+										<div class="ip fix-width">
+											<input type="number" class="ip-" value="0" placeholder="成人立奖" name="product.adult_instant_bonus" />
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="ip fix-width">
+										<input type="number" class="ip-" value="0" placeholder="儿童立奖" name="product.child_instant_bonus" />
+									</div>
+								</td>
+								<td><label class="l" style="width: 100%" title="儿童价格和分值将按照成人标准"><input type="checkbox" value="Y" name="product.as_adult_flg" />允许儿童按成人操作</label></td>
 							</tr>
 							<tr>
 								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">销售注意</label>
 									<div class="ip">
-										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_attention"
-											name="product.sale_attention" placeholder="技术交底"></textarea>
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_attention" name="product.sale_attention"
+											placeholder="技术交底"></textarea>
 									</div></td>
 								<td style="width: 48%" colspan="2" rowspan="3"><label class="l">儿童策略</label>
 									<div class="ip">
-										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy"
-											name="product.sale_strategy" placeholder="收客建议"></textarea>
+										<textarea type="text" class="ip-default" rows="8" maxlength="200" data-bind="value: product().sale_strategy" name="product.sale_strategy"
+											placeholder="收客建议"></textarea>
 									</div></td>
 							</tr>
 						</table>
@@ -214,16 +219,16 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: product().comment"
-									name="product.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="15" maxlength="200" data-bind="value: product().comment" name="product.comment"
+									placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
 					</div>
 				</form>
 
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: createProduct">保存</a> <a type="submit"
-						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: createProduct">保存</a> <a type="submit" class="btn btn-green btn-r"
+						onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
 		</div>

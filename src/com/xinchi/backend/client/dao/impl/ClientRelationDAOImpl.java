@@ -16,6 +16,7 @@ import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -207,6 +208,11 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	@Override
 	public List<ClientRelationBean> selectNeedPublic() {
 		return daoUtil.selectAll("com.xinchi.bean.mapper.ClientRelationMapper.selectNeedPublic");
+	}
+
+	@Override
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectRankScore", rank_option);
 	}
 
 }
