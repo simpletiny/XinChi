@@ -191,7 +191,7 @@
 													<td><input type="number" class="ip-" placeholder="机票价格" oninput="fixBind()" style="width: 90%"
 														st="ticket-cost" /></td>
 													<td><input type="number" class="ip-" placeholder="机票税费" oninput="fixBind()" style="width: 90%"
-														value="140" st="taxation" /></td>
+														value="120" st="taxation" /></td>
 													<td><input type="number" class="ip-" placeholder="机票杂费" oninput="fixBind()" style="width: 90%"
 														st="other-cost" /></td>
 													<td style="vertical-align: middle;" st="sum">0</td>

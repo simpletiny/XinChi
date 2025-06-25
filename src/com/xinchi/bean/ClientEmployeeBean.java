@@ -62,6 +62,8 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 	private String employee_area;
 	private String employee_county;
 
+	private String binding_status;
+	private List<String> binding_statuses;
 	//
 	private String new_client_pk;
 	private String hopping_date;
@@ -402,6 +404,22 @@ public class ClientEmployeeBean extends SupperBO implements Serializable {
 
 	public void setEmployee_county(String employee_county) {
 		this.employee_county = employee_county;
+	}
+
+	public String getBinding_status() {
+		return binding_status;
+	}
+
+	public void setBinding_status(String binding_status) {
+		this.binding_status = binding_status;
+	}
+
+	public List<String> getBinding_statuses() {
+		return binding_statuses;
+	}
+
+	public void setBinding_statuses(List<String> binding_statuses) {
+		this.binding_statuses = binding_statuses;
 	}
 
 }

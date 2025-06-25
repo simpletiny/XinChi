@@ -215,6 +215,44 @@
 			</result>
 		</action>
 
+		<!-- 精准客户 start -->
+		<!-- 创建精准客户 -->
+		<action name="createPreciseEmployee" class="preciseEmployeeAction" method="createPreciseEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 更新精准客户 -->
+		<action name="updatePreciseEmployee" class="preciseEmployeeAction" method="updatePreciseEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 简单更新精准客户，字符相关 -->
+		<action name="updatePreciseEmployeeSimp" class="preciseEmployeeAction" method="updatePreciseEmployeeSimp">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
+		<!-- 搜索精准客户 -->
+		<action name="searchPreciseEmployeeByPage" class="preciseEmployeeAction" method="searchPreciseEmployeeByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 按pk搜索 -->
+		<action name="searchPreciseEmployeeByPk" class="preciseEmployeeAction" method="searchPreciseEmployeeByPk">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 关联精准客户与客户资料 -->
+		<action name="bindingPreciseEmployees" class="preciseEmployeeAction" method="bindingPreciseEmployees">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 删除精准客户 -->
+		<action name="deletePreciseEmployee" class="preciseEmployeeAction" method="deletePreciseEmployee">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 精准客户 end -->
+
 	</package>
 
 </struts>

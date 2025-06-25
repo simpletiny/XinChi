@@ -1,6 +1,5 @@
 package com.xinchi.common;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import org.apache.struts2.ServletActionContext;
  */
 public class XinChiApplicationContext {
 
-	private static Map<Object, Object> context = new HashMap();
+	private static Map<Object, Object> context = new HashMap<>();
 
 	public static Object getParameter(String key) {
 		return context.get(key);

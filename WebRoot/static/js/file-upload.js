@@ -98,6 +98,7 @@ function updateProgress(e, progress) {
 		});
 	}
 }
+
 function deleteImage(deleteButton, inputFile, img, fileNameInput, fileName, param) {
 	$(deleteButton).remove();
 	$(img).remove();

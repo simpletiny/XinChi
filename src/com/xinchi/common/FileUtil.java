@@ -86,7 +86,7 @@ public class FileUtil {
 			ef.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * 获取图片宽度和高度
 	 * 

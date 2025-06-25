@@ -185,7 +185,7 @@
 								<td style="color: green">正常</td>
 								<!-- /ko -->
 
-								<td data-bind="text: $data.area"></td>
+								<td data-bind="text: $data.employee_area""></td>
 								
 								<!-- ko if:$data.body_public_flg=='Y' -->
 								<td><a style="color:red" href="javascript:void(0)"

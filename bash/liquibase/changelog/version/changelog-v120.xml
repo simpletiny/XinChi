@@ -222,6 +222,72 @@
 			<comment>ALTER VIEW budget_order_view</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="6" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE precise_client_employee (
+				  name VARCHAR(10) NOT NULL COMMENT '真实姓名',
+				  is_verified CHAR(1) NULL DEFAULT 'N' COMMENT '是否实名',
+				  type VARCHAR(10) NULL DEFAULT '未知' COMMENT '客户种类',
+				  gender CHAR(1) NULL DEFAULT NULL COMMENT '性别',
+				  wechat VARCHAR(20) NULL DEFAULT NULL COMMENT '微信',
+				  wechat1 VARCHAR(20) NULL DEFAULT NULL,
+				  cellphone VARCHAR(11) NOT NULL COMMENT '手机号',
+				  cellphone1 VARCHAR(11) NULL DEFAULT NULL,
+				  id VARCHAR(18) NULL DEFAULT NULL COMMENT '身份证号',
+				  financial_body_pk CHAR(22) NOT NULL COMMENT '财务主体',
+				  head_photo VARCHAR(26) NULL DEFAULT 'img',
+				  employee_area VARCHAR(10) NULL DEFAULT NULL,
+				  employee_county VARCHAR(20) NULL DEFAULT NULL,
+				  detail_address VARCHAR(100) NULL COMMENT '详细地址',
+				  comment VARCHAR(100) NULL DEFAULT NULL,
+				  binding_status CHAR(1) NULL DEFAULT 'N' COMMENT '关联状态',
+				  binding_count INT NULL COMMENT '关联数量',
+				  self_photo VARCHAR(26) NULL DEFAULT 'img' COMMENT '本人照片',
+				  other_photo VARCHAR(26) NULL DEFAULT 'img' COMMENT '其他照片',
+				  pk CHAR(22) NOT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '精准客户表';
+             ]]>
+			<comment>CREATE TABLE precise_client_employee</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="7" author="simpletiny">
+		<sql>
+            <![CDATA[
+				CREATE TABLE precise_employee_binding (
+				  precise_pk CHAR(22) NOT NULL COMMENT '精准客户Pk',
+				  employee_pk CHAR(22) NOT NULL COMMENT '客户资料pk',
+				  pk CHAR(22) NOT NULL,
+				  create_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_user VARCHAR(10) NULL DEFAULT NULL,
+				  update_time VARCHAR(15) NULL DEFAULT NULL,
+				  create_time VARCHAR(15) NULL DEFAULT NULL,
+				  PRIMARY KEY (pk))
+				ENGINE = InnoDB
+				DEFAULT CHARACTER SET = utf8
+				COLLATE = utf8_bin
+				COMMENT = '精准客户关联员工表';
+             ]]>
+			<comment>CREATE TABLE precise_employee_binding</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="8" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_employee 
+					ADD COLUMN binding_status CHAR(1) NULL DEFAULT 'N' COMMENT '是否关联' AFTER employee_county;
+             ]]>
+			<comment>ALTER TABLE client_employee</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 
