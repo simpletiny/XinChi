@@ -28,18 +28,18 @@ var NeedContext = function() {
 				} else {
 					self.airTickets(data.order_air_infos);
 					createLayer = $.layer({
-						type : 1,
-						title : ['生成订单', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['1200px', '600px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#order-create'
+						type: 1,
+						title: ['生成订单', ''],
+						maxmin: false,
+						closeBtn: [1, true],
+						shadeClose: false,
+						area: ['1200px', '600px'],
+						offset: ['', ''],
+						scrollbar: true,
+						page: {
+							dom: '#order-create'
 						},
-						end : function() {
+						end: function() {
 						}
 					});
 				}
@@ -47,7 +47,47 @@ var NeedContext = function() {
 			});
 
 		}
-	};
+	}
+	self.deleteNeed = function() {
+		if (self.chosenNeeds().length == 0) {
+			fail_msg("请选择");
+			return;
+		} else if (self.chosenNeeds().length > 0) {
+			var param = "";
+			for (var i = 0; i < self.chosenNeeds().length; i++) {
+				param += "need_pks=" + self.chosenNeeds()[i].split(";")[0] + "&";
+			}
+			param = param.RTrim("&");
+			$.layer({
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: "只能删除已取消单机票订单的票务需求。确认要删除吗？",
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中");
+						$.ajax({
+							type: "POST",
+							url: self.apiurl + 'ticket/deleteTicketNeeds',
+							data: param
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.chosenNeeds.removeAll();
+								self.refresh();
+							} else {
+								fail_msg(str);
+								self.chosenNeeds.removeAll();
+							}
+						});
+					}
+				}
+			})
+
+		}
+	}
 	self.deleteAirInfo = function(data, event) {
 		var a = event.target;
 		var tr = $(a).parent().parent();
@@ -116,7 +156,7 @@ var NeedContext = function() {
 				const regex = /^[0-2][0-9]:[0-5][0-9]$/;
 
 				if ((start_time.length > 0 && !regex.test(start_time))
-						|| (end_time.length > 0 && !regex.test(end_time))) {
+					|| (end_time.length > 0 && !regex.test(end_time))) {
 					fail_msg("请正确填写时间！")
 					return;
 				}
@@ -137,22 +177,22 @@ var NeedContext = function() {
 		json.legs = legs;
 
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : confirm_msg,
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: confirm_msg,
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
 					layer.close(createLayer);
 
 					var data = "json=" + JSON.stringify(json);
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'ticket/createTicketOrder',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'ticket/createTicketOrder',
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -183,23 +223,23 @@ var NeedContext = function() {
 			self.airTickets.removeAll();
 			startLoadingIndicator("加载中...");
 			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByProductOrderNumber', {
-				product_order_number : order_number
+				product_order_number: order_number
 			}, function(data) {
 				self.airTickets(data.order_air_infos);
 				endLoadingIndicator();
 				airTicketCheckLayer = $.layer({
-					type : 1,
-					title : ['航段信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#air-ticket-check'
+					type: 1,
+					title: ['航段信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['800px', '500px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#air-ticket-check'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
@@ -207,23 +247,23 @@ var NeedContext = function() {
 			self.airTickets.removeAll();
 			startLoadingIndicator("加载中...");
 			$.getJSON(self.apiurl + 'ticket/selectOrderAirInfoByAirNeedPk', {
-				need_pk : need_pk
+				need_pk: need_pk
 			}, function(data) {
 				self.airTickets(data.order_air_infos);
 				endLoadingIndicator();
 				airTicketCheckLayer = $.layer({
-					type : 1,
-					title : ['航段信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#air-ticket-check'
+					type: 1,
+					title: ['航段信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['800px', '500px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#air-ticket-check'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
@@ -238,24 +278,24 @@ var NeedContext = function() {
 			var url = "order/selectSaleOrderNameListByAirNeedPk";
 
 			$.getJSON(self.apiurl + url, {
-				need_pk : need_pk
+				need_pk: need_pk
 			}, function(data) {
 
 				self.passengers(data.passengers);
 				endLoadingIndicator();
 				passengerCheckLayer = $.layer({
-					type : 1,
-					title : ['乘客信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#passengers-check'
+					type: 1,
+					title: ['乘客信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['800px', '500px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#passengers-check'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
@@ -265,23 +305,23 @@ var NeedContext = function() {
 			var url = "product/selectProductOrderNameByAirNeedPk";
 
 			$.getJSON(self.apiurl + url, {
-				air_need_pk : need_pk
+				air_need_pk: need_pk
 			}, function(data) {
 				self.passengers(data.name_list);
 				endLoadingIndicator();
 				passengerCheckLayer = $.layer({
-					type : 1,
-					title : ['乘客信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '500px'],
-					offset : ['', ''],
-					scrollbar : true,
-					page : {
-						dom : '#passengers-check'
+					type: 1,
+					title: ['乘客信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['800px', '500px'],
+					offset: ['', ''],
+					scrollbar: true,
+					page: {
+						dom: '#passengers-check'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
@@ -289,8 +329,8 @@ var NeedContext = function() {
 
 	};
 	self.needs = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	self.totalPeople = ko.observable();
 	self.refresh = function() {
@@ -449,18 +489,18 @@ var NeedContext = function() {
 	self.chooseSeasonTicket = function() {
 		self.refreshSeasonTicket();
 		seasonTicketLayer = $.layer({
-			type : 1,
-			title : ['选择套票', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['800px', '650px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#season-ticket-pick'
+			type: 1,
+			title: ['选择套票', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['800px', '650px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#season-ticket-pick'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
@@ -595,18 +635,18 @@ var airLegLayer;
 function choseAirLeg(event) {
 	ctx.searchAirLeg();
 	airLegLayer = $.layer({
-		type : 1,
-		title : ['选择票务航段', ''],
-		maxmin : false,
-		closeBtn : [1, true],
-		shadeClose : false,
-		area : ['600px', '650px'],
-		offset : ['', ''],
-		scrollbar : true,
-		page : {
-			dom : '#air-leg-pick'
+		type: 1,
+		title: ['选择票务航段', ''],
+		maxmin: false,
+		closeBtn: [1, true],
+		shadeClose: false,
+		area: ['600px', '650px'],
+		offset: ['', ''],
+		scrollbar: true,
+		page: {
+			dom: '#air-leg-pick'
 		},
-		end : function() {
+		end: function() {
 			console.log("Done");
 		}
 	});

@@ -63,6 +63,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<button type="submit" class="btn btn-green" data-bind="click: function() { createMobileTouch() }">电联</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { createIncomingCall() }">微聊</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { setClientLevel() }">客户关系调整</button>
+						<!-- <button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">销售费用</button> -->
 						<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用申请</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() { quitConnect() }">放弃维护</button>
 						<button type="submit" class="btn btn-green " data-bind="click: function() {createEmployee() }">新增客户</button>
@@ -135,7 +136,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<th></th>
 								<th colspan="5" style="border-right: solid 1px #ff0000; text-align: center"><h3>潜力值</h3></th>
 								<th colspan="4" style="border-right: solid 1px #ff0000; text-align: center"><h3 data-bind="text:month+'用心度'"></h3></th>
-								<th colspan="7" style="text-align: center"><h3>仪表盘</h3></th>
+								<th colspan="7" style="text-align: center"><h3 style="display: inline">仪表盘</h3> <span style="color: red"
+									data-bind="text:meter().meter_message==='none'?'':meter().meter_message">(糖糖30天未签单)</span></th>
 							</tr>
 							<tr>
 								<th></th>
@@ -299,7 +301,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<th>回款誉</th>
 								<th>关系度</th>
 								<th>应收款总计</th>
-								<th>客户贡献</th>
+								<th>费用汇总</th>
 								<th>备注</th>
 								<th>销售</th>
 							</tr>
@@ -329,7 +331,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.relation_level"></td>
 								<td class="rmb" data-bind="text: $data.receivable"></td>
-								<td></td>
+								<td><a class="rmb" href="javascript:void(0)"
+									data-bind="text:$data.client_sale_cost,click:function() {$root.checkSaleCost($data.client_employee_pk)}"></a></td>
 								<!-- ko if: $data.comment==null || $data.comment=='' -->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.client_employee_pk)}">添加</a></td>
 								<!-- /ko -->
@@ -451,6 +454,28 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 		</div>
 	</div>
+	<div id="div-sale-cost" style="width:800px;display: none">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr role="row">
+					<th>日期</th>
+					<th>归属月份</th>
+					<th>金额</th>
+					<th>备注</th>
+					<th>申请人</th>
+				</tr>
+			</thead>
+			<tbody id="tbody-data" data-bind="foreach: reimbursements">
+				<tr>
+					<td data-bind="text: $data.date"></td>
+					<td data-bind="text: $data.month"></td>
+					<td data-bind="text: $data.money" class="rmb"></td>
+					<td data-bind="text: $data.comment"></td>
+					<td data-bind="text: $data.apply_name"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	<%-- 	<div id="client-level" style="display: none; width: 800px">
 		<div class="form-horizontal search-panel">
 			<div class="form-group" style="width: 800px">
@@ -535,6 +560,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/client-relation.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/client/client-relation.js?v=1.004"></script>
 </body>
 </html>

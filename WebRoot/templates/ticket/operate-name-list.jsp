@@ -191,7 +191,7 @@
 													<td><input type="number" class="ip-" placeholder="机票价格" oninput="fixBind()" style="width: 90%"
 														st="ticket-cost" /></td>
 													<td><input type="number" class="ip-" placeholder="机票税费" oninput="fixBind()" style="width: 90%"
-														value="120" st="taxation" /></td>
+														data-bind="value:air_ticket_charge_config().ext1" st="taxation" /></td>
 													<td><input type="number" class="ip-" placeholder="机票杂费" oninput="fixBind()" style="width: 90%"
 														st="other-cost" /></td>
 													<td style="vertical-align: middle;" st="sum">0</td>
@@ -220,6 +220,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/operate-name-list.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/ticket/operate-name-list.js?v=1.003"></script>
 </body>
 </html>

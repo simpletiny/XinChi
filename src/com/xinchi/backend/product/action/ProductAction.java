@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.accounting.service.ReimbursementService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductOrderService;
@@ -37,6 +38,7 @@ import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductReconciliationBean;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
+import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
@@ -54,8 +56,7 @@ public class ProductAction extends BaseAction {
 	private List<ProductBean> products;
 
 	public String searchProductsByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == product)
 			product = new ProductBean();
@@ -95,6 +96,9 @@ public class ProductAction extends BaseAction {
 
 	@Autowired
 	private ProductReconciliationService productReconciliationService;
+	
+	@Autowired
+	private ReimbursementService reimbursementService;
 
 	/**
 	 * 搜索产品利润
@@ -103,22 +107,26 @@ public class ProductAction extends BaseAction {
 	 */
 	public String searchProductProfit() {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == productProfit)
 			productProfit = new ProductProfitBean();
 
 		AirServiceFeeDto fee_option = new AirServiceFeeDto();
+		
+		
 		ProductReconciliationBean pr_option = new ProductReconciliationBean();
+		ReimbursementBean rei_option = new ReimbursementBean();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			productProfit.setUser_number(sessionBean.getUser_number());
 			fee_option.setProduct_manager_number(sessionBean.getUser_number());
 			pr_option.setProduct_manager_number(sessionBean.getUser_number());
+			rei_option.setApply_user(sessionBean.getUser_number());
 		} else {
 			fee_option.setProduct_manager_number(productProfit.getUser_number());
 			pr_option.setProduct_manager_number(productProfit.getUser_number());
+			rei_option.setApply_user(productProfit.getUser_number());
 		}
 
 		String year = productProfit.getOption_year();
@@ -127,6 +135,8 @@ public class ProductAction extends BaseAction {
 		productProfits = service.searchProductProfit(productProfit);
 
 		for (ProductProfitBean pp : productProfits) {
+			pp.setProduct_cost(BigDecimal.ZERO);
+			pp.setKeep_cost(BigDecimal.ZERO);
 			months.remove(pp.getDeparture_month());
 		}
 
@@ -158,9 +168,16 @@ public class ProductAction extends BaseAction {
 		// 额外费用，调账
 		pr_option.setProduct_line(productProfit.getProduct_line());
 		pr_option.setBelong_year(year);
-		List<ProductReconciliationBean> reconciliations = productReconciliationService
-				.selectSumReconciliation(pr_option);
+		List<ProductReconciliationBean> reconciliations = productReconciliationService.selectSumReconciliation(pr_option);
 
+		// 产品费用和唯品费用
+
+		rei_option.setBelong_year(year);
+		rei_option.setItem("J");
+		List<ReimbursementBean> product_costs=reimbursementService.selectSumByParam(rei_option);
+		rei_option.setItem("T");
+		List<ReimbursementBean> keep_costs=reimbursementService.selectSumByParam(rei_option);
+		
 		for (ProductProfitBean pp : productProfits) {
 			for (AirOtherPaymentDto aop : no_b_payments) {
 				if (pp.getDeparture_month().equals(aop.getBelong_month())) {
@@ -178,7 +195,16 @@ public class ProductAction extends BaseAction {
 				if (pp.getDeparture_month().equals(r.getBelong_month())) {
 					pp.setOther_cost(pp.getOther_cost().add(r.getMoney()));
 				}
-
+			}
+			for (ReimbursementBean p : product_costs) {
+				if (pp.getDeparture_month().equals(p.getMonth())) {
+					pp.setProduct_cost(pp.getProduct_cost().add(p.getMoney()));
+				}
+			}
+			for (ReimbursementBean k : keep_costs) {
+				if (pp.getDeparture_month().equals(k.getMonth())) {
+					pp.setKeep_cost(pp.getKeep_cost().add(k.getMoney()));
+				}
 			}
 		}
 		return SUCCESS;
@@ -214,8 +240,7 @@ public class ProductAction extends BaseAction {
 	private String json;
 
 	public String createProduct() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		product.setProduct_manager(sessionBean.getUser_number());
 		resultStr = service.createProduct(product);
 
@@ -238,8 +263,7 @@ public class ProductAction extends BaseAction {
 	private BaseDataService baseDataService;
 
 	public String searchUrgentCnt() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		int urgent_count = service.searchUrgentCnt(sessionBean.getUser_number());
 		BaseDataBean baseData = baseDataService.selectByPk(ResourcesConstants.BASE_DATA_PK_LIMIT_PRODUCT_URGENT_COUNT);
@@ -320,8 +344,7 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String searchProductReportByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == report_option)
 			report_option = new ProductReportDto();
@@ -355,8 +378,7 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String searchProductNeedByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == order_option)
 			order_option = new ProductNeedDto();

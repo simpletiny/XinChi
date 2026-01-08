@@ -144,7 +144,7 @@ public class ReceivedAction extends BaseAction {
 	}
 
 	private String related_pks;
-
+	private String reject_json;
 	public String searchByRelatedPks() {
 		receiveds = service.selectByRelatedPks(related_pks);
 
@@ -152,7 +152,7 @@ public class ReceivedAction extends BaseAction {
 	}
 
 	public String rejectReceived() {
-		resultStr = service.rejectRecived(related_pks);
+		resultStr = service.rejectRecived(reject_json);
 		return SUCCESS;
 	}
 
@@ -286,6 +286,14 @@ public class ReceivedAction extends BaseAction {
 
 	public void setReceived_details(List<ReceivedDetailDto> received_details) {
 		this.received_details = received_details;
+	}
+
+	public String getReject_json() {
+		return reject_json;
+	}
+
+	public void setReject_json(String reject_json) {
+		this.reject_json = reject_json;
 	}
 
 }

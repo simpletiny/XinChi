@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.xinchi.common.SupperBO;
 
 public class ClientRelationBean extends SupperBO implements Serializable {
@@ -54,6 +56,8 @@ public class ClientRelationBean extends SupperBO implements Serializable {
 
 	private String comment;
 	private String head_photo;
+
+	private BigDecimal client_sale_cost;
 
 	public String getClient_employee_name() {
 		return client_employee_name;
@@ -237,6 +241,14 @@ public class ClientRelationBean extends SupperBO implements Serializable {
 
 	public void setHead_photo(String head_photo) {
 		this.head_photo = head_photo;
+	}
+
+	public BigDecimal getClient_sale_cost() {
+		return client_sale_cost;
+	}
+
+	public void setClient_sale_cost(BigDecimal client_sale_cost) {
+		this.client_sale_cost = client_sale_cost;
 	}
 
 }

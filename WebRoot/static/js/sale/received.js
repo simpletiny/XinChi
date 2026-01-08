@@ -291,16 +291,20 @@ var ReceivedContext = function() {
 
 		});
 	}
-	self.viewRejectReason = function(back_pk) {
-		var data = "back_pk=" + back_pk;
+	self.viewRejectReason = function(data) {
+		if(data.type==="PAY"){
+			var data = "back_pk=" + data.related_pk;
 
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/searchRejectReason',
-			data : data
-		}).success(function(str) {
-			success_msg(str);
-		});
+				$.ajax({
+					type : "POST",
+					url : self.apiurl + 'accounting/searchRejectReason',
+					data : data
+				}).success(function(str) {
+					success_msg(str);
+				});
+		}else{
+			success_msg(data.reject_reason);
+		}
 	}
 	// start pagination
 	self.currentPage = ko.observable(1);

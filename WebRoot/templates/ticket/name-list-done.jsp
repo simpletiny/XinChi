@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -131,6 +130,20 @@
 								<input type="text" class="form-control" placeholder="首航段" name="passenger.first_from_to" />
 							</div>
 						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">首航年份</label>
+							<div class="col-md-2" style="float: left">
+								<input type="number" class="form-control" data-bind="value:year" placeholder="2025" name="passenger.year" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">按首航日期</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px" data-bind="options: sortTypes,event{change:search},value:'倒序'" name="passenger.sort_type"></select>
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
 						</div>
@@ -228,8 +241,7 @@
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.ticket_cost"></td>
-							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person"
-								oninput="calSum()" required /></td>
+							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person" oninput="calSum()" required /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -260,8 +272,8 @@
 					<div class="col-md-6 required">
 						<label class="l" style="width: 25%">分配成本</label>
 						<div class="ip">
-							<input type="hidden" st="ticket-source-pk" data-bind="value:$data.pk" /> <input class="form-control"
-								type="number" st="money" placeholder="分配成本" />
+							<input type="hidden" st="ticket-source-pk" data-bind="value:$data.pk" /> <input class="form-control" type="number" st="money"
+								placeholder="分配成本" />
 						</div>
 					</div>
 				</div>
@@ -272,15 +284,14 @@
 				<div class="col-md-12 required">
 					<label class="l">航变备注</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default comment" st="comment" name="comment" rows="5" maxlength="200"
-							placeholder="需要备注说明的信息" required></textarea>
+						<textarea type="text" class="ip-default comment" st="comment" name="comment" rows="5" maxlength="200" placeholder="需要备注说明的信息" required></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="text-align: right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doFlightChange();}">提交</a> <a
-						type="submit" class="btn btn-green btn-r" data-bind="click: cancelChange()">取消</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doFlightChange();}">提交</a> <a type="submit" class="btn btn-green btn-r"
+						data-bind="click: cancelChange()">取消</a>
 				</div>
 			</div>
 		</form>
@@ -313,11 +324,12 @@
 	</div>
 
 	<script>
-		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
+		$(".ticket-operation").addClass("current").children("ol").css(
+				"display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.005"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.006"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

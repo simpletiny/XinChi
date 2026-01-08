@@ -18,6 +18,10 @@
 		<result column="user_roles" property="user_roles" jdbcType="VARCHAR" />
 		<result column="credit_limit" property="credit_limit" jdbcType="DECIMAL" />
 		<result column="credit_balance" property="credit_balance" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="approve_time" property="approve_time" jdbcType="VARCHAR" />
+		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -30,6 +34,10 @@
 		A.sex,
 		A.delete_flg,
 		A.user_status,
+		A.approve_time,
+		A.approve_user,
+		A.create_time,
+		A.update_time,
 		B.id_file_name,
 		B.user_right,
 		B.nick_name,

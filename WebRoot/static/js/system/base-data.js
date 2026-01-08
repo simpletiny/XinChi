@@ -21,9 +21,9 @@ var DataContext = function() {
 
 		var data = "baseData.type=LINE&baseData.order_index=" + order_index + "&baseData.name=" + name;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'system/createBaseData',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'system/createBaseData',
+			data: data
 
 		}).success(function(str) {
 			endLoadingIndicator();
@@ -41,22 +41,22 @@ var DataContext = function() {
 			fail_msg("“" + old_name + "”是系统自带产品线，不允许删除！");
 		} else {
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : "确定要删除“" + old_name + "”产品线吗？",
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: "确定要删除“" + old_name + "”产品线吗？",
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
 						var pk = $("#txt-pk").val();
 						var data = "baseData.type=LINE&baseData.pk=" + pk + "&baseData.name=" + old_name;
 
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'system/deleteBaseData',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'system/deleteBaseData',
+							data: data
 
 						}).success(function(str) {
 							endLoadingIndicator();
@@ -81,13 +81,13 @@ var DataContext = function() {
 			fail_msg("“" + old_name + "”是系统自带产品线，不允许修改！");
 		} else {
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : "更新会将系统中当前产品线下的产品信息一并修改。",
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: "更新会将系统中当前产品线下的产品信息一并修改。",
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("更新中！");
 						var pk = $("#txt-pk").val();
@@ -95,9 +95,9 @@ var DataContext = function() {
 						var data = "baseData.type=LINE&baseData.name=" + name + "&baseData.pk=" + pk;
 
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'system/updateBaseData',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'system/updateBaseData',
+							data: data
 
 						}).success(function(str) {
 							endLoadingIndicator();
@@ -147,9 +147,9 @@ var DataContext = function() {
 
 		var data = "json=" + json;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'system/sortData',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'system/sortData',
+			data: data
 
 		}).success(function(str) {
 			endLoadingIndicator();
@@ -202,18 +202,18 @@ var DataContext = function() {
 
 	self.cleanBadPunishment = function() {
 		clearLayer = $.layer({
-			type : 1,
-			title : ['立即清除', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['400px', '240px'],
-			offset : ['150px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#div-clear'
+			type: 1,
+			title: ['立即清除', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['400px', '240px'],
+			offset: ['150px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#div-clear'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
@@ -223,22 +223,22 @@ var DataContext = function() {
 		if (date.length != 10)
 			return;
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : "确认立即清除" + date + "(含)之前的呆账罚息累计数据吗？",
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: "确认立即清除" + date + "(含)之前的呆账罚息累计数据吗？",
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 
 					startLoadingIndicator("清除中");
 					var pk = 'pk_clean_bad';
 					var ext1 = date;
 					var data = "baseData.type=BAD&baseData.pk=" + pk + "&baseData.ext1=" + ext1;
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'system/updateBaseData',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'system/updateBaseData',
+						data: data
 
 					}).success(function(str) {
 						endLoadingIndicator();
@@ -262,13 +262,13 @@ var DataContext = function() {
 			fail_msg("不允许修改！请联系管理员！");
 		} else {
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : "更新后不会影响之前的呆账罚息！",
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: "更新后不会影响之前的呆账罚息！",
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("更新中！");
 						var pk = self.badConfig().pk;
@@ -278,11 +278,11 @@ var DataContext = function() {
 						var ext3 = self.chosenDay();
 
 						var data = "baseData.type=BAD&baseData.pk=" + pk + "&baseData.ext1=" + ext1 + "&baseData.ext2="
-								+ ext2 + "&baseData.ext3=" + ext3 + "&baseData.code=" + code;
+							+ ext2 + "&baseData.ext3=" + ext3 + "&baseData.code=" + code;
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'system/updateBaseData',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'system/updateBaseData',
+							data: data
 
 						}).success(function(str) {
 							endLoadingIndicator();
@@ -313,13 +313,13 @@ var DataContext = function() {
 	self.saveTeamConfig = function() {
 
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : "更新不会影响今日之前的数据！",
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: "更新不会影响今日之前的数据！",
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingIndicator("更新中！");
 					var pk = self.teamConfig().pk;
@@ -327,11 +327,11 @@ var DataContext = function() {
 					var ext2 = $("#txt-sys-cost").val().trim();
 
 					var data = "baseData.type=TEAM&baseData.pk=" + pk + "&baseData.ext1=" + ext1 + "&baseData.ext2="
-							+ ext2;
+						+ ext2;
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'system/updateBaseData',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'system/updateBaseData',
+						data: data
 
 					}).success(function(str) {
 						endLoadingIndicator();
@@ -361,9 +361,9 @@ var DataContext = function() {
 		var pk = self.saleCreditConfig().pk;
 		var data = "baseData.type=SCREDIT&baseData.pk=" + pk + "&baseData.ext1=" + flg;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'system/updateBaseData',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'system/updateBaseData',
+			data: data
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
@@ -391,9 +391,9 @@ var DataContext = function() {
 		var pk = self.count_limit_config().pk;
 		var data = "baseData.type=PRODUCT&baseData.pk=" + pk + "&baseData.ext1=" + count;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'system/updateBaseData',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'system/updateBaseData',
+			data: data
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
@@ -410,18 +410,47 @@ var DataContext = function() {
 		});
 	};
 	self.updateDishonestHold = function() {
+		if (!$("#form-dishonest-hold").valid())
+			return;
 		startLoadingIndicator("更新中");
 		let days = $("#txt-dishonest-hold").val().trim();
 		var pk = self.dishonest_hold_config().pk;
 		var data = "baseData.type=DISHONEST&baseData.pk=" + pk + "&baseData.ext1=" + days;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'system/updateBaseData',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'system/updateBaseData',
+			data: data
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
 				self.refreshDishonestHold();
+				success_msg("修改成功！")
+			}
+		});
+	}
+
+	self.air_ticket_charge_config = ko.observable({});
+	self.refreshAirTicketCharge = function() {
+		var param = "type=AIRCHARGE";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.air_ticket_charge_config(data.datas[0]);
+		});
+	};
+	self.updateAirTicketCharge = function() {
+		if (!$("#form-air-ticket-charge").valid())
+			return;
+		startLoadingIndicator("更新中");
+		let charge = $("#txt-air-ticket-charge").val().trim();
+		var pk = self.air_ticket_charge_config().pk;
+		var data = "baseData.type=AIRCHARGE&baseData.pk=" + pk + "&baseData.ext1=" + charge;
+		$.ajax({
+			type: "POST",
+			url: self.apiurl + 'system/updateBaseData',
+			data: data
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				self.refreshAirTicketCharge();
 				success_msg("修改成功！")
 			}
 		});
@@ -435,9 +464,9 @@ $(document).ready(function() {
 	ctx.refreshLocations();
 
 	new Sortable(lineGrid, {
-		animation : 150,
-		ghostClass : 'blue-background-class',
-		onEnd : function(e) {
+		animation: 150,
+		ghostClass: 'blue-background-class',
+		onEnd: function(e) {
 			ctx.sortProductLine();
 		}
 	});
@@ -446,4 +475,5 @@ $(document).ready(function() {
 	ctx.refreshSaleCreditConfig();
 	ctx.refreshProductUrgentCountLimit();
 	ctx.refreshDishonestHold();
+	ctx.refreshAirTicketCharge();
 });

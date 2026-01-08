@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -36,16 +37,17 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String pay_time;
 
 	private String pay_number;
+	// 如果是销售费用
+	private String client_employee_pk;
+	private String client_employee_name;
 
-	private String update_user;
+	private String delete_flg;
 
-	private String pk;
-
-	private String create_user;
-
+	private String belong_year;
+	// option
+	private List<String> items;
 	private String money_from;
 	private String money_to;
-	private String delete_flg;
 
 	public String getItem() {
 		return item;
@@ -135,30 +137,6 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 		this.pay_number = pay_number;
 	}
 
-	public String getUpdate_user() {
-		return update_user;
-	}
-
-	public void setUpdate_user(String update_user) {
-		this.update_user = update_user;
-	}
-
-	public String getPk() {
-		return pk;
-	}
-
-	public void setPk(String pk) {
-		this.pk = pk;
-	}
-
-	public String getCreate_user() {
-		return create_user;
-	}
-
-	public void setCreate_user(String create_user) {
-		this.create_user = create_user;
-	}
-
 	public String getMonth() {
 		return month;
 	}
@@ -213,6 +191,38 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setDelete_flg(String delete_flg) {
 		this.delete_flg = delete_flg;
+	}
+
+	public String getClient_employee_pk() {
+		return client_employee_pk;
+	}
+
+	public void setClient_employee_pk(String client_employee_pk) {
+		this.client_employee_pk = client_employee_pk;
+	}
+
+	public String getClient_employee_name() {
+		return client_employee_name;
+	}
+
+	public void setClient_employee_name(String client_employee_name) {
+		this.client_employee_name = client_employee_name;
+	}
+
+	public String getBelong_year() {
+		return belong_year;
+	}
+
+	public void setBelong_year(String belong_year) {
+		this.belong_year = belong_year;
+	}
+
+	public List<String> getItems() {
+		return items;
+	}
+
+	public void setItems(List<String> items) {
+		this.items = items;
 	}
 
 }

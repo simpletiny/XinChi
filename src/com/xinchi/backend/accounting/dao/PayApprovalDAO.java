@@ -52,4 +52,6 @@ public interface PayApprovalDAO {
 	public void suspensePayApplyByPks(List<String> pks);
 
 	public BigDecimal selectSumSuspense();
+
+	public void deleteByBackPk(String pk);
 }

@@ -209,7 +209,7 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data.related_pk)} "></a></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data)} "></a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='E' -->
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>

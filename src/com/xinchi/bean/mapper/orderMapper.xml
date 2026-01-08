@@ -94,8 +94,7 @@
 	</resultMap>
 
 	<resultMap id="NameResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderDto">
-		<collection column="team_number" property="name_list" ofType="com.xinchi.bean.SaleOrderNameListBean"
-			select="selectNamesByTeamNumber">
+		<collection column="team_number" property="name_list" ofType="com.xinchi.bean.SaleOrderNameListBean" select="selectNamesByTeamNumber">
 			<result column="team_number" property="team_number" jdbcType="VACHAR" />
 			<result column="name" property="name" jdbcType="VACHAR" />
 			<result column="id" property="id" jdbcType="VACHAR" />
@@ -120,22 +119,26 @@
 		select * from
 		sale_order_name_list
 		where
-		team_number = #{team_number,jdbcType=CHAR}
+		team_number =
+		#{team_number,jdbcType=CHAR}
 		order by name_index
 	</select>
 	<select id="selectFinalOrderByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select * from
 		budget_order_view
 		where
-		team_number = #{team_number,jdbcType=CHAR}
+		team_number =
+		#{team_number,jdbcType=CHAR}
 	</select>
 	<select id="search3MonthScoreByUserNumber" parameterType="java.lang.String" resultMap="SaleScoreMap">
 		SELECT
 		SUM(IF(A.confirm_flg != 'N'
-		AND (A.final_type IS NULL
+		AND (A.final_type IS
+		NULL
 		OR A.final_type != 4),
 		IFNULL(A.adult_count, 0) *
-		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) *
+		SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0))
 		AS score,
@@ -161,7 +164,8 @@
 		=#{user_number,jdbcType=VARCHAR}
 		GROUP
 		by LEFT(A.confirm_date,7)
-		ORDER by
+		ORDER
+		by
 		LEFT(A.confirm_date,7) DESC
 	</select>
 
@@ -245,7 +249,8 @@
 		A.do_confirm_date,
 		A.assistant_number,
 		A.assistant_name,
-		A.sale AS sale_number,
+		A.sale AS
+		sale_number,
 		A.hotel_comment,
 		A.sale_name,
 		A.final_receivable,
@@ -296,13 +301,15 @@
 		AND (A.final_type IS NULL
 		OR A.final_type != 4),
 		IFNULL(A.adult_count, 0) *
-		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		SUBSTRING_INDEX(A.product_value, ',', 1) +
+		IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0))
 		AS score,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (A.final_type IS NULL
-		OR A.final_type != 4)
+		OR
+		A.final_type != 4)
 		AND 11 >
 		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1),
 		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
@@ -316,7 +323,8 @@
 		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',',
 		1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
-		0)) AS first_score,
+		0)) AS
+		first_score,
 		SUM(IF(A.confirm_flg !=
 		'N'
 		AND (A.final_type IS NULL
@@ -332,9 +340,11 @@
 		OR A.final_type != 4)
 		AND
 		(SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 10
-		AND 21 > SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', -
+		AND 21 >
+		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', -
 		1)),
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) *
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0)
+		*
 		SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0)) AS middle_score,
@@ -342,7 +352,8 @@
 		AND (A.final_type IS NULL
 		OR
 		A.final_type != 4)
-		AND SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
+		AND
+		SUBSTRING_INDEX(LEFT(A.confirm_date, 10), '-', - 1) > 20,
 		(IFNULL(A.adult_count, 0) +
 		IFNULL(A.special_count, 0)),
 		0)) AS last_people,
@@ -355,18 +366,21 @@
 		SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0))
-		AS last_score,
+		AS
+		last_score,
 		LEFT(A.confirm_date, 7) AS confirm_month,
 		A.sale AS sale_number,
 		A.sale_name AS sale_name,
 		SUM(IF(A.confirm_flg != 'N'
-		AND (A.final_type IS NULL
+		AND (A.final_type IS
+		NULL
 		OR A.final_type != 4),
 		(IFNULL(A.adult_count, 0) +
 		IFNULL(A.special_count, 0)),
 		0)) AS sum_people,
 		ROUND(SUM(IF(A.confirm_flg != 'N'
-		AND (A.final_type IS NULL
+		AND
+		(A.final_type IS NULL
 		OR
 		A.final_type != 4),
 		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) *
@@ -376,7 +390,8 @@
 		AND (A.final_type IS NULL
 		OR A.final_type !=
 		4),
-		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
 		0)),
 		2) AS ave_score
 		FROM
@@ -397,18 +412,21 @@
 		AND (A.final_type IS NULL
 		OR A.final_type != 4)
 		AND A.independent_flg != 'A',
-		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
 		0)) AS non_standard_people,
 		SUM(IF(A.confirm_flg != 'N'
 		AND
 		(A.final_type IS NULL
 		OR A.final_type != 4)
-		AND A.independent_flg = 'A',
+		AND A.independent_flg
+		= 'A',
 		(IFNULL(A.adult_count, 0) +
 		IFNULL(A.special_count, 0)),
 		0)) AS only_ticket_people,
 		LEFT(A.confirm_date, 7) AS confirm_month,
-		A.sale AS sale_number,
+		A.sale AS
+		sale_number,
 		A.sale_name AS sale_name
 		FROM
 		budget_order_view A
@@ -428,7 +446,8 @@
 		SUM(IF(A.item = 'G' AND A.status = 'P',
 		A.money,
 		0)) AS sale_salary,
-		month AS confirm_month,
+		month AS
+		confirm_month,
 		apply_user AS sale_number,
 		B.user_name AS sale_name
 		FROM
@@ -475,21 +494,24 @@
 		SUM(IF(A.confirm_flg != 'N'
 		AND (A.final_type IS NULL
 		OR A.final_type != 4),
-		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1) + IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
+		IFNULL(A.adult_count, 0) * SUBSTRING_INDEX(A.product_value, ',', 1)
+		+ IFNULL(A.special_count, 0) * SUBSTRING_INDEX(A.product_value, ',', -
 		1),
 		0)) AS score,
 		LEFT(A.confirm_date, 7) AS confirm_month,
-		A.sale AS sale_number,
+		A.sale AS
+		sale_number,
 		A.sale_name AS sale_name,
 		SUM(IF(A.confirm_flg != 'N'
 		AND (A.final_type IS NULL
 		OR A.final_type != 4),
-		(IFNULL(A.adult_count, 0) + IFNULL(A.special_count, 0)),
+		(IFNULL(A.adult_count, 0) +
+		IFNULL(A.special_count, 0)),
 		0)) AS sum_people
 		FROM
 		budget_order_view A
 		<where>
-			and  A.standard_flg='Y'
+			and A.standard_flg='Y'
 			<if test="confirm_month != null and confirm_month !=''">
 				and LEFT(A.confirm_date,7)= #{confirm_month,jdbcType=VARCHAR}
 			</if>
@@ -639,9 +661,33 @@
 		<where>
 			client_employee_pk=#{employee_pk,jdbcType=CHAR}
 		</where>
-
 	</select>
-
+	<select id="selectMaxConfirmDateBySaleNumber" parameterType="java.lang.String" resultType="java.lang.String">
+		select max(confirm_date) from budget_order_view
+		<where>
+			sale=#{user_number,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<select id="selectOrderCountByParam" parameterType="com.xinchi.bean.OrderReportDto" resultType="java.lang.Integer">
+		select count(A.pk) from team_report A
+		LEFT JOIN
+		budget_order_view B ON A.team_number = B.team_number
+		<where>
+			<if test="date_from != null and date_from !=''">
+				and B.departure_date &gt;= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to != null and date_to !=''">
+				and B.departure_date &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="report_statuses != null and report_statuses !=''">
+				and A.approved in
+				<foreach item="item" collection="report_statuses" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			AND (B.confirm_flg = 'Y' OR B.confirm_flg = 'F') AND (B.final_type != 4 OR B.final_type IS NULL)
+		</where>
+	</select>
 	<select id="selectCByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.team_number,
@@ -729,6 +775,9 @@
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
 				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.departure_month != null and params.bo.departure_month !=''">
+				and LEFT(A.departure_date,7)=#{params.bo.departure_month,jdbcType=VARCHAR}
+			</if>
 			<if test="params.bo.order_statuses != null">
 				and A.status in
 				<foreach item="item" index="index" collection="params.bo.order_statuses" open="(" separator="," close=")">
@@ -744,7 +793,8 @@
 		date_add(A.departure_date,INTERVAL A.days-1 DAY)> DATE_FORMAT(NOW(),
 		'%Y-%m-%d'),TIMESTAMPDIFF(day,A.departure_date,now())-days,-99999) DESC,
 		IF(date_add(A.departure_date,INTERVAL A.days-1
-		DAY) &lt;=DATE_FORMAT(NOW(), '%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d'))
+		DAY) &lt;=DATE_FORMAT(NOW(),
+		'%Y-%m-%d'),TIMESTAMPDIFF(DAY,A.departure_date,DATE_FORMAT(NOW(), '%Y-%m-%d'))
 		- days +
 		2,0) DESC,
 		A.departure_date
@@ -776,6 +826,9 @@
 			</if>
 			<if test="params.bo.confirm_date_to != null and params.bo.confirm_date_to !=''">
 				and A.confirm_date &lt;=#{params.bo.confirm_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.departure_month != null and params.bo.departure_month !=''">
+				and LEFT(A.departure_date,7)=#{params.bo.departure_month,jdbcType=VARCHAR}
 			</if>
 		</where>
 		ORDER BY A.departure_date DESC

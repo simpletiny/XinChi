@@ -31,11 +31,10 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel">
-
-
 					<div class="form-group">
-						<div style="width: 30%; float: right">
+						<div style=" float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {createOrder() }">生成订单</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {deleteNeed() }">删除需求</button>
 							<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {onlyTicket() }">单售票</button> -->
 						</div>
 					</div>
@@ -351,6 +350,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.006"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-need.js?v=0.007"></script>
 </body>
 </html>

@@ -77,14 +77,14 @@
 								<!-- ko if:isSpecificDate -->
 								<th>分数</th>
 								<!-- /ko -->
-								<th>产品毛利</th>
+								<th title="计算公式：应收款/立款-机票款-其它支出-地接款-fy-后台费用-销售费用-单团额外支出+单团额外收入;">产品毛利</th>
 								<th>机票其他</th>
 								<th>押金扣款</th>
 								<th>产品费用</th>
 								<th>唯品费</th>
 								<th>投诉赔偿</th>
 								<th>其它费用</th>
-								<th>产品净利</th>
+								<th title="计算公式：产品毛利-机票其他-押金扣款-产品费用-唯品费-投诉赔偿-其他费用（月度额外收支）;">产品净利</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: reports">

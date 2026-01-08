@@ -26,8 +26,7 @@ public class ReimbursementAction extends BaseAction {
 	private ReimbursementBean reimbursement;
 
 	public String saveReimbursement() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		reimbursement.setApply_user(sessionBean.getUser_number());
 		resultStr = service.save(reimbursement);
 		return SUCCESS;
@@ -62,8 +61,7 @@ public class ReimbursementAction extends BaseAction {
 	 * @return
 	 */
 	public String searchReimbursementByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -79,6 +77,11 @@ public class ReimbursementAction extends BaseAction {
 		page.setParams(params);
 
 		reimbursements = service.selectByPage(page);
+		return SUCCESS;
+	}
+
+	public String selectByParam() {
+		reimbursements = service.selectByParam(option);
 		return SUCCESS;
 	}
 

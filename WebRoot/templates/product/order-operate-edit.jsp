@@ -346,7 +346,7 @@ h3 {
 					<hr />
 					<div class="input-row clearfloat table-order-here">
 						<h3>名单</h3>
-						<table style="width: 100%;" class="table table-order">
+						<table style="width: 100%;" class="table table-order" id="table-names">
 							<thead>
 								<tr>
 									<th>序</th>
@@ -556,6 +556,6 @@ h3 {
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/order-operate-edit.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/product/order-operate-edit.js?v=1.004"></script>
 </body>
 </html>

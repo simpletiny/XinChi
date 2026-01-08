@@ -30,9 +30,12 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private String confirm_date;
 	private String sale_name;
 	private String sale_number;
-
+	private BigDecimal team_other_pay = BigDecimal.ZERO;
+	private BigDecimal team_other_receive = BigDecimal.ZERO;
 	private BigDecimal air_deduct = BigDecimal.ZERO;
 	private BigDecimal exchange = BigDecimal.ZERO;
+	
+	private int order_count = 0;
 
 	private String discount_flg;
 	private BigDecimal discount_receivable = BigDecimal.ZERO;
@@ -66,6 +69,13 @@ public class OrderReportDto extends SupperBO implements Serializable {
 	private BigDecimal tail98 = BigDecimal.ZERO;
 	private BigDecimal other_pay = BigDecimal.ZERO;
 	private BigDecimal other_receive = BigDecimal.ZERO;
+	
+	
+	private BigDecimal no_b_pay = BigDecimal.ZERO;;
+	private BigDecimal no_b_receive = BigDecimal.ZERO;
+
+	private BigDecimal recon_pay = BigDecimal.ZERO;
+	private BigDecimal recon_receive = BigDecimal.ZERO;
 
 	private List<String> standard_flgs;
 
@@ -443,6 +453,62 @@ public class OrderReportDto extends SupperBO implements Serializable {
 
 	public void setStandard_flgs(List<String> standard_flgs) {
 		this.standard_flgs = standard_flgs;
+	}
+
+	public BigDecimal getTeam_other_pay() {
+		return team_other_pay;
+	}
+
+	public void setTeam_other_pay(BigDecimal team_other_pay) {
+		this.team_other_pay = team_other_pay;
+	}
+
+	public BigDecimal getTeam_other_receive() {
+		return team_other_receive;
+	}
+
+	public void setTeam_other_receive(BigDecimal team_other_receive) {
+		this.team_other_receive = team_other_receive;
+	}
+
+	public BigDecimal getNo_b_pay() {
+		return no_b_pay;
+	}
+
+	public void setNo_b_pay(BigDecimal no_b_pay) {
+		this.no_b_pay = no_b_pay;
+	}
+
+	public BigDecimal getNo_b_receive() {
+		return no_b_receive;
+	}
+
+	public void setNo_b_receive(BigDecimal no_b_receive) {
+		this.no_b_receive = no_b_receive;
+	}
+
+	public BigDecimal getRecon_pay() {
+		return recon_pay;
+	}
+
+	public void setRecon_pay(BigDecimal recon_pay) {
+		this.recon_pay = recon_pay;
+	}
+
+	public BigDecimal getRecon_receive() {
+		return recon_receive;
+	}
+
+	public void setRecon_receive(BigDecimal recon_receive) {
+		this.recon_receive = recon_receive;
+	}
+
+	public int getOrder_count() {
+		return order_count;
+	}
+
+	public void setOrder_count(int order_count) {
+		this.order_count = order_count;
 	}
 
 }

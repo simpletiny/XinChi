@@ -5,6 +5,7 @@ var connectInfoLayer;
 var commentLayer;
 var headCheckLayer;
 var queryLayer;
+let saleCostLayer;
 var ClientContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -13,8 +14,8 @@ var ClientContext = function() {
 	self.month = new Date(self.today).Format("yyyy年M月");
 
 	self.relations = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	// 维度
 	// self.level = [ '新增级', '忽略级', '尝试级', '市场级', '朋友级', '主力级', '核心级' ];
@@ -30,10 +31,10 @@ var ClientContext = function() {
 	self.chosenLevel = ko.observableArray(['关系度']);
 
 	self.connectTypeMapping = {
-		"ORDER" : "订单",
-		"VISIT" : "会见",
-		"TOUCH" : "电联",
-		"INCOMING" : "微聊"
+		"ORDER": "订单",
+		"VISIT": "会见",
+		"TOUCH": "电联",
+		"INCOMING": "微聊"
 	};
 
 	self.chosenRelationLevel = ko.observableArray([]);
@@ -42,10 +43,10 @@ var ClientContext = function() {
 
 	self.sortTypes = ['1', '2', '3', '4'];
 	self.sortTypeMapping = {
-		'1' : '账期倒序',
-		'2' : '交流日期',
-		'3' : '签单期间',
-		'4' : '年单'
+		'1': '账期倒序',
+		'2': '交流日期',
+		'3': '签单期间',
+		'4': '年单'
 	};
 
 	self.chosenSortType = ko.observable('2');
@@ -59,18 +60,18 @@ var ClientContext = function() {
 	self.querySysClient = function() {
 
 		queryLayer = $.layer({
-			type : 1,
-			title : ['系统客户查询', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '200px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#query-sys-client'
+			type: 1,
+			title: ['系统客户查询', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '200px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#query-sys-client'
 			},
-			end : function() {
+			end: function() {
 
 			}
 		});
@@ -82,9 +83,9 @@ var ClientContext = function() {
 
 		var data = "wechat=" + wechat + "&cellphone=" + cellphone;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'client/querySysClient',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'client/querySysClient',
+			data: data
 		}).success(function(data) {
 			var str = data.resultStr;
 
@@ -159,23 +160,23 @@ var ClientContext = function() {
 	self.potential = ko.observable({});
 	self.incomingCount = ko.observable({});
 	self.meter = ko.observable({
-		receivable : 0,
-		warning : 0,
-		score : 0,
-		month : 0,
-		bad : 0,
-		month_ : 0,
-		sum_dead : 0,
-		day_hold : 0,
-		bad_interest : 0,
-		dev_fund : 0,
-		new_fund : 0,
+		receivable: 0,
+		warning: 0,
+		score: 0,
+		month: 0,
+		bad: 0,
+		month_: 0,
+		sum_dead: 0,
+		day_hold: 0,
+		bad_interest: 0,
+		dev_fund: 0,
+		new_fund: 0,
 	});
 	self.workOrder = ko.observable({});
 	self.accurateSale = ko.observable({});
 	self.clientEmployeeTypeCount = ko.observable({});
-	self.rankLastMonth = ko.observable({rank_score:0,rank_first_score:0,rank_middle_score:0,rank_last_score:0});
-	self.rankThisMonth = ko.observable({rank_score:0,rank_first_score:0,rank_middle_score:0,rank_last_score:0});
+	self.rankLastMonth = ko.observable({ rank_score: 0, rank_first_score: 0, rank_middle_score: 0, rank_last_score: 0 });
+	self.rankThisMonth = ko.observable({ rank_score: 0, rank_first_score: 0, rank_middle_score: 0, rank_last_score: 0 });
 
 	self.searchClientSummary = function() {
 		var param = $("form").serialize();
@@ -191,7 +192,7 @@ var ClientContext = function() {
 			self.todayPoint(data.today_point);
 			self.rankLastMonth(data.rankLastMonth);
 			self.rankThisMonth(data.rankThisMonth);
-			
+
 			$(".rmb").formatCurrency();
 		});
 	};
@@ -220,7 +221,7 @@ var ClientContext = function() {
 			return;
 		} else if (self.chosenEmployee().length == 1) {
 			window.location.href = self.apiurl + "templates/client/accurate-sale-creation.jsp?key="
-					+ self.chosenEmployee();
+				+ self.chosenEmployee();
 		}
 	};
 	// 新增电联
@@ -252,7 +253,7 @@ var ClientContext = function() {
 		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 	self.employee = ko.observable({
-		sales : []
+		sales: []
 	});
 	self.setClientLevel = function() {
 		console.log(self.chosenEmployee());
@@ -261,18 +262,18 @@ var ClientContext = function() {
 			return;
 		} else if (self.chosenEmployee().length > 0) {
 			levelLayer = $.layer({
-				type : 1,
-				title : ['客户关系调整', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['300px', '150px'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#client-market-level'
+				type: 1,
+				title: ['客户关系调整', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['300px', '150px'],
+				offset: ['', ''],
+				scrollbar: true,
+				page: {
+					dom: '#client-market-level'
 				},
-				end : function() {
+				end: function() {
 
 				}
 			});
@@ -289,9 +290,9 @@ var ClientContext = function() {
 		param += "market_level=" + self.chosenMarketLevel();
 
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'client/setClientEmployeeLevel',
-			data : param
+			type: "POST",
+			url: self.apiurl + 'client/setClientEmployeeLevel',
+			data: param
 		}).success(function(str) {
 			if (str == "success") {
 				self.fetchSummary();
@@ -321,18 +322,18 @@ var ClientContext = function() {
 		$("#todo_content").val("");
 		$("#client_employee_pk").val(pk);
 		todoLayer = $.layer({
-			type : 1,
-			title : ['新增待办', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['400px', '200px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#todo-create'
+			type: 1,
+			title: ['新增待办', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['400px', '200px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#todo-create'
 			},
-			end : function() {
+			end: function() {
 
 			}
 		});
@@ -348,9 +349,9 @@ var ClientContext = function() {
 		param += "&todo.type=CLIENT";
 
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'todo/createToDo',
-			data : param
+			type: "POST",
+			url: self.apiurl + 'todo/createToDo',
+			data: param
 		}).success(function(str) {
 			if (str == "OK") {
 				self.refresh();
@@ -393,18 +394,18 @@ var ClientContext = function() {
 					self.quit(quit_in);
 
 					quitLayer = $.layer({
-						type : 1,
-						title : ['放弃维护', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['400px', '200px'],
-						offset : ['', ''],
-						scrollbar : true,
-						page : {
-							dom : '#quit-connect'
+						type: 1,
+						title: ['放弃维护', ''],
+						maxmin: false,
+						closeBtn: [1, true],
+						shadeClose: false,
+						area: ['400px', '200px'],
+						offset: ['', ''],
+						scrollbar: true,
+						page: {
+							dom: '#quit-connect'
 						},
-						end : function() {
+						end: function() {
 						}
 					});
 				} else {
@@ -418,22 +419,22 @@ var ClientContext = function() {
 	 */
 	self.doQuit = function() {
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认要放弃维护吗？',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认要放弃维护吗？',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					var data = $("#form-quit").serialize();
 
 					startLoadingSimpleIndicator("保存中...");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'client/quitConnectEmployee',
-						traditional : true,
-						data : data
+						type: "POST",
+						url: self.apiurl + 'client/quitConnectEmployee',
+						traditional: true,
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -457,23 +458,23 @@ var ClientContext = function() {
 
 	self.upToFriend = function(pk, client_employee_pk) {
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认将此客户升级为朋友级吗？',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认将此客户升级为朋友级吗？',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					var data = "clientRelation.pk=" + pk + "&clientRelation.client_employee_pk=" + client_employee_pk
-							+ "&clientRelation.relation_level=朋友级";
+						+ "&clientRelation.relation_level=朋友级";
 
 					startLoadingSimpleIndicator("保存中...");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'client/updateEmployeeRelationLevel',
-						traditional : true,
-						data : data
+						type: "POST",
+						url: self.apiurl + 'client/updateEmployeeRelationLevel',
+						traditional: true,
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -489,23 +490,23 @@ var ClientContext = function() {
 
 	self.downToMarket = function(pk, client_employee_pk) {
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认将此客户降级为市场级吗？',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认将此客户降级为市场级吗？',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					var data = "clientRelation.pk=" + pk + "&clientRelation.client_employee_pk=" + client_employee_pk
-							+ "&clientRelation.relation_level=市场级";
+						+ "&clientRelation.relation_level=市场级";
 
 					startLoadingSimpleIndicator("保存中...");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'client/updateEmployeeRelationLevel',
-						traditional : true,
-						data : data
+						type: "POST",
+						url: self.apiurl + 'client/updateEmployeeRelationLevel',
+						traditional: true,
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -526,18 +527,18 @@ var ClientContext = function() {
 		self.searchConnects();
 
 		connectInfoLayer = $.layer({
-			type : 1,
-			title : ['交流信息', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['800px', '760px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#connect-info'
+			type: 1,
+			title: ['交流信息', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['800px', '760px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#connect-info'
 			},
-			end : function() {
+			end: function() {
 			}
 		});
 	};
@@ -559,22 +560,22 @@ var ClientContext = function() {
 	// 添加/修改备注
 	self.editComment = function(employee_pk) {
 		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-			employee_pk : employee_pk
+			employee_pk: employee_pk
 		}, function(data) {
 			self.clientEmployee(data.employee);
 			commentLayer = $.layer({
-				type : 1,
-				title : ['备注', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['500px', '300px'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#comment-edit'
+				type: 1,
+				title: ['备注', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['500px', '300px'],
+				offset: ['', ''],
+				scrollbar: true,
+				page: {
+					dom: '#comment-edit'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -594,9 +595,9 @@ var ClientContext = function() {
 
 		startLoadingIndicator("保存中");
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + "client/updateEmployeeSimply",
-			data : data
+			type: "POST",
+			url: self.apiurl + "client/updateEmployeeSimply",
+			data: data
 		}).success(function(str) {
 			endLoadingIndicator();
 			if (str == "success") {
@@ -609,46 +610,75 @@ var ClientContext = function() {
 	self.checkVisitImg = function(fileName, connect_date) {
 		$("#img-pic").attr("src", "");
 		headCheckLayer = $.layer({
-			type : 1,
-			title : ['交流图片', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['320px', '355px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#pic-check'
+			type: 1,
+			title: ['交流图片', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['320px', '355px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#pic-check'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
 
 		let sub_folder = connect_date.substring(0, 4) + "/" + connect_date.substring(5, 7);
 		console.log(self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-				+ "&fileType=CLIENT_VISIT_IMG&subFolder" + sub_folder);
+			+ "&fileType=CLIENT_VISIT_IMG&subFolder" + sub_folder);
 		$("#img-pic").attr(
-				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_VISIT_IMG&subFolder="
-						+ sub_folder);
+			"src",
+			self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_VISIT_IMG&subFolder="
+			+ sub_folder);
 	};
+	self.reimbursements = ko.observableArray();
+	self.checkSaleCost = function(client_employee_pk) {
+		startLoadingSimpleIndicator("加载中");
+		const data = "option.client_employee_pk=" + client_employee_pk;
+		$.ajax({
+			type: "POST",
+			url: self.apiurl + "accounting/selectReimbursementByParam",
+			data: data
+		}).success(function(data) {
+			self.reimbursements(data.reimbursements);
+			endLoadingIndicator();
+			saleCostLayer = $.layer({
+				type: 1,
+				title: ['销售费用记录', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', '355px'],
+				offset: ['', ''],
+				scrollbar: true,
+				page: {
+					dom: '#div-sale-cost'
+				},
+				end: function() {
+					console.log("Done");
+				}
+			});
+		});
+	}
 	// 查看头像
 	self.checkHeadPhoto = function(fileName) {
 		$("#img-pic").attr("src", "");
 		headCheckLayer = $.layer({
-			type : 1,
-			title : ['头像', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['320px', '355px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#pic-check'
+			type: 1,
+			title: ['头像', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['320px', '355px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#pic-check'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
@@ -656,7 +686,7 @@ var ClientContext = function() {
 			$("#img-pic").attr("src", self.apiurl + "static/img/head.jpg");
 		} else {
 			$("#img-pic").attr("src",
-					self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");
+				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=CLIENT_EMPLOYEE_HEAD");
 		}
 	};
 
@@ -792,7 +822,7 @@ $(document).ready(function() {
 	ctx.refresh();
 	ctx.searchClientSummary();
 	$("#img-pic").css({
-		"width" : "320px",
-		"height" : "320px"
+		"width": "320px",
+		"height": "320px"
 	});
 });

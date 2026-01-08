@@ -65,7 +65,8 @@
 	<select id="selectTicketInfosByPassenger_pk" parameterType="java.lang.String" resultType="com.xinchi.bean.PassengerTicketInfoBean">
 		select * from
 		passenger_ticket_info
-		where passenger_pk = #{pk,jdbcType=CHAR}
+		where passenger_pk
+		= #{pk,jdbcType=CHAR}
 		order by ticket_index
 	</select>
 
@@ -130,7 +131,8 @@
 		passenger_ticket_info A
 		LEFT
 		JOIN
-		air_ticket_name_list B ON A.passenger_pk = B.pk
+		air_ticket_name_list B ON
+		A.passenger_pk = B.pk
 		WHERE
 		A.base_pk = #{payable_pk,jdbcType=CHAR}
 		AND A.ticket_index = 1
@@ -141,7 +143,8 @@
 		FROM
 		air_ticket_name_list
 		where
-		team_number = #{team_number,jdbcType=CHAR}
+		team_number =
+		#{team_number,jdbcType=CHAR}
 	</select>
 	<select id="selectByChangePk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT
@@ -149,7 +152,8 @@
 		FROM
 		air_ticket_name_list
 		where
-		change_pk = #{change_pk,jdbcType=CHAR}
+		change_pk =
+		#{change_pk,jdbcType=CHAR}
 	</select>
 
 	<select id="selectByTeamNumbers" resultMap="BaseResultMap">
@@ -169,7 +173,8 @@
 		FROM
 		air_ticket_name_list
 		where
-		order_number = #{order_number,jdbcType=CHAR}
+		order_number =
+		#{order_number,jdbcType=CHAR}
 	</select>
 
 	<select id="selectByPks" resultMap="BaseResultMap">
@@ -511,7 +516,8 @@
 
 		from air_ticket_name_list A LEFT
 		JOIN
-		user_base B ON A.client_number=
+		user_base B ON
+		A.client_number=
 		B.user_number
 		LEFT JOIN
 		budget_order_view C ON
@@ -548,7 +554,7 @@
 				CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
-		ORDER BY A.first_ticket_date DESC,A.order_number,A.team_number,ticket_order_pk
+		ORDER BY A.first_ticket_date,A.order_number,A.team_number,ticket_order_pk
 	</select>
 
 	<select id="selectTicketCostInfo" parameterType="com.xinchi.bean.AirTicketNameListBean" resultMap="BaseResultMap">
@@ -565,7 +571,8 @@
 		A.id_type
 		FROM
 		air_ticket_name_list A
-		LEFT JOIN
+		LEFT
+		JOIN
 		view_sum_ticket_cost B ON A.pk = B.passenger_pk
 		<where>
 			<if test="team_number != null and team_number !=''">
@@ -648,12 +655,21 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.first_ticket_date&lt;=#{params.bo.date_to,jdbcType=CHAR}
 			</if>
+			<if test="params.bo.year != null and params.bo.year !=''">
+				and LEFT(A.first_ticket_date,4)=#{params.bo.year,jdbcType=CHAR}
+			</if>
 			<if test="params.bo.first_from_to != null and params.bo.first_from_to !=''">
 				and CONCAT(A.first_start_city,'--',A.first_end_city) like
 				CONCAT('%',#{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
-		ORDER BY A.order_number,A.team_number,ticket_order_pk,A.first_ticket_date
+		ORDER BY A.first_ticket_date
+		<choose>
+			<when test="params.bo.sort_type == '正序'">ASC</when>
+			<when test="params.bo.sort_type == '倒序'">DESC</when>
+			<otherwise>DESC</otherwise>
+		</choose>
+		,A.order_number,A.team_number,ticket_order_pk
 	</select>
 
 	<select id="selectTicketOrderPksByPassengerPks" resultType="java.lang.String">

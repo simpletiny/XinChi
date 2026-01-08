@@ -30,6 +30,7 @@
 		<result column="extra_info" property="extra_info" jdbcType="VARCHAR" />
 		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="client_sale_cost" property="client_sale_cost" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<resultMap id="ClientSummaryMap" type="com.xinchi.bean.ClientSummaryDto">
@@ -556,10 +557,12 @@
 		A.type,
 		A.extra_info,
 		A.head_photo,
-		B.comment
+		B.comment,
+		C.money AS client_sale_cost
 		from
 		client_relation A
 		LEFT JOIN client_employee B ON A.client_employee_pk = B.pk
+		LEFT JOIN view_client_sale_cost C ON A.client_employee_pk = C.client_employee_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and (A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%'))

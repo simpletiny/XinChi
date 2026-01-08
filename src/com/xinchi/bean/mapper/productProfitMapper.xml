@@ -204,16 +204,15 @@
 	<select id="selectByParam" parameterType="com.xinchi.bean.ProductProfitBean" resultMap="BaseResultMap">
 		SELECT
 		departure_month,
-		status,
+		CASE
+        WHEN SUM(status = 'N') > 0 THEN 'N'
+        ELSE 'Y'
+    	END AS status,
 		SUM(people_count) AS people_count,
 		SUM(gross_profit) AS gross_profit,
-		SUM(product_cost) AS product_cost,
-		SUM(keep_cost) AS keep_cost,
-		SUM(score) AS score,
-		group_concat(distinct user_number) AS user_number
+		SUM(score) AS score
 		FROM
 		view_product_profit
-
 		<where>
 			<if test="option_year != null and option_year !=''">
 				and LEFT(departure_month,4) =#{option_year,jdbcType=VARCHAR}
@@ -226,6 +225,5 @@
 			</if>
 		</where>
 		GROUP BY departure_month
-		ORDER BY departure_month
 	</select>
 </mapper>

@@ -23,6 +23,8 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
+		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -44,13 +46,34 @@
 		create_user,
 		create_time,
 		update_time,
-		delete_flg
+		delete_flg,
+		client_employee_pk
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from reimbursement
-		where pk = #{pk,jdbcType=CHAR}
+		A.item,
+		A.date,
+		A.month,
+		A.money,
+		A.comment,
+		A.status,
+		A.apply_user,
+		A.approval_user,
+		A.pay_user,
+		A.approval_time,
+		A.pay_time,
+		A.pay_number,
+		A.update_user,
+		A.pk,
+		A.create_user,
+		A.create_time,
+		A.update_time,
+		A.delete_flg,
+		A.client_employee_pk,
+		B.name AS client_employee_name
+		from reimbursement A LEFT JOIN client_employee B ON A.client_employee_pk =B.pk
+		where A.pk =
+		#{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -114,6 +137,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="client_employee_pk != null">
+				client_employee_pk,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="item != null">
@@ -166,6 +192,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="client_employee_pk != null">
+				#{client_employee_pk,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -225,6 +254,7 @@
 			<if test="delete_flg != null">
 				delete_flg = #{delete_flg,jdbcType=CHAR},
 			</if>
+			client_employee_pk = #{client_employee_pk,jdbcType=CHAR},
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -232,6 +262,11 @@
 		select
 		<include refid="Base_Column_List" />
 		from reimbursement
+		<where>
+			<if test="client_employee_pk != null and client_employee_pk !=''">
+				client_employee_pk = #{client_employee_pk,jdbcType=CHAR}
+			</if>
+		</where>
 	</select>
 	<select id="selectSummaries" parameterType="com.xinchi.bean.ReimbursementBean" resultMap="BaseResultMap">
 		select item,month,sum(money) AS money from reimbursement
@@ -242,11 +277,57 @@
 			<if test="date_to !=null and date_to !=''">
 				and month &lt;= #{date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="item !=null and item !=''">
+				and item= #{item,jdbcType=CHAR}
+			</if>
+			<if test="items !=null and items.size()>0">
+				and item in
+				<foreach collection="items" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 			and status = 'P'
 		</where>
 		group by item
+		ORDER BY
+		<choose>
+			<when test="items != null and items.size() > 0">
+				FIELD(item,
+				<foreach collection="items" item="item" separator=",">
+					#{item}
+				</foreach>
+				)
+			</when>
+			<otherwise>
+				item
+			</otherwise>
+		</choose>
 	</select>
-
+	<select id="selectSumByParam" parameterType="com.xinchi.bean.ReimbursementBean" resultMap="BaseResultMap">
+		select month,sum(money) AS money from reimbursement
+		<where>
+			<if test="date_from !=null and date_from !=''">
+				and month >= #{date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="date_to !=null and date_to !=''">
+				and month &lt;= #{date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="month !=null and month !=''">
+				and month = #{month,jdbcType=VARCHAR}
+			</if>
+			<if test="belong_year !=null and belong_year !=''">
+				and left(month,4) = #{belong_year,jdbcType=VARCHAR}
+			</if>
+			<if test="item !=null and item !=''">
+				and item = #{item,jdbcType=CHAR}
+			</if>
+			<if test="apply_user !=null and apply_user !=''">
+				and apply_user = #{apply_user,jdbcType=VARCHAR}
+			</if>
+			and status = 'P'
+		</where>
+		group by month
+	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.item,
@@ -269,7 +350,8 @@
 		A.create_user,
 		A.create_time,
 		A.update_time
-		from reimbursement A
+		from
+		reimbursement A
 		LEFT JOIN
 		user_base B ON
 		A.apply_user=B.user_number

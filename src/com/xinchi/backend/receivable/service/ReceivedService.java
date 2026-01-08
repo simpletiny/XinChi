@@ -57,7 +57,7 @@ public interface ReceivedService extends BaseService {
 
 	public BigDecimal selectSumReceivedByTeamNumber(String team_number);
 
-	public String rejectRecived(String related_pks);
+	public String rejectRecived(String reject_json);
 
 	public List<ReceivedDetailDto> searchAllAboutReceivedByRelatedPks(String related_pk, String from_where);
 

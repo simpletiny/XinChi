@@ -34,7 +34,11 @@ var PassengerContext = function() {
 		"N": "未锁定",
 		"Y": "已锁定"
 	}
-
+	
+	
+	self.year =ko.observable( new Date().getFullYear());
+	self.sortTypes = ['正序', '倒序'];
+	
 	// 解锁名单
 	self.unlockName = function() {
 		if (self.chosenPassengers().length < 1) {

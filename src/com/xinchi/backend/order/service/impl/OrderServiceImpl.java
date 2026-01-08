@@ -41,6 +41,7 @@ import com.xinchi.bean.AirTicketOrderBean;
 import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.ClientReceivedDetailBean;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
@@ -1668,6 +1669,16 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 
+		if (!old.getStandard_flg().equals("Y")) {
+			// 检测是否可修改产品经理
+			if (!old.getProduct_manager().equals(bean.getProduct_manager())) {
+				if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+					result.add(MessageFormat.format(msg_a, "产品", "操作", "修改产品经理"));
+					return result;
+				}
+			}
+		}
+
 		// 检测是否可以修改名单
 		List<SaleOrderNameListBean> oldNameList = nameListDao.selectByOrderPk(bean.getPk());
 		List<SaleOrderNameListBean> newNameList = new ArrayList<SaleOrderNameListBean>();
@@ -2213,5 +2224,15 @@ public class OrderServiceImpl implements OrderService {
 	public String update(SaleOrderBean sale_order) {
 		dao.update(sale_order);
 		return SUCCESS;
+	}
+
+	@Override
+	public String selectMaxConfirmDateBySaleNumber(String user_number) {
+		return dao.selectMaxConfirmDateBySaleNumber(user_number);
+	}
+
+	@Override
+	public int selectOrderCountByParam(OrderReportDto bean) {
+		return dao.selectOrderCountByParam(bean);
 	}
 }

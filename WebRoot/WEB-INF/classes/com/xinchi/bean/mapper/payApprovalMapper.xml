@@ -70,6 +70,10 @@
 		delete from pay_approval
 		where pk = #{pk,jdbcType=CHAR}
 	</delete>
+	<delete id="deleteByBackPk" parameterType="java.lang.String">
+		delete from pay_approval
+		where back_pk = #{back_pk,jdbcType=CHAR}
+	</delete>
 	<update id="suspensePayApplyByPks" parameterType="java.util.List">
 		update pay_approval
 		set status='S'

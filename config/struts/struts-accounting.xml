@@ -81,6 +81,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="selectReimbursementByParam" class="reimbursementAction" method="selectByParam">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="searchReimbursementByPk" class="reimbursementAction" method="searchReimbursementByPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -96,6 +102,53 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 财务报表 start -->
+		<!-- 损益表 start -->
+		<!-- PL  for profit and loss -->
+		<action name="searchPLSummary" class="accountingReportAction" method="searchPLSummary">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLMain" class="accountingReportAction" method="searchPLMain">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLTicket" class="accountingReportAction" method="searchPLTicket">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLHuman" class="accountingReportAction" method="searchPLHuman">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLReimbursement" class="accountingReportAction" method="searchPLReimbursement">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLOther" class="accountingReportAction" method="searchPLOther">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchPLInner" class="accountingReportAction" method="searchPLInner">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 损益表 end -->
+		<!-- 财务报表 end -->
 	</package>
 
 </struts>

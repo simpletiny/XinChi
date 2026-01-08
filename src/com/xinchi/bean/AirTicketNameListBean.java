@@ -72,6 +72,8 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 	private BigDecimal budget_cost;
 	private BigDecimal final_cost;
 	private String detail_comment;
+	private String year;
+	private String sort_type;
 
 	private List<PassengerTicketInfoBean> ticket_infos;;
 
@@ -361,6 +363,22 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setDetail_comment(String detail_comment) {
 		this.detail_comment = detail_comment;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getSort_type() {
+		return sort_type;
+	}
+
+	public void setSort_type(String sort_type) {
+		this.sort_type = sort_type;
 	}
 
 }

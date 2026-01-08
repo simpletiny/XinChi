@@ -1,6 +1,13 @@
 var operateContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
+	self.air_ticket_charge_config = ko.observable({});
+	self.refreshAirTicketCharge = function() {
+		var param = "type=AIRCHARGE";
+		$.getJSON(self.apiurl + 'system/searchByType', param, function(data) {
+			self.air_ticket_charge_config(data.datas[0]);
+		});
+	};
 	self.finish = function() {
 		startLoadingSimpleIndicator("保存中");
 		var all = $(".every-count");
@@ -46,7 +53,7 @@ var operateContext = function() {
 					fail_msg("请填写起降时刻！");
 					return;
 				}
-				let add_day_flg = $(tr).find("input[st^='add-day-flg']").is(":checked")?"Y":"N";
+				let add_day_flg = $(tr).find("input[st^='add-day-flg']").is(":checked") ? "Y" : "N";
 				var from_to_city = $(tr).find("input[st^='from-to-city']").val();
 				var start_place = $(tr).find("input[st^='start-place']").val();
 				var end_place = $(tr).find("input[st^='end-place']").val();
@@ -119,6 +126,7 @@ var ctx = new operateContext();
 $(document).ready(function() {
 	$("input[st='ticket-source']").disabled();
 	ko.applyBindings(ctx);
+	ctx.refreshAirTicketCharge();
 });
 
 function deleteRow(input) {

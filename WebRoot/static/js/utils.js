@@ -197,23 +197,23 @@ function startLoadingIndicator(msg) {
 			+ 'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
-                <div id="loader-inside-process" class="loader-inside-format" hidden>\
-                    <p id="loading-message" style="padding-top: 30px;"></p>\
-                    <div id="loader-inside-bar-container" style="width: 75%;height: 40px;margin:0 auto"></div>\
-                    <p id="loader-inside-value"></p>\
-                </div>\
             </div>';
 
+		//			<div id="loader-inside-process" class="loader-inside-format" hidden>\
+		//			                <p id="loading-message" style="padding-top: 30px;"></p>\
+		//			                <div id="loader-inside-bar-container" style="width: 75%;height: 40px;margin:0 auto"></div>\
+		//			                <p id="loader-inside-value"></p>\
+		//			            </div>\
 		$('body').prepend(uiCode);
-		var options = {
-			bg: '#ff5722',
-			target: document.getElementById('loader-inside-bar-container'),
-			id: 'loader-inside-bar'
-		};
-		nanobar = new Nanobar(options);
+		//		var options = {
+		//			bg: '#ff5722',
+		//			target: document.getElementById('loader-inside-bar-container'),
+		//			id: 'loader-inside-bar'
+		//		};
+		//		nanobar = new Nanobar(options);
 	}
-	$('#loader-inside-infi').show();
-	$('#loader-inside-process').hide();
+	//	$('#loader-inside-infi').show();
+	//	$('#loader-inside-process').hide();
 	$('.large-format-loader #loading-message').html(msg + '...');
 	$('.large-format-loader').removeClass('is-not-loading');
 }
@@ -231,25 +231,37 @@ function startLoadingSimpleIndicator(msg) {
 			+ 'static/img/loading.gif"/></p>\
                     <p id="loading-message" style="padding-top: 10px;"></p>\
                 </div>\
-                <div id="loader-inside-process" class="loader-inside-format" hidden>\
-                    <p id="loading-message" style="padding-top: 30px;"></p>\
-                    <div id="loader-inside-bar-container" style="width: 75%;height: 40px;margin:0 auto"></div>\
-                    <p id="loader-inside-value"></p>\
-                </div>\
             </div>';
 
 		$('body').prepend(uiCode);
-		var options = {
-			bg: '#ff5722',
-			target: document.getElementById('loader-inside-bar-container'),
-			id: 'loader-inside-bar'
-		};
-		nanobar = new Nanobar(options);
 	}
-	$('#loader-inside-infi').show();
-	$('#loader-inside-process').hide();
+	//$('#loader-inside-infi').show();
 	$('.large-format-loader-simple #loading-message').html(msg + '...');
 	$('.large-format-loader-simple').removeClass('is-not-loading');
+}
+
+//局部加载动画
+function startLoadingSliceIndicator(container) {
+	var apiurl = $("#hidden_apiurl").val();
+	if (apiurl == null) {
+		apiurl = "../../";
+	}
+	if ($(container).find('.large-format-loader-slice').length == 0) {
+		var uiCode = '<div class="large-format-loader-slice is-not-loading">\
+	                <div id="loader-inside-infi" class="loader-inside-format-slice">\
+	                    <p style="padding-top: 50px"><img height="50" width="50" src="'
+			+ apiurl
+			+ 'static/img/loading.gif"/></p>\
+	                </div>\
+	            </div>';
+
+		$(container).prepend(uiCode);
+	}
+	//	$('#loader-inside-infi').show();
+	$(container).find('.large-format-loader-slice').removeClass('is-not-loading');
+}
+function endLoadingSliceIndicator(container) {
+	$(container).find('.large-format-loader-slice').addClass('is-not-loading');
 }
 
 function endLoadingIndicator() {
@@ -523,12 +535,12 @@ function dataURLtoFile(dataurl, filename) {
 		$this.find("tbody:eq(0) tr").each(function() {
 			var tds = $(this).children();
 			for (var i = 0; i < tds.length; i++) {
-				if (default_options.except.contains(i + 1)){
+				if (default_options.except.contains(i + 1)) {
 					continue;
 				}
-				
+
 				var td = $(tds[i]);
-				if (typeof +td.text() === 'number' && !isNaN(td.text())){
+				if (typeof +td.text() === 'number' && !isNaN(td.text())) {
 					sum[i] += +td.text();
 				}
 			}
@@ -634,10 +646,10 @@ function inputFormatFromToTime(container) {
 				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]:[0-5]$/,
 				/^[0-2][0-9]:[0-5][0-9]--[0-2][0-9]:[0-5][0-9]$/
 			];
-			while (txt.value.length>0 && !regexSteps.some(regex => regex.test(txt.value))) {
+			while (txt.value.length > 0 && !regexSteps.some(regex => regex.test(txt.value))) {
 				txt.value = txt.value.slice(0, -1);
-		    }
-			
+			}
+
 			let v = txt.value;
 			switch (v.length) {
 				case 2:
@@ -666,9 +678,9 @@ function inputFormatTime(container) {
 				/^[0-2][0-9]:[0-5]$/,
 				/^[0-2][0-9]:[0-5][0-9]$/,
 			];
-			while (txt.value.length>0 && !regexSteps.some(regex => regex.test(txt.value))) {
+			while (txt.value.length > 0 && !regexSteps.some(regex => regex.test(txt.value))) {
 				txt.value = txt.value.slice(0, -1);
-		    }
+			}
 			let v = txt.value;
 			switch (v.length) {
 				case 2:
@@ -680,10 +692,10 @@ function inputFormatTime(container) {
 		}
 	});
 }
-function showBigImg(url){
-	 const newWindow = window.open('', '_blank');
-     // 在新窗口中写入 HTML 并嵌入大图
-     newWindow.document.write(`
+function showBigImg(url) {
+	const newWindow = window.open('', '_blank');
+	// 在新窗口中写入 HTML 并嵌入大图
+	newWindow.document.write(`
          <!DOCTYPE html>
          <html lang="en">
          <head>
@@ -696,47 +708,47 @@ function showBigImg(url){
          </body>
          </html>
      `);
-     newWindow.document.close();
+	newWindow.document.close();
 }
 
 function copyToClipboard(text) {
-    // Check if the browser supports the Clipboard API
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        // Use Clipboard API
-        navigator.clipboard.writeText(text).then(function() {
-            success_msg("已经成功复制到剪切板！");
-        }, function(err) {
-            fail_msg("复制失败！");
-        });
-    } else {
-        // Fallback for browsers that do not support the Clipboard API
-        var textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            var successful = document.execCommand('copy');
-            if(successful){
-                success_msg("已经成功复制到剪切板！");
-            }else{
-                fail_msg("复制失败！");
-            }
-        } catch (err) {
-            console.error('Fallback: Oops, unable to copy', err);
-            document.getElementById('status').innerText = 'Fallback: Unable to copy text.';
-        }
-        document.body.removeChild(textArea);
-    }
+	// Check if the browser supports the Clipboard API
+	if (navigator.clipboard && navigator.clipboard.writeText) {
+		// Use Clipboard API
+		navigator.clipboard.writeText(text).then(function() {
+			success_msg("已经成功复制到剪切板！");
+		}, function(err) {
+			fail_msg("复制失败！");
+		});
+	} else {
+		// Fallback for browsers that do not support the Clipboard API
+		var textArea = document.createElement('textarea');
+		textArea.value = text;
+		document.body.appendChild(textArea);
+		textArea.select();
+		try {
+			var successful = document.execCommand('copy');
+			if (successful) {
+				success_msg("已经成功复制到剪切板！");
+			} else {
+				fail_msg("复制失败！");
+			}
+		} catch (err) {
+			console.error('Fallback: Oops, unable to copy', err);
+			document.getElementById('status').innerText = 'Fallback: Unable to copy text.';
+		}
+		document.body.removeChild(textArea);
+	}
 }
-function validateName(name,id){
+function validateName(name, id) {
 	var apiurl = $("#hidden_apiurl").val();
 	let result;
-	const param = "person.name="+name+"&person.id="+id;
+	const param = "person.name=" + name + "&person.id=" + id;
 	$.ajax({
-		type : "POST",
-		url : apiurl + "system/checkIsDishonest",
-		async : false,
-		data : param
+		type: "POST",
+		url: apiurl + "system/checkIsDishonest",
+		async: false,
+		data: param
 	}).success(function(data) {
 		result = data.person_result;
 	});
@@ -745,11 +757,11 @@ function validateName(name,id){
 
 function initializeDatePicker() {
 	$('.date-picker').datetimepicker({
-		format : 'Y-m-d',
-		timepicker : false,
-		scrollInput : false,
-		defaultDate : new Date(),
-		lang : 'zh',
+		format: 'Y-m-d',
+		timepicker: false,
+		scrollInput: false,
+		defaultDate: new Date(),
+		lang: 'zh',
 	})
 }
 function isLetter(v) {
@@ -763,58 +775,58 @@ function isLetter(v) {
  * @returns
  */
 function determineGender(idCard) {
-    // 验证身份证号码长度是否为18位
-    if (!idCard && idCard.length !== 18) {
-        return "-1";
-    }
+	// 验证身份证号码长度是否为18位
+	if (!idCard && idCard.length !== 18) {
+		return "-1";
+	}
 
-    // 提取第17位字符
-    const genderDigit = idCard.charAt(16);
+	// 提取第17位字符
+	const genderDigit = idCard.charAt(16);
 
-    // 判断性别
-    if (!isNaN(genderDigit)) {
-        return genderDigit % 2 === 0 ? "0" : "1";
-    } else {
-        return "-1";
-    }
+	// 判断性别
+	if (!isNaN(genderDigit)) {
+		return genderDigit % 2 === 0 ? "0" : "1";
+	} else {
+		return "-1";
+	}
 }
 
 function calculateAge(idCard) {
-    // 验证身份证号码长度是否为18位
-    if (!idCard && idCard.length !== 18) {
-        return "-1";
-    }
+	// 验证身份证号码长度是否为18位
+	if (!idCard && idCard.length !== 18) {
+		return "-1";
+	}
 
-    // 提取出生日期
-    const birthDateString = idCard.substring(6, 14); // 格式为 YYYYMMDD
-    const birthYear = parseInt(birthDateString.substring(0, 4), 10);
-    const birthMonth = parseInt(birthDateString.substring(4, 6), 10);
-    const birthDay = parseInt(birthDateString.substring(6, 8), 10);
+	// 提取出生日期
+	const birthDateString = idCard.substring(6, 14); // 格式为 YYYYMMDD
+	const birthYear = parseInt(birthDateString.substring(0, 4), 10);
+	const birthMonth = parseInt(birthDateString.substring(4, 6), 10);
+	const birthDay = parseInt(birthDateString.substring(6, 8), 10);
 
-    // 检查出生日期是否合法
-    if (isNaN(birthYear) || isNaN(birthMonth) || isNaN(birthDay)) {
-        return "-1";
-    }
+	// 检查出生日期是否合法
+	if (isNaN(birthYear) || isNaN(birthMonth) || isNaN(birthDay)) {
+		return "-1";
+	}
 
-    // 创建出生日期对象
-    const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+	// 创建出生日期对象
+	const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
 
-    // 获取当前日期
-    const today = new Date();
-    let age = today.getFullYear() - birthYear;
+	// 获取当前日期
+	const today = new Date();
+	let age = today.getFullYear() - birthYear;
 
-    // 检查是否已经过了今年的生日
-    if (
-        today.getMonth() < birthDate.getMonth() ||
-        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
-    ) {
-        age--; // 如果今年还没过生日，则年龄减一
-    }
+	// 检查是否已经过了今年的生日
+	if (
+		today.getMonth() < birthDate.getMonth() ||
+		(today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+	) {
+		age--; // 如果今年还没过生日，则年龄减一
+	}
 
-    return age;
+	return age;
 }
 
 function isChinese(str) {
-    const regex = /^[\u4e00-\u9fa5]+$/;
-    return regex.test(str);
+	const regex = /^[\u4e00-\u9fa5]+$/;
+	return regex.test(str);
 }

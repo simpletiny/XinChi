@@ -178,6 +178,12 @@
 			<if test="product_line != null and product_line !=''">
 				and product_line = #{product_line,jdbcType=VARCHAR}
 			</if>
+			<if test="from_month != null and from_month !=''">
+				and belong_month &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and belong_month &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
 		</where>
 		GROUP BY product_manager_number,belong_month,product_line
 	</select>

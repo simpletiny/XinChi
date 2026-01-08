@@ -358,6 +358,7 @@
 		supplier C ON
 		B.financial_body_pk = C.pk
 		<where>
+			
 			<if test="params.bo.supplier_employee_name != null and params.bo.supplier_employee_name !=''">
 				and B.name like CONCAT('%',#{params.bo.supplier_employee_name,jdbcType=VARCHAR},'%')
 			</if>
@@ -385,7 +386,7 @@
 					#{params.bo.payable_types[${index}]}
 				</foreach>
 			</if>
-
+			and LEFT(A.first_date,7)>='2024-01-01'
 		</where>
 		ORDER BY A.first_date DESC
 	</select>

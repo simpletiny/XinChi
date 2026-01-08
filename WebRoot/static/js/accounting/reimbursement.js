@@ -111,13 +111,15 @@ var ReimbursementContext = function() {
 	}
 
 	self.viewRejectReason = function(back_pk) {
+		startLoadingSimpleIndicator("加载中...");
 		var data = "back_pk=" + back_pk;
-
+	
 		$.ajax({
 			type: "POST",
 			url: self.apiurl + 'accounting/searchRejectReason',
 			data: data
 		}).success(function(str) {
+			endLoadingIndicator();
 			success_msg(str);
 		});
 	}

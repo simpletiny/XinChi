@@ -1531,6 +1531,23 @@ input:-moz-placeholder {
 	border-bottom: 1px solid #000;
 }
 
+.large-format-loader-slice {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	margin: 0;
+	width: auto;
+	font-weight: normal;
+	border: 0;
+	z-index: 2;
+	text-align: center;
+	color: #ffffff;
+	font-size: 14px;
+	transform: translateY(-50%);
+}
+
 .large-format-loader-simple {
 	display: block;
 	position: fixed;
@@ -1581,6 +1598,13 @@ input:-moz-placeholder {
 	text-align: center;
 	box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05) inset;
 	border-radius: 10px;
+}
+.loader-inside-format-slice {
+	width: 280px;
+	height: 150px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 .is-not-loading {

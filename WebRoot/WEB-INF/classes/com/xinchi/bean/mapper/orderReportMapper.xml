@@ -38,6 +38,8 @@
 		<result column="allocable_money" property="allocable_money" jdbcType="DECIMAL" />
 		<result column="allocable_applied" property="allocable_applied" jdbcType="DECIMAL" />
 		<result column="allocable_balance" property="allocable_balance" jdbcType="DECIMAL" />
+		<result column="team_other_pay" property="team_other_pay" jdbcType="DECIMAL" />
+		<result column="team_other_receive" property="team_other_receive" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="selectOrderReportByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -209,7 +211,7 @@
 			AND (A.confirm_flg = 'Y' OR A.confirm_flg = 'F') AND (A.final_type !=
 			4 OR A.final_type IS NULL)
 		</where>
-		ORDER BY A.departure_date DESC
+		ORDER BY A.departure_date
 	</select>
 
 	<select id="selectSumReport" parameterType="com.xinchi.bean.OrderReportDto" resultMap="BaseResultMap">
@@ -224,11 +226,15 @@
 	        0)) AS tail98,
 	    SUM(X.sale_cost) AS sale_cost,
 	    SUM(X.sys_cost) AS sys_cost,
-	    SUM(COALESCE(A.other_cost, 0) + COALESCE(X.other_pay, 0) - COALESCE(X.other_receive, 0)) AS other_cost,
+	    SUM(COALESCE(X.other_pay, 0)) AS team_other_pay,
+	    SUM(COALESCE(X.other_receive, 0)) AS team_other_receive,
+	    SUM(COALESCE(A.other_cost, 0)) AS other_cost,
 	    SUM(IFNULL(A.fy,0)) AS fy,
-	    SUM(IF(B.final_flg = 'Y',
-	        B.final_receivable,
-	        B.budget_receivable)) AS receivable,
+	    SUM(IF(X.discount_flg = 'N',
+	        IF(B.final_flg = 'Y',
+	            B.final_receivable,
+	            B.budget_receivable),
+	        X.discount_receivable)) AS receivable,
 	    SUM(A.air_ticket_cost) AS air_ticket_cost,
 	    SUM(C.payable) AS product_cost,
 	    SUM(A.adult_count) AS adult_count,

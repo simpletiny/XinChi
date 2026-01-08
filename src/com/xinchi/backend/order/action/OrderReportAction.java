@@ -14,10 +14,12 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.order.service.OrderReportService;
 import com.xinchi.backend.payable.service.AirTicketPayableService;
+import com.xinchi.backend.product.service.ProductReconciliationService;
 import com.xinchi.bean.AirOtherPaymentDto;
 import com.xinchi.bean.AirServiceFeeDto;
 import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ProductReconciliationBean;
 import com.xinchi.bean.TeamReportBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -78,6 +80,9 @@ public class OrderReportAction extends BaseAction {
 	@Autowired
 	private PaymentDetailService paymentDetailService;
 
+	@Autowired
+	private ProductReconciliationService productReconciliationService;
+
 	/**
 	 * 单团核算单汇总
 	 * 
@@ -92,8 +97,16 @@ public class OrderReportAction extends BaseAction {
 		String from_month = option.getDate_from();
 		String to_month = option.getDate_to();
 		String product_manager_number = option.getProduct_manager_number();
+		AirServiceFeeDto fee_option = new AirServiceFeeDto();
+		ProductReconciliationBean pr_option = new ProductReconciliationBean();
+
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			option.setProduct_manager_number(sessionBean.getUser_number());
+			fee_option.setProduct_manager_number(sessionBean.getUser_number());
+			pr_option.setProduct_manager_number(sessionBean.getUser_number());
+		} else {
+			fee_option.setProduct_manager_number(option.getProduct_manager_number());
+			pr_option.setProduct_manager_number(option.getProduct_manager_number());
 		}
 
 		if (!SimpletinyString.isEmpty(option.getDate_from())) {
@@ -123,6 +136,46 @@ public class OrderReportAction extends BaseAction {
 			}
 		}
 		report.setAir_deduct(air_deduct);
+
+		// 机票其他费用
+		fee_option.setFrom_month(from_month);
+		fee_option.setTo_month(to_month);
+		List<AirOtherPaymentDto> no_b_payments = airTicketPayableService.searchNoneBussinessPayment(fee_option);
+		BigDecimal no_b_payment = BigDecimal.ZERO;
+		
+		BigDecimal no_b_pay = BigDecimal.ZERO;;
+		BigDecimal no_b_receive = BigDecimal.ZERO;
+		for (AirOtherPaymentDto nbp : no_b_payments) {
+			if(nbp.getMoney().compareTo(BigDecimal.ZERO)==-1) {
+				no_b_receive = no_b_receive.add(nbp.getMoney().negate());
+			}else {
+				no_b_pay = no_b_pay.add(nbp.getMoney());
+			}
+			no_b_payment = no_b_payment.add(nbp.getMoney());
+		}
+
+		report.setNo_b_pay(no_b_pay);
+		report.setNo_b_receive(no_b_receive);
+		// 月度其他费用
+		pr_option.setFrom_month(from_month);
+		pr_option.setTo_month(to_month);
+		List<ProductReconciliationBean> reconciliations = productReconciliationService.selectSumReconciliation(pr_option);
+		BigDecimal recon = BigDecimal.ZERO;
+		BigDecimal recon_pay = BigDecimal.ZERO;
+		BigDecimal recon_receive = BigDecimal.ZERO;
+		
+		for (ProductReconciliationBean re : reconciliations) {
+			if(re.getMoney().compareTo(BigDecimal.ZERO)==-1) {
+				recon_receive = recon_receive.add(re.getMoney().negate());
+			}else {
+				recon_pay = recon_pay.add(re.getMoney());
+			}
+			recon = recon.add(re.getMoney());
+		}
+
+		report.setRecon_pay(recon_pay);
+		report.setRecon_receive(recon_receive);
+		
 		// 搜索汇兑
 		BigDecimal exchange = BigDecimal.ZERO;
 		if (roles.contains(ResourcesConstants.USER_ROLE_ADMIN) && SimpletinyString.isEmpty(product_manager_number)) {
@@ -138,7 +191,8 @@ public class OrderReportAction extends BaseAction {
 		if (!no_data) {
 			gross_profit = report.getReceivable().subtract(report.getTail98()).subtract(report.getAir_ticket_cost())
 					.subtract(report.getProduct_cost()).subtract(report.getOther_cost()).subtract(report.getFy()).subtract(report.getSys_cost())
-					.subtract(report.getSale_cost()).subtract(report.getAir_deduct()).subtract(report.getExchange());
+					.subtract(report.getSale_cost()).subtract(report.getAir_deduct()).subtract(report.getExchange()).subtract(no_b_payment)
+					.subtract(recon).subtract(report.getTeam_other_pay()).add(report.getTeam_other_receive());
 			per_profit = gross_profit.divide(BigDecimal.valueOf(report.getAdult_count() + report.getSpecial_count()), 2, RoundingMode.HALF_UP);
 		}
 		report.setGross_profit(gross_profit);

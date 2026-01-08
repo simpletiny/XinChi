@@ -7,6 +7,8 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
@@ -210,4 +212,19 @@ public class SimpletinyString {
 		return Period.between(birthDate, currentDate).getYears();
 	}
 
+	public static String replaceByRegex(String src, String regex, String... replace) {
+
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(src);
+
+		String holder = replace.length > 0 ? replace[0] : "";
+
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			m.appendReplacement(sb, holder);
+		}
+		m.appendTail(sb);
+
+		return sb.toString();
+	}
 }

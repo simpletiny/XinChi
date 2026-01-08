@@ -3,6 +3,7 @@ package com.xinchi.backend.order.service;
 import java.util.List;
 
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.BaseService;
@@ -95,5 +96,9 @@ public interface OrderService extends BaseService {
 	public String updateConfirmedOnlyTicketOrder(SaleOrderBean sale_order, String json);
 
 	public String update(SaleOrderBean sale_order);
+
+	public String selectMaxConfirmDateBySaleNumber(String user_number);
+
+	public int selectOrderCountByParam(OrderReportDto bean);
 
 }

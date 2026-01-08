@@ -501,16 +501,17 @@ public class ReceivedServiceImpl implements ReceivedService {
 	}
 
 	@Override
-	public String rejectRecived(String related_pks) {
-		String[] rps = related_pks.split(ResourcesConstants.DELIMITER);
-
+	public String rejectRecived(String reject_json) {
+		JSONObject obj = JSONObject.fromObject(reject_json);
+		String[] rps = obj.getString("related_pks").split(ResourcesConstants.DELIMITER);
+		String rejectReason = obj.getString("reject_reason");
 		for (String related_pk : rps) {
 			List<ClientReceivedDetailBean> receiveds = dao.selectByRelatedPks(related_pk);
 
 			for (ClientReceivedDetailBean crd : receiveds) {
 				crd.setStatus("N");
+				crd.setReject_reason(rejectReason);
 				dao.update(crd);
-
 				ClientReceivedDetailBean option = new ClientReceivedDetailBean();
 				option.setTeam_number(crd.getTeam_number());
 				option.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);

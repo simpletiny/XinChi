@@ -420,14 +420,15 @@ public class OrderAction extends BaseAction {
 				String detail_comment = "";
 				if (!name.getStatus().equals("I")) {
 					PassengerTicketInfoBean pti = name.getTicket_infos().get(0);
-					name.setBudget_cost(pti.getTicket_cost());
+					BigDecimal ticket_cost = pti.getTicket_cost().add(pti.getTaxation()).add(pti.getOther_cost());
+					name.setBudget_cost(ticket_cost);
 					if (name.getStatus().equals("C")) {
-						name.setFinal_cost(pti.getTicket_cost().add(name.getChange_cost()));
+						name.setFinal_cost(ticket_cost.add(name.getChange_cost()));
 						AirTicketChangeLogBean atcl = ticketService.searchFlightChangeLogByPk(name.getChange_pk());
 						detail_comment = "航变原因：" + atcl.getChange_reason() + "；航变费用：" + name.getChange_cost() + "；备注："
 								+ atcl.getComment();
 					} else {
-						name.setFinal_cost(pti.getTicket_cost());
+						name.setFinal_cost(ticket_cost);
 						detail_comment = "正常出票。";
 					}
 				} else {

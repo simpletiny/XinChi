@@ -7,18 +7,21 @@ import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.util.SystemOutLogger;
 
 import com.xinchi.bean.DishonestPersonBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.HttpUtils;
 import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.SimpletinyString;
 
 public class SomeTest {
 
 	public static void main(String[] args) throws IOException {
-		BigDecimal a = new BigDecimal("12.333");
-		System.out.print(a.toPlainString());
+		String a = "客户：丁宇柔;财务主体：公开;\n 客户：丁宁;财务主体：公开; 222222";
+		String regex = "客户：\\s*[^;]+;\\s*财务主体：\\s*[^;]+;\\s*";
 		
+		System.out.println(SimpletinyString.replaceByRegex(a, regex));
 	}
 
 	public String checkHighFromApi(DishonestPersonBean person) {

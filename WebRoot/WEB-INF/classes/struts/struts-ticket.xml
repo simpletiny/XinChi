@@ -8,6 +8,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 删除机票需求 -->
+		<action name="deleteTicketNeeds" class="ticketAction" method="deleteTicketNeeds">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
 		<action name="searchAirTicketOrderByPage" class="ticketAction" method="searchAirTicketOrderByPage">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -101,8 +107,7 @@
 				resultStr
 			</result>
 		</action>
-		<!-- <action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder"> <result name="success" type="str"> 
-			resultStr </result> </action> -->
+		<!-- <action name="lockTicketOrder" class="ticketAction" method="lockAirTicketOrder"> <result name="success" type="str"> resultStr </result> </action> -->
 		<action name="operatePassengers" class="ticketAction" method="operatePassengers">
 			<result name="success">
 				/templates/ticket/operate-name-list.jsp

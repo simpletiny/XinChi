@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.DaoUtil;
@@ -78,8 +79,12 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 
 	@Override
 	public String selectMaxConfirmDateByEmployeePk(String employee_pk) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk",
-				employee_pk);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk", employee_pk);
+	}
+
+	@Override
+	public String selectMaxConfirmDateBySaleNumber(String user_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateBySaleNumber", user_number);
 	}
 
 	@Override
@@ -109,8 +114,7 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 
 	@Override
 	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectFinalOrderByTeamNumber",
-				team_number);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectFinalOrderByTeamNumber", team_number);
 	}
 
 	@Override
@@ -146,5 +150,10 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	@Override
 	public void deleteByPk(String pk) {
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.SaleOrderMapper.deleteByPrimaryKey", pk);
+	}
+
+	@Override
+	public int selectOrderCountByParam(OrderReportDto bean) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectOrderCountByParam", bean);
 	}
 }

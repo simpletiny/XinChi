@@ -412,6 +412,6 @@
 				and CONCAT(A.first_start_city,'--',A.first_end_city) like CONCAT('%', #{params.bo.first_from_to,jdbcType=VARCHAR},'%')
 			</if>
 		</where>
-		order by A.first_ticket_date DESC
+		order by A.first_ticket_date
 	</select>
 </mapper>

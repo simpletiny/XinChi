@@ -32,6 +32,7 @@ import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.UserBaseBean;
+import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -218,6 +219,8 @@ public class ClientRelationAction extends BaseAction {
 
 	@Autowired
 	private UserService userService;
+	
+
 	public String searchClientSummary() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
@@ -243,13 +246,14 @@ public class ClientRelationAction extends BaseAction {
 		ScoreRankDto rank_option = new ScoreRankDto();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			user_pk = sessionBean.getPk();
-			rank_option.setSale_number(sessionBean.getUser_number());
 		} else {
 			user_pk = relation.getSales();
-			UserBaseBean user =	userService.selectByPrimaryKey(user_pk);
-			rank_option.setSale_number(user.getUser_number());
 		}
-
+		//用户信息
+		UserCommonBean user = userService.selectUserCommonByPk(user_pk);
+		String user_number = user.getUser_number();
+		
+		rank_option.setSale_number(user_number);
 		potential = service.selectPotentialData(user_pk);
 		meter = service.selectMeterData(user_pk);
 		workOrder = service.selectWorkOrderData(user_pk);
@@ -281,17 +285,29 @@ public class ClientRelationAction extends BaseAction {
 
 		meter.setPoint_money_deduct(point_money_deduct);
 		meter.setBack_score(back_score);
-		
+
 		rank_option.setConfirm_month(DateUtil.lastMonth());
 		rankLastMonth = service.selectRankScore(rank_option);
 		rank_option.setConfirm_month(DateUtil.thisMonth());
 		rankThisMonth = service.selectRankScore(rank_option);
-		if(null!=rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.FIRST_OF_MONTH)) {
+		if (null != rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.FIRST_OF_MONTH)) {
 			rankThisMonth.setRank_last_score(0);
 			rankThisMonth.setRank_middle_score(0);
-		}else if(null!=rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.MIDDLE_OF_MONTH)) {
+		} else if (null != rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.MIDDLE_OF_MONTH)) {
 			rankThisMonth.setRank_last_score(0);
 		}
+		// 查询签单期间
+		if (!SimpletinyString.isEmpty(user_number)) {
+			String maxOrderDate = orderService.selectMaxConfirmDateBySaleNumber(user_number);
+			if(maxOrderDate==null) {
+				maxOrderDate =  DateUtil.fromUnixTime(user.getApprove_time(),DateUtil.YYYY_MM_DD);
+			}
+			
+			int order_days = DateUtil.dateDiff(maxOrderDate, DateUtil.today());
+			String meter_message = String.format("(%s%d天未签单)", user.getNick_name(),order_days);
+			meter.setMeter_message(meter_message);
+		}
+
 		return SUCCESS;
 	}
 

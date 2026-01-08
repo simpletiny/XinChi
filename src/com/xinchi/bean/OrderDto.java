@@ -113,6 +113,7 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String complain_solution;
 	private String final_voucher_file;
 	// search option
+	private String departure_month;
 	private String passenger_name;
 	private String passenger_cellphone;
 	private String radio_date;
@@ -792,6 +793,14 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setFinal_status(String final_status) {
 		this.final_status = final_status;
+	}
+
+	public String getDeparture_month() {
+		return departure_month;
+	}
+
+	public void setDeparture_month(String departure_month) {
+		this.departure_month = departure_month;
 	}
 
 }

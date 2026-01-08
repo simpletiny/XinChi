@@ -69,11 +69,10 @@ public class OrderReportServiceImpl implements OrderReportService {
 		// 检测是否还有未确认的收支
 		// 收入
 		List<ClientReceivedDetailBean> receiveds = receivedService.selectByTeamNumber(team_number);
-		List<String> receivedTyps = Arrays.asList(ResourcesConstants.RECEIVED_TYPE_RECEIVED,
-				ResourcesConstants.RECEIVED_TYPE_PAY, ResourcesConstants.RECEIVED_TYPE_SUM);
+		List<String> receivedTyps = Arrays.asList(ResourcesConstants.RECEIVED_TYPE_RECEIVED, ResourcesConstants.RECEIVED_TYPE_PAY,
+				ResourcesConstants.RECEIVED_TYPE_SUM);
 		for (ClientReceivedDetailBean received : receiveds) {
-			if (receivedTyps.contains(received.getType())
-					&& !received.getStatus().equals(ResourcesConstants.RECEIVED_STATUS_ENTER)) {
+			if (receivedTyps.contains(received.getType()) && !received.getStatus().equals(ResourcesConstants.RECEIVED_STATUS_ENTER)) {
 				return "existreceived";
 			}
 		}
@@ -151,9 +150,9 @@ public class OrderReportServiceImpl implements OrderReportService {
 			}
 		}
 
-		if (order.getAir_ticket_cost() == null) {
-			return "noairinfo";
-		}
+		// if (order.getAir_ticket_cost() == null) {
+		// return "noairinfo";
+		// }
 
 		return SUCCESS;
 	}

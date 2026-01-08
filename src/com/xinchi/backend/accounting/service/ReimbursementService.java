@@ -28,5 +28,9 @@ public interface ReimbursementService extends BaseService {
 	public String reApply(ReimbursementBean reimbursement);
 
 	public Map<String, BigDecimal> searchSummaries(ReimbursementBean reimbursement);
+	
+	public List<ReimbursementBean> selectByParam(ReimbursementBean option);
+
+	public List<ReimbursementBean> selectSumByParam(ReimbursementBean option);
 
 }

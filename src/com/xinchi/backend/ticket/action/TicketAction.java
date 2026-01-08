@@ -100,7 +100,17 @@ public class TicketAction extends BaseAction {
 	private CommonResultDto commonResult;
 
 	private List<String> need_pks;
-
+	
+	
+	/**
+	 * 删除票务需求
+	 * @return
+	 */
+	public String deleteTicketNeeds() {
+		resultStr = airTicketNeedService.deleteTicketNeeds(need_pks);
+		return SUCCESS;
+	}
+	
 	public String selectOrderAirInfoByNeedPks() {
 		commonResult = new CommonResultDto();
 		commonResult.setIs_done(true);

@@ -288,6 +288,146 @@
 			<comment>ALTER TABLE client_employee</comment>
 		</sql>
 	</changeSet>
+	<changeSet id="9" author="simpletiny">
+		<sql>
+            <![CDATA[
+				ALTER TABLE client_received_detail
+					ADD COLUMN reject_reason VARCHAR(200) NULL COMMENT '驳回理由' AFTER collecter;
+             ]]>
+			<comment>ALTER TABLE client_received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="10" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 DROP VIEW IF EXISTS received_detail;
+					CREATE VIEW received_detail AS
+					    SELECT 
+					        team_number AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter,
+					        reject_reason AS reject_reason
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type <> 'SUM') 
+					    UNION SELECT 
+					        group_concat(team_number) AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter,
+					        reject_reason AS reject_reason
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type = 'SUM')
+					    GROUP BY related_pk;
+             ]]>
+			<comment>ALTER VIEW received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="11" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE reimbursement 
+				ADD COLUMN client_employee_pk CHAR(22) NULL COMMENT '销售费用时的客户pk' AFTER delete_flg;
+             ]]>
+			<comment>ALTER TABLE reimbursement</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="12" author="simpletiny">
+		<sql>
+            <![CDATA[
+            CREATE VIEW view_client_sale_cost AS
+			    SELECT 
+			        SUM(money) AS money, client_employee_pk
+			    FROM
+			        reimbursement
+			    WHERE
+			        item = 'X'
+			            AND client_employee_pk IS NOT NULL AND status = 'P'
+			    GROUP BY client_employee_pk;
+             ]]>
+			<comment>CREATE VIEW view_client_sale_cost</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="13" author="simpletiny">
+		<sql>
+            <![CDATA[
+            CREATE OR REPLACE VIEW view_product_profit AS
+			   SELECT 
+			    LEFT(B.departure_date, 7) AS departure_month,
+			    CASE
+			        WHEN SUM(A.approved = 'N') > 0 THEN 'N'
+			        ELSE 'Y'
+			    END AS status,
+			    SUM(IF(B.confirm_flg <> 'N',
+			        IFNULL(B.adult_count, 0) + IFNULL(B.special_count, 0),
+			        0)) AS people_count,
+			    SUM(IF(B.confirm_flg <> 'N',
+			        IFNULL(B.adult_count, 0) * SUBSTRING_INDEX(B.product_value, ',', 1) + IFNULL(B.special_count, 0) * SUBSTRING_INDEX(B.product_value, ',', -(1)),
+			        0)) AS score,
+			    B.product_manager_number AS user_number,
+			    SUM(IF((A.discount_flg = 'Y'),
+			        A.discount_receivable,
+			        IF((C.final_flg = 'Y'),
+			            C.final_receivable,
+			            C.budget_receivable)) - IF(ISNULL(B.air_ticket_cost),
+			        0,
+			        B.air_ticket_cost) - IF(ISNULL(B.other_cost),
+			        0,
+			        B.other_cost) - COALESCE(D.payable,0) - IF(ISNULL(B.fy), 0, B.fy) - A.sys_cost - A.sale_cost - IFNULL(A.other_pay, 0) + IFNULL(A.other_receive, 0)) AS gross_profit,
+			    B.product_line AS product_line
+			FROM
+			    team_report A
+			        LEFT JOIN
+			    budget_order_view B ON A.team_number = B.team_number
+			        LEFT JOIN
+			    receivable C ON A.team_number = C.team_number
+			        LEFT JOIN
+			    view_team_payable D ON A.team_number = D.team_number
+			WHERE
+			    B.final_type <> 4 OR B.final_type IS NULL
+			GROUP BY B.product_manager_number , LEFT(B.departure_date, 7) , B.product_line;
+             ]]>
+			<comment>ALTER VIEW view_product_profit</comment>
+		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 

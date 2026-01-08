@@ -89,6 +89,6 @@
 				</foreach>
 			</if>
 		</where>
-		ORDER BY A.departure_date,A.product_name,product_model
+		ORDER BY A.departure_date,A.product_name,product_model,A.sale,A.adult_count DESC
 	</select>
 </mapper>

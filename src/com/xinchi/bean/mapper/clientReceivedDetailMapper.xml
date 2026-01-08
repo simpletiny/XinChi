@@ -25,6 +25,7 @@
 		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="collecter" property="collecter" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -49,7 +50,8 @@
 		client_employee_pk,
 		client_pk,
 		voucher_file,
-		collecter
+		collecter,
+		reject_reason
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -72,6 +74,7 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
+		A.reject_reason,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -102,6 +105,7 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
+		A.reject_reason,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -318,6 +322,9 @@
 			<if test="collecter != null">
 				collecter = #{collecter,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -374,7 +381,8 @@
 		A.update_time,
 		D.name AS client_employee_name,
 		A.client_employee_pk,
-		A.voucher_file
+		A.voucher_file,
+		A.reject_reason
 		from
 		received_detail A
 		LEFT JOIN user_base C ON
@@ -452,6 +460,7 @@
 		A.create_user,
 		A.create_time,
 		A.update_time,
+		A.reject_reason,
 		B.client_employee_name,
 		B.client_employee_pk
 		from received_detail A left join budget_order_view B on

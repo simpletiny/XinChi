@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -11,6 +10,8 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
 tr td {
 	text-overflow: ellipsis; /* for IE */
@@ -63,17 +64,14 @@ tr td {
 							</div>
 						</div>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked
-								name="radio_date" />出团日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="1" onclick="check(this)" checked name="radio_date" />出团日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from"
-									name="option.departure_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="from" name="option.departure_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to"
-									name="option.departure_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-1" placeholder="to" name="option.departure_date_to" />
 							</div>
 						</div>
 					</div>
@@ -98,17 +96,23 @@ tr td {
 							<div class="col-md-3">&nbsp;</div>
 						</s:else>
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)"
-								name="radio_date" />确认日期</label>
+							<label class="col-md-1 control-label"><input type="radio" value="2" onclick="check(this)" name="radio_date" />确认日期</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from"
-									name="option.confirm_date_from" />
+								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="from" name="option.confirm_date_from" />
 							</div>
 						</div>
 						<div align="left">
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="to"
-									name="option.confirm_date_to" />
+								<input type="text" class="form-control date-picker" st="st-date-2" disabled="disabled" placeholder="to" name="option.confirm_date_to" />
+							</div>
+						</div>
+
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">出团月份</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control month-picker-st" placeholder="出团月份" name="option.departure_month" />
 							</div>
 						</div>
 						<div style="float: right">
@@ -158,14 +162,12 @@ tr td {
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
 								<td class="rmb" data-bind="text: $data.budget_receivable"></td>
 								<td class="rmb" data-bind="text: $data.final_receivable"></td>
-								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkConfirmPic($data.final_confirm_file,$data.team_number)} ">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkConfirmPic($data.final_confirm_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)"
 									data-bind="click: function() {$root.checkBudgetConfirmPic($data.budget_confirm_file,$data.create_user_number)} ">查看</a></td>
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkFinalDetail($data)} ">查看</a></td>
-								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkVoucherPic($data.final_voucher_file,$data.team_number)} ">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click: function() {$root.checkVoucherPic($data.final_voucher_file,$data.team_number)} ">查看</a></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text:$data.sale_name"></td>
@@ -283,18 +285,17 @@ tr td {
 	<div id="comment-edit" style="display: none; width: 500px">
 		<div class="input-row clearfloat">
 			<div>
-				<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" /> <input type="hidden"
-					data-bind="value:order().standard_flg" id="txt-standard-flg" /> <label class="l">备注</label>
+				<input type="hidden" data-bind="value:order().pk" id="txt-order-pk" /> <input type="hidden" data-bind="value:order().standard_flg"
+					id="txt-standard-flg" /> <label class="l">备注</label>
 				<div class="ip">
-					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment"
-						data-bind="value: order().comment" placeholder="备注"></textarea>
+					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment" data-bind="value: order().comment" placeholder="备注"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div align="right">
-				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
-					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit" class="btn btn-green btn-r"
+					data-bind="click: updateComment">保存</a>
 			</div>
 		</div>
 	</div>
@@ -302,7 +303,9 @@ tr td {
 		$(".order-box").addClass("current").children("ol").css("display",
 				"block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/f-order.js?v=1.001"></script>
 </body>

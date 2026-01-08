@@ -30,6 +30,10 @@ public class ProductReconciliationBean extends SupperBO implements Serializable 
 
 	private BigDecimal money_from;
 	private BigDecimal money_to;
+	
+	private String from_month;
+	
+	private String to_month;
 
 	public String getType() {
 		return type;
@@ -133,6 +137,22 @@ public class ProductReconciliationBean extends SupperBO implements Serializable 
 
 	public void setBelong_year(String belong_year) {
 		this.belong_year = belong_year;
+	}
+
+	public String getFrom_month() {
+		return from_month;
+	}
+
+	public void setFrom_month(String from_month) {
+		this.from_month = from_month;
+	}
+
+	public String getTo_month() {
+		return to_month;
+	}
+
+	public void setTo_month(String to_month) {
+		this.to_month = to_month;
 	}
 
 }
