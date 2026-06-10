@@ -57,6 +57,8 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 	private String voucher_file;
 	private String order_number;
 	private String isOne;
+	
+	private String reject_reason;
 
 	// options
 	private List<String> statuses;
@@ -321,6 +323,14 @@ public class SupplierPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setCreate_users(List<String> create_users) {
 		this.create_users = create_users;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
 	}
 
 }

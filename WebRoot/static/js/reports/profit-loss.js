@@ -1,13 +1,6 @@
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
-	self.chosenStatuses = ko.observableArray([]);
-	self.chosenStatuses.push("Y");
-	self.statuses = ['N', 'Y'];
-	self.approvedMapping = ({
-		'Y': '已审核',
-		'N': '未审核'
-	});
 
 	self.month = ko.observable();
 	var x = new Date();
@@ -19,11 +12,22 @@ var OrderContext = function() {
 	self.summary = ko.observable({});
 	self.main = ko.observable({});
 	self.ticket = ko.observable(new Map());
-	self.human = ko.observable(new Map());
-	self.reimbursement = ko.observable(new Map());
+
+	
 	self.other = ko.observable({});
 	self.inner = ko.observable({});
-
+	self.reimbursement = ko.observable(new Map());
+	self.p_reimbursement = ko.observable(new Map());
+	self.y_reimbursement = ko.observable(new Map());
+	self.i_reimbursement = ko.observable(new Map());
+	//人力
+	self.human = ko.observable(new Map());
+	//已支付
+	self.p_human = ko.observable(new Map());
+	//未支付
+	self.y_human = ko.observable(new Map());
+	//未审批
+	self.i_human = ko.observable(new Map());
 	self.refresh = function() {
 
 		//		div-summary
@@ -115,18 +119,42 @@ var OrderContext = function() {
 			traditional: true
 		}).success(function(data) {
 			let results = new Map(self.human_items().map(item => [item, 0]));
+			let p_results = new Map(self.human_items().map(item => [`P${item}`, 0]));
+			let y_results = new Map(self.human_items().map(item => [`Y${item}`, 0]));
+			let i_results = new Map(self.human_items().map(item => [`I${item}`, 0]));
 			let sum_money = 0;
+			let p_sum = 0;
+			let y_sum = 0;
+			let i_sum = 0;
 			for (let [key, _] of results) {
 				if (data.reibursements[key]) {
 					results.set(key, data.reibursements[key]);
-
 					sum_money += data.reibursements[key];
+				}
+
+				if (data.reibursements['P' + key]) {
+					p_results.set('P' + key, data.reibursements['P' + key]);
+					p_sum += data.reibursements['P' + key];
+				}
+				if (data.reibursements['Y' + key]) {
+					y_results.set('Y' + key, data.reibursements['Y' + key]);
+					y_sum += data.reibursements['Y' + key];
+				}
+				if (data.reibursements['I' + key]) {
+					i_results.set('I' + key, data.reibursements['I' + key]);
+					i_sum += data.reibursements['I' + key];
 				}
 			}
 
 			results.set("SUM", sum_money);
+			p_results.set("PSUM", p_sum);
+			y_results.set("YSUM", y_sum);
+			i_results.set("ISUM", i_sum);
 
 			self.human(results);
+			self.p_human(p_results);
+			self.y_human(y_results);
+			self.i_human(i_results);
 			$(".rmb").formatCurrency();
 			endLoadingSliceIndicator($('#div-human'));
 		});
@@ -146,16 +174,41 @@ var OrderContext = function() {
 		}).success(function(data) {
 
 			let results = new Map(self.reimbursement_items().map(item => [item, 0]));
+			let p_results = new Map(self.reimbursement_items().map(item => [`P${item}`, 0]));
+			let y_results = new Map(self.reimbursement_items().map(item => [`Y${item}`, 0]));
+			let i_results = new Map(self.reimbursement_items().map(item => [`I${item}`, 0]));
 			let sum_money = 0;
+			let p_sum = 0;
+			let y_sum = 0;
+			let i_sum = 0;
 			for (let [key, _] of results) {
 				if (data.reibursements[key]) {
 					results.set(key, data.reibursements[key]);
 					sum_money += data.reibursements[key];
 				}
+
+				if (data.reibursements['P' + key]) {
+					p_results.set('P' + key, data.reibursements['P' + key]);
+					p_sum += data.reibursements['P' + key];
+				}
+				if (data.reibursements['Y' + key]) {
+					y_results.set('Y' + key, data.reibursements['Y' + key]);
+					y_sum += data.reibursements['Y' + key];
+				}
+				if (data.reibursements['I' + key]) {
+					i_results.set('I' + key, data.reibursements['I' + key]);
+					i_sum += data.reibursements['I' + key];
+				}
 			}
 
 			results.set("SUM", sum_money);
+			p_results.set("PSUM", p_sum);
+			y_results.set("YSUM", y_sum);
+			i_results.set("ISUM", i_sum);
 			self.reimbursement(results);
+			self.p_reimbursement(p_results);
+			self.y_reimbursement(y_results);
+			self.i_reimbursement(i_results);
 			$(".rmb").formatCurrency();
 			endLoadingSliceIndicator($('#div-reimbursement'));
 		});
@@ -183,7 +236,7 @@ var OrderContext = function() {
 			summary.ticket = self.ticket().sum;
 			summary.human = self.human().get("SUM");
 			summary.reimbursement = self.reimbursement().get("SUM");
-			summary.profit = summary.gross_profit - summary.ticket - summary.human - summary.reimbursement+other.profit;
+			summary.profit = summary.gross_profit - summary.ticket - summary.human - summary.reimbursement + other.profit;
 			if (summary.people_count != 0) {
 				summary.per_profit = summary.profit / summary.people_count;
 			} else {

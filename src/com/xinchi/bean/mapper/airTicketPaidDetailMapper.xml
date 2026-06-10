@@ -34,6 +34,7 @@
 		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="first_date" property="first_date" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="OtherPaymentMap" type="com.xinchi.bean.AirOtherPaymentDto">
 		
@@ -397,6 +398,9 @@
 			<if test="belong_month != null">
 				belong_month = #{belong_month,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -498,7 +502,8 @@
 		D.from_to_city,
 		A.product_manager,
 		E.user_name AS product_manager_name,
-		A.belong_month
+		A.belong_month,
+		A.reject_reason
 		from
 		air_ticket_paid_detail A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk

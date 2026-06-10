@@ -87,6 +87,11 @@ var PaidContext = function() {
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#table-main").tableSum({
+				accept: [2],
+				title_index: 0
+			});
+
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 		});

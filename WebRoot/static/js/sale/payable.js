@@ -11,6 +11,8 @@ var OrderContext = function() {
 	self.chosenTypes = ko.observableArray([]);
 	self.paysum = ko.observable({});
 	self.sortTypes = ['正序', '倒序'];
+	
+	self.year_now = ko.observable($("#hidden-server-date").val().substring(0,4));
 
 	// 获取摘要信息
 	self.fetchSummary = function() {

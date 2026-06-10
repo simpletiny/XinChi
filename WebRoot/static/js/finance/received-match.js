@@ -461,13 +461,15 @@ var DetailContext = function() {
 					let obj = {};
 					obj.reject_reason = $("#txt-reject-reason").val().trim();
 					var related_pks = '';
+					let received_applys = [];
 					for (var i = 0; i < self.chosenReceiveds().length; i++) {
-						related_pks += self.chosenReceiveds()[i].related_pk
-						if (i != self.chosenReceiveds().length - 1) {
-							related_pks += '@@';
-						}
+						let received = {};
+						received.related_pk = self.chosenReceiveds()[i].related_pk;
+						received.from_where = self.chosenReceiveds()[i].from_where;
+						received_applys.push(received);
 					}
-					obj.related_pks = related_pks;
+					
+					obj.received_applys = received_applys;
 					$.ajax({
 						type: "POST",
 						url: self.apiurl + 'sale/rejectReceived',
@@ -568,6 +570,7 @@ var DetailContext = function() {
 
 		let subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
 		let fileType = "";
+		console.log(from_where)
 		switch (from_where) {
 			case "C":
 				fileType = "CLIENT_RECEIVED_VOUCHER";

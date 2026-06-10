@@ -56,6 +56,7 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 	private String from_to_city;
 	private String passenger;
 	private String first_date;
+	private String reject_reason;
 
 	// 责任经理，针对押金扣款而设定
 	private String product_manager;
@@ -309,6 +310,14 @@ public class AirTicketPaidDetailBean extends SupperBO implements Serializable {
 
 	public void setFirst_date(String first_date) {
 		this.first_date = first_date;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
 	}
 
 }

@@ -172,7 +172,12 @@
 	</delete>
 	<delete id="deleteByProductOrderNumber" parameterType="java.lang.String">
 		delete from product_order_name
-		where product_order_number = #{product_order_number,jdbcType=VARCHAR}
+		where product_order_number =
+		#{product_order_number,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByNamePk" parameterType="java.lang.String">
+		delete from product_order_name
+		where name_pk = #{name_pk,jdbcType=CHAR}
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderNameBean">
@@ -389,7 +394,7 @@
 				</foreach>
 			</if>
 			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size()>0">
-				and C.product_manager_number IN 
+				and C.product_manager_number IN
 				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator="," close=")">
 					#{params.bo.product_manager_numbers[${index}]}
 				</foreach>

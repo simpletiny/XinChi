@@ -364,7 +364,7 @@ public class TicketAction extends BaseAction {
 					compares.remove(k);
 				}
 			}
-			compares.sort(PassengerAllotDto.Comparators.DATE);
+			compares.sort(PassengerAllotDto.Comparators.SORT);
 			ta.setAirLegs(compares);
 
 		}

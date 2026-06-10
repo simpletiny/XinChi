@@ -46,10 +46,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div class="col-md-6">
-							<div data-bind="foreach: statuses" style="padding-top: 4px;">
-								<em class="small-box"> <input type="checkbox"
-									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="statuses" /><label
-									data-bind="text: $root.approvedMapping[$data]"></label>
+							<div style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox" value='N' data-bind="click:function(){refresh();return true;}" name="statuses" /><label>未审核</label>
+								</em> <em class="small-box"> <input type="checkbox" value='Y' checked onclick="return false;" name="statuses" /><label>已审核</label>
 								</em>
 							</div>
 						</div>
@@ -76,7 +75,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="col-md-3">
 							<label class="l" title="净利=毛利-票务-人力成本-费用申请+其他利润">净利：</label>
 							<div class="ip fix_width">
+								<!-- ko if: summary().profit<0 -->
+								<p class="ip-default rmb" style="color: red" data-bind="text: summary().profit"></p>
+								<!-- /ko -->
+								<!-- ko if: summary().profit>=0 -->
 								<p class="ip-default rmb" data-bind="text: summary().profit"></p>
+								<!-- /ko -->
 							</div>
 						</div>
 						<div class="col-md-3">
@@ -226,6 +230,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<hr />
 				<h4 style="margin-bottom: 10px">人力</h4>
 				<div class="form-box info-form" id="div-human">
+					<h4>合计</h4>
 					<div class="input-row clearfloat">
 						<!-- ko foreach: human_items -->
 						<div class="col-md-3">
@@ -236,16 +241,84 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						</div>
 						<!-- /ko -->
 					</div>
+					<h4 style="color: green">已支付</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: human_items -->
+						<div class="col-md-3">
+							<label class="l" data-bind="text:$data === 'SUM' ? '人力成本' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.p_human().get('P'+$data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+					<h4 style="color: #7F05B7">未审批</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: human_items -->
+						<div class="col-md-3">
+							<label class="l" data-bind="text:$data === 'SUM' ? '人力成本' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.i_human().get('I'+$data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+					<h4 style="color: red">未支付</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: human_items -->
+						<div class="col-md-3">
+							<label class="l" data-bind="text:$data === 'SUM' ? '人力成本' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.y_human().get('Y'+$data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+
 				</div>
 				<hr />
 				<h4 style="margin-bottom: 10px">费用申请汇总</h4>
 				<div class="form-box info-form" id="div-reimbursement">
+					<h4>合计</h4>
 					<div class="input-row clearfloat">
 						<!-- ko foreach: reimbursement_items -->
 						<div class="col-md-2">
 							<label class="l" data-bind="text:$data === 'SUM' ? '费用' : payTypeMapping[$data]"></label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: $root.reimbursement().get($data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+					<h4 style="color: green">已支付</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: reimbursement_items -->
+						<div class="col-md-2">
+							<label class="l" data-bind="text:$data === 'SUM' ? '费用' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.p_reimbursement().get('P'+$data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+					<h4 style="color: #7F05B7">未审批</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: reimbursement_items -->
+						<div class="col-md-2">
+							<label class="l" data-bind="text:$data === 'SUM' ? '费用' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.i_reimbursement().get('I'+$data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+					<h4 style="color: red">未支付</h4>
+					<div class="input-row clearfloat">
+						<!-- ko foreach: reimbursement_items -->
+						<div class="col-md-2">
+							<label class="l" data-bind="text:$data === 'SUM' ? '费用' : payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.y_reimbursement().get('Y'+$data)"></p>
 							</div>
 						</div>
 						<!-- /ko -->

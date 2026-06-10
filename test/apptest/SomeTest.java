@@ -1,27 +1,55 @@
 package apptest;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.poi.util.SystemOutLogger;
+import org.json.simple.JSONObject;
+import org.springframework.web.client.RestTemplate;
 
 import com.xinchi.bean.DishonestPersonBean;
-import com.xinchi.common.DateUtil;
 import com.xinchi.common.HttpUtils;
 import com.xinchi.common.ResourcesConstants;
-import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.XMLUtils;
 
 public class SomeTest {
 
-	public static void main(String[] args) throws IOException {
-		String a = "客户：丁宇柔;财务主体：公开;\n 客户：丁宁;财务主体：公开; 222222";
-		String regex = "客户：\\s*[^;]+;\\s*财务主体：\\s*[^;]+;\\s*";
-		
-		System.out.println(SimpletinyString.replaceByRegex(a, regex));
+	public static void main(String[] args) throws Exception {
+		String a = "<xml><ToUserName><![CDATA[wwa7854bfa8dde7156]]></ToUserName><CreateTime>1780990771</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[kf_msg_or_event]]></Event><Token><![CDATA[ENCHLjLoLz18yvie2km9QB1P2jPwxMEes6T8b7xDePTxgcR]]></Token><OpenKfId><![CDATA[wkOwxqCwAAOcACUvFecbyyusPQB3KU8g]]></OpenKfId></xml>\r\n";
+
+		Map<String, String> c = XMLUtils.toMap(a);
+
+		String url = "https://qyapi.weixin.qq.com/cgi-bin/kf/sync_msg?access_token=rUMCcg-n33v89wE8CJeU81qz-021rxZseEF6SwfLJdgO8UjGJRLqI8GJ9vyi37QpaNd8LZsmD8itE0U3ZLFv1pQ1gLEC2GWQX-dr0oAj2LVOVbjuPjxLUNcqzmXQqXv_gdoy8j49owTcNGml6GqYXzqTSKZ955UJBa34FYxJAGEevKe1vkcT5W1pXo3-6iFvf1D59seWPRI__58KicKu1g";
+
+		JSONObject body = new JSONObject();
+		body.put("token", c.get("Token"));
+		body.put("open_kfid", c.get("OpenKfId"));
+		body.put("limit", 1000); // 最大1000条
+		String cursor = "";
+		if (cursor != null && !cursor.isEmpty()) {
+			body.put("cursor", cursor);
+		}
+
+		// voice_format: 0 表示不返回语音转文字，1 表示返回
+		body.put("voice_format", 0);
+
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+			HttpPost request1 = new HttpPost(url);
+			request1.setHeader("Content-Type", "application/json");
+			request1.setEntity(new StringEntity(body.toJSONString(), "UTF-8"));
+
+			org.apache.http.HttpResponse response = httpClient.execute(request1);
+			String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public String checkHighFromApi(DishonestPersonBean person) {

@@ -293,6 +293,10 @@ var PaidContext = function() {
 		});
 	};
 
+	
+	self.viewRejectReason=function(data){
+		success_msg(data.reject_reason);
+	}
 	self.checkVoucherPic = function(fileName, fileType, subFolder) {
 		$("#img-pic").attr("src", "");
 		voucherCheckLayer = $.layer({

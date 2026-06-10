@@ -202,6 +202,12 @@
 					#{params.bo.standard_flgs[${index}]}
 				</foreach>
 			</if>
+			<if test="params.bo.independent_flgs != null and params.bo.independent_flgs !=''">
+				and A.independent_flg in
+				<foreach item="item" index="index" collection="params.bo.independent_flgs" open="(" separator="," close=")">
+					#{params.bo.independent_flgs[${index}]}
+				</foreach>
+			</if>
 			<if test="params.bo.report_statuses != null and params.bo.report_statuses !=''">
 				and X.approved in
 				<foreach item="item" index="index" collection="params.bo.report_statuses" open="(" separator="," close=")">

@@ -112,6 +112,12 @@
 								<select class="form-control" style="height: 34px" data-bind="options: sortTypes" name="payable.sort_type"></select>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">出团年份</label>
+							<div class="col-md-2">
+								<input type="number" maxlength="4" class="form-control" placeholder="出团年份" data-bind="value:year_now()" name="payable.departure_year" />
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">

@@ -40,6 +40,8 @@ public class AirReceivedDetailBean extends SupperBO implements Serializable {
 	private String apply_user;
 
 	private String confirm_user_name;
+	
+	private String reject_reason;
 
 	// options
 	private List<String> statuses;
@@ -214,6 +216,14 @@ public class AirReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setMoney_to(BigDecimal money_to) {
 		this.money_to = money_to;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
 	}
 
 }

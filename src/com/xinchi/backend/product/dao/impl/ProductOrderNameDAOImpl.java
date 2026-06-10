@@ -83,4 +83,9 @@ public class ProductOrderNameDAOImpl extends SqlSessionDaoSupport implements Pro
 	public void deleteByProductOrderNumber(String order_number) {
 		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderNameMapper.deleteByProductOrderNumber", order_number);
 	}
+
+	@Override
+	public void deleteByNamePk(String name_pk) {
+		daoUtil.deleteByParam("com.xinchi.bean.mapper.ProductOrderNameMapper.deleteByNamePk", name_pk);
+	}
 }

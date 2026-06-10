@@ -549,6 +549,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				for (ClientReceivedDetailBean detail : receivedDetails) {
 					detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
 					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setConfirm_user(user.getUser_number());
 					receivedDao.update(detail);
 
 					saveReceivedMatch(detail_id, from_where, detail.getPk());
@@ -558,6 +559,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				for (SupplierPaidDetailBean detail : receivedDetails) {
 					detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
 					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setApprove_user(user.getUser_number());
 					paidDao.update(detail);
 
 					saveReceivedMatch(detail_id, from_where, detail.getPk());

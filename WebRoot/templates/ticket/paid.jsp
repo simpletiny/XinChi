@@ -191,7 +191,7 @@ h3 {
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: $root.viewRejectReason"></a></td>
 								<!-- /ko -->
 
 								<td><a href="javascript:void(0)" data-bind="click:$root.viewDetail">查看</a></td>
@@ -646,6 +646,6 @@ h3 {
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.007"></script>
+	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.008"></script>
 </body>
 </html>

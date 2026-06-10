@@ -60,8 +60,7 @@ public class ProductOrderAction extends BaseAction {
 	private AssistantManagerService assistantManagerService;
 
 	public String searchProductOrderByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (null == order)
@@ -233,6 +232,13 @@ public class ProductOrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String name_pks;
+
+	public String deleteProductOrderName() {
+		resultStr = service.deleteProductOrderNameByNamePks(name_pks);
+		return SUCCESS;
+	}
+
 	private String air_need_pk;
 
 	public String selectProductOrderNameByAirNeedPk() {
@@ -366,6 +372,14 @@ public class ProductOrderAction extends BaseAction {
 
 	public void setOrder_numbers(List<String> order_numbers) {
 		this.order_numbers = order_numbers;
+	}
+
+	public String getName_pks() {
+		return name_pks;
+	}
+
+	public void setName_pks(String name_pks) {
+		this.name_pks = name_pks;
 	}
 
 }

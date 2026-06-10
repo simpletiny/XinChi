@@ -22,6 +22,7 @@ import com.xinchi.backend.order.dao.OrderTicketInfoDAO;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductOrderDAO;
+import com.xinchi.backend.product.dao.ProductOrderNameDAO;
 import com.xinchi.backend.product.dao.ProductOrderTeamNumberDAO;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.dao.ReceivedDAO;
@@ -44,6 +45,7 @@ import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.OrderReportDto;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductOrderBean;
+import com.xinchi.bean.ProductOrderNameBean;
 import com.xinchi.bean.ProductOrderTeamNumberBean;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.SaleOrderBean;
@@ -1496,6 +1498,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private AirTicketNameListDAO airTicketNameListDao;
 
+	@Autowired
+	private ProductOrderNameDAO productOrderNameDao;
+
 	@Override
 	public String updateConfirmedNonStandardOrder(SaleOrderBean bean, String json) {
 		List<Object> result = checkModifyRights(bean, json);
@@ -1504,10 +1509,10 @@ public class OrderServiceImpl implements OrderService {
 			return msg;
 		}
 
-		Set<SaleOrderNameListBean> addNameList = (Set<SaleOrderNameListBean>) result.get(1);
-		Set<SaleOrderNameListBean> deleteNameList = (Set<SaleOrderNameListBean>) result.get(2);
-		Set<SaleOrderNameListBean> modifyNameList = (Set<SaleOrderNameListBean>) result.get(3);
-		Set<SaleOrderNameListBean> normalModifyNames = (Set<SaleOrderNameListBean>) result.get(4);
+		List<SaleOrderNameListBean> addNameList = (List<SaleOrderNameListBean>) result.get(1);
+		List<SaleOrderNameListBean> deleteNameList = (List<SaleOrderNameListBean>) result.get(2);
+		List<SaleOrderNameListBean> modifyNameList = (List<SaleOrderNameListBean>) result.get(3);
+		List<SaleOrderNameListBean> normalModifyNames = (List<SaleOrderNameListBean>) result.get(4);
 		String passenger_captain = (String) result.get(5);
 
 		SaleOrderBean old = dao.selectByPrimaryKey(bean.getPk());
@@ -1518,13 +1523,10 @@ public class OrderServiceImpl implements OrderService {
 		String air_operate_flg = operate_flg.split(",")[1];
 
 		String order_lock_flg = "Y,";
-		String name_lock_flg = "N,";
 		if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 			order_lock_flg += "N";
-			name_lock_flg += "N";
 		} else {
 			order_lock_flg += "Y";
-			name_lock_flg += "Y";
 		}
 
 		bean.setLock_flg(order_lock_flg);
@@ -1556,7 +1558,9 @@ public class OrderServiceImpl implements OrderService {
 
 		List<ProductOrderTeamNumberBean> relations = productOrderTeamNumberDao.selectByTeamNumber(team_number);
 
-		if (null != relations && relations.size() > 0) {
+		boolean hasProductOrdered = null != relations && relations.size() > 0;
+
+		if (hasProductOrdered) {
 			int add_adult_count = bean.getAdult_count() - old.getAdult_count();
 			int add_special_count = special_count - (old.getSpecial_count() == null ? 0 : old.getSpecial_count());
 
@@ -1576,39 +1580,52 @@ public class OrderServiceImpl implements OrderService {
 
 		// 新增的名单
 		for (SaleOrderNameListBean n : addNameList) {
-			n.setLock_flg(name_lock_flg);
+			n.setLock_flg("N,N");
 			nameListDao.insert(n);
+			if (hasProductOrdered) {
+				ProductOrderTeamNumberBean pot = relations.get(0);
+				ProductOrderNameBean p_name = new ProductOrderNameBean();
+				p_name.setName_pk(n.getPk());
+				p_name.setProduct_order_number(pot.getProduct_order_number());
+				p_name.setTeam_number(team_number);
+				productOrderNameDao.insert(p_name);
+			}
 		}
 
 		// 删除的名单
 		for (SaleOrderNameListBean n : deleteNameList) {
-			nameListDao.delete(n.getPk());
 			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean deleteAirName = airTicketNameListDao.selectByBasePk(n.getPk());
 
 				deleteAirName.setDelete_flg("Y");
-				deleteAirName.setLock_flg(name_lock_flg.split(",")[1]);
+				deleteAirName.setLock_flg("N");
 				airTicketNameListDao.update(deleteAirName);
 			}
+			n.setLock_flg("N,N");
+			n.setDelete_flg("Y");
+			nameListDao.update(n);
 		}
 
 		// 修改的名单
 		for (SaleOrderNameListBean n : modifyNameList) {
-			n.setLock_flg(name_lock_flg);
-			nameListDao.update(n);
-			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+			if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+				n.setLock_flg("N,N");
+			} else if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
-
 				modifyAirName.setName(n.getName());
 				modifyAirName.setId(n.getId());
 				modifyAirName.setCellphone_A(n.getCellphone_A());
 				modifyAirName.setCellphone_B(n.getCellphone_B());
 				modifyAirName.setChairman(n.getChairman());
-				modifyAirName.setLock_flg(name_lock_flg.split(",")[1]);
+				modifyAirName.setLock_flg("Y");
 				modifyAirName.setAge(n.getAge());
 				modifyAirName.setId_type(n.getId_type());
 				airTicketNameListDao.update(modifyAirName);
+
+				n.setLock_flg("N,Y");
 			}
+
+			nameListDao.update(n);
 		}
 
 		// 普通修改的名单
@@ -1683,7 +1700,7 @@ public class OrderServiceImpl implements OrderService {
 		List<SaleOrderNameListBean> oldNameList = nameListDao.selectByOrderPk(bean.getPk());
 		List<SaleOrderNameListBean> newNameList = new ArrayList<SaleOrderNameListBean>();
 		// 新增名单
-		Set<SaleOrderNameListBean> addNames = new HashSet<SaleOrderNameListBean>();
+		List<SaleOrderNameListBean> addNames = new ArrayList<>();
 
 		JSONArray nameList = old.getIndependent_flg().equals("A") ? JSONObject.fromObject(json).getJSONArray("name_json")
 				: JSONArray.fromObject(json);
@@ -1701,7 +1718,11 @@ public class OrderServiceImpl implements OrderService {
 			String pk = obj.getString("pk");
 			String id_type = obj.getString("id_type");
 			String age_string = obj.getString("age");
-			int age = age_string.isEmpty() ? 0 : Integer.valueOf(age_string);
+			String price_string = obj.getString("price");
+			String as_adult = obj.getString("as_adult");
+			int age = SimpletinyString.isEmpty(age_string) ? 0 : Integer.valueOf(age_string);
+
+			BigDecimal price = SimpletinyString.isEmpty(price_string) ? BigDecimal.ZERO : new BigDecimal(price_string);
 
 			String lock_flg = obj.getString("lock_flg");
 
@@ -1718,6 +1739,8 @@ public class OrderServiceImpl implements OrderService {
 			passenger.setLock_flg(lock_flg);
 			passenger.setAge(age);
 			passenger.setId_type(id_type);
+			passenger.setPrice(price);
+			passenger.setAs_adult(as_adult);
 
 			if (!SimpletinyString.isEmpty(chairman) && chairman.equals("Y")) {
 				passenger_captain = name;
@@ -1743,18 +1766,19 @@ public class OrderServiceImpl implements OrderService {
 				return result;
 			}
 
-			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)
+					&& !product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED)) {
 				result.add(MessageFormat.format(msg_a, "产品", "操作", "添加游客"));
 				return result;
 			}
 		}
 
 		// 修改的名单
-		Set<SaleOrderNameListBean> modifyNames = new HashSet<SaleOrderNameListBean>();
+		List<SaleOrderNameListBean> modifyNames = new ArrayList<>();
 		// 普通修改
-		Set<SaleOrderNameListBean> normalModifyNames = new HashSet<SaleOrderNameListBean>();
+		List<SaleOrderNameListBean> normalModifyNames = new ArrayList<>();
 		// 删除的名单
-		Set<SaleOrderNameListBean> deleteNames = new HashSet<SaleOrderNameListBean>();
+		List<SaleOrderNameListBean> deleteNames = new ArrayList<>();
 		for (SaleOrderNameListBean n : oldNameList) {
 			boolean isDelete = true;
 			for (SaleOrderNameListBean newn : newNameList) {
@@ -1810,7 +1834,8 @@ public class OrderServiceImpl implements OrderService {
 				result.add(MessageFormat.format(msg_a, "产品", "锁定", "删除名单"));
 				return result;
 			}
-			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)) {
+			if (!product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_NO)
+					&& !product_operate_flg.equals(ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED)) {
 				result.add(MessageFormat.format(msg_a, "产品", "操作", "删除名单"));
 				return result;
 			}
@@ -1833,10 +1858,10 @@ public class OrderServiceImpl implements OrderService {
 			return msg;
 		}
 
-		Set<SaleOrderNameListBean> addNameList = (Set<SaleOrderNameListBean>) result.get(1);
-		Set<SaleOrderNameListBean> deleteNameList = (Set<SaleOrderNameListBean>) result.get(2);
-		Set<SaleOrderNameListBean> modifyNameList = (Set<SaleOrderNameListBean>) result.get(3);
-		Set<SaleOrderNameListBean> normalModifyNames = (Set<SaleOrderNameListBean>) result.get(4);
+		List<SaleOrderNameListBean> addNameList = (List<SaleOrderNameListBean>) result.get(1);
+		List<SaleOrderNameListBean> deleteNameList = (List<SaleOrderNameListBean>) result.get(2);
+		List<SaleOrderNameListBean> modifyNameList = (List<SaleOrderNameListBean>) result.get(3);
+		List<SaleOrderNameListBean> normalModifyNames = (List<SaleOrderNameListBean>) result.get(4);
 		String passenger_captain = (String) result.get(5);
 
 		SaleOrderBean old = dao.selectByPrimaryKey(bean.getPk());
@@ -1848,13 +1873,10 @@ public class OrderServiceImpl implements OrderService {
 		String air_operate_flg = operate_flg.split(",")[1];
 
 		String order_lock_flg = "Y,";
-		String name_lock_flg = "N,";
 		if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 			order_lock_flg += "N";
-			name_lock_flg += "N";
 		} else {
 			order_lock_flg += "Y";
-			name_lock_flg += "Y";
 		}
 
 		bean.setLock_flg(order_lock_flg);
@@ -1884,7 +1906,9 @@ public class OrderServiceImpl implements OrderService {
 
 		List<ProductOrderTeamNumberBean> relations = productOrderTeamNumberDao.selectByTeamNumber(team_number);
 
-		if (null != relations && relations.size() > 0) {
+		boolean hasProductOrdered = null != relations && relations.size() > 0;
+
+		if (hasProductOrdered) {
 			int add_adult_count = bean.getAdult_count() - old.getAdult_count();
 			int add_special_count = special_count - (old.getSpecial_count() == null ? 0 : old.getSpecial_count());
 
@@ -1931,39 +1955,51 @@ public class OrderServiceImpl implements OrderService {
 
 		// 新增的名单
 		for (SaleOrderNameListBean n : addNameList) {
-			n.setLock_flg(name_lock_flg);
+			n.setLock_flg("N,N");
 			nameListDao.insert(n);
+			if (hasProductOrdered) {
+				ProductOrderTeamNumberBean pot = relations.get(0);
+				ProductOrderNameBean p_name = new ProductOrderNameBean();
+				p_name.setName_pk(n.getPk());
+				p_name.setProduct_order_number(pot.getProduct_order_number());
+				p_name.setTeam_number(team_number);
+				productOrderNameDao.insert(p_name);
+			}
 		}
 
 		// 删除的名单
 		for (SaleOrderNameListBean n : deleteNameList) {
-			nameListDao.delete(n.getPk());
 			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean deleteAirName = airTicketNameListDao.selectByBasePk(n.getPk());
-
-				deleteAirName.setDelete_flg("Y");
-				deleteAirName.setLock_flg(name_lock_flg.split(",")[1]);
-				airTicketNameListDao.update(deleteAirName);
+				if(null!=deleteAirName) {
+					deleteAirName.setDelete_flg("Y");
+					deleteAirName.setLock_flg("Y");
+					airTicketNameListDao.update(deleteAirName);
+				}
 			}
+			n.setLock_flg("N,N");
+			n.setDelete_flg("Y");
+			nameListDao.update(n);
 		}
 
 		// 修改的名单
 		for (SaleOrderNameListBean n : modifyNameList) {
-			n.setLock_flg(name_lock_flg);
-			nameListDao.update(n);
-			if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+			if (air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
+				n.setLock_flg("N,N");
+			} else if (!air_operate_flg.equals(ResourcesConstants.AIR_OPERATE_STATUS_NO)) {
 				AirTicketNameListBean modifyAirName = airTicketNameListDao.selectByBasePk(n.getPk());
-
 				modifyAirName.setName(n.getName());
 				modifyAirName.setId(n.getId());
 				modifyAirName.setCellphone_A(n.getCellphone_A());
 				modifyAirName.setCellphone_B(n.getCellphone_B());
 				modifyAirName.setChairman(n.getChairman());
-				modifyAirName.setLock_flg(name_lock_flg.split(",")[1]);
+				modifyAirName.setLock_flg("Y");
 				modifyAirName.setAge(n.getAge());
 				modifyAirName.setId_type(n.getId_type());
 				airTicketNameListDao.update(modifyAirName);
+				n.setLock_flg("N,Y");
 			}
+			nameListDao.update(n);
 		}
 
 		// 普通修改的名单
@@ -1994,10 +2030,10 @@ public class OrderServiceImpl implements OrderService {
 			return msg;
 		}
 
-		Set<SaleOrderNameListBean> addNameList = (Set<SaleOrderNameListBean>) result.get(1);
-		Set<SaleOrderNameListBean> deleteNameList = (Set<SaleOrderNameListBean>) result.get(2);
-		Set<SaleOrderNameListBean> modifyNameList = (Set<SaleOrderNameListBean>) result.get(3);
-		Set<SaleOrderNameListBean> normalModifyNames = (Set<SaleOrderNameListBean>) result.get(4);
+		List<SaleOrderNameListBean> addNameList = (List<SaleOrderNameListBean>) result.get(1);
+		List<SaleOrderNameListBean> deleteNameList = (List<SaleOrderNameListBean>) result.get(2);
+		List<SaleOrderNameListBean> modifyNameList = (List<SaleOrderNameListBean>) result.get(3);
+		List<SaleOrderNameListBean> normalModifyNames = (List<SaleOrderNameListBean>) result.get(4);
 		String passenger_captain = (String) result.get(5);
 
 		String order_pk = bean.getPk();

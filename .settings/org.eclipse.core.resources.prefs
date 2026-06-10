@@ -17,6 +17,7 @@ encoding//WebRoot/templates/users/login.jsp=UTF-8
 encoding//config/jdbc.properties=UTF-8
 encoding//config/log4j.properties=UTF-8
 encoding//config/properties/sys.properties=UTF-8
+encoding//config/properties/wechat.properties=UTF-8
 encoding//config/xwork-conversion.properties=UTF-8
 encoding//src/generator/util/DatabaseUtil.java=UTF-8
 encoding/<project>=UTF-8

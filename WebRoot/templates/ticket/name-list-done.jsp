@@ -85,9 +85,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div style="float: left">
+							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockOrder() }">解锁订单</button>
 							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockName()}">解锁名单</button>
 						</div>
 						<div style="float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder()}">锁定订单</button>
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockName() }">锁定名单</button>
 							<button type="button" class="btn btn-green" data-bind="click:flightChange">航变</button>
 							<button type="button" class="btn btn-green" data-bind="click:rollBack">打回重出</button>
@@ -168,7 +170,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<th>价格</th>
 								<th>需求备注</th>
 								<th>退团</th>
-								<th>名单</th>
+								<th>订单/名单</th>
 								<th>状态</th>
 							</tr>
 						</thead>
@@ -190,7 +192,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td data-bind="text: $data.ticket_cost+$data.change_cost" class="rmb"></td>
 								<td data-bind="text: $data.need_comment"></td>
 								<td><span data-bind="text:$root.deleteMapping[$data.delete_flg]"></span></td>
-								<td><span data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
+								<td><span data-bind="text: $root.lockMapping[$data.order_lock_flg.substr(2,1)]"></span>/<span
+									data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
 								<!-- ko if:$data.status=='Y' -->
 								<td data-bind="text:$root.statusMapping[$data.status]"></td>
 								<!-- /ko -->

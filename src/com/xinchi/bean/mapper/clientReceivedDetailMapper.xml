@@ -26,6 +26,7 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="collecter" property="collecter" jdbcType="VARCHAR" />
 		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
+		<result column="confirm_user" property="confirm_user" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -51,7 +52,8 @@
 		client_pk,
 		voucher_file,
 		collecter,
-		reject_reason
+		reject_reason,
+		confirm_user
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -75,6 +77,7 @@
 		A.voucher_file,
 		A.collecter,
 		A.reject_reason,
+		A.confirm_user,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -106,6 +109,7 @@
 		A.voucher_file,
 		A.collecter,
 		A.reject_reason,
+		A.confirm_user,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -325,6 +329,9 @@
 			<if test="reject_reason != null">
 				reject_reason = #{reject_reason,jdbcType=VARCHAR},
 			</if>
+			<if test="confirm_user != null">
+				confirm_user = #{confirm_user,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -382,7 +389,8 @@
 		D.name AS client_employee_name,
 		A.client_employee_pk,
 		A.voucher_file,
-		A.reject_reason
+		A.reject_reason,
+		A.confirm_user
 		from
 		received_detail A
 		LEFT JOIN user_base C ON

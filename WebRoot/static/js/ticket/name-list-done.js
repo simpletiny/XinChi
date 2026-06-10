@@ -38,7 +38,61 @@ var PassengerContext = function() {
 	
 	self.year =ko.observable( new Date().getFullYear());
 	self.sortTypes = ['正序', '倒序'];
-	
+	// 解锁订单
+		self.unlockOrder = function() {
+			if (self.chosenPassengers().length < 1) {
+				fail_msg("请选择乘客！");
+				return;
+			} else if (self.chosenPassengers().length > 1) {
+				fail_msg("解锁订单只能选中一个乘客！");
+				return;
+			} else {
+				let data = self.chosenPassengers()[0].split(":");
+				let team_number = data[3];
+				let msg = "解锁订单意味着销售可以新增乘客。确认要解锁订单" + team_number + "吗？"
+				$.layer({
+					area: ['auto', 'auto'],
+					dialog: {
+						msg: msg,
+						btns: 2,
+						type: 4,
+						btn: ['确认', '取消'],
+						yes: function(index) {
+							layer.close(index);
+							toggleLockOrder(team_number, 'N');
+
+						}
+					}
+				});
+			}
+		}
+		// 锁定订单
+		self.lockOrder = function() {
+			if (self.chosenPassengers().length < 1) {
+				fail_msg("请选择乘客！");
+				return;
+			} else if (self.chosenPassengers().length > 1) {
+				fail_msg("锁定订单只能选中一个乘客！");
+				return;
+			} else {
+				let data = self.chosenPassengers()[0].split(":");
+				let team_number = data[3];
+				let msg = "锁定订单，销售将不再能增加乘客。确认要锁定订单" + team_number + "吗？"
+				$.layer({
+					area: ['auto', 'auto'],
+					dialog: {
+						msg: msg,
+						btns: 2,
+						type: 4,
+						btn: ['确认', '取消'],
+						yes: function(index) {
+							layer.close(index);
+							toggleLockOrder(team_number, 'Y');
+						}
+					}
+				});
+			}
+		}
 	// 解锁名单
 	self.unlockName = function() {
 		if (self.chosenPassengers().length < 1) {

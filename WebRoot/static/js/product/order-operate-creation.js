@@ -511,7 +511,7 @@ function addSupplier() {
 	}
 	var timestamp = (new Date()).getTime();
 
-	var div_supplier = $(`<div>
+	var div_supplier = $(`<div group>
 							<h3>地接信息</h3>
 							<div class="input-row clearfloat">
 						    <div class="col-md-3 required">
@@ -848,17 +848,23 @@ function adjustTextareaHeight() {
 }
 
 function editAll(txt) {
-	let table = $(txt).parent().parent().parent().parent();
+	let table = $(txt).closest(".table-order");
 	let val_price = $(txt).val().trim();
 	if (!/^-?\d*$/.test(val_price)) {
 		val_price = val_price.slice(0, -1);
 		$(txt).val(val_price);
 	}
 	let all_flg = table.find("thead").find("input[st='chk-edit-all']").is(":checked");
+	let all_prices = table.find("tbody").find("input[st='price']");
 	if (all_flg) {
-		let all_prices = table.find("tbody").find("input[st='price']");
 		all_prices.each(function(index, now_txt) {
 			$(now_txt).val(val_price);
 		});
 	}
+	let sum = 0;
+	let txt_sum = $(txt).closest("[group]").find("[st='supplier-cost']");
+	all_prices.each(function(index, now_txt) {
+		sum += $(now_txt).val() - 0;
+	});
+	txt_sum.val(sum);
 }

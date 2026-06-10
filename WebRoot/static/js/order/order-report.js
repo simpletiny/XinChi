@@ -61,11 +61,11 @@ var OrderReportContext = function() {
 	}, function(data) {
 		self.locations(data.datas);
 		self.locations.push({ name: "非标" });
+		self.locations.push({ name: "单机票" });
 	});
 
 	self.confirm_month = ko.observable();
 	var x = new Date();
-	x = new Date(x.setMonth(x.getMonth() - 1));
 	self.confirm_month(x.Format("yyyy-MM"));
 
 	self.refresh = function() {
@@ -73,7 +73,9 @@ var OrderReportContext = function() {
 		var param = $("form").serialize();
 		const product_line = $('[name="option.product_line"]').val();
 		if (product_line === "非标") {
-			param = param.split("&").filter(p => !p.startsWith("option.product_line=")).join("&") + "&option.standard_flgs=N"
+			param = param.split("&").filter(p => !p.startsWith("option.product_line=")).join("&") + "&option.standard_flgs=N&option.independent_flgs=Y&option.independent_flgs=N"
+		}else if(product_line==="单机票"){
+			param = param.split("&").filter(p => !p.startsWith("option.product_line=")).join("&") + "&option.standard_flgs=N&option.independent_flgs=A"
 		}
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'order/searchOrderReportByPage', param, function(data) {

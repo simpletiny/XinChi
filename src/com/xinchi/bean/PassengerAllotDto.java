@@ -28,14 +28,20 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 	private String add_day_flg;
 	private String ticket_order_pk;
 
+	private int sort_index;
+
 	private String team_number;
 
 	private String is_allot;
 
 	public static class Comparators {
-		public static Comparator<PassengerAllotDto> DATE = new Comparator<PassengerAllotDto>() {
+		public static Comparator<PassengerAllotDto> SORT = new Comparator<PassengerAllotDto>() {
 			@Override
 			public int compare(PassengerAllotDto o1, PassengerAllotDto o2) {
+				int date_compare = o1.date.compareTo(o2.date);
+				if (date_compare == 0) {
+					return Integer.compare(o1.sort_index, o2.sort_index);
+				}
 				return o1.date.compareTo(o2.date);
 			}
 		};
@@ -159,6 +165,14 @@ public class PassengerAllotDto extends SupperBO implements Serializable {
 
 	public void setAdd_day_flg(String add_day_flg) {
 		this.add_day_flg = add_day_flg;
+	}
+
+	public int getSort_index() {
+		return sort_index;
+	}
+
+	public void setSort_index(int sort_index) {
+		this.sort_index = sort_index;
 	}
 
 }

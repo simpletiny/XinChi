@@ -172,12 +172,12 @@
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data.related_pk)} "></a></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: $root.viewRejectReason"></a></td>
 								<!-- /ko -->
-								<!-- ko if:$data.status=='P' -->
+								<!-- ko if:$data.status=='P' && $data.type!='BACK'-->
 								<td><a href="javascript:void(0)" data-bind="click: function() {$root.viewPaidInfo($data.related_pk)} ">查看</a></td>
 								<!-- /ko -->
-								<!-- ko if:$data.status!='P' -->
+								<!-- ko ifnot:$data.status=='P' && $data.type!='BACK' -->
 								<td>-</td>
 								<!-- /ko -->
 								<td data-bind="text: $data.create_user"></td>
@@ -405,6 +405,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/sale/paid.js"></script>
+	<script src="<%=basePath%>static/js/sale/paid.js?v=1.000"></script>
 </body>
 </html>

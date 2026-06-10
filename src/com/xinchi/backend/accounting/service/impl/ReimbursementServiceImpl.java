@@ -119,7 +119,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 			String sale_cost_comment = "客户：" + employee.getName() + ";" + "财务主体：" + employee.getFinancial_body_name() + ";\n";
 			reimbursement.setComment(sale_cost_comment + old_comment);
 			comment = sale_cost_comment + comment;
-		}else {
+		} else {
 			reimbursement.setClient_employee_pk(null);
 			reimbursement.setComment(old_comment);
 		}
@@ -139,6 +139,9 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 		Map<String, BigDecimal> summaries = new HashMap<>();
 		for (ReimbursementBean rei : results) {
 			summaries.put(rei.getItem(), rei.getMoney());
+			summaries.put('P' + rei.getItem(), rei.getPaid_money());
+			summaries.put('Y' + rei.getItem(), rei.getWaiting_money());
+			summaries.put('I' + rei.getItem(), rei.getSuspense_money());
 		}
 		return summaries;
 	}

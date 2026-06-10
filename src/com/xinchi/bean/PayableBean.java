@@ -65,6 +65,8 @@ public class PayableBean extends SupperBO implements Serializable {
 	private String pick_date;
 	private String send_date;
 	private List<String> create_users;
+	
+	private String departure_year;
 
 	public String getTeam_number() {
 		return team_number;
@@ -328,6 +330,14 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setCreate_users(List<String> create_users) {
 		this.create_users = create_users;
+	}
+
+	public String getDeparture_year() {
+		return departure_year;
+	}
+
+	public void setDeparture_year(String departure_year) {
+		this.departure_year = departure_year;
 	}
 
 }

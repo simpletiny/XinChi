@@ -102,7 +102,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="table-main">
 						<thead>
 							<tr role="row">
 								<th></th>

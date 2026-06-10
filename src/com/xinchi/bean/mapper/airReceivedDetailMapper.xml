@@ -24,6 +24,7 @@
 		<result column="supplier_name" property="supplier_name" jdbcType="VARCHAR" />
 		<result column="confirm_user_name" property="confirm_user_name" jdbcType="VARCHAR" />
 		<result column="apply_user" property="apply_user" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -281,6 +282,9 @@
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -314,7 +318,8 @@
 		A.create_time,
 		A.update_time,
 		B.supplier_short_name AS
-		supplier_name
+		supplier_name,
+		A.reject_reason
 		from
 		air_received_detail A
 		LEFT JOIN supplier B ON A.supplier_pk = B.pk

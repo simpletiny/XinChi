@@ -11,12 +11,18 @@ var ReportContext = function() {
 	$.getJSON(self.apiurl + 'user/searchByRole', 'role=PRODUCT', function(data) {
 		self.users(data.users);
 	});
-	
+
 	self.locations = ko.observableArray();
 	$.getJSON(self.apiurl + 'system/searchByType', {
-		type : "LINE"
+		type: "LINE"
 	}, function(data) {
-		self.locations(data.datas);
+		let product_lines = new Array();
+		$.each(data.datas, function(index, item) {
+			product_lines.push(item.name);
+		});
+		product_lines.push("非标");
+		product_lines.push("单机票");
+		self.locations(product_lines);
 	});
 
 	self.years = ko.observableArray();
@@ -36,13 +42,13 @@ var ReportContext = function() {
 	self.isSpecificDate(today == '2023-08-16');
 
 	self.statusMapping = {
-		'N' : '待审核',
-		'Y' : '待终审'
+		'N': '待审核',
+		'Y': '待终审'
 	};
 
 	self.reports = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.refresh = function() {
@@ -51,9 +57,9 @@ var ReportContext = function() {
 		$.getJSON(self.apiurl + 'product/searchProductProfit', param, function(data) {
 			self.reports(data.productProfits);
 			$(".table").tableSum({
-				title : '汇总',
-				title_index : 3,
-				except : [1, 2, 3]
+				title: '汇总',
+				title_index: 3,
+				except: [1, 2, 3]
 			});
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
@@ -63,19 +69,19 @@ var ReportContext = function() {
 	self.addReceive = function() {
 		reconciliation_type = "收入";
 		reconciliationLayer = $.layer({
-			type : 1,
-			title : ['添加收入', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['1000px', '350px'],
-			offset : ['', ''],
-			scrollbar : true,
-			zIndex : 887,
-			page : {
-				dom : '#div-reconciliation'
+			type: 1,
+			title: ['添加收入', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['1000px', '350px'],
+			offset: ['', ''],
+			scrollbar: true,
+			zIndex: 887,
+			page: {
+				dom: '#div-reconciliation'
 			},
-			end : function() {
+			end: function() {
 				$("#div-reconciliation").clear();
 			}
 		});
@@ -83,19 +89,19 @@ var ReportContext = function() {
 	self.addPay = function() {
 		reconciliation_type = "支出";
 		reconciliationLayer = $.layer({
-			type : 1,
-			title : ['添加支出', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['1000px', '350px'],
-			offset : ['', ''],
-			scrollbar : true,
-			zIndex : 887,
-			page : {
-				dom : '#div-reconciliation'
+			type: 1,
+			title: ['添加支出', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['1000px', '350px'],
+			offset: ['', ''],
+			scrollbar: true,
+			zIndex: 887,
+			page: {
+				dom: '#div-reconciliation'
 			},
-			end : function() {
+			end: function() {
 				$("#div-reconciliation").clear();
 			}
 		});
@@ -108,21 +114,21 @@ var ReportContext = function() {
 		let msg = "确认添加" + reconciliation_type + "吗？";
 
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : msg,
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: msg,
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中");
 					let data = $("#form-reconciliation").serialize();
 					data += "&reconciliation.type=" + reconciliation_type;
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/addReconciliation',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'product/addReconciliation',
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -171,22 +177,22 @@ var ReportContext = function() {
 			const msg = "确认要对" + belong_month + "进行扎账吗？";
 
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : msg,
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("保存中");
 						const product_manager_number = self.chosenReports()[0].user_number;
 						const data = "product_manager_number=" + product_manager_number + "&belong_month="
-								+ belong_month;
+							+ belong_month;
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'product/confirmProductAccounting',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'product/confirmProductAccounting',
+							data: data
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {

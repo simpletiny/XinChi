@@ -388,5 +388,12 @@ public class ResourcesConstants {
 	// ************************* 虚拟账户*********************************
 	// 单机票虚拟产品经理 员工号
 	public static String UNREAL_USER_NUMBER_ONLY_TICKET = "OT";
+	
+	
+	//WeChat
+	public static String STOKEN="E7BxCszYpwqYCNKeC9wCih";
+	public static String SENCODINGAESKEY="Gr1LhiFMnUsukwpF1elJRrDdUJwdeQHODrei30ob61g";
+	public static String SCORPID="wwa7854bfa8dde7156";
+	public static String SECRETID="2SVv-JYFk4J8elNjicF7lEkzTHLUBI1DqErDyaxKo2s";
 
 }

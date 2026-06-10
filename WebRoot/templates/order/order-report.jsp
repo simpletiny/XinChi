@@ -431,6 +431,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/order-report.js?v=1.009"></script>
+	<script src="<%=basePath%>static/js/order/order-report.js?v=1.011"></script>
 </body>
 </html>

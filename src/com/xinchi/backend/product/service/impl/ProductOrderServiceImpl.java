@@ -197,8 +197,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		for (OrderDto order : orders) {
 			SaleOrderBean sale_order = new SaleOrderBean();
 			sale_order.setPk(order.getPk());
-			sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(),
-					ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
+			sale_order.setOperate_flg(SimpletinyString.replaceCharFromLeft(order.getOperate_flg(), ResourcesConstants.ORDER_OPERATE_STATUS_ORDERED));
 			orderDao.update(sale_order);
 		}
 		return SUCCESS;
@@ -255,8 +254,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		for (OrderDto order : orders) {
 			SaleOrderBean sale_order = new SaleOrderBean();
 			sale_order.setPk(order.getPk());
-			sale_order.setOperate_flg(
-					ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
+			sale_order.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO + "," + ResourcesConstants.ORDER_OPERATE_STATUS_NO);
 			orderDao.update(sale_order);
 		}
 		// 删除产品订单号和团号对应关系
@@ -645,6 +643,15 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	@Override
 	public String updateProductOrder(ProductOrderBean order) {
 		dao.update(order);
+		return SUCCESS;
+	}
+
+	@Override
+	public String deleteProductOrderNameByNamePks(String name_pks) {
+		String[] names = name_pks.split(",");
+		for (String name_pk : names) {
+			productOrderNameDao.deleteByNamePk(name_pk);
+		}
 		return SUCCESS;
 	}
 }

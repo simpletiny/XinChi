@@ -57,7 +57,7 @@
 					<div class="form-group">
 						<div style="float: right">
 							<button type="submit" class="btn btn-green" data-bind="click: function() { operate()}">发送票务需求</button>
-							<button type="submit" class="btn btn-green" data-bind="click: function() { lockName() }">锁定名单</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() { deleteName() }">删除名单</button>
 						</div>
 					</div>
 					<div class="form-group">
@@ -109,12 +109,13 @@
 								<th>团号</th>
 								<th>出团日期</th>
 								<th>天数</th>
+								<th>退团</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
 							<tr style="overflow: hidden;" ondblclick="checkSameOrderNumber(this)">
 
-								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenPassengers" /></td>
+								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenPassengers"/></td>
 								<td data-bind="text: $index()+1"></td>
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.id"></td>
@@ -126,6 +127,12 @@
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.days"></td>
+								<!-- ko if: $data.delete_flg=="N" -->
+								<td><span>否</span></td>
+								<!-- /ko -->
+								<!-- ko if: $data.delete_flg=="Y" -->
+								<td><span>是</span></td> 
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>
@@ -247,7 +254,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-name-list.js?v=0.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order-name-list.js?v=0.002"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

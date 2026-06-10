@@ -225,8 +225,7 @@
 			</result>
 		</action>
 		<!-- 根据多个订单编号查找乘客信息 -->
-		<action name="searchSaleOrderNameListByProductOrderNumbers" class="productOrderAction"
-			method="searchSaleOrderNameListByProductOrderNumbers">
+		<action name="searchSaleOrderNameListByProductOrderNumbers" class="productOrderAction" method="searchSaleOrderNameListByProductOrderNumbers">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -248,7 +247,8 @@
 			</result>
 		</action>
 		<!-- 搜索订单的出票信息 -->
-		<action name="searchProductOrderTicketStatusByOrderNumber" class="productOrderOperationAction" method="searchProductOrderTicketStatusByOrderNumber">
+		<action name="searchProductOrderTicketStatusByOrderNumber" class="productOrderOperationAction"
+			method="searchProductOrderTicketStatusByOrderNumber">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 搜索订单的销售订单名单信息 -->
@@ -258,7 +258,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 搜索订单操作信息-->
+		<!-- 搜索订单操作信息 -->
 		<action name="searchOrderSupplierByOperationPk" class="productOrderOperationAction" method="searchOrderSupplierByOperationPk">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
@@ -332,7 +332,14 @@
 			</result>
 		</action>
 		<!-- 产品订单 end -->
-
+		<!-- 待发票务 start -->
+		<!--删除已退团产品名单 -->
+		<action name="deleteProductOrderName" class="productOrderAction" method="deleteProductOrderName">
+			<result name="success" type="str">
+				resultStr
+			</result>
+		</action>
+		<!-- 待发票务 end -->
 		<!-- 产品订单操作 start -->
 		<!-- 已操作产品订单编辑 -->
 		<!-- 搜索操作供应商信息 -->
@@ -356,7 +363,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<!-- 生成产品操作 -->
 		<action name="createOrderOperation" class="productOrderOperationAction" method="createOrderOperation">
 			<result name="success" type="str">

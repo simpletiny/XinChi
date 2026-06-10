@@ -110,6 +110,7 @@
 								<th>票务需求</th>
 								<th>出票信息</th>
 								<th>天数</th>
+								<th>退团</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: passengers">
@@ -142,6 +143,12 @@
 								<td><a href="javascript:void(0)" data-bind="click:function(){$root.checkAirNeed($data.pk)}">查看</a></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.days"></td>
+								<!-- ko if: $data.delete_flg=="N" -->
+								<td><span>否</span></td>
+								<!-- /ko -->
+								<!-- ko if: $data.delete_flg=="Y" -->
+								<td><span>是</span></td> 
+								<!-- /ko -->
 							</tr>
 						</tbody>
 					</table>
@@ -291,7 +298,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-name-list-done.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order-name-list-done.js?v=1.002"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

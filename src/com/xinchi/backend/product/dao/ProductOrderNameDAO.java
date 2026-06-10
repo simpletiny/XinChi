@@ -52,4 +52,6 @@ public interface ProductOrderNameDAO {
 	public ProductOrderNameBean selectByNamePk(String name_pk);
 
 	public void deleteByProductOrderNumber(String order_number);
+
+	public void deleteByNamePk(String name_pk);
 }

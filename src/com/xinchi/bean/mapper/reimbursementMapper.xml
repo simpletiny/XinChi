@@ -25,6 +25,9 @@
 		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 		<result column="client_employee_name" property="client_employee_name" jdbcType="VARCHAR" />
+		<result column="paid_money" property="paid_money" jdbcType="DECIMAL" />
+		<result column="waiting_money" property="waiting_money" jdbcType="DECIMAL" />
+		<result column="suspense_money" property="suspense_money" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -269,7 +272,15 @@
 		</where>
 	</select>
 	<select id="selectSummaries" parameterType="com.xinchi.bean.ReimbursementBean" resultMap="BaseResultMap">
-		select item,month,sum(money) AS money from reimbursement
+		SELECT
+		item,
+		month,
+		SUM(money) AS money,
+		SUM(IF(status = 'P', money, 0)) AS paid_money,
+		SUM(IF(status = 'Y', money, 0)) AS waiting_money,
+		SUM(IF(status =
+		'I', money, 0)) AS suspense_money
+		FROM reimbursement
 		<where>
 			<if test="date_from !=null and date_from !=''">
 				and month >= #{date_from,jdbcType=VARCHAR}
@@ -286,7 +297,7 @@
 					#{item}
 				</foreach>
 			</if>
-			and status = 'P'
+			and status !='N' and delete_flg='N'
 		</where>
 		group by item
 		ORDER BY

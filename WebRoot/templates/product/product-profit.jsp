@@ -4,6 +4,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	//String page_title = request.getParameter("page_title");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,7 +47,7 @@
 							<label class="col-md-1 control-label">产品线</label>
 							<div class="col-md-2">
 								<select class="form-control" style="height: 34px"
-									data-bind="options: locations,optionsText:'name',optionsValue:'name', optionsCaption: '--请选择--'" name="productProfit.product_line"></select>
+									data-bind="options: locations,optionsText:$data,optionsValue:$data, optionsCaption: '--请选择--'" name="productProfit.product_line"></select>
 							</div>
 						</div>
 					</div>
@@ -163,6 +164,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.005"></script>
+	<script src="<%=basePath%>static/js/product/product-profit.js?v=1.006"></script>
 </body>
 </html>

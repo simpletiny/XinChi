@@ -130,7 +130,6 @@
 		select
 		A.title,
 		A.label,
-		A.content,
 		A.update_user,
 		A.pk,
 		B.user_name as create_user,

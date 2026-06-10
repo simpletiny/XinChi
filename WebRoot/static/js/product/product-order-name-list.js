@@ -5,8 +5,8 @@ var PassengerContext = function() {
 	self.chosenPassengers = ko.observableArray([]);
 	self.colors = ['#ffff99', '#ccffff', '#9999ff', '#00ffcc'];
 	self.passengers = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.flight = ko.observableArray([]);
@@ -17,35 +17,35 @@ var PassengerContext = function() {
 			return;
 		} else {
 			// 验证是否是相同产品单号
-			if(!allOrderNumbersSame(self.chosenPassengers())){
+			if (!allOrderNumbersSame(self.chosenPassengers())) {
 				fail_msg("所选名单不属于同一产品订单！");
 				return;
 			}
 			$("#table-ticket").clear();
 			let product_pk = self.chosenPassengers()[0].product_pk
 			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-				product_pk : product_pk
+				product_pk: product_pk
 			}, function(data) {
 				self.flight(data.air_tickets);
 				ticketLayer = $.layer({
-					type : 1,
-					title : ['票务信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', 'auto'],
-					offset : ['', ''],
-					page : {
-						dom : '#air-ticket-edit'
+					type: 1,
+					title: ['票务信息', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['800px', 'auto'],
+					offset: ['', ''],
+					page: {
+						dom: '#air-ticket-edit'
 					},
-					end : function() {
+					end: function() {
 					}
 				});
 			});
 		}
 	}
 	// 发送票务需求
-	self.doSendAir = function(){
+	self.doSendAir = function() {
 		var msg = "";
 		var hasTicket = $("#chk-has-ticket").is(":checked") ? "NO" : "YES";
 		var tbody = $("#table-ticket tbody");
@@ -71,13 +71,13 @@ var PassengerContext = function() {
 			msg = "确定将名单标记为单地接吗?";
 		}
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : msg,
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: msg,
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
 					let name_pks = new Array();
@@ -85,7 +85,7 @@ var PassengerContext = function() {
 					let json_obj = {};
 					json_obj.has_ticket = hasTicket;
 					json_obj.name_pks = name_pks;
-					if(hasTicket==="YES"){
+					if (hasTicket === "YES") {
 						json_obj.air_comment = $(".air_comment").val().replace(/\n/g, ";");
 						let datas = new Array();
 
@@ -101,19 +101,19 @@ var PassengerContext = function() {
 						}
 						json_obj.data = datas;
 					}
-					
+
 					var param = "json=" + JSON.stringify(json_obj);
-					
+
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/sendAirTicketNeed',
-						data : param
+						type: "POST",
+						url: self.apiurl + 'product/sendAirTicketNeed',
+						data: param
 					}).success(function(str) {
 						layer.close(ticketLayer);
 						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
-							
+
 							self.chosenPassengers.removeAll();
 						} else {
 							fail_msg("提交失败，请联系管理员！");
@@ -123,10 +123,10 @@ var PassengerContext = function() {
 				}
 			}
 		});
-		
+
 	}
-	
-	self.cancelSendAir = function(){
+
+	self.cancelSendAir = function() {
 		layer.close(ticketLayer);
 	}
 
@@ -134,10 +134,10 @@ var PassengerContext = function() {
 		// "&name_option.operate_status="
 		startLoadingIndicator("加载中...");
 		var param = $("form").serialize();
-		param +="&name_option.operate_statuses=N"
+		param += "&name_option.operate_statuses=N"
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderNameByPage', param, function(data) {
- 			self.passengers(data.name_list);
+			self.passengers(data.name_list);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
@@ -169,6 +169,56 @@ var PassengerContext = function() {
 		});
 	};
 
+	self.deleteName = function() {
+		if (self.chosenPassengers().length < 1) {
+			fail_msg("请选择乘客！");
+			return;
+		} else {
+			const passengers = self.chosenPassengers();
+
+			let name_pks = "";
+			for (let i = 0; i < passengers.length; i++) {
+				let passenger = passengers[i];
+				if (passenger.delete_flg === "N") {
+					fail_msg(passenger.name + "未退团，不能删除！");
+					return;
+				}
+
+				name_pks += passenger.name_pk + ",";
+			}
+			name_pks = name_pks.RTrim(",");
+
+			const msg = "删除后无法找回，请确认没有产生票务费用。<br>确认删除吗？";
+			$.layer({
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: msg,
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("删除中");
+						var param = "name_pks=" + name_pks;
+						$.ajax({
+							type: "POST",
+							url: self.apiurl + 'product/deleteProductOrderName',
+							data: param
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenPassengers.removeAll();
+							} else {
+								fail_msg("删除失败，请联系管理员！");
+							}
+						});
+					}
+				}
+			});
+		}
+
+	}
 	self.search = function() {
 
 	};
@@ -315,7 +365,7 @@ function checkSameOrderNumber(tr) {
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
-	if (index == 10){
+	if (index == 10) {
 		fail_msg("最多添加10个航段！")
 		return;
 	}
@@ -350,24 +400,24 @@ function hasTicket(chk) {
 
 }
 function allOrderNumbersSame(array) {
-    return array.every(item => item.product_order_number === array[0].product_order_number);
+	return array.every(item => item.product_order_number === array[0].product_order_number);
 }
 var airLegLayer;
 function choseAirLeg(event) {
 	ctx.searchAirLeg();
 	airLegLayer = $.layer({
-		type : 1,
-		title : ['选择票务航段', ''],
-		maxmin : false,
-		closeBtn : [1, true],
-		shadeClose : false,
-		area : ['600px', '650px'],
-		offset : ['', ''],
-		scrollbar : true,
-		page : {
-			dom : '#air-leg-pick'
+		type: 1,
+		title: ['选择票务航段', ''],
+		maxmin: false,
+		closeBtn: [1, true],
+		shadeClose: false,
+		area: ['600px', '650px'],
+		offset: ['', ''],
+		scrollbar: true,
+		page: {
+			dom: '#air-leg-pick'
 		},
-		end : function() {
+		end: function() {
 			console.log("Done");
 		}
 	});

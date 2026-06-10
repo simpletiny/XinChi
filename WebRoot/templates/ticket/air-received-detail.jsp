@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -35,8 +34,7 @@
 						</div>
 						<label class="col-md-1 control-label">收入账户</label>
 						<div class="col-md-2">
-							<select class="form-control" name="detail.card_account"
-								data-bind="options: accounts,optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
+							<select class="form-control" name="detail.card_account" data-bind="options: accounts,optionsCaption: '-- 请选择 --',event:{change:refresh}"></select>
 						</div>
 						<label class="col-md-1 control-label">收入月份</label>
 						<div class="col-md-2">
@@ -75,8 +73,8 @@
 						</div>
 						<div data-bind="foreach: statuses" style="padding-top: 4px;">
 							<em class="small-box"> <input type="checkbox"
-								data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
-								name="detail.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
+								data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="detail.statuses" /><label
+								data-bind="text: $root.statusMapping[$data]"></label>
 							</em>
 						</div>
 						<button type="submit" class="btn btn-green" style="float: right" data-bind="click: refresh">搜索</button>
@@ -113,12 +111,16 @@
 								<td data-bind="text: $data.sum_received" class="rmb"></td>
 								<td data-bind="text: $data.received_time"></td>
 								<td data-bind="text: $root.typeMapping[$data.received_type]"></td>
+								<!-- ko if: $data.status == 'N' -->
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: $root.viewRejectReason"></a></td>
+								<!-- /ko -->
+								<!-- ko ifnot: $data.status == 'N' -->
 								<td data-bind="text:$root.statusMapping[$data.status]"></td>
-								<td data-bind="text:$data.confirm_time" class="rmb"></td>
-								<td data-bind="text: $data.confirm_user"></td>
+								<!-- /ko -->
+								<td data-bind="text:$data.confirm_time"></td>
+								<td data-bind="text: $data.confirm_user_name"></td>
 								<td data-bind="text: $data.comment"></td>
-								<td><a href="javascript:;"
-									data-bind="click: function() {$root.checkIdPic($data.received_time,$data.voucher_file)}">查看</a></td>
+								<td><a href="javascript:;" data-bind="click: function() {$root.checkIdPic($data.received_time,$data.voucher_file)}">查看</a></td>
 								<td data-bind="text: $data.apply_user"></td>
 							</tr>
 						</tbody>
@@ -149,6 +151,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/air-received-detail.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/ticket/air-received-detail.js?v=1.004"></script>
 </body>
 </html>

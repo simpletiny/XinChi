@@ -6,8 +6,8 @@ var PassengerContext = function() {
 	self.chosenPassengers = ko.observableArray([]);
 	self.colors = ['#ffff99', '#ccffff', '#9999ff', '#00ffcc'];
 	self.passengers = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.flight = ko.observableArray([]);
@@ -18,32 +18,32 @@ var PassengerContext = function() {
 			return;
 		} else {
 			// 验证是否是相同产品单号
-			if(!allOrderNumbersSame(self.chosenPassengers())){
+			if (!allOrderNumbersSame(self.chosenPassengers())) {
 				fail_msg("所选名单不属于同一产品订单！");
 				return;
 			}
-			
-				ticketLayer = $.layer({
-					type : 1,
-					title : ['票务信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', 'auto'],
-					offset : ['', ''],
-					page : {
-						dom : '#air-ticket-edit'
-					},
-					end : function() {
-					}
+
+			ticketLayer = $.layer({
+				type: 1,
+				title: ['票务信息', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['', ''],
+				page: {
+					dom: '#air-ticket-edit'
+				},
+				end: function() {
+				}
 			});
 		}
 	}
 	// 发送票务需求
-	self.doSendAir = function(){
+	self.doSendAir = function() {
 		var msg = "确定提交票务需求吗?";
 		var tbody = $("#table-ticket tbody");
-		
+
 		var allTrs = tbody.children();
 		for (var i = 0; i < allTrs.length; i++) {
 			var current = allTrs[i];
@@ -55,16 +55,16 @@ var PassengerContext = function() {
 				return;
 			}
 		}
-		let hasTicket ="YES";
-		
+		let hasTicket = "YES";
+
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : msg,
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: msg,
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingIndicator("保存中...");
 					let name_pks = new Array();
@@ -72,7 +72,7 @@ var PassengerContext = function() {
 					let json_obj = {};
 					json_obj.has_ticket = hasTicket;
 					json_obj.name_pks = name_pks;
-					if(hasTicket==="YES"){
+					if (hasTicket === "YES") {
 						json_obj.air_comment = $(".air_comment").val().replace(/\n/g, ";");
 						let datas = new Array();
 
@@ -88,13 +88,13 @@ var PassengerContext = function() {
 						}
 						json_obj.data = datas;
 					}
-					
+
 					var param = "json=" + JSON.stringify(json_obj);
-					
+
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/sendAirTicketNeed',
-						data : param
+						type: "POST",
+						url: self.apiurl + 'product/sendAirTicketNeed',
+						data: param
 					}).success(function(str) {
 						layer.close(ticketLayer);
 						endLoadingIndicator();
@@ -109,35 +109,35 @@ var PassengerContext = function() {
 				}
 			}
 		});
-		
+
 	}
-	
-	self.cancelSendAir = function(){
+
+	self.cancelSendAir = function() {
 		layer.close(ticketLayer);
 	}
-	
+
 	self.flight_segments = ko.observableArray();
 
-	self.checkAirNeed = function(name_pk){
-        // 打印转换后的数组
-		$.getJSON(self.apiurl + 'product/searchAirNeedByNamePk', {name_pk:name_pk}, function(data) {
+	self.checkAirNeed = function(name_pk) {
+		// 打印转换后的数组
+		$.getJSON(self.apiurl + 'product/searchAirNeedByNamePk', { name_pk: name_pk }, function(data) {
 			self.flight_segments(Object.keys(data.flight_segments).map(function(key) {
-                return { key: key, value: data.flight_segments[key] };
-            }));
-			
-			checkAirNeedLayer= $.layer({
-				type : 1,
-				title : ['已发票务需求', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['', ''],
-				page : {
-					dom : '#div-check-air-need'
+				return { key: key, value: data.flight_segments[key] };
+			}));
+
+			checkAirNeedLayer = $.layer({
+				type: 1,
+				title: ['已发票务需求', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['', ''],
+				page: {
+					dom: '#div-check-air-need'
 				},
-				end : function() {
-					
+				end: function() {
+
 				}
 			});
 		});
@@ -146,10 +146,10 @@ var PassengerContext = function() {
 		// "&name_option.operate_status="
 		startLoadingIndicator("加载中...");
 		var param = $("form").serialize();
-		param +="&name_option.operate_statuses=Y&name_option.operate_statuses=D"
+		param += "&name_option.operate_statuses=Y&name_option.operate_statuses=D"
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'product/searchProductOrderNameByPage', param, function(data) {
- 			self.passengers(data.name_list);
+			self.passengers(data.name_list);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
@@ -171,7 +171,8 @@ var PassengerContext = function() {
 				}
 				tr.find("td").css("cssText", "background:" + self.colors[current_index % 4] + " !important");
 			}
-
+			$("span:contains('是')").css("color", "red");
+			$("span:contains('否')").css("color", "green");
 
 			endLoadingIndicator();
 		});
@@ -323,7 +324,7 @@ function checkSameOrderNumber(tr) {
 function addRow() {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
-	if (index == 10){
+	if (index == 10) {
 		fail_msg("最多添加10个航段！")
 		return;
 	}
@@ -336,7 +337,7 @@ function addRow() {
 function deleteRow(txt) {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
-	if(index==1)
+	if (index == 1)
 		return;
 	$(txt).parent().parent().remove();
 	var ins = $(tbody).find("td[st='index']");
@@ -356,25 +357,25 @@ function hasTicket(chk) {
 
 }
 function allOrderNumbersSame(array) {
-    return array.every(item => item.product_order_number === array[0].product_order_number);
+	return array.every(item => item.product_order_number === array[0].product_order_number);
 }
 
 var airLegLayer;
 function choseAirLeg(event) {
 	ctx.searchAirLeg();
 	airLegLayer = $.layer({
-		type : 1,
-		title : ['选择票务航段', ''],
-		maxmin : false,
-		closeBtn : [1, true],
-		shadeClose : false,
-		area : ['600px', '650px'],
-		offset : ['', ''],
-		scrollbar : true,
-		page : {
-			dom : '#air-leg-pick'
+		type: 1,
+		title: ['选择票务航段', ''],
+		maxmin: false,
+		closeBtn: [1, true],
+		shadeClose: false,
+		area: ['600px', '650px'],
+		offset: ['', ''],
+		scrollbar: true,
+		page: {
+			dom: '#air-leg-pick'
 		},
-		end : function() {
+		end: function() {
 			console.log("Done");
 		}
 	});
@@ -383,30 +384,30 @@ function choseAirLeg(event) {
 	$(currentAirLeg).blur();
 }
 
-function deleteSendedAirNeed(data){
+function deleteSendedAirNeed(data) {
 	const need_count = ctx.flight_segments().length;
 	const air_need_pk = data.value[0].need_pk;
 	let msg = "";
-	if(need_count===1){
+	if (need_count === 1) {
 		msg = "只有一个已发送票务需求，删除后名单将会打回至待发票务状态。";
-	}else {
-		msg =  "确认要删除当前票务需求吗？";
+	} else {
+		msg = "确认要删除当前票务需求吗？";
 	}
 	$.layer({
-		area : ['auto', 'auto'],
-		dialog : {
-			msg :msg,
-			btns : 2,
-			type : 4,
-			btn : ['确认', '取消'],
-			yes : function(index) {
+		area: ['auto', 'auto'],
+		dialog: {
+			msg: msg,
+			btns: 2,
+			type: 4,
+			btn: ['确认', '取消'],
+			yes: function(index) {
 				layer.close(index);
 				startLoadingIndicator("删除中");
 				var param = "air_need_pk=" + air_need_pk;
 				$.ajax({
-					type : "POST",
-					url : ctx.apiurl + 'product/deleteSendedAirNeed',
-					data : param
+					type: "POST",
+					url: ctx.apiurl + 'product/deleteSendedAirNeed',
+					data: param
 				}).success(function(str) {
 					endLoadingIndicator();
 					if (str == "success") {

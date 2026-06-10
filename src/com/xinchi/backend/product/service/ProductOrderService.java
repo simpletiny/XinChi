@@ -55,4 +55,6 @@ public interface ProductOrderService extends BaseService {
 
 	public String updateProductOrder(ProductOrderBean order);
 
+	public String deleteProductOrderNameByNamePks(String name_pks);
+
 }

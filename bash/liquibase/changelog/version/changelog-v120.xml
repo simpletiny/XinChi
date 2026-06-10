@@ -389,7 +389,7 @@
 	<changeSet id="13" author="simpletiny">
 		<sql>
             <![CDATA[
-            CREATE OR REPLACE VIEW view_product_profit AS
+             CREATE OR REPLACE VIEW view_product_profit AS
 			   SELECT 
 			    LEFT(B.departure_date, 7) AS departure_month,
 			    CASE
@@ -412,7 +412,7 @@
 			        B.air_ticket_cost) - IF(ISNULL(B.other_cost),
 			        0,
 			        B.other_cost) - COALESCE(D.payable,0) - IF(ISNULL(B.fy), 0, B.fy) - A.sys_cost - A.sale_cost - IFNULL(A.other_pay, 0) + IFNULL(A.other_receive, 0)) AS gross_profit,
-			    B.product_line AS product_line
+			    IF(ISNULL(B.product_line),IF(B.independent_flg='A','单机票','非标'),B.product_line) AS product_line
 			FROM
 			    team_report A
 			        LEFT JOIN
@@ -423,9 +423,149 @@
 			    view_team_payable D ON A.team_number = D.team_number
 			WHERE
 			    B.final_type <> 4 OR B.final_type IS NULL
-			GROUP BY B.product_manager_number , LEFT(B.departure_date, 7) , B.product_line;
+			GROUP BY B.product_manager_number , LEFT(B.departure_date, 7) ,IF(ISNULL(B.product_line),IF(B.independent_flg='A','单机票','非标'),B.product_line);
              ]]>
 			<comment>ALTER VIEW view_product_profit</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="14" author="simpletiny">
+		<sql>
+            <![CDATA[
+            DROP view if exists view_passenger_allot;
+			CREATE VIEW view_passenger_allot AS
+				    SELECT 
+				        A.pk AS passenger_pk,
+				        A.id,
+				        A.name,
+				        B.date,
+				        B.from_city,
+				        B.to_city,
+                        B.start_time,
+                        B.end_time,
+                        B.start_place,
+                        B.end_place,
+                        B.ticket_number,
+                        B.add_day_flg,
+                        B.sort_index,
+				        A.ticket_order_pk,
+				        IF(C.pk IS NULL, 'N', 'Y') AS is_allot,
+                        A.team_number
+				    FROM
+				        air_ticket_name_list A
+				            LEFT JOIN
+				        air_ticket_order_leg B ON A.ticket_order_pk = B.ticket_order_pk
+				            LEFT JOIN
+				        passenger_ticket_info C ON A.pk = C.passenger_pk
+				            AND C.from_to_city = CONCAT(B.from_city, '--', B.to_city);
+             ]]>
+			<comment>ALTER VIEW view_passenger_allot</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="15" author="simpletiny">
+		<sql>
+            <![CDATA[
+            ALTER TABLE client_received_detail 
+				ADD COLUMN confirm_user VARCHAR(10) NULL COMMENT '确认人' AFTER reject_reason;
+			ALTER TABLE supplier_paid_detail 
+				ADD COLUMN reject_reason VARCHAR(200) NULL COMMENT '收入驳回理由' AFTER voucher_number;
+			ALTER TABLE air_ticket_paid_detail 
+				ADD COLUMN reject_reason VARCHAR(200) NULL COMMENT '收入驳回理由' AFTER belong_month;
+			ALTER TABLE air_received_detail 
+				ADD COLUMN reject_reason VARCHAR(200) NULL COMMENT '驳回理由' AFTER collecter;
+             ]]>
+			<comment>ALTER VIEW client_received_detail,supplier_paid_detail,air_ticket_paid_detail,air_received_detail</comment>
+		</sql>
+	</changeSet>
+	<changeSet id="16" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	DROP VIEW if exists paid_detail;
+				CREATE VIEW paid_detail AS
+				    SELECT 
+				        *,
+				        team_number AS order_number,
+				        'SINGLE' AS isOne
+				    FROM
+				        supplier_paid_detail
+				    WHERE
+				        type LIKE '%STRIKE%' 
+				    UNION ALL SELECT 
+				        *,
+				        GROUP_CONCAT(team_number) AS order_number,
+				        IF(COUNT(pk) > 1, 'SUM', 'SINGLE') AS isOne
+				    FROM
+				        supplier_paid_detail
+				    WHERE
+				        type NOT LIKE '%STRIKE%'
+				    GROUP BY related_pk
+             ]]>
+			<comment>ALTER VIEW paid_detail </comment>
+		</sql>
+	</changeSet>
+	<changeSet id="17" author="simpletiny">
+		<sql>
+            <![CDATA[
+            	 DROP VIEW IF EXISTS received_detail;
+					CREATE VIEW received_detail AS
+					    SELECT 
+					        team_number AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter,
+					        reject_reason AS reject_reason,
+					        confirm_user
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type <> 'SUM') 
+					    UNION SELECT 
+					        group_concat(team_number) AS team_number,
+					        received AS received,
+					        received_time AS received_time,
+					        type AS type,
+					        confirm_time AS confirm_time,
+					        status AS status,
+					        comment AS comment,
+					        sum_received AS sum_received,
+					        allot_received AS allot_received,
+					        related_pk AS related_pk,
+					        card_pk AS card_pk,
+					        card_account AS card_account,
+					        create_user AS create_user,
+					        create_time AS create_time,
+					        update_time AS update_time,
+					        update_user AS update_user,
+					        pk AS pk,
+					        client_employee_pk AS client_employee_pk,
+					        client_pk AS client_pk,
+					        voucher_file AS voucher_file,
+					        collecter AS collecter,
+					        reject_reason AS reject_reason,
+					        confirm_user
+					    FROM
+					        client_received_detail
+					    WHERE
+					        (type = 'SUM')
+					    GROUP BY related_pk;
+             ]]>
+			<comment>ALTER VIEW received_detail</comment>
 		</sql>
 	</changeSet>
 </databaseChangeLog>

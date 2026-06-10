@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.common.SupperBO;
@@ -15,7 +16,7 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	private String month;
 
-	private java.math.BigDecimal money;
+	private BigDecimal money;
 
 	private String comment;
 
@@ -49,6 +50,11 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String money_from;
 	private String money_to;
 
+	// DTO
+	private BigDecimal paid_money;
+	private BigDecimal waiting_money;
+	private BigDecimal suspense_money;
+
 	public String getItem() {
 		return item;
 	}
@@ -65,11 +71,11 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 		this.date = date;
 	}
 
-	public java.math.BigDecimal getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
 
-	public void setMoney(java.math.BigDecimal money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 
@@ -223,6 +229,30 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setItems(List<String> items) {
 		this.items = items;
+	}
+
+	public BigDecimal getPaid_money() {
+		return paid_money;
+	}
+
+	public void setPaid_money(BigDecimal paid_money) {
+		this.paid_money = paid_money;
+	}
+
+	public BigDecimal getWaiting_money() {
+		return waiting_money;
+	}
+
+	public void setWaiting_money(BigDecimal waiting_money) {
+		this.waiting_money = waiting_money;
+	}
+
+	public BigDecimal getSuspense_money() {
+		return suspense_money;
+	}
+
+	public void setSuspense_money(BigDecimal suspense_money) {
+		this.suspense_money = suspense_money;
 	}
 
 }

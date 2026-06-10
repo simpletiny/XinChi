@@ -213,7 +213,7 @@
 				<div class="col-md-6 required">
 					<label class="l">支出时间</label>
 					<div class="ip">
-						<input type="text" name="time" class="ip- datetime-picker" placeholder="支出时间" required="required" />
+						<input type="text" name="time" class="ip- datesecond-picker" placeholder="支出时间" required="required" />
 					</div>
 				</div>
 			</div>
@@ -254,6 +254,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
-	<script src="<%=basePath%>static/js/accounting/paid.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/paid.js?v=1.002"></script>
 </body>
 </html>

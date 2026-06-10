@@ -25,7 +25,7 @@ var AgencyContext = function() {
 	self.defaultMoney = ko.observable();
 	startLoadingSimpleIndicator("加载中");
 	$.getJSON(self.apiurl + 'accounting/searchOneWFP', {
-		wfp_pk : self.wfpPk
+		wfp_pk: self.wfpPk
 	}, function(data) {
 		if (data.wfp) {
 			self.wfp(data.wfp);
@@ -47,13 +47,13 @@ var AgencyContext = function() {
 	self.add = function() {
 		self.count += 1;
 		$("#div_add").before($("#div_mod").html());
-		if ($('.datetime-picker').datetimepicker != null) {
-			$('.datetime-picker').datetimepicker({
-				format : 'Y-m-d H:i',
-				timepicker : true,
-				scrollInput : false,
-				defaultDate : new Date(),
-				lang : 'zh'
+		if ($('.datesecond-picker').datetimepicker != null) {
+			$('.datesecond-picker').datetimepicker({
+				format: 'Y-m-d H:i:s',
+				timepicker: true,
+				scrollInput: false,
+				defaultDate: new Date(),
+				lang: 'zh'
 			});
 		}
 		var prev = $("#div_add").prev();
@@ -100,7 +100,7 @@ var AgencyContext = function() {
 				return;
 			}
 			paidJson += '{"account":+"' + account + '","time":"' + time + '","receiver":"' + receiver + '","money":"'
-					+ money + '","voucherFile":"' + voucherFile + '"';
+				+ money + '","voucherFile":"' + voucherFile + '"';
 
 			if (i == allAccount.length - 1) {
 				paidJson += '}';
@@ -113,9 +113,9 @@ var AgencyContext = function() {
 
 		startLoadingSimpleIndicator("保存中");
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/pay',
-			data : "json=" + paidJson + "&voucher_number=" + self.wfp().pay_number
+			type: "POST",
+			url: self.apiurl + 'accounting/pay',
+			data: "json=" + paidJson + "&voucher_number=" + self.wfp().pay_number
 		}).success(function(str) {
 			if (str == "success") {
 				window.location.href = self.apiurl + "templates/accounting/waiting-for-paid.jsp";
@@ -132,6 +132,7 @@ var AgencyContext = function() {
 		for (var i = 0; i < allMoney.length; i++) {
 			sum += ($(allMoney[i]).val() - 0);
 		}
+		sum = sum.toFixed(2);
 		if (sum == self.wfp().money) {
 			return true;
 		} else {
@@ -241,8 +242,8 @@ function changeFile(thisx) {
 function updateProgress(e, progress) {
 	if (e.lengthComputable) {
 		$(progress).attr({
-			value : e.loaded,
-			max : e.total
+			value: e.loaded,
+			max: e.total
 		});
 	}
 }

@@ -150,10 +150,12 @@
 							<td></td>
 							<td></td>
 							<td></td>
+							<td></td>
 							<td>合计</td>
 							<td data-bind="text:totalBudgetPayable" class="rmb"></td>
 							<td data-bind="text:totalPaid" class="rmb"></td>
 							<td data-bind="text:totalBudgetBalance" class="rmb"></td>
+							<td></td> 
 						</tr>
 					</table>
 					<div class="pagination clearfloat">
