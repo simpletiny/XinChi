@@ -79,4 +79,14 @@ public class AirTicketNeedDAOImpl extends SqlSessionDaoSupport implements AirTic
 		daoUtil.deleteByPK("com.xinchi.bean.mapper.AirTicketNeedMapper.deleteByPrimaryKey", pk);
 	}
 
+	@Override
+	public List<AirTicketNeedBean> selectByPks(List<String> pks) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectByPks", pks);
+	}
+
+	@Override
+	public List<OrderAirInfoBean> selectOrderAirInfoByNeedPk(String need_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNeedMapper.selectOrderAirInfoByNeedPk", need_pk);
+	}
+
 }

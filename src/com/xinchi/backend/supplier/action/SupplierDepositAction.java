@@ -1,6 +1,7 @@
 package com.xinchi.backend.supplier.action;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
+import com.xinchi.backend.receivable.service.AirReceivedService;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
+import com.xinchi.bean.AirReceivedDetailBean;
+import com.xinchi.bean.AirTicketPaidDetailBean;
+import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.SimpletinyUser;
+import com.xinchi.common.UserSessionBean;
 
 @Controller
 @Scope("prototype")
@@ -33,6 +41,15 @@ public class SupplierDepositAction extends BaseAction {
 	 */
 	public String searchDepositByPage() {
 		Map<String, Object> params = new HashMap<String, Object>();
+		UserSessionBean user = SimpletinyUser.user();
+		if (null == deposit) {
+			deposit = new SupplierDepositBean();
+		}
+
+		if (request_from.equals("PRODUCT")) {
+			deposit.setResponsible_user(user.getUser_number());
+		}
+
 		params.put("bo", deposit);
 		page.setParams(params);
 
@@ -64,8 +81,18 @@ public class SupplierDepositAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String batUploadBack() throws IOException {
+		deposits = service.batUploadBack(file_name, deposit_type);
+		return SUCCESS;
+	}
+
 	public String batSaveDeposit() {
 		resultStr = service.batSaveDeposit(json);
+		return SUCCESS;
+	}
+
+	public String batSaveDepositBack() {
+		resultStr = service.batSaveDepositBack(json);
 		return SUCCESS;
 	}
 
@@ -98,6 +125,42 @@ public class SupplierDepositAction extends BaseAction {
 	 */
 	public String receiveSupplierDeposit() {
 		resultStr = service.receiveSupplierDeposit(deposit, json);
+		return SUCCESS;
+	}
+
+	// 押金退还记录
+	private List<AirReceivedDetailBean> deposit_receiveds;
+
+	// 扣款记录
+	private List<AirTicketPaidDetailBean> deposit_deducts;
+	// 冲账记录
+	private List<AirTicketPaidDetailBean> deposit_strikes;
+
+	private List<DepositTicketPaidBean> deposit_deduct_relations;
+
+	@Autowired
+	private AirReceivedService airReceivedService;
+
+	@Autowired
+	private AirTicketPaidDetailService airTicketPaidDetailService;
+
+	public String searchDepositReturnDetails() {
+		deposit = service.selectByPrimaryKey(deposit_pk);
+
+		if (deposit.getReturn_way().contains("C")) {
+			deposit_deduct_relations = service.selectDepositTicketPaidsByDepositPk(deposit_pk);
+			deposit_strikes = new ArrayList<AirTicketPaidDetailBean>();
+			for (DepositTicketPaidBean dtp : deposit_deduct_relations) {
+				List<AirTicketPaidDetailBean> li = airTicketPaidDetailService.selectByRelatedPk(dtp.getRelated_pk());
+				deposit_strikes.addAll(li);
+			}
+		}
+		if (deposit.getReturn_way().contains("T")) {
+			deposit_receiveds = airReceivedService.selectByBusinessNumber(deposit.getDeposit_number());
+		}
+		if (deposit.getReturn_way().contains("K")) {
+			deposit_deducts = airTicketPaidDetailService.selectByBasePk(deposit_pk);
+		}
 		return SUCCESS;
 	}
 
@@ -155,6 +218,38 @@ public class SupplierDepositAction extends BaseAction {
 
 	public void setVoucher_number(String voucher_number) {
 		this.voucher_number = voucher_number;
+	}
+
+	public List<AirReceivedDetailBean> getDeposit_receiveds() {
+		return deposit_receiveds;
+	}
+
+	public List<AirTicketPaidDetailBean> getDeposit_deducts() {
+		return deposit_deducts;
+	}
+
+	public List<AirTicketPaidDetailBean> getDeposit_strikes() {
+		return deposit_strikes;
+	}
+
+	public void setDeposit_receiveds(List<AirReceivedDetailBean> deposit_receiveds) {
+		this.deposit_receiveds = deposit_receiveds;
+	}
+
+	public void setDeposit_deducts(List<AirTicketPaidDetailBean> deposit_deducts) {
+		this.deposit_deducts = deposit_deducts;
+	}
+
+	public void setDeposit_strikes(List<AirTicketPaidDetailBean> deposit_strikes) {
+		this.deposit_strikes = deposit_strikes;
+	}
+
+	public List<DepositTicketPaidBean> getDeposit_deduct_relations() {
+		return deposit_deduct_relations;
+	}
+
+	public void setDeposit_deduct_relations(List<DepositTicketPaidBean> deposit_deduct_relations) {
+		this.deposit_deduct_relations = deposit_deduct_relations;
 	}
 
 }

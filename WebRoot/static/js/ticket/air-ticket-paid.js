@@ -60,9 +60,9 @@ var AgencyContext = function() {
 		}
 		count += 1;
 		$("#div_add").before($("#div_mod").html());
-		if ($('.datetime-picker').datetimepicker != null) {
-			$('.datetime-picker').datetimepicker({
-				format : 'Y-m-d H:i',
+		if ($('.datesecond-picker').datetimepicker != null) {
+			$('.datesecond-picker').datetimepicker({
+				format : 'Y-m-d H:i:s',
 				timepicker : true,
 				scrollInput : false,
 				defaultDate : new Date(),
@@ -90,10 +90,6 @@ var AgencyContext = function() {
 			return;
 		}
 		if (!$("form").valid()) {
-			return;
-		}
-		if (!self.caculateSum()) {
-			fail_msg("支付金额合计和应支付总金额不符！");
 			return;
 		}
 

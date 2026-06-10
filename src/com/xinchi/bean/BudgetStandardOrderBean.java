@@ -14,6 +14,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String product_pk;
 
+	private String product_model;
+
 	private String product_name;
 
 	private String departure_date;
@@ -40,6 +42,8 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	private String assistant_number;
+
 	private String pk;
 	private String lock_flg;
 	private String cancel_flg;
@@ -63,11 +67,18 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
+	private String as_adult_flg;
+
 	private String operate_flg;
 	private String treat_comment;
 	private String receivable_comment;
 
 	private String receivable_first_flg;
+	private String sale;
+
+	private String hotel_comment;
+	// DTO
+	private String client_employee_name;
 
 	// 航段信息
 	// private String ticket_number;
@@ -365,5 +376,53 @@ public class BudgetStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getAs_adult_flg() {
+		return as_adult_flg;
+	}
+
+	public void setAs_adult_flg(String as_adult_flg) {
+		this.as_adult_flg = as_adult_flg;
+	}
+
+	public String getProduct_model() {
+		return product_model;
+	}
+
+	public void setProduct_model(String product_model) {
+		this.product_model = product_model;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
+	}
+
+	public String getClient_employee_name() {
+		return client_employee_name;
+	}
+
+	public void setClient_employee_name(String client_employee_name) {
+		this.client_employee_name = client_employee_name;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
 	}
 }

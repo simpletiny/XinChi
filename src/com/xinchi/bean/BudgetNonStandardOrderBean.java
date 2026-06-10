@@ -42,6 +42,8 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	private String update_user;
 
+	private String assistant_number;
+
 	private String lock_flg;
 	private String cancel_flg;
 	private String name_confirm_status;
@@ -63,12 +65,15 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 	private String passenger_captain;
 
 	private String receivable_first_flg;
-
+	private String treat_comment;
 	// 名单是否被锁定
 	private String name_list_lock = "0";
 
 	private String operate_flg;
 
+	private String sale;
+	private String hotel_comment;
+	private String receivable_comment;
 	// dto
 	private String confirm_type;
 
@@ -342,6 +347,46 @@ public class BudgetNonStandardOrderBean extends SupperBO implements Serializable
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getTreat_comment() {
+		return treat_comment;
+	}
+
+	public void setTreat_comment(String treat_comment) {
+		this.treat_comment = treat_comment;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
+	}
+
+	public String getReceivable_comment() {
+		return receivable_comment;
+	}
+
+	public void setReceivable_comment(String receivable_comment) {
+		this.receivable_comment = receivable_comment;
 	}
 
 }

@@ -35,6 +35,9 @@ public class UserCommonBean extends SupperBO implements Serializable {
 
 	private BigDecimal credit_limit;
 	private BigDecimal credit_balance;
+	
+	private String approve_time;
+	private String approve_user;
 
 	public String getLogin_name() {
 		return login_name;
@@ -154,6 +157,22 @@ public class UserCommonBean extends SupperBO implements Serializable {
 
 	public void setCredit_balance(BigDecimal credit_balance) {
 		this.credit_balance = credit_balance;
+	}
+
+	public String getApprove_time() {
+		return approve_time;
+	}
+
+	public void setApprove_time(String approve_time) {
+		this.approve_time = approve_time;
+	}
+
+	public String getApprove_user() {
+		return approve_user;
+	}
+
+	public void setApprove_user(String approve_user) {
+		this.approve_user = approve_user;
 	}
 
 }

@@ -54,6 +54,16 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<div class="col-md-6">
+							<div data-bind="foreach: matchFlgs" style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenMatchFlgs,click:function(){$root.refresh();return true;}"
+									name="detail.match_flgs" /><label data-bind="text: $root.flgMapping[$data]"></label>
+								</em>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">发生日期</label>
 							<div class="col-md-2">
@@ -103,8 +113,20 @@
 								<input type="number" class="form-control" placeholder="精确金额" name="detail.money" />
 							</div>
 						</div>
+						<label class="col-md-1 control-label">备注</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="填写部分信息即可" name="detail.comment" />
+						</div>
 						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">总余额</label>
+							<div class="col-md-1">
+								<p class="ip-default rmb" data-bind="text:sumCardBalance()"></p>
+							</div>
 						</div>
 					</div>
 				</form>
@@ -119,6 +141,7 @@
 								<th>支出</th>
 								<th>余额</th>
 								<th>填报时间</th>
+								<th>填报人</th>
 								<th>备注</th>
 							</tr>
 						</thead>
@@ -128,7 +151,15 @@
 								<td data-bind="text: $data.account"></td>
 								<td data-bind="text: $data.time"></td>
 								<!-- ko if: $data.type=='收入' -->
+								<!-- ko if:$data.match_flg=='N' -->
+								<td data-bind="text: $data.money" style="color: #FF9999" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.match_flg=='Y' -->
 								<td data-bind="text: $data.money" class="rmb"></td>
+								<!-- /ko -->
+								<!-- ko if:$data.match_flg=='O' -->
+								<td data-bind="text: $data.money" style="color: lightgreen" class="rmb"></td>
+								<!-- /ko -->
 								<td></td>
 								<!-- /ko -->
 								<!-- ko if: $data.type=='支出' -->
@@ -137,6 +168,7 @@
 								<!-- /ko -->
 								<td data-bind="text: $data.balance" class="rmb"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: $data.record_user"></td>
 								<td data-bind="text: $data.comment"></td>
 							</tr>
 						</tbody>
@@ -199,8 +231,9 @@
 				<tbody id="tbody-data" data-bind="foreach:bat_details">
 					<tr>
 						<td data-bind="text: $data.time"></td>
-						<td><input type="number" data-bind="value:$data.second,event:{input:function(){lessthan60(event,$data);}}" class="ip-default"
-							style="padding: 4px !important; width: 60%" /><input type="hidden" data-bind="value:$data.time"></input></td>
+						<td><input type="number" data-bind="value:$data.second,event:{input:function(){lessthan60(event,$data);}}"
+							class="ip-default" style="padding: 4px !important; width: 60%" /><input type="hidden"
+							data-bind="value:$data.time"></input></td>
 						<td data-bind="text: $data.money" class="rmb"></td>
 						<td data-bind="text: $data.comment"></td>
 					</tr>
@@ -220,6 +253,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/file-upload-plain.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/detail.js"></script>
+	<script src="<%=basePath%>static/js/finance/detail.js?v=1.002"></script>
 </body>
 </html>

@@ -1,15 +1,17 @@
 var matchDetailLayer;
 var viewDetailLayer;
 var viewCommentLayer;
+var otherMatchLayer;
+let rejectReasonLayer;
 var DetailContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
 	self.allStatus = ['N', 'Y'];
 	self.statusMapping = {
-		'N' : '未匹配',
-		'Y' : '已匹配',
-		'O' : '其他收入'
+		'N': '未匹配',
+		'Y': '已匹配',
+		'O': '其他收入'
 	};
 	self.chosenStatus = ko.observable('N');
 	self.chosenDetails = ko.observableArray([]);
@@ -25,8 +27,8 @@ var DetailContext = function() {
 	});
 
 	self.details = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	self.today = ko.observable();
 	var x = new Date();
@@ -55,34 +57,63 @@ var DetailContext = function() {
 			fail_msg("请选择收入");
 			return;
 		} else {
-			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认标记为其他收入吗?',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
-						startLoadingSimpleIndicator("保存中...");
-						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'finance/matchOtherReceived',
-							data : "detailId=" + self.chosenDetails()
-						}).success(function(str) {
-							endLoadingIndicator();
-							if (str == "success") {
-								self.search();
-							} else {
-								fail_msg(str);
-							}
-							self.chosenDetails(null);
-						});
-						layer.close(index);
-					}
+			otherMatchLayer = $.layer({
+				type: 1,
+				title: ['其他收入匹配', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#div-other-match'
+				},
+				end: function() {
 				}
 			});
 		}
 	};
+
+	self.doOtherMatch = function() {
+		$.layer({
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认标记为其他收入吗?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
+					layer.close(index);
+					startLoadingSimpleIndicator("保存中...");
+					const comment = $("#other-match-comment").val().trim();
+					let data = "detail.pk=" + self.chosenDetails();
+					if (comment != '') {
+						data += "&detail.other_match_comment=" + encodeURIComponent(comment);
+					}
+					$.ajax({
+						type: "POST",
+						url: self.apiurl + 'finance/matchOtherReceived',
+						data: data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							self.search();
+							layer.close(otherMatchLayer);
+						} else {
+							fail_msg(str);
+						}
+						self.chosenDetails(null);
+					});
+
+				}
+			}
+		});
+	}
+
+	self.cancelOtherMatch = function() {
+
+	}
 	self.received = ko.observable({});
 	self.sumDetails = ko.observableArray([]);
 	self.sumDetail = ko.observable({});
@@ -96,7 +127,7 @@ var DetailContext = function() {
 		var detail_pk = data.pk;
 		startLoadingSimpleIndicator("加载中");
 		$.getJSON(self.apiurl + 'finance/searchReceivedDetailByPaymentDetailPk', {
-			detailId : detail_pk
+			detailId: detail_pk
 		}, function(data) {
 			self.received(data.received_detail);
 
@@ -109,18 +140,18 @@ var DetailContext = function() {
 					$(".rmb").formatCurrency();
 					endLoadingIndicator();
 					matchDetailLayer = $.layer({
-						type : 1,
-						title : ['合账详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['800px', 'auto'],
-						offset : ['150px', ''],
-						scrollbar : true,
-						page : {
-							dom : '#sum_detail'
+						type: 1,
+						title: ['合账详情', ''],
+						maxmin: false,
+						closeBtn: [1, true],
+						shadeClose: false,
+						area: ['800px', 'auto'],
+						offset: ['150px', ''],
+						scrollbar: true,
+						page: {
+							dom: '#sum_detail'
 						},
-						end : function() {
+						end: function() {
 							console.log("Done");
 						}
 					});
@@ -132,18 +163,18 @@ var DetailContext = function() {
 					self.comment(self.received().comment);
 					endLoadingIndicator();
 					matchDetailLayer = $.layer({
-						type : 1,
-						title : ['摘要详情', ''],
-						maxmin : false,
-						closeBtn : [1, true],
-						shadeClose : false,
-						area : ['700px', 'auto'],
-						offset : ['150px', ''],
-						scrollbar : true,
-						page : {
-							dom : '#comment'
+						type: 1,
+						title: ['摘要详情', ''],
+						maxmin: false,
+						closeBtn: [1, true],
+						shadeClose: false,
+						area: ['700px', 'auto'],
+						offset: ['150px', ''],
+						scrollbar: true,
+						page: {
+							dom: '#comment'
 						},
-						end : function() {
+						end: function() {
 							console.log("Done");
 						}
 					});
@@ -160,18 +191,18 @@ var DetailContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要取消匹配吗?',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要取消匹配吗?',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						startLoadingSimpleIndicator("匹配中");
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'finance/cancelMatchReceived',
-							data : "detailId=" + self.chosenDetails()
+							type: "POST",
+							url: self.apiurl + 'finance/cancelMatchReceived',
+							data: "detailId=" + self.chosenDetails()
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
@@ -240,11 +271,12 @@ var DetailContext = function() {
 	// end pagination
 	// right side info
 	self.typeMapping = {
-		'CSUM' : '合账',
-		'CRECEIVED' : '收入',
-		'ABACK' : '票务退返',
-		'DBACK' : '地接退返',
-		'ARSUM' : '押金退还'
+		'CSUM': '客户收入（合）',
+		'CRECEIVED': '客户收入',
+		'ABACK': '票务退返',
+		'DBACK': '地接退返',
+		'ARSUM': '押金退还（合）',
+		'ARRECEIVED': '押金退还'
 	};
 	self.receiveds = ko.observableArray([]);
 	self.detail = ko.observable({});
@@ -287,7 +319,6 @@ var DetailContext = function() {
 
 		$.getJSON(self.apiurl + 'accounting/searchReceivedByPage', param, function(data) {
 			self.receiveds(data.receiveds);
-
 			self.totalCount1(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums1(self.currentPage1());
 
@@ -367,18 +398,18 @@ var DetailContext = function() {
 
 		const json = JSON.stringify(json_obj);
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '是否确认匹配?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '是否确认匹配?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					startLoadingSimpleIndicator("匹配中");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'finance/matchReceived',
-						data : "json=" + json
+						type: "POST",
+						url: self.apiurl + 'finance/matchReceived',
+						data: "json=" + json
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -398,41 +429,66 @@ var DetailContext = function() {
 		if (self.chosenReceiveds().length < 1) {
 			fail_msg("请选择要驳回的收入申请！");
 			return;
+		} else {
+			rejectReasonLayer = $.layer({
+				type: 1,
+				title: ['驳回原因', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#div-reject-reason'
+				},
+				end: function() {
+				}
+			});
 		}
+	}
+	self.doReject = function() {
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认将此收入申请驳回吗?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认将此收入申请驳回吗?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
+					layer.close(index);
 					startLoadingSimpleIndicator("驳回中");
-
+					let obj = {};
+					obj.reject_reason = $("#txt-reject-reason").val().trim();
 					var related_pks = '';
+					let received_applys = [];
 					for (var i = 0; i < self.chosenReceiveds().length; i++) {
-						related_pks += self.chosenReceiveds()[i].related_pk
-						if (i != self.chosenReceiveds().length - 1) {
-							related_pks += '@@';
-						}
+						let received = {};
+						received.related_pk = self.chosenReceiveds()[i].related_pk;
+						received.from_where = self.chosenReceiveds()[i].from_where;
+						received_applys.push(received);
 					}
-
+					
+					obj.received_applys = received_applys;
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'sale/rejectReceived',
-						data : "related_pks=" + related_pks
+						type: "POST",
+						url: self.apiurl + 'sale/rejectReceived',
+						data: "reject_json=" + encodeURIComponent(JSON.stringify(obj))
 					}).success(function(str) {
 						if (str == "success") {
+							layer.close(rejectReasonLayer);
 							self.refreshRight();
 							self.search();
 							self.chosenDetails(null);
 						}
 						endLoadingIndicator();
 					});
-					layer.close(index);
 				}
 			}
 		});
+	}
+	self.cancelReject = function() {
+		layer.close(rejectReasonLayer);
 	}
 	self.viewComment = function(detail) {
 		let t = detail.from_where + detail.type;
@@ -444,18 +500,18 @@ var DetailContext = function() {
 				self.orders(data.orders);
 				endLoadingIndicator();
 				viewCommentLayer = $.layer({
-					type : 1,
-					title : ['摘要详情', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['700px', 'auto'],
-					offset : ['150px', ''],
-					scrollbar : true,
-					page : {
-						dom : '#comment1'
+					type: 1,
+					title: ['摘要详情', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['700px', 'auto'],
+					offset: ['150px', ''],
+					scrollbar: true,
+					page: {
+						dom: '#comment1'
 					},
-					end : function() {
+					end: function() {
 						console.log("Done");
 					}
 				});
@@ -475,18 +531,18 @@ var DetailContext = function() {
 			endLoadingIndicator();
 
 			viewDetailLayer = $.layer({
-				type : 1,
-				title : ['合账详情', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#sum_detail1'
+				type: 1,
+				title: ['合账详情', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['', ''],
+				scrollbar: true,
+				page: {
+					dom: '#sum_detail1'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -496,49 +552,50 @@ var DetailContext = function() {
 	self.checkVoucherPic = function(fileName, received_time, from_where) {
 		$("#img-pic").attr("src", "");
 		budgetConfirmCheckLayer = $.layer({
-			type : 1,
-			title : ['查看确认件', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#pic-check'
+			type: 1,
+			title: ['查看确认件', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '650px'],
+			offset: ['50px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#pic-check'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
 
 		let subFolder = received_time.substring(0, 4) + "/" + received_time.substring(5, 7);
 		let fileType = "";
+		console.log(from_where)
 		switch (from_where) {
-			case "C" :
+			case "C":
 				fileType = "CLIENT_RECEIVED_VOUCHER";
 				break;
-			case "D" :
-			case "A" :
-			case "AR" :
+			case "D":
+			case "A":
+			case "AR":
 				fileType = "SUPPLIER_RECEIVED_VOUCHER";
 				break;
-			default :
+			default:
 				console.error("no this type");
 		}
 
 		$("#img-pic").attr(
-				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=" + fileType + "&subFolder="
-						+ subFolder);
+			"src",
+			self.apiurl + 'file/getFileStream?fileFileName=' + fileName + "&fileType=" + fileType + "&subFolder="
+			+ subFolder);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(
-			'click',
-			function() {
-				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
-						+ encodeURIComponent($(this).attr("src")));
-			});
+		'click',
+		function() {
+			window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
+				+ encodeURIComponent($(this).attr("src")));
+		});
 	// start pagination
 	self.currentPage1 = ko.observable(1);
 	self.perPage1 = 20;
@@ -594,8 +651,8 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 	$('.month-picker-st').MonthPicker({
-		Button : false,
-		MonthFormat : 'yy-mm'
+		Button: false,
+		MonthFormat: 'yy-mm'
 	});
 	$(':file').change(function() {
 		changeFile(this);

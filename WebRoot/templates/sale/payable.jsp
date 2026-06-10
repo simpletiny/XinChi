@@ -112,6 +112,12 @@
 								<select class="form-control" style="height: 34px" data-bind="options: sortTypes" name="payable.sort_type"></select>
 							</div>
 						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">出团年份</label>
+							<div class="col-md-2">
+								<input type="number" maxlength="4" class="form-control" placeholder="出团年份" data-bind="value:year_now()" name="payable.departure_year" />
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -165,7 +171,7 @@
 					</table>
 				</div>
 				<div class="list-result">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="main-table">
 						<thead>
 							<tr role="row">
 								<th><input type="checkbox" id="chk-all" onclick="checkAll(this)" />全选</th>
@@ -189,7 +195,7 @@
 						</thead>
 						<tbody id="tbody-data" data-bind="foreach: payables">
 							<tr>
-								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox" data-bind="checkedValue:JSON.stringify($data), checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.supplier_employee_name"></td>
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.back_days"></td>
@@ -198,66 +204,14 @@
 								<td data-bind="text: $data.product"></td>
 								<td data-bind="text: $data.people_count"></td>
 								<td data-bind="text: $data.team_number"></td>
-
-								<td st="budget" style="display: none" data-bind="text:$data.budget_payable" class="rmb"></td>
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="final" style="display: none" data-bind="text:$data.final_payable" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="final" style="display: none">未决算</td>
-								<!-- /ko -->
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="all" data-bind="text:$data.final_payable" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="all" data-bind="text:$data.budget_payable" class="rmb"></td>
-								<!-- /ko -->
-
-								<td data-bind="text: $data.paid"></td>
-
-								<td st="budget" style="display: none" data-bind="text:$data.budget_balance" class="rmb"></td>
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="final" style="display: none" data-bind="text:$data.final_balance" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="final" style="display: none">未决算</td>
-								<!-- /ko -->
-
-								<!-- ko if: $data.final_flg=="Y" -->
-								<td st="all" data-bind="text:$data.final_balance" class="rmb"></td>
-								<!-- /ko -->
-								<!-- ko if: $data.final_flg=="N" -->
-								<td st="all" data-bind="text:$data.budget_balance" class="rmb"></td>
-								<!-- /ko -->
+								<td st="payable" data-bind="attr:{'final-flg':$data.final_flg,'budget':$data.budget_payable,'final':$data.final_payable}" class="rmb"></td>
+								<td data-bind="text: $data.paid" class="rmb"></td>
+								<td st="balance" data-bind="attr:{'final-flg':$data.final_flg,'budget':$data.budget_balance,'final':$data.final_balance}" class="rmb"></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<td data-bind="text: $data.product_manager"></td>
 								</s:if>
 							</tr>
 						</tbody>
-						<tr id="total-row">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>合计</td>
-							<td data-bind="text:totalPeople"></td>
-							<td></td>
-							<td st="all" data-bind="text:totalPayable" class="rmb"></td>
-							<td st="budget" style="display: none" data-bind="text:totalBudgetPayable" class="rmb"></td>
-							<td st="final" style="display: none" data-bind="text:totalFinalPayable" class="rmb"></td>
-							<td data-bind="text:totalPaid" class="rmb"></td>
-							<td st="all" data-bind="text:totalBalance" class="rmb"></td>
-							<td st="budget" style="display: none" data-bind="text:totalBudgetBalance" class="rmb"></td>
-							<td st="final" style="display: none" data-bind="text:totalFinalBalance" class="rmb"></td>
-							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-								<td></td>
-							</s:if>
-						</tr>
 					</table>
 					<div class="pagination clearfloat">
 						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
@@ -342,7 +296,7 @@
 					<label class="l" style="width: 100%">分配金额</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenOrders -->
+			<!-- ko foreach:chosenPayables -->
 			<div class="input-row clearfloat" st="back_allot">
 				<input type="hidden" data-bind="value:$data.pk" st="back-pk" />
 				<div class="col-md-3">
@@ -434,7 +388,7 @@
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">支付总额</label>
 					<div class="ip" style="width: 70%">
-						<input type="number" name="detail.allot_money" class="ip-" st="sum_paid" required="required" />
+						<input type="number" name="detail.allot_money" data-bind="value:totalPay()" class="ip-" st="sum_paid" required="required" />
 					</div>
 				</div>
 			</div>
@@ -456,7 +410,7 @@
 				</div>
 			</div>
 
-			<!-- ko foreach:chosenOrders -->
+			<!-- ko foreach:chosenPayables -->
 			<div class="input-row clearfloat" st="pay_allot">
 				<input type="hidden" data-bind="value:$data.pk" st="pay-pk" />
 				<div class="col-md-3">
@@ -491,11 +445,11 @@
 					<div class="ip">
 						<!-- ko if:$data.final_flg=="Y" -->
 						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" required="required" />
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.final_balance" oninput="caculateSumPay()" required="required" />
 						<!-- /ko -->
 						<!-- ko if:$data.final_flg=="N" -->
 						<input type="number" class="form-control" st="paid"
-							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" required="required" />
+							data-bind="attr:{'name':'name-'+$data.pk},value: $data.budget_balance" oninput="caculateSumPay()" required="required" />
 						<!-- /ko -->
 
 					</div>
@@ -699,7 +653,7 @@
 					<label class="l" style="width: 100%">扣款分配</label>
 				</div>
 			</div>
-			<!-- ko foreach:chosenOrders -->
+			<!-- ko foreach:chosenPayables -->
 			<div class="input-row clearfloat" st="deduct_allot">
 				<input type="hidden" data-bind="value:$data.pk" st="deduct-pk" />
 				<div class="col-md-3">
@@ -764,7 +718,7 @@
 	</div>
 
 	<script>
-		$(".product").addClass("current").children("ol").css("display", "block");
+		$(".payable").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
@@ -774,6 +728,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/file-upload.js"></script>
-	<script src="<%=basePath%>static/js/sale/payable.js"></script>
+	<script src="<%=basePath%>static/js/sale/payable.js?v=1.006"></script>
 </body>
 </html>

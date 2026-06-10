@@ -30,6 +30,7 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="order_number" property="order_number" jdbcType="VARCHAR" />
 		<result column="isOne" property="isOne" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 
@@ -91,7 +92,8 @@
 		A.payable_pk,
 		A.voucher_file,
 		B.name AS supplier_employee_name
-		from supplier_paid_detail A
+		from
+		supplier_paid_detail A
 		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		where A.related_pk = #{related_pk,jdbcType=CHAR}
 	</select>
@@ -319,6 +321,9 @@
 			<if test="voucher_file != null">
 				voucher_file = #{voucher_file,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -374,10 +379,13 @@
 		A.voucher_file
 		from paid_detail A left join supplier_employee B on
 		A.supplier_employee_pk=B.pk
-		LEFT JOIN user_base C ON A.approve_user = C.user_number
+		LEFT
+		JOIN user_base C ON A.approve_user = C.user_number
 		LEFT JOIN user_base D ON A.paid_user
 		= D.user_number
-		where A.related_pk = #{related_pk,jdbcType=VARCHAR}
+		where A.related_pk =
+		#{related_pk,jdbcType=VARCHAR}
+		AND type NOT LIKE '%STRIKE%'
 	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -403,9 +411,11 @@
 		A.update_time,
 		A.limit_time,
 		A.order_number,
-		A.isOne
+		A.isOne,
+		A.reject_reason
 		from
-		paid_detail A left join supplier_employee B on A.supplier_employee_pk=B.pk
+		paid_detail A left join supplier_employee B on
+		A.supplier_employee_pk=B.pk
 		LEFT JOIN user_base C ON A.create_user =
 		C.user_number
 		LEFT JOIN supplier D ON B.financial_body_pk = D.pk
@@ -442,6 +452,12 @@
 			</if>
 			<if test="params.bo.order_number != null and params.bo.order_number !=''">
 				and A.order_number like concat('%', #{params.bo.order_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.create_users != null and params.bo.create_users.size()>0">
+				and A.create_user in
+				<foreach item="item" index="index" collection="params.bo.create_users" open="(" separator="," close=")">
+					#{params.bo.create_users[${index}]}
+				</foreach>
 			</if>
 		</where>
 		order by A.create_time DESC

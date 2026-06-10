@@ -6,26 +6,10 @@ var PaidContext = function() {
 	self.chosenPaids = ko.observableArray([]);
 
 	self.paids = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
-	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'F'])
-	self.itemMapping = {
-		'D' : '地接款',
-		'X' : '销售费用',
-		'H' : '客情费用',
-		'J' : '产品费用',
-		'T' : '唯品费',
-		'P' : '票务费用',
-		'B' : '办公费用',
-		'E' : '招待费',
-		'K' : '差旅费用',
-		'G' : '个人工资',
-		'C' : '分红分润',
-		'Q' : '其它支出',
-		'M' : '多付返款',
-		'F' : 'FLY'
-	};
+	self.items = ko.observableArray(['D', 'X', 'H', 'J', 'T', 'A', 'P', 'B', 'E', 'K', 'G', 'C', 'Q', 'M', 'S', 'I', 'F'])
 
 	self.dateFrom = ko.observable();
 	self.dateTo = ko.observable();
@@ -48,14 +32,15 @@ var PaidContext = function() {
 	self.dateFrom(getWeekStartDate.Format("yyyy-MM-dd"));
 
 	self.chosenStatus = ko.observableArray([]);
-	self.allStatus = ['I', 'N', 'Y'];
+	self.allStatus = ['I', 'N', 'Y', 'S'];
 	self.chosenStatus.push('I');
 
 	self.statusMapping = {
-		'I' : '待审批',
-		'Y' : '已同意',
-		'N' : '已驳回',
-		'P' : '已入账'
+		'I': '待审批',
+		'Y': '已同意',
+		'N': '已驳回',
+		'S': '挂账',
+		'P': '已入账'
 	};
 	// 计算合计
 	self.totalPeople = ko.observable(0);
@@ -67,6 +52,7 @@ var PaidContext = function() {
 	self.sumBalance = ko.observable();
 	self.sumCardBalance = ko.observable();
 	self.sum_waiting_for_paid = ko.observable();
+	self.sumSuspense = ko.observable();
 	self.refresh = function() {
 
 		startLoadingIndicator("加载中……");
@@ -74,7 +60,6 @@ var PaidContext = function() {
 		var totalReceivable = 0;
 		var totalPayable = 0;
 		var totalProfit = 0;
-		var totalPerProfit = 0;
 
 		var param = $("form").serialize();
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
@@ -84,6 +69,7 @@ var PaidContext = function() {
 			self.sumBalance(data.sum_balance);
 			self.sumCardBalance(data.sum_card_balance);
 			self.sum_waiting_for_paid(data.sum_waiting_for_paid);
+			self.sumSuspense(data.sum_suspense);
 			// 计算合计
 			$(self.paids()).each(function(idx, data) {
 				totalPeople += data.people_count;
@@ -101,28 +87,69 @@ var PaidContext = function() {
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 
+			$("#table-main").tableSum({
+				accept: [2],
+				title_index: 0
+			});
+
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 		});
 	};
+	/**
+	 * 挂账
+	 */
+	self.suspense = function(paid) {
+		if (self.chosenPaids().length < 1) {
+			fail_msg("请选择！")
+		} else {
+			$.layer({
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要挂起这些申请吗?',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("提交中");
+						const approval_pks = self.chosenPaids().map(data => data.pk).join(',')
+						var data = "approval_pks=" + approval_pks;
+						$.ajax({
+							type: "POST",
+							url: self.apiurl + 'accounting/suspensePayApply',
+							data: data
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
 
+	};
 	self.agree = function(paid) {
 		var data = "item=" + paid.item + "&pk=" + paid.pk;
 
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认同意此申请吗?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认同意此申请吗?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingSimpleIndicator("提交中");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'accounting/agreePayApply',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'accounting/agreePayApply',
+						data: data
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
@@ -141,18 +168,18 @@ var PaidContext = function() {
 		current_data = paid;
 		$("#txt-comment").val("");
 		reasonLayer = $.layer({
-			type : 1,
-			title : ['驳回理由', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '300px'],
-			offset : ['', ''],
-			scrollbar : true,
-			page : {
-				dom : '#comment'
+			type: 1,
+			title: ['驳回理由', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '300px'],
+			offset: ['', ''],
+			scrollbar: true,
+			page: {
+				dom: '#comment'
 			},
-			end : function() {
+			end: function() {
 				console.log("Done");
 			}
 		});
@@ -164,19 +191,19 @@ var PaidContext = function() {
 		var comment = $("#txt-comment").val().trim();
 		data += "&reject_reason=" + comment;
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认拒绝此申请吗?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认拒绝此申请吗?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					layer.close(index);
 					startLoadingSimpleIndicator("提交中");
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'accounting/rejectPayApply',
-						data : data
+						type: "POST",
+						url: self.apiurl + 'accounting/rejectPayApply',
+						data: data
 					}).success(function(str) {
 
 						if (str == "success") {
@@ -200,18 +227,18 @@ var PaidContext = function() {
 			self.employee(data.client_employee);
 			console.log(data.client_employee);
 			employeeLayer = $.layer({
-				type : 1,
-				title : ['多付返款客户', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['600px', '300px'],
-				offset : ['', ''],
-				scrollbar : true,
-				page : {
-					dom : '#employee'
+				type: 1,
+				title: ['多付返款客户', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['600px', '300px'],
+				offset: ['', ''],
+				scrollbar: true,
+				page: {
+					dom: '#employee'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});

@@ -52,6 +52,13 @@ public class AirLegAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String use_flg;
+
+	public String changeUseAirLeg() {
+		resultStr = service.changeUse(leg_pks, use_flg);
+		return SUCCESS;
+	}
+
 	public String updateAirLeg() {
 		resultStr = service.updateLeg(leg);
 		return SUCCESS;
@@ -99,5 +106,13 @@ public class AirLegAction extends BaseAction {
 
 	public void setLeg_pks(List<String> leg_pks) {
 		this.leg_pks = leg_pks;
+	}
+
+	public String getUse_flg() {
+		return use_flg;
+	}
+
+	public void setUse_flg(String use_flg) {
+		this.use_flg = use_flg;
 	}
 }

@@ -16,5 +16,10 @@ public interface ReimbursementDAO {
 	public void deleteByPk(String pk);
 
 	public List<ReimbursementBean> selectByPage(Page page);
+	
+	public List<ReimbursementBean> selectByParam(ReimbursementBean option);
 
+	public List<ReimbursementBean> selectSummaries(ReimbursementBean reimbursement);
+	
+	public List<ReimbursementBean> selectSumByParam(ReimbursementBean reimbursement);
 }

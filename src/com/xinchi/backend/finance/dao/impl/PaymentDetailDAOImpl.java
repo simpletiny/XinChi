@@ -1,5 +1,6 @@
 package com.xinchi.backend.finance.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -85,5 +86,10 @@ public class PaymentDetailDAOImpl extends SqlSessionDaoSupport implements Paymen
 	public List<PaymentDetailBean> selectByInnerPk(String inner_pk) {
 
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.PaymentDetailMapper.selectByInnerPk", inner_pk);
+	}
+
+	@Override
+	public BigDecimal selectExchangeByParam(PaymentDetailBean option) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.PaymentDetailMapper.selectExchangeByParam", option);
 	}
 }

@@ -168,4 +168,14 @@ public class NumberServiceImpl implements NumberService {
 		return result;
 	}
 
+	@Override
+	public String generateFakePhoneNumber() {
+		EveryoneCountBean count = countDao.selectCountByType(ResourcesConstants.COUNT_TYPE_FAKE_PHONE);
+		String number = "130" + Utils.fullFill(count.getCount(), "0", 8);
+
+		count.setCount(count.getCount() + 1);
+		countDao.update(count);
+		return number;
+	}
+
 }

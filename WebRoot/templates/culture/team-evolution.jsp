@@ -55,6 +55,7 @@
 								<th>标题</th>
 								<th>作者</th>
 								<th>日期</th>
+								<th>最后更新</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: views">
@@ -66,6 +67,7 @@
 								<td><a href="javascript:void(0)" data-bind="text: $data.title,attr: {href: 'team-evolution-preview.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.create_user"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: moment(!$data.update_time?$data.create_time-0:$data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
 							</tr>
 						</tbody>
 					</table>

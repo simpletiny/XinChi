@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,20 +53,17 @@
 }
 
 .fixed {
-	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 5%;
+	right: 10px;
 	top: 200px;
-	margin-left: 10px;
 	z-index: 100;
 	width: 100px;
 }
 
-.fixed button {
-	width: 80px;
+.fixed input {
 	margin-top: 5px;
-	display: block;
+	display: inline-block;
 }
 </style>
 </head>
@@ -78,9 +74,9 @@
 			<h2>待出票名单</h2>
 		</div>
 		<div class="fixed">
-			<div style="width: 30%; float: right">
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
-			</div>
+			<input type="button" class="btn btn-green col-md-1" value="分配" data-bind="click: function() { operate() }"></input> <input
+				type="button" class="btn btn-green" id="copy" value="复制"></input><input type="button" class="btn btn-green"
+				id="btn-download" data-bind="click:download" value="下载名单"></input>
 		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box" style="overflow: hidden">
@@ -97,23 +93,21 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span6">
-							<label class="col-md-1 control-label">客户</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
-							</div>
+						<label class="col-md-1 control-label">客户</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
-							</div>
+						<label class="col-md-1 control-label">订单号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="订单号" name="passenger.order_number" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">乘机人</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
-							</div>
+						<label class="col-md-1 control-label">团号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
+						</div>
+						<label class="col-md-1 control-label">乘机人</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
 						</div>
 					</div>
 
@@ -137,7 +131,6 @@
 						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
-							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -270,6 +263,18 @@
 			</div>
 		</div>
 	</div>
+	<div id="templet-pick" style="display: none; width: 300px">
+		<div class="form-group">
+			<label class="col-md-3 control-label" style="float: left">模板</label>
+			<div style="width: 70%; float: left">
+				<select class="form-control" style="height: 34px" id="select-templet"
+					data-bind="options: templets,optionsText:'templet_name',optionsValue:'pk', optionsCaption: '请选择'"></select>
+			</div>
+		</div>
+		<div class="form-group" style="float: right; margin-top: 10px">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { pickTemplet() }">确认</button>
+		</div>
+	</div>
 	<form id="data-form" method="post" action="<%=basePath%>ticket/operatePassengers" style="display: none">
 		<input name="json" id="json-data" />
 	</form>
@@ -278,7 +283,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list.js?v1.005"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

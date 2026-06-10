@@ -3,6 +3,7 @@ package com.xinchi.backend.ticket.action;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.SupplierEmployeeBean;
 import com.xinchi.bean.TicketAllotDto;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.DateUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -92,44 +94,112 @@ public class TicketAction extends BaseAction {
 		} else if (product_order_number.startsWith("N")) {
 			order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(product_order_number);
 		}
-
 		return SUCCESS;
 	}
 
-	private List<String> product_order_numbers;
 	private CommonResultDto commonResult;
 
-	public String selectOrderAirInfoByProductOrderNumbers() {
+	private List<String> need_pks;
+	
+	
+	/**
+	 * 删除票务需求
+	 * @return
+	 */
+	public String deleteTicketNeeds() {
+		resultStr = airTicketNeedService.deleteTicketNeeds(need_pks);
+		return SUCCESS;
+	}
+	
+	public String selectOrderAirInfoByNeedPks() {
 		commonResult = new CommonResultDto();
 		commonResult.setIs_done(true);
 
-		String order_number = product_order_numbers.get(0);
-		if (order_number.startsWith("P")) {
-			order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(order_number);
-		} else if (order_number.startsWith("N")) {
-			order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+		List<AirTicketNeedBean> air_needs = airTicketNeedService.selectByPks(need_pks);
+		Set<String> set_order_numbers = new HashSet<>();
+
+		List<Long> create_times = new ArrayList<>();
+
+		for (AirTicketNeedBean need : air_needs) {
+			set_order_numbers.add(need.getProduct_order_number());
+			create_times.add(Long.parseLong(need.getCreate_time()));
 		}
 
-		if (product_order_numbers.size() > 1) {
-
-			for (int i = 1; i < product_order_numbers.size(); i++) {
-				order_number = product_order_numbers.get(i);
-				List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
-				if (order_number.startsWith("P")) {
-					next_order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(order_number);
-				} else if (order_number.startsWith("N")) {
-					next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(order_number);
+		long min_create_time = Collections.min(create_times);
+		long max_create_time = Collections.max(create_times);
+		long check_time = Long.parseLong(DateUtil.getTimeMillis("2024-06-07"));
+		if (min_create_time < check_time && max_create_time > check_time) {
+			commonResult.setMsg("所选票务需求包含新旧两版数据！");
+			commonResult.setIs_done(false);
+		} else {
+			// 旧版数据处理方式
+			if (max_create_time < check_time) {
+				List<String> product_order_numbers = new ArrayList<>(set_order_numbers);
+				String c_order_number = product_order_numbers.get(0);
+				if (c_order_number.startsWith("P")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByProductOrderNumber(c_order_number);
+				} else if (c_order_number.startsWith("N")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
 				}
 
-				String res = compareTwoInfos(order_air_infos, next_order_air_infos);
-				if (!res.equals("")) {
-					commonResult.setMsg(res);
-					commonResult.setIs_done(false);
-					break;
+				if (product_order_numbers.size() > 1) {
+					for (int i = 1; i < product_order_numbers.size(); i++) {
+						c_order_number = product_order_numbers.get(i);
+						List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+						if (c_order_number.startsWith("P")) {
+							next_order_air_infos = airTicketNeedService
+									.selectOrderAirInfoByProductOrderNumber(c_order_number);
+						} else if (c_order_number.startsWith("N")) {
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
+						}
+
+						String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+						if (!res.equals("")) {
+							commonResult.setMsg(res);
+							commonResult.setIs_done(false);
+							break;
+						}
+					}
+				}
+			}
+			// 新版本数据处理方式
+			else if (min_create_time > check_time) {
+				List<String> product_order_numbers = new ArrayList<>(set_order_numbers);
+				String c_order_number = product_order_numbers.get(0);
+				if (c_order_number.startsWith("N")) {
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
+					if (product_order_numbers.size() > 1) {
+						for (int i = 1; i < product_order_numbers.size(); i++) {
+							c_order_number = product_order_numbers.get(i);
+							List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByTeamNumber(c_order_number);
+							String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+							if (!res.equals("")) {
+								commonResult.setMsg(res);
+								commonResult.setIs_done(false);
+								break;
+							}
+						}
+					}
+				} else {
+					String air_need_pk = need_pks.get(0);
+					order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(air_need_pk);
+					if (need_pks.size() > 1) {
+						for (int i = 1; i < need_pks.size(); i++) {
+							String current_need_pk = need_pks.get(i);
+							List<OrderAirInfoBean> next_order_air_infos = new ArrayList<OrderAirInfoBean>();
+							next_order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(current_need_pk);
+							String res = compareTwoInfos(order_air_infos, next_order_air_infos);
+							if (!res.equals("")) {
+								commonResult.setMsg(res);
+								commonResult.setIs_done(false);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
-
 		return SUCCESS;
 	}
 
@@ -226,6 +296,18 @@ public class TicketAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchPassengerTicketCostInfo() {
+		airTicketNameList = airTicketNameListService.selectTicketCostInfo(passenger);
+		return SUCCESS;
+	}
+
+	private String need_pk;
+
+	public String selectOrderAirInfoByAirNeedPk() {
+		order_air_infos = airTicketNeedService.selectOrderAirInfoByNeedPk(need_pk);
+		return SUCCESS;
+	}
+
 	private String json;
 
 	private List<TicketAllotDto> ticketAllots;
@@ -282,7 +364,7 @@ public class TicketAction extends BaseAction {
 					compares.remove(k);
 				}
 			}
-			compares.sort(PassengerAllotDto.Comparators.DATE);
+			compares.sort(PassengerAllotDto.Comparators.SORT);
 			ta.setAirLegs(compares);
 
 		}
@@ -297,6 +379,38 @@ public class TicketAction extends BaseAction {
 	 */
 	public String rollBackNameDone() {
 		resultStr = passengerTicketInfoService.rollBackNameDone(passenger_pks);
+		return SUCCESS;
+	}
+
+	/**
+	 * 决算票务订单
+	 * 
+	 * @return
+	 */
+	public String finalTicketOrder() {
+		String final_flg = "Y";
+		resultStr = airTicketOrderService.finalTicketOrder(order_number, final_flg);
+		return SUCCESS;
+	}
+
+	/**
+	 * 取消票务订单决算
+	 * 
+	 * @return
+	 */
+	public String cancelFinalTicketOrder() {
+		String final_flg = "N";
+		resultStr = airTicketOrderService.finalTicketOrder(order_number, final_flg);
+		return SUCCESS;
+	}
+
+	/**
+	 * 检查是否可以操作
+	 * 
+	 * @return
+	 */
+	public String checkCanEditByPassengerPks() {
+		resultStr = airTicketOrderService.checkCanEditByPassengerPks(passenger_pks_str);
 		return SUCCESS;
 	}
 
@@ -417,6 +531,13 @@ public class TicketAction extends BaseAction {
 	 */
 	public String changeFlight() {
 		resultStr = service.changFlight(json);
+		return SUCCESS;
+	}
+
+	private String change_pk;
+
+	public String rollBackTicketChange() {
+		resultStr = service.rollBackTicketChange(change_pk);
 		return SUCCESS;
 	}
 
@@ -674,14 +795,6 @@ public class TicketAction extends BaseAction {
 		this.ticket_change_pk = ticket_change_pk;
 	}
 
-	public List<String> getProduct_order_numbers() {
-		return product_order_numbers;
-	}
-
-	public void setProduct_order_numbers(List<String> product_order_numbers) {
-		this.product_order_numbers = product_order_numbers;
-	}
-
 	public CommonResultDto getCommonResult() {
 		return commonResult;
 	}
@@ -704,6 +817,30 @@ public class TicketAction extends BaseAction {
 
 	public void setLock_flg(String lock_flg) {
 		this.lock_flg = lock_flg;
+	}
+
+	public String getChange_pk() {
+		return change_pk;
+	}
+
+	public void setChange_pk(String change_pk) {
+		this.change_pk = change_pk;
+	}
+
+	public List<String> getNeed_pks() {
+		return need_pks;
+	}
+
+	public void setNeed_pks(List<String> need_pks) {
+		this.need_pks = need_pks;
+	}
+
+	public String getNeed_pk() {
+		return need_pk;
+	}
+
+	public void setNeed_pk(String need_pk) {
+		this.need_pk = need_pk;
 	}
 
 }

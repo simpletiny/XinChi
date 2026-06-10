@@ -4,6 +4,11 @@ var employeeContext = function() {
 	self.orders = ko.observable();
 	self.test = ko.observableArray([]);
 
+	self.statusMapping = {
+		2 : "产品确认",
+		4 : "票务确认"
+	}
+
 	for (var i = 0; i < 10; i++) {
 		var s = new Object;
 		s.index = i;
@@ -16,6 +21,7 @@ var employeeContext = function() {
 	$.getJSON(self.apiurl + 'order/searchConfirmingOrders', {}, function(data) {
 		if (data.orders) {
 			self.orders(data.orders);
+			console.log(data.orders);
 		} else {
 			fail_msg("加载失败，联系管理员！");
 		}
@@ -28,12 +34,12 @@ var employeeContext = function() {
 	self.confirmNameList = function(team_number) {
 		var btn = event.target;
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认名单无误？',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					startLoadingIndicator("确认中...");

@@ -117,7 +117,6 @@
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.title,
-		A.content,
 		A.update_user,
 		A.pk,
 		B.user_name as create_user,

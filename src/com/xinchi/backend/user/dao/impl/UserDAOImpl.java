@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.user.dao.UserDAO;
@@ -62,19 +61,22 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 
 	@Override
 	public List<UserCommonBean> getAllUserCommonByParam(UserCommonBean bo) {
-		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllByParam", bo);
+		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllByParam",
+				bo);
 		return list;
 	}
 
 	@Override
 	public List<UserCommonBean> getAllNewUsers() {
-		List<UserCommonBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllNewUsers", null);
+		List<UserCommonBean> list = daoUtil
+				.selectByBOParamT("com.xinchi.bean.mapper.UserCommonMapper.selectAllNewUsers", null);
 		return list;
 	}
 
 	@Override
-	public List<UserCommonBean> getAllUsersByRole(String roles) {
-		List<UserCommonBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.UserCommonMapper.selectAllUsersByRole", roles);
+	public List<UserCommonBean> getAllUsersByRole(List<String> roles) {
+		List<UserCommonBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.UserCommonMapper.selectAllUsersByRole", roles);
 		return list;
 	}
 
@@ -107,13 +109,15 @@ public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {
 
 	@Override
 	public UserCommonBean selectUserCommonByPk(String user_pk) {
-		return (UserCommonBean)daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByPrimaryKey", user_pk);
+		return (UserCommonBean) daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByPrimaryKey",
+				user_pk);
 	}
 
 	@Override
 	public UserCommonBean selectUserCommonByUserNumber(String user_number) {
-		
-		 return (UserCommonBean)daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByUserNumber", user_number);
+
+		return (UserCommonBean) daoUtil.selectByPK("com.xinchi.bean.mapper.UserCommonMapper.selectByUserNumber",
+				user_number);
 	}
 
 }

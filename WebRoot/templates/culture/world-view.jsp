@@ -5,6 +5,7 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	//String title = request.getParameter("page_title");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -55,6 +56,7 @@
 								<th>标题</th>
 								<th>作者</th>
 								<th>日期</th>
+								<th>最后更新</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: views">
@@ -66,6 +68,7 @@
 								<td><a href="javascript:void(0)" data-bind="text: $data.title,attr: {href: 'world-view-preview.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.create_user"></td>
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD HH:mm')"></td>
+								<td data-bind="text: moment(!$data.update_time?$data.create_time-0:$data.update_time-0).format('YYYY-MM-DD HH:mm')"></td>
 							</tr>
 						</tbody>
 					</table>

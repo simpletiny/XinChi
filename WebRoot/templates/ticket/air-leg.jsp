@@ -35,16 +35,26 @@
 <body>
 	<div class="main-body">
 		<div class="subtitle" style="float: left">
-			<h2 style="width: 30%; float: left">票务航段</h2>
+			<h2 style="width: 30%; float: left">航段管理</h2>
 		</div>
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
-						<div style="width: 30%; float: right">
+						<div class="col-md-6">
+							<div data-bind="foreach: uses" style="padding-top: 4px;">
+								<em class="small-box"> <input type="checkbox"
+									data-bind="attr: {'value': $data},checked:$root.chosenUses,click:function(){$root.refresh();return true;}"
+									name="leg.use_flgs" /><label data-bind="text: $root.useMapping[$data]"></label>
+								</em>
+							</div>
+						</div>
+						<div style="width: 40%; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {createLeg() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {editLeg() }">编辑</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {deleteLeg() }">删除</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {changeUse('N') }">暂定使用</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {changeUse('Y') }">启用</button>
 							<!-- <button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {onlyTicket() }">单售票</button> -->
 						</div>
 					</div>
@@ -65,14 +75,17 @@
 					</div>
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover" style="width: 50%">
+					<table class="table table-striped table-hover" style="width: 70%">
 						<thead>
 							<tr role="row">
 								<th></th>
 								<th>序号</th>
 								<th>出发城市</th>
+								<th>起飞地</th>
 								<th>抵达城市</th>
+								<th>降落地</th>
 								<th>常用标识</th>
+								<th>状态</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: legs">
@@ -80,9 +93,13 @@
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenLegs" /></td>
 								<td data-bind="text: $index()+1"></td>
 								<td data-bind="text: $data.from_city"></td>
+								<td data-bind="text: $data.from_place"></td>
 								<td data-bind="text: $data.to_city"></td>
+								<td data-bind="text: $data.to_place"></td>
 								<td><select
 									data-bind="options: $root.hots,value:$data.hot_flg, optionsText:function(hot){return $root.hotMapping[hot]},event: {change:$root.switchHot}"></select></td>
+
+								<td data-bind="text:$root.useMapping[$data.use_flg]"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -113,11 +130,27 @@
 							placeholder="出发城市" required="required" />
 					</div>
 				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">起飞地</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="leg.from_place" class="form-control" data-bind="value:leg().from_place" maxlength="15"
+							placeholder="起飞地" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">抵达城市</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" name="leg.to_city" class="form-control" data-bind="value:leg().to_city" maxlength="20"
 							placeholder="抵达城市" required="required" />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">降落地</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="leg.to_place" class="form-control" data-bind="value:leg().to_place" maxlength="15"
+							placeholder="降落地" />
 					</div>
 				</div>
 			</div>
@@ -140,11 +173,27 @@
 							placeholder="出发城市" required="required" />
 					</div>
 				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">起飞地</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="leg.from_place" class="form-control" data-bind="value:leg().from_place" maxlength="15"
+							placeholder="起飞地" />
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
 				<div class="col-md-6 required">
 					<label class="l" style="width: 30%">抵达城市</label>
 					<div class="ip" style="width: 70%">
 						<input type="text" name="leg.to_city" class="form-control" data-bind="value:leg().to_city" maxlength="20"
 							placeholder="抵达城市" required="required" />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l" style="width: 30%">降落地</label>
+					<div class="ip" style="width: 70%">
+						<input type="text" name="leg.to_place" class="form-control" data-bind="value:leg().to_place" maxlength="15"
+							placeholder="降落地" />
 					</div>
 				</div>
 			</div>
@@ -159,6 +208,6 @@
 	<script>
 		$(".ticket").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/ticket/air-leg.js"></script>
+	<script src="<%=basePath%>static/js/ticket/air-leg.js?v=1.002"></script>
 </body>
 </html>

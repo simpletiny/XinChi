@@ -3,6 +3,8 @@ package com.xinchi.backend.order.dao;
 import java.util.List;
 
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.tools.Page;
 
@@ -20,7 +22,7 @@ public interface OrderDAO {
 
 	public OrderDto searchOrderByPk(String order_pk);
 
-	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page);
+	public List<SaleScoreDto> searchSaleScore(SaleScoreDto score);
 
 	public List<SaleScoreDto> searchSaleScoreByParam(SaleScoreDto ssd);
 
@@ -28,7 +30,9 @@ public interface OrderDAO {
 
 	public List<OrderDto> selectWithProductByParam(OrderDto order);
 
-	String selectMaxConfirmDateByEmployeePk(String employee_pk);
+	public String selectMaxConfirmDateByEmployeePk(String employee_pk);
+	
+	public String selectMaxConfirmDateBySaleNumber(String user_number);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
@@ -39,4 +43,22 @@ public interface OrderDAO {
 	public List<SaleScoreDto> search3MonthScoreByUserNumber(String user_number);
 
 	public List<OrderDto> selectPayableInfoByParam(OrderDto option);
+
+	public OrderDto selectFinalOrderByTeamNumber(String team_number);
+
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score);
+
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
+
+	public List<OrderDto> selectOrderWithNames(List<String> team_numbers);
+
+	public void insertWithPk(SaleOrderBean bean);
+
+	public void update(SaleOrderBean order);
+
+	public SaleOrderBean selectByPrimaryKey(String order_pk);
+
+	public void deleteByPk(String order_pk);
+	
+	public int selectOrderCountByParam(OrderReportDto bean);
 }

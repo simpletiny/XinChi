@@ -50,13 +50,14 @@ tr td {
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品订单</h2>
+			<h2>待操作</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group" style="float: right">
+						<button type="submit" class="btn btn-green" data-bind="click: function() { copyNameList() }">复制名单</button>
 						<button type="submit" class="btn btn-green" data-bind="click: function() { createOperate() }">订单操作</button>
 						<button type="submit" class="btn btn-green" data-bind="click: function() { rollBack() }">打回订单</button>
 					</div>
@@ -141,10 +142,9 @@ tr td {
 								<th>乘客</th>
 								<th>票务需求</th>
 								<th>出票</th>
-								<th>备注</th>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<th>产品经理</th>
-								</s:if>
+								<th>订单备注</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
@@ -182,10 +182,16 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.air_comment, click:function(){msg($data.air_comment)}"></a></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkTicketInfos">查看</a></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.comment, click:function(){msg($data.comment)}"></a></td>
-								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.product_manager"></td>
-								</s:if>
+								<!-- ko if: $data.comment==null || $data.comment==''-->
+								<td><a href="javascript:void(0)"
+									data-bind="click:$root.editComment">添加</a></td>
+								<!-- /ko -->
+								<!-- ko if: $data.comment!=null && $data.comment!=''-->
+								<td data-bind="attr:{title:$data.comment}"><a href="javascript:void(0)"
+									data-bind="text: $data.comment,click:$root.editComment">添加</a></td>
+								<!-- /ko -->
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -232,14 +238,14 @@ tr td {
 						<td data-bind="text: $data.adult_count"></td>
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-						<td data-bind="text:$data.create_user"></td>
+						<td data-bind="text:$data.sale_name"></td>
 						<td><a href="javascript:void(0)"
 							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.cancel_flg == "N" -->
 						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.cancel_flg == "Y" -->
-						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<td style="color: red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
@@ -258,6 +264,24 @@ tr td {
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+	<!-- 备注编辑 -->
+	<div id="comment-edit" style="display: none; width: 500px">
+		<input type="hidden" id="txt-order-pk"/>
+		<div class="input-row clearfloat">
+			<div>
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="10" maxlength="200" id="txt-comment" placeholder="备注"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div align="right">
+				<a type="submit" class="btn btn-green btn-r" data-bind="click: cancelEditComment">取消</a> <a type="submit"
+					class="btn btn-green btn-r" data-bind="click: updateComment">保存</a>
+			</div>
 		</div>
 	</div>
 	<!-- 查看乘客信息 -->
@@ -362,6 +386,6 @@ tr td {
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order.js?v=1.004"></script>
 </body>
 </html>

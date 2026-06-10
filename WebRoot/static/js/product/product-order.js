@@ -2,6 +2,7 @@ var orderCheckLayer;
 var passengerCheckLayer;
 var innerPassengerCheckLayer;
 var ticketInfoCheckLayer;
+let commentLayer;
 var ProductContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -10,7 +11,9 @@ var ProductContext = function() {
 
 	// 获取产品经理信息
 	self.users = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
 		self.users(data.users);
 	});
 
@@ -85,49 +88,45 @@ var ProductContext = function() {
 				return;
 			}
 
-			$
-					.ajax({
-						type : "POST",
-						url : self.apiurl + 'product/isAllOrdersLocked',
-						data : "order_number=" + order_number
-					})
-					.success(
-							function(result) {
-								endLoadingIndicator()
-								var str = result.split(",");
-								if (str[0] == "yes") {
-									if (standard_flg == "N") {
+			$.ajax({
+				type : "POST",
+				url : self.apiurl + 'product/isAllOrdersLocked',
+				data : "order_number=" + order_number
+			}).success(
+					function(result) {
+						endLoadingIndicator()
+						var str = result.split(",");
+						if (str[0] == "yes") {
+							if (standard_flg == "N") {
 
-										window.location.href = self.apiurl
-												+ 'templates/product/order-operate-creation.jsp?standard_flg=N&order_number='
-												+ order_number;
+								window.location.href = self.apiurl
+										+ 'templates/product/order-operate-creation.jsp?standard_flg=N&order_number='
+										+ order_number;
 
-									} else {
+							} else {
+								window.location.href = self.apiurl
+										+ 'templates/product/order-operate-creation.jsp?standard_flg=Y&product_pk='
+										+ product_pk + '&order_number=' + order_number;
+								// $.getJSON(self.apiurl +
+								// 'product/searchProductByPk', {
+								// product_pk : product_pk
+								// }, function(data) {
+								// if (data && data.product.supplier_upkeep_flg
+								// == 'Y') {
+								//
+								// } else {
+								// fail_msg("产品未添加地接维护！不能操作");
+								// }
+								//
+								// });
 
-										$
-												.getJSON(
-														self.apiurl + 'product/searchProductByPk',
-														{
-															product_pk : product_pk
-														},
-														function(data) {
-															if (data && data.product.supplier_upkeep_flg == 'Y') {
-																window.location.href = self.apiurl
-																		+ 'templates/product/order-operate-creation.jsp?standard_flg=Y&product_pk='
-																		+ product_pk + '&order_number=' + order_number;
-															} else {
-																fail_msg("产品未添加地接维护！不能操作");
-															}
-
-														});
-
-									}
-								} else if (str[0] == "no") {
-									fail_msg("请锁定所有销售订单后继续操作！")
-								} else {
-									fail_msg(str[0]);
-								}
-							});
+							}
+						} else if (str[0] == "no") {
+							fail_msg("请锁定所有销售订单后继续操作！")
+						} else {
+							fail_msg(str[0]);
+						}
+					});
 
 		}
 	};
@@ -230,7 +229,6 @@ var ProductContext = function() {
 
 	self.lockOrder = function(team_number, lock_flg) {
 		var param = "team_number=" + team_number + "&lock_flg=" + lock_flg;
-
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/changeOrderLock',
@@ -271,6 +269,75 @@ var ProductContext = function() {
 			});
 		});
 	};
+
+	// 编辑备注
+	self.editComment = function(data, event) {
+		$("#txt-order-pk").val(data.pk);
+		$("#txt-comment").val(data.comment);
+		commentLayer = $.layer({
+			type : 1,
+			title : ['备注', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['500px', '300px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#comment-edit'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	}
+
+	self.cancelEditComment = function() {
+		layer.close(commentLayer);
+	}
+	self.updateComment = function() {
+		const product_order_pk = $("#txt-order-pk").val();
+		const comment = encodeURIComponent($("#txt-comment").val().trim());
+		var param = "order.pk=" + product_order_pk + "&order.comment=" + comment;
+		$.ajax({
+			type : "POST",
+			url : self.apiurl + 'product/updateProductOrder',
+			data : param
+		}).success(function(str) {
+			if (str == "success") {
+				self.refresh();
+				layer.close(commentLayer);
+			} else {
+				fail_msg(str);
+			}
+		});
+	}
+
+	self.copyNameList = function() {
+		const url = "product/searchSaleOrderNameListByProductOrderNumbers";
+		if (self.chosenOrders().length == 0) {
+			fail_msg("请选择产品订单！");
+			return;
+		} else {
+			startLoadingSimpleIndicator("查询中");
+			let param = "";
+			for (let i = 0; i < self.chosenOrders().length; i++) {
+				let data = self.chosenOrders()[i].split(";");
+				param += "order_numbers=" + data[0] + "&";
+			}
+
+			$.getJSON(self.apiurl + url, param, function(data) {
+				let content = "";
+				if (data.passengers) {
+					data.passengers.forEach(function(name) {
+						content += name.name + " " + name.id + "\n";
+					})
+				}
+				copyToClipboard(content);
+				endLoadingIndicator();
+			});
+		}
+	}
 	// 订单详情查看乘客信息
 	self.innerCheckPassengers = function(data, event) {
 		self.passengers.removeAll();

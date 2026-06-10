@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -270,20 +269,23 @@ tr td {
 			<button type="submit" style="float: right" class="btn btn-green col-md-1" data-bind="click:saveONT">保存</button>
 		</div>
 	</div>
-	<div id="air-ticket" style="display: none; width: 600px;height:430px;overflow-y:auto ">
+	<div id="air-ticket" style="display: none; width: 700px; height: 430px; overflow-y: auto">
 		<div class="input-row clearfloat">
 			<form id="form-ticket">
-				<div style="width: 100%">
-					<label class="l">产品名称</label> <label class="l" data-bind="text:product().name"></label> <input type="hidden"
-						data-bind="value:product().pk" name="product_pk" /> <label class="l">产品编号</label> <label class="l"
-						data-bind="text:product().product_number"></label>
+				<div style="width: 100%; display: flex;">
+					<label class="l">产品名称</label>
+					<p class="ip-default" data-bind="text:product().name"></p>
+					<input type="hidden" data-bind="value:product().pk" name="product_pk" /> <label style="padding-left: 20px"
+						class="l">产品编号</label>
+					<p class="ip-default" data-bind="text:product().product_number"></p>
 				</div>
 			</form>
-			<div style="margin-top: 20px; " id="div-ticket">
+			<div style="margin-top: 20px;" id="div-ticket">
 				<table style="width: 100%" id="table-ticket">
 					<thead>
 						<tr class="required">
 							<th class="r" style="width: 10%">航段</th>
+							<th style="width: 20%">航班号</th>
 							<th class="r" style="width: 10%">天次</th>
 							<th class="r" style="width: 30%">起飞城市</th>
 							<th class="r" style="width: 30%">抵达城市</th>
@@ -292,20 +294,22 @@ tr td {
 					<!-- ko if:airTickets().length>0 -->
 					<tbody data-bind="foreach:airTickets">
 						<tr>
-							<td st="index" data-bind="text:$data.ticket_index"></td>
-							<td><input st="start-day" type="text" data-bind="value:$data.start_day" /></td>
-							<td><input st="start-city" type="text" data-bind="value:$data.start_city" /></td>
-							<td><input st="end-city" type="text" data-bind="value:$data.end_city" /></td>
+							<td st="index" data-bind="text:alphabetMap[$data.ticket_index]"></td>
+							<td><input st="flight-number" type="text" maxlength="10" data-bind="value:$data.flight_number" /></td>
+							<td><input st="start-day" type="number" data-bind="value:$data.start_day" /></td>
+							<td><input st="start-city" type="text" maxlength="10" data-bind="value:$data.start_city" /></td>
+							<td><input st="end-city" type="text" maxlength="10" data-bind="value:$data.end_city" /></td>
 						</tr>
 					</tbody>
 					<!-- /ko -->
 					<!-- ko if:airTickets().length<1 -->
 					<tbody>
 						<tr>
-							<td st="index">1</td>
-							<td><input st="start-day" type="text" /></td>
-							<td><input st="start-city" type="text" /></td>
-							<td><input st="end-city" type="text" /></td>
+							<td st="index" data-bind="text:alphabetMap['1']"></td>
+							<td><input st="flight-number" type="text" maxlength="10" /></td>
+							<td><input st="start-day" type="number" /></td>
+							<td><input st="start-city" type="text" maxlength="10" /></td>
+							<td><input st="end-city" type="text" maxlength="10" /></td>
 						</tr>
 					</tbody>
 					<!-- /ko -->
@@ -324,10 +328,10 @@ tr td {
 
 	</div>
 	<script>
-		$(".product-manager").addClass("current").children("ol").css("display",
-				"block");
+		$(".product-manager").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/product-upkeep.js"></script>
+	<script src="<%=basePath%>static/js/product/product-upkeep.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
 </body>
 </html>

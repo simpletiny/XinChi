@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -392,5 +393,12 @@ public class AccountingServiceImpl implements AccountingService {
 	@Override
 	public List<ReceivedDetailDto> searchAllReceivedsByPage(Page<ReceivedDetailDto> page) {
 		return dao.selectByPage(page);
+	}
+
+	@Override
+	public String suspensePayApply(String approval_pks) {
+		List<String> pks = Arrays.asList(approval_pks.split(","));
+		payApprovalDao.suspensePayApplyByPks(pks);
+		return SUCCESS;
 	}
 }

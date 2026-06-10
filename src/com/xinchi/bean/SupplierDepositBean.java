@@ -35,11 +35,24 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	private String deposit_number;
 
+	private String responsible_user;
+
 	// DTO
 	private List<String> statuses;
 	private String voucher_file_name;
 	private String time;
 	private int pay_index;
+
+	private BigDecimal money_from;
+	private BigDecimal money_to;
+
+	private String create_month;
+	private BigDecimal sum_money;
+	private BigDecimal balance_money;
+	private BigDecimal clear_money;
+	private String supplier_short_name;
+	private String back_comment;
+	private String responsible_user_name;
 
 	public String getVoucher_number() {
 		return voucher_number;
@@ -183,6 +196,86 @@ public class SupplierDepositBean extends SupperBO implements Serializable {
 
 	public void setDeposit_number(String deposit_number) {
 		this.deposit_number = deposit_number;
+	}
+
+	public BigDecimal getMoney_from() {
+		return money_from;
+	}
+
+	public BigDecimal getMoney_to() {
+		return money_to;
+	}
+
+	public void setMoney_from(BigDecimal money_from) {
+		this.money_from = money_from;
+	}
+
+	public void setMoney_to(BigDecimal money_to) {
+		this.money_to = money_to;
+	}
+
+	public String getCreate_month() {
+		return create_month;
+	}
+
+	public BigDecimal getSum_money() {
+		return sum_money;
+	}
+
+	public BigDecimal getBalance_money() {
+		return balance_money;
+	}
+
+	public BigDecimal getClear_money() {
+		return clear_money;
+	}
+
+	public String getSupplier_short_name() {
+		return supplier_short_name;
+	}
+
+	public void setCreate_month(String create_month) {
+		this.create_month = create_month;
+	}
+
+	public void setSum_money(BigDecimal sum_money) {
+		this.sum_money = sum_money;
+	}
+
+	public void setBalance_money(BigDecimal balance_money) {
+		this.balance_money = balance_money;
+	}
+
+	public void setClear_money(BigDecimal clear_money) {
+		this.clear_money = clear_money;
+	}
+
+	public void setSupplier_short_name(String supplier_short_name) {
+		this.supplier_short_name = supplier_short_name;
+	}
+
+	public String getBack_comment() {
+		return back_comment;
+	}
+
+	public void setBack_comment(String back_comment) {
+		this.back_comment = back_comment;
+	}
+
+	public String getResponsible_user() {
+		return responsible_user;
+	}
+
+	public void setResponsible_user(String responsible_user) {
+		this.responsible_user = responsible_user;
+	}
+
+	public String getResponsible_user_name() {
+		return responsible_user_name;
+	}
+
+	public void setResponsible_user_name(String responsible_user_name) {
+		this.responsible_user_name = responsible_user_name;
 	}
 
 }

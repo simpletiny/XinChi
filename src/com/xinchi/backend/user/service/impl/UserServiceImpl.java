@@ -3,22 +3,35 @@ package com.xinchi.backend.user.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.sys.dao.BaseDataDAO;
+import com.xinchi.backend.sys.dao.PagesDAO;
+import com.xinchi.backend.user.dao.AssistantManagerDAO;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.userinfo.dao.UserInfoDAO;
 import com.xinchi.backend.userinfo.service.UserInfoService;
 import com.xinchi.backend.util.UserUtilService;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.BaseDataBean;
+import com.xinchi.bean.PagesBean;
 import com.xinchi.bean.ReceivableBalanceDto;
 import com.xinchi.bean.ReceivableBean;
 import com.xinchi.bean.UserBaseBean;
@@ -46,6 +59,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserInfoService userInfoService;
 
+	@Autowired
+	private PagesDAO pagesDao;
+
 	@Override
 	public String login(UserBaseBean ubb) {
 		List<UserBaseBean> users = dao.getAllByParam(ubb);
@@ -68,6 +84,7 @@ public class UserServiceImpl implements UserService {
 
 				UserInfoBean uib = infoDao.selectByUserId(user.getId());
 
+				// 存储用户基本信息
 				sessionBean.setPk(user.getPk());
 				sessionBean.setUser_number(user.getUser_number());
 				sessionBean.setUser_name(user.getUser_name());
@@ -81,6 +98,25 @@ public class UserServiceImpl implements UserService {
 
 				XinChiApplicationContext.setSession(ResourcesConstants.LOGIN_SESSION_KEY, sessionBean);
 
+				// 存储用户导航信息
+				List<PagesBean> navigation = new ArrayList<>();
+
+				if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+					PagesBean admin_option = new PagesBean();
+					admin_option.setLevel(1);
+					navigation = pagesDao.selectByParam(admin_option);
+				} else {
+					PagesBean other_option = new PagesBean();
+					other_option.setRoles(Arrays.asList(uib.getUser_role().split(",")));
+					other_option.setLevel(1);
+					navigation = pagesDao.selectByRoles(other_option);
+					navigation = list2list(navigation);
+				}
+
+				XinChiApplicationContext.setSession(ResourcesConstants.NAVIGATION_SESSION_KEY, navigation);
+
+				String navigation_html = create_navigatioin_html(navigation, uib.getUser_role());
+				XinChiApplicationContext.setSession(ResourcesConstants.NAVIGATION_HTML_SESSION_KEY, navigation_html);
 				if (uib.getUser_role().contains("SALE"))
 					return "sale";
 				return "success";
@@ -88,6 +124,93 @@ public class UserServiceImpl implements UserService {
 				return "input";
 			}
 		}
+	}
+
+	private List<PagesBean> list2list(List<PagesBean> list) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (PagesBean page : list) {
+			if (page.getLevel() == 1) {
+				if (map.get("P" + page.getPk()) == null) {
+					map.put("P" + page.getPk(), page);
+				}
+			} else {
+				if (map.get(page.getFather_pk()) == null) {
+					List<PagesBean> children = new ArrayList<PagesBean>();
+					children.add(page);
+					map.put(page.getFather_pk(), children);
+				} else {
+					((List<PagesBean>) map.get(page.getFather_pk())).add(page);
+				}
+			}
+		}
+		List<PagesBean> result = new ArrayList<PagesBean>();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getKey().startsWith("P")) {
+				PagesBean page = (PagesBean) entry.getValue();
+				page.setChild_pages((List<PagesBean>) map.get(page.getPk()));
+				Collections.sort(page.getChild_pages(), new Comparator<PagesBean>() {
+					@Override
+					public int compare(PagesBean o1, PagesBean o2) {
+						// 比较两个 PagesBean 对象的 orderIndex 字段
+						return Integer.compare(o1.getOrder_index(), o2.getOrder_index());
+					}
+				});
+				result.add(page);
+			}
+		}
+		return result;
+	}
+
+	private String create_navigatioin_html(List<PagesBean> navigation, String roles) {
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/templates/";
+		String html = "";
+		StringBuilder sb = new StringBuilder();
+		if (navigation != null) {
+			for (PagesBean parent : navigation) {
+				// 假设父页面为 Map 类型
+				String parentTitle = parent.getPage_title();
+				String parentUrl = basePath;
+				if (roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+					parentUrl += parent.getChild_pages().get(0).getPage_url();
+				} else {
+					parentUrl += parent.getPage_url();
+				}
+
+				String parentClass = parent.getPage_class() != null ? parent.getPage_class() : "default";
+				List<PagesBean> childPages = parent.getChild_pages();
+
+				sb.append("<li class=\"").append(parentClass).append("\">");
+				sb.append("<a href=\"").append(parentUrl != null ? parentUrl : "#").append("\">");
+				sb.append("<i class=\"fa fa-users1 fa-lg fa-fw\"></i>");
+				sb.append(parentTitle);
+				sb.append("</a>");
+
+				// 如果存在子页面则生成子菜单（使用 <ol>）
+				if (childPages != null && !childPages.isEmpty()) {
+					sb.append("<ol style=\"display:none;\">");
+					for (PagesBean child : childPages) {
+						String childTitle = child.getPage_title();
+						String childUrl = basePath + child.getPage_url();
+
+						sb.append("<li>");
+						sb.append("<a href=\"").append(childUrl).append("?page_title=").append(childTitle)
+								.append("\">");
+						sb.append("<i class=\"fa fa-angle-right fa-lg fa-fw\"></i>");
+						sb.append(childTitle);
+						sb.append("</a>");
+						sb.append("</li>");
+					}
+					sb.append("</ol>");
+				}
+				sb.append("</li>");
+			}
+		}
+		// 将生成的导航 HTML 保存到 session 中
+		html = sb.toString();
+		return html;
 	}
 
 	@Override
@@ -156,7 +279,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserCommonBean> getAllUsersByRole(String roles) {
-		return dao.getAllUsersByRole(roles);
+		List<String> arr_roles = Arrays.asList(roles.split(","));
+
+		return dao.getAllUsersByRole(arr_roles);
 	}
 
 	@Override
@@ -220,13 +345,40 @@ public class UserServiceImpl implements UserService {
 		return dao.selectUserCommonByPk(user_pk);
 	}
 
+	@Autowired
+	private AssistantManagerDAO assistantManagerDao;
+
 	@Override
-	public String updateUserRoles(String user_pk, String user_roles) {
+	public String updateUserRoles(String user_pk, String user_roles, String product_managers) {
 		UserBaseBean ubb = dao.selectByPrimaryKey(user_pk);
 		UserInfoBean uib = infoDao.selectByUserId(ubb.getId());
+
+		// 如果之前包含产品助理角色，现在不包含，则删除对应经理数据
+		if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)
+				&& !user_roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+			assistantManagerDao.deleteByAssistantNumber(ubb.getUser_number());
+		}
+		// 有选择的产品经理才进行更新
+		if (!SimpletinyString.isEmpty(product_managers)) {
+			// 如果之前就包含产品助理角色，则删除对应经理数据
+			if (uib.getUser_role().contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				assistantManagerDao.deleteByAssistantNumber(ubb.getUser_number());
+			}
+			// 如果现在包含产品助理角色，则写入对应的经理数据
+			if (user_roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				for (String manager_number : product_managers.split(",")) {
+					AssistantManagerBean amb = new AssistantManagerBean();
+					amb.setAssistant_number(ubb.getUser_number());
+					amb.setManager_number(manager_number);
+					amb.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+					assistantManagerDao.insert(amb);
+				}
+			}
+		}
+
 		uib.setUser_role(user_roles);
 		infoDao.update(uib);
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
@@ -280,7 +432,13 @@ public class UserServiceImpl implements UserService {
 
 			// 更新余额，余额=初始金额-应收款
 			ReceivableBalanceDto rb = receivableDao.selectUserReceivableBalanceByUserNumber(ubb.getUser_number());
-			uib.setCredit_balance(credit_limit.subtract(rb.getAll_balance()));
+
+			BigDecimal balance = BigDecimal.ZERO;
+			if (null != rb) {
+				balance = rb.getAll_balance();
+			}
+
+			uib.setCredit_balance(credit_limit.subtract(balance));
 
 			infoDao.update(uib);
 		}

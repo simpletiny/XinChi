@@ -21,6 +21,9 @@
 		<result column="lock_flg" property="lock_flg" jdbcType="VARCHAR" />
 		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="id_type" property="id_type" jdbcType="CHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+		<result column="as_adult" property="as_adult" jdbcType="CHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -43,7 +46,10 @@
 		update_time,
 		price,
 		lock_flg,
-		delete_flg
+		delete_flg,
+		id_type,
+		age,
+		as_adult
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -56,23 +62,24 @@
 		select
 		<include refid="Base_Column_List" />
 		from sale_order_name_list
-		where team_number = #{team_number,jdbcType=CHAR}
+		where team_number = #{team_number,jdbcType=CHAR} and delete_flg='N'
 	</select>
 	<select id="selectByTeamNumbers" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from sale_order_name_list
-		where team_number in 
+		where team_number in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+		and delete_flg='N'
 		order by team_number
 	</select>
 	<select id="selectByOrderPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from sale_order_name_list
-		where order_pk = #{order_pk,jdbcType=CHAR}
+		where order_pk = #{order_pk,jdbcType=CHAR} and delete_flg='N'
 		ORDER BY name_index
 	</select>
 
@@ -93,9 +100,7 @@
 	</delete>
 
 	<insert id="insert" parameterType="com.xinchi.bean.SaleOrderNameListBean">
-
 		insert into sale_order_name_list
-
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
 				team_number,
@@ -150,6 +155,15 @@
 			</if>
 			<if test="lock_flg != null">
 				lock_flg,
+			</if>
+			<if test="id_type != null">
+				id_type,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="as_adult != null">
+				as_adult,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -206,6 +220,15 @@
 			</if>
 			<if test="lock_flg != null">
 				#{lock_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				#{id_type,jdbcType=CHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="as_adult != null">
+				#{as_adult,jdbcType=CHAR},
 			</if>
 		</trim>
 	</insert>
@@ -268,6 +291,15 @@
 			<if test="delete_flg != null">
 				delete_flg = #{delete_flg,jdbcType=CHAR},
 			</if>
+			<if test="id_type != null">
+				id_type = #{id_type,jdbcType=CHAR},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="as_adult != null">
+				as_adult = #{as_adult,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -275,5 +307,6 @@
 		select
 		<include refid="Base_Column_List" />
 		from sale_order_name_list
+		where delete_flg='N'
 	</select>
 </mapper>

@@ -22,18 +22,17 @@ function changeFile(thisx) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url, true);
 	xhr.responseType = "blob";
-
+	console.log(formData);
 	xhr.onload = function() {
 		if (this.status == 200) {
-			var fileName = this.getResponseHeader("Content-Disposition").split(
-					";")[1].split("=")[1];
+			var fileName = this.getResponseHeader("Content-Disposition").split(";")[1].split("=")[1];
 			var blob = this.response;
 			fileNameInput.val(fileName);
 			var span = $(thisx).parent().parent().find("span").css({
 				"color" : "green"
 			});
-			var html = '已上传&nbsp;&nbsp;<a href="javascript:void(0)" onclick="viewTemplet(\'temp\',\''
-					+ fileName + '\')">预览</a>';
+			var html = '已上传&nbsp;&nbsp;<a href="javascript:void(0)" onclick="viewTemplet(\'temp\',\'' + fileName
+					+ '\')">预览</a>';
 			$(span).html(html)
 			success_msg("上传成功！请点击保存按钮以保存。");
 		} else {

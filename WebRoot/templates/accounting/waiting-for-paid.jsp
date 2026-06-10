@@ -64,7 +64,7 @@
 						<label class="col-md-1 control-label">项目</label>
 						<div class="col-md-2">
 							<select class="form-control"
-								data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+								data-bind="options: items, optionsText:function(item){return payTypeMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
 								name="wfp.item" required="required"></select>
 						</div>
 					</div>
@@ -108,7 +108,7 @@
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenPaids" /></td>
 
 								<td data-bind="text: $data.pay_number"></td>
-								<td data-bind="text: $root.itemMapping[$data.item]"></td>
+								<td data-bind="text: payTypeMapping[$data.item]"></td>
 								<td data-bind="text: $data.receiver"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<!-- ko if: $data.limit_time!=null &&  moment().isAfter($data.limit_time) -->
@@ -164,6 +164,7 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/waiting-for-paid.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/waiting-for-paid.js?v=1.001"></script>
 </body>
 </html>

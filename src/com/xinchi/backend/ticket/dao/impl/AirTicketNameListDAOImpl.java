@@ -134,4 +134,9 @@ public class AirTicketNameListDAOImpl extends SqlSessionDaoSupport implements Ai
 
 	}
 
+	@Override
+	public List<AirTicketNameListBean> selectTicketCostInfo(AirTicketNameListBean passenger) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.AirTicketNameListMapper.selectTicketCostInfo", passenger);
+	}
+
 }

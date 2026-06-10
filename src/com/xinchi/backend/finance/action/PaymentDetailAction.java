@@ -135,12 +135,8 @@ public class PaymentDetailAction extends BaseAction {
 	}
 
 	public String matchOtherReceived() {
-
-		PaymentDetailBean thisDetail = service.selectByPk(detailId);
-		// O for other received
-		thisDetail.setMatch_flg("O");
-
-		resultStr = service.update(thisDetail);
+		detail.setMatch_flg("O");
+		resultStr = service.update(detail);
 		return SUCCESS;
 	}
 

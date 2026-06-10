@@ -36,6 +36,11 @@ public class CardAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String searchCardBalance() throws Exception {
+		sum_balance = cardService.selectSumBalance(SimpletinyDataUtil.getAccounts());
+		return SUCCESS;
+	}
+
 	private List<String> accounts;
 
 	public String searchAllAccounts() {
@@ -43,11 +48,13 @@ public class CardAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	public String stopUseCard() {
+	private String delete_flg;
+
+	public String switchUseCard() {
 		String[] pks = card_pks.split(",");
 		for (String pk : pks) {
 			CardBean current = cardService.selectByPk(pk);
-			current.setDelete_flg("Y");
+			current.setDelete_flg(delete_flg);
 			cardService.update(current);
 		}
 		resultStr = SUCCESS;
@@ -146,6 +153,14 @@ public class CardAction extends BaseAction {
 
 	public void setSum_balance(BigDecimal sum_balance) {
 		this.sum_balance = sum_balance;
+	}
+
+	public String getDelete_flg() {
+		return delete_flg;
+	}
+
+	public void setDelete_flg(String delete_flg) {
+		this.delete_flg = delete_flg;
 	}
 
 }

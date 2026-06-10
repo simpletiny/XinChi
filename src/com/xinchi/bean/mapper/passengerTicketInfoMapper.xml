@@ -5,12 +5,15 @@
 		<result column="ticket_source" property="ticket_source" jdbcType="VARCHAR" />
 		<result column="ticket_source_pk" property="ticket_source_pk" jdbcType="CHAR" />
 		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="taxation" property="taxation" jdbcType="DECIMAL" />
+		<result column="other_cost" property="other_cost" jdbcType="DECIMAL" />
 		<result column="PNR" property="PNR" jdbcType="VARCHAR" />
 		<result column="passenger_pk" property="passenger_pk" jdbcType="CHAR" />
 		<result column="ticket_index" property="ticket_index" jdbcType="INTEGER" />
 		<result column="ticket_date" property="ticket_date" jdbcType="VARCHAR" />
 		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
 		<result column="from_to_time" property="from_to_time" jdbcType="VARCHAR" />
+		<result column="add_day_flg" property="add_day_flg" jdbcType="CHAR" />
 		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
 		<result column="from_airport" property="from_airport" jdbcType="VARCHAR" />
 		<result column="to_airport" property="to_airport" jdbcType="VARCHAR" />
@@ -21,18 +24,22 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="base_pk" property="base_pk" jdbcType="CHAR" />
+		<result column="people_count" property="people_count" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 
 		ticket_source,
 		ticket_cost,
+		other_cost,
+		taxation,
 		PNR,
 		passenger_pk,
 		ticket_index,
 		ticket_date,
 		ticket_number,
 		from_to_time,
+		add_day_flg,
 		from_to_city,
 		from_airport,
 		to_airport,
@@ -77,7 +84,31 @@
 
 		order by ticket_index
 	</select>
-
+	<select id="selectGroupInfoByTeamNumbers" resultMap="BaseResultMap" parameterType="java.util.List">
+		SELECT
+		COUNT(DISTINCT A.pk) AS people_count,
+		B.ticket_date,
+		B.from_to_city,
+		B.ticket_number,
+		B.from_to_time,
+		B.from_airport,
+		B.to_airport,
+		B.ticket_index
+		FROM
+		air_ticket_name_list A
+		LEFT JOIN
+		passenger_ticket_info B ON A.pk =
+		B.passenger_pk
+		<where>
+			A.team_number in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+		GROUP BY B.from_to_city , ticket_date , ticket_number , from_to_time , from_airport , to_airport
+		order by
+		people_count,ticket_index
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from passenger_ticket_info
 		where pk = #{pk,jdbcType=CHAR}
@@ -93,6 +124,12 @@
 			</if>
 			<if test="ticket_cost != null">
 				ticket_cost,
+			</if>
+			<if test="taxation != null">
+				taxation,
+			</if>
+			<if test="other_cost != null">
+				other_cost,
 			</if>
 			<if test="PNR != null">
 				PNR,
@@ -111,6 +148,9 @@
 			</if>
 			<if test="from_to_time != null">
 				from_to_time,
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg,
 			</if>
 			<if test="from_to_city != null">
 				from_to_city,
@@ -153,6 +193,12 @@
 			<if test="ticket_cost != null">
 				#{ticket_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="taxation != null">
+				#{taxation,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				#{other_cost,jdbcType=DECIMAL},
+			</if>
 			<if test="PNR != null">
 				#{PNR,jdbcType=VARCHAR},
 			</if>
@@ -170,6 +216,9 @@
 			</if>
 			<if test="from_to_time != null">
 				#{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				#{add_day_flg,jdbcType=CHAR},
 			</if>
 			<if test="from_to_city != null">
 				#{from_to_city,jdbcType=VARCHAR},
@@ -217,6 +266,12 @@
 			<if test="ticket_cost != null">
 				ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
 			</if>
+			<if test="taxation != null">
+				taxation = #{taxation,jdbcType=DECIMAL},
+			</if>
+			<if test="other_cost != null">
+				other_cost = #{other_cost,jdbcType=DECIMAL},
+			</if>
 			<if test="PNR != null">
 				PNR = #{PNR,jdbcType=VARCHAR},
 			</if>
@@ -234,6 +289,9 @@
 			</if>
 			<if test="from_to_time != null">
 				from_to_time = #{from_to_time,jdbcType=VARCHAR},
+			</if>
+			<if test="add_day_flg != null">
+				add_day_flg = #{add_day_flg,jdbcType=VARCHAR},
 			</if>
 			<if test="from_to_city != null">
 				from_to_city = #{from_to_city,jdbcType=VARCHAR},

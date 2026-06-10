@@ -5,6 +5,7 @@
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
+		<result column="product_model" property="product_model" jdbcType="CHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
 		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
@@ -42,6 +43,7 @@
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="CHAR" />
 		<result column="sale" property="sale" jdbcType="CHAR" />
+		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -49,6 +51,7 @@
 		team_number,
 		client_employee_pk,
 		product_pk,
+		product_model,
 		departure_date,
 		days,
 		receivable,
@@ -85,7 +88,8 @@
 		update_time,
 		status,
 		voucher_file,
-		sale
+		sale,
+		assistant_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -112,6 +116,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk,
+			</if>
+			<if test="product_model != null">
+				product_model,
 			</if>
 			<if test="departure_date != null">
 				departure_date,
@@ -224,6 +231,9 @@
 			<if test="sale != null">
 				sale,
 			</if>
+			<if test="assistant_number != null">
+				assistant_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -234,6 +244,9 @@
 			</if>
 			<if test="product_pk != null">
 				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				#{product_model,jdbcType=VARCHAR},
 			</if>
 			<if test="departure_date != null">
 				#{departure_date,jdbcType=VARCHAR},
@@ -346,6 +359,9 @@
 			<if test="sale != null">
 				#{sale,jdbcType=CHAR},
 			</if>
+			<if test="assistant_number != null">
+				#{assistant_number,jdbcType=VARCHAR},
+			</if>
 		</trim>
 	</insert>
 
@@ -361,6 +377,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				product_model = #{product_model,jdbcType=CHAR},
 			</if>
 			<if test="departure_date != null">
 				departure_date = #{departure_date,jdbcType=VARCHAR},
@@ -469,6 +488,9 @@
 			</if>
 			<if test="sale != null">
 				sale = #{sale,jdbcType=CHAR},
+			</if>
+			<if test="assistant_number != null">
+				assistant_number = #{assistant_number,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

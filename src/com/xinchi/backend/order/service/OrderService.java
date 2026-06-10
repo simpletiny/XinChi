@@ -3,6 +3,8 @@ package com.xinchi.backend.order.service;
 import java.util.List;
 
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -23,11 +25,11 @@ public interface OrderService extends BaseService {
 
 	public String finalOrder(OrderDto order);
 
-	public String rollBackFinalOrder(String order_pk, String standard_flg);
+	public String rollBackFinalOrder(String order_pk);
 
 	public String cancelOrder(OrderDto order);
 
-	public List<SaleScoreDto> searchSaleScoreByPage(Page<SaleScoreDto> page);
+	public List<SaleScoreDto> searchSaleScoreByPage(SaleScoreDto score);
 
 	public List<SaleScoreDto> searchBackMoneyScoreByPage(Page<SaleScoreDto> page);
 
@@ -52,5 +54,51 @@ public interface OrderService extends BaseService {
 	public String createReceivable(String order_pk);
 
 	public String checkCanBeEdit(String order_pk);
+
+	public OrderDto selectFinalOrderByTeamNumber(String team_number);
+
+	public String authorizeAssistant(List<String> order_pks, String assistant_number);
+
+	public String forwardOrder(List<String> order_pks, String sale_number);
+
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score);
+
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score);
+
+	public List<OrderDto> selectOrderWithNames(List<String> t_ns);
+
+	public String createBudgetStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String createBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String createOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String deleteTbcOrder(String order_pk);
+
+	public String deleteByPk(String order_pk);
+
+	public String updateBudgetStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String updateBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String confirmBudgetNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedNonStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedStandardOrder(SaleOrderBean sale_order, String json);
+
+	public String updateConfirmedOnlyTicketOrder(SaleOrderBean sale_order, String json);
+
+	public String update(SaleOrderBean sale_order);
+
+	public String selectMaxConfirmDateBySaleNumber(String user_number);
+
+	public int selectOrderCountByParam(OrderReportDto bean);
 
 }

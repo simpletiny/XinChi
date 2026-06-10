@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -45,28 +44,24 @@
 					<div class="form-group" style="padding-top: 20px">
 						<div class="span6">
 							<div class="col-md-2">
-								<input type="text" class="form-control" maxlength="10" placeholder="产品线" id="txt-line" /> <input type="hidden"
-									id="txt-pk" /> <input type="hidden" id="txt-edit" /> <input type="hidden" id="txt-old-name" />
+								<input type="text" class="form-control" maxlength="10" placeholder="产品线" id="txt-line" /> <input type="hidden" id="txt-pk" /> <input
+									type="hidden" id="txt-edit" /> <input type="hidden" id="txt-old-name" />
 							</div>
 						</div>
 						<div class="span6">
 							<div style="padding-top: 3px;">
 								<button type="submit" class="btn btn-green create" data-bind="click: function() {createLine() }">添加</button>
-								<button type="submit" class="btn btn-green update" style="display: none"
-									data-bind="click: function() {updateLine() }">更新</button>
-								<button type="submit" class="btn btn-green update" style="display: none"
-									data-bind="click: function() {deleteLine() }">删除</button>
-								<button type="submit" class="btn btn-green update" style="display: none"
-									data-bind="click: function() {cancelUpdate() }">取消</button>
+								<button type="submit" class="btn btn-green update" style="display: none" data-bind="click: function() {updateLine() }">更新</button>
+								<button type="submit" class="btn btn-green update" style="display: none" data-bind="click: function() {deleteLine() }">删除</button>
+								<button type="submit" class="btn btn-green update" style="display: none" data-bind="click: function() {cancelUpdate() }">取消</button>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div id="lineGrid" class="col" data-bind="foreach: locations">
 							<div class="grid-square" style="">
-								<span
-									data-bind="text:$data.name,event:{dblclick:function(){$root.setLineName($data.name,$data.pk,$data.can_edit)}}"></span>
-								<input type="hidden" data-bind="value:$data.pk" />
+								<span data-bind="text:$data.name,event:{dblclick:function(){$root.setLineName($data.name,$data.pk,$data.can_edit)}}"></span> <input
+									type="hidden" data-bind="value:$data.pk" />
 							</div>
 						</div>
 					</div>
@@ -82,8 +77,7 @@
 									data-bind="options: badDenominator,  optionsText: 'text', optionsValue: 'value',value:chosenDenominator, event:{change:function(){changeDenominator()}}"></select>
 							</div>
 							<div class="col-md-2">
-								<input type="number" class="form-control"
-									data-bind="value:badNumerator(),event:{keyup:function(){changeDenominator()}}" maxlength="6"
+								<input type="number" class="form-control" data-bind="value:badNumerator(),event:{keyup:function(){changeDenominator()}}" maxlength="6"
 									id="txt-bad-numerator" />
 							</div>
 							<label class="col-md-2" id="l-bad-rate"></label>
@@ -91,11 +85,9 @@
 					</div>
 					<div class="form-group">
 						<div class="span6 col-md-6">
-							<label class="col-md-3 fix-width1 control-label"><input type="checkbox" value="AUTO" id="chk-isauto"
-								data-bind="checked:isAuto()" />自动清零，每月</label>
+							<label class="col-md-3 fix-width1 control-label"><input type="checkbox" value="AUTO" id="chk-isauto" data-bind="checked:isAuto()" />自动清零，每月</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px"
-									data-bind="options: days,  optionsText: 'text', optionsValue: 'value',value:chosenDay"></select>
+								<select class="form-control" style="height: 34px" data-bind="options: days,  optionsText: 'text', optionsValue: 'value',value:chosenDay"></select>
 							</div>
 							<div class="col-md-2">
 								<button type="submit" class="btn btn-green create" data-bind="click: function() {cleanBadPunishment() }">立即清除</button>
@@ -136,12 +128,55 @@
 					<h3>销售信用额度</h3>
 					<div class="form-group" style="padding-top: 20px">
 						<div class="span6 col-md-3">
-							<input name="relation.sort_type" type="radio" value="Y" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('Y');return true;}}" /><label
-								class="control-label">启用</label>
+							<input name="relation.sort_type" type="radio" value="Y"
+								data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('Y');return true;}}" /><label class="control-label">启用</label>
 						</div>
 						<div class="span6 col-md-3">
-							<input name="relation.sort_type" type="radio" value="N" data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('N');return true;}}" /><label
-								class="control-label">停用</label>
+							<input name="relation.sort_type" type="radio" value="N"
+								data-bind="checked:saleCreditFlg(),event:{click:function(){changeSaleCredit('N');return true;}}" /><label class="control-label">停用</label>
+						</div>
+					</div>
+				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-count-limit">
+					<h3>产品紧急上架次数/周</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-1 control-label">次数/周</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" data-bind="value:count_limit_config().ext1" maxlength="2" id="txt-count-limit" />
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateCountLimit() }">保存</button>
+						</div>
+					</div>
+				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-dishonest-hold">
+					<h3>失信人记录保存时间</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-1 control-label">时长（天）</label>
+						<div class="col-md-2">
+							<input type="number" required class="form-control" data-bind="value:dishonest_hold_config().ext1" max="99" min="3" id="txt-dishonest-hold" />
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateDishonestHold() }">保存</button>
+						</div>
+					</div>
+					<div class="form-group" style="padding-top: 20px">
+						<span style="color: red">每日凌晨00:05更新，只按日期相减判定。</span>
+					</div>
+				</form>
+				<hr />
+				<form class="form-horizontal search-panel" id="form-air-ticket-charge">
+					<h3>机票税费</h3>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-1 control-label">费用</label>
+						<div class="col-md-2">
+							<input type="number" required class="form-control" data-bind="value:air_ticket_charge_config().ext1" min="0" max="999"
+								id="txt-air-ticket-charge" />
+						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green create" data-bind="click: function() {updateAirTicketCharge() }">保存</button>
 						</div>
 					</div>
 				</form>
@@ -158,16 +193,15 @@
 			<div class="col-md-12" style="margin-top: 20px">
 				<label class="l" style="width: 30%">清除日</label>
 				<div class="ip" style="width: 70%">
-					<input type="text" maxlength="10" data-bind="value:today()" id="txt-clean-date" class="form-control date-picker"
-						required="required" />
+					<input type="text" maxlength="10" data-bind="value:today()" id="txt-clean-date" class="form-control date-picker" required="required" />
 				</div>
 			</div>
 		</div>
 		<div class="input-row clearfloat">
 			<div class="col-md-12" style="margin-top: 10px">
 				<div align="right">
-					<a type="button" class="btn btn-green btn-r" data-bind="click: confirmCleanBadInterest">确认</a> <a type="button"
-						class="btn btn-green btn-r" data-bind="click: cancelCleanBadInterest">取消</a>
+					<a type="button" class="btn btn-green btn-r" data-bind="click: confirmCleanBadInterest">确认</a> <a type="button" class="btn btn-green btn-r"
+						data-bind="click: cancelCleanBadInterest">取消</a>
 				</div>
 			</div>
 		</div>
@@ -178,6 +212,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/sortable/Sortable.js"></script>
-	<script src="<%=basePath%>static/js/system/base-data.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/system/base-data.js?v=1.003"></script>
 </body>
 </html>

@@ -21,6 +21,14 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="deposit_number" property="deposit_number" jdbcType="VARCHAR" />
+		<result column="responsible_user" property="responsible_user" jdbcType="VARCHAR" />
+		<result column="responsible_user_name" property="responsible_user_name" jdbcType="VARCHAR" />
+
+		<result column="create_month" property="create_month" jdbcType="VARCHAR" />
+		<result column="sum_money" property="sum_money" jdbcType="DECIMAL" />
+		<result column="balance_money" property="balance_money" jdbcType="DECIMAL" />
+		<result column="clear_money" property="clear_money" jdbcType="DECIMAL" />
+		<result column="supplier_short_name" property="supplier_short_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,7 +49,8 @@
 		update_time,
 		comment,
 		received_voucher_number,
-		deposit_number
+		deposit_number,
+		responsible_user
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -49,11 +58,43 @@
 		from supplier_deposit
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
+	<select id="selectDepositSummary" resultMap="BaseResultMap" parameterType="com.xinchi.bean.SupplierDepositBean">
+		SELECT
+		A.supplier_pk,
+		SUM(money) AS
+		sum_money,
+		SUM(IF(A.status = 'N', A.balance, 0)) AS balance_money,
+		SUM(IF(A.status = 'Y', A.money, 0)) AS clear_money,
+		B.supplier_name,
+		B.supplier_short_name
+		FROM
+		supplier_deposit A
+		LEFT JOIN
+		supplier B ON A.supplier_pk = B.pk
+		GROUP BY
+		supplier_pk
+		HAVING balance_money > 0
+	</select>
+	<select id="selectSumDeposit" resultMap="BaseResultMap">
+		SELECT
+		SUM(money) AS sum_money,
+		SUM(IF(status = 'N', balance, 0)) AS
+		balance_money,
+		SUM(IF(status = 'Y', money, 0)) AS clear_money
+		FROM
+		supplier_deposit
+	</select>
 	<select id="selectByDepositNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from supplier_deposit
 		where deposit_number = #{deposit_number,jdbcType=VARCHAR}
+	</select>
+	<select id="selectDepositWithoutNumber" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from supplier_deposit
+		where deposit_number is null
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -125,6 +166,9 @@
 			<if test="deposit_number != null">
 				deposit_number,
 			</if>
+			<if test="responsible_user != null">
+				responsible_user,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="voucher_number != null">
@@ -177,6 +221,9 @@
 			</if>
 			<if test="deposit_number != null">
 				#{deposit_number,jdbcType=VARCHAR},
+			</if>
+			<if test="responsible_user != null">
+				#{responsible_user,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -236,6 +283,9 @@
 			<if test="deposit_number != null">
 				deposit_number = #{deposit_number,jdbcType=VARCHAR},
 			</if>
+			<if test="responsible_user != null">
+				responsible_user = #{responsible_user,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -270,10 +320,14 @@
 		A.update_time,
 		A.comment,
 		A.received_voucher_number,
-		A.deposit_number
+		A.deposit_number,
+		A.responsible_user,
+		C.user_name AS responsible_user_name
 		from
 		supplier_deposit A
 		LEFT JOIN supplier B ON A.supplier_pk = B.pk
+		LEFT JOIN user_base C ON
+		A.responsible_user=C.user_number
 		<where>
 			<if test="params.bo.supplier_name != null and params.bo.supplier_name !=''">
 				and B.supplier_short_name like CONCAT('%',#{params.bo.supplier_name,jdbcType=VARCHAR},'%')
@@ -286,6 +340,21 @@
 			</if>
 			<if test="params.bo.account != null and params.bo.account !=''">
 				and A.account = #{params.bo.account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money != null and params.bo.money !=''">
+				and A.money = #{params.bo.money,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.money_from != null and params.bo.money_from !=''">
+				and A.money &gt;= #{params.bo.money_from,jdbcType=DECIMAL}
+			</if>
+			<if test="params.bo.voucher_number != null and params.bo.voucher_number !=''">
+				and A.voucher_number like CONCAT('%', #{params.bo.voucher_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.responsible_user != null and params.bo.responsible_user !=''">
+				and A.responsible_user = #{params.bo.responsible_user,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.money_to != null and params.bo.money_to !=''">
+				and A.money &lt;= #{params.bo.money_to,jdbcType=DECIMAL}
 			</if>
 			<if test="params.bo.statuses!= null and params.bo.statuses !=''">
 				and A.status in

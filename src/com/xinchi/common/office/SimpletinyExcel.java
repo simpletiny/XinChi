@@ -34,6 +34,6 @@ public class SimpletinyExcel {
 			break;
 		}
 
-		return cellValue;
+		return cellValue.trim();
 	}
 }

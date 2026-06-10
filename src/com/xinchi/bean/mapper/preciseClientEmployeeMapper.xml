@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.PreciseClientEmployeeMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.PreciseClientEmployeeBean">
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="CHAR" />
+		<result column="wechat" property="wechat" jdbcType="VARCHAR" />
+		<result column="wechat1" property="wechat1" jdbcType="VARCHAR" />
+		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="cellphone1" property="cellphone1" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="financial_body_pk" property="financial_body_pk" jdbcType="CHAR" />
+		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
+		<result column="employee_area" property="employee_area" jdbcType="VARCHAR" />
+		<result column="employee_county" property="employee_county" jdbcType="VARCHAR" />
+		<result column="detail_address" property="detail_address" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="self_photo" property="self_photo" jdbcType="VARCHAR" />
+		<result column="other_photo" property="other_photo" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="financial_body_name" property="financial_body_name" jdbcType="VARCHAR" />
+		<result column="binding_status" property="binding_status" jdbcType="CHAR" />
+		<result column="is_verified" property="is_verified" jdbcType="CHAR" />
+		<result column="binding_count" property="binding_count" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		name,
+		type,
+		gender,
+		wechat,
+		wechat1,
+		cellphone,
+		cellphone1,
+		id,
+		financial_body_pk,
+		head_photo,
+		employee_area,
+		employee_county,
+		detail_address,
+		comment,
+		self_photo,
+		other_photo,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time,
+		binding_status,
+		binding_count,
+		is_verified
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		A.name,
+		A.is_verified,
+		A.type,
+		A.gender,
+		A.wechat,
+		A.wechat1,
+		A.cellphone,
+		A.cellphone1,
+		A.id,
+		A.financial_body_pk,
+		A.head_photo,
+		A.employee_area,
+		A.employee_county,
+		A.detail_address,
+		A.comment,
+		A.self_photo,
+		A.other_photo,
+		A.binding_status,
+		A.binding_count,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.client_short_name AS
+		financial_body_name
+		from
+		precise_client_employee A
+		LEFT JOIN client B ON
+		A.financial_body_pk = B.pk
+		where A.pk = #{pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from precise_client_employee
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.PreciseClientEmployeeBean">
+
+		insert into precise_client_employee
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="wechat != null">
+				wechat,
+			</if>
+			<if test="wechat1 != null">
+				wechat1,
+			</if>
+			<if test="cellphone != null">
+				cellphone,
+			</if>
+			<if test="cellphone1 != null">
+				cellphone1,
+			</if>
+			<if test="id != null">
+				id,
+			</if>
+			<if test="financial_body_pk != null">
+				financial_body_pk,
+			</if>
+			<if test="head_photo != null">
+				head_photo,
+			</if>
+			<if test="employee_area != null">
+				employee_area,
+			</if>
+			<if test="employee_county != null">
+				employee_county,
+			</if>
+			<if test="detail_address != null">
+				detail_address,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="self_photo != null">
+				self_photo,
+			</if>
+			<if test="other_photo != null">
+				other_photo,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=CHAR},
+			</if>
+			<if test="wechat != null">
+				#{wechat,jdbcType=VARCHAR},
+			</if>
+			<if test="wechat1 != null">
+				#{wechat1,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				#{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone1 != null">
+				#{cellphone1,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="financial_body_pk != null">
+				#{financial_body_pk,jdbcType=CHAR},
+			</if>
+			<if test="head_photo != null">
+				#{head_photo,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_area != null">
+				#{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				#{employee_county,jdbcType=VARCHAR},
+			</if>
+			<if test="detail_address != null">
+				#{detail_address,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="self_photo != null">
+				#{self_photo,jdbcType=VARCHAR},
+			</if>
+			<if test="other_photo != null">
+				#{other_photo,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.PreciseClientEmployeeBean">
+		update precise_client_employee
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=CHAR},
+			</if>
+			<if test="wechat != null">
+				wechat = #{wechat,jdbcType=VARCHAR},
+			</if>
+			<if test="wechat1 != null">
+				wechat1 = #{wechat1,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				cellphone = #{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone1 != null">
+				cellphone1 = #{cellphone1,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="financial_body_pk != null">
+				financial_body_pk = #{financial_body_pk,jdbcType=CHAR},
+			</if>
+			<if test="head_photo != null">
+				head_photo = #{head_photo,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_area != null">
+				employee_area = #{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				employee_county = #{employee_county,jdbcType=VARCHAR},
+			</if>
+			<if test="detail_address != null">
+				detail_address = #{detail_address,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			self_photo = #{self_photo,jdbcType=VARCHAR},
+			other_photo = #{other_photo,jdbcType=VARCHAR},
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="binding_status != null">
+				binding_status = #{binding_status,jdbcType=CHAR},
+			</if>
+			<if test="is_verified != null">
+				is_verified = #{is_verified,jdbcType=CHAR},
+			</if>
+			<if test="binding_count != null">
+				binding_count = #{binding_count,jdbcType=INTEGER},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.PreciseClientEmployeeBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from precise_client_employee
+
+		<where>
+			<if test='name != null and name !=""'>
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test='id != null and id !=""'>
+				and id = #{id,jdbcType=CHAR}
+			</if>
+			<if test='cellphone1 != null and cellphone1 !=""'>
+				and (cellphone = #{cellphone1,jdbcType=VARCHAR} OR cellphone1 = #{cellphone1,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		select
+		A.name,
+		A.is_verified,
+		A.type,
+		A.gender,
+		A.wechat,
+		A.wechat1,
+		A.cellphone,
+		A.cellphone1,
+		A.id,
+		A.financial_body_pk,
+		A.head_photo,
+		A.employee_area,
+		A.employee_county,
+		A.detail_address,
+		A.comment,
+		A.self_photo,
+		A.other_photo,
+		A.binding_status,
+		A.binding_count,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.create_time,
+		A.update_time,
+		B.client_short_name AS
+		financial_body_name
+		from precise_client_employee A
+		LEFT JOIN client B ON A.financial_body_pk = B.pk
+		<where>
+			<if test="params.bo.employee_area != null and params.bo.employee_area !=''">
+				and A.employee_area = #{params.bo.employee_area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and A.name LIKE CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.wechat != null and params.bo.wechat !=''">
+				and (A.wechat LIKE CONCAT('%',#{params.bo.wechat,jdbcType=VARCHAR},'%') OR A.wechat1 LIKE
+				CONCAT('%',#{params.bo.wechat,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="params.bo.cellphone != null and params.bo.cellphone !=''">
+				and (A.cellphone LIKE CONCAT('%',#{params.bo.cellphone,jdbcType=VARCHAR},'%') OR A.cellphone1 LIKE
+				CONCAT('%',#{params.bo.cellphone,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="params.bo.binding_statuses != null and params.bo.binding_statuses.size()>0">
+				and A.binding_status in
+				<foreach item="item" collection="params.bo.use_flgs" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="params.bo.verified_statuses != null and params.bo.verified_statuses.size()>0">
+				and A.is_verified in
+				<foreach item="item" collection="params.bo.verified_statuses" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

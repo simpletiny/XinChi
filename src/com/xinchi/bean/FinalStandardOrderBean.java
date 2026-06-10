@@ -14,6 +14,8 @@ public class FinalStandardOrderBean extends SupperBO implements Serializable {
 
 	private String product_pk;
 
+	private String product_model;
+
 	private String departure_date;
 
 	private Integer days;
@@ -49,6 +51,7 @@ public class FinalStandardOrderBean extends SupperBO implements Serializable {
 	private String confirm_file;
 
 	private String name_list;
+	private String assistant_number;
 
 	private java.math.BigDecimal air_ticket_cost;
 
@@ -378,6 +381,22 @@ public class FinalStandardOrderBean extends SupperBO implements Serializable {
 
 	public void setSale(String sale) {
 		this.sale = sale;
+	}
+
+	public String getProduct_model() {
+		return product_model;
+	}
+
+	public void setProduct_model(String product_model) {
+		this.product_model = product_model;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
 	}
 
 }

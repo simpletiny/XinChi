@@ -116,7 +116,7 @@
 							<div class="col-md-6 required">
 								<label class="l">支出时间</label>
 								<div class="ip">
-									<input type="text" name="time" class="ip- datetime-picker" name="xx" placeholder="支出时间" required="required" />
+									<input type="text" name="time" class="ip- datesecond-picker" name="xx" placeholder="支出时间" required="required" />
 								</div>
 							</div>
 						</div>
@@ -173,7 +173,7 @@
 				<div class="col-md-6 required">
 					<label class="l">支出时间</label>
 					<div class="ip">
-						<input type="text" name="time" class="ip- datetime-picker" placeholder="支出时间" required="required" />
+						<input type="text" name="time" class="ip- datesecond-picker" placeholder="支出时间" required="required" />
 					</div>
 				</div>
 			</div>
@@ -211,6 +211,6 @@
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/air-ticket-paid.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/ticket/air-ticket-paid.js?v=1.001"></script>
 </body>
 </html>

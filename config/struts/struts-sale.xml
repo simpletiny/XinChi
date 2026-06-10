@@ -136,6 +136,12 @@
 		<action name="searchByRelatedPks" class="receivedAction" method="searchByRelatedPks">
 			<result name="success" type="json"></result>
 		</action>
+		<action name="searchReceivedByTeamNumber" class="receivedAction" method="searchReceivedByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<!-- payable action start -->
 		<action name="searchPayableByPage" class="payableAction" method="searchPayableByPage">

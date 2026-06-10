@@ -13,11 +13,13 @@
 		<result column="start_place" property="start_place" jdbcType="VARCHAR" />
 		<result column="end_place" property="end_place" jdbcType="VARCHAR" />
 		<result column="ticket_number" property="ticket_number" jdbcType="VARCHAR" />
+		<result column="add_day_flg" property="add_day_flg" jdbcType="CHAR" />
 		<result column="ticket_order_pk" property="ticket_order_pk" jdbcType="CHAR" />
 		<result column="is_allot" property="is_allot" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -32,9 +34,11 @@
 		start_place,
 		end_place,
 		ticket_number,
+		add_day_flg,
 		ticket_order_pk,
 		is_allot,
-		team_number
+		team_number,
+		sort_index
 	</sql>
 
 	<select id="selectByParam" parameterType="com.xinchi.bean.PassengerAllotDto" resultMap="BaseResultMap">

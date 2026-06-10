@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,7 +30,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品单团报表</h2>
+			<h2>损益表</h2>
 		</div>
 
 		<div class="main-container">
@@ -41,8 +40,8 @@
 						<div class="col-md-6">
 							<div data-bind="foreach: statuses" style="padding-top: 4px;">
 								<em class="small-box"> <input type="checkbox"
-									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
-									name="option.report_statuses" /><label data-bind="text: $root.approvedMapping[$data]"></label>
+									data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}" name="option.report_statuses" /><label
+									data-bind="text: $root.approvedMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -51,12 +50,10 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">月份</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="起始月"
-									name="option.date_from" />
+								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="起始月" name="option.date_from" />
 							</div>
 							<div class="col-md-2">
-								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="截止月"
-									name="option.date_to" />
+								<input type="text" class="form-control month-picker-st" data-bind="value:month" placeholder="截止月" name="option.date_to" />
 							</div>
 						</div>
 						<div class="span6">
@@ -130,21 +127,79 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
-							<label class="l">后台成本：</label>
+							<label class="l">后台划拨：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().sys_cost"></p>
 							</div>
 						</div>
 						<div class="col-md-3">
-							<label class="l">销售费用：</label>
+							<label class="l">销售划拨：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().sale_cost"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">提成立奖：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: 0.00"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">押金扣款：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().air_deduct"></p>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-3">
-							<label class="l">毛利：</label>
+							<label class="l">单团额外支出：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().team_other_pay"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">单团额外收入：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().team_other_receive"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">月度额外支出：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text:  report().recon_pay"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">月度额外收入：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().recon_receive"></p>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-3">
+							<label class="l">票务额外支出：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().no_b_pay"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">票务额外收入：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().no_b_receive"></p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">汇兑：</label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: report().exchange"></p>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-3" title="计算公式：应收款-98清尾-机票款-地接款-其它支出-fy-后台划拨-销售划拨-单团额外支出+单团额外收入-机票押金扣款-汇款汇兑-月度额外支出+月度额外收入-票务其他支出+票务其他收入。">
+							<label class="l">产品毛利：</label>
 							<div class="ip fix_width">
 								<p class="ip-default rmb" data-bind="text: report().gross_profit"></p>
 							</div>
@@ -157,16 +212,31 @@
 						</div>
 					</div>
 				</div>
+				<hr />
+				<h3 style="margin-bottom: 10px">费用申请汇总</h3>
+				<div class="form-box info-form">
+					<div class="input-row clearfloat">
+						<!-- ko foreach: items -->
+						<div class="col-md-3">
+							<label class="l" data-bind="text:payTypeMapping[$data]"></label>
+							<div class="ip fix_width">
+								<p class="ip-default rmb" data-bind="text: $root.reiSummary().get($data)"></p>
+							</div>
+						</div>
+						<!-- /ko -->
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 	<script>
-		$(".manager").addClass("current").children("ol").css("display", "block");
+		$(".data").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/reports/product-team-report.js"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/reports/product-team-report.js?v=1.002"></script>
 </body>
 </html>

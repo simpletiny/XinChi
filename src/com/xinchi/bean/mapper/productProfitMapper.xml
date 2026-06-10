@@ -18,6 +18,7 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="product_line" property="product_line" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -33,6 +34,7 @@
 		profit,
 		user_number,
 		pk,
+		product_line,
 		create_user,
 		update_user,
 		create_time,
@@ -202,15 +204,15 @@
 	<select id="selectByParam" parameterType="com.xinchi.bean.ProductProfitBean" resultMap="BaseResultMap">
 		SELECT
 		departure_month,
-		status,
+		CASE
+        WHEN SUM(status = 'N') > 0 THEN 'N'
+        ELSE 'Y'
+    	END AS status,
 		SUM(people_count) AS people_count,
 		SUM(gross_profit) AS gross_profit,
-		SUM(product_cost) AS product_cost,
-		SUM(keep_cost) AS keep_cost,
 		SUM(score) AS score
 		FROM
 		view_product_profit
-
 		<where>
 			<if test="option_year != null and option_year !=''">
 				and LEFT(departure_month,4) =#{option_year,jdbcType=VARCHAR}
@@ -218,8 +220,10 @@
 			<if test="user_number != null and user_number !=''">
 				and user_number =#{user_number,jdbcType=VARCHAR}
 			</if>
+			<if test="product_line != null and product_line !=''">
+				and product_line =#{product_line,jdbcType=VARCHAR}
+			</if>
 		</where>
 		GROUP BY departure_month
-		ORDER BY departure_month
 	</select>
 </mapper>

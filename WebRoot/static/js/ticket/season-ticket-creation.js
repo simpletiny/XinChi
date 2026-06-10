@@ -32,8 +32,7 @@ var FlightContext = function() {
 			var current = allTrs[i];
 
 			var ticket_index = i + 1;
-			var add_day_flg = $(current).find("[st='is-add-day']").is(
-					":checked") ? 'Y' : 'N';
+			var add_day_flg = $(current).find("[st='is-add-day']").is(":checked") ? 'Y' : 'N';
 			var index_leg = $(current).find("[st='index-leg']").val();
 			var start_day = $(current).find("[st='start-day']").val();
 			var ticket_number = $(current).find("[st='ticket-number']").val();
@@ -44,13 +43,10 @@ var FlightContext = function() {
 			var start_place = $(current).find("[st='start-place']").val();
 			var end_place = $(current).find("[st='end-place']").val();
 
-			json += '{"ticket_index":"' + ticket_index + '","add_day_flg":"'
-					+ add_day_flg + '","index_leg":"' + index_leg
-					+ '","start_day":"' + start_day + '","ticket_number":"'
-					+ ticket_number + '","ticket_leg":"' + ticket_leg
-					+ '","start_time":"' + start_time + '","end_time":"'
-					+ end_time + '","start_place":"' + start_place
-					+ '","end_place":"' + end_place + '"'
+			json += '{"ticket_index":"' + ticket_index + '","add_day_flg":"' + add_day_flg + '","index_leg":"'
+					+ index_leg + '","start_day":"' + start_day + '","ticket_number":"' + ticket_number
+					+ '","ticket_leg":"' + ticket_leg + '","start_time":"' + start_time + '","end_time":"' + end_time
+					+ '","start_place":"' + start_place + '","end_place":"' + end_place + '"'
 
 			if (i == allTrs.length - 1) {
 				json += '}';
@@ -65,31 +61,24 @@ var FlightContext = function() {
 			type : "POST",
 			url : self.apiurl + 'ticket/createSeasonTicket',
 			data : data
-		}).success(
-				function(str) {
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/ticket/season-ticket.jsp";
-					}
-				});
+		}).success(function(str) {
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/ticket/season-ticket.jsp";
+			}
+		});
 	}
 
 	// 供应商选择
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
-		var param = "employee.type=A&employee.name="
-				+ $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex1() + "&page.count="
-				+ self.perPage1;
-		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-				function(data) {
-					self.supplierEmployees(data.employees);
+		var param = "employee.type=A&employee.name=" + $("#supplier_name").val();
+		param += "&page.start=" + self.startIndex1() + "&page.count=" + self.perPage1;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-					self
-							.totalCount1(Math.ceil(data.page.total
-									/ self.perPage1));
-					self.setPageNums1(self.currentPage1());
-				});
+			self.totalCount1(Math.ceil(data.page.total / self.perPage1));
+			self.setPageNums1(self.currentPage1());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -135,8 +124,7 @@ var FlightContext = function() {
 
 	self.setPageNums1 = function(curPage) {
 		var startPage1 = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self
-				.totalCount1();
+		var endPage1 = curPage + 4 <= self.totalCount1() ? curPage + 4 : self.totalCount1();
 		var pageNums1 = [];
 		for (var i = startPage1; i <= endPage1; i++) {
 			pageNums1.push(i);
@@ -153,10 +141,8 @@ var FlightContext = function() {
 	self.airLegs = ko.observable({});
 	self.refreshAirLeg = function() {
 		var param = "leg.city=" + $("#city").val();
-		param += "&page.start=" + self.startIndex2() + "&page.count="
-				+ self.perPage2;
-		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(
-				data) {
+		param += "&page.start=" + self.startIndex2() + "&page.count=" + self.perPage2;
+		$.getJSON(self.apiurl + 'ticket/searchAirLegsByPage', param, function(data) {
 			self.airLegs(data.legs);
 
 			self.totalCount2(Math.ceil(data.page.total / self.perPage2));
@@ -208,8 +194,7 @@ var FlightContext = function() {
 
 	self.setPageNums2 = function(curPage2) {
 		var startPage2 = curPage2 - 4 > 0 ? curPage2 - 4 : 1;
-		var endPage2 = curPage2 + 4 <= self.totalCount2() ? curPage2 + 4 : self
-				.totalCount2();
+		var endPage2 = curPage2 + 4 <= self.totalCount2() ? curPage2 + 4 : self.totalCount2();
 		var pageNums2 = [];
 		for (var i = startPage2; i <= endPage2; i++) {
 			pageNums2.push(i);
@@ -241,8 +226,7 @@ function addRow() {
 			+ '<td><input st="end-time" type="text" maxlength="5" onkeyup="formatTime(this)" onblur="checkTime(this)" required="required" /></td>'
 			+ '<td style="float: left"><input st="is-add-day" type="checkbox" />+1</td>'
 			+ '<td><input st="start-place" type="text" maxlength="20" /></td>'
-			+ '<td><input st="end-place" type="text" maxlength="20" /></td>'
-			+ '</tr>';
+			+ '<td><input st="end-place" type="text" maxlength="20" /></td>' + '</tr>';
 
 	var tr = $(html);
 

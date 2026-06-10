@@ -209,7 +209,7 @@ tr td {
 								<td data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data.related_pk)} "></a></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: function() {$root.viewRejectReason($data)} "></a></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='E' -->
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
@@ -354,7 +354,7 @@ tr td {
 									+ '&fileType=VOUCHER&subFolder=' + $data.account_pk}" alt="图片" style="width: 590px; height: 600px; cursor: pointer" />
 	</div>
 	<script>
-		$(".sale").addClass("current").children("ol").css("display", "block");
+		$(".receivable").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>

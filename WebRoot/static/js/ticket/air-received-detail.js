@@ -3,6 +3,18 @@ var AirReceivedDetailContext = function() {
 	self.apiurl = $("#hidden_apiurl").val();
 
 	self.details = ko.observableArray();
+
+	self.statuses = ['I', 'N', 'E'];
+	self.statusMapping = {
+		'I': "待确认",
+		'N': "被驳回",
+		'E': "已入账"
+	};
+
+	self.chosenStatuses = ko.observableArray([]);
+	self.chosenStatuses.push('I');
+	self.chosenStatuses.push('N');
+
 	// 获取所有账户
 	self.accounts = ko.observableArray([]);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {
@@ -19,14 +31,9 @@ var AirReceivedDetailContext = function() {
 
 	self.chosenReceiveds = ko.observableArray();
 
-	self.statusMapping = {
-		I : '待确认',
-		E : '已入账'
-	}
-
 	self.typeMapping = {
-		SUM : '合账',
-		RECEIVED : '收入'
+		SUM: '合账',
+		RECEIVED: '收入'
 	}
 
 	self.refresh = function() {
@@ -41,7 +48,10 @@ var AirReceivedDetailContext = function() {
 			self.setPageNums(self.currentPage());
 
 			$("td:contains('已入账')").css("color", "green");
+			$("td:contains('被驳回')").css("color", "red");
 			$(".rmb").formatCurrency();
+			
+			
 		});
 	};
 
@@ -61,22 +71,23 @@ var AirReceivedDetailContext = function() {
 			}
 
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : "确认要打回押金退还记录吗？",
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: "确认要打回押金退还记录吗？",
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("打回中……");
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'receivable/rollBackReceivedDetail',
-							data : "related_pk=" + detail.related_pk
+							type: "POST",
+							url: self.apiurl + 'receivable/rollBackReceivedDetail',
+							data: "related_pk=" + detail.related_pk
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
+								self.chosenReceiveds.removeAll();
 								self.refresh();
 							} else {
 								fail_msg(str);
@@ -87,21 +98,25 @@ var AirReceivedDetailContext = function() {
 			});
 		}
 	}
+	
+	self.viewRejectReason = function(data){
+		success_msg(data.reject_reason);
+	}
 
 	// 查看身份证图片
 	self.checkIdPic = function(received_time, fileName) {
 		$("#img-pic").attr("src", "");
 		idCheckLayer = $.layer({
-			type : 1,
-			title : ['查看身份证图片', ''],
-			maxmin : false,
-			closeBtn : [1, true],
-			shadeClose : false,
-			area : ['600px', '650px'],
-			offset : ['50px', ''],
-			scrollbar : true,
-			page : {
-				dom : '#pic-check'
+			type: 1,
+			title: ['查看身份证图片', ''],
+			maxmin: false,
+			closeBtn: [1, true],
+			shadeClose: false,
+			area: ['600px', '650px'],
+			offset: ['50px', ''],
+			scrollbar: true,
+			page: {
+				dom: '#pic-check'
 			}
 		});
 
@@ -109,17 +124,17 @@ var AirReceivedDetailContext = function() {
 		const sub_folder = split_str[0] + "/" + split_str[1];
 
 		$("#img-pic").attr(
-				"src",
-				self.apiurl + 'file/getFileStream?fileFileName=' + fileName
-						+ "&fileType=SUPPLIER_RECEIVED_VOUCHER&subFolder=" + sub_folder);
+			"src",
+			self.apiurl + 'file/getFileStream?fileFileName=' + fileName
+			+ "&fileType=SUPPLIER_RECEIVED_VOUCHER&subFolder=" + sub_folder);
 	};
 	// 新标签页显示大图片
 	$("#img-pic").on(
-			'click',
-			function() {
-				window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
-						+ encodeURIComponent($(this).attr("src")));
-			});
+		'click',
+		function() {
+			window.open(self.apiurl + "templates/common/check-picture-big.jsp?src="
+				+ encodeURIComponent($(this).attr("src")));
+		});
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 20;

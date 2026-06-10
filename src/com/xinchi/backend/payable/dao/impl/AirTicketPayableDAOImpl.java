@@ -84,4 +84,16 @@ public class AirTicketPayableDAOImpl extends SqlSessionDaoSupport implements Air
 				summary_option);
 	}
 
+	@Override
+	public List<AirServiceFeeDto> selectServiceFeeSummary(AirServiceFeeDto summary_option) {
+		return daoUtil.selectObjectsByParam("com.xinchi.bean.mapper.AirTicketPayableMapper.selectAirTicketFeeSummary",
+				summary_option);
+	}
+
+	@Override
+	public List<AirServiceFeeDto> selectAirTicketDeductSummary(AirServiceFeeDto summary_option) {
+		return daoUtil.selectObjectsByParam(
+				"com.xinchi.bean.mapper.AirTicketPayableMapper.selectAirTicketDeductSummary", summary_option);
+	}
+
 }

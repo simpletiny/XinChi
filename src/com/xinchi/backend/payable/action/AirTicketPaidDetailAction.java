@@ -11,11 +11,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.xinchi.backend.finance.service.PaymentDetailService;
+import com.xinchi.backend.finance.service.ReceivedMatchService;
 import com.xinchi.backend.payable.service.AirTicketPaidDetailService;
 import com.xinchi.bean.AirTicketPaidDetailBean;
 import com.xinchi.bean.AirTicketPaidDto;
 import com.xinchi.bean.PaymentDetailBean;
+import com.xinchi.bean.ReceivedMatchBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
 
 @Controller
@@ -44,6 +47,9 @@ public class AirTicketPaidDetailAction extends BaseAction {
 	@Autowired
 	private PaymentDetailService paymentDetailService;
 
+	@Autowired
+	private ReceivedMatchService receivedMatchService;
+
 	/**
 	 * 搜索支付详情
 	 * 
@@ -53,18 +59,26 @@ public class AirTicketPaidDetailAction extends BaseAction {
 		details = service.selectByRelatedPk(related_pk);
 		payment_details = new ArrayList<PaymentDetailBean>();
 		if (null != details && details.size() > 0) {
-			String voucher_number = details.get(0).getVoucher_number();
-			if (SimpletinyString.isEmpty(voucher_number))
-				return SUCCESS;
+			AirTicketPaidDetailBean current_detail = details.get(0);
+			if (current_detail.getType().equals(ResourcesConstants.PAID_TYPE_BACK)) {
+				List<ReceivedMatchBean> rmbs = receivedMatchService.selectByReceivedPk(current_detail.getPk());
+				for (ReceivedMatchBean rmb : rmbs) {
+					PaymentDetailBean pd = paymentDetailService.selectByPk(rmb.getDetail_pk());
+					payment_details.add(pd);
+				}
+			} else {
+				String voucher_number = current_detail.getVoucher_number();
+				if (SimpletinyString.isEmpty(voucher_number))
+					return SUCCESS;
 
-			String[] voucher_numbers = voucher_number.split(",");
+				String[] voucher_numbers = voucher_number.split(",");
 
-			for (String v_n : voucher_numbers) {
-				List<PaymentDetailBean> list = paymentDetailService.selectByVoucherNumber(v_n);
-				payment_details.addAll(list);
+				for (String v_n : voucher_numbers) {
+					List<PaymentDetailBean> list = paymentDetailService.selectByVoucherNumber(v_n);
+					payment_details.addAll(list);
+				}
 			}
 		}
-
 		return SUCCESS;
 	}
 

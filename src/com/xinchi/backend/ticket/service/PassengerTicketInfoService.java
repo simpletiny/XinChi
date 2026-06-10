@@ -51,4 +51,6 @@ public interface PassengerTicketInfoService extends BaseService {
 	public List<PassengerTicketInfoBean> selectByPassengerPk(String passenger_pk);
 
 	public String rollBackNameDone(List<String> passenger_pks);
+
+	public List<PassengerTicketInfoBean> selectGroupInfoByTeamNumbers(List<String> t_ns);
 }

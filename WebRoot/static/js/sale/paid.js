@@ -7,8 +7,8 @@ var PaidContext = function() {
 	self.chosenPaids = ko.observableArray([]);
 
 	self.paids = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 
 	self.dateFrom = ko.observable();
@@ -34,31 +34,31 @@ var PaidContext = function() {
 	self.allStatus = ['I', 'N', 'Y', 'P'];
 
 	self.statusMapping = {
-		'I' : '待审批',
-		'N' : '被驳回',
-		'Y' : '已同意',
-		'P' : '已支付'
+		'I': '待审批',
+		'N': '被驳回',
+		'Y': '已同意',
+		'P': '已支付'
 	};
 	self.paidTypes = [{
-		name : '支付',
-		key : 'PAID'
+		name: '支付',
+		key: 'PAID'
 	}, {
-		name : '返款',
-		key : 'BACK'
+		name: '返款',
+		key: 'BACK'
 	}, {
-		name : '冲账',
-		key : 'STRIKE'
+		name: '冲账',
+		key: 'STRIKE'
 	}, {
-		name : '扣款',
-		key : 'DEDUCT'
+		name: '扣款',
+		key: 'DEDUCT'
 	}];
 	self.typeMapping = {
-		'BACK' : '返款',
-		'PAID' : '支付',
-		'STRIKE' : '冲账',
-		'DEDUCT' : '扣款',
-		'STRIKEOUT' : '冲账/出',
-		'STRIKEIN' : '冲账/入'
+		'BACK': '返款',
+		'PAID': '支付',
+		'STRIKE': '冲账',
+		'DEDUCT': '扣款',
+		'STRIKEOUT': '冲账/出',
+		'STRIKEIN': '冲账/入'
 	};
 
 	// 计算合计
@@ -123,20 +123,20 @@ var PaidContext = function() {
 		var data = "related_pk=" + sourceData.related_pk;
 
 		$.layer({
-			area : ['auto', 'auto'],
-			dialog : {
-				msg : '确认要打回重报吗?',
-				btns : 2,
-				type : 4,
-				btn : ['确认', '取消'],
-				yes : function(index) {
+			area: ['auto', 'auto'],
+			dialog: {
+				msg: '确认要打回重报吗?',
+				btns: 2,
+				type: 4,
+				btn: ['确认', '取消'],
+				yes: function(index) {
 					startLoadingSimpleIndicator("操作中");
 					layer.close(index);
 					$.ajax({
-						type : "POST",
-						url : self.apiurl + 'sale/rollBackPayApply',
-						data : data,
-						success : function(str) {
+						type: "POST",
+						url: self.apiurl + 'sale/rollBackPayApply',
+						data: data,
+						success: function(str) {
 							if (str != "success") {
 								fail_msg("回滚失败，请联系管理员");
 							}
@@ -150,15 +150,15 @@ var PaidContext = function() {
 		});
 	};
 	self.sumDetails = ko.observable({
-		total : 0,
-		items : []
+		total: 0,
+		items: []
 	});
 	self.order = ko.observable({
-		team_number : "",
-		client_employee_name : "",
-		product : "",
-		people_count : "",
-		departure_date : ""
+		team_number: "",
+		client_employee_name: "",
+		product: "",
+		people_count: "",
+		departure_date: ""
 
 	});
 	self.comment = ko.observable();
@@ -173,18 +173,18 @@ var PaidContext = function() {
 				self.comment(detail.comment);
 				endLoadingIndicator();
 				viewCommentLayer = $.layer({
-					type : 1,
-					title : ['摘要详情', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['700px', 'auto'],
-					offset : ['150px', ''],
-					scrollbar : true,
-					page : {
-						dom : '#comment'
+					type: 1,
+					title: ['摘要详情', ''],
+					maxmin: false,
+					closeBtn: [1, true],
+					shadeClose: false,
+					area: ['700px', 'auto'],
+					offset: ['150px', ''],
+					scrollbar: true,
+					page: {
+						dom: '#comment'
 					},
-					end : function() {
+					end: function() {
 						console.log("Done");
 					}
 				});
@@ -199,18 +199,18 @@ var PaidContext = function() {
 			self.sumDetails(result.paids);
 			self.sumDetail(data);
 			viewDetailLayer = $.layer({
-				type : 1,
-				title : ['合账详情', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#sum_detail'
+				type: 1,
+				title: ['合账详情', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#sum_detail'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -235,18 +235,18 @@ var PaidContext = function() {
 				}
 			});
 			viewDetailLayer = $.layer({
-				type : 1,
-				title : ['冲账详情', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#strike_detail'
+				type: 1,
+				title: ['冲账详情', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#strike_detail'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
@@ -269,34 +269,38 @@ var PaidContext = function() {
 
 			endLoadingIndicator();
 			viewPaidLayer = $.layer({
-				type : 1,
-				title : ['支付详情', ''],
-				maxmin : false,
-				closeBtn : [1, true],
-				shadeClose : false,
-				area : ['800px', 'auto'],
-				offset : ['150px', ''],
-				scrollbar : true,
-				page : {
-					dom : '#div_view_detail'
+				type: 1,
+				title: ['支付详情', ''],
+				maxmin: false,
+				closeBtn: [1, true],
+				shadeClose: false,
+				area: ['800px', 'auto'],
+				offset: ['150px', ''],
+				scrollbar: true,
+				page: {
+					dom: '#div_view_detail'
 				},
-				end : function() {
+				end: function() {
 					console.log("Done");
 				}
 			});
 		});
 	}
 
-	self.viewRejectReason = function(back_pk) {
-		var data = "back_pk=" + back_pk;
+	self.viewRejectReason = function(data) {
+		if (data.type === "BACK") {
+			success_msg(data.reject_reason);
+		} else {
+			var data = "back_pk=" + back_pk;
+			$.ajax({
+				type: "POST",
+				url: self.apiurl + 'accounting/searchRejectReason',
+				data: data
+			}).success(function(str) {
+				success_msg(str);
+			});
+		}
 
-		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/searchRejectReason',
-			data : data
-		}).success(function(str) {
-			success_msg(str);
-		});
 	}
 	// 加载头像
 	self.loadFiles = function() {

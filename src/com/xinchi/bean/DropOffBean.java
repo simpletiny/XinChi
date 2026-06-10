@@ -1,6 +1,7 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -26,6 +27,7 @@ public class DropOffBean extends SupperBO implements Serializable {
 	private String to_airport;
 	private String client_name;
 	private String phones;
+	private List<String> client_numbers;
 
 	// search options
 	private String from_city;
@@ -158,6 +160,14 @@ public class DropOffBean extends SupperBO implements Serializable {
 
 	public void setTo_city(String to_city) {
 		this.to_city = to_city;
+	}
+
+	public List<String> getClient_numbers() {
+		return client_numbers;
+	}
+
+	public void setClient_numbers(List<String> client_numbers) {
+		this.client_numbers = client_numbers;
 	}
 
 }

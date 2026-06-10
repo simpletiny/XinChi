@@ -23,4 +23,6 @@ public interface OrderReportService extends BaseService {
 	public TeamReportBean selectTeamReportByTeamNumber(String team_number);
 
 	public String updateTeamReport(TeamReportBean bean);
+
+	public String checkOrderReportCanBeApproved(String team_number);
 }

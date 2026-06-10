@@ -47,8 +47,6 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	private String comment;
 
-	private String pk;
-
 	private String delete_flg;
 	private String agency_name;
 	private String agency_pk;
@@ -69,9 +67,14 @@ public class ClientBean extends SupperBO implements Serializable {
 	private String market_level;
 	private String talk_level;
 
+	private String recipient;
+	private String recipient_phone1;
+	private String recipient_phone2;
+
+	private List<ClientInoutImgBean> client_inouts;
 	private List<ClientUserBean> client_users;
 	// search options
-	
+
 	private List<String> public_flgs;
 	private List<String> statuses;
 	private List<String> relate_flgs;
@@ -220,14 +223,6 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getPk() {
-		return pk;
-	}
-
-	public void setPk(String pk) {
-		this.pk = pk;
 	}
 
 	public String getSales() {
@@ -412,6 +407,38 @@ public class ClientBean extends SupperBO implements Serializable {
 
 	public void setPublic_flgs(List<String> public_flgs) {
 		this.public_flgs = public_flgs;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public String getRecipient_phone1() {
+		return recipient_phone1;
+	}
+
+	public String getRecipient_phone2() {
+		return recipient_phone2;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	public void setRecipient_phone1(String recipient_phone1) {
+		this.recipient_phone1 = recipient_phone1;
+	}
+
+	public void setRecipient_phone2(String recipient_phone2) {
+		this.recipient_phone2 = recipient_phone2;
+	}
+
+	public List<ClientInoutImgBean> getClient_inouts() {
+		return client_inouts;
+	}
+
+	public void setClient_inouts(List<ClientInoutImgBean> client_inouts) {
+		this.client_inouts = client_inouts;
 	}
 
 }

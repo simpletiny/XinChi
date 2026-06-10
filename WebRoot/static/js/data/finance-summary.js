@@ -15,6 +15,7 @@ var SummaryContext = function() {
 	self.payable_details = ko.observable({});
 
 	self.view_detail = function(provice) {
+		startLoadingSimpleIndicator("加载中...");
 		$.getJSON(self.apiurl + 'data/fetchPayableByArea', "provice=" + provice, function(data) {
 			self.payable_details(data.payables);
 
@@ -35,7 +36,6 @@ var SummaryContext = function() {
 				}
 			});
 
-			console.log(self.payable_details());
 			$(".rmb").formatCurrency();
 			endLoadingIndicator();
 		});

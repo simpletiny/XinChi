@@ -75,5 +75,6 @@
 				and substr(A.received_time,1,10) =#{params.bo.date,jdbcType=VARCHAR}
 			</if>
 		</where>
+		order by A.received_time
 	</select>
 </mapper>

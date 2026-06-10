@@ -14,45 +14,47 @@ var ClientContext = function() {
 	var client_employee_name = arr[1];
 	self.visit().client_employee_pk = ko.observable(client_employee_pk);
 	self.visit().client_employee_name = ko.observable(client_employee_name);
-	self.target = [ '开拓客户', '关系破局', '升级关系', '产品宣推', '催讨尾款', '登门善后' ];
+	self.target = ['开拓客户', '关系破局', '升级关系', '产品宣推', '催讨尾款', '登门善后'];
 	self.chosenSubTargets = ko.observableArray([]);
-	
-//	self.targetMapping = {
-//		'1' : '开拓客户',
-//		'2' : '关系破局',
-//		'3' : '升级关系',
-//		'4' : '产品宣推',
-//		'5' : '催讨尾款',
-//		'6' : '登门善后',
-//	};
+
+	// self.targetMapping = {
+	// '1' : '开拓客户',
+	// '2' : '关系破局',
+	// '3' : '升级关系',
+	// '4' : '产品宣推',
+	// '5' : '催讨尾款',
+	// '6' : '登门善后',
+	// };
 
 	var x = new Date();
 	self.visit().date = ko.observable();
 	self.visit().date(x.Format("yyyy-MM-dd"));
-	
-	var minDate= x.addDate(-2).Format("yyyy/MM/dd");
+
+	var minDate = x.addDate(-2).Format("yyyy/MM/dd");
 	$('.date-picker').datetimepicker({
-		maxDate:0,
-		minDate:minDate
+		maxDate : 0,
+		minDate : minDate
 	});
-	
+
 	self.saveVisit = function() {
-		console.log($("form").serialize() + "&visit.type=VISIT&visit.sub_target="+self.chosenSubTargets())
+		console.log($("form").serialize() + "&visit.type=VISIT&visit.sub_target=" + self.chosenSubTargets())
 		if (!$("form").valid()) {
 			return;
 		}
-		// if (self.visit().summary.length < 21) {
-		// fail_msg("总结不得少于20个字");
-		// return;
-		// }
+		if ($("#txt-summary").val().length < 21) {
+			fail_msg("效果评估不得少于20个字");
+			return;
+		}
 
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'client/createVisit',
-			data : $("form").serialize() + "&visit.type=VISIT&visit.sub_target="+self.chosenSubTargets()
+			data : $("form").serialize() + "&visit.type=VISIT&visit.sub_target=" + self.chosenSubTargets()
 		}).success(function(str) {
-			if (str == "OK") {
+			if (str == "success") {
 				window.location.href = self.apiurl + "templates/client/client-relation.jsp";
+			} else {
+				fail_msg(str);
 			}
 		});
 
@@ -170,4 +172,12 @@ var ctx = new ClientContext();
 
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	$('.file-img').change(function() {
+		changeFile({
+			input : this,
+			size : 400,
+			width : 400,
+			required : "yes"
+		});
+	});
 });

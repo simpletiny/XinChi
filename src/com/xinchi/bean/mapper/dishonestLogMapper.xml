@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.DishonestLogMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.DishonestLogBean">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="case_code" property="case_code" jdbcType="VARCHAR" />
+		<result column="reg_date" property="reg_date" jdbcType="VARCHAR" />
+		<result column="publish_date" property="publish_date" jdbcType="VARCHAR" />
+		<result column="sign_flg" property="sign_flg" jdbcType="CHAR" />
+		<result column="signal_rating" property="signal_rating" jdbcType="CHAR" />
+		<result column="court_name" property="court_name" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		id,
+		case_code,
+		reg_date,
+		publish_date,
+		sign_flg,
+		signal_rating,
+		court_name,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dishonest_log
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPersonId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from dishonest_log
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from dishonest_log
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.DishonestLogBean">
+
+		insert into dishonest_log
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="case_code != null">
+				case_code,
+			</if>
+			<if test="reg_date != null">
+				reg_date,
+			</if>
+			<if test="publish_date != null">
+				publish_date,
+			</if>
+			<if test="sign_flg != null">
+				sign_flg,
+			</if>
+			<if test="signal_rating != null">
+				signal_rating,
+			</if>
+			<if test="court_name != null">
+				court_name,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="case_code != null">
+				#{case_code,jdbcType=VARCHAR},
+			</if>
+			<if test="reg_date != null">
+				#{reg_date,jdbcType=VARCHAR},
+			</if>
+			<if test="publish_date != null">
+				#{publish_date,jdbcType=VARCHAR},
+			</if>
+			<if test="sign_flg != null">
+				#{sign_flg,jdbcType=CHAR},
+			</if>
+			<if test="signal_rating != null">
+				#{signal_rating,jdbcType=CHAR},
+			</if>
+			<if test="court_name != null">
+				#{court_name,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.DishonestLogBean">
+		update dishonest_log
+		<set>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="case_code != null">
+				case_code = #{case_code,jdbcType=VARCHAR},
+			</if>
+			<if test="reg_date != null">
+				reg_date = #{reg_date,jdbcType=VARCHAR},
+			</if>
+			<if test="publish_date != null">
+				publish_date = #{publish_date,jdbcType=VARCHAR},
+			</if>
+			<if test="sign_flg != null">
+				sign_flg = #{sign_flg,jdbcType=CHAR},
+			</if>
+			<if test="signal_rating != null">
+				signal_rating = #{signal_rating,jdbcType=CHAR},
+			</if>
+			<if test="court_name != null">
+				court_name = #{court_name,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.DishonestLogBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dishonest_log
+	</select>
+</mapper>

@@ -1,9 +1,9 @@
 var clientEmployeeLayer;
+let confirmLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.order = ko.observable({});
-	self.clientEmployees = ko.observable({});
 	self.employee = ko.observable({});
 	self.order_pk = $("#key").val();
 	self.current_date = $("#hidden-server-date").val();
@@ -18,23 +18,23 @@ var OrderContext = function() {
 		self.users(data.users);
 	});
 
-	self.passengers = ko.observableArray([]);
+	self.passengers = ko.observableArray([{
+		name_index : 1,
+		chairman : 'Y'
+	}]);
 
 	var x = new Date(self.current_date);
 	var year_now = x.getFullYear();
 
 	self.confirm_date(self.current_date);
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
+		self.order(data.order);
 
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
-		self.passengers(data.passengers);
+		if (data.passengers.length > 0) {
+			self.passengers(data.passengers);
+		}
 
 		if (self.order().name_list_lock == '1')
 			$("#txt-name-list").disabled();
@@ -42,18 +42,19 @@ var OrderContext = function() {
 		if (self.order().independent_flg == 'Y') {
 			self.independent_msg("（独立团）");
 		}
-
-		$.getJSON(self.apiurl + 'client/searchOneEmployee', {
-			employee_pk : self.order().client_employee_pk
-		}, function(data) {
-			if (data.employee) {
-				self.employee(data.employee);
-			} else {
-				fail_msg("员工不存在！");
-			}
-		}).fail(function(reason) {
-			fail_msg(reason.responseText);
-		});
+		if(self.order().client_employee_pk){
+			$.getJSON(self.apiurl + 'client/searchOneEmployee', {
+				employee_pk : self.order().client_employee_pk
+			}, function(data) {
+				if (data.employee) {
+					self.employee(data.employee);
+				} else {
+					fail_msg("员工不存在！");
+				}
+			}).fail(function(reason) {
+				fail_msg(reason.responseText);
+			});
+		}
 		self.loadFiles();
 	});
 	self.loadFiles = function() {
@@ -73,8 +74,8 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
-
+		formData.append("subFolder", self.order().create_user_number);
+		
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', url, true);
@@ -120,38 +121,53 @@ var OrderContext = function() {
 		};
 		xhr.send(formData);
 	};
-
+	self.confirm_order = ko.observable({});
 	self.updateOrder = function() {
-		if (!$("form").valid()) {
+		let result = validateOrder();
+		if(result[0]!="SUCCESS"){
+			fail_msg(result.join("<br>"));
 			return;
 		}
+		let departure_date = $('[name="sale_order.departure_date"]').val();
+		let days = $("#txt-days").val();
+		let back_date =  new Date(new Date(departure_date).addDate(days-1)).Format("yyyy-MM-dd");
+		let product_name = $('#txt-product-name').val();
+		let product_manager = $("#sel-product-manager option:selected").text();
+		let adult_count = $("#people-count").val()-0;
+		let special_count = $("#special-count").val()-0;
+		let sum_count = adult_count+special_count;
+		let client_employee = $("#txt-client-employee-name").val();
+		
+		self.confirm_order({departure_date,back_date,days,product_name,product_manager,adult_count,special_count,sum_count,client_employee})
+		
+		confirmLayer = $.layer({
+			type : 1,
+			title : ['订单确认', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['900px', '300px'],
+			offset : ['', ''],
+			scrollbar : true,
+			page : {
+				dom : '#div-confirm'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
 
-		var maxDate = new Date(x.Format("yyyy-MM-dd"));
-		var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
-		var confirm_date = new Date($(".date-picker-confirm-date").val());
-		if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
-			fail_msg("请选择允许的时间范围！");
-			return;
-		}
-
-		var confirm_file = $("#txt-confirm-file").val();
-		if (confirm_file == "") {
-			fail_msg("请上传确认件！");
-			return;
-		}
-
+	};
+	self.doConfirmOrder = function(){
+		startLoadingSimpleIndicator("保存中");
 		var data = $("form").serialize();
-
 		// 名单json
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		// 判断是否有名单
-		var hasNames = false;
-		var hasChairman = false;
-		var json = '[';
+		let people = new Array();
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
 			var index = i + 1;
 			var name = $(tr).find("[st='name']").val().trim();
 			var sex = $(tr).find("[st='sex']").val();
@@ -160,40 +176,15 @@ var OrderContext = function() {
 			var cellphone_B = $(tr).find("[st='cellphone_B']").val().trim();
 			var id = $(tr).find("[st='id']").val().trim();
 
-			if (name == "" && id == "") {
-				continue;
-			}
+			const age = $(tr).find("[st='age']").val().trim();
+			const id_type = $(tr).find("[st='type']").val();
 
-			if ((name != "" && id == "") || (name == "" && id != "")) {
-				fail_msg("请正确填写第" + index + "个名单!");
-				return;
-			}
-
-			if (name != "" && id != "" && !hasNames) {
-				hasNames = true;
-			}
-
-			if (teamChairman == "Y") {
-				hasChairman = true;
-			}
-
-			json += '{"chairman":"' + teamChairman + '","index":"' + index + '","name":"' + name + '","sex":"' + sex
-					+ '","cellphone_A":"' + cellphone_A + '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"},';
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id};
+			people.push(person);
 		}
 
-		if (!hasNames) {
-			fail_msg("没有名单，不能确认！");
-			return;
-		}
-		if (!hasChairman) {
-			fail_msg("请指定团长！");
-			return;
-		}
-
-		json = json.RTrim(',') + ']';
+		const json = JSON.stringify(people);
 		data += "&json=" + json;
-
-		startLoadingSimpleIndicator("保存中");
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'order/confirmBudgetNonStandardOrder',
@@ -206,7 +197,11 @@ var OrderContext = function() {
 				fail_msg("信用额度不足，不能确认订单！");
 			}
 		});
-	};
+	}
+	self.cancelConfirm = function(){
+		layer.close(confirmLayer);
+	}
+	
 	// 批量导入
 	self.batName = function() {
 		passengerBatLayer = $.layer({
@@ -226,6 +221,99 @@ var OrderContext = function() {
 			}
 		});
 	};
+	self.clientEmployees = ko.observable({});
+	self.refreshClient = function() {
+		startLoadingSimpleIndicator("加载中……");
+		var param = "employee.name=" + $("#client_name").val();
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
+			self.clientEmployees(data.employees);
+
+			self.totalCount(Math.ceil(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+			
+			endLoadingIndicator();
+		});
+	};
+
+	self.searchClientEmployee = function() {
+		self.refreshClient();
+	};
+
+	self.choseClientEmployee = function() {
+		$("#txt-client-employee-name").blur();
+		clientEmployeeLayer = $.layer({
+			type : 1,
+			title : ['选择客户操作', ''],
+			maxmin : false,
+			closeBtn : [1, true],
+			shadeClose : false,
+			area : ['600px', '650px'],
+			offset : ['50px', ''],
+			scrollbar : true,
+			page : {
+				dom : '#client-pick'
+			},
+			end : function() {
+				console.log("Done");
+			}
+		});
+	};
+
+	self.pickClientEmployee = function(data) {
+		$("#txt-client-employee-name").val(data.name);
+		$("#txt-client-employee-pk").val(data.pk);
+		$("#txt-financial-body-name").text(data.financial_body_name);
+		layer.close(clientEmployeeLayer);
+	};
+	
+	// start pagination
+	self.currentPage = ko.observable(1);
+	self.perPage = 10;
+	self.pageNums = ko.observableArray();
+	self.totalCount = ko.observable(1);
+	self.startIndex = ko.computed(function() {
+		return (self.currentPage() - 1) * self.perPage;
+	});
+
+	self.resetPage = function() {
+		self.currentPage(1);
+	};
+
+	self.previousPage = function() {
+		if (self.currentPage() > 1) {
+			self.currentPage(self.currentPage() - 1);
+			self.refreshPage();
+		}
+	};
+
+	self.nextPage = function() {
+		if (self.currentPage() < self.pageNums().length) {
+			self.currentPage(self.currentPage() + 1);
+			self.refreshPage();
+		}
+	};
+
+	self.turnPage = function(pageIndex) {
+		self.currentPage(pageIndex);
+		self.refreshPage();
+	};
+
+	self.setPageNums = function(curPage) {
+		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
+		var pageNums = [];
+		for (var i = startPage; i <= endPage; i++) {
+			pageNums.push(i);
+		}
+		self.pageNums(pageNums);
+	};
+
+	self.refreshPage = function() {
+		self.searchClientEmployee();
+	};
+	
+	// end pagination
 };
 
 var ctx = new OrderContext();
@@ -250,4 +338,66 @@ $(document).ready(function() {
 		minDate : minDate,
 		maxDate : maxDate,
 	})
+	
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });
+function validateOrder(){
+	startLoadingSimpleIndicator("校验订单");
+	let result = new Array();
+	if (!$("form").valid()) {
+		result.push("请填写非空项！");
+	}
+
+	var x = new Date($("#hidden-server-date").val());
+	var maxDate = new Date(x.Format("yyyy-MM-dd"));
+	var minDate = new Date(x.addDate(-2).Format("yyyy-MM-dd"));
+	var confirm_date = new Date($(".date-picker-confirm-date").val());
+	if (confirm_date - maxDate > 0 || confirm_date - minDate < 0) {
+		result.push("请选择允许的时间范围:" + minDate + "至" + maxDate+"！");
+	}
+	var confirm_file = $("#txt-confirm-file").val();
+	if (confirm_file == "") {
+		result.push("请上传确认件！");
+	}
+	var hasNames = false;
+	var hasChairman = false;
+	var tbody = $("#name-table").find("tbody");
+	var trs = $(tbody).children();
+	let not_ok_names = new Array();
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i];
+		var chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+		var name = $(tr).find("[st='name']").val().trim();
+		var id = $(tr).find("[st='id']").val().trim();
+		let is_ok = $(tr).find("[st='is_ok']").val();
+		if(is_ok!='Y'){
+			not_ok_names.push(name);
+		}
+		if (name != "" && id != "" && !hasNames) {
+			hasNames = true;
+		}
+
+		if (chairman == "Y") {
+			hasChairman = true;
+		}
+	}
+
+	if (!hasNames) {
+		result.push("没有名单，不能确认！");
+	}
+
+	if (!hasChairman) {
+		result.push("请指定团长！");
+	}
+
+	if(not_ok_names.length>0){
+		result.push(not_ok_names.join(",")+"未通过验证！");
+	}
+	
+	if(result.length==0)
+		result.push("SUCCESS");
+	endLoadingIndicator();
+	return result;
+}

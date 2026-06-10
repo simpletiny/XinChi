@@ -74,4 +74,5 @@ public interface SupplierService extends BaseService {
 	public void deleteSupplierFile(String file_name, String supplier_pk);
 
 	public String blockSupplier(String supplier_pk);
+
 }

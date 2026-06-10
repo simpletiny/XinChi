@@ -23,6 +23,9 @@ public class PayableOrderBean extends SupperBO implements Serializable {
 
 	private String update_user;
 
+	// DTO
+	private String supplier_employee_name;
+
 	public String getTeam_number() {
 		return team_number;
 	}
@@ -85,6 +88,14 @@ public class PayableOrderBean extends SupperBO implements Serializable {
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
+	}
+
+	public String getSupplier_employee_name() {
+		return supplier_employee_name;
+	}
+
+	public void setSupplier_employee_name(String supplier_employee_name) {
+		this.supplier_employee_name = supplier_employee_name;
 	}
 
 }

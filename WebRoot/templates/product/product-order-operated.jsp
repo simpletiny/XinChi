@@ -55,6 +55,7 @@ tr td {
 					<div class="form-group">
 						<div style="float: right">
 							<div>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { copyNameList() }">复制名单</button>
 								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { batDownload() }">确认件批量下载</button> -->
 								<button type="submit" class="btn btn-green" data-bind="click: function() { finalOperate() }">决算</button>
 								<button type="submit" class="btn btn-green " data-bind="click: function() { deleteOperation() }">打回重新操作</button>
@@ -130,7 +131,8 @@ tr td {
 								<th>主体</th>
 								<th>总成本</th>
 								<th>产品名称</th>
-								<th>人数</th>
+								<th>成人</th>
+								<th>儿童</th>
 								<th>接团日期</th>
 								<th>接团方式</th>
 								<th>接团联系</th>
@@ -141,6 +143,8 @@ tr td {
 								<th>联系方式</th>
 								<th>备注</th>
 								<th>下载</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -161,7 +165,8 @@ tr td {
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.supplier_cost"></td>
 								<td data-bind="text: $data.supplier_product_name"></td>
-								<td data-bind="text: $data.people_count"></td>
+								<td data-bind="text: $data.adult_count"></td>
+								<td data-bind="text: $data.special_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
 								<td class="detail" data-bind="text: $data.pick_type"></td>
 								<td data-bind="text: $data.picker_cellphone"></td>
@@ -174,6 +179,8 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
 									style="cursor: pointer; margin-right: 10px">确认件</a></td>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -263,45 +270,6 @@ tr td {
 			</div>
 		</div>
 
-	</div>
-	<div id="order-final" style="display: none; width: 800px; height: 550px; overflow-y: auto">
-		<!-- ko if:order_number().indexOf('P')==0 -->
-		<div class="input-row clearfloat">
-			<div class="col-md-12">
-				<table style="width: 100%" class="table table-striped table-hover" id="table-order">
-					<thead>
-						<tr>
-							<th style="width: 20%">团号</th>
-							<th style="width: 20%">销售</th>
-							<th style="width: 10%">人数</th>
-							<th style="width: 30%">游客</th>
-							<th style="color: red">决算价格</th>
-						</tr>
-					</thead>
-					<tbody data-bind="foreach:final_sale_orders">
-						<tr>
-							<input type="hidden" data-bind="value:$data.team_number" st="team-number" />
-							<td data-bind="text:$data.team_number"></td>
-							<td data-bind="text:$data.create_user"></td>
-							<td data-bind="text:$data.adult_count+($data.special_count==null?0:$data.special_count)"></td>
-							<td><a href="javascript:void(0)" style="color: blue"
-								data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-							<td><input type="number" class="required intdtext" data-bind="value:$data.payable" st="team-payable" /></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<!-- /ko -->
-		<div class="input-row clearfloat">
-			<label class="col-md-2 control-label" style="color: red">决算总成本</label>
-			<div class="col-md-4">
-				<input type="number" class="form-control" placeholder="决算总成本" id="final-supplier-cost" />
-			</div>
-		</div>
-		<div class="input-row clearfloat" style="float: right">
-			<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { doFinal() }">确认</button>
-		</div>
 	</div>
 	<div id="supplier-pick" style="display: none;">
 		<div class="main-container">
@@ -404,14 +372,14 @@ tr td {
 						<td data-bind="text: $data.adult_count"></td>
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-						<td data-bind="text:$data.create_user"></td>
+						<td data-bind="text:$data.sale_name"></td>
 						<td><a href="javascript:void(0)"
 							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.cancel_flg == "N" -->
 						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.cancel_flg == "Y" -->
-						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<td style="color: red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
@@ -458,13 +426,12 @@ tr td {
 		</div>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operated.js?v=1.003"></script>
 </body>
 </html>

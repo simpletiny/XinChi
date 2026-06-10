@@ -10,7 +10,8 @@
 		<result column="supplier_cost" property="supplier_cost" jdbcType="DECIMAL" />
 		<result column="final_supplier_cost" property="final_supplier_cost" jdbcType="DECIMAL" />
 		<result column="supplier_product_name" property="supplier_product_name" jdbcType="VARCHAR" />
-		<result column="people_count" property="people_count" jdbcType="INTEGER" />
+		<result column="adult_count" property="adult_count" jdbcType="INTEGER" />
+		<result column="special_count" property="special_count" jdbcType="INTEGER" />
 		<result column="pick_date" property="pick_date" jdbcType="VARCHAR" />
 		<result column="pick_type" property="pick_type" jdbcType="VARCHAR" />
 		<result column="picker_cellphone" property="picker_cellphone" jdbcType="VARCHAR" />
@@ -30,6 +31,10 @@
 		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
 		<result column="single_flg" property="single_flg" jdbcType="CHAR" />
+		<result column="operator_number" property="operator_number" jdbcType="VARCHAR" />
+		<result column="operator_name" property="operator_name" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -41,7 +46,8 @@
 		supplier_cost,
 		final_supplier_cost,
 		supplier_product_name,
-		people_count,
+		special_count,
+		adult_count,
 		pick_date,
 		pick_type,
 		picker_cellphone,
@@ -56,7 +62,9 @@
 		off_day,
 		create_time,
 		update_time,
-		passenger_captain
+		passenger_captain,
+		operator_number,
+		product_manager_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -68,7 +76,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.pick_type,
 		A.picker_cellphone,
@@ -83,7 +92,9 @@
 		A.off_day,
 		A.create_time,
 		A.update_time,
-		A.passenger_captain
+		A.passenger_captain,
+		A.operator_number,
+		A.product_manager_number
 		from product_order_operation A
 		LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
@@ -123,8 +134,11 @@
 			<if test="supplier_product_name != null">
 				supplier_product_name,
 			</if>
-			<if test="people_count != null">
-				people_count,
+			<if test="adult_count != null">
+				adult_count,
+			</if>
+			<if test="special_count != null">
+				special_count,
 			</if>
 			<if test="pick_date != null">
 				pick_date,
@@ -171,6 +185,12 @@
 			<if test="passenger_captain != null">
 				passenger_captain,
 			</if>
+			<if test="operator_number != null">
+				operator_number,
+			</if>
+			<if test="product_manager_number != null">
+				product_manager_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -191,8 +211,11 @@
 			<if test="supplier_product_name != null">
 				#{supplier_product_name,jdbcType=VARCHAR},
 			</if>
-			<if test="people_count != null">
-				#{people_count,jdbcType=INTEGER},
+			<if test="adult_count != null">
+				#{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_count != null">
+				#{special_count,jdbcType=INTEGER},
 			</if>
 			<if test="pick_date != null">
 				#{pick_date,jdbcType=VARCHAR},
@@ -239,6 +262,12 @@
 			<if test="passenger_captain != null">
 				#{passenger_captain,jdbcType=VARCHAR},
 			</if>
+			<if test="operator_number != null">
+				#{operator_number,jdbcType=VARCHAR},
+			</if>
+			<if test="product_manager_number != null">
+				#{product_manager_number,jdbcType=VARCHAR},
+			</if>
 		</trim>
 	</insert>
 
@@ -267,8 +296,11 @@
 			<if test="supplier_product_name != null">
 				supplier_product_name = #{supplier_product_name,jdbcType=VARCHAR},
 			</if>
-			<if test="people_count != null">
-				people_count = #{people_count,jdbcType=INTEGER},
+			<if test="adult_count != null">
+				adult_count = #{adult_count,jdbcType=INTEGER},
+			</if>
+			<if test="special_count != null">
+				special_count = #{special_count,jdbcType=INTEGER},
 			</if>
 			<if test="pick_date != null">
 				pick_date = #{pick_date,jdbcType=VARCHAR},
@@ -312,6 +344,12 @@
 			<if test="passenger_captain != null">
 				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
 			</if>
+			<if test="operator_number != null">
+				operator_number = #{operator_number,jdbcType=VARCHAR},
+			</if>
+			<if test="product_manager_number != null">
+				product_manager_number = #{product_manager_number,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -330,7 +368,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.send_date,
 		A.pick_type,
@@ -348,6 +387,10 @@
 		C.supplier_short_name AS supplier_name,
 		C.pk AS supplier_pk,
 		A.passenger_captain,
+		A.operator_number,
+		F.user_name AS operator_name,
+		A.product_manager_number,
+		G.user_name AS product_manager_name,
 		if(D.single_flg is null,'Y',D.single_flg) AS single_flg,
 		group_concat(E.team_number) AS team_numbers
 		from product_order_operation A LEFT JOIN supplier_employee B ON
@@ -357,11 +400,10 @@
 		LEFT JOIN product_order D ON A.team_number=D.order_number
 		LEFT JOIN
 		product_order_team_number E ON A.team_number=E.product_order_number
-
+		LEFT JOIN user_base F ON A.operator_number = F.user_number
+		LEFT JOIN user_base G ON A.product_manager_number = G.user_number
+		
 		<where>
-			<if test="params.bo.create_user != null and params.bo.create_user !=''">
-				and A.create_user = #{params.bo.create_user,jdbcType=VARCHAR}
-			</if>
 			<if test="params.bo.status != null and params.bo.status !=''">
 				and A.status = #{params.bo.status,jdbcType=VARCHAR}
 			</if>
@@ -380,12 +422,20 @@
 			<if test="params.bo.pick_month != null and params.bo.pick_month !=''">
 				and LEFT(A.pick_date,7) = #{params.bo.pick_month,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size()>0">
+				and A.product_manager_number in
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator=","
+					close=")">
+					#{params.bo.product_manager_numbers[${index}]}
+				</foreach>
+			</if>
+			
 		</where>
 		group by A.team_number,A.operate_index
 		<if test="params.bo.team_number1 != null and params.bo.team_number1 !=''">
 			HAVING team_numbers like CONCAT('%',#{params.bo.team_number1,jdbcType=VARCHAR},'%')
 		</if>
-		ORDER BY A.pick_date DESC,A.team_number,A.operate_index
+		ORDER BY A.pick_date ASC,A.team_number,A.operate_index,A.supplier_product_name
 	</select>
 
 
@@ -399,7 +449,8 @@
 		A.supplier_cost,
 		A.final_supplier_cost,
 		A.supplier_product_name,
-		A.people_count,
+		A.special_count,
+		A.adult_count,
 		A.pick_date,
 		A.send_date,
 		A.pick_type,
@@ -414,7 +465,9 @@
 		A.picker,
 		A.land_day,
 		A.off_day,
-		A.passenger_captain
+		A.passenger_captain,
+		A.operator_number,
+		A.product_manager_number
 		from
 		product_order_operation A LEFT JOIN supplier_employee B ON A.supplier_employee_pk = B.pk
 		where

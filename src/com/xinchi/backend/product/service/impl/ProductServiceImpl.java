@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.order.dao.BudgetNonStandardOrderDAO;
-import com.xinchi.backend.order.dao.BudgetStandardOrderDAO;
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.backend.product.dao.ProductDAO;
 import com.xinchi.backend.product.dao.ProductDelayDAO;
@@ -26,8 +25,6 @@ import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.ticket.dao.FlightDAO;
 import com.xinchi.backend.ticket.dao.FlightInfoDAO;
 import com.xinchi.backend.util.service.NumberService;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.FlightInfoBean;
 import com.xinchi.bean.OrderDto;
@@ -39,10 +36,12 @@ import com.xinchi.bean.ProductProfitBean;
 import com.xinchi.bean.ProductSupplierBean;
 import com.xinchi.bean.ProductSupplierInfoBean;
 import com.xinchi.bean.ProductUrgentBean;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -70,13 +69,29 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String createProduct(ProductBean product) {
 		ProductBean option = new ProductBean();
+		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(product.getProduct_model());
+		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		// 2024-07-25,改为同一产品名称下型号不能重复
+		option.setCreate_user(user.getUser_number());
+		option.setName(product.getName());
 
 		// 检测产品型号
 		List<ProductBean> exists = dao.selectByParam(option);
 
 		if (null != exists && exists.size() > 0)
 			return "exists";
+
+		List<Integer> id_types = product.getId_types();
+
+		int t = 0;
+		if (null != id_types) {
+			for (Integer id_type : id_types) {
+				t += id_type;
+			}
+		}
+		t = t == 0 ? 3 : t;
+		product.setId_type(String.valueOf(t));
 
 		dao.insert(product);
 		return SUCCESS;
@@ -89,7 +104,12 @@ public class ProductServiceImpl implements ProductService {
 	public String update(ProductBean bean, ProductDelayBean delay) {
 		// 检测产品型号
 		ProductBean option = new ProductBean();
+		UserSessionBean user = SimpletinyUser.user();
 		option.setProduct_model(bean.getProduct_model());
+		// 2023-12-24，改为同一产品经理下的型号不能重复（原所有型号不能重复）。
+		// 2024-07-25,改为同一产品名称下型号不能重复
+		option.setCreate_user(user.getUser_number());
+		option.setName(bean.getName());
 		List<ProductBean> exists = dao.selectByParam(option);
 		if (null != exists) {
 			for (ProductBean exist : exists) {
@@ -121,7 +141,19 @@ public class ProductServiceImpl implements ProductService {
 				delayDao.delete(exist_delay.getPk());
 			bean.setProduct_value(delay.getProduct_value());
 			bean.setProduct_child_value(delay.getProduct_child_value());
+
+			List<Integer> id_types = bean.getId_types();
+
+			int t = 0;
+			if (null != id_types) {
+				for (Integer id_type : id_types) {
+					t += id_type;
+				}
+			}
+			t = t == 0 ? 3 : t;
+			bean.setId_type(String.valueOf(t));
 		}
+		bean.setAnalysis_flg("N");
 		dao.update(bean);
 		return "success";
 	}
@@ -178,9 +210,6 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductBean> selectByPage(Page<ProductBean> page) {
 		return dao.selectByPage(page);
 	}
-
-	@Autowired
-	private BudgetStandardOrderDAO bsoDao;
 
 	@Override
 	public String onSale(String product_pks, String sale_flg, String force_flg, String urgent_flg) {
@@ -246,10 +275,11 @@ public class ProductServiceImpl implements ProductService {
 		else if (sale_flg.equals("N")) {
 			for (ProductBean product : products) {
 				// 判断是否存在待确认订单
-				BudgetStandardOrderBean option = new BudgetStandardOrderBean();
+
+				OrderDto option = new OrderDto();
 				option.setProduct_pk(product.getPk());
 				option.setConfirm_flg("N");
-				List<BudgetStandardOrderBean> orders = bsoDao.selectByParam(option);
+				List<OrderDto> orders = orderDao.selectByParam(option);
 				if (null != orders && orders.size() > 0) {
 					// 判断是否有经理权限
 					if (!user_roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -262,8 +292,8 @@ public class ProductServiceImpl implements ProductService {
 							product.setKeep_flg("N");
 							dao.update(product);
 							// 删除待确认订单
-							for (BudgetStandardOrderBean order : orders) {
-								bsoDao.delete(order.getPk());
+							for (OrderDto order : orders) {
+								orderDao.deleteByPk(order.getPk());
 							}
 						} else {
 							return "second&&" + product.getProduct_number() + product.getName() + "有待确认订单！";
@@ -737,7 +767,7 @@ public class ProductServiceImpl implements ProductService {
 		// 删除之前没用的模板
 		for (String file : templetFiles) {
 			if (!file.equals("default")) {
-				FileUtil.deleteFile(file, "supplierConfirmTempletFolder", null);
+				FileUtil.deleteFile(file, "supplierConfirmTempletFolder");
 			}
 		}
 		return SUCCESS;
@@ -802,43 +832,11 @@ public class ProductServiceImpl implements ProductService {
 	public String unlockOrders(List<String> team_numbers) {
 		for (String team_number : team_numbers) {
 			OrderDto order = orderDao.selectByTeamNumber(team_number);
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(order.getPk());
-				bso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(order.getPk());
-				bnso.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
-				bnsoDao.update(bnso);
-			}
+			SaleOrderBean ready_order = new SaleOrderBean();
+			ready_order.setPk(order.getPk());
+			ready_order.setLock_flg(SimpletinyString.replaceCharFromLeft(order.getLock_flg(), "N", 1));
+			orderDao.update(ready_order);
 		}
-
-		return SUCCESS;
-	}
-
-	@Override
-	public String tipSalesConfirmName(List<String> team_numbers) {
-		for (String team_number : team_numbers) {
-			OrderDto order = orderDao.selectByTeamNumber(team_number);
-
-			if (order.getName_confirm_status().equals("3") || order.getName_confirm_status().equals("5"))
-				continue;
-			if (order.getStandard_flg().equals("Y")) {
-				BudgetStandardOrderBean bso = new BudgetStandardOrderBean();
-				bso.setPk(order.getPk());
-
-				bso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
-				bsoDao.update(bso);
-			} else {
-				BudgetNonStandardOrderBean bnso = new BudgetNonStandardOrderBean();
-				bnso.setPk(order.getPk());
-				bnso.setName_confirm_status(ResourcesConstants.NAME_CONFIRM_STATUS_PRODUCTING);
-				bnsoDao.update(bnso);
-			}
-		}
-
 		return SUCCESS;
 	}
 
@@ -857,6 +855,7 @@ public class ProductServiceImpl implements ProductService {
 			int start_day = obj.getInt("start_day");
 			String start_city = obj.getString("start_city");
 			String end_city = obj.getString("end_city");
+			String flight_number = obj.getString("flight_number");
 
 			ProductAirTicketBean ticket = new ProductAirTicketBean();
 
@@ -865,6 +864,7 @@ public class ProductServiceImpl implements ProductService {
 			ticket.setStart_day(start_day);
 			ticket.setStart_city(start_city);
 			ticket.setEnd_city(end_city);
+			ticket.setFlight_number(flight_number);
 			productAirTicketService.insert(ticket);
 
 		}
@@ -881,18 +881,17 @@ public class ProductServiceImpl implements ProductService {
 	private ProductUrgentDAO productUrgentDao;
 
 	@Override
-	public String searchUrgentCnt(String user_number) {
+	public int searchUrgentCnt(String user_number) {
 
 		ProductUrgentBean option = new ProductUrgentBean();
 
-		;
 		option.setUser_number(user_number);
 		option.setDate_from(DateUtil.getThisWeekFirstDay());
 		option.setDate_to(DateUtil.getThisWeekLastDay());
 
 		List<ProductUrgentBean> pubs = productUrgentDao.selectByParam(option);
 
-		return null != pubs ? String.valueOf(pubs.size()) : "0";
+		return null != pubs ? pubs.size() : 0;
 	}
 
 	@Autowired

@@ -22,7 +22,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		
 		<!-- 搜索已确认订单 -->
 		<action name="searchCOrdersByPage" class="orderAction" method="searchCOrdersByPage">
 			<result name="success" type="json">
@@ -30,12 +30,10 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 按pk搜索已确认订单 -->
-		<action name="searchCOrderByPk" class="orderAction" method="searchCOrderByPk">
-			<result name="success" type="json">
-				<param name="excludeNullProperties">true</param>
-				<param name="ignoreHierarchy">false</param>
-			</result>
+
+		<!-- 按pk查询订单 -->
+		<action name="searchOrderByPk" class="orderAction" method="searchOrderByPk">
+			<result name="success" type="json"></result>
 		</action>
 		<!-- 搜索已决算订单 -->
 		<action name="searchFOrdersByPage" class="orderAction" method="searchFOrdersByPage">
@@ -52,11 +50,6 @@
 		<action name="createReceivable" class="orderAction" method="createReceivable">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<!-- 打回已确认订单 -->
-		<action name="rollBackCOrder" class="orderAction" method="rollBackCOrder">
-			<result name="success" type="str">resultStr</result>
-		</action>
-
 		<!-- 更新标准预算单 -->
 		<action name="updateBudgetStandardOrder" class="orderAction" method="updateBudgetStandardOrder">
 			<result name="success" type="str">resultStr</result>
@@ -65,7 +58,14 @@
 		<action name="confirmBudgetStandardOrder" class="orderAction" method="confirmBudgetStandardOrder">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		<!-- 授权助理 -->
+		<action name="authorizeAssistant" class="orderAction" method="authorizeAssistant">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 转发订单 -->
+		<action name="forwardOrder" class="orderAction" method="forwardOrder">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 检测已确认订单是否能够修改 -->
 		<action name="checkCanBeEdit" class="orderAction" method="checkCanBeEdit">
 			<result name="success" type="str">resultStr</result>
@@ -93,21 +93,9 @@
 		<action name="confirmNameList" class="orderAction" method="confirmNameList">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		<!-- 决算标准预算单 -->
-		<!-- <action name="finalBudgetStandardOrder" class="orderAction" method="finalBudgetStandardOrder"> <result name="success" 
-			type="str">resultStr</result> </action> -->
-		<!-- 决算非标准预算单 -->
-		<!-- <action name="finalBudgetNonStandardOrder" class="orderAction" method="finalBudgetNonStandardOrder"> <result name="success" 
-			type="str">resultStr</result> </action> -->
-
 		<!-- 决算订单打回重报 -->
 		<action name="rollBackFinalOrder" class="orderAction" method="rollBackFinalOrder">
 			<result name="success" type="str">resultStr</result>
-		</action>
-
-		<!-- 按pk查询标准预算单 -->
-		<action name="searchTbcBsOrderByPk" class="orderAction" method="searchTbcBsOrderByPk">
-			<result name="success" type="json"></result>
 		</action>
 		<!-- 更新非标准预算单 -->
 		<action name="updateBudgetNonStandardOrder" class="orderAction" method="updateBudgetNonStandardOrder">
@@ -131,10 +119,6 @@
 		<!-- 更新已确认非标准预算单 -->
 		<action name="updateConfirmedNonStandardOrder" class="orderAction" method="updateConfirmedNonStandardOrder">
 			<result name="success" type="str">resultStr</result>
-		</action>
-		<!-- 按PK查询非标准预算单 -->
-		<action name="searchTbcBnsOrderByPk" class="orderAction" method="searchTbcBnsOrderByPk">
-			<result name="success" type="json"></result>
 		</action>
 		<!-- 更新订单备注 -->
 		<action name="updateComment" class="orderAction" method="updateComment">
@@ -160,8 +144,15 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<!-- 根据团号搜索订单信息 -->
+		<!-- 根据团号搜索订单 -->
 		<action name="selectOrderByTeamNumber" class="orderAction" method="selectOrderByTeamNumber">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 根据团号搜索订单信息 -->
+		<action name="selectOrderInfoByTeamNumber" class="orderAction" method="selectOrderInfoByTeamNumber">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>
@@ -189,8 +180,16 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<!-- 验证是否可以审核 -->
+		<action name="checkOrderReportCanBeApproved" class="orderReportAction" method="checkOrderReportCanBeApproved">
+			<result name="success" type="str">resultStr</result>
+		</action>
 		<!-- 审核 -->
 		<action name="approveTeamReport" class="orderReportAction" method="approveTeamReport">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 单团添加额外收支 -->
+		<action name="addReconciliation" class="orderReportAction" method="addReconciliation">
 			<result name="success" type="str">resultStr</result>
 		</action>
 		<!-- 打回已审核的单团核算单 -->
@@ -203,7 +202,7 @@
 		</action>
 
 		<!-- 销售仪表盘 -->
-		<action name="searchSaleScoreByPage" class="saleDashBoardAction" method="searchSaleScoreByPage">
+		<action name="searchSaleScoreByParam" class="saleDashBoardAction" method="searchSaleScoreByParam">
 			<result name="success" type="json">
 				<param name="excludeNullProperties">true</param>
 				<param name="ignoreHierarchy">false</param>

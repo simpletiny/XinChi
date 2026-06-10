@@ -30,6 +30,7 @@
 		<result column="extra_info" property="extra_info" jdbcType="VARCHAR" />
 		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="client_sale_cost" property="client_sale_cost" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<resultMap id="ClientSummaryMap" type="com.xinchi.bean.ClientSummaryDto">
@@ -43,6 +44,7 @@
 		<result column="week_accurate_sale_count" property="week_accurate_sale_count" jdbcType="INTEGER" />
 	</resultMap>
 	<resultMap id="PotentialMap" type="com.xinchi.bean.PotentialDto">
+		<result column="user_pk" property="user_pk" jdbcType="CHAR" />
 		<result column="all_all" property="all_all" jdbcType="INTEGER" />
 		<result column="core_all" property="core_all" jdbcType="INTEGER" />
 		<result column="main_all" property="main_all" jdbcType="INTEGER" />
@@ -51,6 +53,14 @@
 		<result column="try_all" property="try_all" jdbcType="INTEGER" />
 		<result column="ignore_all" property="ignore_all" jdbcType="INTEGER" />
 		<result column="new_all" property="new_all" jdbcType="INTEGER" />
+
+		<result column="last_all" property="last_all" jdbcType="INTEGER" />
+		<result column="last_core" property="last_core" jdbcType="INTEGER" />
+		<result column="last_main" property="last_main" jdbcType="INTEGER" />
+		<result column="last_market" property="last_market" jdbcType="INTEGER" />
+		<result column="last_try" property="last_try" jdbcType="INTEGER" />
+		<result column="last_ignore" property="last_ignore" jdbcType="INTEGER" />
+		<result column="last_new" property="last_new" jdbcType="INTEGER" />
 
 		<result column="all_tel" property="all_tel" jdbcType="INTEGER" />
 		<result column="core_tel" property="core_tel" jdbcType="INTEGER" />
@@ -108,6 +118,7 @@
 		<result column="extra_info" property="extra_info" jdbcType="VARCHAR" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="visit_img" property="visit_img" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="WorkOrderMap" type="com.xinchi.bean.WorkOrderDto">
 		<result column="all_order" property="all_order" jdbcType="INTEGER" />
@@ -131,12 +142,14 @@
 	</resultMap>
 	<resultMap id="IncomingCountMap" type="com.xinchi.bean.IncomingCountDto">
 		<result column="all_wechat" property="all_wechat" jdbcType="INTEGER" />
+		<result column="core_wechat" property="core_wechat" jdbcType="INTEGER" />
 		<result column="main_wechat" property="main_wechat" jdbcType="INTEGER" />
 		<result column="market_wechat" property="market_wechat" jdbcType="INTEGER" />
 		<result column="try_wechat" property="try_wechat" jdbcType="INTEGER" />
 		<result column="ignore_wechat" property="ignore_wechat" jdbcType="INTEGER" />
 		<result column="new_wechat" property="new_wechat" jdbcType="INTEGER" />
 		<result column="all_tel" property="all_tel" jdbcType="INTEGER" />
+		<result column="core_tel" property="core_tel" jdbcType="INTEGER" />
 		<result column="main_tel" property="main_tel" jdbcType="INTEGER" />
 		<result column="market_tel" property="market_tel" jdbcType="INTEGER" />
 		<result column="try_tel" property="try_tel" jdbcType="INTEGER" />
@@ -156,6 +169,14 @@
 		<result column="user_pk" property="user_pk" jdbcType="VARCHAR" />
 		<result column="product_point" property="product_point" jdbcType="INTEGER" />
 		<result column="confirm_date" property="confirm_date" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ScoreRankMap" type="com.xinchi.bean.ScoreRankDto">
+		<result column="sale_number" property="sale_number" jdbcType="VARCHAR" />
+		<result column="confirm_month" property="confirm_month" jdbcType="VARCHAR" />
+		<result column="rank_first_score" property="rank_first_score" jdbcType="INTEGER" />
+		<result column="rank_middle_score" property="rank_middle_score" jdbcType="INTEGER" />
+		<result column="rank_last_score" property="rank_last_score" jdbcType="INTEGER" />
+		<result column="rank_score" property="rank_score" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -188,46 +209,72 @@
 	<select id="selectPotentialData" parameterType="java.lang.String" resultMap="PotentialMap">
 		SELECT
 		COUNT(IF(A.relation_level!='新增级',1,NULL)) AS all_all,
+		COUNT(IF(A.relation_level='核心级',1,NULL)) AS core_all,
 		COUNT(IF(A.relation_level='主力级',1,NULL)) AS main_all,
 		COUNT(IF(A.relation_level='市场级',1,NULL)) AS market_all,
 		COUNT(IF(A.relation_level='尝试级',1,NULL)) AS try_all,
 		COUNT(IF(A.relation_level='忽略级',1,NULL)) AS ignore_all,
-		COUNT(IF(A.relation_level='新增级',1,NULL)) AS new_all,
+		COUNT(IF(A.relation_level='新增级',1,NULL))
+		AS new_all,
 
-		COUNT(IF(A.market_level='电话级' and A.relation_level!='新增级',1,NULL)) AS all_tel,
+		COUNT(IF(A.market_level='核心' and A.relation_level!='新增级',1,NULL))
+		AS all_tel,
+		COUNT(IF(A.relation_level='核心级' and
+		A.market_level='核心',1,NULL)) AS core_tel,
 		COUNT(IF(A.relation_level='主力级' and
-		A.market_level='电话级',1,NULL)) AS main_tel,
-		COUNT(IF(A.relation_level='市场级' and A.market_level='电话级',1,NULL)) AS
+		A.market_level='核心',1,NULL)) AS
+		main_tel,
+		COUNT(IF(A.relation_level='市场级'
+		and
+		A.market_level='核心',1,NULL)) AS
 		market_tel,
-		COUNT(IF(A.relation_level='尝试级' and A.market_level='电话级',1,NULL)) AS try_tel,
-		COUNT(IF(A.relation_level='忽略级' and A.market_level='电话级',1,NULL)) AS ignore_tel,
+		COUNT(IF(A.relation_level='尝试级' and A.market_level='核心',1,NULL)) AS try_tel,
+		COUNT(IF(A.relation_level='忽略级' and
+		A.market_level='核心',1,NULL)) AS ignore_tel,
 		COUNT(IF(A.relation_level='新增级' and
-		A.market_level='电话级',1,NULL)) AS new_tel,
+		A.market_level='核心',1,NULL)) AS
+		new_tel,
 
-		COUNT(IF(A.market_level='微信级' and A.relation_level!='新增级',1,NULL)) AS
+		COUNT(IF(A.market_level='主力' and A.relation_level!='新增级',1,NULL)) AS
 		all_wechat,
-		COUNT(IF(A.relation_level='主力级' and A.market_level='微信级',1,NULL)) AS main_wechat,
-		COUNT(IF(A.relation_level='市场级' and A.market_level='微信级',1,NULL)) AS market_wechat,
-		COUNT(IF(A.relation_level='尝试级' and
-		A.market_level='微信级',1,NULL)) AS try_wechat,
-		COUNT(IF(A.relation_level='忽略级' and A.market_level='微信级',1,NULL)) AS
-		ignore_wechat,
-		COUNT(IF(A.relation_level='新增级' and A.market_level='微信级',1,NULL)) AS new_wechat,
-
-		COUNT(IF(A.market_level='广告级' and A.relation_level!='新增级',1,NULL)) AS all_ad,
+		COUNT(IF(A.relation_level='核心级' and
+		A.market_level='主力',1,NULL)) AS core_wechat,
 		COUNT(IF(A.relation_level='主力级' and
-		A.market_level='广告级',1,NULL)) AS main_ad,
-		COUNT(IF(A.relation_level='市场级' and A.market_level='广告级',1,NULL)) AS
+		A.market_level='主力',1,NULL)) AS main_wechat,
+		COUNT(IF(A.relation_level='市场级' and
+		A.market_level='主力',1,NULL)) AS
+		market_wechat,
+		COUNT(IF(A.relation_level='尝试级' and
+		A.market_level='主力',1,NULL)) AS
+		try_wechat,
+		COUNT(IF(A.relation_level='忽略级' and A.market_level='主力',1,NULL)) AS
+		ignore_wechat,
+		COUNT(IF(A.relation_level='新增级' and
+		A.market_level='主力',1,NULL)) AS new_wechat,
+
+		COUNT(IF(A.market_level='普通' and
+		A.relation_level!='新增级',1,NULL)) AS
+		all_ad,
+		COUNT(IF(A.relation_level='核心级' and
+		A.market_level='普通',1,NULL)) AS core_ad,
+		COUNT(IF(A.relation_level='主力级' and
+		A.market_level='普通',1,NULL)) AS
+		main_ad,
+		COUNT(IF(A.relation_level='市场级' and
+		A.market_level='普通',1,NULL)) AS
 		market_ad,
-		COUNT(IF(A.relation_level='尝试级' and A.market_level='广告级',1,NULL)) AS try_ad,
+		COUNT(IF(A.relation_level='尝试级' and A.market_level='普通',1,NULL))
+		AS try_ad,
 		COUNT(IF(A.relation_level='忽略级'
-		and A.market_level='广告级',1,NULL)) AS ignore_ad,
-		COUNT(IF(A.relation_level='新增级' and A.market_level='广告级',1,NULL)) AS
+		and A.market_level='普通',1,NULL)) AS ignore_ad,
+		COUNT(IF(A.relation_level='新增级' and
+		A.market_level='普通',1,NULL)) AS
 		new_ad
 
 		FROM
 		client_employee A LEFT JOIN
-		view_client_employee_user B ON A.pk = B.employee_pk
+		view_client_employee_user B ON A.pk =
+		B.employee_pk
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -237,10 +284,32 @@
 		</where>
 	</select>
 
+	<!-- 搜索各种类客户个数 -->
+	<select id="selectTypeCount" resultMap="PotentialMap">
+		SELECT
+		COUNT(IF(A.relation_level!='新增级',1,NULL)) AS all_all,
+		COUNT(IF(A.relation_level='核心级',1,NULL)) AS core_all,
+		COUNT(IF(A.relation_level='主力级',1,NULL)) AS main_all,
+		COUNT(IF(A.relation_level='市场级',1,NULL)) AS market_all,
+		COUNT(IF(A.relation_level='尝试级',1,NULL)) AS try_all,
+		COUNT(IF(A.relation_level='忽略级',1,NULL)) AS ignore_all,
+		COUNT(IF(A.relation_level='新增级',1,NULL))
+		AS new_all,
+		B.user_pks AS user_pk
+		FROM
+		client_employee A LEFT JOIN
+		view_client_employee_user B ON A.pk = B.employee_pk
+		<where>
+			A.public_flg='N' and A.delete_flg='N'
+		</where>
+		group by B.user_pks
+	</select>
+
 	<!-- 搜索努力值订单数据 -->
 	<select id="selectWorkOrderData" parameterType="java.lang.String" resultMap="WorkOrderMap">
 		select
 		SUM(A.month_order_count) AS all_order,
+		SUM(IF(A.relation_level='核心级',A.month_order_count,NULL)) AS core_order,
 		SUM(IF(A.relation_level='主力级',A.month_order_count,NULL)) AS main_order,
 		SUM(IF(A.relation_level='市场级',A.month_order_count,NULL)) AS market_order,
 		SUM(IF(A.relation_level='尝试级',A.month_order_count,NULL)) AS try_order,
@@ -248,7 +317,8 @@
 		SUM(IF(A.relation_level='新增级',A.month_order_count,NULL)) AS new_order
 		from month_order_count A
 		LEFT JOIN
-		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
+		view_client_employee_user B ON
+		A.client_employee_pk = B.employee_pk
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -260,6 +330,7 @@
 	<select id="selectAccurateSaleData" parameterType="java.lang.String" resultMap="AccurateSaleCountMap">
 		select
 		SUM(A.visit_count) AS all_accurate,
+		SUM(IF(A.relation_level='核心级',A.visit_count,NULL)) AS core_accurate,
 		SUM(IF(A.relation_level='主力级',A.visit_count,NULL)) AS main_accurate,
 		SUM(IF(A.relation_level='市场级',A.visit_count,NULL)) AS market_accurate,
 		SUM(IF(A.relation_level='尝试级',A.visit_count,NULL)) AS try_accurate,
@@ -268,7 +339,8 @@
 		SUM(IF(A.relation_level='新增级',A.visit_count,NULL)) AS new_accurate
 		from view_visit_count A
 		LEFT JOIN
-		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
+		view_client_employee_user B ON
+		A.client_employee_pk = B.employee_pk
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and (B.user_pks like CONCAT('%',#{_parameter,jdbcType=VARCHAR},'%'))
@@ -279,23 +351,28 @@
 	<!-- 搜索努力值精推数据 -->
 	<select id="selectIncomingData" parameterType="java.lang.String" resultMap="IncomingCountMap">
 		select
-		SUM(A.wechat_count) AS all_wechat_count,
+		SUM(A.wechat_count) AS all_wechat,
+		SUM(IF(A.relation_level='核心级',A.wechat_count,NULL)) AS
+		core_wechat,
 		SUM(IF(A.relation_level='主力级',A.wechat_count,NULL)) AS
-		main_wechat_count,
-		SUM(IF(A.relation_level='市场级',A.wechat_count,NULL)) AS market_wechat_count,
-		SUM(IF(A.relation_level='尝试级',A.wechat_count,NULL)) AS try_wechat_count,
-		SUM(IF(A.relation_level='忽略级',A.wechat_count,NULL)) AS ignore_wechat_count,
-		SUM(IF(A.relation_level='新增级',A.wechat_count,NULL)) AS new_wechat_count,
+		main_wechat,
+		SUM(IF(A.relation_level='市场级',A.wechat_count,NULL))
+		AS market_wechat,
+		SUM(IF(A.relation_level='尝试级',A.wechat_count,NULL)) AS try_wechat,
+		SUM(IF(A.relation_level='忽略级',A.wechat_count,NULL)) AS ignore_wechat,
+		SUM(IF(A.relation_level='新增级',A.wechat_count,NULL)) AS new_wechat,
 
-		SUM(A.tel_count) AS all_tel_count,
-		SUM(IF(A.relation_level='主力级',A.tel_count,NULL)) AS main_tel_count,
+		SUM(A.tel_count) AS all_tel,
+		SUM(IF(A.relation_level='主力级',A.tel_count,NULL)) AS
+		main_tel,
 		SUM(IF(A.relation_level='市场级',A.tel_count,NULL)) AS
-		market_tel_count,
+		market_tel,
 		SUM(IF(A.relation_level='尝试级',A.tel_count,NULL))
-		AS try_tel_count,
-		SUM(IF(A.relation_level='忽略级',A.tel_count,NULL)) AS ignore_tel_count,
+		AS try_tel,
+		SUM(IF(A.relation_level='忽略级',A.tel_count,NULL)) AS ignore_tel,
 		SUM(IF(A.relation_level='新增级',A.tel_count,NULL))
-		AS new_tel_count
+		AS
+		new_tel
 		from view_incoming_count A
 		LEFT JOIN
 		view_client_employee_user B ON A.client_employee_pk = B.employee_pk
@@ -308,32 +385,40 @@
 	</select>
 	<!-- 搜索仪表盘数据 -->
 	<select id="selectMeterData" parameterType="java.lang.String" resultMap="MeterMap">
-		SELECT 
-		    SUM(A.score) AS score,
-		    SUM(A.month_score) AS month_score,
-		    SUM(B.receivable) AS receivable,
-		    SUM(B.warning) AS warning,
-		    SUM(C.sum_reimbursement) AS sum_reimbursement,
-		    SUM(D.sum_reimbursement) AS month_reimbursement,
-		    SUM(B.bad) AS bad,
-		    SUM(B.month_dead) AS month_dead,
-		    SUM(B.sum_dead) AS sum_dead,
-		    SUM(IF(E.day_hold IS NULL, 0, E.day_hold)) AS day_hold,
-		    SUM(IF(F.bad_interest IS NULL,0,F.bad_interest)) AS bad_interest
+		SELECT
+		SUM(A.score) AS score,
+		SUM(A.month_score) AS month_score,
+		SUM(B.receivable) AS receivable,
+		SUM(B.warning) AS
+		warning,
+		SUM(C.sum_reimbursement) AS
+		sum_reimbursement,
+		SUM(D.sum_reimbursement) AS month_reimbursement,
+		SUM(B.bad) AS
+		bad,
+		SUM(B.month_dead) AS month_dead,
+		SUM(B.sum_dead) AS sum_dead,
+		SUM(IF(E.day_hold IS NULL, 0, E.day_hold)) AS
+		day_hold,
+		SUM(IF(F.bad_interest IS NULL,0,F.bad_interest)) AS bad_interest
 		FROM
-			user_base X 
-            LEFT JOIN 
-		    view_score A ON A.user_number = X.user_number
-		        LEFT JOIN
-		    view_receivable_meter B ON X.pk = B.user_pk
-		        LEFT JOIN
-		    view_sum_reimbursement C ON X.user_number = C.apply_user
-		        LEFT JOIN
-		    view_month_reimbursement D ON X.user_number = D.apply_user
-		        LEFT JOIN
-		    view_accumulate_balance E ON X.user_number = E.user_number
-		    	LEFT JOIN
-		    view_bad_interest F ON X.user_number = F.user_number
+		user_base X
+		LEFT JOIN
+		view_score A ON
+		A.user_number = X.user_number
+		LEFT JOIN
+		view_receivable_meter B ON X.pk = B.user_pk
+		LEFT JOIN
+		view_sum_reimbursement C ON
+		X.user_number =
+		C.apply_user
+		LEFT JOIN
+		view_month_reimbursement D ON X.user_number = D.apply_user
+		LEFT JOIN
+		view_accumulate_balance E ON X.user_number = E.user_number
+		LEFT JOIN
+		view_bad_interest F ON X.user_number =
+		F.user_number
 		<where>
 			<if test="_parameter != null and _parameter !=''">
 				and X.pk = #{_parameter,jdbcType=VARCHAR}
@@ -350,8 +435,6 @@
 		</where>
 		ORDER BY connect_date DESC
 	</select>
-
-
 	<select id="selectClientCount" parameterType="java.lang.String" resultType="java.lang.String">
 		select count(*) from client_employee
 		<where>
@@ -367,7 +450,8 @@
 			and A.confirm_date >= DATE_ADD(CURDATE(),INTERVAL -WEEKDAY(CURDATE()) DAY)
 			and A.confirm_date
 			&lt;=date_sub(CURDATE(),INTERVAL WEEKDAY(CURDATE()) -
-			6 DAY)
+			6
+			DAY)
 			<if test="_parameter != null and _parameter !=''">
 				and B.user_name = #{_parameter,jdbcType=VARCHAR}
 			</if>
@@ -473,10 +557,12 @@
 		A.type,
 		A.extra_info,
 		A.head_photo,
-		B.comment
+		B.comment,
+		C.money AS client_sale_cost
 		from
 		client_relation A
 		LEFT JOIN client_employee B ON A.client_employee_pk = B.pk
+		LEFT JOIN view_client_sale_cost C ON A.client_employee_pk = C.client_employee_pk
 		<where>
 			<if test="params.bo.sales != null and params.bo.sales !=''">
 				and (A.sales like CONCAT('%',#{params.bo.sales,jdbcType=VARCHAR},'%'))
@@ -496,17 +582,28 @@
 			and A.delete_flg='N'
 			and not ((A.sales is null OR A.sales='public') and (A.receivable is null OR A.receivable =0))
 		</where>
-		<if test='params.bo.sort_type!=null and params.bo.sort_type=="1"'>
-			ORDER BY last_receivable_period DESC
+		ORDER BY
+		CASE
+		WHEN A.market_level = '核心' THEN 1
+		WHEN A.market_level = '主力' THEN 2
+		WHEN A.market_level = '普通' THEN 3
+		WHEN
+		A.market_level = '未知' THEN 4
+		WHEN
+		A.market_level IS NULL OR A.market_level = '' THEN 5
+		ELSE 6
+		END
+		<if test='params.bo.sort_type != null and params.bo.sort_type == "1"'>
+			,A.last_receivable_period DESC
 		</if>
-		<if test='params.bo.sort_type!=null and params.bo.sort_type=="2"'>
-			ORDER BY connect_date ASC
+		<if test='params.bo.sort_type != null and params.bo.sort_type == "2"'>
+			,A.connect_date ASC
 		</if>
-		<if test='params.bo.sort_type!=null and params.bo.sort_type=="3"'>
-			ORDER BY last_order_period DESC
+		<if test='params.bo.sort_type != null and params.bo.sort_type == "3"'>
+			,A.last_order_period DESC
 		</if>
-		<if test='params.bo.sort_type!=null and params.bo.sort_type=="4"'>
-			ORDER BY year_order_count DESC
+		<if test='params.bo.sort_type != null and params.bo.sort_type == "4"'>
+			,A.year_order_count DESC
 		</if>
 	</select>
 	<select id="selectSummaryByEmployeePk" resultMap="BaseResultMap">
@@ -534,7 +631,8 @@
 		B.comment
 		from
 		client_relation A
-		LEFT JOIN client_employee B ON A.client_employee_pk =
+		LEFT JOIN client_employee B ON
+		A.client_employee_pk =
 		B.pk
 		WHERE A.client_employee_pk = #{employee_pk,jdbcType=VARCHAR}
 	</select>
@@ -542,38 +640,99 @@
 	<select id="selectPointByParam" parameterType="com.xinchi.bean.PointDto" resultMap="PointMap">
 		select
 		sum(A.point) AS point,
-		A.create_user AS user_number,
+		A.sale_number AS user_number,
 		A.date,
 		B.pk AS user_pk
 		from view_point A
 		LEFT JOIN
 		user_base B
-		ON A.create_user = B.user_number
+		ON A.sale_number = B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
 			and LEFT(date,7)='2018-12'
 		</where>
-		GROUP BY A.create_user,A.date
+		GROUP BY A.sale_number,A.date
 	</select>
 	<select id="selectEnableBackPointByParam" parameterType="com.xinchi.bean.BackPointDto" resultMap="BackPointMap">
 		SELECT
 		A.team_number,
-		A.user_number,
+		A.sale AS user_number,
 		A.confirm_date,
 		B.pk AS user_pk,
 		A.product_point
 		FROM
 		view_back_money_balance A
 		LEFT JOIN
-		user_base B ON A.user_number = B.user_number
+		user_base B ON A.sale
+		= B.user_number
 		<where>
 			<if test="user_pk != null and user_pk !=''">
 				and B.pk = #{user_pk,jdbcType=VARCHAR}
 			</if>
 			and LEFT(A.confirm_date, 7) = DATE_FORMAT(NOW(), '%Y-%m')
 			and A.balance &lt;= (A.receivable-A.receivable*0.98)
+		</where>
+	</select>
+	<select id="selectRankScore" parameterType="com.xinchi.bean.ScoreRankDto" resultMap="ScoreRankMap">
+		SELECT
+		(
+		SELECT COUNT(*) + 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.first_score > A.first_score
+		OR (B.first_score = A.first_score AND B.first_people > A.first_people)
+		)
+		) AS rank_first_score,
+		(
+		SELECT COUNT(*) + 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.middle_score >
+		A.middle_score
+		OR
+		(B.middle_score = A.middle_score AND B.middle_people > A.middle_people)
+		)
+		) AS rank_middle_score,
+
+		(
+		SELECT COUNT(*)
+		+ 1
+		FROM view_score_from_last_month B
+		WHERE B.confirm_month = A.confirm_month
+		AND (
+		B.last_score > A.last_score
+		OR
+		(B.last_score = A.last_score AND
+		B.last_people > A.last_people)
+		)
+		) AS rank_last_score,
+
+		(
+		SELECT COUNT(*) + 1
+		FROM
+		view_score_from_last_month B
+		WHERE
+		B.confirm_month = A.confirm_month
+		AND (
+		B.score > A.score
+		OR (B.score = A.score AND B.sum_people > A.sum_people)
+		)
+		) AS
+		rank_score
+
+		FROM
+		view_score_from_last_month A
+		<where>
+			<if test="sale_number != null and sale_number !=''">
+				AND A.sale_number = #{sale_number,jdbcType=VARCHAR}
+			</if>
+			<if test="confirm_month != null and confirm_month !=''">
+				AND A.confirm_month = #{confirm_month,jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 </mapper>	

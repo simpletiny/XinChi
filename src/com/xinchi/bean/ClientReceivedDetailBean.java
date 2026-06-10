@@ -50,6 +50,8 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	private String voucher_file;
 	private String collecter;
+	private String reject_reason;
+	private String confirm_user;
 
 	// more back DTO data
 	private String receiver;
@@ -318,6 +320,22 @@ public class ClientReceivedDetailBean extends SupperBO implements Serializable {
 
 	public void setTypes(List<String> types) {
 		this.types = types;
+	}
+
+	public String getReject_reason() {
+		return reject_reason;
+	}
+
+	public void setReject_reason(String reject_reason) {
+		this.reject_reason = reject_reason;
+	}
+
+	public String getConfirm_user() {
+		return confirm_user;
+	}
+
+	public void setConfirm_user(String confirm_user) {
+		this.confirm_user = confirm_user;
 	}
 
 }

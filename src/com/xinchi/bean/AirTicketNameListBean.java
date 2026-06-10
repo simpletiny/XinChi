@@ -65,6 +65,16 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	private String order_lock_flg;
 
+	private String id_type;
+	private int age;
+
+	// DTO
+	private BigDecimal budget_cost;
+	private BigDecimal final_cost;
+	private String detail_comment;
+	private String year;
+	private String sort_type;
+
 	private List<PassengerTicketInfoBean> ticket_infos;;
 
 	public String getTeam_number() {
@@ -313,6 +323,62 @@ public class AirTicketNameListBean extends SupperBO implements Serializable {
 
 	public void setChange_cost(BigDecimal change_cost) {
 		this.change_cost = change_cost;
+	}
+
+	public String getId_type() {
+		return id_type;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setId_type(String id_type) {
+		this.id_type = id_type;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public BigDecimal getBudget_cost() {
+		return budget_cost;
+	}
+
+	public BigDecimal getFinal_cost() {
+		return final_cost;
+	}
+
+	public void setBudget_cost(BigDecimal budget_cost) {
+		this.budget_cost = budget_cost;
+	}
+
+	public void setFinal_cost(BigDecimal final_cost) {
+		this.final_cost = final_cost;
+	}
+
+	public String getDetail_comment() {
+		return detail_comment;
+	}
+
+	public void setDetail_comment(String detail_comment) {
+		this.detail_comment = detail_comment;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getSort_type() {
+		return sort_type;
+	}
+
+	public void setSort_type(String sort_type) {
+		this.sort_type = sort_type;
 	}
 
 }

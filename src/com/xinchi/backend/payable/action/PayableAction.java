@@ -1,5 +1,6 @@
 package com.xinchi.backend.payable.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import com.xinchi.backend.payable.service.PayableService;
 import com.xinchi.backend.supplier.service.SupplierEmployeeService;
 import com.xinchi.backend.supplier.service.SupplierService;
+import com.xinchi.backend.user.service.AssistantManagerService;
+import com.xinchi.bean.AssistantManagerBean;
 import com.xinchi.bean.PayableBean;
 import com.xinchi.bean.PayableSummaryBean;
 import com.xinchi.bean.SupplierBean;
@@ -78,6 +81,8 @@ public class PayableAction extends BaseAction {
 
 	private PayableBean payable;
 	private List<PayableBean> payables;
+	@Autowired
+	private AssistantManagerService assistantManagerService;
 
 	public String searchPayableByPage() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
@@ -85,7 +90,29 @@ public class PayableAction extends BaseAction {
 		String roles = sessionBean.getUser_roles();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			// payable.setSales(sessionBean.getUser_number());
-			payable.setCreate_user(sessionBean.getUser_number());
+			List<String> create_users = new ArrayList<>();
+			create_users.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					create_users.add(amb.getManager_number());
+				}
+			}
+			// 如果是产品经理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setManager_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					create_users.add(amb.getAssistant_number());
+				}
+			}
+			payable.setCreate_users(create_users);
 		}
 
 		String team_status = payable.getTeam_status();

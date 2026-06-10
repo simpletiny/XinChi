@@ -61,10 +61,10 @@
 								<input type="text" id="name" class="ip-default" data-bind="value: agency().agency_name" placeholder="公司全称" onblur="checkSame(this,'NAME')" name="agency.agency_name" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 required">
 							<label class="l">信用代码</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: agency().credit_code" placeholder="信用代码" onblur="checkSame(this,'CODE')" name="agency.credit_code" />
+								<input type="text" required class="ip-" data-bind="value: agency().credit_code" placeholder="信用代码" onblur="checkSame(this,'CODE')" name="agency.credit_code" />
 							</div>
 						</div>
 					</div>
@@ -80,20 +80,21 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">出境资质</label>
 							<div class="ip">
+								<em class="small-box"> <input type="radio" name="agency.is_exit" checked="checked" value="U" /><label>未知</label></em> 
 								<em class="small-box"> <input type="radio" name="agency.is_exit" value="Y" /><label>有</label>
-								</em> <em class="small-box"> <input type="radio" name="agency.is_exit" checked="checked" value="N" /><label>无</label>
+								</em> <em class="small-box"> <input type="radio" name="agency.is_exit" value="N" /><label>无</label>
 								</em>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">主营业务</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: mainBus,value: agency().main_bussines" name="agency.main_bussines" required="required"></select>
+								<select class="form-control" data-bind="options: mainBus, optionsCaption: '-- 请选择 --',value: agency().main_bussines" name="agency.main_bussines"></select>
 							</div>
 						</div>
 						<div class="col-md-6 required">

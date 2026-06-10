@@ -35,8 +35,7 @@ public class ReimbursementDAOImpl extends SqlSessionDaoSupport implements Reimbu
 
 	@Override
 	public ReimbursementBean selectByPk(String reimbursement_pk) {
-		return (ReimbursementBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ReimbursementMapper.selectByPrimaryKey",
-				reimbursement_pk);
+		return (ReimbursementBean) daoUtil.selectByPK("com.xinchi.bean.mapper.ReimbursementMapper.selectByPrimaryKey", reimbursement_pk);
 	}
 
 	@Override
@@ -47,5 +46,22 @@ public class ReimbursementDAOImpl extends SqlSessionDaoSupport implements Reimbu
 	@Override
 	public List<ReimbursementBean> selectByPage(Page page) {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectByPage", page);
+	}
+
+	@Override
+	public List<ReimbursementBean> selectSummaries(ReimbursementBean reimbursement) {
+		List<ReimbursementBean> result = daoUtil.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectSummaries", reimbursement);
+		return result;
+	}
+	@Override
+	public List<ReimbursementBean> selectSumByParam(ReimbursementBean reimbursement) {
+		List<ReimbursementBean> result = daoUtil.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectSumByParam", reimbursement);
+		return result;
+	}
+
+	@Override
+	public List<ReimbursementBean> selectByParam(ReimbursementBean option) {
+		List<ReimbursementBean> result = daoUtil.selectByParam("com.xinchi.bean.mapper.ReimbursementMapper.selectByParam", option);
+		return result;
 	}
 }

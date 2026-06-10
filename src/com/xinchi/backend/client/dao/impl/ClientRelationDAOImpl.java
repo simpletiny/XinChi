@@ -10,13 +10,13 @@ import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
-import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -125,6 +125,11 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	}
 
 	@Override
+	public List<PotentialDto> selectTypeCount() {
+		return daoUtil.selectAllOut("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectTypeCount");
+	}
+
+	@Override
 	public MeterDto selectMeterData(String user_pk) {
 		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectMeterData",
 				user_pk);
@@ -203,6 +208,11 @@ public class ClientRelationDAOImpl extends SqlSessionDaoSupport implements Clien
 	@Override
 	public List<ClientRelationBean> selectNeedPublic() {
 		return daoUtil.selectAll("com.xinchi.bean.mapper.ClientRelationMapper.selectNeedPublic");
+	}
+
+	@Override
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.ClientRelationSummaryMapper.selectRankScore", rank_option);
 	}
 
 }

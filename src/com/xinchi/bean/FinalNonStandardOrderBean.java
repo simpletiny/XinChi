@@ -65,6 +65,7 @@ public class FinalNonStandardOrderBean extends SupperBO implements Serializable 
 	private String status;
 	private String voucher_file;
 	private String sale;
+	private String assistant_number;
 
 	// 变更信息
 	private String final_type;
@@ -386,6 +387,14 @@ public class FinalNonStandardOrderBean extends SupperBO implements Serializable 
 
 	public void setSale(String sale) {
 		this.sale = sale;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
 	}
 
 }

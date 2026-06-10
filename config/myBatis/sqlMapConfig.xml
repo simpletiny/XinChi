@@ -139,6 +139,24 @@
 		<mapper resource="com/xinchi/bean/mapper/pagesRoleMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/accumulateBalanceMapper.xml" />
 		<mapper resource="com/xinchi/bean/mapper/airReceivedDetailMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/xinChiPromiseMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productReconciliationMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/productAccountingFirmMapper.xml" />
+		<mapper resource="com/xinchi/bean/mapper/clientEmployeeTypeCountMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/ticketNameTempletMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/clientInoutImgMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/productOrderNameMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/productOrderNameAirNeedMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/productOrderNameFlightSegmentMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/dishonestLogMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/dishonestPersonMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/identityMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/orderSupplierSaleOrderMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/orderSupplierSaleOrderNameInfoMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/saleOrderMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/assistantManagerMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/preciseClientEmployeeMapper.xml"/>
+		<mapper resource="com/xinchi/bean/mapper/preciseEmployeeBindingMapper.xml"/>
 		<!-- 通过package元素将会把指定包下面的所有Mapper接口进行注册 <package name="com.tiantian.mybatis.mapperinterface"/> -->
 	</mappers>
 </configuration>  

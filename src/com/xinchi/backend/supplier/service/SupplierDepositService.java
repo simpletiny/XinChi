@@ -3,6 +3,7 @@ package com.xinchi.backend.supplier.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -54,7 +55,19 @@ public interface SupplierDepositService extends BaseService {
 
 	public List<SupplierDepositBean> batUploadDeposit(String file_name, String deposit_type) throws IOException;
 
+	public List<SupplierDepositBean> batUploadBack(String file_name, String deposit_type) throws IOException;
+
 	public String batSaveDeposit(String json);
 
+	public String batSaveDepositBack(String json);
+
 	public List<SupplierDepositBean> selectByVoucherNumber(String voucher_number);
+
+	public List<DepositTicketPaidBean> selectDepositTicketPaidsByDepositPk(String deposit_pk);
+
+	public List<SupplierDepositBean> selectDepositWithoutNumber();
+
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean);
+
+	public SupplierDepositBean selectSumDeposit();
 }

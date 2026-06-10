@@ -17,11 +17,14 @@
 <style>
 #name-table tr th, td {
 	text-align: center;
-	vertical-align:middle !important
+	vertical-align: middle !important
 }
 
 .fix-width {
 	width: 40% !important;
+}
+textarea {
+	width:200px !important;
 }
 </style>
 </head>
@@ -39,16 +42,16 @@
 		<div class="main-container">
 			<div class="main-box">
 				<form class="form-box info-form" id="form_container">
+					<input type="hidden" data-bind="value:product().as_adult_flg" name="sale_order.as_adult_flg" />
 					<div class="input-row clearfloat">
-						<div class="col-md-3 required">
+						<div class="col-md-3">
 							<label class="l">客户</label>
 							<div class="ip fix-width">
-								<input type="text" id="txt-client-employee-name" class="ip-"
-									data-bind="value: order().client_employee_name,event:{click:choseClientEmployee}" placeholder="客户"
-									required="required" />
+								<input type="text" id="txt-client-employee-name" class="ip-" data-bind="event:{click:choseClientEmployee}"
+									placeholder="客户" />
 							</div>
-							<input type="text" class="ip-" id="txt-client-employee-pk" data-bind="value: order().client_employee_pk"
-								style="display: none" name="bsOrder.client_employee_pk" id="client-employee-pk" required="required" />
+							<input type="text" class="ip-" id="txt-client-employee-pk" style="display: none"
+								name="sale_order.client_employee_pk" id="client-employee-pk" />
 						</div>
 						<div class="col-md-3">
 							<label class="l">财务主体</label>
@@ -59,14 +62,14 @@
 						<div class="col-md-4">
 							<label class="l">产品名称</label>
 							<div class="ip fix-width">
-								<p class="ip-default" data-bind="text:product().name"></p>
-								<input type="hidden" data-bind="value: product().pk" name="bsOrder.product_pk" required="required" />
+								<input type="text" id="txt-product-name" class="ip-" data-bind="value:product().name,event:{click:choseProduct}" placeholder="产品" />
+								<input type="hidden" id="txt-product-pk" data-bind="value:product().pk" name="sale_order.product_pk" />
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class="l">产品型号</label>
 							<div class="ip fix-width">
-								<p class="ip-default" data-bind="text:product().product_number"></p>
+								<p class="ip-default" data-bind="text:product().product_model" id="p-product-model"></p>
 							</div>
 						</div>
 					</div>
@@ -75,14 +78,14 @@
 							<label class="l">出团日期</label>
 							<div class="ip">
 								<input type="text" id="departure" class="ip- date-picker" data-bind="value: order().departure_date"
-									placeholder="出团日期" name="bsOrder.departure_date" />
+									placeholder="出团日期" name="sale_order.departure_date" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">天数</label>
 							<div class="ip">
-								<p class="ip-default" data-bind="text:product().days"></p>
-								<input type="hidden" data-bind="value: product().days" placeholder="天数" name="bsOrder.days" />
+								<p class="ip-default" data-bind="text:product().days" id="p-days"></p>
+								<input type="hidden" data-bind="value: product().days" placeholder="天数" id="txt-days" name="sale_order.days" />
 							</div>
 						</div>
 					</div>
@@ -92,14 +95,14 @@
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-sum-money">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-sum-money" data-bind="value: order().receivable"
-									placeholder="总团款" name="bsOrder.receivable" />
+									name="sale_order.receivable" />
 							</div>
 						</div>
 						<div class="col-md-3">
 							<label class="l">其他费用</label>
 							<div class="ip fix-width">
-								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoPrice()" data-bind="value: order().other_cost" placeholder="其他费用"
-									name="bsOrder.other_cost" />
+								<input type="number" class="ip- auto-1" id="other-cost" onkeyup="autoPrice()"
+									data-bind="value: order().other_cost" placeholder="其他费用" name="sale_order.other_cost" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -107,7 +110,7 @@
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-adult-count">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-adult-count" data-bind="value: order().adult_count"
-									placeholder="成人数" name="bsOrder.adult_count" />
+									placeholder="成人数" name="sale_order.adult_count" />
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -115,110 +118,55 @@
 							<div class="ip fix-width">
 								<p class="ip-default" id="txt-auto-children-count">0</p>
 								<input type="hidden" class="ip- auto-1" id="auto-children-count" data-bind="value: order().special_count"
-									placeholder="儿童数" name="bsOrder.special_count" />
+									placeholder="儿童数" name="sale_order.special_count" />
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class="l">FLY</label>
 							<div class="ip fix-width">
-								<input type="text" data-bind="value:order().fy" name="bsOrder.fy" class="ip-" placeholder="FLY" />
+								<input type="text" data-bind="value:order().fy" name="sale_order.fy" class="ip-" placeholder="FLY" />
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4">
-							<label class="l">团款备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" id="receivable-comment" maxlength="200"
-									data-bind="value: order().receivable_comment" placeholder="团款备注" name="bsOrder.receivable_comment"></textarea>
+						<div class="col-md-3">
+							<label class="l">团款备注</label> 
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" id="receivable-comment" maxlength="200"
+									data-bind="value: order().receivable_comment" placeholder="团款备注" name="sale_order.receivable_comment"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
-							<label class="l">接待备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" data-bind="value:order().treat_comment" maxlength="200"
-									name="bsOrder.treat_comment" placeholder="接待备注"></textarea>
+						<div class="col-md-3">
+							<label class="l">用房说明</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().hotel_comment" maxlength="200"
+									name="sale_order.hotel_comment" placeholder="用房说明"></textarea>
 							</div>
 						</div>
-						<div class="col-md-4">
-							<label class="l">订单备注</label>
-							<div class="ip">
-								<textarea type="text" class="ip-default" rows="10" maxlength="200" data-bind="value: order().comment"
-									name="bsOrder.comment" placeholder="需要备注说明的信息"></textarea>
+						<div class="col-md-3">
+							<label class="l">销售特请</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" data-bind="value:order().treat_comment" maxlength="200"
+									name="sale_order.treat_comment" placeholder="销售特请"></textarea>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="l">订单备注（仅自己可见）</label>
+							<div class="ip fix-width">
+								<textarea type="text" class="ip-default" rows="7" maxlength="200" data-bind="value: order().comment"
+									name="sale_order.comment" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 							</div>
 						</div>
 					</div>
 					<hr />
 					<h3>名单</h3>
-					<div style="display: none; width: 600px" id="bat-passenger">
-						<div class="input-row clearfloat">
-							<div class="col-md-12">
-								<textarea type="text" class="ip-default" id="txt-name-list" rows="10" placeholder="姓名+身份证号。"></textarea>
-							</div>
-							<div class="col-md-12" style="text-align: right; margin-top: 10px">
-								<a type="submit" class="btn btn-green btn-r" onclick="cancelBat()">取消</a> <a type="submit"
-									class="btn btn-green btn-r" onclick="formatNameList()">写入</a>
-							</div>
-						</div>
-					</div>
-					<div id="air-ticket-check">
-						<div class="input-row clearfloat">
-							<div class="col-md-12">
-								<table style="width: 100%" id="name-table" class="table table-striped table-hover">
-									<thead>
-										<tr>
-											<th style="width: 4%">团长</th>
-											<th style="width: 4%">序号</th>
-											<th style="width: 10%">姓名</th>
-											<th style="width: 7%">性别</th>
-											<th style="width: 5%" title="只按年份计算">年龄</th>
-											<th style="width: 16%">手机号A</th>
-											<th style="width: 16%">手机号B</th>
-											<th style="width: 22%">证件号码</th>
-											<th style="width: 7%">价格&nbsp;<input type="checkbox" id="chk-bind" onclick="bindFix()" title="选中修改所有价格" /></th>
-										<!-- 	<th style="width: 10%">分房组</th>
-											<th style="width: 9%"></th>
-											<th style="width: 9%"></th> -->
-											<th style="width: 7%"></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><input type="radio" checked="checked" name="team_chairman" /></td>
-											<td st="name-index">1</td> 
-											<td><input type="text" class="ip-" style="width: 90%" st="name" /></td>
-											<td><select class="form-control" style="height: 34px" st="sex">
-													<option value="">选择</option>
-													<option value="M">男</option>
-													<option value="F">女</option>
-											</select></td>
-											<td><input class="ip-" type="text" style="width: 90%" st="age" /></td>
-											<td><input class="ip-" type="text" style="width: 90%" st="cellphone_A" /></td>
-											<td><input class="ip-" type="text" style="width: 90%" st="cellphone_B" /></td>
-											<td><input class="ip-" type="text" style="width: 90%" maxlength="18" oninput="autoPrice();autoCaculate()" st="id" /></td>
-											<td><input class="ip-" type="text" style="width: 90%" oninput="fixAllPrice(event);autoPrice()"
-												data-bind="value:product().adult_price-product().business_profit_substract" st="price" /></td>
-											<!-- <td><input class="ip-" type="text" style="width: 90%" value="分房组" /></td>
-											<td><a href="javascript:;" class="a-upload">上传身份证<input type="file" name="file" /></a> <input
-												type="hidden" /></td>
-											<td><a href="javascript:;" class="a-upload">上传护照<input type="file" name="file" /></a> <input
-												type="hidden" /></td> -->
-											<td><input type="button" style="width: 60%" onclick="removeName(this)" title="删除名单" value="—" /></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div align="right">
-							<a type="submit" class="btn btn-green btn-r" data-bind="click: batName">批量导入</a> <a type="submit"
-								class="btn btn-green btn-r" onclick = "addName()">添加名单</a>
-						</div>
-					</div>
+					<s:include value="common/name-bat.jsp"></s:include>
+					<s:include value="common/name-list.jsp"></s:include>
 					<hr />
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传确认件<input type="file"  accept=".jpg,.png" name="file" /></a> <input type="hidden"
-								name="bsOrder.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传确认件<input type="file" accept=".jpg,.png" name="file" /></a> <input
+								type="hidden" name="sale_order.budget_confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -231,63 +179,123 @@
 			</div>
 		</div>
 	</div>
-	<div id="client-pick" style="display: none;">
-		<div class="main-container">
-			<div class="main-box" style="width: 600px">
-				<div class="form-group">
-					<div class="span8">
-						<label class="col-md-2 control-label">姓名</label>
-						<div class="col-md-6">
-							<input type="text" id="client_name" class="form-control" placeholder="姓名" />
-						</div>
+	<div id="client-pick" style="display: none; width: 600px">
+		<div class="form-horizontal search-panel">
+			<div class="form-group">
+				<div class="input-row clearfloat">
+					<label class="col-md-2 control-label">姓名</label>
+					<div class="col-md-6">
+						<input type="text" id="client_name" class="form-control" placeholder="姓名" />
 					</div>
-					<div>
-						<button type="submit" class="btn btn-green col-md-1" data-bind="event:{click:searchClientEmployee }">搜索</button>
-					</div>
+					<button type="submit" class="btn btn-green col-md-1" style="float: right"
+						data-bind="event:{click:searchClientEmployee }">搜索</button>
 				</div>
-				<div class="list-result">
-					<table class="table table-striped table-hover">
-						<thead>
-							<tr role="row">
-								<th>姓名</th>
-								<th>财务主体</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: clientEmployees">
-							<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data)}}">
-								<td data-bind="text: $data.name"></td>
-								<td data-bind="text: $data.financial_body_name"></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="pagination clearfloat">
-						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums -->
-						<!-- ko if: $data == $root.currentPage() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage() -->
-						<a data-bind="text: $data, click: $root.turnPage"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
-					</div>
+			</div>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>姓名</th>
+						<th>财务主体</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: clientEmployees">
+					<tr data-bind="event: {click: function(){ $parent.pickClientEmployee($data)}}">
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.financial_body_name"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums -->
+				<!-- ko if: $data == $root.currentPage() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage() -->
+				<a data-bind="text: $data, click: $root.turnPage"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
+			</div>
+		</div>
+	</div>
+	<div id="product-pick" style="display: none; width: 1200px">
+		<div class="form-horizontal search-panel">
+			<div class="input-row clearfloat">
+				<label class="col-md-1 control-label">产品名称</label>
+				<div class="col-md-3">
+					<input type="text" id="product-name" class="form-control" placeholder="产品名称" />
 				</div>
+				<label class="col-md-1 control-label">产品型号</label>
+				<div class="col-md-3">
+					<input type="text" id="product-model" class="form-control" placeholder="产品型号" />
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<button type="submit" class="btn btn-green col-md-1" style="float: right" data-bind="event:{click:searchProduct }">搜索</button>
+			</div>
+		</div>
+		<div class="list-result">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>产品名称</th>
+						<th title="成人/儿童">分值</th>
+						<th>产品线</th>
+						<th>型号</th>
+						<th>天数</th>
+						<th>首段城市对</th>
+						<th>直客报价</th>
+						<th>儿童报价</th>
+						<th>同业返利</th>
+						<th>最大让利</th>
+						<th>产品经理</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: products">
+					<tr data-bind="event: {click: function(){ $parent.pickProduct($data)}}">
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+						<td data-bind="text: $data.location"></td>
+						<td data-bind="text: $data.product_model"></td>
+						<td data-bind="text: $data.days"></td>
+						<td
+							data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
+						<td data-bind="text: $data.adult_price"></td>
+						<td data-bind="text: $data.child_price"></td>
+						<td data-bind="text: $data.business_profit_substract"></td>
+						<td data-bind="text: $data.max_profit_substract"></td>
+						<td data-bind="text: $data.product_manager"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination clearfloat">
+				<a data-bind="click: previousPage1, enable: currentPage1() > 1" class="prev">Prev</a>
+				<!-- ko foreach: pageNums1 -->
+				<!-- ko if: $data == $root.currentPage1() -->
+				<span class="current" data-bind="text: $data"></span>
+				<!-- /ko -->
+				<!-- ko ifnot: $data == $root.currentPage1() -->
+				<a data-bind="text: $data, click: $root.turnPage1"></a>
+				<!-- /ko -->
+				<!-- /ko -->
+				<a data-bind="click: nextPage1, enable: currentPage1() < pageNums1().length" class="next">Next</a>
 			</div>
 		</div>
 	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.0"></script>
-	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/order/passenger.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-creation.js?v=1.006"></script>
+	<script src="<%=basePath%>static/js/order/standard-order-common.js?v=1.007"></script>
 </body>
 </html>

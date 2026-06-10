@@ -45,4 +45,6 @@ public interface AccountingService extends BaseService {
 
 	public List<ReceivedDetailDto> searchAllReceivedsByPage(Page<ReceivedDetailDto> page);
 
+	public String suspensePayApply(String approval_pks);
+
 }

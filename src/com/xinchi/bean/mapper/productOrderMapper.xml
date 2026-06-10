@@ -23,6 +23,8 @@
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		<result column="passenger_captain" property="passenger_captain" jdbcType="VARCHAR" />
+		<result column="operator_number" property="operator_number" jdbcType="VARCHAR" />
+		<result column="operator_name" property="operator_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -45,7 +47,8 @@
 		passenger_captain,
 		standard_flg,
 		product_pk,
-		days
+		days,
+		operator_number
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -130,6 +133,9 @@
 			<if test="passenger_captain != null">
 				passenger_captain,
 			</if>
+			<if test="operator_number != null">
+				operator_number,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="order_number != null">
@@ -191,6 +197,9 @@
 			</if>
 			<if test="passenger_captain != null">
 				#{passenger_captain,jdbcType=VARCHAR},
+			</if>
+			<if test="operator_number != null">
+				#{operator_number,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -254,6 +263,9 @@
 			<if test="passenger_captain != null">
 				passenger_captain = #{passenger_captain,jdbcType=VARCHAR},
 			</if>
+			<if test="operator_number != null">
+				operator_number = #{operator_number,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -261,6 +273,20 @@
 		select
 		<include refid="Base_Column_List" />
 		from product_order
+		<where>
+			<if test="product_name != null and product_name !=''">
+				and product_name = #{product_name,jdbcType=VARCHAR}
+			</if>
+			<if test="product_model != null and product_model !=''">
+				and product_model = #{product_model,jdbcType=VARCHAR}
+			</if>
+			<if test="departure_date != null and departure_date !=''">
+				and departure_date = #{departure_date,jdbcType=VARCHAR}
+			</if>
+			<if test="product_manager_number != null and product_manager_number !=''">
+				and product_manager_number = #{product_manager_number,jdbcType=VARCHAR}
+			</if>
+		</where>
 	</select>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -286,16 +312,18 @@
 		A.product_pk,
 		A.days,
 		B.user_name AS product_manager,
+		A.operator_number,
+		D.user_name AS operator_name,
 		group_concat(C.team_number) AS team_numbers
 		FROM
 		product_order A
 		LEFT JOIN
-		user_base B ON A.product_manager_number = B.user_number
-		left join product_order_team_number C ON A.order_number=C.product_order_number
+		user_base B ON A.product_manager_number =
+		B.user_number
+		left join product_order_team_number C ON
+		A.order_number=C.product_order_number
+		LEFT JOIN user_base D ON A.operator_number = D.user_number
 		<where>
-			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
-				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
-			</if>
 			<if test="params.bo.product_name != null and params.bo.product_name !=''">
 				and A.product_name like concat('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
 			</if>
@@ -317,11 +345,18 @@
 					#{params.bo.statuses[${index}]}
 				</foreach>
 			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size()>0">
+				and A.product_manager_number in
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator=","
+					close=")">
+					#{params.bo.product_manager_numbers[${index}]}
+				</foreach>
+			</if>
 		</where>
 		GROUP BY A.order_number
 		<if test="params.bo.team_number != null and params.bo.team_number !=''">
 			HAVING team_numbers like CONCAT('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
 		</if>
-		order by A.departure_date DESC
+		order by A.departure_date ASC,A.product_name
 	</select>
 </mapper>

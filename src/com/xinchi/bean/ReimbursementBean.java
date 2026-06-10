@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -14,7 +16,7 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	private String month;
 
-	private java.math.BigDecimal money;
+	private BigDecimal money;
 
 	private String comment;
 
@@ -36,16 +38,22 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 	private String pay_time;
 
 	private String pay_number;
+	// 如果是销售费用
+	private String client_employee_pk;
+	private String client_employee_name;
 
-	private String update_user;
+	private String delete_flg;
 
-	private String pk;
-
-	private String create_user;
-
+	private String belong_year;
+	// option
+	private List<String> items;
 	private String money_from;
 	private String money_to;
-	private String delete_flg;
+
+	// DTO
+	private BigDecimal paid_money;
+	private BigDecimal waiting_money;
+	private BigDecimal suspense_money;
 
 	public String getItem() {
 		return item;
@@ -63,11 +71,11 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 		this.date = date;
 	}
 
-	public java.math.BigDecimal getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
 
-	public void setMoney(java.math.BigDecimal money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 
@@ -135,30 +143,6 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 		this.pay_number = pay_number;
 	}
 
-	public String getUpdate_user() {
-		return update_user;
-	}
-
-	public void setUpdate_user(String update_user) {
-		this.update_user = update_user;
-	}
-
-	public String getPk() {
-		return pk;
-	}
-
-	public void setPk(String pk) {
-		this.pk = pk;
-	}
-
-	public String getCreate_user() {
-		return create_user;
-	}
-
-	public void setCreate_user(String create_user) {
-		this.create_user = create_user;
-	}
-
 	public String getMonth() {
 		return month;
 	}
@@ -213,6 +197,62 @@ public class ReimbursementBean extends SupperBO implements Serializable {
 
 	public void setDelete_flg(String delete_flg) {
 		this.delete_flg = delete_flg;
+	}
+
+	public String getClient_employee_pk() {
+		return client_employee_pk;
+	}
+
+	public void setClient_employee_pk(String client_employee_pk) {
+		this.client_employee_pk = client_employee_pk;
+	}
+
+	public String getClient_employee_name() {
+		return client_employee_name;
+	}
+
+	public void setClient_employee_name(String client_employee_name) {
+		this.client_employee_name = client_employee_name;
+	}
+
+	public String getBelong_year() {
+		return belong_year;
+	}
+
+	public void setBelong_year(String belong_year) {
+		this.belong_year = belong_year;
+	}
+
+	public List<String> getItems() {
+		return items;
+	}
+
+	public void setItems(List<String> items) {
+		this.items = items;
+	}
+
+	public BigDecimal getPaid_money() {
+		return paid_money;
+	}
+
+	public void setPaid_money(BigDecimal paid_money) {
+		this.paid_money = paid_money;
+	}
+
+	public BigDecimal getWaiting_money() {
+		return waiting_money;
+	}
+
+	public void setWaiting_money(BigDecimal waiting_money) {
+		this.waiting_money = waiting_money;
+	}
+
+	public BigDecimal getSuspense_money() {
+		return suspense_money;
+	}
+
+	public void setSuspense_money(BigDecimal suspense_money) {
+		this.suspense_money = suspense_money;
 	}
 
 }

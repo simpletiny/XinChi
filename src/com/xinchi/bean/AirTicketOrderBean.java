@@ -59,6 +59,10 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 
 	private String comment;
 
+	private String first_month;
+
+	private String final_flg;
+
 	public String getClient_number() {
 		return client_number;
 	}
@@ -281,6 +285,22 @@ public class AirTicketOrderBean extends SupperBO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getFirst_month() {
+		return first_month;
+	}
+
+	public void setFirst_month(String first_month) {
+		this.first_month = first_month;
+	}
+
+	public String getFinal_flg() {
+		return final_flg;
+	}
+
+	public void setFinal_flg(String final_flg) {
+		this.final_flg = final_flg;
 	}
 
 }

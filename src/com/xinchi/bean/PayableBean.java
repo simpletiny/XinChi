@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -63,6 +64,9 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	private String pick_date;
 	private String send_date;
+	private List<String> create_users;
+	
+	private String departure_year;
 
 	public String getTeam_number() {
 		return team_number;
@@ -318,6 +322,22 @@ public class PayableBean extends SupperBO implements Serializable {
 
 	public void setProduct_manager(String product_manager) {
 		this.product_manager = product_manager;
+	}
+
+	public List<String> getCreate_users() {
+		return create_users;
+	}
+
+	public void setCreate_users(List<String> create_users) {
+		this.create_users = create_users;
+	}
+
+	public String getDeparture_year() {
+		return departure_year;
+	}
+
+	public void setDeparture_year(String departure_year) {
+		this.departure_year = departure_year;
 	}
 
 }

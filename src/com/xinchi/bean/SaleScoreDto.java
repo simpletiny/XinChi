@@ -8,18 +8,27 @@ import com.xinchi.common.SupperBO;
 public class SaleScoreDto extends SupperBO implements Serializable {
 	private static final long serialVersionUID = -8643890019509523613L;
 
-	private BigDecimal score;
+	private BigDecimal score = BigDecimal.ZERO;
 	private String sale_number;
 	private String sale_name;
 	private String confirm_month;
-	private int sum_people;
+	private int sum_people = 0;
 
-	private int first_people;
-	private BigDecimal first_score;
-	private int middle_people;
-	private BigDecimal middle_score;
-	private int last_people;
-	private BigDecimal last_score;
+	private int first_people = 0;
+	private BigDecimal first_score = BigDecimal.ZERO;
+	private int middle_people = 0;
+	private BigDecimal middle_score = BigDecimal.ZERO;
+	private int last_people = 0;
+	private BigDecimal last_score = BigDecimal.ZERO;
+
+	// 平均分值
+	private BigDecimal ave_score = BigDecimal.ZERO;
+
+	private int non_standard_people = 0;
+	private int only_ticket_people = 0;
+
+	private BigDecimal sale_cost = BigDecimal.ZERO;
+	private BigDecimal sale_salary = BigDecimal.ZERO;
 
 	private float discount;
 
@@ -117,5 +126,45 @@ public class SaleScoreDto extends SupperBO implements Serializable {
 
 	public void setLast_score(BigDecimal last_score) {
 		this.last_score = last_score;
+	}
+
+	public BigDecimal getAve_score() {
+		return ave_score;
+	}
+
+	public int getNon_standard_people() {
+		return non_standard_people;
+	}
+
+	public int getOnly_ticket_people() {
+		return only_ticket_people;
+	}
+
+	public void setAve_score(BigDecimal ave_score) {
+		this.ave_score = ave_score;
+	}
+
+	public void setNon_standard_people(int non_standard_people) {
+		this.non_standard_people = non_standard_people;
+	}
+
+	public void setOnly_ticket_people(int only_ticket_people) {
+		this.only_ticket_people = only_ticket_people;
+	}
+
+	public BigDecimal getSale_cost() {
+		return sale_cost;
+	}
+
+	public BigDecimal getSale_salary() {
+		return sale_salary;
+	}
+
+	public void setSale_cost(BigDecimal sale_cost) {
+		this.sale_cost = sale_cost;
+	}
+
+	public void setSale_salary(BigDecimal sale_salary) {
+		this.sale_salary = sale_salary;
 	}
 }

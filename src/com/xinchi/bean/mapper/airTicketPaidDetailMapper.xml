@@ -31,12 +31,18 @@
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
 		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="belong_month" property="belong_month" jdbcType="VARCHAR" />
+		<result column="from_to_city" property="from_to_city" jdbcType="VARCHAR" />
+		<result column="passenger" property="passenger" jdbcType="VARCHAR" />
+		<result column="first_date" property="first_date" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="OtherPaymentMap" type="com.xinchi.bean.AirOtherPaymentDto">
+		
 		<result column="money" property="money" jdbcType="DECIMAL" />
 		<result column="pay_money" property="pay_money" jdbcType="DECIMAL" />
 		<result column="receive_money" property="receive_money" jdbcType="DECIMAL" />
 		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="belong_month" property="belong_month" jdbcType="VARCHAR" />
 		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
@@ -72,7 +78,7 @@
 		from air_ticket_paid_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	<select id="selectByPayablePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectByBasePk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from air_ticket_paid_detail
@@ -392,6 +398,9 @@
 			<if test="belong_month != null">
 				belong_month = #{belong_month,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -400,11 +409,12 @@
 		<include refid="Base_Column_List" />
 		from air_ticket_paid_detail
 	</select>
-	<select id="selectDepositDeducts" parameterType="com.xinchi.bean.AirOtherPaymentDto" resultMap="OtherPaymentMap">
+	<select id="selectDepositDeducts" parameterType="com.xinchi.bean.AirServiceFeeDto" resultMap="OtherPaymentMap">
 		SELECT
 		SUM(A.money) AS money,
 		A.product_manager AS product_manager_number,
-		B.user_name AS product_manager_name
+		B.user_name AS product_manager_name,
+        A.belong_month AS belong_month
 		FROM
 		air_ticket_paid_detail A
 		LEFT JOIN
@@ -415,11 +425,20 @@
 			<if test="first_month != null and first_month !=''">
 				and A.belong_month = #{first_month,jdbcType=VARCHAR}
 			</if>
+			<if test="first_year != null and first_year !=''">
+				and LEFT(A.belong_month,4) = #{first_year,jdbcType=VARCHAR}
+			</if>
+			<if test="from_month != null and from_month !=''">
+				and A.belong_month &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and A.belong_month &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
 				and A.product_manager = #{product_manager_number,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP BY product_manager
+		GROUP BY A.product_manager,A.belong_month
 		ORDER BY money DESC
 	</select>
 	<select id="selectNoneBusinessPayment" parameterType="com.xinchi.bean.AirOtherPaymentDto" resultMap="OtherPaymentMap">
@@ -427,6 +446,7 @@
 		SUM(IF(type='RECEIVE',money,0)) AS receive_money,
 		SUM(IF(type='PAY',money,0)) AS pay_money,
 		SUM(IF(type='RECEIVE',-money,money)) AS money,
+		A.belong_month AS belong_month,
 		B.user_name  AS product_manager_name
 		FROM
 		air_ticket_paid_detail A
@@ -434,13 +454,22 @@
 		<where>
 			and (type = 'RECEIVE' OR type = 'PAY')
 			<if test="first_month != null and first_month !=''">
-				and belong_month = #{first_month,jdbcType=VARCHAR}
+				and A.belong_month = #{first_month,jdbcType=VARCHAR}
+			</if>
+			<if test="from_month != null and from_month !=''">
+				and A.belong_month &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and A.belong_month &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
+			<if test="first_year != null and first_year !=''">
+				and LEFT(A.belong_month,4) = #{first_year,jdbcType=VARCHAR}
 			</if>
 			<if test="product_manager_number != null and product_manager_number !=''">
-				and product_manager = #{product_manager_number,jdbcType=VARCHAR}
+				and A.product_manager = #{product_manager_number,jdbcType=VARCHAR}
 			</if>
 		</where>
-		GROUP BY product_manager
+		GROUP BY A.product_manager,A.belong_month
 		ORDER BY money DESC
 	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -460,11 +489,11 @@
 		A.related_pk,
 		A.comment,
 		A.pk,
+		A.voucher_number,
 		A.create_user,
 		A.update_user,
 		A.base_pk,
 		A.PNR,
-		A.voucher_number,
 		A.create_time,
 		A.update_time,
 		COALESCE(C.supplier_name, A.receiver) AS receiver,
@@ -473,7 +502,8 @@
 		D.from_to_city,
 		A.product_manager,
 		E.user_name AS product_manager_name,
-		A.belong_month
+		A.belong_month,
+		A.reject_reason
 		from
 		air_ticket_paid_detail A LEFT JOIN supplier_employee B ON
 		A.supplier_employee_pk = B.pk
@@ -523,6 +553,9 @@
 			</if>
 			<if test="params.bo.first_date_to != null and params.bo.first_date_to !=''">
 				and D.first_date &lt;= #{params.bo.first_date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.voucher_number != null and params.bo.voucher_number !=''">
+				and A.voucher_number like CONCAT('%',#{params.bo.voucher_number,jdbcType=VARCHAR},'%')
 			</if>
 			order by D.first_date DESC,A.time DESC
 		</where>

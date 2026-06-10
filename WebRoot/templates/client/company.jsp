@@ -19,6 +19,20 @@
 .form-control {
 	height: 30px;
 }
+
+#img-container {
+	min-height: 230px;
+	display: flex;
+	align-items: center;
+}
+
+#img-container img {
+	margin-left: 20px;
+	border: 1px dashed #ccc;
+	width: 200px;
+	height: 200px;
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -33,16 +47,16 @@
 				<form class="form-horizontal search-panel" id="form-search">
 
 					<div class="form-group">
-						<div style="width: 50%; float: right">
+						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { setClientLevel() }">客户评级</button>
-							<s:if test="#session.user.user_roles.contains('ADMIN')">
-								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
-							</s:if>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createCompany() }">新建</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editCompany() }">编辑</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { resetPage(); stopCompany() }">停用</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { keepMySide() }">维护</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { publicCompany() }">公开</button>
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() {stopCompany() }">停用</button>
 							<s:if test="#session.user.user_roles.contains('ADMIN')">
 								<button type="submit" class="btn btn-green col-md-1"
-									data-bind="click: function() { resetPage(); deleteCompany() }">删除</button>
+									data-bind="click: function() {deleteCompany() }">删除</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: changeSales">调整销售</button>
 							</s:if>
 						</div>
@@ -57,12 +71,10 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">地市</label>
 							<div class="col-md-2">
-								<select class="form-control" style="height: 34px"
-									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',value: client().client_area,event:{change:ter}"
-									name="client.client_area"></select>
+								<select class="form-control heilongjiang-city" style="height: 34px" name="client.client_area"></select>
 							</div>
 							<div class="col-md-2">
-								<select class="form-control" id="county" name="client.client_county"></select>
+								<select class="form-control district empty" id="county" name="client.client_county"></select>
 							</div>
 						</div>
 
@@ -75,13 +87,10 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span6 col-md-3">
-							<label class="col-md-1 control-label">&nbsp;</label>
-							<div data-bind="foreach: relates">
-								<em class="small-box "> <input type="checkbox" name="client.relate_flgs"
-									data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
-									data-bind="text: $root.relatesMapping[$data]"></label>
-								</em>
+						<div class="span6">
+							<label class="col-md-1 control-label">负责人</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="负责人" name="client.body_name" />
 							</div>
 						</div>
 						<div class="span6">
@@ -126,12 +135,17 @@
 								</em>
 							</div>
 						</div>
-						<label class="col-md-1 control-label">沟通力</label>
+						<label class="col-md-1 control-label">关系强度</label>
 						<div class="span6">
-							<div data-bind="foreach: talkLevels" class="col-md-4">
+							<div class="col-md-4">
+								<!-- ko foreach:talkLevels-->
 								<em class="small-box "> <input name="client.talk_levels" type="checkbox"
 									data-bind="attr: {'value': $data}, checked: $root.chosenTalkLevels,event:{click:function(){$root.refresh();return true;}}" /><label
 									data-bind="text: $data"></label>
+								</em>
+								<!-- /ko -->
+								<em class="small-box "> <input name="client.talk_levels" type="radio" checked value="全部"
+									data-bind="event:{click:chkTalkLevelRad}" /><label>全部</label>
 								</em>
 							</div>
 						</div>
@@ -140,18 +154,25 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">主营</label>
 							<div class="col-md-4">
-								<em class="small-box "> <input name="client.main_businesses" type="checkbox" value="组团" checked="checked"
-									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label>
-									<input name="client.main_businesses" type="checkbox" value="综合"
-									data-bind="event:{click:chkMainBusinessChk}" checked="checked"/><label>综合</label>
-									<input name="client.main_businesses" type="radio" value="地接"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
-									<input name="client.main_businesses" type="radio" value="同业"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
-									<input name="client.main_businesses" type="radio" value="其它"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
-									<input name="client.main_businesses" type="radio" value="全部"
-									data-bind="event:{click:chkMainBusinessRad}" /><label>全部</label>
+								<em class="small-box "> <input name="client.main_businesses" type="checkbox" checked value="组团"
+									data-bind="event:{click:chkMainBusinessChk}" /><label>组团</label><input name="client.main_businesses"
+									type="checkbox" checked value="户外" data-bind="event:{click:chkMainBusinessChk}" /><label>户外</label> <input
+									name="client.main_businesses" type="checkbox" value="线上" checked data-bind="event:{click:chkMainBusinessChk}" /><label>线上</label>
+									<input name="client.main_businesses" type="checkbox" checked value="综合" data-bind="event:{click:chkMainBusinessChk}" /><label>综合</label>
+									<input name="client.main_businesses" type="radio" value="地接" data-bind="event:{click:chkMainBusinessRad}" /><label>地接</label>
+									<input name="client.main_businesses" type="radio" value="同业" data-bind="event:{click:chkMainBusinessRad}" /><label>同业</label>
+									<input name="client.main_businesses" type="radio" value="其它" data-bind="event:{click:chkMainBusinessRad}" /><label>其它</label>
+									<input name="client.main_businesses" type="radio" value="全部" data-bind="event:{click:chkMainBusinessRad}"
+									 /><label>全部</label>
+								</em>
+							</div>
+						</div>
+						<div class="span6 col-md-3">
+							<label class="col-md-1 control-label">&nbsp;</label>
+							<div data-bind="foreach: relates">
+								<em class="small-box "> <input type="checkbox" name="client.relate_flgs"
+									data-bind="attr: {'value': $data}, checked: $root.chosenRelates,event:{click:$root.changeRelate}" /><label
+									data-bind="text: $root.relatesMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -166,15 +187,17 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
-								<td width="11.11%">总数</td>
-								<td width="11.11%" data-bind="text:totalCompanies()"></td>
-								<td width="11.11%">年单1</td>
-								<td width="11.11%" data-bind="text:clientCount().oneYearorderCnt"></td>
-								<td width="11.11%">年单1+</td>
-								<td width="11.11%" data-bind="text:clientCount().moreYearorderCnt"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
-								<td width="11.11%"></td>
+								<td width="5%">总数：</td>
+								<td width="10%" data-bind="text:totalCompanies()"></td>
+								<td width="5%">30天：</td>
+								<td width="10%" data-bind="text:clientCount().client_30day_count"></td>
+								<td width="5%">100天：</td>
+								<td width="10%" data-bind="text:clientCount().client_100day_count"></td>
+								<td width="5%">年单1：</td>
+								<td width="10%" data-bind="text:clientCount().client_one_year_count"></td>
+								<td width="7%">年单1+：</td>
+								<td width="10%" data-bind="text:clientCount().client_more_year_count"></td>
+								<td></td>
 							</tr>
 						</thead>
 					</table>
@@ -187,9 +210,7 @@
 								<th>简称</th>
 								<th>门脸</th>
 								<th>主营</th>
-								<th>地市</th>
-								<th>区县</th>
-								<th>地址</th>
+								<th>地区</th>
 								<th>类型</th>
 								<th>负责人</th>
 								<th>关联</th>
@@ -200,6 +221,10 @@
 								<th>市场力</th>
 								<th>回款誉</th>
 								<th>紧密度</th>
+								<th>外环境</th>
+								<th>内环境</th>
+								<th>营销费</th>
+								<th>资质</th>
 								<th>备注</th>
 								<th>所属销售</th>
 							</tr>
@@ -211,28 +236,34 @@
 									data-bind="text: $data.client_short_name,attr: {href: 'company-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.store_type"></td>
 								<td data-bind="text: $data.main_business"></td>
-								<td data-bind="text: $data.client_area"></td>
-								<td data-bind="text: $data.client_county"></td>
-								<td data-bind="text: $data.address"></td>
-
+								<td data-bind="text: $data.client_area+($data.client_county ? $data.client_county : '')"></td>
 								<td data-bind="text: $data.client_type"></td>
 								<td data-bind="text: $data.body_name"></td>
 								<!-- ko if:$data.relate_flg =='N' -->
-								<td style="color: red">未关联</td>
+								<td style="color: red">未</td>
 								<!-- /ko -->
-
 								<!-- ko if:$data.relate_flg =='Y' -->
 								<td style="color: blue"><a href="javascript:void(0)"
-									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">已关联</a></td>
+									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
 								<!-- /ko -->
 
-								<td data-bind="text: $data.client_employee_count"></td>
+								<td><a href="javascript:void(0)" data-bind="text: $data.client_employee_count,click:$root.checkEmployee"></a></td>
 								<td class="rmb" data-bind="text: $data.sum_balance"></td>
 								<td data-bind="text: $data.client_year_order_count"></td>
 								<td data-bind="text: $data.last_order_date"></td>
 								<td data-bind="text: $data.market_level"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.talk_level"></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkOutImg">查看</a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkInImg">查看</a></td>
+								<td></td>
+								<!-- ko if:$data.relate_flg =='N' -->
+								<td></td>
+								<!-- /ko -->
+								<!-- ko if:$data.relate_flg =='Y' -->
+								<td style="color: blue"><a href="javascript:void(0)"
+									data-bind="attr: {href: 'agency-detail.jsp?key='+$data.agency_pk}">查看</a></td>
+								<!-- /ko -->
 								<!-- ko if: $data.comment==null || $data.comment==''-->
 								<td><a href="javascript:void(0)" data-bind="click:function() {$root.editComment($data.pk)}">添加</a></td>
 								<!-- /ko -->
@@ -289,10 +320,10 @@
 				class="btn btn-green btn-r" data-bind="click: doCancelChangeSale">取消</a>
 		</div>
 	</div>
-	<div id="client-level" style="display: none; width: 800px">
+	<div id="client-level" style="display: none; width: 900px">
 		<form class="form-horizontal search-panel" id="form-level">
 			<input type="hidden" data-bind="value:client().pk" name="client.pk" />
-			<div class="form-group" style="width: 800px">
+			<div class="form-group" style="width: 900px">
 				<div class="span6">
 					<label class="col-md-1 control-label">回款誉</label>
 					<div class="col-md-3">
@@ -307,7 +338,7 @@
 					</div>
 				</div>
 				<div class="span6">
-					<label class="col-md-1 control-label">沟通力</label>
+					<label class="col-md-1 control-label">关系强度</label>
 					<div class="col-md-3">
 						<select class="form-control" data-bind="options: talkLevels, value:client().talk_level" name="client.talk_level"></select>
 					</div>
@@ -336,10 +367,36 @@
 			</div>
 		</div>
 	</div>
+	<div id="check-img" style="display: none; width: 500px">
+		<div class="input-row clearfloat">
+			<div class="upload-container" id="img-container"></div>
+		</div>
+	</div>
+	<div id="employee-detail" style="display: none; width: 500px; height: 400px; overflow-y: scroll">
+		<div class="input-row clearfloat">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>客户姓名</th>
+						<th>手机号</th>
+						<th>状态</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: employees">
+					<tr>
+						<td data-bind="text: $data.name"></td>
+						<td data-bind="text: $data.cellphone"></td>
+						<td data-bind="text: $data.sales_name"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/multiple-select/jquery.multiple.select.js"></script>
-	<script src="<%=basePath%>static/js/client/company.js"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.002"></script>
+	<script src="<%=basePath%>static/js/client/company.js?v=1.006"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@
 		<result column="max_profit_substract" property="max_profit_substract" jdbcType="DECIMAL" />
 		<result column="business_price" property="business_price" jdbcType="DECIMAL" />
 		<result column="product_manager" property="product_manager" jdbcType="VARCHAR" />
+		<result column="product_manager_name" property="product_manager_name" jdbcType="VARCHAR" />
 		<result column="sale_flg" property="sale_flg" jdbcType="CHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
 		<result column="pk" property="pk" jdbcType="CHAR" />
@@ -53,8 +54,11 @@
 		<result column="local_upkeep_flg" property="local_upkeep_flg" jdbcType="VARCHAR" />
 		<result column="keep_flg" property="keep_flg" jdbcType="CHAR" />
 		<result column="analysis_flg" property="analysis_flg" jdbcType="CHAR" />
+		<result column="as_adult_flg" property="as_adult_flg" jdbcType="CHAR" />
+		<result column="id_type" property="id_type" jdbcType="CHAR" />
+		<result column="adult_instant_bonus" property="adult_instant_bonus" jdbcType="DECIMAL" />
+		<result column="child_instant_bonus" property="child_instant_bonus" jdbcType="DECIMAL" />
 	</resultMap>
-
 	<sql id="Base_Column_List">
 		name,
 		product_number,
@@ -106,14 +110,76 @@
 		supplier_upkeep_flg,
 		local_upkeep_flg,
 		keep_flg,
-		analysis_flg
+		analysis_flg,
+		as_adult_flg,
+		id_type,
+		adult_instant_bonus,
+		child_instant_bonus
 
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
-		<include refid="Base_Column_List" />
-		from product
-		where pk = #{pk,jdbcType=CHAR}
+		A.name,
+		A.product_number,
+		A.location,
+		A.days,
+		A.max_profit_substract,
+		A.business_price,
+		A.product_manager,
+		A.sale_flg,
+		A.comment,
+		A.pk,
+		A.create_user,
+		A.update_user,
+		A.air_ticket_charge,
+		A.product_value,
+		A.air_ticket_cost,
+		A.other_cost,
+		A.gross_profit,
+		A.gross_profit_rate,
+		A.product_model,
+		A.adult_price,
+		A.child_price,
+		A.business_profit_substract,
+		A.air_ticket_child_cost,
+		A.local_adult_cost,
+		A.local_child_cost,
+		A.other_child_cost,
+		A.product_child_value,
+		A.cash_flow,
+		A.spot_cash,
+		A.first_air_start,
+		A.first_air_end,
+		A.sale_attention,
+		A.sale_strategy,
+		A.strict_price_flg,
+		A.cash_flow_air_flg,
+		A.cash_flow_local_flg,
+		A.cash_flow_other_flg,
+		A.create_time,
+		A.update_time,
+		A.off_shelves_date,
+		A.gross_child_profit,
+		A.cash_child_flow,
+		A.spot_child_cash,
+		A.gross_child_profit_rate,
+		A.client_confirm_templet,
+		A.out_notice_templet,
+		A.air_ticket_upkeep_flg,
+		A.supplier_upkeep_flg,
+		A.local_upkeep_flg,
+		A.keep_flg,
+		A.analysis_flg,
+		A.as_adult_flg,
+		A.id_type,
+		A.adult_instant_bonus,
+		A.child_instant_bonus,
+		B.user_name AS product_manager_name
+		from product A
+		LEFT JOIN user_base B ON
+		A.product_manager = B.user_number
+		where A.pk =
+		#{pk,jdbcType=CHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -258,6 +324,18 @@
 			<if test="gross_child_profit_rate != null">
 				gross_child_profit_rate,
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg,
+			</if>
+			<if test="id_type != null">
+				id_type,
+			</if>
+			<if test="adult_instant_bonus != null">
+				adult_instant_bonus,
+			</if>
+			<if test="child_instant_bonus != null">
+				child_instant_bonus,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -391,6 +469,18 @@
 			</if>
 			<if test="gross_child_profit_rate != null">
 				#{gross_child_profit_rate,jdbcType=FLOAT},
+			</if>
+			<if test="as_adult_flg != null">
+				#{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				#{id_type,jdbcType=CHAR},
+			</if>
+			<if test="adult_instant_bonus != null">
+				#{adult_instant_bonus,jdbcType=DECIMAL},
+			</if>
+			<if test="child_instant_bonus != null">
+				#{child_instant_bonus,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>
@@ -549,6 +639,18 @@
 			<if test="analysis_flg != null">
 				analysis_flg = #{analysis_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg = #{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="id_type != null">
+				id_type = #{id_type,jdbcType=CHAR},
+			</if>
+			<if test="adult_instant_bonus != null">
+				adult_instant_bonus = #{adult_instant_bonus,jdbcType=DECIMAL},
+			</if>
+			<if test="child_instant_bonus != null">
+				child_instant_bonus = #{child_instant_bonus,jdbcType=DECIMAL},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -562,6 +664,9 @@
 			</if>
 			<if test="product_model !=null and product_model !='' ">
 				and product_model = #{product_model,jdbcType=VARCHAR}
+			</if>
+			<if test="create_user !=null and create_user !='' ">
+				and create_user = #{create_user,jdbcType=VARCHAR}
 			</if>
 			<if test="location !=null and location !='' ">
 				and location = #{location,jdbcType=VARCHAR}
@@ -633,16 +738,24 @@
 		A.supplier_upkeep_flg,
 		A.local_upkeep_flg,
 		A.keep_flg,
-		A.analysis_flg
+		A.analysis_flg,
+		A.as_adult_flg,
+		A.id_type,
+		A.adult_instant_bonus,			
+		A.child_instant_bonus
 		from
 		product A
-		LEFT JOIN user_base B on A.product_manager=B.user_number
+		LEFT JOIN user_base B on
+		A.product_manager=B.user_number
 		<where>
 			<if test="params.bo.product_manager != null and params.bo.product_manager !=''">
 				and A.product_manager = #{params.bo.product_manager,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.product_number != null and params.bo.product_number !=''">
 				and A.product_number like concat('%', #{params.bo.product_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_model != null and params.bo.product_model !=''">
+				and A.product_model like concat('%', #{params.bo.product_model,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like concat('%', #{params.bo.name,jdbcType=VARCHAR},'%')
@@ -669,7 +782,6 @@
 				and A.product_value >= 9
 			</if>
 		</where>
-
 		order by A.product_value DESC,A.name,A.product_model
 	</select>
 </mapper>

@@ -19,6 +19,7 @@ import com.xinchi.backend.client.dao.EmployeeDAO;
 import com.xinchi.backend.client.dao.JobHoppingLogDAO;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.dao.OrderDAO;
+import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.util.dao.CommonDAO;
 import com.xinchi.bean.AccurateSaleBean;
 import com.xinchi.bean.ClientBean;
@@ -30,6 +31,7 @@ import com.xinchi.bean.JobHoppingLogBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.RelationLevelDto;
 import com.xinchi.bean.SqlBean;
+import com.xinchi.bean.UserCommonBean;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
@@ -78,36 +80,60 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ClientEmployeeBean option1 = new ClientEmployeeBean();
 		option1.setCellphone(employee.getCellphone());
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
-		if (exists1 != null && exists1.size() > 0)
-			return "existcellphone";
-
-		if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
-			ClientEmployeeBean option2 = new ClientEmployeeBean();
-			option2.setCellphone1(employee.getCellphone1());
-			List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
-			if (exists2 != null && exists2.size() > 0)
-				return "existcellphone";
+		if (exists1 != null && exists1.size() > 0) {
+			for (ClientEmployeeBean exist : exists1) {
+				if (exist.getSales().equals(employee.getSales())
+						|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+					return "existcellphone";
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
+		// ClientEmployeeBean option2 = new ClientEmployeeBean();
+		// option2.setCellphone1(employee.getCellphone1());
+		// List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		// if (exists2 != null && exists2.size() > 0)
+		// return "existcellphone";
+		// }
 
 		ClientEmployeeBean option3 = new ClientEmployeeBean();
 		option3.setWechat(employee.getWechat());
 		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
-		if (exists3 != null && exists3.size() > 0)
-			return "existwechat";
-
-		if (!SimpletinyString.isEmpty(employee.getWechat1())) {
-			ClientEmployeeBean option4 = new ClientEmployeeBean();
-			option4.setWechat1(employee.getWechat1());
-			List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
-			if (exists4 != null && exists4.size() > 0)
-				return "existwechat";
+		if (exists3 != null && exists3.size() > 0) {
+			for (ClientEmployeeBean exist : exists3) {
+				if (exist.getSales().equals(employee.getSales())
+						|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+					return "existwechat";
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getWechat1())) {
+		// ClientEmployeeBean option4 = new ClientEmployeeBean();
+		// option4.setWechat1(employee.getWechat1());
+		// List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		// if (exists4 != null && exists4.size() > 0)
+		// return "existwechat";
+		// }
 		if (SimpletinyString.isEmpty(employee.getHead_photo())) {
 			employee.setHead_photo(null);
 		} else {
 			saveFile(employee.getHead_photo());
 		}
-
+		// 检测是否需要审核
+		// String client_pk = employee.getFinancial_body_pk();
+		//
+		// if (!SimpletinyString.isEmpty(client_pk)) {
+		// ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+		// String client_short_name = employee.getFinancial_body_name();
+		//
+		// if (client.getClient_short_name().equals(client_short_name)) {
+		// employee.setReview_flg("Y");
+		// } else {
+		// employee.setFinancial_body_pk(null);
+		// }
+		// }
+		// 2024-05-12无需审核
+		employee.setReview_flg("Y");
 		employee.setRelation_level("新增级");
 		dao.insert(employee);
 		// 记录客户和销售对应关系
@@ -116,45 +142,81 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ceub.setUser_pk(employee.getSales());
 		employeeUserDao.insert(ceub);
 
-		return "success";
+		return SUCCESS;
 	}
 
 	@Override
 	public String updateEmployee(ClientEmployeeBean employee) {
+		ClientEmployeeBean old = dao.selectByPrimaryKey(employee.getPk());
 		ClientEmployeeBean option1 = new ClientEmployeeBean();
 		option1.setCellphone(employee.getCellphone());
 		List<ClientEmployeeBean> exists1 = dao.getAllByParam(option1);
-		if (exists1 != null && exists1.size() > 0 && !exists1.get(0).getPk().equals(employee.getPk())
-				&& !employee.getPublic_flg().equals("Y"))
-			return "existcellphone";
-
-		if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
-			ClientEmployeeBean option2 = new ClientEmployeeBean();
-			option2.setCellphone1(employee.getCellphone1());
-			List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
-			if (exists2 != null && exists2.size() > 0 && !exists2.get(0).getPk().equals(employee.getPk())
-					&& !employee.getPublic_flg().equals("Y"))
-				return "existcellphone";
+		if (exists1 != null && exists1.size() > 0) {
+			for (ClientEmployeeBean exist : exists1) {
+				if (!exist.getPk().equals(old.getPk())) {
+					if (exist.getSales().equals(employee.getSales())
+							|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+						return "existcellphone";
+				}
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getCellphone1())) {
+		// ClientEmployeeBean option2 = new ClientEmployeeBean();
+		// option2.setCellphone1(employee.getCellphone1());
+		// List<ClientEmployeeBean> exists2 = dao.getAllByParam(option2);
+		// if (exists2 != null && exists2.size() > 0 &&
+		// !exists2.get(0).getPk().equals(employee.getPk())
+		// && !employee.getPublic_flg().equals("Y"))
+		// return "existcellphone";
+		// }
 		ClientEmployeeBean option3 = new ClientEmployeeBean();
 		option3.setWechat(employee.getWechat());
 		List<ClientEmployeeBean> exists3 = dao.getAllByParam(option3);
-		if (exists3 != null && exists3.size() > 0 && !exists3.get(0).getPk().equals(employee.getPk())
-				&& !employee.getPublic_flg().equals("Y"))
-			return "existwechat";
-
-		if (!SimpletinyString.isEmpty(employee.getWechat1())) {
-			ClientEmployeeBean option4 = new ClientEmployeeBean();
-			option4.setWechat1(employee.getWechat1());
-			List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
-			if (exists4 != null && exists4.size() > 0 && !exists4.get(0).getPk().equals(employee.getPk())
-					&& !employee.getPublic_flg().equals("Y"))
-				return "existwechat";
+		if (exists3 != null && exists3.size() > 0) {
+			for (ClientEmployeeBean exist : exists3) {
+				if (!exist.getPk().equals(old.getPk())) {
+					if (exist.getSales().equals(employee.getSales())
+							|| exist.getSales().equals(ResourcesConstants.USER_PUBLIC))
+						return "existwechat";
+				}
+			}
 		}
+
+		// if (!SimpletinyString.isEmpty(employee.getWechat1())) {
+		// ClientEmployeeBean option4 = new ClientEmployeeBean();
+		// option4.setWechat1(employee.getWechat1());
+		// List<ClientEmployeeBean> exists4 = dao.getAllByParam(option4);
+		// if (exists4 != null && exists4.size() > 0 &&
+		// !exists4.get(0).getPk().equals(employee.getPk())
+		// && !employee.getPublic_flg().equals("Y"))
+		// return "existwechat";
+		// }
 		// 如果是公开维护修改所属销售
 		if (employee.getPublic_flg().equals("Y")) {
 			UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 					.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+			// 查验财务主体合法性
+			if (!sessionBean.getUser_roles().contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+				ClientBean client = clientDao.selectByPrimaryKey(employee.getFinancial_body_pk());
+				if (client.getDelete_flg().equals("Y"))
+					return "bodyillegal0";
+
+				List<ClientUserBean> cubs = clientUserDao.selectByClientPk(employee.getFinancial_body_pk());
+				boolean legal = false;
+				if (null != cubs) {
+					for (ClientUserBean cub : cubs) {
+						if (sessionBean.getPk().equals(cub.getUser_pk())) {
+							legal = true;
+							break;
+						}
+					}
+				}
+
+				if (!legal) {
+					return "bodyillegal1";
+				}
+			}
 
 			employee.setPublic_flg("N");
 			employee.setRelation_level(ResourcesConstants.CLIENT_RELATION_LEVEL_01);
@@ -176,6 +238,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 			saveFile(employee.getHead_photo());
 		}
 
+		// 2024-05-12:无需审核
+		// // 检测是否需要审核
+		// if (oldCeb.getReview_flg().equals("N")) {
+		// String client_pk = employee.getFinancial_body_pk();
+		// if (!SimpletinyString.isEmpty(client_pk)) {
+		// ClientBean client = clientDao.selectByPrimaryKey(client_pk);
+		// String client_short_name = employee.getFinancial_body_name();
+		//
+		// if (client.getClient_short_name().equals(client_short_name)) {
+		// employee.setReview_flg("Y");
+		// } else {
+		// employee.setFinancial_body_pk(null);
+		// }
+		// }
+		// }
+		employee.setReview_flg("Y");
 		dao.update(employee);
 		return SUCCESS;
 
@@ -214,6 +292,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		for (String employee_pk : employee_pks) {
 			ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
 			employee.setPublic_flg("Y");
+			// 这个ID是个需要解决的问题，要么改成SimpletinyPUblic,要么系统分发到其他公司时，这是个问题。
+			employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
 			// 删除之前存在的对应关系
 			employeeUserDao.deleteByEmployeePk(employee_pk);
 
@@ -314,9 +394,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dao.update(main);
 
 		// 更新涉及到client_employee_pk的表
-		String[] tables = { "accurate_sale", "client_visit", "client_received_detail", "receivable", "budget_order",
-				"budget_standard_order", "final_order", "final_standard_order", "budget_non_standard_order",
-				"final_non_standard_order" };
+		String[] tables = { "accurate_sale", "client_visit", "client_received_detail", "receivable", "sale_order" };
 
 		SqlBean sqlbean = new SqlBean();
 		for (String table : tables) {
@@ -366,9 +444,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			// 删除之前存在的对应关系
 			employeeUserDao.deleteByEmployeePk(employee_pk);
-
 			if (main_user.equals("public")) {
 				employee.setPublic_flg("Y");
+				employee.setFinancial_body_pk("cn12cn13fHd3eXNxc3x6fw");
 				// 保存新的对应关系
 				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
 
@@ -521,6 +599,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 		for (ClientEmployeeBean employee : employees) {
 			employee.setMarket_level(market_level);
 			dao.update(employee);
+		}
+		return SUCCESS;
+	}
+
+	@Autowired
+	private UserDAO userDao;
+
+	@Override
+	public String makePublicToSales(String employee_pk, String user_number) {
+		ClientEmployeeBean employee = dao.selectByPrimaryKey(employee_pk);
+
+		List<ClientEmployeeUserBean> ceubs = employeeUserDao.selectByEmployeePk(employee_pk);
+
+		if (null != ceubs) {
+			if (ceubs.get(0).getUser_pk().equals(ResourcesConstants.USER_PUBLIC)) {
+				employeeUserDao.deleteByEmployeePk(employee_pk);
+				employee.setPublic_flg("N");
+				// 保存新的对应关系
+				ClientEmployeeUserBean ceub = new ClientEmployeeUserBean();
+				ceub.setEmployee_pk(employee_pk);
+				UserCommonBean user = userDao.selectUserCommonByUserNumber(user_number);
+				ceub.setUser_pk(user.getPk());
+				employeeUserDao.insert(ceub);
+
+				dao.update(employee);
+			}
 		}
 		return SUCCESS;
 	}

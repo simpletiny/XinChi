@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -44,7 +43,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-			旅游公司新建<a href="<%=basePath%>/templates/client/agency.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a>
+				旅游公司新建<a href="<%=basePath%>/templates/client/agency.jsp" class="cancel-create"><i class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
 
@@ -56,13 +55,15 @@
 						<div class="col-md-6 required">
 							<label class="l">公司全称</label>
 							<div class="ip">
-								<input type="text" id="name" class="ip-default" data-bind="value: agency().agency_name" onblur="checkSame(this,'NAME')" placeholder="公司全称" name="agency.agency_name" required="required" />
+								<input type="text" id="name" class="ip-default" data-bind="value: agency().agency_name"
+									onblur="checkSame(this,'NAME')" placeholder="公司全称" name="agency.agency_name" required="required" />
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 required">
 							<label class="l">信用代码</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: agency().credit_code" placeholder="信用代码" onblur="checkSame(this,'CODE')"  name="agency.credit_code" />
+								<input type="text" required class="ip-" data-bind="value: agency().credit_code" placeholder="信用代码"
+									onblur="checkSame(this,'CODE')" name="agency.credit_code" />
 							</div>
 						</div>
 					</div>
@@ -70,7 +71,9 @@
 						<div class="col-md-6 required">
 							<label class="l">地区</label>
 							<div class="ip" style="width: 35%">
-								<select class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: agency().agency_provice,event:{change:ter}" name="agency.agency_provice" required="required"></select>
+								<select class="form-control"
+									data-bind="options: provices, optionsCaption: '-- 省份--',value: agency().agency_provice,event:{change:ter}"
+									name="agency.agency_provice" required="required"></select>
 							</div>
 							<div class="ip" style="width: 35%">
 								<select class="form-control" id="city" name="agency.agency_city" required="required">
@@ -78,26 +81,29 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">出境资质</label>
 							<div class="ip">
-								<em class="small-box"> <input type="radio" name="agency.is_exit" value="Y" /><label>有</label>
-								</em> <em class="small-box"> <input type="radio" name="agency.is_exit" checked="checked" value="N" /><label>无</label>
+								<em class="small-box"> <input type="radio" name="agency.is_exit" checked="checked" value="U" /><label>未知</label>
+								</em> <em class="small-box"> <input type="radio" name="agency.is_exit" value="Y" /><label>有</label>
+								</em> <em class="small-box"> <input type="radio" name="agency.is_exit" value="N" /><label>无</label>
 								</em>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">主营业务</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: mainBus,value: agency().main_bussines" name="agency.main_bussines" required="required"></select>
+								<select class="form-control" data-bind="options: mainBus, optionsCaption: '-- 请选择 --',value: agency().main_bussines"
+									name="agency.main_bussines"></select>
 							</div>
 						</div>
 						<div class="col-md-6 required">
 							<label class="l">公司类型</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: agencyType,value: agency().agency_type" name="agency.agency_type" required="required"></select>
+								<select class="form-control" data-bind="options: agencyType,value: agency().agency_type"
+									name="agency.agency_type" required="required"></select>
 							</div>
 						</div>
 					</div>
@@ -105,7 +111,8 @@
 						<div class="col-md-12">
 							<label class="l">备注</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" data-bind="value: agency().comment" name="agency.comment" placeholder="需要备注说明的信息"></textarea>
+								<textarea type="text" class="ip-default" rows="15" data-bind="value: agency().comment" name="agency.comment"
+									placeholder="需要备注说明的信息"></textarea>
 							</div>
 						</div>
 					</div>
@@ -115,13 +122,16 @@
 						<div class="col-md-6 required">
 							<label class="l">法人姓名</label>
 							<div class="ip">
-								<input type="text" class="ip- date-picker" data-bind="value: agency().corporate_name" maxlength="10" placeholder="法人姓名" name="agency.corporate_name" required=“required”/>
+								<input type="text" class="ip- date-picker" data-bind="value: agency().corporate_name" maxlength="10"
+									placeholder="法人姓名" name="agency.corporate_name" required=“required” />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">性别</label>
 							<div class="ip">
-								<select class="form-control" data-bind="options: genders,optionsCaption: '-- 性别--',value: agency().corporate_sex" name="agency.corporate_sex"></select>
+								<select class="form-control"
+									data-bind="options: genders,optionsCaption: '-- 性别--',value: agency().corporate_sex"
+									name="agency.corporate_sex"></select>
 							</div>
 						</div>
 					</div>
@@ -129,13 +139,15 @@
 						<div class="col-md-6">
 							<label class="l">手机号</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: agency().corporate_cellphone" placeholder="手机号" name="agency.corporate_cellphone" />
+								<input type="text" class="ip-" data-bind="value: agency().corporate_cellphone" placeholder="手机号"
+									name="agency.corporate_cellphone" />
 							</div>
 						</div>
 						<div class="col-md-6">
 							<label class="l">身份证号</label>
 							<div class="ip">
-								<input type="text" class="ip-" data-bind="value: agency().corporate_id" placeholder="身份证号" name="agency.corporate_id" />
+								<input type="text" class="ip-" data-bind="value: agency().corporate_id" placeholder="身份证号"
+									name="agency.corporate_id" />
 							</div>
 						</div>
 					</div>
@@ -144,7 +156,8 @@
 					<h4>营业执照</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传营业执照<input type="file" name="file1" /></a> <input type="hidden" name="agencyFile.licence_name" />
+							<a href="javascript:;" class="a-upload">上传营业执照<input type="file" name="file1" /></a> <input type="hidden"
+								name="agencyFile.licence_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -153,7 +166,8 @@
 					<h4>经营许可</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传经营许可<input type="file" name="file2" /></a> <input type="hidden" name="agencyFile.permit_name" />
+							<a href="javascript:;" class="a-upload">上传经营许可<input type="file" name="file2" /></a> <input type="hidden"
+								name="agencyFile.permit_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -162,7 +176,8 @@
 					<h4>责任险</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传责任险<input type="file" name="file3" /></a> <input type="hidden" name="agencyFile.liability_insurance_name" />
+							<a href="javascript:;" class="a-upload">上传责任险<input type="file" name="file3" /></a> <input type="hidden"
+								name="agencyFile.liability_insurance_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -171,7 +186,8 @@
 					<h4>法人身份证</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传法人身份证<input type="file" name="file4" /></a> <input type="hidden" name="agencyFile.corporate_name" />
+							<a href="javascript:;" class="a-upload">上传法人身份证<input type="file" name="file4" /></a> <input type="hidden"
+								name="agencyFile.corporate_name" />
 
 						</div>
 						<div class="col-md-6"></div>
@@ -181,7 +197,8 @@
 					<h4>负责人身份证</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传负责人身份证<input type="file" name="file5" /></a> <input type="hidden" name="agencyFile.chief_name" />
+							<a href="javascript:;" class="a-upload">上传负责人身份证<input type="file" name="file5" /></a> <input type="hidden"
+								name="agencyFile.chief_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -190,7 +207,8 @@
 					<h4>其他</h4>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传其他文件<input type="file" name="file6" /></a> <input type="hidden" name="agencyFile.other_name" />
+							<a href="javascript:;" class="a-upload">上传其他文件<input type="file" name="file6" /></a> <input type="hidden"
+								name="agencyFile.other_name" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>

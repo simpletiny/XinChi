@@ -47,9 +47,22 @@
 		</action>
 
 		<!-- 产品相关文件下载 end -->
-	
+		<!-- 票务下载相关 start -->
+		<action name="downloadTicketFile" class="ticketFileAction" method="downloadTicketFile">
+			<result name="success" type="stream">
+				<param name="inputName">fips</param>
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="contentType">application/octet-stream</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		<!-- 票务下载相关 end -->
 		<!-- 预览word html文件 -->
 		<action name="viewWord" class="fileAction" method="viewWord">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 预览excel html文件 -->
+		<action name="viewExcel" class="fileAction" method="viewExcel">
 			<result name="success" type="str">resultStr</result>
 		</action>
 	</package>

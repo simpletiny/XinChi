@@ -171,7 +171,7 @@
 										<td><input
 											data-bind="checked:$data.pick_type,attr:{name:'radio-jie-'+ $parentContext.$index()+'-'+$index()}"
 											st="radio-jie-0" type="radio" value="0" onclick="changeJieSongType(this)" />航段</td>
-										<td><input type="text" maxlength="10" st="txt-jie-type-0"
+										<td><input type="text" maxlength="1" st="txt-jie-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"
 											data-bind="value:$data.pick_leg,enable:$root.isD($data.pick_type),css:{required:$root.isD($data.pick_type)}" /></td>
 										<td><input
 											data-bind="checked:$data.pick_type,attr:{name:'radio-jie-'+ $parentContext.$index()+'-'+$index()}"
@@ -181,7 +181,8 @@
 										<td><input class="required" type="number" maxlength="2" st="day" data-bind="value:$data.pick_day" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.pick_traffic" maxlength="10"
 											st="traffic-tool" /></td>
-										<td><input class="required" type="text" data-bind="value:$data.pick_time" maxlength="15" st="time" /></td>
+										<td><input class="required from-to-time" placeholder="12:01--23:20" type="text"
+											data-bind="value:$data.pick_time" maxlength="12" st="time" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.pick_city" maxlength="15" st="city" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.pick_place" maxlength="30" st="place" /></td>
 									</tr>
@@ -191,7 +192,7 @@
 										<td><input
 											data-bind="checked:$data.send_type,attr:{name:'radio-song-'+ $parentContext.$index()+'-'+$index()}"
 											st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)" />航段</td>
-										<td><input type="text" maxlength="10" st="txt-song-type-0"
+										<td><input type="text" maxlength="1" st="txt-song-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"
 											data-bind="value:$data.send_leg,enable:$root.isD($data.send_type),css:{required:$root.isD($data.send_type)}" /></td>
 										<td><input
 											data-bind="checked:$data.send_type,attr:{name:'radio-song-'+ $parentContext.$index()+'-'+$index()}"
@@ -201,7 +202,8 @@
 										<td><input class="required" type="number" maxlength="2" st="day" data-bind="value:$data.send_day" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_traffic" maxlength="10"
 											st="traffic-tool" /></td>
-										<td><input class="required" type="text" data-bind="value:$data.send_time" maxlength="15" st="time" /></td>
+										<td><input class="required from-to-time" placeholder="12:01--23:20" type="text"
+											data-bind="value:$data.send_time" maxlength="12" st="time" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_city" maxlength="15" st="city" /></td>
 										<td><input class="required" type="text" data-bind="value:$data.send_place" maxlength="30" st="place" /></td>
 									</tr>
@@ -291,9 +293,8 @@
 				</div>
 				<hr class="hr-big" />
 				<div align="right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: saveProductSupplier">保存</a> <a type="submit"
-						class="btn btn-green btn-r" data-bind="click: createProduct">更新</a> <a type="submit" class="btn btn-green btn-r"
-						onclick="javascript:history.go(-1);return false;">放弃</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: saveProductSupplier">保存</a><a type="submit"
+						class="btn btn-green btn-r" onclick="javascript:history.go(-1);return false;">放弃</a>
 				</div>
 			</div>
 		</div>
@@ -372,6 +373,7 @@
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/supplier-management-edit.js"></script>
+	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
+	<script src="<%=basePath%>static/js/product/supplier-management-edit.js?v=1.001"></script>
 </body>
 </html>

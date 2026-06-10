@@ -2,6 +2,7 @@ package com.xinchi.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.xinchi.common.SupperBO;
 
@@ -22,7 +23,8 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	private String supplier_product_name;
 
-	private Integer people_count;
+	private int adult_count = 0;
+	private int special_count = 0;
 
 	private String pick_date;
 
@@ -59,6 +61,14 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 	private String passenger_captain;
 
 	private String single_flg;
+
+	private String product_manager_number;
+	private String product_manager_name;
+	private String operator_number;
+
+	private List<String> product_manager_numbers;
+
+	private String operator_name;
 
 	// search option
 	private String team_number1;
@@ -109,14 +119,6 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setSupplier_product_name(String supplier_product_name) {
 		this.supplier_product_name = supplier_product_name;
-	}
-
-	public Integer getPeople_count() {
-		return people_count;
-	}
-
-	public void setPeople_count(Integer people_count) {
-		this.people_count = people_count;
 	}
 
 	public String getPick_date() {
@@ -285,6 +287,62 @@ public class ProductOrderOperationBean extends SupperBO implements Serializable 
 
 	public void setTeam_number1(String team_number1) {
 		this.team_number1 = team_number1;
+	}
+
+	public int getAdult_count() {
+		return adult_count;
+	}
+
+	public int getSpecial_count() {
+		return special_count;
+	}
+
+	public void setAdult_count(int adult_count) {
+		this.adult_count = adult_count;
+	}
+
+	public void setSpecial_count(int special_count) {
+		this.special_count = special_count;
+	}
+
+	public String getOperator_number() {
+		return operator_number;
+	}
+
+	public void setOperator_number(String operator_number) {
+		this.operator_number = operator_number;
+	}
+
+	public String getOperator_name() {
+		return operator_name;
+	}
+
+	public void setOperator_name(String operator_name) {
+		this.operator_name = operator_name;
+	}
+
+	public String getProduct_manager_number() {
+		return product_manager_number;
+	}
+
+	public String getProduct_manager_name() {
+		return product_manager_name;
+	}
+
+	public void setProduct_manager_number(String product_manager_number) {
+		this.product_manager_number = product_manager_number;
+	}
+
+	public void setProduct_manager_name(String product_manager_name) {
+		this.product_manager_name = product_manager_name;
+	}
+
+	public List<String> getProduct_manager_numbers() {
+		return product_manager_numbers;
+	}
+
+	public void setProduct_manager_numbers(List<String> product_manager_numbers) {
+		this.product_manager_numbers = product_manager_numbers;
 	}
 
 }

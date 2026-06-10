@@ -18,9 +18,30 @@ tr td {
 	white-space: nowrap;
 	text-align: left
 }
+
+.fixed {
+	font-size: 12px;
+	display: block;
+	position: fixed;
+	right: 20px;
+	top: 200px;
+	margin-left: 10px;
+	z-index: 100;
+	width: 100px;
+}
+
+.fixed button {
+	width: 80px;
+	margin-top: 5px;
+	display: block;
+}
 </style>
 </head>
 <body>
+	<div class="fixed">
+		<button type="submit" style="display: none" class="btn btn-green col-md-1"
+			data-bind="click: function() { checkNames() }" id='btn-check-names'>查看名单</button>
+	</div>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
@@ -32,13 +53,14 @@ tr td {
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div style="float: right">
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createStandard() }">客户需求</button>
+							<button type="submit" class="btn btn-green" data-bind="click: function() { checkDishonest() }">失信人查询</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createStandard() }">客户需求</button>
 							<!-- <div>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createNonStandard() }">非标需求</button>
 							</div> -->
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createIndependent() }">独立团需求</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { createTicket() }">单机票</button>
-						</div> 
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createIndependent() }">独立团需求</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { createTicket() }">单机票</button>
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="span6">
@@ -84,6 +106,7 @@ tr td {
 								<th></th>
 								<th>产品编号</th>
 								<th title="成人/儿童">分值</th>
+								<th title="成人/儿童">立奖</th>
 								<th>产品线</th>
 								<th>产品名称</th>
 								<th>型号</th>
@@ -104,6 +127,7 @@ tr td {
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenProducts" /></td>
 								<td data-bind="text: $data.product_number"></td>
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+								<td data-bind="text: $data.adult_instant_bonus +'/'+$data.child_instant_bonus"></td>
 								<td data-bind="text: $data.location"></td>
 								<td data-bind="text: $data.name"></td>
 								<td data-bind="text: $data.product_model"></td>
@@ -173,10 +197,28 @@ tr td {
 			</div>
 		</div>
 	</div>
+	<div id="div-name-check" style="display: none; width: 600px; height: 500px; overflow-y: auto">
+		<div class="form-group" style="margin-top:10px">
+			<div style="float: right">
+				<button type="submit" class="btn btn-green" data-bind="click: function() { deleteNames() }">删除</button>
+			</div>
+		</div>
+		<div class="form-group">
+			<table style="width: 100%" class="table table-striped table-hover" style="padding:20px">
+				<thead> 
+					<tr>
+						<th style="width: 30%">姓名</th>
+						<th style="width: 70%">身份证号</th>
+					</tr>
+				</thead>
+				<tbody id="tbody-name">
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<script>
-		$(".order-box").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-box").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/product/product-box.js"></script>
+	<script src="<%=basePath%>static/js/product/product-box.js?v=1.001"></script>
 </body>
 </html>

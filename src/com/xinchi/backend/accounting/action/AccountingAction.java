@@ -68,7 +68,7 @@ public class AccountingAction extends BaseAction {
 		else if (item.equals(ResourcesConstants.PAY_TYPE_MORE_BACK)) {
 			resultStr = service.agreeMoreBack(pa.getBack_pk());
 		}
-		// 票务费用
+		// 票务费用，还有被一种是票务端产生的费用，目前没有，
 		else if (item.equals(ResourcesConstants.PAY_TYPE_PIAOWU)) {
 			resultStr = service.agreeAirTicketPayApply(pa.getBack_pk());
 		}
@@ -110,6 +110,13 @@ public class AccountingAction extends BaseAction {
 
 		if (resultStr.equals(SUCCESS))
 			payApprovalService.update(pa);
+		return SUCCESS;
+	}
+
+	private String approval_pks;
+
+	public String suspensePayApply() {
+		resultStr = service.suspensePayApply(approval_pks);
 		return SUCCESS;
 	}
 
@@ -250,5 +257,13 @@ public class AccountingAction extends BaseAction {
 
 	public void setClient_employee(ClientEmployeeBean client_employee) {
 		this.client_employee = client_employee;
+	}
+
+	public String getApproval_pks() {
+		return approval_pks;
+	}
+
+	public void setApproval_pks(String approval_pks) {
+		this.approval_pks = approval_pks;
 	}
 }

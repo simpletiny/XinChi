@@ -64,6 +64,7 @@
 						</div>
 						<div align="right">
 							<button type="submit" class="btn btn-green " data-bind="click: function() { reimbursement() }">费用申请</button>
+							<button type="submit" class="btn btn-green " data-bind="click: function() { update() }">重新申请</button>
 							<button type="submit" class="btn btn-green" data-bind="click: delete_reimbursement">删除</button>
 						</div>
 
@@ -79,7 +80,7 @@
 							<label class="col-md-1 control-label">项目</label>
 							<div class="col-md-2">
 								<select class="form-control"
-									data-bind="options: items, optionsText:function(item){return itemMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
+									data-bind="options: items, optionsText:function(item){return payTypeMapping[item]}, optionsCaption: '-- 请选择 --',event: {change:refresh}"
 									name="reimbursement.item" required="required"></select>
 							</div>
 						</div>
@@ -124,7 +125,7 @@
 							<tr>
 								<td><input type="checkbox" data-bind="checkedValue:$data, checked: $root.chosenReimbursements" /></td>
 								<td data-bind="text: $data.date"></td>
-								<td data-bind="text: $root.itemMapping[$data.item]"></td>
+								<td data-bind="text: payTypeMapping[$data.item]"></td>
 								<td data-bind="text: $data.month"></td>
 								<td data-bind="text: $data.money" class="rmb"></td>
 								<td data-bind="text: $data.comment"></td>
@@ -140,10 +141,10 @@
 								<!-- /ko -->
 
 								<td data-bind="text: $data.approval_name"></td>
-								<!-- ko if:$data.approval_time !=null -->
+								<!-- ko if:$data.approval_time !=null && $data.approval_time!="" -->
 								<td data-bind="text: moment($data.approval_time-0).format('YYYY-MM-DD HH:mm')"></td>
 								<!-- /ko -->
-								<!-- ko if:$data.approval_time ==null -->
+								<!-- ko if:$data.approval_time ==null || $data.approval_time=="" -->
 								<td></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.pay_name"></td>
@@ -195,6 +196,7 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/accounting/reimbursement.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/accounting/accounting-constant.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/accounting/reimbursement.js?v=1.002"></script>
 </body>
 </html>

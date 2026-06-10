@@ -32,14 +32,6 @@
 	color: red;
 	font-weight: bold;
 }
-
-tr td {
-	text-overflow: ellipsis; /* for IE */
-	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: left
-}
 </style>
 </head>
 <body>
@@ -54,7 +46,9 @@ tr td {
 					<div class="form-group">
 						<div style="float: right">
 							<div>
-								<button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">修改价格</button>
+								<button type="submit" class="btn btn-green" data-bind="click: function() { copyNameList() }">复制名单</button>
+								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">修改价格</button> -->
+								<button type="submit" class="btn btn-green" data-bind="click: function() { editOperation() }">修改</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { confirmOperation() }">确认</button>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { deleteOperation() }">打回重新操作</button>
 							</div>
@@ -129,12 +123,15 @@ tr td {
 								<th>主体</th>
 								<th>总成本</th>
 								<th>产品名称</th>
-								<th>人数</th>
+								<th>成人</th>
+								<th>儿童</th>
 								<th>接团日期</th>
 								<th>送团日期</th>
 								<th>游客信息</th>
 								<th>备注</th>
 								<th>下载</th>
+								<th>操作人</th>
+								<th>产品经理</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: operations">
@@ -155,7 +152,8 @@ tr td {
 								<td data-bind="text: $data.supplier_name"></td>
 								<td data-bind="text: $data.supplier_cost"></td>
 								<td data-bind="text: $data.supplier_product_name"></td>
-								<td data-bind="text: $data.people_count"></td>
+								<td data-bind="text: $data.adult_count"></td>
+								<td data-bind="text: $data.special_count"></td>
 								<td data-bind="text: $data.pick_date"></td>
 								<td data-bind="text: $data.send_date"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
@@ -163,6 +161,8 @@ tr td {
 								<td><a href="javascript:void(0)"
 									data-bind="click:function(){$root.downloadSc($data.team_number,$data.supplier_employee_pk)}"
 									style="cursor: pointer; margin-right: 10px">确认件</a></td>
+								<td data-bind="text: $data.operator_name"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -182,7 +182,143 @@ tr td {
 			</div>
 		</div>
 	</div>
-	<div id="supplier-info" style="display: none; width: 800px;height:450px;overflow-y:auto ">
+	<div id="div-confirm" style="display: none; width: 1200px; height: 800px; overflow-y: auto">
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l">地接操作</label>
+				<p class="ip-default" data-bind="text:supplier().supplier_employee_name"></p>
+			</div>
+			<div class="col-md-3">
+				<label class="l">产品名称</label>
+				<p class="ip-default" data-bind="text:supplier().supplier_product_name"></p>
+			</div>
+			<div class="col-md-3">
+				<label class="l">接团日期</label>
+				<p class="ip-default" data-bind="text:supplier().pick_date"></p>
+			</div>
+			<div class="col-md-3">
+				<label class="l">天数</label>
+				<p class="ip-default" data-bind="text:supplier().days"></p>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l">成人</label>
+				<p class="ip-default" data-bind="text:operation().adult_count"></p>
+			</div>
+			<div class="col-md-3">
+				<label class="l">儿童</label>
+				<p class="ip-default" data-bind="text:operation().special_count"></p>
+			</div>
+			<div class="col-md-3">
+				<label class="l">团款总计</label>
+				<p class="ip-default" data-bind="text:supplier().supplier_cost"></p>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l">接待说明</label>
+				<p class="ip-default" data-bind="text:supplier().treat_comment"></p>
+			</div>
+		</div>
+		<hr />
+		<div class="input-row clearfloat">
+			<h3>接送信息</h3>
+			<div style="margin-top: 20px; padding-left: 70px">
+				<table style="width: 90%" class="table-supplier">
+					<thead>
+						<tr>
+							<th style="width: 5%"></th>
+							<th style="width: 10%">日期</th>
+							<th style="width: 10%">交通工具</th>
+							<th style="width: 10%">抵离时间</th>
+							<th style="width: 10%">抵离城市</th>
+							<th style="width: 10%">抵离地点</th>
+						</tr>
+					</thead>
+					<tbody data-bind="foreach:supplier().infos">
+						<tr>
+							<td class="r">接：</td>
+							<td data-bind="text:$data.pick_date"></td>
+							<td data-bind="text:$data.pick_traffic"></td>
+							<td data-bind="text:$data.pick_time"></td>
+							<td data-bind="text:$data.pick_city"></td>
+							<td data-bind="text:$data.pick_place"></td>
+						</tr>
+						<tr>
+							<td class="r">送：</td>
+							<td data-bind="text:$data.send_date"></td>
+							<td data-bind="text:$data.send_traffic"></td>
+							<td data-bind="text:$data.send_time"></td>
+							<td data-bind="text:$data.send_city"></td>
+							<td data-bind="text:$data.send_place"></td>
+						</tr>
+						<!-- ko if:($index()+1) < $root.supplier().infos.length -->
+						<tr>
+							<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<hr />
+		<div class="input-row clearfloat">
+			<h3>名单</h3>
+			<table style="width: 1200px;" class="table table-order">
+				<thead>
+					<tr>
+						<th style="width: 5%">序</th>
+						<th style="width: 15%">订单信息</th>
+						<th style="width: 20%">客人名单</th>
+						<th style="width: 5%">性别</th>
+						<th style="width: 5%">年龄</th>
+						<th style="width: 10%">单价</th>
+						<th style="width: 10%">团款备注</th>
+						<th style="width: 10%">联系方式</th>
+						<th style="width: 10%">用房说明</th>
+						<th style="width: 10%">销售特请</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach:{data:supplier().sale_order_infos,as:'order'}">
+					<!-- ko foreach:{data:order.infos,as:'name'} -->
+					<!-- ko if: $index() === 0-->
+					<tr>
+						<td data-bind="text:$parentContext.$index()+1,attr: { rowspan: order.infos.length }"></td>
+						<td
+							data-bind="html:order.adult_count+'大'+order.special_count+'小'+'&lt;br&gt;销售：'+order.sale_name+'&lt;br&gt;团号：'+order.team_number,attr: { rowspan: order.infos.length }"></td>
+						<td data-bind="text:$data.passenger_name+';'+$data.passenger_id"></td>
+						<td data-bind="text:determineGender($data.passenger_id)==0?'女':'男'"></td>
+						<td data-bind="text:calculateAge($data.passenger_id)"></td>
+						<td data-bind="text:$data.price"></td>
+						<td data-bind="text:order.receivable_comment,attr: { rowspan:order.infos.length }"></td>
+						<td data-bind="text:order.contact_way,attr: { rowspan:order.infos.length }"></td>
+						<td data-bind="text:order.hotel_comment,attr: { rowspan:order.infos.length }"></td>
+						<td data-bind="text:order.treat_comment,attr: { rowspan:order.infos.length }"></td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko if: $index() != 0-->
+					<tr>
+						<td data-bind="text:$data.passenger_name+';'+$data.passenger_id"></td>
+						<td data-bind="text:determineGender($data.passenger_id)==0?'女':'男'"></td>
+						<td data-bind="text:calculateAge($data.passenger_id)"></td>
+						<td data-bind="text:$data.price"></td>
+					</tr>
+					<!-- /ko -->
+					<!-- /ko -->
+				</tbody>
+			</table>
+
+		</div>
+		<hr class="hr-big-dash" />
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:function(){doConfirm()}">确定</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:function(){cancelConfirm()}">取消</button>
+		</div>
+
+	</div>
+
+	<!-- <div id="supplier-info" style="display: none; width: 800px;height:450px;overflow-y:auto ">
 		<div class="input-row clearfloat">
 			<div class="col-md-12">
 				<table style="width: 100%" class="table table-striped table-hover" id="table-order">
@@ -239,7 +375,7 @@ tr td {
 		</div>
 
 	</div>
-
+ -->
 	<div id="supplier-pick" style="display: none;">
 		<div class="main-container">
 			<div class="main-box" style="width: 600px">
@@ -341,14 +477,14 @@ tr td {
 						<td data-bind="text: $data.adult_count"></td>
 						<td data-bind="text: $data.special_count"></td>
 						<td><a href="javascript:void(0)" data-bind="click:$root.innerCheckPassengers,text: $data.passenger_captain"></a></td>
-						<td data-bind="text:$data.create_user"></td>
+						<td data-bind="text:$data.sale_name"></td>
 						<td><a href="javascript:void(0)"
 							data-bind="click:function(){msg($data.treat_comment)},text:$data.treat_comment"></a></td>
 						<!-- ko if: $data.cancel_flg == "N" -->
 						<td data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.cancel_flg == "Y" -->
-						<td style="color:red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
+						<td style="color: red" data-bind="text:$root.orderStatusMapping[$data.cancel_flg]"></td>
 						<!-- /ko -->
 						<!-- ko if: $data.lock_flg.substr(0,1) == "Y" -->
 						<td style="color: green" data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
@@ -401,6 +537,6 @@ tr td {
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.001"></script>
+	<script src="<%=basePath%>static/js/product/product-order-operating.js?v=1.005"></script>
 </body>
 </html>

@@ -49,15 +49,17 @@
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div align="left">
-							<label class="col-md-1 control-label"><input type="radio" name="rad-confirm" value="month"
-								onclick="switchType(this)" checked="checked" />确认月份</label>
+							<label class="col-md-1 control-label">确认月份</label>
 							<div class="col-md-2" style="float: left">
-								<input type="text" class="form-control month-picker-st" data-bind="value:confirm_month()" placeholder="确认月份"
+								<input type="text" class="form-control month-picker-st" id="txt-confirm-month" data-bind="value:confirm_month()" placeholder="确认月份"
 									name="score.confirm_month" />
 							</div>
 						</div>
+						<div style="padding-top: 3px;">
+							<button type="submit" class="btn btn-green col-md-1" st="btn-search" data-bind="click: refresh">搜索</button>
+						</div>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<div align="left">
 							<label class="col-md-1 control-label"><input type="radio" value="date" onclick="switchType(this)"
 								name="rad-confirm" />确认日期</label>
@@ -69,24 +71,27 @@
 								<input type="text" class="form-control date-picker" disabled="disabled" placeholder="截止日期" name="score.date_to" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
-							<button type="submit" class="btn btn-green col-md-1" st="btn-search" data-bind="click: refresh">搜索</button>
-						</div>
-					</div>
+						
+					</div> -->
 				</form>
 				<div class="list-result">
-					<table class="table table-striped table-hover" style="width: 70%">
+					<table class="table table-striped table-hover" >
 						<thead>
 							<tr role="row">
 								<th>销售</th>
-								<th>上旬分值</th>
-								<th>上旬收客</th>
-								<th>中旬分值</th>
-								<th>中旬收客</th>
-								<th>下旬分值</th>
-								<th>下旬收客</th>
-								<th>月度分值</th>
-								<th>月度收客</th>
+								<th>上旬（分）</th>
+								<th>中旬（分）</th>
+								<th>下旬（分）</th>
+								<th>月度（分）</th>
+								<th style="border-right:1px dashed black">客均（分）</th>
+								<th>上旬（人）</th>
+								<th>中旬（人）</th>
+								<th>下旬（人）</th>
+								<th>标品（人）</th>
+								<th>非标（人）</th>
+								<th style="border-right:1px dashed black">机票（人）</th>
+								<th>销售费用（元）</th>
+								<th style="border-right:1px dashed black">个人工资（元）</th>
 								<th>月份</th>
 							</tr>
 						</thead>
@@ -94,29 +99,22 @@
 							<tr>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.first_score"></td>
-								<td data-bind="text: $data.first_people"></td>
 								<td data-bind="text: $data.middle_score"></td>
-								<td data-bind="text: $data.middle_people"></td>
 								<td data-bind="text: $data.last_score"></td>
-								<td data-bind="text: $data.last_people"></td>
 								<td data-bind="text: $data.score"></td>
+								<td data-bind="text: $data.ave_score" style="border-right:1px dashed black"></td>
+								<td data-bind="text: $data.first_people"></td>
+								<td data-bind="text: $data.middle_people"></td>
+								<td data-bind="text: $data.last_people"></td>
 								<td data-bind="text: $data.sum_people"></td>
+								<td data-bind="text: $data.non_standard_people"></td>
+								<td data-bind="text: $data.only_ticket_people" style="border-right:1px dashed black"></td>
+								<td data-bind="text: $data.sale_cost" class="rmb"></td>
+								<td data-bind="text: $data.sale_salary" class="rmb" style="border-right:1px dashed black"></td>
 								<td data-bind="text: $data.confirm_month"></td>
 							</tr>
 						</tbody>
 					</table>
-					<div class="pagination clearfloat" style="width: 50%">
-						<a data-bind="click: previousPage, enable: currentPage() > 1" class="prev">Prev</a>
-						<!-- ko foreach: pageNums -->
-						<!-- ko if: $data == $root.currentPage() -->
-						<span class="current" data-bind="text: $data"></span>
-						<!-- /ko -->
-						<!-- ko ifnot: $data == $root.currentPage() -->
-						<a data-bind="text: $data, click: $root.turnPage"></a>
-						<!-- /ko -->
-						<!-- /ko -->
-						<a data-bind="click: nextPage, enable: currentPage() < pageNums().length" class="next">Next</a>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -129,6 +127,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/sale/sale-score.js"></script>
+	<script src="<%=basePath%>static/js/sale/sale-score.js?v=1.001"></script>
 </body>
 </html>

@@ -462,6 +462,11 @@
 					#{params.bo.is_cooperates[${index}]}
 				</foreach> 
 			</if>
+			<if test="params.bo.is_cooperates == null or params.bo.is_cooperates.size==0">
+				and is_cooperate ='Y'
+			</if>
 		</where>
+		
+		ORDER BY is_cooperate DESC,supplier_short_name
 	</select>
 </mapper>

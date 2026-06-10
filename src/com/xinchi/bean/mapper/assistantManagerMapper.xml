@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.AssistantManagerMapper">
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.AssistantManagerBean">
+		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
+		<result column="manager_number" property="manager_number" jdbcType="VARCHAR" />
+		<result column="assistant_type" property="assistant_type" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="pk" property="pk" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		assistant_number,
+		manager_number,
+		assistant_type,
+		update_user,
+		create_user,
+		pk,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from assistant_manager
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByAssistantNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from assistant_manager
+		where assistant_number = #{assistant_number,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from assistant_manager
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByAssistantNumber" parameterType="java.lang.String">
+		delete from assistant_manager
+		where assistant_number =
+		#{user_number,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.AssistantManagerBean">
+
+		insert into assistant_manager
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="assistant_number != null">
+				assistant_number,
+			</if>
+			<if test="manager_number != null">
+				manager_number,
+			</if>
+			<if test="assistant_type != null">
+				assistant_type,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="assistant_number != null">
+				#{assistant_number,jdbcType=VARCHAR},
+			</if>
+			<if test="manager_number != null">
+				#{manager_number,jdbcType=VARCHAR},
+			</if>
+			<if test="assistant_type != null">
+				#{assistant_type,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.AssistantManagerBean">
+		update assistant_manager
+		<set>
+			<if test="assistant_number != null">
+				assistant_number = #{assistant_number,jdbcType=VARCHAR},
+			</if>
+			<if test="manager_number != null">
+				manager_number = #{manager_number,jdbcType=VARCHAR},
+			</if>
+			<if test="assistant_type != null">
+				assistant_type = #{assistant_type,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.AssistantManagerBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from assistant_manager
+		<where>
+			<if test="assistant_number != null and assistant_number !=''">
+				and assistant_number = #{assistant_number,jdbcType=VARCHAR}
+			</if>
+			<if test="manager_number != null and manager_number !=''">
+				and manager_number = #{manager_number,jdbcType=VARCHAR}
+			</if>
+			<if test="assistant_type != null and assistant_type !=''">
+				and assistant_type = #{assistant_type,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

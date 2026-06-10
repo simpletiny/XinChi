@@ -13,6 +13,9 @@ import com.xinchi.backend.culture.service.ProductResearchViewService;
 import com.xinchi.bean.ProductResearchLabelBean;
 import com.xinchi.bean.ProductResearchViewBean;
 import com.xinchi.common.BaseAction;
+import com.xinchi.common.ResourcesConstants;
+import com.xinchi.common.UserSessionBean;
+import com.xinchi.common.XinChiApplicationContext;
 
 @Controller
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -59,8 +62,23 @@ public class ProductResearchViewAction extends BaseAction {
 	}
 
 	public String deleteProductResearchView() {
-		service.delete(view_pk);
-		resultStr = OK;
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
+				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		String roles = sessionBean.getUser_roles();
+		String user_number = sessionBean.getUser_number();
+		if (roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
+			service.delete(view_pk);
+			resultStr = OK;
+		} else {
+			ProductResearchViewBean deleteView = service.selectViewByPk(view_pk);
+			if (deleteView.getCreate_user().equals(user_number)) {
+				service.delete(view_pk);
+				resultStr = OK;
+			} else {
+				resultStr = "NORIGHT";
+			}
+		}
+
 		return SUCCESS;
 	}
 

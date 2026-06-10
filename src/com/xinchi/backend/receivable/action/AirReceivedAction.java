@@ -33,8 +33,7 @@ public class AirReceivedAction extends BaseAction {
 		String roles = user.getUser_roles();
 		Map<String, Object> params = new HashMap<String, Object>();
 
-		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)
-				&& !roles.contains(ResourcesConstants.USER_ROLE_CASHIER)) {
+		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			detail.setCreate_user(user.getUser_number());
 		}
 		params.put("bo", detail);

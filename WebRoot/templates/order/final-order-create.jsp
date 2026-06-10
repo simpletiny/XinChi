@@ -139,14 +139,14 @@
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传决算单<input type="file" accept=".jpg,.png" name="file" /></a> <input type="hidden" data-bind="value:order().confirm_file" name="order.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传决算单<input type="file" accept=".jpg,.png" name="file" /></a> <input type="hidden" data-bind="value:order().final_confirm_file" name="order.final_confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
 					<div class="input-row clearfloat"></div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传凭证<input type="file"  accept=".jpg,.png" name="file" /></a> <input type="hidden" data-bind="value:order().voucher_file" name="order.voucher_file" />
+							<a href="javascript:;" class="a-upload">上传凭证<input type="file"  accept=".jpg,.png" name="file" /></a> <input type="hidden" data-bind="value:order().final_voucher_file" name="order.final_voucher_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
@@ -168,6 +168,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
 	<script src="<%=basePath%>static/js/order/confirm-upload.js"></script>
-	<script src="<%=basePath%>static/js/order/final-order-create.js"></script>
+	<script src="<%=basePath%>static/js/order/final-order-create.js?v=1.001"></script>
 </body>
 </html>

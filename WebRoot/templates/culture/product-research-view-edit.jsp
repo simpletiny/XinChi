@@ -22,7 +22,7 @@
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
 			<h2>
-				修改产品研发<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+				修改售前必知<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
 					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
@@ -66,7 +66,7 @@
 		</div>
 	</div>
 	<script>
-		$(".culture").addClass("current").children("ol")
+		$(".order-box").addClass("current").children("ol")
 				.css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>

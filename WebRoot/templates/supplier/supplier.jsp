@@ -108,6 +108,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script>
     $(".supplier").addClass("current").children("ol").css("display", "block");
   </script>
-    <script src="<%=basePath%>static/js/supplier/supplier.js"></script>
+    <script src="<%=basePath%>static/js/supplier/supplier.js?v=1.001"></script>
 </body>
 </html>

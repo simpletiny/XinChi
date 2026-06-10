@@ -89,11 +89,19 @@ public class ProductBean extends SupperBO implements Serializable {
 	private BigDecimal cash_child_flow;
 	private BigDecimal spot_child_cash;
 	private float gross_child_profit_rate;
+	private String id_type;
+	private String as_adult_flg;
+	
+	private BigDecimal adult_instant_bonus; 
+	private BigDecimal child_instant_bonus;
 
 	// 保持上架标识
 	private String keep_flg;
 
 	private String analysis_flg;
+
+	// DTO
+	private String product_manager_name;
 
 	// 产品维护相关标识
 	private String client_confirm_templet;
@@ -105,6 +113,8 @@ public class ProductBean extends SupperBO implements Serializable {
 	// search options
 	private List<String> locations;
 	private List<String> statuses;
+
+	private List<Integer> id_types;
 
 	private String high_value_flg = "N";
 
@@ -522,6 +532,54 @@ public class ProductBean extends SupperBO implements Serializable {
 
 	public void setAnalysis_flg(String analysis_flg) {
 		this.analysis_flg = analysis_flg;
+	}
+
+	public String getId_type() {
+		return id_type;
+	}
+
+	public String getAs_adult_flg() {
+		return as_adult_flg;
+	}
+
+	public void setId_type(String id_type) {
+		this.id_type = id_type;
+	}
+
+	public void setAs_adult_flg(String as_adult_flg) {
+		this.as_adult_flg = as_adult_flg;
+	}
+
+	public List<Integer> getId_types() {
+		return id_types;
+	}
+
+	public void setId_types(List<Integer> id_types) {
+		this.id_types = id_types;
+	}
+
+	public String getProduct_manager_name() {
+		return product_manager_name;
+	}
+
+	public void setProduct_manager_name(String product_manager_name) {
+		this.product_manager_name = product_manager_name;
+	}
+
+	public BigDecimal getAdult_instant_bonus() {
+		return adult_instant_bonus;
+	}
+
+	public void setAdult_instant_bonus(BigDecimal adult_instant_bonus) {
+		this.adult_instant_bonus = adult_instant_bonus;
+	}
+
+	public BigDecimal getChild_instant_bonus() {
+		return child_instant_bonus;
+	}
+
+	public void setChild_instant_bonus(BigDecimal child_instant_bonus) {
+		this.child_instant_bonus = child_instant_bonus;
 	}
 
 }

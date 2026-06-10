@@ -71,6 +71,7 @@ var SupplierContext = function() {
 
 	self.refresh = function() {
 		var param = $("form").serialize();
+		param += "&supplier.is_cooperates=N&supplier.is_cooperates=Y"
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'supplier/searchSupplierByPage', param, function(data) {
 			self.suppliers(data.suppliers);

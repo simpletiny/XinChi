@@ -4,6 +4,14 @@ var DetailContext = function() {
 	self.type = ['收入', '支出', '内转'];
 	self.chosenDetails = ko.observableArray([]);
 	self.accounts = ko.observableArray([]);
+	self.matchFlgs = ['N', 'Y', 'O'];
+	self.flgMapping = {
+		'N' : "未确认",
+		'Y' : "主营确认",
+		'O' : "其它确认"
+	};
+	self.chosenMatchFlgs = ko.observableArray([]);
+	self.chosenMatchFlgs.push(...self.matchFlgs);
 	$.getJSON(self.apiurl + 'finance/searchAllAccounts', {}, function(data) {
 		if (data.accounts) {
 			self.accounts(data.accounts);
@@ -13,7 +21,17 @@ var DetailContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-
+	self.sumCardBalance = ko.observable();
+	$.getJSON(self.apiurl + 'finance/searchCardBalance', {}, function(data) {
+		if (data.sum_balance) {
+			self.sumCardBalance(data.sum_balance);
+		} else {
+			fail_msg("无法获取余额信息！");
+		}
+	}).fail(function(reason) {
+		fail_msg(reason.responseText);
+	});
+	
 	self.createDetail = function(type) {
 		window.location.href = self.apiurl + "templates/finance/" + type + "-detail-creation.jsp";
 	};
@@ -410,7 +428,7 @@ var DetailContext = function() {
 	};
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

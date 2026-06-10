@@ -1,5 +1,6 @@
 package com.xinchi.backend.accounting.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,7 @@ public class ReimbursementAction extends BaseAction {
 	private ReimbursementBean reimbursement;
 
 	public String saveReimbursement() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		reimbursement.setApply_user(sessionBean.getUser_number());
 		resultStr = service.save(reimbursement);
 		return SUCCESS;
@@ -41,6 +41,18 @@ public class ReimbursementAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String reimbursement_pk;
+
+	public String searchReimbursementByPk() {
+		reimbursement = service.selectByPk(reimbursement_pk);
+		return SUCCESS;
+	}
+
+	public String reApplyReimbursement() {
+		resultStr = service.reApply(reimbursement);
+		return SUCCESS;
+	}
+
 	private List<ReimbursementBean> reimbursements;
 
 	/**
@@ -49,8 +61,7 @@ public class ReimbursementAction extends BaseAction {
 	 * @return
 	 */
 	public String searchReimbursementByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -66,6 +77,23 @@ public class ReimbursementAction extends BaseAction {
 		page.setParams(params);
 
 		reimbursements = service.selectByPage(page);
+		return SUCCESS;
+	}
+
+	public String selectByParam() {
+		reimbursements = service.selectByParam(option);
+		return SUCCESS;
+	}
+
+	private Map<String, BigDecimal> summarise;
+
+	private ReimbursementBean option;
+
+	public String searchSumReimbursement() {
+		if (reimbursement == null)
+			reimbursement = new ReimbursementBean();
+
+		summarise = service.searchSummaries(option);
 		return SUCCESS;
 	}
 
@@ -91,5 +119,29 @@ public class ReimbursementAction extends BaseAction {
 
 	public void setReimbursement_pks(List<String> reimbursement_pks) {
 		this.reimbursement_pks = reimbursement_pks;
+	}
+
+	public String getReimbursement_pk() {
+		return reimbursement_pk;
+	}
+
+	public void setReimbursement_pk(String reimbursement_pk) {
+		this.reimbursement_pk = reimbursement_pk;
+	}
+
+	public Map<String, BigDecimal> getSummarise() {
+		return summarise;
+	}
+
+	public void setSummarise(Map<String, BigDecimal> summarise) {
+		this.summarise = summarise;
+	}
+
+	public ReimbursementBean getOption() {
+		return option;
+	}
+
+	public void setOption(ReimbursementBean option) {
+		this.option = option;
 	}
 }

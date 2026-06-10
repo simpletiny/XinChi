@@ -17,6 +17,8 @@ public class MeterDto implements Serializable {
 	private BigDecimal sum_dead = BigDecimal.ZERO;
 	private BigDecimal day_hold = BigDecimal.ZERO;
 	private BigDecimal bad_interest = BigDecimal.ZERO;
+	
+	private String meter_message = "none";
 
 	private float back_score = 0;
 	private int score = 0;
@@ -124,6 +126,14 @@ public class MeterDto implements Serializable {
 
 	public void setBad_interest(BigDecimal bad_interest) {
 		this.bad_interest = bad_interest;
+	}
+
+	public String getMeter_message() {
+		return meter_message;
+	}
+
+	public void setMeter_message(String meter_message) {
+		this.meter_message = meter_message;
 	}
 
 }

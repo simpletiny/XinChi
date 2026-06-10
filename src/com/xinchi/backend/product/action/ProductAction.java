@@ -1,5 +1,8 @@
 package com.xinchi.backend.product.action;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,21 +12,33 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xinchi.backend.accounting.service.ReimbursementService;
+import com.xinchi.backend.payable.service.AirTicketPayableService;
 import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductOrderService;
+import com.xinchi.backend.product.service.ProductReconciliationService;
 import com.xinchi.backend.product.service.ProductReportService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.product.service.ProductSupplierService;
+import com.xinchi.backend.sys.service.BaseDataService;
 import com.xinchi.backend.ticket.service.FlightService;
+import com.xinchi.backend.user.service.AssistantManagerService;
+import com.xinchi.bean.AirOtherPaymentDto;
+import com.xinchi.bean.AirServiceFeeDto;
+import com.xinchi.bean.AssistantManagerBean;
+import com.xinchi.bean.BaseDataBean;
 import com.xinchi.bean.FlightBean;
 import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ProductDelayBean;
 import com.xinchi.bean.ProductLocalBean;
 import com.xinchi.bean.ProductNeedDto;
+import com.xinchi.bean.ProductOrderBean;
 import com.xinchi.bean.ProductProfitBean;
+import com.xinchi.bean.ProductReconciliationBean;
 import com.xinchi.bean.ProductReportDto;
 import com.xinchi.bean.ProductSupplierBean;
+import com.xinchi.bean.ReimbursementBean;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.UserSessionBean;
@@ -41,8 +56,7 @@ public class ProductAction extends BaseAction {
 	private List<ProductBean> products;
 
 	public String searchProductsByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == product)
 			product = new ProductBean();
@@ -77,6 +91,15 @@ public class ProductAction extends BaseAction {
 
 	private ProductProfitBean productProfit;
 
+	@Autowired
+	private AirTicketPayableService airTicketPayableService;
+
+	@Autowired
+	private ProductReconciliationService productReconciliationService;
+	
+	@Autowired
+	private ReimbursementService reimbursementService;
+
 	/**
 	 * 搜索产品利润
 	 * 
@@ -84,18 +107,122 @@ public class ProductAction extends BaseAction {
 	 */
 	public String searchProductProfit() {
 
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == productProfit)
 			productProfit = new ProductProfitBean();
 
+		AirServiceFeeDto fee_option = new AirServiceFeeDto();
+		
+		
+		ProductReconciliationBean pr_option = new ProductReconciliationBean();
+		ReimbursementBean rei_option = new ReimbursementBean();
+
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			productProfit.setUser_number(sessionBean.getUser_number());
+			fee_option.setProduct_manager_number(sessionBean.getUser_number());
+			pr_option.setProduct_manager_number(sessionBean.getUser_number());
+			rei_option.setApply_user(sessionBean.getUser_number());
+		} else {
+			fee_option.setProduct_manager_number(productProfit.getUser_number());
+			pr_option.setProduct_manager_number(productProfit.getUser_number());
+			rei_option.setApply_user(productProfit.getUser_number());
 		}
 
+		String year = productProfit.getOption_year();
+		List<String> months = gainAllMonth(year);
+
 		productProfits = service.searchProductProfit(productProfit);
+
+		for (ProductProfitBean pp : productProfits) {
+			pp.setProduct_cost(BigDecimal.ZERO);
+			pp.setKeep_cost(BigDecimal.ZERO);
+			months.remove(pp.getDeparture_month());
+		}
+
+		for (String month : months) {
+			ProductProfitBean pp = new ProductProfitBean();
+			pp.setDeparture_month(month);
+			pp.setPeople_count(0);
+			pp.setStatus("Y");
+			pp.setGross_profit(BigDecimal.ZERO);
+			pp.setProduct_cost(BigDecimal.ZERO);
+			pp.setKeep_cost(BigDecimal.ZERO);
+			pp.setScore(BigDecimal.ZERO);
+			productProfits.add(pp);
+		}
+		Collections.sort(productProfits);
+
+		// 手续费
+		// fee_option.setFirst_year(productProfit.getOption_year());
+		// List<AirServiceFeeDto> fees =
+		// airTicketPayableService.searchServiceFees(fee_option);
+
+		// 机票其他费用
+		fee_option.setFirst_year(productProfit.getOption_year());
+		List<AirOtherPaymentDto> no_b_payments = airTicketPayableService.searchNoneBussinessPayment(fee_option);
+
+		// 押金扣款
+		List<AirOtherPaymentDto> deducts = airTicketPayableService.searchDepositDeducts(fee_option);
+
+		// 额外费用，调账
+		pr_option.setProduct_line(productProfit.getProduct_line());
+		pr_option.setBelong_year(year);
+		List<ProductReconciliationBean> reconciliations = productReconciliationService.selectSumReconciliation(pr_option);
+
+		// 产品费用和唯品费用
+
+		rei_option.setBelong_year(year);
+		rei_option.setItem("J");
+		List<ReimbursementBean> product_costs=reimbursementService.selectSumByParam(rei_option);
+		rei_option.setItem("T");
+		List<ReimbursementBean> keep_costs=reimbursementService.selectSumByParam(rei_option);
+		
+		for (ProductProfitBean pp : productProfits) {
+			for (AirOtherPaymentDto aop : no_b_payments) {
+				if (pp.getDeparture_month().equals(aop.getBelong_month())) {
+					// 应该将金额相加
+					pp.setTicket_other_cost(pp.getTicket_other_cost().add(aop.getMoney()));
+				}
+			}
+			for (AirOtherPaymentDto deduct : deducts) {
+				if (pp.getDeparture_month().equals(deduct.getBelong_month())) {
+					pp.setDeposit_deduct(pp.getDeposit_deduct().add(deduct.getMoney()));
+				}
+			}
+
+			for (ProductReconciliationBean r : reconciliations) {
+				if (pp.getDeparture_month().equals(r.getBelong_month())) {
+					pp.setOther_cost(pp.getOther_cost().add(r.getMoney()));
+				}
+			}
+			for (ReimbursementBean p : product_costs) {
+				if (pp.getDeparture_month().equals(p.getMonth())) {
+					pp.setProduct_cost(pp.getProduct_cost().add(p.getMoney()));
+				}
+			}
+			for (ReimbursementBean k : keep_costs) {
+				if (pp.getDeparture_month().equals(k.getMonth())) {
+					pp.setKeep_cost(pp.getKeep_cost().add(k.getMoney()));
+				}
+			}
+		}
 		return SUCCESS;
+	}
+
+	private List<String> gainAllMonth(String year) {
+		List<String> months = new ArrayList<>();
+		for (int i = 0; i < 12; i++) {
+			String month = "";
+			if (i < 9) {
+				month = year + "-" + "0" + (i + 1);
+			} else {
+				month = year + "-" + (i + 1);
+			}
+			months.add(month);
+		}
+
+		return months;
 	}
 
 	/**
@@ -113,8 +240,7 @@ public class ProductAction extends BaseAction {
 	private String json;
 
 	public String createProduct() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		product.setProduct_manager(sessionBean.getUser_number());
 		resultStr = service.createProduct(product);
 
@@ -133,10 +259,15 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Autowired
+	private BaseDataService baseDataService;
+
 	public String searchUrgentCnt() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
-		resultStr = service.searchUrgentCnt(sessionBean.getUser_number());
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+
+		int urgent_count = service.searchUrgentCnt(sessionBean.getUser_number());
+		BaseDataBean baseData = baseDataService.selectByPk(ResourcesConstants.BASE_DATA_PK_LIMIT_PRODUCT_URGENT_COUNT);
+		resultStr = String.valueOf(Integer.valueOf(baseData.getExt1()) - urgent_count);
 		return SUCCESS;
 	}
 
@@ -187,7 +318,6 @@ public class ProductAction extends BaseAction {
 
 	public String searchProductByPk() {
 		product = service.selectByPrimaryKey(product_pk);
-		productSuppliers = productSupplierService.selectByProductPk(product_pk);
 		return SUCCESS;
 	}
 
@@ -214,8 +344,7 @@ public class ProductAction extends BaseAction {
 	 * @return
 	 */
 	public String searchProductReportByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == report_option)
 			report_option = new ProductReportDto();
@@ -240,27 +369,40 @@ public class ProductAction extends BaseAction {
 
 	private List<ProductNeedDto> productOrders;
 
+	@Autowired
+	private AssistantManagerService assistantManagerService;
+
 	/**
 	 * 搜索产品订单
 	 * 
 	 * @return
 	 */
 	public String searchProductNeedByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 		if (null == order_option)
 			order_option = new ProductNeedDto();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
-			order_option.setProduct_manager_number(sessionBean.getUser_number());
+			List<String> product_manager_numbers = new ArrayList<>();
+			product_manager_numbers.add(sessionBean.getUser_number());
+			// 如果是产品助理
+			if (roles.contains(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT)) {
+				AssistantManagerBean assistant_option = new AssistantManagerBean();
+				assistant_option.setAssistant_number(sessionBean.getUser_number());
+				assistant_option.setAssistant_type(ResourcesConstants.USER_ROLE_PRODUCT_ASSISTANT);
+				List<AssistantManagerBean> ambs = assistantManagerService.selectByParam(assistant_option);
+				for (AssistantManagerBean amb : ambs) {
+					product_manager_numbers.add(amb.getManager_number());
+				}
+			}
+			order_option.setProduct_manager_numbers(product_manager_numbers);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("bo", order_option);
 		page.setParams(params);
-
 		productOrders = productOrderService.selectNeedByPage(page);
 		return SUCCESS;
 	}
@@ -274,16 +416,6 @@ public class ProductAction extends BaseAction {
 	 */
 	public String unlockOrders() {
 		resultStr = service.unlockOrders(team_numbers);
-		return SUCCESS;
-	}
-
-	/**
-	 * 提示销售确认名单
-	 * 
-	 * @return
-	 */
-	public String tipSalesConfirmName() {
-		resultStr = service.tipSalesConfirmName(team_numbers);
 		return SUCCESS;
 	}
 
@@ -308,6 +440,17 @@ public class ProductAction extends BaseAction {
 		product = service.selectByPrimaryKey(product_pk);
 
 		air_tickets = productAirTicketService.selectByProductPk(product_pk);
+		return SUCCESS;
+	}
+
+	private String product_order_number;
+
+	public String searchProductAirTicketInfoByProductOrderNumber() {
+		ProductOrderBean productOrder = productOrderService.selectByOrderNumber(product_order_number);
+		product = service.selectByPrimaryKey(productOrder.getProduct_pk());
+		if (null != product) {
+			air_tickets = productAirTicketService.selectByProductPk(product.getPk());
+		}
 		return SUCCESS;
 	}
 
@@ -575,6 +718,14 @@ public class ProductAction extends BaseAction {
 
 	public void setProductProfit(ProductProfitBean productProfit) {
 		this.productProfit = productProfit;
+	}
+
+	public String getProduct_order_number() {
+		return product_order_number;
+	}
+
+	public void setProduct_order_number(String product_order_number) {
+		this.product_order_number = product_order_number;
 	}
 
 }

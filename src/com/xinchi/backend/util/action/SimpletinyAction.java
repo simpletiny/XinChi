@@ -1,16 +1,12 @@
 package com.xinchi.backend.util.action;
 
-import static com.xinchi.common.SimpletinyString.isEmpty;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -28,14 +24,10 @@ import com.xinchi.backend.client.service.ClientEmployeeUserService;
 import com.xinchi.backend.client.service.ClientService;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.dao.OrderDAO;
-import com.xinchi.backend.order.service.BudgetNonStandardOrderService;
-import com.xinchi.backend.order.service.BudgetStandardOrderService;
-import com.xinchi.backend.order.service.OrderNameListService;
 import com.xinchi.backend.order.service.OrderReportService;
 import com.xinchi.backend.order.service.OrderService;
 import com.xinchi.backend.payable.dao.PayableDAO;
 import com.xinchi.backend.payable.service.PayableService;
-import com.xinchi.backend.product.service.ProductAirTicketService;
 import com.xinchi.backend.product.service.ProductService;
 import com.xinchi.backend.receivable.dao.ReceivableDAO;
 import com.xinchi.backend.receivable.service.ReceivableService;
@@ -43,22 +35,13 @@ import com.xinchi.backend.receivable.service.ReceivedService;
 import com.xinchi.backend.sale.service.FinalOrderService;
 import com.xinchi.backend.sale.service.SaleOrderService;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
-import com.xinchi.backend.ticket.dao.AirTicketNameListDAO;
-import com.xinchi.backend.ticket.dao.PassengerTicketInfoDAO;
-import com.xinchi.backend.ticket.service.AirTicketNeedService;
-import com.xinchi.backend.ticket.service.AirTicketOrderService;
 import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.user.service.UserService;
 import com.xinchi.backend.util.dao.TeamNumberDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.backend.util.service.SimpletinyService;
-import com.xinchi.bean.AirTicketNameListBean;
-import com.xinchi.bean.AirTicketNeedBean;
-import com.xinchi.bean.AirTicketOrderBean;
-import com.xinchi.bean.BudgetNonStandardOrderBean;
 import com.xinchi.bean.BudgetOrderBean;
 import com.xinchi.bean.BudgetOrderSupplierBean;
-import com.xinchi.bean.BudgetStandardOrderBean;
 import com.xinchi.bean.ClientBean;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
@@ -71,12 +54,9 @@ import com.xinchi.bean.FinalOrderSupplierBean;
 import com.xinchi.bean.IncomingCallBean;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
-import com.xinchi.bean.PassengerTicketInfoBean;
 import com.xinchi.bean.PayableBean;
-import com.xinchi.bean.ProductAirTicketBean;
 import com.xinchi.bean.ProductBean;
 import com.xinchi.bean.ReceivableBean;
-import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.bean.SupplierDepositBean;
 import com.xinchi.bean.TeamNumberBean;
 import com.xinchi.bean.TeamReportBean;
@@ -291,35 +271,6 @@ public class SimpletinyAction extends BaseAction {
 	}
 
 	@Autowired
-	private BudgetStandardOrderService budgetStandardOrderService;
-	@Autowired
-	private OrderNameListService orderNameListService;
-
-	public String fixPassenger() {
-		List<BudgetStandardOrderBean> orders = budgetStandardOrderService.selectByParam(null);
-		for (BudgetStandardOrderBean order : orders) {
-			if (isEmpty(order.getTeam_number()))
-				continue;
-			List<SaleOrderNameListBean> names = orderNameListService.selectByTeamNumber(order.getTeam_number());
-			String passenger_captain = "";
-			for (SaleOrderNameListBean name : names) {
-				if (name.getChairman().equals("Y")) {
-					passenger_captain = name.getName();
-					if (passenger_captain.length() > 10) {
-						passenger_captain = passenger_captain.substring(0, 5);
-					}
-					break;
-				}
-			}
-			order.setPassenger_captain(passenger_captain);
-
-			budgetStandardOrderService.updateComment(order);
-
-		}
-		return SUCCESS;
-	}
-
-	@Autowired
 	private SimpletinyService service;
 
 	private String account_name;
@@ -396,101 +347,7 @@ public class SimpletinyAction extends BaseAction {
 	}
 
 	@Autowired
-	private AirTicketNeedService needService;
-
-	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private ProductAirTicketService productAirTicketService;
-
-	@Autowired
-	private AirTicketOrderService airTicketOrderService;
-	@Autowired
-	private BudgetStandardOrderService bsoService;
-
-	@Autowired
-	private BudgetNonStandardOrderService bnsoService;
-
-	@Autowired
-	private OrderNameListService orderNamelistService;
-
-	public String autoGenTicketOrder() {
-
-		Map<String, Object> params = new HashMap<String, Object>();
-		AirTicketNeedBean x = new AirTicketNeedBean();
-		params.put("bo", x);
-
-		page.setParams(params);
-		page.setStart(0);
-		page.setCount(1000);
-		List<AirTicketNeedBean> list = needService.selectOrderByPage(page);
-		for (AirTicketNeedBean need : list) {
-			String names = "";
-			if (need.getConfirm_flg().equals("Y")) {
-				if (need.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean bsOrder = bsoService.selectByPrimaryKey(need.getSale_order_pk());
-					names = bsOrder.getName_list();
-				} else {
-					BudgetNonStandardOrderBean bnsOrder = bnsoService.selectByPrimaryKey(need.getSale_order_pk());
-					names = bnsOrder.getName_list();
-				}
-			}
-			if (names == null)
-				continue;
-			String arrName[] = names.split(";");
-			List<SaleOrderNameListBean> nnnn = new ArrayList<SaleOrderNameListBean>();
-			for (String name : arrName) {
-				String[] info = name.split(":");
-				if (info.length < 2)
-					continue;
-				SaleOrderNameListBean y = new SaleOrderNameListBean();
-
-				y.setName(info[0]);
-				y.setId(info[1]);
-				y.setTeam_number(need.getTeam_number());
-				nnnn.add(y);
-			}
-
-			orderNamelistService.saveNameList(nnnn);
-
-			AirTicketOrderBean airTicketOrder = new AirTicketOrderBean();
-			if (need.getStandard_flg().equals("Y")) {
-				// 销售的产品
-				ProductBean saleProduct = productService.selectByPrimaryKey(need.getProduct_pk());
-				if (saleProduct == null)
-					continue;
-
-				// 产品机票信息
-				List<ProductAirTicketBean> productAirTickets = productAirTicketService
-						.selectByProductPk(saleProduct.getPk());
-				ProductAirTicketBean firstTicketInfo = productAirTickets.get(0);
-
-				airTicketOrder.setClient_number(need.getTicket_client_number());
-				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());
-				airTicketOrder.setFirst_ticket_date(need.getFirst_ticket_date());
-
-				airTicketOrder.setFirst_start_city(firstTicketInfo.getStart_city());
-				airTicketOrder.setFirst_end_city(firstTicketInfo.getEnd_city());
-				// airTicketOrder.setPeople_count(need.getPeople_count());
-				airTicketOrder.setTeam_number(need.getTeam_number());
-				airTicketOrder.setTour_product_pk(saleProduct.getPk());
-				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
-
-			} else {
-				airTicketOrder.setClient_number(need.getTicket_client_number());
-				airTicketOrder.setTicket_cost(need.getAir_ticket_cost());
-				// airTicketOrder.setPeople_count(need.getPeople_count());
-				airTicketOrder.setTeam_number(need.getTeam_number());
-				airTicketOrder.setSale_order_pk(need.getSale_order_pk());
-			}
-			airTicketOrder.setSale_standard_flg(need.getStandard_flg());
-			airTicketOrderService.insert(airTicketOrder);
-		}
-
-		return SUCCESS;
-
-	}
 
 	public String updateProductDetail() {
 		List<ProductBean> products = productService.getAllByParam(null);
@@ -837,60 +694,6 @@ public class SimpletinyAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	@Autowired
-	private AirTicketNameListDAO airTicketNameListDao;
-
-	@Autowired
-	private PassengerTicketInfoDAO passengerTicketInfoDao;
-
-	/**
-	 * 修正单团核算单
-	 * 
-	 * @return
-	 */
-	public String autoUpdateProductReport() {
-		OrderDto option = new OrderDto();
-		option.setConfirm_year("2020");
-
-		List<OrderDto> orders = orderDao.selectByParam(option);
-
-		for (OrderDto order : orders) {
-			List<AirTicketNameListBean> names = airTicketNameListDao.selectByTeamNumber(order.getTeam_number());
-			boolean done = true;
-			for (AirTicketNameListBean name : names) {
-				if (!name.getStatus().equals("Y")) {
-					done = false;
-					break;
-				}
-			}
-
-			if (done) {
-
-				BigDecimal ticketCost = BigDecimal.ZERO;
-				for (AirTicketNameListBean name : names) {
-
-					List<PassengerTicketInfoBean> ptis = passengerTicketInfoDao.selectByPassengerPk(name.getPk());
-					if (null != ptis && ptis.size() > 0) {
-						ticketCost = ticketCost.add(ptis.get(0).getTicket_cost());
-					}
-				}
-
-				if (order.getStandard_flg().equals("Y")) {
-					BudgetStandardOrderBean standardOrder = bsoService.selectByPrimaryKey(order.getPk());
-					standardOrder.setAir_ticket_cost(ticketCost);
-					bsoService.updateComment(standardOrder);
-				} else {
-					BudgetNonStandardOrderBean nonStandardOrder = bnsoService.selectByPrimaryKey(order.getPk());
-					nonStandardOrder.setAir_ticket_cost(ticketCost);
-					bnsoService.updateComment(nonStandardOrder);
-				}
-			}
-
-		}
-
-		return SUCCESS;
-	}
-
 	private String team_numbers;
 
 	@Autowired
@@ -921,24 +724,23 @@ public class SimpletinyAction extends BaseAction {
 
 	public String autoInsertDepositNumber() {
 
-		List<SupplierDepositBean> deposits = supplierDepositService.selectByParam(null);
+		List<SupplierDepositBean> deposits = supplierDepositService.selectDepositWithoutNumber();
 		int len = deposits.size();
-		String[] numbers = doGenerateNumber(NumberService.SOURCE_DEPOSIT_NUMBER, len + 1);
+		TeamNumberBean option = new TeamNumberBean();
+		option.setUser_pk("dHV3eXJ8fHl4gHF3d3p4fQ");
+		option.setType("D");
+		TeamNumberBean tb = teamNumberDao.selectNextNumber(option);
 
+		String[] numbers = doGenerateNumber(NumberService.SOURCE_DEPOSIT_NUMBER, tb.getTeam_number(), len + 1);
 		for (int i = 0; i < len; i++) {
 			SupplierDepositBean deposit = deposits.get(i);
-			deposit.setDeposit_number(numbers[i]);
+			deposit.setDeposit_number("D00" + numbers[i]);
 			supplierDepositService.update(deposit);
 		}
 
 		String last = numbers[len];
-
-		TeamNumberBean tb = new TeamNumberBean();
-		tb.setUser_pk("dHV3eXJ8fHl4gHF3d3p4fQ");
-		tb.setType("D");
 		tb.setTeam_number(last);
-		teamNumberDao.insert(tb);
-
+		teamNumberDao.update(tb);
 		return SUCCESS;
 	}
 
@@ -946,7 +748,7 @@ public class SimpletinyAction extends BaseAction {
 		String[] a = new String[5];
 		for (int i = 0; i < 5; i++) {
 			if (i == 0) {
-				String b = addOne("D00VW2Q", NumberService.SOURCE_DEPOSIT_NUMBER);
+				String b = addOne("VW2Q", NumberService.SOURCE_DEPOSIT_NUMBER);
 				a[0] = b;
 			} else {
 				String b = addOne(a[i - 1], NumberService.SOURCE_DEPOSIT_NUMBER);
@@ -979,13 +781,13 @@ public class SimpletinyAction extends BaseAction {
 		}
 	}
 
-	public static String[] doGenerateNumber(String source, int len) {
+	public static String[] doGenerateNumber(String source, String first, int len) {
 		String result[] = new String[len];
 
 		// String user_pk = "dHV3eXJ8fHl4gHF3d3p4fQ";
 		for (int i = 0; i < len; i++) {
 			if (i == 0) {
-				result[i] = "D00" + source.substring(0, 4);
+				result[i] = first;
 			} else {
 				result[i] = addOne(result[i - 1], source);
 			}

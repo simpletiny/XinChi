@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -39,16 +38,15 @@
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: match">主营收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: matchOther">其他收入</button>
 								<button type="submit" class="btn btn-green col-md-1" data-bind="click: reject">驳回</button>
-								<button id="btn-cancel" style="display: none" type="submit" class="btn btn-green col-md-1"
-									data-bind="click: cancelMatch">取消匹配</button>
+								<button id="btn-cancel" style="display: none" type="submit" class="btn btn-green col-md-1" data-bind="click: cancelMatch">取消匹配</button>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="ip">
 							<div data-bind="foreach: allStatus" style="padding-top: 4px;">
-								<em class="small-box"> <input type="radio" data-bind="attr: {value: $data },checked: $root.chosenStatus "
-									onclick="changeStatus(this)" name="detail.match_flg" /><label data-bind="text: $root.statusMapping[$data]"></label>
+								<em class="small-box"> <input type="radio" data-bind="attr: {value: $data },checked: $root.chosenStatus " onclick="changeStatus(this)"
+									name="detail.match_flg" /><label data-bind="text: $root.statusMapping[$data]"></label>
 								</em>
 							</div>
 						</div>
@@ -63,8 +61,8 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">账户</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --',event: {change:refresh}"
-									name="detail.account" required="required"></select>
+								<select class="form-control" data-bind="options: accounts, optionsCaption: '-- 请选择 --',event: {change:refresh}" name="detail.account"
+									required="required"></select>
 							</div>
 						</div>
 						<div class="span6">
@@ -137,10 +135,10 @@
 												<td data-bind="text: $data.money" class="rmb"></td>
 												<td data-bind="text: $data.comment"></td>
 												<!-- ko if: $data.match_flg =='Y' -->
-												<td ><a href="javascript:void(0)" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
+												<td><a href="javascript:void(0)" data-bind="text: $root.statusMapping[$data.match_flg],click:$root.showDetails" /></td>
 												<!-- /ko -->
 												<!-- ko ifnot: $data.match_flg =='Y'  -->
-												<td  data-bind="text: $root.statusMapping[$data.match_flg]"></td>
+												<td data-bind="text: $root.statusMapping[$data.match_flg]"></td>
 												<!-- /ko -->
 											</tr>
 										</tbody>
@@ -186,8 +184,7 @@
 												<td><a href="javascript:void(0)"
 													data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,$data.received_time,$data.from_where)} ">查看</a></td>
 												<!-- ko if: $data.type == 'SUM' -->
-												<td><a href="javascript:void(0)"
-													data-bind="event:{click:function(){$root.viewDetail($data.related_pk,$data.from_where)}}">详情</a></td>
+												<td><a href="javascript:void(0)" data-bind="event:{click:function(){$root.viewDetail($data.related_pk,$data.from_where)}}">详情</a></td>
 												<!-- /ko -->
 												<!-- ko if: $data.type != 'SUM' -->
 												<td data-bind="text: $data.pay_user"></td>
@@ -353,7 +350,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px;padding-bottom: 30px">
+	<div id="sum_detail1" style="display: none; width: 800px; padding-top: 30px; padding-bottom: 30px">
 		<div class="input-row clearfloat">
 			<div class="col-md-6">
 				<label class="l" style="width: 30%">账户</label>
@@ -408,7 +405,7 @@
 		<!-- /ko -->
 	</div>
 	<div id="comment1" style="display: none; width: 800px; padding-top: 30px;">
-		<div  data-bind="foreach: orders">
+		<div data-bind="foreach: orders">
 			<div class="input-row clearfloat">
 				<div class="col-md-6">
 					<label class="l" style="width: 30%">团号</label>
@@ -455,16 +452,53 @@
 			</div>
 		</div>
 	</div>
+	<div id="div-other-match" style="display: none; width: 800px; height: 300px; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-8">
+				<label class="l">备注</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="7" maxlength="200" id="other-match-comment" placeholder="需要备注说明的信息"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doOtherMatch">提交</a> <a type="button" class="btn btn-green btn-r"
+						data-bind="click: cancelOtherMatch">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="div-reject-reason" style="display: none; width: 800px; height: 300px; padding-top: 30px;">
+		<div class="input-row clearfloat">
+			<div class="col-md-8">
+				<label class="l">驳回理由</label>
+				<div class="ip">
+					<textarea type="text" class="ip-default" rows="7" maxlength="200" id="txt-reject-reason" placeholder="驳回理由，可不输入"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="input-row clearfloat">
+			<div class="col-md-12" style="margin-top: 10px">
+				<div align="right">
+					<a type="button" class="btn btn-green btn-r" data-bind="click: doReject">提交</a> <a type="button" class="btn btn-green btn-r"
+						data-bind="click: cancelReject">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
 	<script>
-		$(".accounting").addClass("current").children("ol").css("display", "block");
+		$(".accounting").addClass("current").children("ol").css("display",
+				"block");
 	</script>
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/finance/received-match.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/finance/received-match.js?v=1.005"></script>
 </body>
 </html>

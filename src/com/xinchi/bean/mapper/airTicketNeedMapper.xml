@@ -37,6 +37,7 @@
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="air_date" property="air_date" jdbcType="VARCHAR" />
 		<result column="ticket_client_number" property="ticket_client_number" jdbcType="VARCHAR" />
+		<result column="flight_number" property="flight_number" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -62,6 +63,15 @@
 		<include refid="Base_Column_List" />
 		from air_ticket_need
 		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPks" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from air_ticket_need
+		where pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 	<select id="selectByProductOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -119,6 +129,7 @@
 				and A.product_order_number = #{params.bo.team_number,jdbcType=VARCHAR}
 			</if>
 		</where>
+		 order by A.first_ticket_date,A.first_from_to,A.product_name
 	</select>
 	<select id="selectOrderByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
@@ -142,10 +153,12 @@
 	</select>
 	<select id="selectOrderAirInfoByTeamNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select
-		team_number AS product_order_number,
+		team_number AS
+		product_order_number,
 		ticket_index as info_index,
-		CONCAT(from_city,'--',to_city) AS from_to_city,
-		ticket_date AS air_date,
+		CONCAT(from_city,'-',to_city) AS from_to_city,
+		ticket_date AS
+		air_date,
 		create_user AS ticket_client_number
 		from
 		sale_order_ticket_info
@@ -156,7 +169,6 @@
 	<select id="selectOrderAirInfoByProductOrderNumber" parameterType="java.lang.String" resultMap="OrderAirInfoMap">
 		select
 		product_order_number,
-		air_leg,
 		info_index,
 		day_index,
 		from_to_city,
@@ -168,14 +180,28 @@
 		day_index - 1 DAY)
 		END AS air_date,
 		ticket_client_number,
-		departure_date
+		departure_date,
+		flight_number
 		from
 		view_order_air_info
 		where product_order_number =
 		#{product_order_number,jdbcType=CHAR}
 		ORDER BY info_index
 	</select>
-
+	<select id="selectOrderAirInfoByNeedPk" resultMap="OrderAirInfoMap" parameterType="java.lang.String">
+		select
+		product_order_number,
+		info_index,
+		day_index,
+		from_to_city,
+		departure_date AS air_date,
+		ticket_client_number,
+		flight_number
+		from
+		view_order_air_info
+		where need_pk = #{need_pk,jdbcType=CHAR}
+		ORDER BY info_index
+	</select>
 	<insert id="insert" parameterType="com.xinchi.bean.AirTicketNeedBean">
 
 		insert into air_ticket_need

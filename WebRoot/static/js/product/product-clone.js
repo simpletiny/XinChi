@@ -19,6 +19,18 @@ var ProductContext = function() {
 		self.product(data.product);
 		if (self.product().strict_price_flg == "Y")
 			$("#chk-strict").attr("checked", true);
+
+		if (self.product().as_adult_flg == "Y")
+			$("#chk-as-adult-flg").attr("checked", true);
+
+		if (self.product().id_type == "1") {
+			$("#chk-id-type-id").attr("checked", true);
+		} else if (self.product().id_type == "2") {
+			$("#chk-id-type-passport").attr("checked", true);
+		} else if (self.product().id_type == "3") {
+			$("#chk-id-type-id").attr("checked", true);
+			$("#chk-id-type-passport").attr("checked", true);
+		}
 	});
 
 	self.saveProduct = function() {
@@ -35,37 +47,35 @@ var ProductContext = function() {
 		}
 		startLoadingIndicator("保存中");
 		var data = $("form").serialize();
+		if (!$("#chk-strict").is(":checked"))
+			data += "&product.strict_price_flg=N";
+		if (!$("#chk-as-adult-flg").is(":checked"))
+			data += "&product.as_adult_flg=N";
 		$.ajax({
 			type : "POST",
 			url : self.apiurl + 'product/createProduct',
 			data : data
-		}).success(
-				function(str) {
-					endLoadingIndicator();
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product.jsp";
-					} else if (str == "exists") {
-						fail_msg("产品库中存在同型号产品！");
-						endLoadingIndicator();
-					}
-				});
+		}).success(function(str) {
+			endLoadingIndicator();
+			if (str == "success") {
+				window.location.href = self.apiurl + "templates/product/product.jsp";
+			} else if (str == "exists") {
+				fail_msg("产品库中存在同型号产品！");
+				endLoadingIndicator();
+			}
+		});
 
 	};
 	self.supplierEmployees = ko.observable({});
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
-		$
-				.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-						function(data) {
-							self.supplierEmployees(data.employees);
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
+		$.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param, function(data) {
+			self.supplierEmployees(data.employees);
 
-							self.totalCount(Math.round(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
-						});
+			self.totalCount(Math.round(data.page.total / self.perPage));
+			self.setPageNums(self.currentPage());
+		});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -111,8 +121,7 @@ var ProductContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -205,11 +214,9 @@ function caculateGrossProfit() {
 	var business_profit_substract = $("#business-profit-substract").val() - 0;
 	var max_profit_substract = $("#max-profit-substract").val() - 0;
 	// 产品价格
-	var product_price = adult_price - business_profit_substract
-			- max_profit_substract;
+	var product_price = adult_price - business_profit_substract - max_profit_substract;
 
-	var product_child_price = child_price - business_profit_substract
-			- max_profit_substract;
+	var product_child_price = child_price - business_profit_substract - max_profit_substract;
 
 	var local_adult_cost = $("#local-adult-cost").val() - 0;
 	var air_ticket_cost = $("#air-ticket-cost").val() - 0;
@@ -220,10 +227,8 @@ function caculateGrossProfit() {
 	var other_child_cost = $("#other-child-cost").val() - 0;
 
 	// 毛利
-	var gross_profit = product_price - local_adult_cost - air_ticket_cost
-			- other_cost;
-	var gross_child_profit = product_child_price - local_child_cost
-			- air_ticket_child_cost - other_child_cost;
+	var gross_profit = product_price - local_adult_cost - air_ticket_cost - other_cost;
+	var gross_child_profit = product_child_price - local_child_cost - air_ticket_child_cost - other_child_cost;
 
 	$("#gross-profit").text(gross_profit);
 	$("#txt-gross-profit").val(gross_profit);
@@ -234,8 +239,7 @@ function caculateGrossProfit() {
 	// 毛利率
 	var gross_profit_rate = 0;
 	if (adult_price - business_profit_substract != 0) {
-		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract))
-				.toFixed(2));
+		gross_profit_rate = parseFloat((gross_profit / (adult_price - business_profit_substract)).toFixed(2));
 		gross_profit_rate = Math.round(gross_profit_rate * 100);
 	}
 

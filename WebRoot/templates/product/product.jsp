@@ -117,6 +117,12 @@ tr td {
 						</div>
 					</div>
 					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label" style="width: 5% !important">产品型号</label>
+							<div class="col-md-2">
+								<input class="form-control" placeholder="产品型号" name="product.product_model"></input>
+							</div>
+						</div>
 						<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 							<div class="span6">
 								<label class="col-md-1 control-label" style="width: 5% !important">产品经理</label>
@@ -149,6 +155,7 @@ tr td {
 								<th>同业返利</th>
 								<th>最大让利</th>
 								<th title="成人/儿童">销售分值</th>
+								<th title="成人/儿童">立奖</th>
 								<th>首段城市对</th>
 								<th>销售注意</th>
 								<th>儿童策略</th>
@@ -183,6 +190,7 @@ tr td {
 								<td data-bind="text: $data.max_profit_substract"></td>
 
 								<td data-bind="text: $data.product_value +'/'+($data.product_child_value?$data.product_child_value:'')"></td>
+								<td data-bind="text: $data.adult_instant_bonus +'/'+$data.child_instant_bonus"></td>
 								<td
 									data-bind="text: ($data.first_air_start?$data.first_air_start:'') + '--' + ($data.first_air_end?$data.first_air_end:'')"></td>
 								<td><a href="javascript:void(0)"
@@ -461,6 +469,6 @@ tr td {
 		$(".product-manager").addClass("current").children("ol").css("display",
 				"block");
 	</script>
-	<script src="<%=basePath%>static/js/product/product.js?v=1.0"></script>
+	<script src="<%=basePath%>static/js/product/product.js?v=1.004"></script>
 </body>
 </html>

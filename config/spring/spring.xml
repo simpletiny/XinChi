@@ -14,7 +14,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:jdbc.properties</value>
-				<value>classpath:properties/sys.properties</value>
+				<value>classpath:properties/*.properties</value>
 				<value>file:/var/simpletiny/jdbc.properties</value>
 				<value>file:/var/simpletiny/sys.properties</value>
 			</list>

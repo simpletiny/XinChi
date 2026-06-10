@@ -1,6 +1,8 @@
 package com.xinchi.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.xinchi.common.SupperBO;
 
 public class AirLegBean extends SupperBO implements Serializable {
@@ -8,7 +10,11 @@ public class AirLegBean extends SupperBO implements Serializable {
 
 	private String from_city;
 
+	private String from_place;
+
 	private String to_city;
+
+	private String to_place;
 
 	private String create_user;
 
@@ -18,8 +24,12 @@ public class AirLegBean extends SupperBO implements Serializable {
 
 	private Integer sort_index;
 
-	//option
+	private String use_flg;
+
+	// option
 	private String city;
+	private List<String> use_flgs;
+
 	public String getFrom_city() {
 		return from_city;
 	}
@@ -74,6 +84,38 @@ public class AirLegBean extends SupperBO implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getUse_flg() {
+		return use_flg;
+	}
+
+	public void setUse_flg(String use_flg) {
+		this.use_flg = use_flg;
+	}
+
+	public List<String> getUse_flgs() {
+		return use_flgs;
+	}
+
+	public void setUse_flgs(List<String> use_flgs) {
+		this.use_flgs = use_flgs;
+	}
+
+	public String getFrom_place() {
+		return from_place;
+	}
+
+	public String getTo_place() {
+		return to_place;
+	}
+
+	public void setFrom_place(String from_place) {
+		this.from_place = from_place;
+	}
+
+	public void setTo_place(String to_place) {
+		this.to_place = to_place;
 	}
 
 }

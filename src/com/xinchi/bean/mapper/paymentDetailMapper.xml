@@ -24,6 +24,7 @@
 		<result column="match_flg" property="match_flg" jdbcType="CHAR" />
 		<result column="exchange_flg" property="exchange_flg" jdbcType="CHAR" />
 		<result column="finance_flg" property="finance_flg" jdbcType="CHAR" />
+		<result column="other_match_comment" property="other_match_comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -48,7 +49,8 @@
 		voucher_file_name,
 		match_flg,
 		exchange_flg,
-		finance_flg
+		finance_flg,
+		other_match_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -56,14 +58,14 @@
 		from payment_detail
 		where pk = #{pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectByInnerPk" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from payment_detail
 		where inner_pk = #{inner_pk,jdbcType=CHAR}
 	</select>
-	
+
 	<select id="selectByVoucherNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		A.account,
@@ -89,7 +91,8 @@
 		A.exchange_flg,
 		A.finance_flg
 		from payment_detail A
-		LEFT JOIN card B ON A.account = B.account
+		LEFT JOIN card B ON A.account =
+		B.account
 		where voucher_number =
 		#{voucher_number,jdbcType=CHAR}
 	</select>
@@ -299,6 +302,9 @@
 			<if test="finance_flg != null">
 				finance_flg = #{finance_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="other_match_comment != null">
+				other_match_comment = #{other_match_comment,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -347,6 +353,20 @@
 		</where>
 		order by time desc limit 1
 	</select>
+	<select id="selectExchangeByParam" parameterType="com.xinchi.bean.PaymentDetailBean" resultType="java.math.BigDecimal">
+		select
+		sum(money)
+		from payment_detail
+		<where>
+			and exchange_flg = 'Y' and type='支出'
+			<if test="from_month != null and from_month !=''">
+				and left(time,7) &gt;= #{from_month,jdbcType=VARCHAR}
+			</if>
+			<if test="to_month != null and to_month !=''">
+				and left(time,7) &lt;= #{to_month,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
 		select
 		A.account,
@@ -355,7 +375,7 @@
 		A.money,
 		A.balance,
 		A.record_time,
-		A.record_user,
+		C.user_name AS record_user,
 		A.update_user,
 		A.create_user,
 		A.pk,
@@ -370,12 +390,17 @@
 		A.match_flg,
 		A.exchange_flg,
 		A.finance_flg
-		from payment_detail A
+		from
+		payment_detail A
 		LEFT JOIN card B ON A.account=B.account
- 
+		LEFT JOIN user_base C ON A.record_user = C.user_number
+
 		<where>
 			<if test="params.bo.account != null and params.bo.account !=''">
-				and A.account like CONCAT('%',#{params.bo.account,jdbcType=VARCHAR},'%')
+				and A.account =#{params.bo.account,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.comment != null and params.bo.comment !=''">
+				and A.comment like CONCAT('%',#{params.bo.comment,jdbcType=VARCHAR},'%')
 			</if>
 			<if test='params.bo.type != null and params.bo.type !="" and params.bo.type !="内转"'>
 				and A.type = #{params.bo.type,jdbcType=VARCHAR}
@@ -388,6 +413,12 @@
 			</if>
 			<if test='params.bo.match_flg != null and params.bo.match_flg =="Y"'>
 				and (A.match_flg = 'Y' OR A.match_flg='O')
+			</if>
+			<if test='params.bo.match_flgs != null and params.bo.match_flgs.size()>0'>
+				and A.match_flg in
+				<foreach item="item" index="index" collection="params.bo.match_flgs" open="(" separator="," close=")">
+					#{params.bo.match_flgs[${index}]}
+				</foreach>
 			</if>
 			<if test="params.bo.time != null and params.bo.time !=''">
 				and left(A.time,10) = #{params.bo.time,jdbcType=VARCHAR}

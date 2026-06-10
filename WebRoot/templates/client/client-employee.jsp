@@ -106,6 +106,12 @@
 							<div class="col-md-2">
 								<em class="small-box "> <input type="checkbox" id="chk_public"
 									data-bind="event:{click:function(){refresh();return true;}}" /><label>公开</label>
+									<input type="checkbox" name="employee.review_flg"
+									data-bind="event:{click:function(){refresh();return true;}}" value="N"/><label>未审核</label>
+								</em>
+							</div>
+							<div class="col-md-2">
+								<em class="small-box "> 
 								</em>
 							</div>
 						</div>
@@ -179,9 +185,16 @@
 								<td style="color: green">正常</td>
 								<!-- /ko -->
 
-								<td data-bind="text: $data.area"></td>
+								<td data-bind="text: $data.employee_area""></td>
+								
+								<!-- ko if:$data.body_public_flg=='Y' -->
+								<td><a style="color:red" href="javascript:void(0)"
+									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
+								<!-- /ko -->
+								<!-- ko if:$data.body_public_flg!='Y' -->
 								<td><a href="javascript:void(0)"
 									data-bind="text: $data.financial_body_name,click:function(){ $root.checkFinancialBody($data.financial_body_pk);}"></a></td>
+								<!-- /ko -->
 								<td data-bind="text: $data.year_order_count"></td>
 								<td data-bind="text: $data.back_level"></td>
 								<td data-bind="text: $data.last_order_period"></td>
@@ -416,6 +429,6 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/client-employee.js"></script>
+	<script src="<%=basePath%>static/js/client/client-employee.js?v=1.001"></script>
 </body>
 </html>

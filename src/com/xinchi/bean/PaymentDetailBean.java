@@ -47,6 +47,8 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	// 汇兑标签
 	private String exchange_flg;
 
+	private String other_match_comment;
+
 	// 内转搜索条件
 	private List<String> exchange_type;
 	private String from_date;
@@ -66,6 +68,8 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 	private String receiver_pk;
 	private String belong_month;
 	private String product_manager;
+
+	private List<String> match_flgs;
 
 	public String getAccount() {
 		return account;
@@ -345,6 +349,22 @@ public class PaymentDetailBean extends SupperBO implements Serializable {
 
 	public void setProduct_manager(String product_manager) {
 		this.product_manager = product_manager;
+	}
+
+	public List<String> getMatch_flgs() {
+		return match_flgs;
+	}
+
+	public void setMatch_flgs(List<String> match_flgs) {
+		this.match_flgs = match_flgs;
+	}
+
+	public String getOther_match_comment() {
+		return other_match_comment;
+	}
+
+	public void setOther_match_comment(String other_match_comment) {
+		this.other_match_comment = other_match_comment;
 	}
 
 }

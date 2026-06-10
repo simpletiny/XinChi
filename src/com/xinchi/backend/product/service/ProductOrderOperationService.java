@@ -1,6 +1,5 @@
 package com.xinchi.backend.product.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.xinchi.bean.DropOffBean;
@@ -60,13 +59,17 @@ public interface ProductOrderOperationService extends BaseService {
 
 	public List<DropOffBean> searchDropOff(DropOffBean drop_off);
 
-	public String finalOperation(String operate_pk, BigDecimal final_supplier_cost, String json);
+	public String finalOperation(String json);
 
 	public String rollBackOperation(String operate_pk);
 
 	public List<PayableOrderBean> selectPayableOrderByParam(PayableOrderBean option);
 
-	public String modifyOrderOperation(String json);
-
 	public List<DropOffBean> selectDropOffByPage(Page<DropOffBean> page);
+
+	public List<PayableOrderBean> selectPayableOrderByTeamNumber(String team_number);
+
+	public String updateOrderOperation(String json);
+
+	public String confirmOperation(String operate_pks);
 }

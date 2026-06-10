@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.xinchi.backend.order.dao.OrderDAO;
 import com.xinchi.bean.OrderDto;
+import com.xinchi.bean.OrderReportDto;
+import com.xinchi.bean.SaleOrderBean;
 import com.xinchi.bean.SaleScoreDto;
 import com.xinchi.common.DaoUtil;
 import com.xinchi.tools.Page;
@@ -56,8 +58,8 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 	}
 
 	@Override
-	public List<SaleScoreDto> searchSaleScore(Page<SaleScoreDto> page) {
-		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.searchSaleScore", page);
+	public List<SaleScoreDto> searchSaleScore(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectSaleScore", score);
 	}
 
 	@Override
@@ -77,8 +79,12 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 
 	@Override
 	public String selectMaxConfirmDateByEmployeePk(String employee_pk) {
-		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk",
-				employee_pk);
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateByEmployeePk", employee_pk);
+	}
+
+	@Override
+	public String selectMaxConfirmDateBySaleNumber(String user_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectMaxConfirmDateBySaleNumber", user_number);
 	}
 
 	@Override
@@ -106,4 +112,48 @@ public class OrderDAOImpl extends SqlSessionDaoSupport implements OrderDAO {
 		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectPayableInfoByParam", option);
 	}
 
+	@Override
+	public OrderDto selectFinalOrderByTeamNumber(String team_number) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectFinalOrderByTeamNumber", team_number);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchNonStandardSaleData(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectNonStandardSaleData", score);
+	}
+
+	@Override
+	public List<SaleScoreDto> searchSaleCost(SaleScoreDto score) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectSaleCost", score);
+	}
+
+	@Override
+	public List<OrderDto> selectOrderWithNames(List<String> team_numbers) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.OrderMapper.selectOrderWithNames", team_numbers);
+	}
+
+	@Override
+	public void insertWithPk(SaleOrderBean bean) {
+		daoUtil.insertBOWithPk("com.xinchi.bean.mapper.SaleOrderMapper.insert", bean);
+	}
+
+	@Override
+	public void update(SaleOrderBean bean) {
+		daoUtil.updateByPK("com.xinchi.bean.mapper.SaleOrderMapper.updateByPrimaryKey", bean);
+	}
+
+	@Override
+	public SaleOrderBean selectByPrimaryKey(String pk) {
+		return (SaleOrderBean) daoUtil.selectByPK("com.xinchi.bean.mapper.SaleOrderMapper.selectByPrimaryKey", pk);
+	}
+
+	@Override
+	public void deleteByPk(String pk) {
+		daoUtil.deleteByPK("com.xinchi.bean.mapper.SaleOrderMapper.deleteByPrimaryKey", pk);
+	}
+
+	@Override
+	public int selectOrderCountByParam(OrderReportDto bean) {
+		return daoUtil.selectOneValueByParam("com.xinchi.bean.mapper.OrderMapper.selectOrderCountByParam", bean);
+	}
 }

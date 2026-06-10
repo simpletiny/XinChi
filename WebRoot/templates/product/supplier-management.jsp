@@ -167,12 +167,12 @@
 										<td class="r">接：</td>
 										<td><input name="radio-jie-0" st="radio-jie-0" checked="checked" type="radio" value="0"
 											onclick="changeJieSongType(this)"/>航段</td>
-										<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0" /></td>
+										<td><input class="required" type="text" maxlength="1" st="txt-jie-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"/></td>
 										<td><input name="radio-jie-0" st="radio-jie-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-jie-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
-										<td><input class="required" type="text" maxlength="15" st="time" /></td>
+										<td><input class="required from-to-time" placeholder="12:01--23:20"  type="text" maxlength="12" st="time" /></td>
 										<td><input class="required" type="text" maxlength="15" st="city" /></td>
 										<td><input class="required" type="text" maxlength="30" st="place" /></td>
 									</tr>
@@ -181,12 +181,12 @@
 										<td class="r">送：</td>
 										<td><input name="radio-song-0" st="radio-song-0" checked="checked" type="radio" value="0"
 											onclick="changeJieSongType(this)" />航段</td>
-										<td><input class="required" type="text" maxlength="10" st="txt-song-type-0" /></td>
+										<td><input class="required" type="text" maxlength="1" st="txt-song-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"/></td>
 										<td><input name="radio-song-0" st="radio-song-1" type="radio" value="1" onclick="changeJieSongType(this)" />其他</td>
 										<td><input type="text" maxlength="10" st="txt-song-type-1" disabled="disabled" /></td>
 										<td><input class="required" maxlength="2" type="number" st="day" /></td>
 										<td><input class="required" type="text" maxlength="10" st="traffic-tool" /></td>
-										<td><input class="required" type="text" maxlength="15" st="time" /></td>
+										<td><input class="required from-to-time" type="text"  placeholder="12:01--23:20" maxlength="12" st="time" /></td>
 										<td><input class="required" type="text" maxlength="15" st="city" /></td>
 										<td><input class="required" type="text" maxlength="30" st="place" /></td>
 									</tr>
@@ -288,6 +288,7 @@
 				"block");
 	</script>
 	<script src="<%=basePath%>static/js/product/product-upload.js"></script>
-	<script src="<%=basePath%>static/js/product/supplier-management.js"></script>
+	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
+	<script src="<%=basePath%>static/js/product/supplier-management.js?v=1.001"></script>
 </body>
 </html>

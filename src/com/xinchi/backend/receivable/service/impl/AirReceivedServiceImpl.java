@@ -45,6 +45,7 @@ public class AirReceivedServiceImpl implements AirReceivedService {
 			String deposit_number = detail.getBusiness_number();
 			SupplierDepositBean deposit = supplierDepositDao.selectByDepositNumber(deposit_number);
 			List<AirReceivedDetailBean> exists = dao.selectByBusinessNumber(deposit_number);
+			deposit.setStatus("N");
 			deposit.setBalance(deposit.getBalance().add(detail.getReceived()));
 			deposit.setReceived(deposit.getReceived().subtract(detail.getReceived()));
 			if (null == exists || exists.size() < 1) {
@@ -75,6 +76,11 @@ public class AirReceivedServiceImpl implements AirReceivedService {
 	@Override
 	public List<AirReceivedDetailBean> selectByParam(AirReceivedDetailBean option) {
 		return dao.selectByParam(option);
+	}
+
+	@Override
+	public List<AirReceivedDetailBean> selectByBusinessNumber(String business_number) {
+		return dao.selectByBusinessNumber(business_number);
 	}
 
 }

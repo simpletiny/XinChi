@@ -268,6 +268,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		}
 
 		PaymentDetailBean oldDetail = dao.selectById(newDetail.getPk());
+		// 已匹配的不能修改
+		if (oldDetail.getMatch_flg().equals("Y") || oldDetail.getMatch_flg().equals("O")) {
+			return "matched";
+		}
+
 		List<PaymentDetailBean> oldAfterDetails = dao.selectAfterByParam(oldDetail);
 		BigDecimal wrong = oldDetail.getMoney();
 		if (oldDetail.getType().equals("收入")) {
@@ -544,6 +549,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				for (ClientReceivedDetailBean detail : receivedDetails) {
 					detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ENTER);
 					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setConfirm_user(user.getUser_number());
 					receivedDao.update(detail);
 
 					saveReceivedMatch(detail_id, from_where, detail.getPk());
@@ -553,6 +559,7 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 				for (SupplierPaidDetailBean detail : receivedDetails) {
 					detail.setStatus(ResourcesConstants.PAID_STATUS_PAID);
 					detail.setConfirm_time(DateUtil.getMinStr());
+					detail.setApprove_user(user.getUser_number());
 					paidDao.update(detail);
 
 					saveReceivedMatch(detail_id, from_where, detail.getPk());
@@ -742,5 +749,11 @@ public class PaymentDetailServiceImpl implements PaymentDetailService {
 		}
 
 		return SUCCESS;
+	}
+
+	@Override
+	public BigDecimal selectExchangeByParam(PaymentDetailBean option) {
+		
+		return dao.selectExchangeByParam(option);
 	}
 }

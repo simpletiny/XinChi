@@ -37,11 +37,13 @@
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div style="float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { forwardOrder() }">转发订单</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { deleteOrder() }">删除</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { editOrder() }">编辑</button>
-							<button type="submit" title="只生成应收款" class="btn btn-green"
-								data-bind="click: function() { createReceivable() }">生成应收款</button>
-							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
+							<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('SALES')">
+								<button type="submit" title="只生成应收款" class="btn btn-green" data-bind="click: function() { createReceivable() }">生成应收款</button>
+								<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { confirmOrder() }">订单确认</button>
+							</s:if>
 						</div>
 					</div>
 					<div class="form-group">
@@ -78,14 +80,12 @@
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px" id="select-sales"
 										data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="option.create_user"></select>
+										name="option.sale_number"></select>
 								</div>
 							</div>
 						</s:if>
-						<div style="width: 30%; float: right">
-							<div>
-								<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
-							</div>
+						<div style="float: right">
+							<button type="submit" st="btn-search" class="btn btn-green col-md-1" data-bind="click: function() { refresh() }">搜索</button>
 						</div>
 					</div>
 				</form>
@@ -110,6 +110,7 @@
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
 									<th>销售</th>
 								</s:if>
+								<th>来源</th>
 								<th title="订单将在编辑日期三天后自动删除！">编辑日期</th>
 							</tr>
 						</thead>
@@ -126,19 +127,20 @@
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.receivable"></td>
 								<td data-bind="text: $data.balance"></td>
-								<!-- ko if:$data.confirm_file!=null && $data.confirm_file != '' -->
+								<!-- ko if:$data.budget_confirm_file!=null && $data.budget_confirm_file != '' -->
 								<td><a href="javascript:void(0)"
-									data-bind="click: function() {$root.checkIdPic($data.confirm_file,$data.create_user_number)} ">查看</a></td>
+									data-bind="click: function() {$root.checkIdPic($data.budget_confirm_file,$data.create_user_number)} ">查看</a></td>
 								<!-- /ko -->
-								<!-- ko if: $data.confirm_file==null || $data.confirm_file == '' -->
+								<!-- ko if: $data.budget_confirm_file==null || $data.budget_confirm_file == '' -->
 								<td></td>
 								<!-- /ko -->
 								<td data-bind="text: $data.comment"></td>
 								<td data-bind="text: $data.product_manager"></td>
 								<td><a href="javascript:void(0)" class="download" data-bind="click:$root.downloadFile">下载</a></td>
 								<s:if test="#session.user.user_roles.contains('ADMIN')||#session.user.user_roles.contains('MANAGER')">
-									<td data-bind="text: $data.create_user"></td>
+									<td data-bind="text: $data.sale_name"></td>
 								</s:if>
+								<td data-bind="text: $data.assistant_name"></td>
 								<!-- ko if:$data.update_time==null -->
 								<td data-bind="text: moment($data.create_time-0).format('YYYY-MM-DD')"></td>
 								<!-- /ko -->
@@ -164,6 +166,20 @@
 			</div>
 		</div>
 	</div>
+	<div style="display: none; width: 500px" id="div-sales-pick">
+		<div class="input-row clearfloat">
+			<label class="l">销售</label>
+			<div class="ip" style="width: 70% !important;">
+				<select class="form-control" style="height: 34px"
+					data-bind="options: sales,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"
+					id="sel-sale"></select>
+			</div>
+		</div>
+		<div class="input-row clearfloat" style="float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:doForward">确认</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click:cancelForward">取消</button>
+		</div>
+	</div>
 	<div id="pic-check" style="display: none">
 		<jsp:include page="../common/check-picture.jsp" />
 	</div>
@@ -172,6 +188,6 @@
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/order/tbc-order.js?v=1.1"></script>
+	<script src="<%=basePath%>static/js/order/tbc-order.js?v=1.002"></script>
 </body>
 </html>

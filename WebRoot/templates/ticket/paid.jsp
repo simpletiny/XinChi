@@ -22,6 +22,10 @@
 .form-control {
 	height: 30px;
 }
+
+h3 {
+	padding-left: 20px !important;
+}
 </style>
 
 </head>
@@ -37,6 +41,12 @@
 			<div class="main-box">
 				<form class="form-horizontal search-panel" id="form-search">
 					<div class="form-group">
+						<div data-bind="foreach: statuses" style="padding-top: 4px;">
+							<em class="small-box"> <input type="checkbox"
+								data-bind="attr: {'value': $data},checked:$root.chosenStatuses,click:function(){$root.refresh();return true;}"
+								name="option.statuses" /><label data-bind="text: $root.statusMapping[$data]"></label>
+							</em>
+						</div>
 						<div style="float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function(){createDetail('R');}">添加收入</button>
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: function(){createDetail('P');}">添加支出</button>
@@ -80,12 +90,12 @@
 
 						<label class="col-md-1 control-label">入账日期</label>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" id="option-data-from" data-bind="value: dateFrom" placeholder="from"
+							<input type="text" class="form-control date-picker" id="option-data-from" placeholder="from"
 								name="option.date_from" />
 						</div>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control date-picker" id="option-data-to" data-bind="value: dateTo" placeholder="to"
-								name="option.date_to" />
+							<input type="text" class="form-control date-picker" id="option-data-to" data-bind="value: dateTo"
+								placeholder="to" name="option.date_to" />
 						</div>
 						<div>
 							<label class="col-md-1 control-label">收款方</label>
@@ -110,7 +120,7 @@
 									name="option.type" required="required"></select>
 							</div>
 						</div>
-						<label class="col-md-1 control-label">归属月份</label> 
+						<label class="col-md-1 control-label">归属月份</label>
 						<div class="col-md-2" style="float: left">
 							<input type="text" class="form-control month-picker-st" id="option-belong-month" name="option.belong_month" />
 						</div>
@@ -119,6 +129,12 @@
 							<select class="form-control" name="option.product_manager"
 								data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number', optionsCaption: '--请选择--'"></select>
 						</div>
+						<label class="col-md-1 control-label">凭证号</label>
+						<div class="col-md-2" style="float: left">
+							<input type="text" class="form-control" placeholder='凭证号' name="option.voucher_number" />
+						</div>
+					</div>
+					<div class="form-group">
 						<button type="submit" style="float: right" class="btn btn-green" data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
@@ -175,7 +191,7 @@
 								<td style="color: green" data-bind="text: $root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
 								<!-- ko if:$data.status=='N' -->
-								<td style="color: red" data-bind="text: $root.statusMapping[$data.status]"></td>
+								<td><a href="javascript:void(0)" style="color: red" data-bind="text: $root.statusMapping[$data.status],click: $root.viewRejectReason"></a></td>
 								<!-- /ko -->
 
 								<td><a href="javascript:void(0)" data-bind="click:$root.viewDetail">查看</a></td>
@@ -212,7 +228,7 @@
 		</div>
 	</div>
 	<div id="sum_detail" style="display: none; width: 1200px; height: 500px; overflow-y: auto; padding-top: 30px;">
-
+		<h3>申请详情</h3>
 		<div class="input-row clearfloat">
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">收款方</label>
@@ -235,6 +251,8 @@
 			</div>
 		</div>
 		<!-- /ko -->
+		<hr />
+		<h3>支付详情</h3>
 		<div class="input-row clearfloat">
 			<div class="col-md-2">
 				<label class="l" style="width: 100%">收支账户</label>
@@ -242,11 +260,14 @@
 			<div class="col-md-3">
 				<label class="l" style="width: 100%">收支时间</label>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<label class="l" style="width: 100%">收款方账户</label>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-1">
 				<label class="l" style="width: 100%">收支金额</label>
+			</div>
+			<div class="col-md-2">
+				<label class="l" style="width: 100%">凭证号</label>
 			</div>
 			<div class="col-md-2">
 				<label class="l" style="width: 100%">凭证</label>
@@ -264,9 +285,57 @@
 					<p class="ip-default" data-bind="text:$data.time"></p>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<div class="ip">
 					<p class="ip-default" data-bind="text:$data.receiver"></p>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.money"></p>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.voucher_number"></p>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="ip">
+					<p class="ip-default">
+						<a href="javascript:void(0)"
+							data-bind="click: function() {$root.checkVoucherPic($data.voucher_file_name,'VOUCHER',$data.account_pk)} ">查看</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+	<!-- 返款详情 -->
+	<div id="received_detail" style="display: none; width: 1200px; height: 500px; overflow-y: auto; padding-top: 30px;">
+		<h3>申请详情</h3>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">付款方</label>
+			</div>
+			<div class="col-md-2">
+				<label class="l" style="width: 100%">返款金额</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">收款账户</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">收款时间</label>
+			</div>
+			<div class="col-md-1">
+				<label class="l" style="width: 100%">凭证</label>
+			</div>
+		</div>
+		<!-- ko foreach:details -->
+		<div class="input-row clearfloat" st="allot">
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.financial_body_name"></p>
 				</div>
 			</div>
 			<div class="col-md-2">
@@ -274,13 +343,62 @@
 					<p class="ip-default" data-bind="text:$data.money"></p>
 				</div>
 			</div>
-
-			<div class="col-md-2">
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.card_account"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.time"></p>
+				</div>
+			</div>
+			<div class="col-md-1">
 				<div class="ip">
 					<p class="ip-default">
 						<a href="javascript:void(0)"
-							data-bind="click: function() {$root.checkVoucherPic($data.voucher_file_name,$data.account_pk)} ">查看</a>
+							data-bind="click: function() {$root.checkVoucherPic($data.voucher_file,'SUPPLIER_RECEIVED_VOUCHER',$data.time.substr(0,4)+'/'+$data.time.substr(5,2))} ">查看</a>
 					</p>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+		<hr />
+		<h3>收款详情</h3>
+		<div class="input-row clearfloat">
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">收入账户</label>
+			</div>
+			<div class="col-md-3">
+				<label class="l" style="width: 100%">收入时间</label>
+			</div>
+			<div class="col-md-2">
+				<label class="l" style="width: 100%">收入金额</label>
+			</div>
+			<div class="col-md-4">
+				<label class="l" style="width: 100%">备注</label>
+			</div>
+		</div>
+		<!-- ko foreach:paymentDetails -->
+		<div class="input-row clearfloat" st="allot">
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.account"></p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.time"></p>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.money"></p>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="ip">
+					<p class="ip-default" data-bind="text:$data.comment"></p>
 				</div>
 			</div>
 		</div>
@@ -528,6 +646,6 @@
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.004"></script>
+	<script src="<%=basePath%>static/js/ticket/paid.js?v=1.008"></script>
 </body>
 </html>

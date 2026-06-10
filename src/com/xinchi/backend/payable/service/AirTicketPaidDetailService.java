@@ -62,4 +62,6 @@ public interface AirTicketPaidDetailService extends BaseService {
 	public String createDeduct(String json);
 
 	public String addProductManger(String detail_pk, String product_manager_number, String belong_month);
+
+	public List<AirTicketPaidDetailBean> selectByBasePk(String base_pk);
 }

@@ -23,7 +23,8 @@ public class ProductNeedAction extends BaseAction {
 	private String product_name;
 	private String product_model;
 	private String departure_date;
-
+	private String product_manager_number;
+	private List<OrderDto> sale_orders;
 	@Autowired
 	private OrderService orderService;
 
@@ -38,23 +39,17 @@ public class ProductNeedAction extends BaseAction {
 		confirm_flgs.add("Y");
 		confirm_flgs.add("F");
 		option.setConfirm_flgs(confirm_flgs);
+		option.setOperate_flg(ResourcesConstants.ORDER_OPERATE_STATUS_NO + ",");
 
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		if (!sessionBean.getUser_roles().contains("ADMIN")) {
-			option.setProduct_manager_number(sessionBean.getUser_number());
+			option.setProduct_manager_number(product_manager_number);
 		}
 
-		List<OrderDto> orders = orderService.selectWithProductByParam(option);
-		resultStr = "";
-		for (OrderDto order : orders) {
-			resultStr += "," + order.getTeam_number();
-		}
-
-		resultStr = resultStr.replaceFirst(",", "");
+		sale_orders = orderService.selectWithProductByParam(option);
 		return SUCCESS;
-
 	}
 
 	public String getProduct_name() {
@@ -79,5 +74,21 @@ public class ProductNeedAction extends BaseAction {
 
 	public void setDeparture_date(String departure_date) {
 		this.departure_date = departure_date;
+	}
+
+	public List<OrderDto> getSale_orders() {
+		return sale_orders;
+	}
+
+	public void setSale_orders(List<OrderDto> sale_orders) {
+		this.sale_orders = sale_orders;
+	}
+
+	public String getProduct_manager_number() {
+		return product_manager_number;
+	}
+
+	public void setProduct_manager_number(String product_manager_number) {
+		this.product_manager_number = product_manager_number;
 	}
 }

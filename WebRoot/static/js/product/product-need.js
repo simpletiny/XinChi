@@ -1,6 +1,7 @@
 var operateLayer;
 var passengerCheckLayer;
-var airLayer;
+var createLayer;
+let receivableCheckLayer;
 var OrderContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
@@ -36,7 +37,9 @@ var OrderContext = function() {
 
 	// 获取用户信息
 	self.users = ko.observableArray([]);
-	$.getJSON(self.apiurl + 'user/searchAllUseUsers', {}, function(data) {
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
 		self.users(data.users);
 	});
 
@@ -99,6 +102,34 @@ var OrderContext = function() {
 			});
 		});
 	};
+
+	self.order = ko.observable({});
+
+	self.checkReceivable = function(data, event) {
+		var team_number = data.team_number;
+		var url = "order/selectOrderByTeamNumber";
+
+		$.getJSON(self.apiurl + url, {
+			team_number : team_number
+		}, function(data) {
+			self.order(data.option);
+			receivableCheckLayer = $.layer({
+				type : 1,
+				title : ['团款信息', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['800px', '700px'],
+				offset : ['', ''],
+				scrollbar : true,
+				page : {
+					dom : '#receivable-check'
+				},
+				end : function() {
+				}
+			});
+		});
+	};
 	self.cancelOperate = function() {
 		layer.close(operateLayer);
 	};
@@ -120,8 +151,8 @@ var OrderContext = function() {
 						startLoadingIndicator("解锁中...");
 						var param = "";
 						for (var i = 0; i < self.chosenOrders().length; i++) {
-							var inner_data = self.chosenOrders()[i].split(";");
-							var team_number = inner_data[2];
+							var inner_data = self.chosenOrders()[i];
+							var team_number = inner_data.team_number;
 							param += "team_numbers=" + team_number + "&";
 						}
 						$.ajax({
@@ -133,6 +164,7 @@ var OrderContext = function() {
 							if (str == "success") {
 								self.refresh();
 								self.chosenOrders.removeAll();
+								$("#chk-all").prop("checked", false);
 							} else {
 								fail_msg("解锁失败，请联系管理员！");
 							}
@@ -144,67 +176,27 @@ var OrderContext = function() {
 
 		}
 	}
-	/**
-	 * 提示销售确认名单
-	 */
-	self.tipSales = function() {
-		if (self.chosenOrders().length == 0) {
-			fail_msg("请选择产品订单！");
-			return;
-		} else {
-
-			startLoadingIndicator("操作中...");
-
-			var param = "";
-			for (var i = 0; i < self.chosenOrders().length; i++) {
-				var inner_data = self.chosenOrders()[i].split(";");
-				var team_number = inner_data[2];
-				param += "team_numbers=" + team_number + "&";
-			}
-			$.ajax({
-				type : "POST",
-				url : self.apiurl + 'product/tipSalesConfirmName',
-				data : param
-			}).success(function(str) {
-				endLoadingIndicator();
-				if (str == "success") {
-					$("input[type='checkbox']:checked").each(function() {
-						if ($(this).is(":checked")) {
-							$(this).parents("tr").find(".status-no").removeAttr("style").text("待确认");
-						}
-					})
-
-					self.chosenOrders.removeAll();
-					success_msg("提示成功，请等待销售确认后操作。")
-				} else {
-					fail_msg("操作失败，请联系管理员！");
-				}
-			});
-		}
-	}
-
-	self.team_numbers = ko.observableArray([]);
 	self.flight = ko.observableArray([]);
+	self.sale_orders = ko.observableArray([]);
+	// 生成订单
 	self.createOrder = function() {
-		self.team_numbers.removeAll();
 		if (self.chosenOrders().length == 0) {
 			fail_msg("请选择产品订单！");
 			return;
 		} else {
 
 			// 判断是否是相同产品
-			var data = self.chosenOrders()[0].split(";");
-			var product_pk = data[1];
-			var departure_date = data[6];
+			var data = self.chosenOrders()[0];
+			var product_pk = data.product_pk;
+			var departure_date = data.departure_date;
 			var team_numbers = new Array();
-
 			for (var i = 0; i < self.chosenOrders().length; i++) {
-				var inner_data = self.chosenOrders()[i].split(";");
-				var inner_product_pk = inner_data[1];
-				var inner_operate_flg = inner_data[3];
-				var inner_name_confirm_status = inner_data[4];
-				var inner_departure_date = inner_data[6];
-				var inner_team_number = inner_data[2];
+				var inner_data = self.chosenOrders()[i];
+				var inner_product_pk = inner_data.product_pk;
+				var inner_operate_flg = inner_data.operate_flg;
+				var inner_name_confirm_status = inner_data.name_confirm_status;
+				var inner_departure_date = inner_data.departure_date;
+				var inner_team_number = inner_data.team_number;
 				team_numbers.push(inner_team_number);
 
 				if (product_pk != inner_product_pk) {
@@ -228,24 +220,27 @@ var OrderContext = function() {
 				}
 			}
 			startLoadingSimpleIndicator("检测中……");
-			var product_name = data[7];
-			var product_model = data[8];
-
-			var param = 'product_name=' + product_name + '&product_model=' + product_model + '&departure_date='
-					+ departure_date;
+			var product_name = data.product_name;
+			var product_model = data.product_model;
+			const product_manager_number = data.product_manager_number;
+			var param = 'product_name=' + encodeURIComponent(product_name) + '&product_model='
+					+ encodeURIComponent(product_model) + '&departure_date=' + encodeURIComponent(departure_date)
+					+ '&product_manager_number=' + product_manager_number;
 
 			$.ajax({
 				type : "POST",
 				url : self.apiurl + 'product/checkSameNeedOrder',
 				data : param
-			}).success(function(str) {
-				var result = str.split(",");
-				for (var i = result.length - 1; i >= 0; i--) {
-					for (var j = 0; j < team_numbers.length; j++) {
-						if (result[i] == team_numbers[j]) {
-							result.splice(i, 1);
-							break;
-						}
+			}).success(function(data) {
+				const orders = data.sale_orders;
+				let no_orders = new Array();
+				let result = new Array();
+				for (let i = 0; i < orders.length; i++) {
+					const order = orders[i];
+					if (!team_numbers.includes(order.team_number)) {
+						result.push(order.team_number);
+					} else {
+						no_orders.push(order);
 					}
 				}
 				endLoadingIndicator();
@@ -260,96 +255,85 @@ var OrderContext = function() {
 							btn : ['一并操作', '忽略'],
 							yes : function(index) {
 								layer.close(index);
-								self.team_numbers.push(str.split(","));
-								popAirLayer(product_pk);
+								popCreateLayer(orders);
 							},
 							no : function(index) {
-								popAirLayer(product_pk);
-								self.team_numbers.push(team_numbers);
+								layer.close(index);
+								popCreateLayer(no_orders);
 							}
 						}
 					});
 				} else {
-					self.team_numbers.push(team_numbers);
-					popAirLayer(product_pk);
+					popCreateLayer(orders);
 				}
 			});
-
 		}
 	}
-
-	function popAirLayer(product_pk) {
-		if (product_pk == "undefined") {
-			airLayer = $.layer({
+	self.product_orders = ko.observableArray([]);
+	function popCreateLayer(orders) {
+		self.sale_orders(orders);
+		let url = self.apiurl + "product/searchSameProductOrderByTeamNumber";
+		let team_number = orders[0].team_number;
+		startLoadingSimpleIndicator("加载中");
+		// 检测是否已存在同质未操作产品订单
+		$.getJSON(url, {
+			team_number : team_number
+		}, function(data) {
+			self.product_orders(data.orders);
+			endLoadingIndicator();
+			createLayer = $.layer({
 				type : 1,
-				title : ['票务信息', ''],
+				title : ['销售单信息', ''],
 				maxmin : false,
 				closeBtn : [1, true],
 				shadeClose : false,
-				area : ['800px', '550px'],
+				area : ['900px', '550px'],
 				offset : ['', ''],
 				page : {
-					dom : '#air-ticket-edit'
+					dom : '#div-order-create'
 				},
 				end : function() {
 				}
 			});
-		} else {
-			$.getJSON(self.apiurl + 'product/searchProductAirTicketInfoByProductPk', {
-				product_pk : product_pk
-			}, function(data) {
-				self.flight(data.air_tickets);
-				airLayer = $.layer({
-					type : 1,
-					title : ['票务信息', ''],
-					maxmin : false,
-					closeBtn : [1, true],
-					shadeClose : false,
-					area : ['800px', '750px'],
-					offset : ['', ''],
-					page : {
-						dom : '#air-ticket-edit'
-					},
-					end : function() {
-					}
-				});
-			});
-		}
+		});
 	}
 
 	self.doCreateOrder = function(isplus) {
-		if (!$("#form-air").valid()) {
+
+		if ($("#chk-combine").is(":checked") && $("#sel-product-order").val() == "") {
+			fail_msg("请选择要合并到的订单！");
 			return;
 		}
 
-		var msg = "";
-		var hasTicket = $("#chk-has-ticket").is(":checked") ? "NO" : "YES";
-		var tbody = $("#table-ticket tbody");
-		var index = tbody.children().length;
-		if (index == 0) {
-			hasTicket = "NO";
+		// 单地接信息
+		let trs = $("#table-sale-order tbody tr");
+		let order_prop = {};
+		let sale_order_status = new Array();
+		for (let i = 0; i < trs.length; i++) {
+			let tr = $(trs[i]);
+			let team_number = tr.find("[st='team-number']").val();
+			let is_only_dijie = tr.find("[st='is-only-dijie']").is(":checked") ? "Y" : "N";
+
+			let obj = {};
+			obj.team_number = team_number;
+			obj.is_only_dijie = is_only_dijie;
+			sale_order_status.push(obj);
+		}
+		order_prop.sale_order_status = sale_order_status;
+
+		// 合并订单信息
+		let is_combine = $("#chk-combine").is(":checked") ? "Y" : "N";
+		order_prop.is_combine = is_combine;
+		if (is_combine == "Y") {
+			let product_order_number = $("#sel-product-order").val();
+			order_prop.product_order_number = product_order_number;
 		}
 
-		if (hasTicket == "YES") {
-			var allTrs = tbody.children();
-			for (var i = 0; i < allTrs.length; i++) {
-				var current = allTrs[i];
-				var start_day = $(current).find("[st='start-day']").val();
-				var start_city = $(current).find("[st='start-city']").val();
-				var end_city = $(current).find("[st='end-city']").val();
+		// 备注
+		let comment = $(".comment").val().replace(/\n/g, ";");
+		order_prop.comment = comment;
 
-				if (start_day.trim() == "" || start_city.trim() == "" || end_city.trim() == "") {
-					fail_msg("请填写必须填写的项目！");
-					return;
-				}
-
-			}
-
-			msg = "提交后不能修改，确定提交给票务吗?";
-
-		} else {
-			msg = "没有机票信息，确定要生成订单吗?";
-		}
+		const msg = "确认要生成产品订单吗？";
 		$.layer({
 			area : ['auto', 'auto'],
 			dialog : {
@@ -358,56 +342,32 @@ var OrderContext = function() {
 				type : 4,
 				btn : ['确认', '取消'],
 				yes : function(index) {
-					layer.close(airLayer);
+					layer.close(createLayer);
 					layer.close(index);
-					startLoadingIndicator("保存中...");
-					var json = '{"air_comment":"' + $(".air_comment").val().replace(/\n/g, ";") + '","comment":"'
-							+ $(".comment").val().replace(/\n/g, ";") + '","has_ticket":"' + hasTicket
-							+ '","team_numbers":"' + $("#txt-team-numbers").val() + '","data":[';
-					var allTrs = tbody.children();
-					for (var i = 0; i < allTrs.length; i++) {
-						var current = allTrs[i];
+					startLoadingIndicator("保存中");
 
-						var flight_index = i + 1;
-
-						var start_day = $(current).find("[st='start-day']").val();
-						var start_city = $(current).find("[st='start-city']").val();
-						var end_city = $(current).find("[st='end-city']").val();
-
-						json += '{"flight_index":"' + flight_index + '","start_day":"' + start_day + '","start_city":"'
-								+ start_city + '","end_city":"' + end_city + '"';
-
-						if (i == allTrs.length - 1) {
-							json += '}';
-						} else {
-							json += '},';
-						}
-					}
-
-					json += ']}';
-					var data = "json=" + json;
+					var param = "json=" + JSON.stringify(order_prop);
 					$.ajax({
 						type : "POST",
 						url : self.apiurl + 'product/createProductOrder',
-						data : data
+						data : param
 					}).success(function(str) {
 						endLoadingIndicator();
 						if (str == "success") {
 							self.refresh();
 							self.chosenOrders.removeAll();
+							$("chk-all").prop("checked", false);
 						} else {
 							fail_msg("提交失败，请联系管理员！");
 						}
-
 					});
 				}
 			}
 		});
-
 	}
 
-	self.cancelSendAir = function() {
-		layer.close(airLayer);
+	self.cancelCreateOrder = function() {
+		layer.close(createLayer);
 	}
 
 	// start pagination
@@ -536,16 +496,12 @@ function checkAll(chk) {
 	if ($(chk).is(":checked")) {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.push(order.pk + ";" + order.product_pk + ";" + order.team_number + ';' + order.operate_flg
-					+ ';' + order.name_confirm_status + ';' + order.standard_flg + ';' + order.departure_date + ';'
-					+ order.product_name + ';' + order.product_model);
+			ctx.chosenOrders.push(order);
 		}
 	} else {
 		for (var i = 0; i < ctx.orders().length; i++) {
 			var order = ctx.orders()[i];
-			ctx.chosenOrders.remove(order.pk + ";" + order.product_pk + ";" + order.team_number + ';'
-					+ order.operate_flg + ';' + order.name_confirm_status + ';' + order.standard_flg + ';'
-					+ order.departure_date + ';' + order.product_name + ';' + order.product_model);
+			ctx.chosenOrders.remove(order);
 		}
 	}
 }
@@ -578,9 +534,10 @@ function addRow() {
 	var index = tbody.children().length;
 	if (index == 10)
 		return;
-	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td st="index"></td><td><input st="start-day" type="number" min="1" maxlength="2" /></td><td><input st="start-city" type="text" maxlength="10" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input type="button" value="-" onclick="deleteRow(this)"></input></td></tr>');
+	var tr = $('<tr><input type="hidden" st="flight-index" value="1" /><td st="index"></td><td><input st="start-day" type="number" min="1" maxlength="2" /></td><td><input st="flight-number" type="text"/></td><td><input st="start-city" type="text" maxlength="10" /></td><td><input st="end-city" type="text" maxlength="10"/></td><td><input type="button" value="-" onclick="deleteRow(this)"></input></td></tr>');
 
-	$(tr).find("td[st='index']").text(index + 1);
+	$(tr).find("input[st='flight-index']").val(index + 1);
+	$(tr).find("td[st='index']").text(alphabetMap[index + 1]);
 
 	tbody.append(tr);
 }
@@ -590,9 +547,10 @@ function deleteRow(txt) {
 	var tbody = $("#table-ticket tbody");
 	var index = tbody.children().length;
 	var ins = $(tbody).find("td[st='index']");
-
+	let hid_ins = $(tbody).find("input[st='flight-index']");
 	for (var i = 0; i < ins.length; i++) {
-		$(ins[i]).text(i + 1);
+		$(ins[i]).text(alphabetMap[i + 1]);
+		$(hid_ins[i]).val(i + 1);
 	}
 }
 /* 切换是否有机票信息 */
@@ -605,4 +563,17 @@ function hasTicket(chk) {
 		$("#air-comment").show();
 	}
 
+}
+
+function checkCombine() {
+	if ($("#sel-product-order option").length < 2) {
+		fail_msg("不存在同质产品订单！");
+		$("#chk-combine").prop("checked", false);
+	} else {
+		if ($("#chk-combine").is(":checked")) {
+			$("#sel-product-order").prop("disabled", false);
+		} else {
+			$("#sel-product-order").prop("disabled", true);
+		}
+	};
 }

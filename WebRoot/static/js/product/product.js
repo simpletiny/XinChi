@@ -149,10 +149,10 @@ var ProductContext = function() {
 				});
 			} else {
 				$.getJSON(self.apiurl + 'product/searchUrgentCnt', {}, function(str) {
-					if (str - 0 >= 99) {
+					if (str <= 0) {
 						fail_msg("本周紧急上架次数已用完！");
 					} else {
-						self.urgentCnt(99 - str);
+						self.urgentCnt(str);
 						self.searchProductByPk(product_pks);
 					}
 				});

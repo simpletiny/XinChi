@@ -59,13 +59,16 @@ var ViewContext = function() {
 					type : 4,
 					btn : ['确认', '取消'],
 					yes : function(index) {
+						layer.close(index);
 						$.ajax({
 							type : "POST",
 							url : self.apiurl + 'culture/deleteProductResearchView',
 							data : "view_pk=" + self.chosenViews()
 						}).success(function(str) {
 							if (str == "OK") {
-								window.location.href = self.apiurl + "templates/culture/product-research-view.jsp";
+								self.refresh();
+							} else if (str == "NORIGHT") {
+								fail_msg("只能删除自己撰写的文章。")
 							}
 						});
 					}

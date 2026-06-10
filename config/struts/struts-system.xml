@@ -33,7 +33,7 @@
 		<action name="sortData" class="baseDataAction" method="sortData">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
+
 		<!-- 创建基础数据 -->
 		<action name="createBaseData" class="baseDataAction" method="createBaseData">
 			<result name="success" type="str">resultStr</result>
@@ -46,6 +46,37 @@
 		<action name="deleteBaseData" class="baseDataAction" method="deleteBaseData">
 			<result name="success" type="str">resultStr</result>
 		</action>
-
+		<!-- 失信人查询 start -->
+		<action name="checkIsDishonest" class="dishonestAction" method="checkIsDishonest">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 失信人查询 end -->
+		<!-- 页面管理 start -->
+		<!-- 搜索已分好类的所有页面 -->
+		<action name="searchSortPages" class="pagesAction" method="searchSortPages">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 更新页面修改 -->
+		<action name="updatePages" class="pagesAction" method="updatePages">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 角色权限修改，包括角色优先级 -->
+		<action name="updateRolePages" class="pagesAction" method="updateRolePages">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<!-- 搜索角色有权限的页面 -->
+		<action name="searchRolePages" class="pagesAction" method="searchRolePages">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<!-- 页面管理 end-->
 	</package>
 </struts>

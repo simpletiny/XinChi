@@ -47,6 +47,12 @@ public class ProductOrderBean extends SupperBO implements Serializable {
 
 	private int days;
 
+	private String operator_number;
+
+	private String operator_name;
+
+	private List<String> product_manager_numbers;
+
 	// search options
 	private String team_number;
 
@@ -216,6 +222,30 @@ public class ProductOrderBean extends SupperBO implements Serializable {
 
 	public void setTeam_number(String team_number) {
 		this.team_number = team_number;
+	}
+
+	public String getOperator_number() {
+		return operator_number;
+	}
+
+	public void setOperator_number(String operator_number) {
+		this.operator_number = operator_number;
+	}
+
+	public String getOperator_name() {
+		return operator_name;
+	}
+
+	public void setOperator_name(String operator_name) {
+		this.operator_name = operator_name;
+	}
+
+	public List<String> getProduct_manager_numbers() {
+		return product_manager_numbers;
+	}
+
+	public void setProduct_manager_numbers(List<String> product_manager_numbers) {
+		this.product_manager_numbers = product_manager_numbers;
 	}
 
 }

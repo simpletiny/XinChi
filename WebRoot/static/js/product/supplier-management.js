@@ -7,10 +7,20 @@ var ProductContext = function() {
 	self.productPk = $("#product-pk").val();
 	self.product = ko.observable({});
 
+
+
 	$.getJSON(self.apiurl + 'product/searchProductByPk', {
-		product_pk : self.productPk
+		product_pk: self.productPk
 	}, function(data) {
 		self.product(data.product);
+	});
+
+	self.airTickets = ko.observableArray([]);
+	$.getJSON(self.apiurl
+		+ 'product/searchProductAirTicketInfoByProductPk', {
+		product_pk: self.productPk
+	}, function(data) {
+		self.airTickets(data.air_tickets);
 	});
 
 	self.createProduct = function() {
@@ -41,7 +51,7 @@ var ProductContext = function() {
 				continue;
 
 			var supplierProductName = $(tr)
-					.find("[st='supplier-product-name']").val();
+				.find("[st='supplier-product-name']").val();
 			var supplierCost = $(tr).find("[st='supplier-cost']").val();
 
 			var landDay = $(tr).find("[st='land-day']").val();
@@ -52,13 +62,13 @@ var ProductContext = function() {
 			var sendType = $(tr).find("[st='send-type']").val();
 
 			var current = '{"supplier_index":"' + index
-					+ '","supplier_employee_pk":"' + supplierEmployeePk
-					+ '","supplier_product_name":"' + supplierProductName
-					+ '","supplier_cost":"' + supplierCost + '","land_day":"'
-					+ landDay + '","pick_type":"' + pickType + '","picker":"'
-					+ picker + '","picker_cellphone":"' + pickerCellphone
-					+ '","off_day":"' + offDay + '","send_type":"' + sendType
-					+ '"}';
+				+ '","supplier_employee_pk":"' + supplierEmployeePk
+				+ '","supplier_product_name":"' + supplierProductName
+				+ '","supplier_cost":"' + supplierCost + '","land_day":"'
+				+ landDay + '","pick_type":"' + pickType + '","picker":"'
+				+ picker + '","picker_cellphone":"' + pickerCellphone
+				+ '","off_day":"' + offDay + '","send_type":"' + sendType
+				+ '"}';
 			if (i == trs.length - 1) {
 				json += current + ']';
 			} else {
@@ -69,20 +79,20 @@ var ProductContext = function() {
 		var data = $("form").serialize();
 		data += "&json=" + json;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'product/createProduct',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'product/createProduct',
+			data: data
 		}).success(
-				function(str) {
+			function(str) {
+				endLoadingIndicator();
+				if (str == "success") {
+					window.location.href = self.apiurl
+						+ "templates/product/product.jsp";
+				} else if (str == "exists") {
+					fail_msg("产品库中存在同名产品！");
 					endLoadingIndicator();
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product.jsp";
-					} else if (str == "exists") {
-						fail_msg("产品库中存在同名产品！");
-						endLoadingIndicator();
-					}
-				});
+				}
+			});
 
 	};
 
@@ -96,19 +106,19 @@ var ProductContext = function() {
 
 		var data = "json=" + json;
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'product/saveProductSupplier',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'product/saveProductSupplier',
+			data: data
 		}).success(
-				function(str) {
-					endLoadingIndicator();
-					if (str == "success") {
-						window.location.href = self.apiurl
-								+ "templates/product/product-upkeep.jsp";
-					} else {
-						fail_msg(str);
-					}
-				});
+			function(str) {
+				endLoadingIndicator();
+				if (str == "success") {
+					window.location.href = self.apiurl
+						+ "templates/product/product-upkeep.jsp";
+				} else {
+					fail_msg(str);
+				}
+			});
 
 	}
 
@@ -128,36 +138,36 @@ var ProductContext = function() {
 			var current_div = all_divs[i];
 
 			var supplier_pk = $(current_div).find(':input[st="supplier-pk"]')
-					.val();
+				.val();
 
 			var supplier_product_name = $(current_div).find(
-					':input[st="supplier-product-name"]').val();
+				':input[st="supplier-product-name"]').val();
 
 			var supplier_product_days = $(current_div).find(
-					':input[st="supplier-product-days"]').val();
+				':input[st="supplier-product-days"]').val();
 
 			var adult_cost = $(current_div).find(':input[st="adult-cost"]')
-					.val();
+				.val();
 			var child_cost = $(current_div).find(':input[st="child-cost"]')
-					.val();
+				.val();
 
 			var tourist_info = '';
 			$(current_div).find('input[name="chk_tourist"]:checked').each(
-					function(i) {
-						tourist_info += $(this).val() + ";";
-					});
+				function(i) {
+					tourist_info += $(this).val() + ";";
+				});
 
 			var confirm_file_templet = $(current_div).find(
-					'input[st="confirm-file-templet"]').val();
+				'input[st="confirm-file-templet"]').val();
 
 			one_json += '{"supplier_index":"' + i + '",' + '"supplier_pk":"'
-					+ supplier_pk + '",' + '"supplier_product_name":"'
-					+ supplier_product_name + '",'
-					+ '"supplier_product_days":"' + supplier_product_days
-					+ '",' + '"adult_cost":"' + adult_cost + '",'
-					+ '"child_cost":"' + child_cost + '",' + '"tourist_info":"'
-					+ tourist_info + '",' + '"confirm_file_templet":"'
-					+ confirm_file_templet + '",';
+				+ supplier_pk + '",' + '"supplier_product_name":"'
+				+ supplier_product_name + '",'
+				+ '"supplier_product_days":"' + supplier_product_days
+				+ '",' + '"adult_cost":"' + adult_cost + '",'
+				+ '"child_cost":"' + child_cost + '",' + '"tourist_info":"'
+				+ tourist_info + '",' + '"confirm_file_templet":"'
+				+ confirm_file_templet + '",';
 
 			one_json += '"info_json":';
 
@@ -177,62 +187,62 @@ var ProductContext = function() {
 				var info_index = j / 3;
 
 				var pick_type = $(tr_min).find(
-						':radio[name^="radio-jie"]:checked').val();
+					':radio[name^="radio-jie"]:checked').val();
 				var pick_leg, pick_other;
 
 				if (pick_type == "0") {
 					pick_leg = $(tr_min).find(':input[st="txt-jie-type-0"]')
-							.val();
+						.val();
 					pick_other = "";
 				} else {
 					pick_other = $(tr_min).find(':input[st="txt-jie-type-1"]')
-							.val();
+						.val();
 					pick_leg = "";
 				}
 
 				var pick_day = $(tr_min).find(':input[st="day"]').val();
 				var pick_traffic = $(tr_min).find(':input[st="traffic-tool"]')
-						.val();
+					.val();
 				var pick_time = $(tr_min).find(':input[st="time"]').val();
 				var pick_city = $(tr_min).find(':input[st="city"]').val();
 				var pick_place = $(tr_min).find(':input[st="place"]').val();
 
 				var send_type = $(tr_add).find(
-						':radio[name^="radio-song"]:checked').val();
+					':radio[name^="radio-song"]:checked').val();
 				var send_leg, send_other;
 
 				if (send_type == "0") {
 					send_leg = $(tr_add).find(':input[st="txt-song-type-0"]')
-							.val();
+						.val();
 					send_other = "";
 				} else {
 					send_other = $(tr_add).find(':input[st="txt-song-type-1"]')
-							.val();
+						.val();
 					send_leg = "";
 				}
 
 				var send_day = $(tr_add).find(':input[st="day"]').val();
 				var send_traffic = $(tr_add).find(':input[st="traffic-tool"]')
-						.val();
+					.val();
 				var send_time = $(tr_add).find(':input[st="time"]').val();
 				var send_city = $(tr_add).find(':input[st="city"]').val();
 				var send_place = $(tr_add).find(':input[st="place"]').val();
 
 				two_json += '{';
 				two_json += '"info_index":"' + info_index + '",'
-						+ '"pick_type":"' + pick_type + '",' + '"pick_leg":"'
-						+ pick_leg + '",' + '"pick_other":"' + pick_other
-						+ '",' + '"pick_day":"' + pick_day + '",'
-						+ '"pick_traffic":"' + pick_traffic + '",'
-						+ '"pick_time":"' + pick_time + '",' + '"pick_city":"'
-						+ pick_city + '",' + '"pick_place":"' + pick_place
-						+ '",' + '"send_type":"' + send_type + '",'
-						+ '"send_leg":"' + send_leg + '",' + '"send_other":"'
-						+ send_other + '",' + '"send_day":"' + send_day + '",'
-						+ '"send_traffic":"' + send_traffic + '",'
-						+ '"send_time":"' + send_time + '",' + '"send_city":"'
-						+ send_city + '",' + '"send_place":"' + send_place
-						+ '"';
+					+ '"pick_type":"' + pick_type + '",' + '"pick_leg":"'
+					+ pick_leg + '",' + '"pick_other":"' + pick_other
+					+ '",' + '"pick_day":"' + pick_day + '",'
+					+ '"pick_traffic":"' + pick_traffic + '",'
+					+ '"pick_time":"' + pick_time + '",' + '"pick_city":"'
+					+ pick_city + '",' + '"pick_place":"' + pick_place
+					+ '",' + '"send_type":"' + send_type + '",'
+					+ '"send_leg":"' + send_leg + '",' + '"send_other":"'
+					+ send_other + '",' + '"send_day":"' + send_day + '",'
+					+ '"send_traffic":"' + send_traffic + '",'
+					+ '"send_time":"' + send_time + '",' + '"send_city":"'
+					+ send_city + '",' + '"send_place":"' + send_place
+					+ '"';
 
 				if (j == trs.length - 2) {
 					two_json += '}';
@@ -281,16 +291,16 @@ var ProductContext = function() {
 	self.refreshSupplier = function() {
 		var param = "employee.name=" + $("#supplier_name").val();
 		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+			+ self.perPage;
 		$
-				.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
-						function(data) {
-							self.supplierEmployees(data.employees);
+			.getJSON(self.apiurl + 'supplier/searchEmployeeByPage', param,
+				function(data) {
+					self.supplierEmployees(data.employees);
 
-							self.totalCount(Math.round(data.page.total
-									/ self.perPage));
-							self.setPageNums(self.currentPage());
-						});
+					self.totalCount(Math.round(data.page.total
+						/ self.perPage));
+					self.setPageNums(self.currentPage());
+				});
 	};
 
 	self.searchSupplierEmployee = function() {
@@ -337,7 +347,7 @@ var ProductContext = function() {
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
 		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+			.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -354,23 +364,24 @@ var ProductContext = function() {
 var ctx = new ProductContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
+	inputFormatFromToTime("div-supplier");
 });
 var currentSupplier;
 var supplierEmployeeLayer;
 function choseSupplierEmployee(event) {
 	supplierEmployeeLayer = $.layer({
-		type : 1,
-		title : ['选择供应商操作', ''],
-		maxmin : false,
-		closeBtn : [1, true],
-		shadeClose : false,
-		area : ['600px', '650px'],
-		offset : ['50px', ''],
-		scrollbar : true,
-		page : {
-			dom : '#supplier-pick'
+		type: 1,
+		title: ['选择供应商操作', ''],
+		maxmin: false,
+		closeBtn: [1, true],
+		shadeClose: false,
+		area: ['600px', '650px'],
+		offset: ['50px', ''],
+		scrollbar: true,
+		page: {
+			dom: '#supplier-pick'
 		},
-		end : function() {
+		end: function() {
 			console.log("Done");
 		}
 	});
@@ -383,43 +394,43 @@ function addRow(btn) {
 	var timestamp = (new Date()).getTime();
 
 	var tr_min = $('<tr>'
-			+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
-			+ '<td class="r">接：</td>'
-			+ '<td><input name="radio-jie-'
-			+ timestamp
-			+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0"/></td>'
-			+ '<td><input name="radio-jie-'
-			+ timestamp
-			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
-			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>');
+		+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
+		+ '<td class="r">接：</td>'
+		+ '<td><input name="radio-jie-'
+		+ timestamp
+		+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
+		+ '<td><input class="required" type="text" maxlength="1" st="txt-jie-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"/></td>'
+		+ '<td><input name="radio-jie-'
+		+ timestamp
+		+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
+		+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
+		+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
+		+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
+		+ '<td><input class="required from-to-time" placeholder="12:01--23:20" type="text" maxlength="12" st="time"/></td>'
+		+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
+		+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
+		+ '</tr>');
 	var tr_add = $('<tr>'
-			+ '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
-			+ '<td class="r">送：</td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
-			+ '" checked="checked" st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)"/>航段</td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="txt-song-type-0"/></td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
-			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
-			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>');
+		+ '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
+		+ '<td class="r">送：</td>'
+		+ '<td><input name="radio-song-'
+		+ timestamp
+		+ '" checked="checked" st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)"/>航段</td>'
+		+ '<td><input class="required" type="text" maxlength="1" st="txt-song-type-0"  oninput="fillFlight()" placeholder="输入航段自动填写"/></td>'
+		+ '<td><input name="radio-song-'
+		+ timestamp
+		+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
+		+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
+		+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
+		+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
+		+ '<td><input class="required from-to-time" placeholder="12:01--23:20" type="text" maxlength="12" st="time"/></td>'
+		+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
+		+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
+		+ '</tr>');
 
 	var tr_line = $('<tr>'
-			+ '<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>'
-			+ '</tr>');
+		+ '<td colspan="11"><hr style="width: 100%; text-align: center; vertical-align: middle" /></td>'
+		+ '</tr>');
 
 	tr_current.after(tr_line);
 	tr_line.after(tr_min);
@@ -442,110 +453,110 @@ function deleteRow(btn) {
 function addSupplier() {
 	var timestamp = (new Date()).getTime();
 	var div_supplier = $('<div><div class="input-row clearfloat">'
-			+ '<div class="col-md-3 required">'
-			+ '<label class="l" style="width: 70px !important">地接社</label>'
-			+ '<div class="fix-width1">'
-			+ '<input type="text" class="ip-" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"'
-			+ 'class="need" st="supplier-pk" style="display: none" />'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-3 required">'
-			+ '<label class="l" style="width: 70px !important">产品名称</label>'
-			+ '<div class="fix-width1">'
-			+ '<input type="text" class="ip-" st="supplier-product-name"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-2 required">'
-			+ '<label class="l" style="width: 70px !important">天数</label>'
-			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-" st="supplier-product-days"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-2 required">'
-			+ '<label class="l" style="width: 70px !important">成人</label>'
-			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-" st="adult-cost"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-2 required">'
-			+ '<label class="l" style="width: 70px !important">儿童</label>'
-			+ '<div class="ip" style="width: 50% !important">'
-			+ '<input type="number" class="ip-"  st="child-cost"/>'
-			+ '</div>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div style="margin-top: 20px; padding-left: 70px">'
-			+ '<table style="width: 90%" class="table-supplier">'
-			+ '<thead>'
-			+ '<tr class="required">'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 10%"></th>'
-			+ '<th style="width: 5%"></th>'
-			+ '<th style="width: 10%"></th>'
-			+ '<th class="r" style="width: 10%">天次</th>'
-			+ '<th class="r" style="width: 10%">交通工具</th>'
-			+ '<th class="r" style="width: 10%">抵离时间</th>'
-			+ '<th class="r" style="width: 10%">抵离城市</th>'
-			+ '<th class="r" style="width: 10%">抵离地点</th>'
-			+ '</tr>'
-			+ '</thead>'
-			+ '<tbody st="t-body">'
-			+ '<tr>'
-			+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
-			+ '<td class="r">接：</td>' + '<td><input name="radio-jie-'
-			+ timestamp
-			+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="txt-jie-type-0"/></td>'
-			+ '<td><input name="radio-jie-'
-			+ timestamp
-			+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
-			+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>'
-			+ '<tr>'
-			+ '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
-			+ '<td class="r">送：</td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
-			+ '" checked="checked" st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)"/>航段</td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="txt-song-type-0"/></td>'
-			+ '<td><input name="radio-song-'
-			+ timestamp
-			+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
-			+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
-			+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
-			+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="time"/></td>'
-			+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
-			+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
-			+ '</tr>'
-			+ '</tbody>'
-			+ '</table>'
-			+ '</div>'
-			+ '<div class="input-row clearfloat">'
-			+ '<div class="col-md-6">'
-			+ '<label class="l" style="width: 70px !important">游客信息：</label>'
-			+ '<div class="ip">'
-			+ '<div style="padding-top: 4px;">'
-			+ '<em class="small-box"> <input type="checkbox" checked="checked" name="chk_tourist" value="name"/><label>姓名</label> <input '
-			+ 'type="checkbox" checked="checked" name="chk_tourist" value="sex"/><label>性别</label> <input type="checkbox" '
-			+ 'name="chk_tourist" value="age"/><label>年龄</label> <input type="checkbox" name="chk_tourist" value="id"/><label>身份证号码</label> <input '
-			+ 'type="checkbox" checked="checked" name="chk_tourist" value="tel"/><label>联系方式</label> <input type="checkbox" '
-			+ 'name="chk_tourist" value="room_group"/><label>分房组</label>'
-			+ '</em>'
-			+ '</div>'
-			+ '</div>'
-			+ '</div>'
-			+ '<div class="col-md-3">'
-			+ '<div class="ip">'
-			+ '<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)"/></a> <input type="hidden" st="confirm-file-templet"/><span style="color: blue">默认模板</span>'
-			+ '</div></div></div><hr /></div>');
+		+ '<div class="col-md-3 required">'
+		+ '<label class="l" style="width: 70px !important">地接社</label>'
+		+ '<div class="fix-width1">'
+		+ '<input type="text" class="ip-" st="supplier-name" onclick="choseSupplierEmployee(event)" /> <input type="text"'
+		+ 'class="need" st="supplier-pk" style="display: none" />'
+		+ '</div>'
+		+ '</div>'
+		+ '<div class="col-md-3 required">'
+		+ '<label class="l" style="width: 70px !important">产品名称</label>'
+		+ '<div class="fix-width1">'
+		+ '<input type="text" class="ip-" st="supplier-product-name"/>'
+		+ '</div>'
+		+ '</div>'
+		+ '<div class="col-md-2 required">'
+		+ '<label class="l" style="width: 70px !important">天数</label>'
+		+ '<div class="ip" style="width: 50% !important">'
+		+ '<input type="number" class="ip-" st="supplier-product-days"/>'
+		+ '</div>'
+		+ '</div>'
+		+ '<div class="col-md-2 required">'
+		+ '<label class="l" style="width: 70px !important">成人</label>'
+		+ '<div class="ip" style="width: 50% !important">'
+		+ '<input type="number" class="ip-" st="adult-cost"/>'
+		+ '</div>'
+		+ '</div>'
+		+ '<div class="col-md-2 required">'
+		+ '<label class="l" style="width: 70px !important">儿童</label>'
+		+ '<div class="ip" style="width: 50% !important">'
+		+ '<input type="number" class="ip-"  st="child-cost"/>'
+		+ '</div>'
+		+ '</div>'
+		+ '</div>'
+		+ '<div style="margin-top: 20px; padding-left: 70px">'
+		+ '<table style="width: 90%" class="table-supplier">'
+		+ '<thead>'
+		+ '<tr class="required">'
+		+ '<th style="width: 5%"></th>'
+		+ '<th style="width: 5%"></th>'
+		+ '<th style="width: 5%"></th>'
+		+ '<th style="width: 10%"></th>'
+		+ '<th style="width: 5%"></th>'
+		+ '<th style="width: 10%"></th>'
+		+ '<th class="r" style="width: 10%">天次</th>'
+		+ '<th class="r" style="width: 10%">交通工具</th>'
+		+ '<th class="r" style="width: 10%">抵离时间</th>'
+		+ '<th class="r" style="width: 10%">抵离城市</th>'
+		+ '<th class="r" style="width: 10%">抵离地点</th>'
+		+ '</tr>'
+		+ '</thead>'
+		+ '<tbody st="t-body">'
+		+ '<tr>'
+		+ '<td><input type="button" value="-" onclick="deleteRow(this)" /></td>'
+		+ '<td class="r">接：</td>' + '<td><input name="radio-jie-'
+		+ timestamp
+		+ '" checked="checked" type="radio" st="radio-jie-0" value="0" onclick="changeJieSongType(this)"/>航段</td>'
+		+ '<td><input class="required" type="text" maxlength="1" st="txt-jie-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"/></td>'
+		+ '<td><input name="radio-jie-'
+		+ timestamp
+		+ '" type="radio" st="radio-jie-1" value="1" onclick="changeJieSongType(this)"/>其他</td>'
+		+ '<td><input type="text"  maxlength="10" st="txt-jie-type-1" disabled="disabled"/></td>'
+		+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
+		+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
+		+ '<td><input class="required from-to-time" type="text" maxlength="12" placeholder="12:01--23:20" st="time"/></td>'
+		+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
+		+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
+		+ '</tr>'
+		+ '<tr>'
+		+ '<td><input type="button" value="+" onclick="addRow(this)" /></td>'
+		+ '<td class="r">送：</td>'
+		+ '<td><input name="radio-song-'
+		+ timestamp
+		+ '" checked="checked" st="radio-song-0" type="radio" value="0" onclick="changeJieSongType(this)"/>航段</td>'
+		+ '<td><input class="required" type="text" maxlength="1" st="txt-song-type-0" oninput="fillFlight()" placeholder="输入航段自动填写"/></td>'
+		+ '<td><input name="radio-song-'
+		+ timestamp
+		+ '" type="radio" value="1" st="radio-song-0" onclick="changeJieSongType(this)"/>其他</td>'
+		+ '<td><input type="text"  maxlength="10" st="txt-song-type-1" disabled="disabled"/></td>'
+		+ '<td><input class="required" type="number" maxlength="2" st="day"/></td>'
+		+ '<td><input class="required" type="text" maxlength="10" st="traffic-tool"/></td>'
+		+ '<td><input class="required from-to-time" type="text" maxlength="12" placeholder="12:01--23:20" st="time"/></td>'
+		+ '<td><input class="required" type="text" maxlength="15" st="city"/></td>'
+		+ '<td><input class="required" type="text" maxlength="30" st="place"/></td>'
+		+ '</tr>'
+		+ '</tbody>'
+		+ '</table>'
+		+ '</div>'
+		+ '<div class="input-row clearfloat">'
+		+ '<div class="col-md-6">'
+		+ '<label class="l" style="width: 70px !important">游客信息：</label>'
+		+ '<div class="ip">'
+		+ '<div style="padding-top: 4px;">'
+		+ '<em class="small-box"> <input type="checkbox" checked="checked" name="chk_tourist" value="name"/><label>姓名</label> <input '
+		+ 'type="checkbox" checked="checked" name="chk_tourist" value="sex"/><label>性别</label> <input type="checkbox" '
+		+ 'name="chk_tourist" value="age"/><label>年龄</label> <input type="checkbox" name="chk_tourist" value="id"/><label>身份证号码</label> <input '
+		+ 'type="checkbox" checked="checked" name="chk_tourist" value="tel"/><label>联系方式</label> <input type="checkbox" '
+		+ 'name="chk_tourist" value="room_group"/><label>分房组</label>'
+		+ '</em>'
+		+ '</div>'
+		+ '</div>'
+		+ '</div>'
+		+ '<div class="col-md-3">'
+		+ '<div class="ip">'
+		+ '<a href="javascript:;" class="a-upload">上传确认件<input type="file" onchange="changeFile(this)"/></a> <input type="hidden" st="confirm-file-templet"/><span style="color: blue">默认模板</span>'
+		+ '</div></div></div><hr /></div>');
 	$('#div-supplier').append(div_supplier);
 }
 function deleteSupplier() {
@@ -566,11 +577,13 @@ function changeJieSongType(ra) {
 		$(txt0).addClass("required");
 		$(txt1).attr("disabled", true);
 		$(txt1).removeClass("required");
+		$(txt1).val('');
 	} else {
 		$(txt1).attr("disabled", false);
 		$(txt1).addClass("required");
 		$(txt0).attr("disabled", true);
 		$(txt0).removeClass("required");
+		$(txt0).val('');
 	}
 }
 /**
@@ -590,3 +603,37 @@ function caculateOtherCost() {
 	$("#local-adult-cost").val(sum);
 	caculateGrossProfit();
 }
+function isLetter(v) {
+	const regex = /^[A-Za-z]+$/; // 正则表达式，匹配只包含一个或多个字母的字符串
+	return regex.test(v);
+}
+function fillFlight() {
+	let txt = event.target;
+	let txt_value = $(txt).val().trim().toUpperCase();
+	if (isLetter(txt_value)) {
+		$(txt).val(txt_value);
+	} else {
+		$(txt).val(txt_value.slice(0, -1));
+	}
+	let flight_info;
+
+	for (const info of ctx.airTickets()) {
+		if (txt_value === alphabetMap[info.ticket_index]) {
+			flight_info = info;
+		}
+	}
+
+	let a, b, c = '';
+	if (flight_info) {
+		a = flight_info.start_day
+		b = '飞机';
+		c = flight_info.start_city + '--' + flight_info.end_city;
+	}
+
+	let tr = $(txt).parent().parent();
+
+	$(tr).find(':input[st="day"]').val(a);
+	$(tr).find(':input[st="traffic-tool"]').val(b);
+	$(tr).find(':input[st="city"]').val(c);
+}
+

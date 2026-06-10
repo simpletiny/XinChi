@@ -2,26 +2,13 @@ var ReimbursementContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 
-	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'P', 'B', 'E', 'K', 'G', 'C', 'Q']);
-	self.itemMapping = {
-		'X' : '销售费用',
-		'H' : '客情费用',
-		'J' : '产品费用',
-		'T' : '唯品费',
-		'P' : '票务费用',
-		'B' : '办公费用',
-		'E' : '招待费',
-		'K' : '差旅费用',
-		'G' : '个人工资',
-		'C' : '分红分润',
-		'Q' : '其它支出'
-	};
+	self.items = ko.observableArray(['X', 'H', 'J', 'T', 'A', 'B', 'E', 'K', 'G', 'C', 'S', 'I', 'Q']);
 
 	self.statusMapping = {
-		'I' : '待审批',
-		'Y' : '待支付',
-		'N' : '已驳回',
-		'P' : '已入账'
+		'I': '待审批',
+		'Y': '待支付',
+		'N': '已驳回',
+		'P': '已入账'
 	};
 	// 申请人信息
 	self.sales = ko.observableArray([]);
@@ -74,19 +61,19 @@ var ReimbursementContext = function() {
 				data += "reimbursement_pks=" + rei.pk + "&";
 			}
 			$.layer({
-				area : ['auto', 'auto'],
-				dialog : {
-					msg : '确认要删除这些费用数据吗？',
-					btns : 2,
-					type : 4,
-					btn : ['确认', '取消'],
-					yes : function(index) {
+				area: ['auto', 'auto'],
+				dialog: {
+					msg: '确认要删除这些费用数据吗？',
+					btns: 2,
+					type: 4,
+					btn: ['确认', '取消'],
+					yes: function(index) {
 						layer.close(index);
 						startLoadingIndicator("删除中！");
 						$.ajax({
-							type : "POST",
-							url : self.apiurl + 'accounting/deleteReibursement',
-							data : data
+							type: "POST",
+							url: self.apiurl + 'accounting/deleteReibursement',
+							data: data
 						}).success(function(str) {
 							endLoadingIndicator();
 							if (str == "success") {
@@ -107,20 +94,38 @@ var ReimbursementContext = function() {
 		window.location.href = self.apiurl + "templates/accounting/reimbursement-creation.jsp";
 	};
 
-	self.viewRejectReason = function(back_pk) {
-		var data = "back_pk=" + back_pk;
+	self.update = function() {
+		if (self.chosenReimbursements().length == 0) {
+			fail_msg("请选择要删除的数据！");
+		} else if (self.chosenReimbursements().length > 1) {
+			fail_msg("重新申报只能选择一条数据！");
+		} else {
+			let status = self.chosenReimbursements()[0].status;
+			if (status !== 'N') {
+				fail_msg("只能选择被驳回的申请！")
+				return;
+			}
+			let pk = self.chosenReimbursements()[0].pk;
+			window.location.href = self.apiurl + "templates/accounting/reimbursement-edit.jsp?key=" + pk;
+		}
+	}
 
+	self.viewRejectReason = function(back_pk) {
+		startLoadingSimpleIndicator("加载中...");
+		var data = "back_pk=" + back_pk;
+	
 		$.ajax({
-			type : "POST",
-			url : self.apiurl + 'accounting/searchRejectReason',
-			data : data
+			type: "POST",
+			url: self.apiurl + 'accounting/searchRejectReason',
+			data: data
 		}).success(function(str) {
+			endLoadingIndicator();
 			success_msg(str);
 		});
 	}
 	// start pagination
 	self.currentPage = ko.observable(1);
-	self.perPage = 20;
+	self.perPage = 50;
 	self.pageNums = ko.observableArray();
 	self.totalCount = ko.observable(1);
 	self.startIndex = ko.computed(function() {

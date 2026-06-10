@@ -11,6 +11,8 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.css?v1.001" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/jquery-ui.css" />
 <style>
 .form-group {
 	margin-bottom: 5px;
@@ -19,27 +21,33 @@
 .form-control {
 	height: 30px;
 }
+
+.detail-header .title {
+	color: #6fa8dc;
+	margin-left: 20px;
+}
+
+.detail-header .content {
+	margin-left: 10px;
+}
 </style>
 </head>
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>已操作订单</h2>
+			<h2>已出票订单</h2>
 		</div>
 
 		<div class="main-container">
 			<div class="main-box">
-				<!-- 	<div style="width: 30%; float: right">
-							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">锁定操作</button>
-							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
-						</div> -->
 				<form class="form-horizontal search-panel">
 					<!-- <div class="form-group">
 						<div style="width: 30%; float: right">
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder() }">生成待操作名单</button>
 						</div>
 					</div> -->
+					<input name="airTicketOrder.final_flg" type="hidden" value="N" />
 					<div class="form-group">
 						<div class="span6">
 							<label class="col-md-1 control-label">客户</label>
@@ -59,6 +67,9 @@
 								<input type="text" class="form-control" placeholder="产品" name="airTicketOrder.product_name" />
 							</div>
 						</div>
+						<div style="padding-top: 3px; float: right">
+							<button type="submit" class="btn btn-green col-md-1" data-bind="click: finalOrder">决算订单</button>
+						</div>
 					</div>
 					<div class="form-group">
 						<div align="left">
@@ -72,7 +83,22 @@
 								<input type="text" class="form-control date-picker" placeholder="to" name="airTicketOrder.date_to" />
 							</div>
 						</div>
-						<div style="padding-top: 3px;">
+
+					</div>
+					<div class="form-group">
+						<div class="span6">
+							<label class="col-md-1 control-label">首航段</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" placeholder="首航段" name="airTicketOrder.first_from_to" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">首航月份</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control month-picker-st" placeholder="首航月份" name="airTicketOrder.first_month" />
+							</div>
+						</div>
+						<div style="padding-top: 3px; float: right">
 							<button type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
 						</div>
 					</div>
@@ -95,7 +121,7 @@
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr style="overflow: hidden">
-								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenOrders" /></td>
+								<td><input type="checkbox" data-bind="checkedValue: $data, checked: $root.chosenOrders" /></td>
 								<td data-bind="text: $data.client_name"></td>
 								<!-- ko if: $data.cost_done_flg=="N" -->
 								<td style="color: red" data-bind="text: $data.ticket_cost"></td>
@@ -176,7 +202,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="passengers-check" style="display: none; width: 800px">
+	<div id="passengers-check" style="display: none; width: 800px; height: 450px; overflow-y: scroll;">
 		<div class="input-row clearfloat">
 			<div style="margin-top: 60px; height: 300px">
 				<table style="width: 100%" class="table table-striped table-hover">
@@ -198,11 +224,76 @@
 			</div>
 		</div>
 	</div>
+	<!-- 决算详情 -->
+	<div id="final-detail"
+		style="display: none; width: 1000px; height: 700px; overflow-y: scroll; padding-top: 30px; padding-bottom: 20px">
+		<div class="detail-header">
+			<span class="title">订单号</span><span class="content" data-bind="text:order().order_number"></span> <span class="title">机票款</span><span
+				class="content" data-bind="text:order().ticket_cost"></span> <span class="title">人数</span><span class="content"
+				data-bind="text:order().people_count"></span> <span class="title">首航段</span><span class="content"
+				data-bind="text:order().first_from_to"></span><span class="title">首航日期</span><span class="content"
+				data-bind="text:order().first_ticket_date"></span>
+		</div>
+		<hr />
+		<h3 style="padding-left: 40px">航段信息</h3>
+		<div class="input-row clearfloat">
+			<table style="width: 100%" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th style="width: 10%">航段</th>
+						<th style="width: 15%">日期</th>
+						<th style="width: 15%">起飞城市</th>
+						<th style="width: 15%">抵达城市</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach:airTickets">
+					<tr>
+						<td data-bind="text:$data.sort_index"></td>
+						<td data-bind="text:$data.date"></td>
+						<td data-bind="text:$data.from_city"></td>
+						<td data-bind="text:$data.to_city"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<hr />
+		<h3 style="padding-left: 40px">名单详情</h3>
+		<div class="input-row clearfloat">
+			<table style="width: 100%; margin-left: 30px; margin-top: 20px;" id="table-ticket-price">
+				<thead>
+					<tr>
+						<th class="r" style="width: 10%">序号</th>
+						<th class="r" style="width: 20%">姓名</th>
+						<th class="r" style="width: 40%">证件号</th>
+						<th class="r" style="width: 10%">出票状态</th>
+						<th class="r" style="width: 20%">机票价格</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach:passengers">
+					<tr>
+						<td st="index" data-bind="text:$index()+1" />
+						<td data-bind="text:$data.name" />
+						<td data-bind="text:$data.id" />
+						<td data-bind="text:$root.statusMapping[$data.status]" />
+						<td data-bind="text:$data.ticket_cost" />
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<div style="padding-top: 3px; float: right">
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: cancelFinal">取消</button>
+			<button type="submit" class="btn btn-green col-md-1" data-bind="click: doFinal">决算</button>
+		</div>
+	</div>
 	<script>
 		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
 	</script>
+	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
+	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-order-done.js"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-order-done.js?v=1.001"></script>
 </body>
 </html>

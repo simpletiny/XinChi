@@ -20,4 +20,6 @@ public interface AirReceivedService extends BaseService {
 
 	public List<AirReceivedDetailBean> selectByParam(AirReceivedDetailBean option);
 
+	public List<AirReceivedDetailBean> selectByBusinessNumber(String business_number);
+
 }

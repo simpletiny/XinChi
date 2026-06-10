@@ -50,8 +50,9 @@ public class EmployeeAction extends BaseAction {
 	}
 
 	private String market_level;
+
 	public String setClientEmployeeLevel() {
-		resultStr  = employeeService.updateMarketLevel(employee_pks,market_level);
+		resultStr = employeeService.updateMarketLevel(employee_pks, market_level);
 		return SUCCESS;
 	}
 
@@ -98,6 +99,15 @@ public class EmployeeAction extends BaseAction {
 		if (null == rld) {
 			rld = new RelationLevelDto();
 		}
+		return SUCCESS;
+	}
+
+	private String financial_body_pk;
+
+	public String searchEmployeeByFinancialBodyPk() {
+		ClientEmployeeBean option = new ClientEmployeeBean();
+		option.setFinancial_body_pk(financial_body_pk);
+		employees = employeeService.getAllClientEmployeeByParam(option);
 		return SUCCESS;
 	}
 
@@ -316,5 +326,13 @@ public class EmployeeAction extends BaseAction {
 
 	public void setMarket_level(String market_level) {
 		this.market_level = market_level;
+	}
+
+	public String getFinancial_body_pk() {
+		return financial_body_pk;
+	}
+
+	public void setFinancial_body_pk(String financial_body_pk) {
+		this.financial_body_pk = financial_body_pk;
 	}
 }

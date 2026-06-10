@@ -1,63 +1,31 @@
 var salesLayer;
 var levelLayer;
 var commentLayer;
+var employeeLayer;
+let imgLayer;
 var CompanyContext = function() {
 	var self = this;
 	self.apiurl = $("#hidden_apiurl").val();
 	self.chosenCompanies = ko.observableArray([]);
 	self.createCompany = function() {
-		window.location.href = self.apiurl
-				+ "templates/client/company-creation.jsp";
+		window.location.href = self.apiurl + "templates/client/company-creation.jsp";
 	};
 	self.client = ko.observable({});
-	self.clientArea = [ '哈尔滨', '齐齐哈尔', '牡丹江', '佳木斯', '大庆', '鸡西', '绥化', '呼伦贝尔',
-			'伊春', '鹤岗', '双鸭山', '七台河', '黑河', '大兴安岭' ];
-	self.countyMapping = {
-		'哈尔滨' : [ '道里区', '南岗区', '道外区', '平房区', '松北区', '香坊区', '呼兰区', '阿城区',
-				'双城区', '哈西区', '开发区', '群力区', '尚志市', '五常市', '依兰县', '方正县', '宾县',
-				'巴彦县', '木兰县', '通河县', '延寿县' ],
-		'齐齐哈尔' : [ '齐齐哈尔' ],
-		'牡丹江' : [ '牡丹江' ],
-		'佳木斯' : [ '佳木斯' ],
-		'大庆' : [ '新村', '让胡路区', '萨尔图区', '龙凤区', '红岗区', '大同区', '肇州县', '肇源县',
-				'林甸县', '杜尔伯特县' ],
-		'鸡西' : [ '鸡西' ],
-		'绥化' : [ '绥化' ],
-		'呼伦贝尔' : [ '呼伦贝尔' ],
-		'伊春' : [ '伊春' ],
-		'鹤岗' : [ '鹤岗' ],
-		'双鸭山' : [ '双鸭山' ],
-		'黑河' : [ '黑河' ],
-		'大兴安岭' : [ '大兴安岭' ]
-	};
-	self.client().client_area = ko.observable();
-	self.client().client_county = ko.observable();
-
-	self.ter = function() {
-		$("#county").empty();
-		$("#county").append("<option value>--区县--</option>");
-		for (var i = 0; i < self.countyMapping[self.client().client_area()].length; i++) {
-			var value = self.countyMapping[self.client().client_area()][i];
-			$("#county").append(
-					"<option value='" + value + "'>" + value + "</option>");
-		}
-	};
-
 	self.clients = ko.observable({
 		total : 0,
 		items : []
 	});
-	self.storeTypes = [ '未知', '门店', '写字间', '其它 ' ];
-	self.mainBusinesses = [ '其它', '组团', '地接', '同业', '综合' ];
-	self.backLevels = [ '其它', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱' ];
-	self.marketLevels = [ '未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级' ];
-	self.status = [ 'N', 'Y' ];
-	self.talkLevels = [ '核心', '主力', '市场', '排斥' ];
+	self.storeTypes = ['未知', '门店', '写字间', '其它 '];
+	self.mainBusinesses = ['其它', '组团', '地接', '同业', '综合'];
+	self.backLevels = ['其它', '立即', '及时', '拖拉', '费劲', '定期', '垃圾', '布莱'];
+	self.marketLevels = ['未知', '主导级', '引领级', '普通级', '跟随级', '玩闹级'];
+	self.status = ['N', 'Y'];
+	self.talkLevels = ['核心', '主力', '市场', '排斥'];
 	self.chosenTalkLevels = ko.observableArray([]);
-	self.chosenTalkLevels.push("核心");
-	self.chosenTalkLevels.push("主力");
-	self.chosenTalkLevels.push("市场");
-	self.chosenTalkLevels.push("排斥");
+// self.chosenTalkLevels.push("核心");
+// self.chosenTalkLevels.push("主力");
+// self.chosenTalkLevels.push("市场");
+// self.chosenTalkLevels.push("排斥");
 	self.statusMapping = {
 		'N' : '正常',
 		'Y' : '已停用'
@@ -69,7 +37,7 @@ var CompanyContext = function() {
 
 	self.chosenStatus = ko.observable('N');
 
-	self.relates = [ 'N', 'Y' ];
+	self.relates = ['N', 'Y'];
 	self.relatesMapping = {
 		'N' : '未关联',
 		'Y' : '已关联'
@@ -97,24 +65,17 @@ var CompanyContext = function() {
 		startLoadingSimpleIndicator("加载中");
 		var param = $("#form-search").serialize();
 
-		if ($(":radio[name='client.main_businesses']:checked").val() == "全部") {
-			param += "&client.main_businesses=组团&client.main_businesses=综合&client.main_businesses=地接&client.main_businesses=同业&client.main_businesses=其它";
-		}
 		if ($("input[name='client.public_flgs']:checked").val() == "A") {
 			param += "&client.public_flgs=Y&client.public_flgs=N";
 		}
 
-		$.getJSON(self.apiurl + 'client/searchClinetCount', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchClinetCount', param, function(data) {
 			self.clientCount(data.clientCount);
-			console.log(self.clientCount());
 		});
 
-		param += "&page.start=" + self.startIndex() + "&page.count="
-				+ self.perPage;
+		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 
-		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(
-				data) {
+		$.getJSON(self.apiurl + 'client/searchCompanyByPage', param, function(data) {
 			self.clients(data.clients);
 			$(".rmb").formatCurrency();
 
@@ -127,6 +88,11 @@ var CompanyContext = function() {
 
 	self.chkMainBusinessRad = function(data, event) {
 		$(":checkbox[name='client.main_businesses']").attr("checked", false);
+		self.refresh();
+		return true;
+	}
+	self.chkTalkLevelRad = function(data, event) {
+		$(":checkbox[name='client.talk_levels']").attr("checked", false);
 		self.refresh();
 		return true;
 	}
@@ -169,12 +135,12 @@ var CompanyContext = function() {
 
 			levelLayer = $.layer({
 				type : 1,
-				title : [ '客户评级', '' ],
+				title : ['客户评级', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '800px', '150px' ],
-				offset : [ '', '' ],
+				area : ['900px', '150px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#client-level'
@@ -216,12 +182,12 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '确认停用该财务主体吗?',
 					btns : 2,
 					type : 4,
-					btn : [ '确认', '取消' ],
+					btn : ['确认', '取消'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("停用中");
@@ -231,7 +197,9 @@ var CompanyContext = function() {
 							data : "company_pks=" + self.chosenCompanies()
 						}).success(function(str) {
 							if (str == "success") {
+							
 								self.refresh();
+								
 								self.chosenCompanies.removeAll();
 								endLoadingIndicator();
 							} else {
@@ -252,12 +220,12 @@ var CompanyContext = function() {
 			return;
 		} else {
 			$.layer({
-				area : [ 'auto', 'auto' ],
+				area : ['auto', 'auto'],
 				dialog : {
 					msg : '注意：删除财务主体，会将此财务主体下的客户一并删除。如果你知道自己在做什么，请点确认?',
 					btns : 2,
 					type : 7,
-					btn : [ '确认', '不了' ],
+					btn : ['确认', '不了'],
 					yes : function(index) {
 						layer.close(index);
 						startLoadingSimpleIndicator("删除中...");
@@ -281,6 +249,46 @@ var CompanyContext = function() {
 			});
 		}
 	};
+	/**
+	 * 公开财务主体
+	 */
+	self.publicCompany = function() {
+		if (self.chosenCompanies().length == 0) {
+			fail_msg("请选择财务主体");
+			return;
+		} else if (self.chosenCompanies().length > 1) {
+			fail_msg("只能选择一个财务主体");
+			return;
+		} else {
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '注意：公开财务主体，会将此财务主体下的客户资料转到“公开的财务主体”名下。确认要公开吗？',
+					btns : 2,
+					type : 7,
+					btn : ['确认', '不了'],
+					yes : function(index) {
+						layer.close(index);
+						startLoadingSimpleIndicator("更新中");
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'client/publicCompany',
+							data : "client_pk=" + self.chosenCompanies()
+						}).success(function(str) {
+							endLoadingIndicator();
+							if (str == "success") {
+								self.refresh();
+								self.chosenCompanies.removeAll();
+							} else {
+								fail_msg("操作失败，请联系管理员");
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
 	self.chosenUser = ko.observableArray([]);
 
 	/**
@@ -293,12 +301,12 @@ var CompanyContext = function() {
 		} else {
 			salesLayer = $.layer({
 				type : 1,
-				title : [ '修改财务主体销售', '' ],
+				title : ['修改财务主体销售', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '600px', '400px' ],
-				offset : [ '200px', '' ],
+				area : ['600px', '400px'],
+				offset : ['200px', ''],
 				scrollbar : true,
 				page : {
 					dom : '#edit-sale'
@@ -313,8 +321,7 @@ var CompanyContext = function() {
 		if (self.chosenUser().contains("public")) {
 			self.chosenUser.removeAll();
 			self.chosenUser.push("public");
-		}
-		;
+		};
 		return true;
 	}
 	self.doChangeSale = function() {
@@ -324,19 +331,18 @@ var CompanyContext = function() {
 		}
 
 		$.layer({
-			area : [ 'auto', 'auto' ],
+			area : ['auto', 'auto'],
 			dialog : {
 				msg : '确认将选中的财务主体移至新销售名下吗?',
 				btns : 2,
 				type : 4,
-				btn : [ '确认', '取消' ],
+				btn : ['确认', '取消'],
 				yes : function(index) {
 					layer.close(index);
 					var data = {
 						company_pks : self.chosenCompanies(),
 						sale_pks : self.chosenUser()
 					};
-					console.log(data.sale_pks);
 					startLoadingSimpleIndicator("转移中...");
 					$.ajax({
 						type : "POST",
@@ -359,9 +365,79 @@ var CompanyContext = function() {
 		});
 	};
 
+	self.keepMySide = function() {
+		let user_pk = $("#user-pk").val();
+		$.layer({
+			area : ['auto', 'auto'],
+			dialog : {
+				msg : '确认将选中的财务主体移至自己名下吗?',
+				btns : 2,
+				type : 4,
+				btn : ['确认', '取消'],
+				yes : function(index) {
+					layer.close(index);
+					var data = {
+						company_pks : self.chosenCompanies(),
+						sale_pks : user_pk
+					};
+					startLoadingSimpleIndicator("转移中...");
+					$.ajax({
+						type : "POST",
+						url : self.apiurl + 'client/changeClientSales',
+						traditional : true,
+						data : data
+					}).success(function(str) {
+						endLoadingIndicator();
+						if (str == "success") {
+							layer.close(salesLayer);
+							self.refresh();
+							self.chosenCompanies.removeAll();
+						} else {
+							fail_msg("转移失败，请联系管理员！");
+						}
+					});
+				}
+			}
+		});
+	};
+
 	self.doCancelChangeSale = function() {
 		layer.close(salesLayer);
 	};
+
+	self.employees = ko.observableArray([]);
+	self.checkEmployee = function(data) {
+
+		$.getJSON(self.apiurl + 'client/searchEmployeeByFinancialBodyPk', {
+			financial_body_pk : data.pk
+		}, function(data) {
+			if (data.employees) {
+				self.employees(data.employees);
+			} else {
+				fail_msg("不存在客户员工！");
+			}
+			employeeLayer = $.layer({
+				type : 1,
+				title : ['客户员工详情', ''],
+				maxmin : false,
+				closeBtn : [1, true],
+				shadeClose : false,
+				area : ['500px', '450px'],
+				offset : ['200px', ''],
+				scrollbar : true,
+				page : {
+					dom : '#employee-detail'
+				},
+				end : function() {
+
+				}
+			});
+
+		}).fail(function(reason) {
+			fail_msg(reason.responseText);
+		});
+
+	}
 
 	self.search = function() {
 
@@ -379,9 +455,7 @@ var CompanyContext = function() {
 			fail_msg("编辑只能选中一个");
 			return;
 		} else if (self.chosenCompanies().length == 1) {
-			window.location.href = self.apiurl
-					+ "templates/client/company-edit.jsp?key="
-					+ self.chosenCompanies()[0];
+			window.location.href = self.apiurl + "templates/client/company-edit.jsp?key=" + self.chosenCompanies()[0];
 		}
 	};
 	self.company = ko.observable({});
@@ -393,12 +467,12 @@ var CompanyContext = function() {
 			self.company(data.client);
 			commentLayer = $.layer({
 				type : 1,
-				title : [ '备注', '' ],
+				title : ['备注', ''],
 				maxmin : false,
-				closeBtn : [ 1, true ],
+				closeBtn : [1, true],
 				shadeClose : false,
-				area : [ '500px', '300px' ],
-				offset : [ '', '' ],
+				area : ['500px', '300px'],
+				offset : ['', ''],
 				scrollbar : true,
 				page : {
 					dom : '#comment-edit'
@@ -436,6 +510,38 @@ var CompanyContext = function() {
 		});
 	};
 
+	self.checkOutImg = function(data) {
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'client/searchOneCompany', {
+			client_pk : data.pk
+		}, function(data) {
+			if (data.client) {
+				downloadImg(data.client,"O");
+			} else {
+				fail_msg("公司不存在！");
+			}
+			endLoadingIndicator();
+		}).fail(function(reason) {
+			console.log(reason.responseText);
+		});
+	}
+
+	self.checkInImg = function(data) {
+		startLoadingSimpleIndicator("加载中");
+		$.getJSON(self.apiurl + 'client/searchOneCompany', {
+			client_pk : data.pk
+		}, function(data) {
+			if (data.client) {
+				downloadImg(data.client,"I");
+			} else {
+				fail_msg("公司不存在！");
+			}
+			endLoadingIndicator();
+		}).fail(function(reason) {
+			console.log(reason.responseText);
+		});
+	}
+
 	// start pagination
 	self.currentPage = ko.observable(1);
 	self.perPage = 100;
@@ -470,8 +576,7 @@ var CompanyContext = function() {
 
 	self.setPageNums = function(curPage) {
 		var startPage = curPage - 4 > 0 ? curPage - 4 : 1;
-		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self
-				.totalCount();
+		var endPage = curPage + 4 <= self.totalCount() ? curPage + 4 : self.totalCount();
 		var pageNums = [];
 		for (var i = startPage; i <= endPage; i++) {
 			pageNums.push(i);
@@ -491,3 +596,69 @@ $(document).ready(function() {
 	ko.applyBindings(ctx);
 	ctx.refresh();
 });
+function downloadImg(client,type) {
+	let title = type=="O"?"外环境":"内环境";
+	
+	imgLayer = $.layer({
+		type : 1,
+		title : [title, ''],
+		maxmin : false,
+		closeBtn : [1, true],
+		shadeClose : false,
+		area : ['1000px', '330px'],
+		offset : ['', ''],
+		scrollbar : true,
+		page : {
+			dom : '#check-img'
+		},
+		end : function() {
+
+		}
+	});
+	
+	let imgs = new Array();
+	for(const e of client.client_inouts){
+		if(e.img_type===type){
+			imgs.push(e);
+		}
+	}
+	for(const e of imgs){
+		let data = {
+			fileFileName :e.img_name,
+			fileType :"CLIENT_INOUT_IMG",
+			subFolder:e.client_pk
+		};
+		showImg(data);
+	}
+}
+
+function showImg(data){
+	let img_container = $("#img-container");
+	img_container.html('');
+	let params = new URLSearchParams(data).toString();
+	fetch(`${ctx.apiurl}file/getFileStream?${params}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // 创建一个 URL 对象
+        var url = URL.createObjectURL(blob);
+        
+        
+		let img_group = $("<div></div>")
+		let img = document.createElement("img");
+		img.src = url;
+		$(img).on(
+				'click',
+				function() {
+					showBigImg(url);
+				});
+		img_group.append(img);
+		img_container.append(img_group)
+    })
+    .catch(error => console.error('Error fetching image:', error));
+
+}

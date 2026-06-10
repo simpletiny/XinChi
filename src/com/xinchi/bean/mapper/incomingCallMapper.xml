@@ -11,6 +11,7 @@
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="visit_img" property="visit_img" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -23,7 +24,8 @@
 		create_user,
 		update_user,
 		create_time,
-		update_time
+		update_time,
+		visit_img
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -75,6 +77,9 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="visit_img != null">
+				visit_img,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="client_employee_pk != null">
@@ -103,6 +108,9 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="visit_img != null">
+				#{visit_img,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -134,6 +142,9 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="visit_img != null">
+				visit_img = #{visit_img,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

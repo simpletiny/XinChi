@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -15,6 +16,7 @@ import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseService;
 import com.xinchi.common.LogDescription;
@@ -68,9 +70,13 @@ public interface ClientRelationService extends BaseService {
 	public float caculateBackPoint(String user_pk);
 
 	public IncomingCountDto selectIncomingDate(String user_pk);
-	
+
 	public ClientRelationBean selectByEmployeePk(String employee_pk);
 
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
+
+	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean);
+
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option);
 
 }

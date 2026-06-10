@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -22,15 +24,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xinchi.backend.finance.dao.CardDAO;
 import com.xinchi.backend.finance.service.PaymentDetailService;
 import com.xinchi.backend.receivable.dao.AirReceivedDAO;
+import com.xinchi.backend.supplier.dao.DepositTicketPaidDAO;
 import com.xinchi.backend.supplier.dao.SupplierDAO;
 import com.xinchi.backend.supplier.dao.SupplierDepositDAO;
 import com.xinchi.backend.supplier.service.SupplierDepositService;
+import com.xinchi.backend.user.dao.UserDAO;
 import com.xinchi.backend.util.service.NumberService;
 import com.xinchi.bean.AirReceivedDetailBean;
 import com.xinchi.bean.CardBean;
+import com.xinchi.bean.DepositTicketPaidBean;
 import com.xinchi.bean.PaymentDetailBean;
 import com.xinchi.bean.SupplierBean;
 import com.xinchi.bean.SupplierDepositBean;
+import com.xinchi.bean.UserBaseBean;
 import com.xinchi.common.DBCommonUtil;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.FileFolder;
@@ -310,6 +316,10 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			Cell cell9 = row.getCell(colMapping.get("序号"));
 			int pay_index = (int) Float.parseFloat(SimpletinyExcel.getCellValueByCell(cell9));
 
+			// 责任人
+			Cell cell10 = row.getCell(colMapping.get("责任人"));
+			String responsible_user_name = SimpletinyExcel.getCellValueByCell(cell10);
+
 			comment = "成交编号：" + dealNum + ";" + "航段：" + airLeg + ";" + "航班日期：" + air_date + ";" + excelComment;
 
 			deposit.setAccount(account);
@@ -322,6 +332,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			deposit.setTime(payTime);
 
 			deposit.setPay_index(pay_index);
+			deposit.setResponsible_user_name(responsible_user_name);
 
 			deposits.add(deposit);
 		}
@@ -330,18 +341,99 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 	}
 
 	@Override
+	public List<SupplierDepositBean> batUploadBack(String file_name, String deposit_type) throws IOException {
+		List<SupplierDepositBean> deposits = new ArrayList<SupplierDepositBean>();
+
+		String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+		String tem_file = tempFolder + File.separator + file_name;
+		File excelFile = new File(tem_file);
+
+		BufferedInputStream fs = new BufferedInputStream(new FileInputStream(excelFile));
+		// 获得工作簿
+		@SuppressWarnings("resource")
+		XSSFWorkbook wb = new XSSFWorkbook(fs);
+
+		// 获得sheet
+		XSSFSheet sheet = wb.getSheetAt(0);
+		int rows = sheet.getPhysicalNumberOfRows();
+
+		// 获取标题行
+		XSSFRow titleRow = sheet.getRow(0);
+		int colnum = titleRow.getLastCellNum();
+		Map<String, Integer> colMapping = new HashMap<String, Integer>();
+
+		for (int i = 0; i < colnum; i++) {
+			Cell cell = titleRow.getCell(i);
+			String title = cell.getStringCellValue();
+			colMapping.put(title, i);
+		}
+		for (int i = 1; i < rows; i++) {
+			// 获取第i行
+			XSSFRow row = sheet.getRow(i);
+			if (row == null) {
+				continue;
+			}
+
+			// 押金单号
+			Cell cell1 = row.getCell(colMapping.get("押金单号"));
+			String deposit_number = SimpletinyExcel.getCellValueByCell(cell1);
+
+			if (SimpletinyString.isEmpty(deposit_number)) {
+				continue;
+			}
+			// 收款账户
+			Cell cell2 = row.getCell(colMapping.get("收款账户"));
+			String account = SimpletinyExcel.getCellValueByCell(cell2);
+
+			// 退还金额
+			Cell cell3 = row.getCell(colMapping.get("退还金额"));
+			String money = SimpletinyExcel.getCellValueByCell(cell3);
+
+			// 退还日期
+			Cell cell4 = row.getCell(colMapping.get("退还日期"));
+			String back_date = SimpletinyExcel.getCellValueByCell(cell4).substring(0, 10);
+
+			// 备注
+			Cell cell5 = row.getCell(colMapping.get("备注"));
+			String back_comment = SimpletinyExcel.getCellValueByCell(cell5);
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(deposit_number);
+			if (currentDeposit == null)
+				continue;
+
+			BigDecimal received = new BigDecimal(SimpletinyString.isNumeric(money) ? money : "0");
+
+			SupplierBean supplier = supplierDao.selectByPrimaryKey(currentDeposit.getSupplier_pk());
+			currentDeposit.setReceived(received);
+			currentDeposit.setTime(back_date);
+			currentDeposit.setAccount(account);
+
+			currentDeposit.setSupplier_pk(currentDeposit.getSupplier_pk());
+			currentDeposit.setSupplier_name(supplier.getSupplier_name());
+
+			currentDeposit.setBack_comment(back_comment);
+			deposits.add(currentDeposit);
+		}
+
+		excelFile.delete();
+		return deposits;
+	}
+
+	@Autowired
+	private UserDAO userDao;
+
+	@Override
 	public String batSaveDeposit(String json) {
-
 		JSONArray array = JSONArray.fromObject(json);
-
 		Map<String, String> leader = new HashMap<String, String>();
 
+		Set<String> responsible_user_names = new HashSet<>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
 			String supplier_name = obj.getString("supplier_name");
 			String account = obj.getString("account");
 			String pay_index = obj.getString("pay_index");
 			String pay_time = obj.getString("time");
+			String responsible_user_name = obj.getString("responsible_user_name");
 
 			if (SimpletinyString.isEmpty(supplier_name)) {
 				return "第" + (i + 1) + "行缺少供应商信息！";
@@ -357,7 +449,10 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			if (SimpletinyString.isEmpty(pay_time)) {
 				return "第" + (i + 1) + "行缺少支付时间！";
 			}
-
+			if (SimpletinyString.isEmpty(responsible_user_name)) {
+				return "第" + (i + 1) + "行缺少责任人！";
+			}
+			responsible_user_names.add(responsible_user_name);
 			if (!leader.keySet().contains(pay_index)) {
 				leader.put(pay_index, supplier_name + "##" + account + "##" + pay_time);
 			}
@@ -396,6 +491,16 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 		}
 
+		// 责任人员工号
+		Map<String, String> user_map = new HashMap<>();
+		for (String user : responsible_user_names) {
+			UserBaseBean user_base = userDao.selectUserByName(user);
+			if (null == user_base) {
+				return "责任人：系统不存在用户" + user;
+			}
+			user_map.put(user, user_base.getUser_number());
+		}
+
 		// 生成银行流水账
 		Map<String, String> voucher_numbers = new HashMap<String, String>();
 
@@ -415,6 +520,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			List<SupplierBean> suppliers = supplierDao.getAllByParam(option);
 
 			if (null == suppliers || suppliers.size() == 0) {
+				DBCommonUtil.rollBackData();
 				return supplier_name + "供应商不存在！";
 			}
 
@@ -432,6 +538,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			CardBean card = cardDao.getCardByAccount(account);
 
 			if (card == null) {
+				DBCommonUtil.rollBackData();
 				return account + "账户不存在！";
 			}
 
@@ -448,6 +555,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 
 			msg = paymentDetailService.insert(payment);
 			if (!msg.equals(SUCCESS)) {
+				DBCommonUtil.rollBackData();
 				return "账户" + account + "银行流水存在相同时间的记录，请修改支付时间！";
 			}
 		}
@@ -461,6 +569,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			String pay_index = obj.getString("pay_index");
 			BigDecimal money = new BigDecimal(obj.getString("money"));
 			String return_date = obj.getString("return_date");
+			String responsible_user_name = obj.getString("responsible_user_name");
 
 			SupplierBean option = new SupplierBean();
 			option.setSupplier_name(supplier_name);
@@ -469,7 +578,7 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			SupplierBean supplier = suppliers.get(0);
 
 			SupplierDepositBean deposit = new SupplierDepositBean();
-
+			String deposit_number = numberService.generateDepositNumber();
 			// 保存航司押金记录
 			deposit.setSupplier_pk(supplier.getPk());
 			deposit.setAccount(account);
@@ -478,9 +587,99 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 			deposit.setReturn_date(return_date);
 			deposit.setComment(comment);
 			deposit.setReceived(BigDecimal.ZERO);
+			deposit.setDeposit_number(deposit_number);
 			deposit.setBalance(deposit.getMoney());
+			deposit.setResponsible_user(user_map.get(responsible_user_name));
 			dao.insert(deposit);
 		}
+		return SUCCESS;
+	}
+
+	@Override
+	public String batSaveDepositBack(String json) {
+		JSONArray array = JSONArray.fromObject(json);
+		List<AirReceivedDetailBean> temps = new ArrayList<>();
+
+		String supplier_pk = "";
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = array.getJSONObject(i);
+			String deposit_number = obj.getString("deposit_number");
+			String account = obj.getString("account");
+			String money = obj.getString("received");
+			String back_date = obj.getString("time");
+			String comment = obj.getString("back_comment");
+
+			if (SimpletinyString.isEmpty(deposit_number)) {
+				return "第" + (i + 1) + "行缺少押金单号！";
+			}
+
+			if (SimpletinyString.isEmpty(account)) {
+				return "第" + (i + 1) + "行缺少收款账户！";
+			}
+
+			if (!SimpletinyString.isNumeric(money)) {
+				return "第" + (i + 1) + "行退还金额不合法！";
+			}
+			if (SimpletinyString.isEmpty(back_date)) {
+				return "第" + (i + 1) + "行缺少退还时间！";
+			}
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(deposit_number);
+			BigDecimal received = new BigDecimal(money);
+
+			if (received.compareTo(currentDeposit.getBalance()) == 1) {
+				return "第" + (i + 1) + "行的退还金额大于余额！";
+			}
+			String related_pk = DBCommonUtil.genPk();
+			AirReceivedDetailBean detail = new AirReceivedDetailBean();
+			detail.setBusiness_number(deposit_number);
+			detail.setReceived(received);
+			detail.setReceived_time(back_date);
+			detail.setCard_account(account);
+			detail.setRelated_pk(related_pk);
+			detail.setSupplier_pk(currentDeposit.getSupplier_pk());
+
+			if (i == 0) {
+				supplier_pk = currentDeposit.getSupplier_pk();
+			} else {
+				if (!supplier_pk.equals(currentDeposit.getSupplier_pk())) {
+					return "第一行押金供应商与" + (i + 1) + "行押金供应商不同，不能批量上传！";
+				}
+			}
+
+			detail.setStatus(ResourcesConstants.RECEIVED_STATUS_ING);
+			if (comment.length() > 195) {
+				comment = comment.substring(0, 195);
+			}
+			detail.setComment("批量上传；" + comment);
+			temps.add(detail);
+		}
+
+		for (AirReceivedDetailBean detail : temps) {
+			SupplierDepositBean currentDeposit = dao.selectByDepositNumber(detail.getBusiness_number());
+			// 生成退还记录
+			detail.setSum_received(detail.getReceived());
+			detail.setReceived_type(ResourcesConstants.RECEIVED_TYPE_RECEIVED);
+			airReceivedDao.insert(detail);
+			currentDeposit.setReceived(currentDeposit.getReceived() == null ? BigDecimal.ZERO
+					: currentDeposit.getReceived().add(detail.getReceived()));
+			currentDeposit.setBalance(currentDeposit.getBalance().subtract(detail.getReceived()));
+
+			String return_way = currentDeposit.getReturn_way();
+			if (SimpletinyString.isEmpty(return_way)) {
+				currentDeposit.setReturn_way("T");
+			} else {
+				if (currentDeposit.getReturn_way().indexOf("T") < 0) {
+					currentDeposit.setReturn_way(return_way + ",T");
+				}
+			}
+
+			if (currentDeposit.getBalance().compareTo(BigDecimal.ZERO) == 0) {
+				currentDeposit.setStatus("Y");
+			}
+			// 更新押金账
+			dao.update(currentDeposit);
+		}
+
 		return SUCCESS;
 	}
 
@@ -492,6 +691,30 @@ public class SupplierDepositServiceImpl implements SupplierDepositService {
 		List<SupplierDepositBean> deposits = dao.selectByParam(option);
 
 		return deposits;
+	}
+
+	@Autowired
+	private DepositTicketPaidDAO depositTicketPaidDao;
+
+	@Override
+	public List<DepositTicketPaidBean> selectDepositTicketPaidsByDepositPk(String deposit_pk) {
+		return depositTicketPaidDao.selectByDepositPk(deposit_pk);
+	}
+
+	@Override
+	public List<SupplierDepositBean> selectDepositWithoutNumber() {
+		return dao.selectDepositWithoutNumber();
+	}
+
+	@Override
+	public List<SupplierDepositBean> selectDepositSummary(SupplierDepositBean bean) {
+
+		return dao.selectDepositSummary(bean);
+	}
+
+	@Override
+	public SupplierDepositBean selectSumDeposit() {
+		return dao.selectSumDeposit();
 	}
 
 }

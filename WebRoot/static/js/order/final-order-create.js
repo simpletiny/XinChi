@@ -8,7 +8,7 @@ var OrderContext = function() {
 	self.order_pk = $("#key").val();
 	self.employee = ko.observable({});
 
-	self.types = ko.observableArray([ {
+	self.types = ko.observableArray([{
 		name : "无变化",
 		value : "1"
 	}, {
@@ -17,12 +17,12 @@ var OrderContext = function() {
 	}, {
 		name : "有投诉",
 		value : "3"
-	} ]);
+	}]);
 
 	self.chosenType = ko.observable();
 	self.chosenType("1");
-
-	$.getJSON(self.apiurl + 'order/searchCOrderByPk', {
+	startLoadingSimpleIndicator("加载中");
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.order);
@@ -34,6 +34,7 @@ var OrderContext = function() {
 			} else {
 				fail_msg("员工不存在！");
 			}
+			endLoadingIndicator();
 		}).fail(function(reason) {
 			fail_msg(reason.responseText);
 		});
@@ -74,17 +75,17 @@ var final_type = "0";
 var changeType = function(rad) {
 	final_type = $(rad).val();
 	switch ($(rad).val() - 0) {
-	case 1:
-		$("#div-2").hide();
-		break;
-	case 2:
-		$("#div-2").show();
-		$(".type-3").hide();
-		break;
-	case 3:
-		$("#div-2").show();
-		$(".type-3").show();
-		break;
+		case 1 :
+			$("#div-2").hide();
+			break;
+		case 2 :
+			$("#div-2").show();
+			$(".type-3").hide();
+			break;
+		case 3 :
+			$("#div-2").show();
+			$(".type-3").show();
+			break;
 	}
 	caculateFinalReceivable();
 };
@@ -160,6 +161,7 @@ var caculateFinalReceivable = function() {
 		final_receivable -= complain_money;
 	}
 
+	final_receivable = final_receivable.toFixed(2);
 	$("#p-final-receivable").text(final_receivable);
 	$("#txt-final-receivable").val(final_receivable);
 };

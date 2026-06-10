@@ -61,7 +61,31 @@ var LoginContext = function() {
 
 var ctx = new LoginContext();
 
+function addFixedPositionedText(text, horizontalSpacing, verticalSpacing) {
+	const mask = document.getElementById('mask');
+	const maskWidth = mask.offsetWidth;
+	const maskHeight = mask.offsetHeight;
+
+	for (let x = 0; x < maskWidth; x += horizontalSpacing) {
+		for (let y = 0; y < maskHeight; y += verticalSpacing) {
+			const textElement = document.createElement('div');
+			textElement.classList.add('mask-text');
+			textElement.textContent = text;
+
+			textElement.style.left = x + 'px';
+			textElement.style.top = y + 'px';
+
+			mask.appendChild(textElement);
+		}
+	}
+}
+
 $(document).ready(function() {
+	 $("body").append(`<div id="mask">
+	 </div>`)
+		
+
+	addFixedPositionedText('欣驰国际', 400, 200);
 	ko.applyBindings(ctx);
 	if ($.cookie("auto-login") == "true") {
 		$("#auto-login").prop("checked", true);

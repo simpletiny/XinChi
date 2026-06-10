@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="input-row clearfloat">
 					 <div class="col-md-6 required">
                         <label class="l">支出金额</label>
-                        <div class="ip"><input type="number" id="txt-money" class="ip-"  max="100" data-bind="value: detail().money" placeholder="支出金额" name="detail.money" required="required"/></div>
+                        <div class="ip"><input type="number" id="txt-money" class="ip-"  max="500" data-bind="value: detail().money" placeholder="支出金额" name="detail.money" required="required"/></div>
                     </div>
                 </div>
                <div class="input-row clearfloat">

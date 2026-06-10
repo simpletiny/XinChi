@@ -25,6 +25,8 @@ public class ClientAction extends BaseAction {
 	@Autowired
 	private ClientService clientService;
 
+	private String json;
+
 	public String createCompany() {
 		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
 				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
@@ -33,7 +35,7 @@ public class ClientAction extends BaseAction {
 		if (!SimpletinyString.isEmpty(client.getAgency_pk())) {
 			client.setRelate_flg("Y");
 		}
-		resultStr = clientService.createCompany(client);
+		resultStr = clientService.createCompany(client, json);
 		return SUCCESS;
 	}
 
@@ -43,7 +45,7 @@ public class ClientAction extends BaseAction {
 		} else {
 			client.setRelate_flg("Y");
 		}
-		resultStr = clientService.updateCompany(client);
+		resultStr = clientService.updateCompany(client, json);
 		return SUCCESS;
 	}
 
@@ -64,9 +66,22 @@ public class ClientAction extends BaseAction {
 			client.setSales(sessionBean.getPk());
 		}
 
+		if (client.getMain_businesses() != null && client.getMain_businesses().contains("全部")) {
+			client.setMain_businesses(null);
+		}
+		if (client.getTalk_levels() != null && client.getTalk_levels().contains("全部")) {
+			client.setTalk_levels(null);
+		}
 		params.put("bo", client);
 		page.setParams(params);
 		clients = clientService.getAllCompaniesByPage(page);
+		return SUCCESS;
+	}
+
+	private String agency_pk;
+
+	public String searchClientByAgencyPk() {
+		clients = clientService.searchClientByAgencyPk(agency_pk);
 		return SUCCESS;
 	}
 
@@ -79,6 +94,14 @@ public class ClientAction extends BaseAction {
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			client.setSales(sessionBean.getPk());
+		}
+
+		if (client.getMain_businesses() != null && client.getMain_businesses().contains("全部")) {
+			client.setMain_businesses(null);
+		}
+
+		if (client.getTalk_levels() != null && client.getTalk_levels().contains("全部")) {
+			client.setTalk_levels(null);
 		}
 
 		clientCount = clientService.selectCountByParam(client);
@@ -96,6 +119,11 @@ public class ClientAction extends BaseAction {
 
 	public String deleteCompany() {
 		resultStr = clientService.deleteClient(company_pks);
+		return SUCCESS;
+	}
+
+	public String publicCompany() {
+		resultStr = clientService.publicCompany(client_pk);
 		return SUCCESS;
 	}
 
@@ -163,6 +191,22 @@ public class ClientAction extends BaseAction {
 
 	public void setClientCount(ClientCountDto clientCount) {
 		this.clientCount = clientCount;
+	}
+
+	public String getJson() {
+		return json;
+	}
+
+	public void setJson(String json) {
+		this.json = json;
+	}
+
+	public String getAgency_pk() {
+		return agency_pk;
+	}
+
+	public void setAgency_pk(String agency_pk) {
+		this.agency_pk = agency_pk;
 	}
 
 }

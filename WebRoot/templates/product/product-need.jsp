@@ -49,8 +49,9 @@
 	font-weight: bold;
 	font-size: 20px;
 }
-.error{
-	color:red;
+
+.error {
+	color: red;
 }
 </style>
 </head>
@@ -58,7 +59,7 @@
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>产品需求</h2>
+			<h2>销售订单</h2>
 		</div>
 
 		<div class="main-container">
@@ -68,8 +69,7 @@
 						<div style="float: right">
 							<div>
 								<button type="submit" class="btn btn-green" data-bind="click: function() { createOrder() }">生成订单</button>
-
-								<button type="submit" class="btn btn-green" data-bind="click: function() { tipSales() }">提示销售确认</button>
+								<!-- <button type="submit" class="btn btn-green" data-bind="click: function() { tipSales() }">提示销售确认</button> -->
 								<button type="submit" class="btn btn-green" data-bind="click: function() { unlockOrder() }">解锁</button>
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 								<div class="col-md-2">
 									<select class="form-control" style="height: 34px"
 										data-bind="options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
-										name="order_option.product_manager_number"></select>
+										name="order_option.product_manager_numbers"></select>
 								</div>
 							</div>
 						</s:if>
@@ -136,18 +136,18 @@
 								<th>成人</th>
 								<th>特殊</th>
 								<th>游客信息</th>
+								<th>团款</th>
 								<th>销售</th>
-								<th>接待特请</th>
+								<th>销售特请</th>
 								<th>销售锁定</th>
-								<th>名单确认</th>
 								<th>标/非标</th>
 							</tr>
 						</thead>
 						<tbody data-bind="foreach: orders">
 							<tr>
 								<td><input type="checkbox"
-									data-bind="attr: {'value': $data.pk+';'+$data.product_pk+';'+$data.team_number+';'+$data.operate_flg+';'+$data.name_confirm_status+';'+$data.standard_flg+';'+$data.departure_date+';'+$data.product_name+';'+$data.product_model}, checked: $root.chosenOrders" /></td>
-								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td> 
+									data-bind="checkedValue:$data, checked: $root.chosenOrders" /></td>
+								<td data-bind="text:$root.statusMapping[$data.operate_flg.substr(0,1)]"></td>
 								<td data-bind="text: $data.team_number"></td>
 								<td data-bind="text: $data.departure_date"></td>
 								<td data-bind="text: $data.product_name"></td>
@@ -155,19 +155,10 @@
 								<td data-bind="text: $data.adult_count"></td>
 								<td data-bind="text: $data.special_count"></td>
 								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger"></a></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkReceivable,text: $data.receivable"></a></td>
 								<td data-bind="text: $data.sale_name"></td>
 								<td data-bind="text: $data.treat_comment"></td>
 								<td data-bind="text:$root.lockMapping[$data.lock_flg.substr(0,1)]"></td>
-
-								<!-- ko if:$data.name_confirm_status=="1" -->
-								<td style="color: red" class="status-no" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.name_confirm_status=="2" -->
-								<td data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
-								<!-- ko if:$data.name_confirm_status=="3" -->
-								<td style="color: green" data-bind="text:$root.nameMapping[$data.name_confirm_status]"></td>
-								<!-- /ko -->
 								<td data-bind="text: $root.standardMapping[$data.standard_flg]"></td>
 							</tr>
 						</tbody>
@@ -261,79 +252,165 @@
 			</div>
 		</div>
 	</div>
-	<!-- 机票信息 -->
-	<div id="air-ticket-edit" style="display: none; width: 800px; height: 700px; overflow: auto">
-		<form class="form-box info-form" id="form-air">
+	<!-- 查看团款信息 -->
+	<div id="receivable-check" style="display: none; width: 800px; height: 650px; overflow-y: auto;">
+		<div class="form-box info-form">
+			<h3 style="padding-left:50px;">预算</h3>
+			<hr />
 			<div class="input-row clearfloat">
-				<label class="col-md-2 control-label">团号</label>
-				<div class="col-md-6">
-					<p data-bind="text:team_numbers()"></p>
-					<input type="hidden" name="team_numbers" id="txt-team-numbers" data-bind="value:team_numbers()" />
-
+				<div class="col-md-4">
+					<label class="l">总团款:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().receivable"></p>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<label class="l">团款说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().receivable_comment"></p>
+					</div>
 				</div>
 			</div>
-			<div class="input-row clearfloat" style="float:right;padding-bottom: 20px">
-				<em class="small-box"> <input type="checkbox" onclick="hasTicket(this)" id="chk-has-ticket"/><label style="font:bold;color:red">无机票</label>
-				</em>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">FLY:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().fy"></p>
+					</div>
+				</div>
 			</div>
-			<div class="input-row clearfloat" id="air-ticket">
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">其他费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().other_cost"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().other_cost_comment"></p>
+					</div>
+				</div>
+			</div>
+			<h3 style="padding-left:50px;margin-top:40px">决算</h3>
+			<hr />
+			<div class="input-row clearfloat">
+				<div class="col-md-4">
+					<label class="l">决算团款:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().final_receivable"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">增加费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().raise_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().raise_comment"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">减少费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().reduce_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">费用说明:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().reduce_comment"></p>
+					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-6">
+					<label class="l">投诉费用:</label>
+					<div class="ip" style="width: 50px">
+						<p class="ip-default" data-bind="text: order().complain_money"></p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label class="l">投诉原因:</label>
+					<div class="ip" style="width: 200px">
+						<p class="ip-default" data-bind="text: order().complain_comment"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 生成订单 -->
+	<div id="div-order-create" style="display: none; width: 900px; height: 500px; overflow: auto">
+		<form class="form-box info-form" id="form-air">
+			<div class="input-row clearfloat">
 				<div class="col-md-12">
-					<table style="width: 100%" id="table-ticket">
+					<table style="width: 100%" class="table table-striped table-hover" id="table-sale-order">
 						<thead>
-							<tr class="required">
-								<th class="r" style="width: 10%">航段</th>
-								<th class="r" style="width: 10%">天次</th>
-								<th class="r" style="width: 15%">起飞城市</th>
-								<th class="r" style="width: 15%">降落城市</th>
-								<th style="width: 10%"></th>
+							<tr>
+								<th>团号</th>
+								<th>出团日期</th>
+								<th>产品名称</th>
+								<th>成人</th>
+								<th>儿童</th>
+								<th>游客信息</th>
+								<th>单地接</th>
 							</tr>
 						</thead>
-						<tbody data-bind="foreach :flight()">
+						<tbody data-bind="foreach :sale_orders">
 							<tr>
-								<input type="hidden" st="flight-index" data-bind="value:$data.ticket_index" />
-								<td st="index" data-bind="text:$data.ticket_index"></td>
-								<td><input st="start-day" type="text" data-bind="value:$data.start_day" /></td>
-								<td><input st="start-city" type="text" data-bind="value:$data.start_city"/></td>
-								<td><input st="end-city" type="text" data-bind="value:$data.end_city"/></td>
-								<td><input type="button" value="-" onclick="deleteRow(this)"></input></td>
+								<input type="hidden" st="team-number" data-bind="value:$data.team_number" />
+								<td data-bind="text:$data.team_number"></td>
+								<td data-bind="text:$data.departure_date"></td>
+								<td data-bind="text:$data.product_name"></td>
+								<td data-bind="text:$data.adult_count"></td>
+								<td data-bind="text:$data.special_count"></td>
+								<td><a href="javascript:void(0)" data-bind="click:$root.checkPassengers,text: $data.passenger_captain"></a></td>
+								<td><input type="checkbox" value="Y" st="is-only-dijie" /></td>
 							</tr>
 						</tbody>
 					</table>
-					<div style="margin-top: 20px; float: right">
-						<input type="button" value="+" onclick="addRow()"></input>
-					</div>
-				</div>
-			</div>
-			<div class="input-row clearfloat" id="air-comment">
-				<div class="col-md-12">
-					<label class="l">票务要求</label>
-					<div class="ip">
-						<textarea type="text" class="ip-default air_comment" rows="5" maxlength="200" placeholder="票务需求"></textarea>
-					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12">
-					<label class="l">订单备注</label>
+					<label class="l">订单备注（仅自己可见）</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default comment" rows="5" maxlength="200" placeholder="需要备注说明的信息"></textarea>
+						<textarea type="text" class="ip-default comment" rows="5" maxlength="200" placeholder="需要备注说明的信息（仅自己可见）"></textarea>
 					</div>
+				</div>
+			</div>
+			<div class="input-row clearfloat">
+				<div class="col-md-2">
+					<label class="l"><input type="checkbox" id="chk-combine" onchange="checkCombine()"></input>合并至订单</label>
+				</div>
+				<div class="col-md-4">
+					<select class="form-control" id="sel-product-order" disabled style="height: 34px"
+						data-bind="options: product_orders,  optionsText: 'order_number', optionsValue: 'order_number', optionsCaption: '--请选择--'"
+						name="option.confirm_period"></select>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="text-align: right">
 					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doCreateOrder();}">提交</a> <a
-						type="submit" class="btn btn-green btn-r" data-bind="click: cancelSendAir">取消</a>
+						type="submit" class="btn btn-green btn-r" data-bind="click: cancelCreateOrder">取消</a>
 				</div>
 			</div>
 		</form>
 	</div>
 	<script>
-		$(".order-operate").addClass("current").children("ol").css("display",
-				"block");
+		$(".order-operate").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/product/product-need.js?v=1.2"></script>
+	<script src="<%=basePath%>static/js/product/product-properties.js"></script>
+	<script src="<%=basePath%>static/js/product/product-need.js?v=1.007"></script>
 </body>
 </html>

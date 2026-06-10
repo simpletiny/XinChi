@@ -9,6 +9,15 @@ var viewContext = function() {
 	$.getJSON(self.apiurl + 'culture/searchOneProductResearchView', {
 		view_pk : self.viewPk
 	}, function(data) {
+		let user_number = $("#user-number").val();
+		let user_roles = $("#user-roles").val();
+		if (user_roles.indexOf("ADMIN") >= 0 || user_roles.indexOf("MANAGER") >= 0) {
+			$(".hasright").show();
+		} else {
+			if (data.view.create_user == user_number) {
+				$(".hasright").show();
+			}
+		}
 		if (data.view) {
 			self.view(data.view);
 		} else {
@@ -19,9 +28,9 @@ var viewContext = function() {
 	}).fail(function(reason) {
 		fail_msg(reason.responseText);
 	});
-	
-	self.editView = function(){
-		window.location.href = self.apiurl + "templates/culture/product-research-view-edit.jsp?key="+self.viewPk;
+
+	self.editView = function() {
+		window.location.href = self.apiurl + "templates/culture/product-research-view-edit.jsp?key=" + self.viewPk;
 	};
 };
 
@@ -30,4 +39,3 @@ var ctx = new viewContext();
 $(document).ready(function() {
 	ko.applyBindings(ctx);
 });
-

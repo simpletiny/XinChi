@@ -6,6 +6,7 @@
 		<result column="client_employee_pk" property="client_employee_pk" jdbcType="CHAR" />
 		<result column="product_pk" property="product_pk" jdbcType="CHAR" />
 		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
 		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
 		<result column="days" property="days" jdbcType="INTEGER" />
 		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
@@ -39,6 +40,10 @@
 		<result column="cancel_flg" property="cancel_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="receivable_first_flg" property="receivable_first_flg" jdbcType="CHAR" />
+		<result column="as_adult_flg" property="as_adult_flg" jdbcType="CHAR" />
+		<result column="assistant_number" property="assistant_number" jdbcType="VARCHAR" />
+		<result column="sale" property="sale" jdbcType="VARCHAR" />
+		<result column="hotel_comment" property="hotel_comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -47,6 +52,7 @@
 		client_employee_pk,
 		product_pk,
 		product_name,
+		product_model,
 		departure_date,
 		days,
 		receivable,
@@ -79,7 +85,11 @@
 		lock_flg,
 		cancel_flg,
 		name_confirm_status,
-		receivable_first_flg
+		receivable_first_flg,
+		as_adult_flg,
+		assistant_number,
+		sale,
+		hotel_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -113,6 +123,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk,
+			</if>
+			<if test="product_model != null">
+				product_model,
 			</if>
 			<if test="product_name != null">
 				product_name,
@@ -207,6 +220,18 @@
 			<if test="name_confirm_status != null">
 				name_confirm_status,
 			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg,
+			</if>
+			<if test="assistant_number != null">
+				assistant_number,
+			</if>
+			<if test="sale != null">
+				sale,
+			</if>
+			<if test="hotel_comment != null">
+				hotel_comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="team_number != null">
@@ -217,6 +242,9 @@
 			</if>
 			<if test="product_pk != null">
 				#{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				#{product_model,jdbcType=VARCHAR},
 			</if>
 			<if test="product_name != null">
 				#{product_name,jdbcType=VARCHAR},
@@ -311,6 +339,18 @@
 			<if test="name_confirm_status != null">
 				#{name_confirm_status,jdbcType=CHAR},
 			</if>
+			<if test="as_adult_flg != null">
+				#{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="assistant_number != null">
+				#{assistant_number,jdbcType=VARCHAR},
+			</if>
+			<if test="sale != null">
+				#{sale,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				#{hotel_comment,jdbcType=VARCHAR},
+			</if>
 		</trim>
 	</insert>
 
@@ -326,6 +366,9 @@
 			</if>
 			<if test="product_pk != null">
 				product_pk = #{product_pk,jdbcType=CHAR},
+			</if>
+			<if test="product_model != null">
+				product_model = #{product_model,jdbcType=VARCHAR},
 			</if>
 			<if test="product_name != null">
 				product_name = #{product_name,jdbcType=VARCHAR},
@@ -425,6 +468,18 @@
 			</if>
 			<if test="receivable_first_flg != null">
 				receivable_first_flg = #{receivable_first_flg,jdbcType=CHAR},
+			</if>
+			<if test="as_adult_flg != null">
+				as_adult_flg = #{as_adult_flg,jdbcType=CHAR},
+			</if>
+			<if test="assistant_number != null">
+				assistant_number = #{assistant_number,jdbcType=VARCHAR},
+			</if>
+			<if test="sale != null">
+				sale = #{sale,jdbcType=VARCHAR},
+			</if>
+			<if test="hotel_comment != null">
+				hotel_comment = #{hotel_comment,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

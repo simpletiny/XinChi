@@ -2,8 +2,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
 
@@ -57,7 +56,9 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">地区</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: provices, optionsCaption: '-- 省份--',value: agency().agency_provice,event:{change:ter}" name="agency.agency_provice"></select>
+								<select class="form-control"
+									data-bind="options: provices, optionsCaption: '-- 省份--',value: agency().agency_provice,event:{change:ter}"
+									name="agency.agency_provice"></select>
 							</div>
 						</div>
 						<div class="span6">
@@ -71,19 +72,24 @@
 						<div class="span6">
 							<label class="col-md-1 control-label">类型</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: agencyType, optionsCaption: '-- 请选择--',value: agency().agency_type" name="agency.agency_type" required="required"></select>
+								<select class="form-control"
+									data-bind="options: agencyType, optionsCaption: '-- 请选择--',value: agency().agency_type"
+									name="agency.agency_type" required="required"></select>
 							</div>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">出境</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: isExit, optionsCaption: '-- 请选择 --',value: agency().is_exit" name="agency.is_exit"></select>
+								<select class="form-control" data-bind="options: isExit, optionsCaption: '-- 请选择 --',value: agency().is_exit"
+									name="agency.is_exit"></select>
 							</div>
 						</div>
 						<div class="span6">
 							<label class="col-md-1 control-label">主营</label>
 							<div class="col-md-2">
-								<select class="form-control" data-bind="options: mainBus, optionsCaption: '-- 请选择--',value: agency().main_bussines" name="agency.main_bussines" required="required"></select>
+								<select class="form-control"
+									data-bind="options: mainBus, optionsCaption: '-- 请选择--',value: agency().main_bussines"
+									name="agency.main_bussines" required="required"></select>
 							</div>
 						</div>
 						<div class="span6">
@@ -92,7 +98,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-							<button  style="float:right" st="btn-search" type="submit" class="btn btn-green col-md-1" data-bind="click: refresh">搜索</button>
+						<button style="float: right" st="btn-search" type="submit" class="btn btn-green col-md-1"
+							data-bind="click: refresh">搜索</button>
 					</div>
 				</form>
 				<div class="list-result">
@@ -115,15 +122,16 @@
 							<tr>
 								<td><input type="checkbox" data-bind="attr: {'value': $data.pk}, checked: $root.chosenAgencys" /></td>
 								<td data-bind="text: $data.main_bussines"></td>
-								<td data-bind="text: $data.agency_client_count"></td>
-								<td><a href="javascript:void(0)" data-bind="text: $data.agency_name,attr: {href: 'agency-detail.jsp?key='+$data.pk}"></a></td>
+								<td><a href="javascript:void(0)" data-bind="text:$data.agency_client_count,click:$root.checkClient"></a></td>
+								<td><a href="javascript:void(0)"
+									data-bind="text: $data.agency_name,attr: {href: 'agency-detail.jsp?key='+$data.pk}"></a></td>
 								<td data-bind="text: $data.agency_city"></td>
 								<td data-bind="text: $data.agency_type"></td>
 								<td data-bind="text:$root.isMapping[$data.is_exit]"></td>
 								<td data-bind="text: $data.corporate_name"></td>
 								<td>- -</td>
 								<!-- ko if: $data.is_cancel == 'Y' -->
-								<td style="color:red">已注销</td>
+								<td style="color: red">已注销</td>
 								<!-- /ko -->
 								<!-- ko if: $data.is_cancel == 'N' -->
 								<td><a href="javascript:void(0)" data-bind="event: {click:function(){$root.cancel($data.pk)}}">注销</a></td>
@@ -147,9 +155,29 @@
 			</div>
 		</div>
 	</div>
+	<div id="client-detail" style="display: none; width: 800px; height: 400px; overflow-y: scroll">
+		<div class="input-row clearfloat">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr role="row">
+						<th>简称</th>
+						<th>全称</th>
+						<th>所属销售</th>
+					</tr>
+				</thead>
+				<tbody data-bind="foreach: clients">
+					<tr>
+						<td data-bind="text: $data.client_short_name"></td>
+						<td data-bind="text: $data.client_name"></td>
+						<td data-bind="text: $data.sales_name"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
-	<script src="<%=basePath%>static/js/client/agency.js"></script>
+	<script src="<%=basePath%>static/js/client/agency.js?v=1.001"></script>
 </body>
 </html>

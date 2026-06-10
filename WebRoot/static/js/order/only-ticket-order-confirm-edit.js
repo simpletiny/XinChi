@@ -10,23 +10,24 @@ var OrderContext = function() {
 	self.ticket_infos = ko.observableArray([]);
 	self.air_comment = ko.observable();
 	self.current_date = $("#hidden-server-date").val();
+	// 获取产品经理信息
+	self.users = ko.observableArray([]);
+	$.getJSON(self.apiurl + 'user/searchByRole', {
+		role : 'PRODUCT'
+	}, function(data) {
+		self.users(data.users);
+	});
 
 	self.do_confirm_date = ko.observable();
 
 	var d = new Date(self.current_date);
-	var year_now = d.getFullYear();
 
-	$.getJSON(self.apiurl + 'order/searchTbcBnsOrderByPk', {
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
-		self.order(data.bnsOrder);
-		$(data.passengers).each(function(idx, passenger) {
-			passenger.age = ko.observable();
-			var birthYear = passenger.id.substring(6, 10);
-			passenger.age(year_now - birthYear);
-		});
+		self.order(data.order);
 		self.passengers(data.passengers);
-
+		
 		self.ticket_infos(data.ticketInfos);
 		self.air_comment(self.ticket_infos()[0].comment);
 		self.do_confirm_date(self.order().do_confirm_date);
@@ -77,7 +78,7 @@ var OrderContext = function() {
 		var formData = new FormData();
 		formData.append("fileFileName", fileName);
 		formData.append("fileType", "CLIENT_CONFIRM");
-		formData.append("subFolder", self.order().create_user);
+		formData.append("subFolder", self.order().create_user_number);
 
 		var url = ctx.apiurl + 'file/getFileStream';
 		var xhr = new XMLHttpRequest();
@@ -145,62 +146,59 @@ var OrderContext = function() {
 			return;
 		}
 
-		var other_cost = $(":input[name='bnsOrder.other_cost']").val().trim();
-		var other_comment = $(":input[name='bnsOrder.other_cost_comment']").val().trim();
+		var other_cost = $(":input[name='sale_order.other_cost']").val().trim();
+		var other_comment = $(":input[name='sale_order.other_cost_comment']").val().trim();
 		if (other_cost != "" && other_comment == "") {
 			fail_msg("有其他费用，必须填写费用说明！")
 			return;
 		}
-
-		var json = '';
-		// 航班信息json
-		var ticket_json = '[';
+		// 航班信息
 		var info_table = $("#table-ticket tbody");
 		var infos = $(info_table).children();
-
-		for (var i = 0; i < infos.length; i++) {
-			if (i != 0)
-				ticket_json += ',';
-			var tr = $(infos[i]);
-			var index = tr.find("input[st='flight-index']").val().trim();
-			var date = tr.find("input[st='date']").val().trim();
-			var from_city = tr.find("input[st='from-city']").val().trim();
-			var to_city = tr.find("input[st='to-city']").val().trim();
+		let legs = new Array();
+		for (let i = 0; i < infos.length; i++) {
+			const tr = $(infos[i]);
+			const index = tr.find("input[st='flight-index']").val().trim();
+			const date = tr.find("input[st='date']").val().trim();
+			const from_city = tr.find("input[st='from-city']").val().trim();
+			const to_city = tr.find("input[st='to-city']").val().trim();
+			
 			// 判断是否有航班信息
 			if (date == '' || from_city == '' || to_city == '') {
 				fail_msg("请填写航班信息！")
 				return;
 			}
-
-			ticket_json += '{"index":"' + index + '","date":"' + date + '","from_city":"' + from_city + '","to_city":"'
-					+ to_city + '"}';
-
+			
+			let leg = {index,date,from_city,to_city};
+			legs.push(leg);
 		}
-		ticket_json += ']';
-
+		
 		var air_comment = $("#air-comment").val().trim();
 
-		// 名单json
-		var hasNames = false;
-		var hasChairman = false;
+		// 名单
+		let hasNames = false;
+		let hasChairman = false;
 		var tbody = $("#name-table").find("tbody");
 		var trs = $(tbody).children();
-		var name_json = '[';
+		let people = new Array();
+		let not_ok_names = new Array();
 		for (var i = 0; i < trs.length; i++) {
-			if (i != 0)
-				name_json += ',';
-			var tr = trs[i];
-			var teamChairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
-			var index = i + 1;
-			var name = $(tr).find("[st='name']").val().trim();
-			var sex = $(tr).find("[st='sex']").val();
-			var pk = $(tr).find("[st='name-pk']").val();
-			var lock_flg = $(tr).find("[st='name-lock']").val();
-
-			var cellphone_A = $(tr).find("[st='cellphone_A']").val().trim();
-			var cellphone_B = $(tr).find("[st='cellphone_B']").val().trim();
-			var id = $(tr).find("[st='id']").val().trim();
-
+			const tr = trs[i];
+			const chairman = $(tr).find("[name='team_chairman']").is(":checked") ? "Y" : "N";
+			const index = i + 1;
+			const name = $(tr).find("[st='name']").val().trim();
+			const sex = $(tr).find("[st='sex']").val();
+			const age = $(tr).find("[st='age']").val().trim();
+			const id_type = $(tr).find("[st='type']").val();
+			const pk = $(tr).find("[st='name-pk']").val();
+			const cellphone_A = $(tr).find("[st='cellphone_A']").val();
+			const cellphone_B = $(tr).find("[st='cellphone_B']").val();
+			const lock_flg = $(tr).find("[st='name-lock']").val();
+			const id = $(tr).find("[st='id']").val().trim();
+			let is_ok = $(tr).find("[st='is_ok']").val();
+			if(is_ok!='Y'){
+				not_ok_names.push(name);
+			}
 			if (name == "" && id == "") {
 				continue;
 			}
@@ -214,15 +212,13 @@ var OrderContext = function() {
 				hasNames = true;
 			}
 
-			if (teamChairman == "Y") {
+			if (chairman == "Y") {
 				hasChairman = true;
 			}
 
-			name_json += '{"pk":"' + pk + '","lock_flg":"' + lock_flg + '","chairman":"' + teamChairman + '","index":"'
-					+ index + '","name":"' + name + '","sex":"' + sex + '","cellphone_A":"' + cellphone_A
-					+ '","cellphone_B":"' + cellphone_B + '","id":"' + id + '"}';
+			let person = {chairman,index,name,sex,age,cellphone_A,cellphone_B,id_type,id,pk,lock_flg};
+			people.push(person);
 		}
-		name_json += ']';
 
 		// 判断是否有名单
 		if (!hasNames) {
@@ -234,10 +230,15 @@ var OrderContext = function() {
 			fail_msg("请指定团长！");
 			return;
 		}
-
-		json = '{"ticket_json":' + ticket_json + ',"name_json":' + name_json + ',"air_comment":"' + air_comment + '"}';
-
-		var data = $("form").serialize() + "&json=" + json;
+		if(not_ok_names.length>0){
+			fail_msg(not_ok_names.join(",")+"未通过验证！");
+			endLoadingIndicator();
+			return;
+		}
+		const info = {ticket_json:legs,name_json:people,air_comment:air_comment};
+		const json = JSON.stringify(info);
+		
+		const data = $("form").serialize() + "&json=" + json;
 
 		startLoadingIndicator("保存中……");
 		$.ajax({
@@ -283,4 +284,8 @@ $(document).ready(function() {
 	$(':file').change(function() {
 		changeFile(this);
 	});
+	
+	let a_btn = $(`<a type="submit"
+	class="btn btn-green btn-r" onclick="checkName()">名单校验</a>`);
+	$("#div-btn-area").prepend(a_btn);
 });

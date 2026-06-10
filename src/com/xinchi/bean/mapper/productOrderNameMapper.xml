@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xinchi.bean.mapper.ProductOrderNameMapper">
+
+	<resultMap id="BaseResultMap" type="com.xinchi.bean.ProductOrderNameBean">
+		<result column="product_order_number" property="product_order_number" jdbcType="VARCHAR" />
+		<result column="team_number" property="team_number" jdbcType="VARCHAR" />
+		<result column="name_pk" property="name_pk" jdbcType="CHAR" />
+		<result column="operate_status" property="operate_status" jdbcType="CHAR" />
+		<result column="ticked" property="ticked" jdbcType="CHAR" />
+		<result column="ticked_time" property="ticked_time" jdbcType="VARCHAR" />
+		<result column="ticked_user" property="ticked_user" jdbcType="VARCHAR" />
+		<result column="ticket_cost" property="ticket_cost" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="pk" property="pk" jdbcType="CHAR" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="cellphone_A" property="cellphone_A" jdbcType="VARCHAR" />
+		<result column="cellphone_B" property="cellphone_B" jdbcType="VARCHAR" />
+		<result column="id_file" property="id_file" jdbcType="VARCHAR" />
+		<result column="passport_file" property="passport_file" jdbcType="VARCHAR" />
+		<result column="name_index" property="name_index" jdbcType="INTEGER" />
+		<result column="chairman" property="chairman" jdbcType="CHAR" />
+		<result column="order_pk" property="order_pk" jdbcType="CHAR" />
+		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
+		<result column="delete_flg" property="delete_flg" jdbcType="CHAR" />
+		<result column="id_type" property="id_type" jdbcType="CHAR" />
+		<result column="as_adult" property="as_adult" jdbcType="CHAR" />
+		<result column="departure_date" property="departure_date" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name" jdbcType="VARCHAR" />
+		<result column="product_model" property="product_model" jdbcType="VARCHAR" />
+		<result column="product_pk" property="product_pk" jdbcType="VARCHAR" />
+		<result column="product_manager_number" property="product_manager_number" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+
+		product_order_number,
+		team_number,
+		name_pk,
+		operate_status,
+		ticked,
+		ticked_time,
+		ticked_user,
+		ticket_cost,
+		status,
+		pk,
+		create_user,
+		update_user,
+		create_time,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_name
+		where pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByNamePk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_name
+		where name_pk = #{name_pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByPks" resultMap="BaseResultMap" parameterType="java.util.List">
+		SELECT
+		A.*,
+		B.name,
+		B.id,
+		B.sex,
+		B.cellphone_A,
+		B.cellphone_B,
+		B.id_file,
+		B.passport_file,
+		B.name_index,
+		B.chairman,
+		B.order_pk,
+		B.lock_flg,
+		B.delete_flg,
+		B.id_type,
+		B.as_adult,
+		C.departure_date,
+		C.product_name,
+		C.product_model,
+		C.days,
+		C.product_pk,
+		C.product_manager_number
+		FROM
+		product_order_name A
+		LEFT JOIN
+		sale_order_name_list B ON A.name_pk =
+		B.pk
+		LEFT join
+		product_order C ON
+		A.product_order_number = C.order_number
+		WHERE A.pk in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectByTeamNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		A.*,
+		B.name,
+		B.id,
+		B.sex,
+		B.cellphone_A,
+		B.cellphone_B,
+		B.id_file,
+		B.passport_file,
+		B.name_index,
+		B.chairman,
+		B.order_pk,
+		B.lock_flg,
+		B.delete_flg,
+		B.id_type,
+		B.as_adult,
+		C.departure_date,
+		C.product_name,
+		C.product_model,
+		C.days,
+		C.product_pk,
+		C.product_manager_number
+		FROM
+		product_order_name A
+		LEFT JOIN
+		sale_order_name_list B ON A.name_pk =
+		B.pk
+		LEFT join
+		product_order C ON
+		A.product_order_number = C.order_number
+		WHERE A.team_number = #{team_number,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByNeedPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		B.*,
+		C.name,
+		C.id,
+		C.sex,
+		C.cellphone_A,
+		C.cellphone_B,
+		C.id_file,
+		C.passport_file,
+		C.name_index,
+		C.chairman,
+		C.order_pk,
+		C.lock_flg,
+		C.delete_flg,
+		C.id_type,
+		C.as_adult,
+		C.age
+		FROM
+		product_order_name_air_need A
+		LEFT JOIN
+		product_order_name B ON A.name_pk = B.pk
+		LEFT JOIN
+		sale_order_name_list C ON B.name_pk = C.pk
+		where A.need_pk =#{need_pk,jdbcType=CHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from product_order_name
+		where pk = #{pk,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByProductOrderNumber" parameterType="java.lang.String">
+		delete from product_order_name
+		where product_order_number =
+		#{product_order_number,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByNamePk" parameterType="java.lang.String">
+		delete from product_order_name
+		where name_pk = #{name_pk,jdbcType=CHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.xinchi.bean.ProductOrderNameBean">
+
+		insert into product_order_name
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="product_order_number != null">
+				product_order_number,
+			</if>
+			<if test="team_number != null">
+				team_number,
+			</if>
+			<if test="name_pk != null">
+				name_pk,
+			</if>
+			<if test="operate_status != null">
+				operate_status,
+			</if>
+			<if test="ticked != null">
+				ticked,
+			</if>
+			<if test="ticked_time != null">
+				ticked_time,
+			</if>
+			<if test="ticked_user != null">
+				ticked_user,
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="pk != null">
+				pk,
+			</if>
+			<if test="create_user != null">
+				create_user,
+			</if>
+			<if test="update_user != null">
+				update_user,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="product_order_number != null">
+				#{product_order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="team_number != null">
+				#{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="name_pk != null">
+				#{name_pk,jdbcType=CHAR},
+			</if>
+			<if test="operate_status != null">
+				#{operate_status,jdbcType=CHAR},
+			</if>
+			<if test="ticked != null">
+				#{ticked,jdbcType=CHAR},
+			</if>
+			<if test="ticked_time != null">
+				#{ticked_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticked_user != null">
+				#{ticked_user,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				#{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				#{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				#{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				#{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.xinchi.bean.ProductOrderNameBean">
+		update product_order_name
+		<set>
+			<if test="product_order_number != null">
+				product_order_number = #{product_order_number,jdbcType=VARCHAR},
+			</if>
+			<if test="team_number != null">
+				team_number = #{team_number,jdbcType=VARCHAR},
+			</if>
+			<if test="name_pk != null">
+				name_pk = #{name_pk,jdbcType=CHAR},
+			</if>
+			<if test="operate_status != null">
+				operate_status = #{operate_status,jdbcType=CHAR},
+			</if>
+			<if test="ticked != null">
+				ticked = #{ticked,jdbcType=CHAR},
+			</if>
+			<if test="ticked_time != null">
+				ticked_time = #{ticked_time,jdbcType=VARCHAR},
+			</if>
+			<if test="ticked_user != null">
+				ticked_user = #{ticked_user,jdbcType=VARCHAR},
+			</if>
+			<if test="ticket_cost != null">
+				ticket_cost = #{ticket_cost,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="pk != null">
+				pk = #{pk,jdbcType=CHAR},
+			</if>
+			<if test="create_user != null">
+				create_user = #{create_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=VARCHAR},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pk = #{pk,jdbcType=CHAR}
+	</update>
+	<select id="selectByParam" parameterType="com.xinchi.bean.ProductOrderNameBean" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product_order_name
+		<where>
+			<if test="product_order_number != null and product_order_number !=''">
+				and product_order_number=#{product_order_number,jdbcType=VARCHAR}
+			</if>
+			<if test="operate_status != null and operate_status !=''">
+				and operate_status=#{operate_status,jdbcType=CHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
+		SELECT
+		A.*,
+		B.name,
+		B.id,
+		B.sex,
+		B.cellphone_A,
+		B.cellphone_B,
+		B.id_file,
+		B.passport_file,
+		B.name_index,
+		B.chairman,
+		B.order_pk,
+		B.lock_flg,
+		B.delete_flg,
+		B.id_type,
+		B.as_adult,
+		C.departure_date,
+		C.product_name,
+		C.product_model,
+		C.days,
+		C.product_pk,
+		C.product_manager_number
+		FROM
+		product_order_name A
+		LEFT JOIN
+		sale_order_name_list B ON A.name_pk =
+		B.pk
+		LEFT join
+		product_order C ON
+		A.product_order_number = C.order_number
+		<where>
+			<if test="params.bo.product_name != null and params.bo.product_name !=''">
+				and C.product_name like concat('%', #{params.bo.product_name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_model != null and params.bo.product_model !=''">
+				and C.product_model like concat('%', #{params.bo.product_model,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.product_order_number != null and params.bo.product_order_number !=''">
+				and A.product_order_number like concat('%',#{params.bo.product_order_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.team_number != null and params.bo.team_number !=''">
+				and A.team_number like concat('%',#{params.bo.team_number,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.name != null and params.bo.name !=''">
+				and B.name like concat('%',#{params.bo.name,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="params.bo.date_from != null and params.bo.date_from !=''">
+				and C.departure_date >=#{params.bo.date_from,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.date_to != null and params.bo.date_to !=''">
+				and C.departure_date &lt;=#{params.bo.date_to,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.operate_statuses != null and params.bo.operate_statuses !=''">
+				and A.operate_status in
+				<foreach item="item" index="index" collection="params.bo.operate_statuses" open="(" separator="," close=")">
+					#{params.bo.operate_statuses[${index}]}
+				</foreach>
+			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size()>0">
+				and C.product_manager_number IN
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator="," close=")">
+					#{params.bo.product_manager_numbers[${index}]}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY A.product_order_number,A.team_number
+	</select>
+</mapper>

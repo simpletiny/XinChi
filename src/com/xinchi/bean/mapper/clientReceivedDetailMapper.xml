@@ -25,6 +25,8 @@
 		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
 		<result column="voucher_file" property="voucher_file" jdbcType="VARCHAR" />
 		<result column="collecter" property="collecter" jdbcType="VARCHAR" />
+		<result column="reject_reason" property="reject_reason" jdbcType="VARCHAR" />
+		<result column="confirm_user" property="confirm_user" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -49,7 +51,9 @@
 		client_employee_pk,
 		client_pk,
 		voucher_file,
-		collecter
+		collecter,
+		reject_reason,
+		confirm_user
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -72,6 +76,8 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
+		A.reject_reason,
+		A.confirm_user,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -102,6 +108,8 @@
 		A.update_time,
 		A.voucher_file,
 		A.collecter,
+		A.reject_reason,
+		A.confirm_user,
 		C.name AS
 		client_employee_name,
 		B.client_employee_pk
@@ -318,6 +326,12 @@
 			<if test="collecter != null">
 				collecter = #{collecter,jdbcType=VARCHAR},
 			</if>
+			<if test="reject_reason != null">
+				reject_reason = #{reject_reason,jdbcType=VARCHAR},
+			</if>
+			<if test="confirm_user != null">
+				confirm_user = #{confirm_user,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -339,11 +353,9 @@
 	</select>
 
 	<select id="selectByTeamNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
-
 		select
 		<include refid="Base_Column_List" />
 		from client_received_detail
-
 		<where>
 			team_number = #{team_number,jdbcType=CHAR}
 		</where>
@@ -372,12 +384,13 @@
 		A.update_user,
 		A.pk,
 		C.user_name AS user_name,
-		A.create_user,
 		A.create_time,
 		A.update_time,
 		D.name AS client_employee_name,
 		A.client_employee_pk,
-		A.voucher_file
+		A.voucher_file,
+		A.reject_reason,
+		A.confirm_user
 		from
 		received_detail A
 		LEFT JOIN user_base C ON
@@ -455,6 +468,7 @@
 		A.create_user,
 		A.create_time,
 		A.update_time,
+		A.reject_reason,
 		B.client_employee_name,
 		B.client_employee_pk
 		from received_detail A left join budget_order_view B on

@@ -5,13 +5,13 @@ import java.util.List;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientRelationBean;
-import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
 import com.xinchi.bean.ConnectDto;
 import com.xinchi.bean.IncomingCountDto;
 import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.tools.Page;
 
@@ -59,6 +59,8 @@ public interface ClientRelationDAO {
 
 	public List<ConnectDto> selectConnectsByPage(Page<ConnectDto> page);
 
+	public List<PotentialDto> selectTypeCount();
+
 	public List<ClientRelationBean> selectByParam(ClientRelationBean option);
 
 	public void insert(ClientRelationBean two);
@@ -74,5 +76,7 @@ public interface ClientRelationDAO {
 	public List<BackPointDto> selectEnableBackPointByParam(BackPointDto option);
 
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk);
+
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option);
 
 }

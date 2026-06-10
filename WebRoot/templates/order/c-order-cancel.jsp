@@ -74,7 +74,7 @@
 						<div class="col-md-4 required">
 							<label class="l">决算团款</label>
 							<div class="ip fix-width">
-								<input type="number" required="required" class="ip-default" name="order.receivable" />
+								<input type="number" required="required" class="ip-default" name="order.final_receivable" />
 							</div>
 						</div>
 					</div>
@@ -82,20 +82,20 @@
 						<div class="col-md-6 required">
 							<label class="l">团款备注</label>
 							<div class="ip">
-								<textarea id="txt-raise" type="text" class="ip-default" rows="10" maxlength="200" placeholder="团款备注" required="required" name="order.receivable_comment"></textarea>
+								<textarea id="txt-raise" type="text" class="ip-default" rows="10" maxlength="200" placeholder="团款备注" required="required" name="order.final_receivable_comment"></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传决算单<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().confirm_file" name="order.confirm_file" />
+							<a href="javascript:;" class="a-upload">上传决算单<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().confirm_file" name="order.final_confirm_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>
 					<div class="input-row clearfloat"></div>
 					<div class="input-row clearfloat">
 						<div class="col-md-6">
-							<a href="javascript:;" class="a-upload">上传凭证<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().voucher_file" name="order.voucher_file" />
+							<a href="javascript:;" class="a-upload">上传凭证<input type="file" name="file" accept=".jpg,.png"/></a> <input type="hidden" data-bind="value:order().voucher_file" name="order.final_voucher_file" />
 						</div>
 						<div class="col-md-6"></div>
 					</div>

@@ -1,11 +1,14 @@
 package com.xinchi.backend.product.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.xinchi.bean.AirTicketNameListBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.ProductNeedDto;
 import com.xinchi.bean.ProductOrderBean;
+import com.xinchi.bean.ProductOrderNameBean;
+import com.xinchi.bean.ProductOrderNameFlightSegmentBean;
 import com.xinchi.bean.SaleOrderNameListBean;
 import com.xinchi.common.BaseService;
 import com.xinchi.tools.Page;
@@ -33,5 +36,25 @@ public interface ProductOrderService extends BaseService {
 	public List<OrderDto> searchSaleOrderInfoByProductOrderInfo(String order_number, String supplier_employee_pk);
 
 	public List<AirTicketNameListBean> searchTicketInfoByOrderNumber(String order_number);
+
+	public List<ProductOrderBean> selectByParam(ProductOrderBean option);
+
+	public List<ProductOrderNameBean> searchProductOrderNameByPage(Page<ProductOrderNameBean> page);
+
+	public String sendAirTicketNeed(String json);
+
+	public Map<String, List<ProductOrderNameFlightSegmentBean>> searchAirNeedByNamePk(String name_pk);
+
+	public List<ProductOrderNameBean> selectProductOrderNameByAirNeedPk(String air_need_pk);
+
+	public String deleteSendedAirNeed(String air_need_pk);
+
+	public List<SaleOrderNameListBean> searchSaleOrderNameListByProductOrderNumbers(List<String> order_numbers);
+
+	public String searchProductOrderTicketStatusByOrderNumber(String product_order_number);
+
+	public String updateProductOrder(ProductOrderBean order);
+
+	public String deleteProductOrderNameByNamePks(String name_pks);
 
 }

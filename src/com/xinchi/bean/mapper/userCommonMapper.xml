@@ -18,6 +18,10 @@
 		<result column="user_roles" property="user_roles" jdbcType="VARCHAR" />
 		<result column="credit_limit" property="credit_limit" jdbcType="DECIMAL" />
 		<result column="credit_balance" property="credit_balance" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
+		<result column="approve_time" property="approve_time" jdbcType="VARCHAR" />
+		<result column="approve_user" property="approve_user" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -30,6 +34,10 @@
 		A.sex,
 		A.delete_flg,
 		A.user_status,
+		A.approve_time,
+		A.approve_user,
+		A.create_time,
+		A.update_time,
 		B.id_file_name,
 		B.user_right,
 		B.nick_name,
@@ -70,14 +78,16 @@
 			and A.user_number !='N00000'
 		</where>
 	</select>
-	<select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="selectAllUsersByRole" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
 		<include refid="Base_Column_List" />
 		from user_base A LEFT JOIN user_info B
 		ON A.id = B.id
-		where B.user_role like CONCAT('%',#{roles},'%')
-		AND
-		A.delete_flg='N'
+		where
+		<foreach item="role" collection="list" separator="OR" open="(" close=")">
+			B.user_role LIKE CONCAT('%', #{role}, '%')
+		</foreach>
+		AND A.delete_flg='N'
 	</select>
 	<select id="selectByPage" resultMap="BaseResultMap" parameterType="com.xinchi.bean.UserCommonBean">
 		select
@@ -91,7 +101,7 @@
 			<if test="params.bo.user_roles != null and params.bo.user_roles !=''">
 				and B.user_role like CONCAT('%',#{params.bo.user_roles,jdbcType=VARCHAR},'%')
 			</if>
-			and A.user_number not in ('N00000','N00001','OT')
+			and A.user_number not in ('N00000','OT','N00001')
 		</where>
 		ORDER BY delete_flg,user_number
 	</select>

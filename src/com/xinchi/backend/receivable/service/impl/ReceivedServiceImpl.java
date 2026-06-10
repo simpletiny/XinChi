@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jsoup.select.Evaluator.IsEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import com.xinchi.common.FileFolder;
 import com.xinchi.common.FileUtil;
 import com.xinchi.common.ResourcesConstants;
 import com.xinchi.common.SimpletinyString;
+import com.xinchi.common.SimpletinyUser;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
@@ -76,8 +78,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 		String[] pks = received_pks.split(",");
 		for (String pk : pks) {
 			ClientReceivedDetailBean detail = dao.selectByPk(pk);
-			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM)
-					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
+			if (detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_SUM) || detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_OUT)
 					|| detail.getType().equals(ResourcesConstants.RECEIVED_TYPE_STRIKE_IN)) {
 				String related_pk = detail.getRelated_pk();
 				List<ClientReceivedDetailBean> related_detail = dao.selectByRelatedPks(related_pk);
@@ -160,8 +161,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 			receivableService.updateReceivableReceived(detail);
 		}
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 
 		return SUCCESS;
@@ -191,8 +191,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 		receivableService.updateReceivableReceived(detail);
 
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 
 		return SUCCESS;
@@ -219,8 +218,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 		List<ClientReceivedDetailBean> res = dao.selectByParam(option);
 		BigDecimal discount_received = BigDecimal.ZERO;
 		for (ClientReceivedDetailBean re : res) {
-			if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98)
-					&& !re.getType().equals(ResourcesConstants.RECEIVED_TYPE_FLY)) {
+			if (!re.getType().equals(ResourcesConstants.RECEIVED_TYPE_TAIL98) && !re.getType().equals(ResourcesConstants.RECEIVED_TYPE_FLY)) {
 				discount_received = discount_received.add(re.getReceived());
 			}
 		}
@@ -244,8 +242,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 
 		dao.insertWithPk(detail);
 		// 保存收入凭证
-		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator
-				+ detail.getReceived_time().substring(5, 7);
+		String subFolder = detail.getReceived_time().substring(0, 4) + File.separator + detail.getReceived_time().substring(5, 7);
 		FileUtil.saveFile(detail.getVoucher_file(), FileFolder.CLIENT_RECEIVED_VOUCHER.value(), subFolder);
 		receivableService.updateReceivableReceived(detail);
 
@@ -288,8 +285,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 			dao.insertWithPk(detail);
 			receivableService.updateReceivableReceived(detail);
 		}
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		// 生成支付审批数据
 		PayApprovalBean pa = new PayApprovalBean();
@@ -394,8 +390,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 		detail.setReceived(detail.getReceived().negate());
 
 		dao.insert(detail);
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 
 		// 生成支付审批数据
 		PayApprovalBean pa = new PayApprovalBean();
@@ -438,8 +433,7 @@ public class ReceivedServiceImpl implements ReceivedService {
 			option.setTeam_number(team_number);
 			List<ClientReceivedDetailBean> res = dao.selectByParam(option);
 			ReceivableBean receivable = receivableDao.selectReceivableByTeamNumber(team_number);
-			BigDecimal discount_receivable = (receivable.getFinal_flg().equals("Y")
-					? receivable.getFinal_receivable().multiply(new BigDecimal(0.98))
+			BigDecimal discount_receivable = (receivable.getFinal_flg().equals("Y") ? receivable.getFinal_receivable().multiply(new BigDecimal(0.98))
 					: receivable.getBudget_receivable().multiply(new BigDecimal(0.98)));
 			// 98折应收精确到元，向下取整。如198.4就应该是198
 			discount_receivable = discount_receivable.setScale(0, BigDecimal.ROUND_DOWN);
@@ -457,14 +451,12 @@ public class ReceivedServiceImpl implements ReceivedService {
 						// if (order.getConfirm_date().equals(re.getReceived_time().substring(0, 10))) {
 						// discount_received = discount_received.add(re.getReceived());
 						// }
-						if (null != order.getConfirm_date()
-								&& DateUtil.compare(order.getConfirm_date(), "2022-07-18") == 2) {
+						if (null != order.getConfirm_date() && DateUtil.compare(order.getConfirm_date(), "2022-07-18") == 2) {
 							discount_received = discount_received.add(re.getReceived());
 						} else {
 							// 如果订单未确认，则用订单创建时间计算
-							String limitDate = DateUtil
-									.addDate(order.getConfirm_flg().equals("Y") ? order.getConfirm_date()
-											: DateUtil.fromUnixTime(order.getCreate_time(), DateUtil.YYYY_MM_DD), 1);
+							String limitDate = DateUtil.addDate(order.getConfirm_flg().equals("Y") ? order.getConfirm_date()
+									: DateUtil.fromUnixTime(order.getCreate_time(), DateUtil.YYYY_MM_DD), 1);
 							if (DateUtil.compare(limitDate, re.getReceived_time().substring(0, 10)) < 2) {
 								discount_received = discount_received.add(re.getReceived());
 							}
@@ -500,24 +492,78 @@ public class ReceivedServiceImpl implements ReceivedService {
 		return dao.selectSumReceivedByTeamNumber(team_number);
 	}
 
+	@Autowired
+	private PaidDAO paidDAO;
+	@Autowired
+	private AirTicketPaidDetailDAO airTicketPaidDetailDAO;
+	@Autowired
+	private AirReceivedDAO airReceivedDAO;
+
 	@Override
-	public String rejectRecived(String related_pks) {
-		String[] rps = related_pks.split(ResourcesConstants.DELIMITER);
+	public String rejectRecived(String reject_json) {
+		JSONObject obj = JSONObject.fromObject(reject_json);
+		String rejectReason = obj.getString("reject_reason");
+		JSONArray applys = obj.getJSONArray("received_applys");
+		UserSessionBean user = SimpletinyUser.user();
+		String approval_user = user.getUser_number();
+		for (int i = 0; i < applys.size(); i++) {
+			JSONObject apply = applys.getJSONObject(i);
+			String related_pk = apply.getString("related_pk");
+			String from_where = apply.getString("from_where");
 
-		for (String related_pk : rps) {
-			List<ClientReceivedDetailBean> receiveds = dao.selectByRelatedPks(related_pk);
-
-			for (ClientReceivedDetailBean crd : receiveds) {
-				crd.setStatus("N");
-				dao.update(crd);
-
-				ClientReceivedDetailBean option = new ClientReceivedDetailBean();
-				option.setTeam_number(crd.getTeam_number());
-				option.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
-				List<ClientReceivedDetailBean> tails = dao.selectByParam(option);
-				for (ClientReceivedDetailBean tail : tails) {
-					tail.setStatus("N");
-					dao.update(tail);
+			if (!SimpletinyString.isEmpty(from_where)) {
+				// 应收款
+				if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_CLIENT)) {
+					List<ClientReceivedDetailBean> receiveds = dao.selectByRelatedPks(related_pk);
+					for (ClientReceivedDetailBean crd : receiveds) {
+						crd.setStatus("N");
+						crd.setConfirm_user(approval_user);
+						crd.setReject_reason(rejectReason);
+						crd.setConfirm_time(DateUtil.getMinStr());
+						dao.update(crd);
+						// 如果存在98清尾，则打回98清尾
+						ClientReceivedDetailBean option = new ClientReceivedDetailBean();
+						option.setTeam_number(crd.getTeam_number());
+						option.setType(ResourcesConstants.RECEIVED_TYPE_TAIL98);
+						List<ClientReceivedDetailBean> tails = dao.selectByParam(option);
+						for (ClientReceivedDetailBean tail : tails) {
+							tail.setStatus("N");
+							dao.update(tail);
+						}
+					}
+				}
+				// 地接退返
+				else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_SUPPLIER)) {
+					List<SupplierPaidDetailBean> details = paidDAO.selectSupplierPaidDetailByRelatedPk(related_pk);
+					for (SupplierPaidDetailBean detail : details) {
+						detail.setStatus("N");
+						detail.setReject_reason(rejectReason);
+						detail.setApprove_user(approval_user);
+						detail.setConfirm_time(DateUtil.getMinStr());
+						paidDAO.update(detail);
+					}
+				}
+				// 票务退返
+				else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_TICKET)) {
+					List<AirTicketPaidDetailBean> details = airTicketPaidDetailDAO.selectByRelatedPk(related_pk);
+					for (AirTicketPaidDetailBean detail : details) {
+						detail.setStatus("N");
+						detail.setReject_reason(rejectReason);
+						detail.setApprove_user(approval_user);
+						detail.setConfirm_time(DateUtil.getMinStr());
+						airTicketPaidDetailDAO.update(detail);
+					}
+				}
+				// 票务收入
+				else if (from_where.equals(ResourcesConstants.RECEIVED_FROM_WHERE_AIR_RECEIVED)) {
+					List<AirReceivedDetailBean> details = airReceivedDAO.selectByRelatedPk(related_pk);
+					for (AirReceivedDetailBean detail : details) {
+						detail.setStatus("N");
+						detail.setReject_reason(rejectReason);
+						detail.setConfirm_user(approval_user);
+						detail.setConfirm_time(DateUtil.getMinStr());
+						airReceivedDAO.update(detail);
+					}
 				}
 			}
 		}
@@ -575,5 +621,10 @@ public class ReceivedServiceImpl implements ReceivedService {
 		}
 
 		return results;
+	}
+
+	@Override
+	public List<ClientReceivedDetailBean> selectByTeamNumber(String team_number) {
+		return dao.selectByTeamNumber(team_number);
 	}
 }

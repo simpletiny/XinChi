@@ -1,9 +1,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,20 +53,17 @@
 }
 
 .fixed {
-	font-size: 12px;
 	display: block;
 	position: fixed;
-	right: 15%;
+	right: 10px;
 	top: 200px;
-	margin-left: 10px;
 	z-index: 100;
 	width: 100px;
 }
 
-.fixed button {
-	width: 80px;
+.fixed input {
 	margin-top: 5px;
-	display: block;
+	display: inline-block;
 }
 
 .error {
@@ -81,42 +77,40 @@
 		<div class="subtitle">
 			<h2>已出票名单</h2>
 		</div>
-		<!-- 	<div class="fixed">
-			<div style="width: 30%; float: right">
-				<button type="submit" class="btn btn-green col-md-1" data-bind="click: function() { operate() }">分配</button>
-			</div>
-		</div> -->
+		<div class="fixed">
+			<input type="button" class="btn btn-green" id="copy" value="复制"></input>
+		</div>
 		<div class="main-container">
 			<div class="main-box" id="div-box">
 				<form class="form-horizontal search-panel">
 					<div class="form-group">
 						<div style="float: left">
+							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockOrder() }">解锁订单</button>
 							<button type="submit" class="btn btn-green" data-bind="click: function() {unlockName()}">解锁名单</button>
 						</div>
 						<div style="float: right">
+							<button type="submit" class="btn btn-green" data-bind="click: function() { lockOrder()}">锁定订单</button>
 							<button type="submit" class="btn btn-green" data-bind="click: function() { lockName() }">锁定名单</button>
 							<button type="button" class="btn btn-green" data-bind="click:flightChange">航变</button>
 							<button type="button" class="btn btn-green" data-bind="click:rollBack">打回重出</button>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="span6">
-							<label class="col-md-1 control-label">客户</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
-							</div>
+						<label class="col-md-1 control-label">客户</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="客户" name="passenger.client_name" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">团号</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
-							</div>
+						<label class="col-md-1 control-label">订单号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="订单号" name="passenger.order_number" />
 						</div>
-						<div class="span6">
-							<label class="col-md-1 control-label">乘机人</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
-							</div>
+						<label class="col-md-1 control-label">团号</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="团号" name="passenger.team_number" />
+						</div>
+						<label class="col-md-1 control-label">乘机人</label>
+						<div class="col-md-2">
+							<input type="text" class="form-control" placeholder="乘机人" name="passenger.name" />
 						</div>
 					</div>
 
@@ -138,9 +132,22 @@
 								<input type="text" class="form-control" placeholder="首航段" name="passenger.first_from_to" />
 							</div>
 						</div>
+					</div>
+					<div class="form-group">
+						<div align="left">
+							<label class="col-md-1 control-label">首航年份</label>
+							<div class="col-md-2" style="float: left">
+								<input type="number" class="form-control" data-bind="value:year" placeholder="2025" name="passenger.year" />
+							</div>
+						</div>
+						<div class="span6">
+							<label class="col-md-1 control-label">按首航日期</label>
+							<div class="col-md-2">
+								<select class="form-control" style="height: 34px" data-bind="options: sortTypes,event{change:search},value:'倒序'" name="passenger.sort_type"></select>
+							</div>
+						</div>
 						<div style="padding-top: 3px;">
 							<button type="submit" class="btn btn-green" data-bind="click: refresh">搜索</button>
-							<button type="button" class="btn btn-green" id="copy">复制选中的名单信息</button>
 						</div>
 					</div>
 				</form>
@@ -163,7 +170,7 @@
 								<th>价格</th>
 								<th>需求备注</th>
 								<th>退团</th>
-								<th>名单</th>
+								<th>订单/名单</th>
 								<th>状态</th>
 							</tr>
 						</thead>
@@ -185,7 +192,8 @@
 								<td data-bind="text: $data.ticket_cost+$data.change_cost" class="rmb"></td>
 								<td data-bind="text: $data.need_comment"></td>
 								<td><span data-bind="text:$root.deleteMapping[$data.delete_flg]"></span></td>
-								<td><span data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
+								<td><span data-bind="text: $root.lockMapping[$data.order_lock_flg.substr(2,1)]"></span>/<span
+									data-bind="text:$root.lockMapping[$data.lock_flg]"></span></td>
 								<!-- ko if:$data.status=='Y' -->
 								<td data-bind="text:$root.statusMapping[$data.status]"></td>
 								<!-- /ko -->
@@ -227,16 +235,16 @@
 							<th style="width: 15%">姓名</th>
 							<th style="width: 40%">身份证号</th>
 							<th style="width: 15%">价格</th>
-							<th style="width: 30%">航变成本<input type="checkbox" id="change-all"/></th>
+							<th style="width: 30%">航变成本<input type="checkbox" id="change-all" /></th>
 						</tr>
 					</thead>
-					<tbody data-bind="foreach:changeNames" >
+					<tbody data-bind="foreach:changeNames">
 						<tr>
-							<input type="hidden" data-bind="value:$data.pk" st="name-pk"/>
+							<input type="hidden" data-bind="value:$data.pk" st="name-pk" />
 							<td data-bind="text:$data.name"></td>
 							<td data-bind="text:$data.id"></td>
 							<td data-bind="text:$data.ticket_cost"></td>
-							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person" oninput="calSum()"  required /></td>
+							<td><input class="form-control" type="number" placeholder="负数即有退款" st="change-cost-person" oninput="calSum()" required /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -267,8 +275,8 @@
 					<div class="col-md-6 required">
 						<label class="l" style="width: 25%">分配成本</label>
 						<div class="ip">
-							<input type="hidden" st="ticket-source-pk" data-bind="value:$data.pk" /> <input class="form-control"
-								type="number" st="money" placeholder="分配成本" />
+							<input type="hidden" st="ticket-source-pk" data-bind="value:$data.pk" /> <input class="form-control" type="number" st="money"
+								placeholder="分配成本" />
 						</div>
 					</div>
 				</div>
@@ -279,15 +287,14 @@
 				<div class="col-md-12 required">
 					<label class="l">航变备注</label>
 					<div class="ip">
-						<textarea type="text" class="ip-default comment" st="comment" name="comment" rows="5" maxlength="200"
-							placeholder="需要备注说明的信息" required></textarea>
+						<textarea type="text" class="ip-default comment" st="comment" name="comment" rows="5" maxlength="200" placeholder="需要备注说明的信息" required></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="input-row clearfloat">
 				<div class="col-md-12" style="text-align: right">
-					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doFlightChange();}">提交</a> <a
-						type="submit" class="btn btn-green btn-r" data-bind="click: cancelChange()">取消</a>
+					<a type="submit" class="btn btn-green btn-r" data-bind="click: function(){doFlightChange();}">提交</a> <a type="submit" class="btn btn-green btn-r"
+						data-bind="click: cancelChange()">取消</a>
 				</div>
 			</div>
 		</form>
@@ -320,11 +327,12 @@
 	</div>
 
 	<script>
-		$(".ticket-operation").addClass("current").children("ol").css("display", "block");
+		$(".ticket-operation").addClass("current").children("ol").css(
+				"display", "block");
 	</script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/name-list-done.js?v1.006"></script>
 	<script src="<%=basePath%>static/vendor/clipboard.min.js"></script>
 </body>
 </html>

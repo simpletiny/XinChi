@@ -7,8 +7,8 @@ var OrderContext = function() {
 
 	self.order_pk = $("#key").val();
 	self.employee = ko.observable({});
-	
-	$.getJSON(self.apiurl + 'order/searchCOrderByPk', {
+
+	$.getJSON(self.apiurl + 'order/searchOrderByPk', {
 		order_pk : self.order_pk
 	}, function(data) {
 		self.order(data.order);

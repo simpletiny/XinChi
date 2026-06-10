@@ -14,9 +14,11 @@ import com.xinchi.backend.client.service.AccurateSaleService;
 import com.xinchi.backend.client.service.ClientRelationService;
 import com.xinchi.backend.client.service.EmployeeService;
 import com.xinchi.backend.order.service.OrderService;
+import com.xinchi.backend.user.service.UserService;
 import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
 import com.xinchi.bean.ClientSummaryDto;
@@ -28,6 +30,9 @@ import com.xinchi.bean.MeterDto;
 import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.PotentialDto;
 import com.xinchi.bean.SaleScoreDto;
+import com.xinchi.bean.ScoreRankDto;
+import com.xinchi.bean.UserBaseBean;
+import com.xinchi.bean.UserCommonBean;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.BaseAction;
 import com.xinchi.common.DateUtil;
@@ -90,8 +95,7 @@ public class ClientRelationAction extends BaseAction {
 	}
 
 	public String searchRelationsByPage() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
@@ -208,9 +212,17 @@ public class ClientRelationAction extends BaseAction {
 
 	private IncomingCountDto incomingCount;
 
+	private ClientEmployeeTypeCountBean clientEmployeeTypeCount;
+
+	private ScoreRankDto rankLastMonth;
+	private ScoreRankDto rankThisMonth;
+
+	@Autowired
+	private UserService userService;
+	
+
 	public String searchClientSummary() {
-		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext
-				.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
+		UserSessionBean sessionBean = (UserSessionBean) XinChiApplicationContext.getSession(ResourcesConstants.LOGIN_SESSION_KEY);
 		String roles = sessionBean.getUser_roles();
 
 		SaleScoreDto ssd = new SaleScoreDto();
@@ -231,17 +243,27 @@ public class ClientRelationAction extends BaseAction {
 		float back_score = 0;
 
 		String user_pk = "";
+		ScoreRankDto rank_option = new ScoreRankDto();
 		if (!roles.contains(ResourcesConstants.USER_ROLE_ADMIN)) {
 			user_pk = sessionBean.getPk();
 		} else {
 			user_pk = relation.getSales();
 		}
-
+		//用户信息
+		UserCommonBean user = userService.selectUserCommonByPk(user_pk);
+		String user_number = user.getUser_number();
+		
+		rank_option.setSale_number(user_number);
 		potential = service.selectPotentialData(user_pk);
 		meter = service.selectMeterData(user_pk);
 		workOrder = service.selectWorkOrderData(user_pk);
 		accurateSale = service.selectAccurateSaleData(user_pk);
 		incomingCount = service.selectIncomingDate(user_pk);
+
+		ClientEmployeeTypeCountBean optionType = new ClientEmployeeTypeCountBean();
+		optionType.setUser_pk(user_pk);
+		optionType.setMonth(DateUtil.lastMonth());
+		clientEmployeeTypeCount = service.selectTypeCount(optionType);
 
 		if (!SimpletinyString.isEmpty(user_pk)) {
 			point_money_deduct = service.caculatePointMoneyDeduct(user_pk);
@@ -263,9 +285,29 @@ public class ClientRelationAction extends BaseAction {
 
 		meter.setPoint_money_deduct(point_money_deduct);
 		meter.setBack_score(back_score);
-		// clientSummary = service.getClientSummary(relation);
-		// employeeCount = service.selectClientEmployeeCount(relation);
-		// monthOrderCount = service.selectMonthOrderCount(relation);
+
+		rank_option.setConfirm_month(DateUtil.lastMonth());
+		rankLastMonth = service.selectRankScore(rank_option);
+		rank_option.setConfirm_month(DateUtil.thisMonth());
+		rankThisMonth = service.selectRankScore(rank_option);
+		if (null != rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.FIRST_OF_MONTH)) {
+			rankThisMonth.setRank_last_score(0);
+			rankThisMonth.setRank_middle_score(0);
+		} else if (null != rankThisMonth && DateUtil.getTenDayPeriod().equals(DateUtil.MIDDLE_OF_MONTH)) {
+			rankThisMonth.setRank_last_score(0);
+		}
+		// 查询签单期间
+		if (!SimpletinyString.isEmpty(user_number)) {
+			String maxOrderDate = orderService.selectMaxConfirmDateBySaleNumber(user_number);
+			if(maxOrderDate==null) {
+				maxOrderDate =  DateUtil.fromUnixTime(user.getApprove_time(),DateUtil.YYYY_MM_DD);
+			}
+			
+			int order_days = DateUtil.dateDiff(maxOrderDate, DateUtil.today());
+			String meter_message = String.format("(%s%d天未签单)", user.getNick_name(),order_days);
+			meter.setMeter_message(meter_message);
+		}
+
 		return SUCCESS;
 	}
 
@@ -471,5 +513,29 @@ public class ClientRelationAction extends BaseAction {
 
 	public void setRelations(List<ClientRelationBean> relations) {
 		this.relations = relations;
+	}
+
+	public ClientEmployeeTypeCountBean getClientEmployeeTypeCount() {
+		return clientEmployeeTypeCount;
+	}
+
+	public void setClientEmployeeTypeCount(ClientEmployeeTypeCountBean clientEmployeeTypeCount) {
+		this.clientEmployeeTypeCount = clientEmployeeTypeCount;
+	}
+
+	public ScoreRankDto getRankLastMonth() {
+		return rankLastMonth;
+	}
+
+	public void setRankLastMonth(ScoreRankDto rankLastMonth) {
+		this.rankLastMonth = rankLastMonth;
+	}
+
+	public ScoreRankDto getRankThisMonth() {
+		return rankThisMonth;
+	}
+
+	public void setRankThisMonth(ScoreRankDto rankThisMonth) {
+		this.rankThisMonth = rankThisMonth;
 	}
 }

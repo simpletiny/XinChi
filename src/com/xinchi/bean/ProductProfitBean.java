@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 import com.xinchi.common.SupperBO;
 
-public class ProductProfitBean extends SupperBO implements Serializable {
+public class ProductProfitBean extends SupperBO implements Serializable, Comparable<ProductProfitBean> {
 	private static final long serialVersionUID = -6861985805862234005L;
 
 	private String departure_month;
@@ -16,13 +16,15 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	private BigDecimal gross_profit;
 
-	private BigDecimal product_cost;
+	private BigDecimal product_cost = BigDecimal.ZERO;
 
-	private BigDecimal keep_cost;
+	private BigDecimal keep_cost = BigDecimal.ZERO;
 
 	private BigDecimal air_lose;
 
-	private BigDecimal other_cost;
+	private BigDecimal ticket_other_cost = BigDecimal.ZERO;
+
+	private BigDecimal other_cost = BigDecimal.ZERO;;
 
 	private BigDecimal profit;
 
@@ -37,6 +39,14 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 	private String update_user;
 
 	private String option_year;
+	
+	private String product_line;
+
+	// DTO
+	// 手续费
+	private BigDecimal service_fees = BigDecimal.ZERO;
+	// 押金扣款
+	private BigDecimal deposit_deduct = BigDecimal.ZERO;
 
 	public String getDeparture_month() {
 		return departure_month;
@@ -156,6 +166,43 @@ public class ProductProfitBean extends SupperBO implements Serializable {
 
 	public void setScore(BigDecimal score) {
 		this.score = score;
+	}
+
+	public BigDecimal getService_fees() {
+		return service_fees;
+	}
+
+	public void setService_fees(BigDecimal service_fees) {
+		this.service_fees = service_fees;
+	}
+
+	public BigDecimal getDeposit_deduct() {
+		return deposit_deduct;
+	}
+
+	public void setDeposit_deduct(BigDecimal deposit_deduct) {
+		this.deposit_deduct = deposit_deduct;
+	}
+
+	@Override
+	public int compareTo(ProductProfitBean o) {
+		return this.getDeparture_month().compareTo(o.getDeparture_month());
+	}
+
+	public BigDecimal getTicket_other_cost() {
+		return ticket_other_cost;
+	}
+
+	public void setTicket_other_cost(BigDecimal ticket_other_cost) {
+		this.ticket_other_cost = ticket_other_cost;
+	}
+
+	public String getProduct_line() {
+		return product_line;
+	}
+
+	public void setProduct_line(String product_line) {
+		this.product_line = product_line;
 	}
 
 }

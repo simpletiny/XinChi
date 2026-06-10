@@ -23,6 +23,7 @@
 		<result column="lock_flg" property="lock_flg" jdbcType="CHAR" />
 		<result column="name_confirm_status" property="name_confirm_status" jdbcType="CHAR" />
 		<result column="standard_flg" property="standard_flg" jdbcType="CHAR" />
+		<result column="receivable" property="receivable" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="selectByPage" parameterType="com.xinchi.tools.Page" resultMap="BaseResultMap">
@@ -38,30 +39,28 @@
 		A.departure_date,
 		A.adult_count,
 		A.special_count,
-		A.create_user AS sale_name,
+		A.sale_name
+		AS sale_name,
 		A.product_manager_number,
 		A.operate_flg,
 		C.user_name AS product_manager,
 		B.pk AS product_pk,
-		B.product_number AS product_number,
 		A.pk AS pk,
 		A.passenger_captain AS passenger,
 		A.treat_comment,
 		A.lock_flg,
 		A.name_confirm_status,
-		A.standard_flg
-
-		from budget_order_view A
-		LEFT JOIN product B ON A.product_pk=B.pk
+		A.standard_flg,
+		if(A.confirm_flg='F',A.final_receivable, A.receivable) As receivable
+		from
+		budget_order_view A
+		LEFT JOIN product B ON
+		A.product_pk=B.pk
 		LEFT
 		JOIN user_base C ON A.product_manager_number =
 		C.user_number
-		LEFT JOIN final_order_view D ON A.team_number=D.team_number
 		<where>
-			and A.confirm_flg in ('Y','F') and (D.final_type is null or D.final_type!=4) and A.independent_flg != 'A'
-			<if test="params.bo.product_manager_number != null and params.bo.product_manager_number !=''">
-				and A.product_manager_number = #{params.bo.product_manager_number,jdbcType=VARCHAR}
-			</if>
+			and A.confirm_flg in ('Y','F') and (A.final_type is null or A.final_type!=4) and A.independent_flg != 'A'
 			<if test="params.bo.product_model!= null and params.bo.product_model !=''">
 				and B.product_model like CONCAT('%',#{params.bo.product_model,jdbcType=VARCHAR},'%')
 			</if>
@@ -83,7 +82,13 @@
 			<if test="params.bo.date_to != null and params.bo.date_to !=''">
 				and A.departure_date &lt;= #{params.bo.date_to,jdbcType=VARCHAR}
 			</if>
+			<if test="params.bo.product_manager_numbers != null and params.bo.product_manager_numbers.size() > 0 and params.bo.product_manager_numbers[0] != ''">
+				AND A.product_manager_number IN
+				<foreach item="item" index="index" collection="params.bo.product_manager_numbers" open="(" separator="," close=")">
+					#{params.bo.product_manager_numbers[${index}]}
+				</foreach>
+			</if>
 		</where>
-		ORDER BY A.departure_date DESC
+		ORDER BY A.departure_date,A.product_name,product_model,A.sale,A.adult_count DESC
 	</select>
 </mapper>

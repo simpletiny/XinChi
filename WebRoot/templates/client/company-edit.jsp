@@ -11,6 +11,64 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>欣驰国际</title>
+<link rel="stylesheet" href="<%=basePath%>static/css/dropzone.css" type="text/css" />
+<link rel="stylesheet" href="<%=basePath%>static/css/upload.css" type="text/css" />
+<style>
+h3 {
+	padding-left: 20px !important;
+}
+
+.preview-container {
+	min-height: 230px;
+	display: flex;
+	align-items: center;
+}
+
+.preview-container img {
+	margin-left: 20px;
+	border: 1px dashed #ccc;
+	width: 200px;
+	height: 200px;
+}
+
+.plus-sign {
+	display: inline-block;
+	font-size: 3em; /* 加号的大小 */
+	color: #000; /* 加号的颜色 */
+}
+
+.upload-title {
+	width: 100%;
+	font-size: 16px;
+}
+
+.upload-container {
+	width: 100%;
+	display: flex;
+}
+
+.dropzone {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	height: 230px;
+	width: 200px;
+	margin-left: 20px;
+	margin-top: 20px;
+	border: 2px dashed #ccc;
+	gap: 5px;
+	flex-direction: column;
+	text-align: center;
+}
+
+.no-select {
+	user-select: none; /* 禁止选择 */
+	-webkit-user-select: none; /* 针对Safari和Chrome的前缀 */
+	-moz-user-select: none; /* 针对Firefox的前缀 */
+	-ms-user-select: none; /* 针对IE和Edge的前缀 */
+}
+</style>
 </head>
 <body>
 	<div class="main-body">
@@ -60,77 +118,98 @@
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">公司类型</label>
 							<div class="ip">
 								<select class="form-control"
 									data-bind="options: clientType, optionsCaption: '-- 请选择 --', value: client().client_type"
-									name="client.client_type" required="required"></select>
+									name="client.client_type"></select>
 							</div>
 						</div>
-						<div class="col-md-6 required">
-							<label class="l">地市</label>
-							<div class="ip" style="width: 35%">
-								<select class="form-control"
-									data-bind="options: clientArea, optionsCaption: '-- 请选择 --',value: client().client_area,event:{change:ter}"
-									name="client.client_area" required="required"></select>
-							</div>
-							<div class="ip" style="width: 35%">
-								<select class="form-control" id="county" name="client.client_county"></select>
-							</div>
-						</div>
-					</div>
-					<div class="input-row clearfloat">
-						<div class="col-md-4 required">
+						<div class="col-md-6">
 							<label class="l">门脸</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: storeTypes, optionsCaption: '-- 请选择 --', value: client().store_type"
-									name="client.store_type" required="required"></select>
+									name="client.store_type"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-6">
 							<label class="l">主营</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: mainBusinesses, optionsCaption: '-- 请选择 --', value: client().main_business"
-									name="client.main_business" required="required"></select>
+									name="client.main_business"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+						<div class="col-md-6">
 							<label class="l">回款誉</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: backLevels, optionsCaption: '-- 请选择 --', value: client().back_level"
-									name="client.back_level" required="required"></select>
+									name="client.back_level"></select>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-4 required">
+						<div class="col-md-6">
 							<label class="l">市场力</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: marketLevels, optionsCaption: '-- 请选择 --', value: client().market_level"
-									name="client.market_level" required="required"></select>
+									name="client.market_level"></select>
 							</div>
 						</div>
-						<div class="col-md-4 required">
+						<div class="col-md-6">
 							<label class="l">紧密度</label>
-							<div class="ip" style="width: 60%">
+							<div class="ip">
 								<select class="form-control"
 									data-bind="options: talkLevels, optionsCaption: '-- 请选择 --', value: client().talk_level"
-									name="client.talk_level" required="required"></select>
+									name="client.talk_level"></select>
 							</div>
 						</div>
 					</div>
 					<div class="input-row clearfloat">
-						<div class="col-md-12 required">
+						<div class="col-md-6">
+							<label class="l">地市</label>
+							<div class="ip" style="width: 35%">
+								<select class="form-control heilongjiang-city" data-bind="value:client().client_area"></select>
+							</div>
+							<div class="ip" style="width: 35%">
+								<select class="form-control district" name="client.client_county"></select>
+							</div>
+						</div>
+						<div class="col-md-6 ">
 							<label class="l">地址</label>
 							<div class="ip">
 								<input type="text" class="ip-" maxlength="100" data-bind="value: client().address" placeholder="地址"
-									required="required" name="client.address" />
+									name="client.address" />
 								</textarea>
+							</div>
+						</div>
+					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-4">
+							<label class="l">收件人</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="10" data-bind="value: client().recipient" placeholder="收件人"
+									name="client.recipient" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">联系方式1</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="20" data-bind="value: client().recipient_phone1" placeholder="联系方式1"
+									name="client.recipient_phone1" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label class="l">联系方式2</label>
+							<div class="ip" style="width: 60">
+								<input type="text" class="ip-" maxlength="20" data-bind="value: client().recipient_phone2" placeholder="联系方式2"
+									name="client.recipient_phone2" />
 							</div>
 						</div>
 					</div>
@@ -147,11 +226,11 @@
 					<hr noshade color="#0066cc" />
 					<h3>财务主体</h3>
 					<div class="input-row clearfloat">
-						<div class="col-md-6 required">
+						<div class="col-md-6">
 							<label class="l">姓名</label>
 							<div class="ip">
 								<input type="text" class="ip- date-picker" maxlength="10" data-bind="value: client().body_name"
-									placeholder="财务主体姓名" name="client.body_name" required="required" />
+									placeholder="财务主体姓名" name="client.body_name" />
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -200,6 +279,24 @@
 								<textarea type="text" class="ip-default" maxlength="100" rows="15" data-bind="value: client().comment"
 									name="client.comment" placeholder="需要备注说明的信息"></textarea>
 							</div>
+						</div>
+					</div>
+
+					<hr noshade color="#0066cc" />
+					<h3>外环境</h3>
+					<div class="upload-container " id="out-container">
+						<div class="preview-container"></div>
+						<div class="dropzone" id="dropzoneout">
+							<span class="plus-sign">+</span> <span class="upload-title no-select">上传图片（可拖拽）</span>
+						</div>
+					</div>
+
+					<hr noshade color="#0066cc" />
+					<h3>内环境</h3>
+					<div class="upload-container" id="in-container">
+						<div class="preview-container"></div>
+						<div class="dropzone" id="dropzonein">
+							<span class="plus-sign">+</span> <span class="upload-title no-select">上传图片（可拖拽）</span>
 						</div>
 					</div>
 				</form>
@@ -255,12 +352,18 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/template" id="tpl">
+        <div class="dz-preview dz-file-preview">
+        </div>
+    </script>
 	<script>
 		$(".client").addClass("current").children("ol").css("display", "block");
 	</script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>static/vendor/messages_zh.min.js"></script>
 	<script src="<%=basePath%>static/js/validation.js"></script>
-	<script src="<%=basePath%>static/js/client/company-edit.js"></script>
+	<script src="<%=basePath%>static/vendor/dropzone.js"></script>
+	<script src="<%=basePath%>static/js/client/heilongjiang-area.js?v=1.003"></script>
+	<script src="<%=basePath%>static/js/client/company-edit.js?v=1.006"></script>
 </body>
 </html>

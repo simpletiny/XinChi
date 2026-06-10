@@ -12,6 +12,7 @@
 <head>
 <title>欣驰国际</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/upload.css" />
 </head>
 <body>
 	<div class="main-body">
@@ -19,7 +20,7 @@
 		<input type="hidden" id="client_key" value="<%=key%>" />
 		<div class="subtitle">
 			<h2>
-				新增拜访<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
+				新增会见<a href="javascript:void(0)" onclick="javascript:history.go(-1);return false;" class="cancel-create"><i
 					class="ic-cancel"></i>取消</a>
 			</h2>
 		</div>
@@ -43,9 +44,8 @@
 					<div class="input-row clearfloat">
 						<div class="col-md-12">
 							<div class="ip required" style="width: 30%">
-								<label class="l">日期</label> <input type="text" style="width: 50%"
-									class="ip-default date-picker" data-bind="value: visit().date"  name="visit.date"
-									required="required" />
+								<label class="l">日期</label> <input type="text" style="width: 50%" class="ip-default date-picker"
+									data-bind="value: visit().date" name="visit.date" required="required" />
 							</div>
 						</div>
 					</div>
@@ -74,11 +74,20 @@
 						<div class="col-md-12 required">
 							<label class="l">效果评估</label>
 							<div class="ip">
-								<textarea type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary"
-									name="visit.summary" placeholder="效果评估" required="required"></textarea>
+								<textarea id="txt-summary" type="text" class="ip-default" rows="15" maxlength="500" data-bind="value: visit().summary"
+									name="visit.summary" placeholder="效果评估(最少20字)" required="required"></textarea>
 							</div>
 						</div>
 					</div>
+					<div class="input-row clearfloat">
+						<div class="col-md-2 required" >
+							<label class="l">上传图片</label>
+							<a href="javascript:;"  class="a-upload">选择文件<input type="file" required="required" class="file-img"
+								accept="image/jpeg,image/png" name="file2" /></a> <input type="hidden" name="visit.visit_img" />
+						</div>
+						<div class="col-md-6"></div>
+					</div>
+					<div class="input-row clearfloat"></div>
 				</form>
 				<div align="right">
 					<a type="submit" class="btn btn-green btn-r" id="btn_save" data-bind="click: saveVisit">保存</a>
@@ -139,6 +148,7 @@
 	<script src="<%=basePath%>static/js/validation.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/jquery.datetimepicker.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/client/visit-creation.js"></script>
+	<script src="<%=basePath%>static/js/file-upload.js"></script>
+	<script src="<%=basePath%>static/js/client/visit-creation.js?v=1.001"></script>
 </body>
 </html>

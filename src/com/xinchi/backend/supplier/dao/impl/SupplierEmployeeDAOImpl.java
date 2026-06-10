@@ -41,24 +41,33 @@ public class SupplierEmployeeDAOImpl extends SqlSessionDaoSupport implements Sup
 
 	@Override
 	public com.xinchi.bean.SupplierEmployeeBean selectByPrimaryKey(String id) {
-		return (com.xinchi.bean.SupplierEmployeeBean) daoUtil.selectByPK("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByPrimaryKey", id);
+		return (com.xinchi.bean.SupplierEmployeeBean) daoUtil
+				.selectByPK("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByPrimaryKey", id);
 	}
 
 	@Override
 	public List<com.xinchi.bean.SupplierEmployeeBean> getAllByParam(com.xinchi.bean.SupplierEmployeeBean bo) {
-		List<com.xinchi.bean.SupplierEmployeeBean> list = daoUtil.selectByBOParamT("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByParam", bo);
+		List<com.xinchi.bean.SupplierEmployeeBean> list = daoUtil
+				.selectByBOParamT("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByParam", bo);
 		return list;
 	}
 
 	@Override
 	public List<SupplierEmployeeBean> getAllByPage(Page<SupplierEmployeeBean> page) {
-		List<com.xinchi.bean.SupplierEmployeeBean> list = daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByPage", page);
+		List<com.xinchi.bean.SupplierEmployeeBean> list = daoUtil
+				.selectByParam("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectByPage", page);
 		return list;
 	}
 
 	@Override
 	public List<String> getBodyPksByEmployeePks(String[] employee_pks) {
-		return daoUtil.selectListByParam("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectBodyPksByEmployeePks", employee_pks);
+		return daoUtil.selectListByParam("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectBodyPksByEmployeePks",
+				employee_pks);
+	}
+
+	@Override
+	public List<SupplierEmployeeBean> selectBySupplierPk(String supplier_pk) {
+		return daoUtil.selectByParam("com.xinchi.bean.mapper.SupplierEmployeeMapper.selectBySupplierPk", supplier_pk);
 	}
 
 }

@@ -51,7 +51,7 @@ var CompanyContext = function() {
 
 		var param = $("#form-search").serialize();
 		if ($("#chk_public").is(":checked")) {
-			param += "&employee.public_flgs=Y";
+			param += "&employee.public_flgs=Y&employee.public_flgs=N";
 		} else {
 			param += "&employee.public_flgs=N";
 		}
@@ -59,7 +59,6 @@ var CompanyContext = function() {
 		param += "&page.start=" + self.startIndex() + "&page.count=" + self.perPage;
 		$.getJSON(self.apiurl + 'client/searchEmployeeByPage', param, function(data) {
 			self.employees(data.employees);
-			console.log(data.employees);
 			self.totalCount(Math.ceil(data.page.total / self.perPage));
 			self.setPageNums(self.currentPage());
 			self.loadFiles();

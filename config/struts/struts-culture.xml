@@ -24,6 +24,27 @@
 			<result name="success" type="str">resultStr</result>
 		</action>
 
+		<!-- 欣驰承诺 -->
+		<action name="createXinChiPromise" class="xinChiPromiseAction" method="createXinChiPromise">
+			<result name="success" type="str">resultStr
+			</result>
+		</action>
+		<action name="searchXinChiPromiseByPage" class="xinChiPromiseAction" method="searchXinChiPromiseByPage">
+			<result name="success" type="json">
+				<param name="excludeNullProperties">true</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="searchOneXinChiPromise" class="xinChiPromiseAction" method="searchOneXinChiPromise">
+			<result name="success" type="json"></result>
+		</action>
+		<action name="updateXinChiPromise" class="xinChiPromiseAction" method="updateXinChiPromise">
+			<result name="success" type="str">resultStr</result>
+		</action>
+		<action name="deleteXinChiPromise" class="xinChiPromiseAction" method="deleteXinChiPromise">
+			<result name="success" type="str">resultStr</result>
+		</action>
+
 		<!-- 世界观 -->
 		<action name="createWorldView" class="worldViewAction" method="createWorldView">
 			<result name="success" type="str">resultStr
@@ -67,8 +88,8 @@
 		<action name="deleteValueView" class="valueViewAction" method="deleteValueView">
 			<result name="success" type="str">resultStr</result>
 		</action>
-		
-		<!--团质进化-->
+
+		<!--团质进化 -->
 		<action name="createTeamEvolution" class="teamEvolutionAction" method="createTeamEvolution">
 			<result name="success" type="str">resultStr
 			</result>

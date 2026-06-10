@@ -126,16 +126,8 @@ public class BaseDataServiceImpl implements BaseDataService {
 			dao.update(baseData);
 
 		}
-		// 呆账配置
-		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_BAD_CONFIG)) {
-			dao.update(baseData);
-		}
-		// 单团核算相关
-		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_TEAM_CONFIG)) {
-			dao.update(baseData);
-		}
-		// 销售信用额度启用
-		else if (baseData.getType().equals(ResourcesConstants.BASE_DATA_TYPE_SALE_CREDIT)) {
+		// 其他配置
+		else {
 			dao.update(baseData);
 		}
 

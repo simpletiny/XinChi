@@ -16,4 +16,12 @@ public interface AirTicketNeedService extends BaseService {
 	public List<OrderAirInfoBean> selectOrderAirInfoByTeamNumber(String team_number);
 
 	public List<OrderAirInfoBean> selectOrderAirInfoByProductOrderNumber(String order_number);
+
+	public AirTicketNeedBean selectByPk(String pk);
+
+	public List<AirTicketNeedBean> selectByPks(List<String> pks);
+
+	public List<OrderAirInfoBean> selectOrderAirInfoByNeedPk(String need_pk);
+
+	public String deleteTicketNeeds(List<String> need_pks);
 }

@@ -1,14 +1,18 @@
 package com.xinchi.backend.client.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xinchi.backend.client.dao.ClientEmployeeQuitConnectLogDAO;
+import com.xinchi.backend.client.dao.ClientEmployeeTypeCountDAO;
 import com.xinchi.backend.client.dao.ClientEmployeeUserDAO;
 import com.xinchi.backend.client.dao.ClientRelationDAO;
 import com.xinchi.backend.client.dao.ClientVisitDAO;
@@ -21,6 +25,7 @@ import com.xinchi.bean.AccurateSaleDto;
 import com.xinchi.bean.BackPointDto;
 import com.xinchi.bean.ClientEmployeeBean;
 import com.xinchi.bean.ClientEmployeeQuitConnectLogBean;
+import com.xinchi.bean.ClientEmployeeTypeCountBean;
 import com.xinchi.bean.ClientEmployeeUserBean;
 import com.xinchi.bean.ClientRelationBean;
 import com.xinchi.bean.ClientRelationSummaryBean;
@@ -34,6 +39,7 @@ import com.xinchi.bean.MobileTouchBean;
 import com.xinchi.bean.OrderDto;
 import com.xinchi.bean.PointDto;
 import com.xinchi.bean.PotentialDto;
+import com.xinchi.bean.ScoreRankDto;
 import com.xinchi.bean.WorkOrderDto;
 import com.xinchi.common.DateUtil;
 import com.xinchi.common.ResourcesConstants;
@@ -41,6 +47,7 @@ import com.xinchi.common.SimpletinyString;
 import com.xinchi.common.UserSessionBean;
 import com.xinchi.common.XinChiApplicationContext;
 import com.xinchi.tools.Page;
+import com.xinchi.tools.PropertiesUtil;
 
 @Service
 @Transactional
@@ -53,8 +60,25 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 
 	@Override
 	public String createVisit(ClientVisitBean visit) {
+		// 保存凭证文件
+		if (!SimpletinyString.isEmpty(visit.getVisit_img())) {
+			String visit_date = visit.getDate();
+			String visit_year = visit_date.substring(0, 4);
+			String visit_month = visit_date.substring(5, 7);
+			String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+			String fileFolder = PropertiesUtil.getProperty("clientVisitImg");
+			File sourceFile = new File(tempFolder + File.separator + visit.getVisit_img());
+			File destfile = new File(fileFolder + File.separator + visit_year + File.separator + visit_month
+					+ File.separator + visit.getVisit_img());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
 		visitDao.insert(visit);
-		return "OK";
+		return SUCCESS;
 	}
 
 	@Override
@@ -130,6 +154,23 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 
 	@Override
 	public String createMobileTouch(MobileTouchBean mobile) {
+		// 保存凭证文件
+		if (!SimpletinyString.isEmpty(mobile.getVisit_img())) {
+			String visit_date = mobile.getDate();
+			String visit_year = visit_date.substring(0, 4);
+			String visit_month = visit_date.substring(5, 7);
+			String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+			String fileFolder = PropertiesUtil.getProperty("clientVisitImg");
+			File sourceFile = new File(tempFolder + File.separator + mobile.getVisit_img());
+			File destfile = new File(fileFolder + File.separator + visit_year + File.separator + visit_month
+					+ File.separator + mobile.getVisit_img());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
 		mobileTouchDao.insert(mobile);
 		return SUCCESS;
 	}
@@ -139,6 +180,23 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 
 	@Override
 	public String createIncomingCall(IncomingCallBean incoming) {
+		// 保存凭证文件
+		if (!SimpletinyString.isEmpty(incoming.getVisit_img())) {
+			String visit_date = incoming.getDate();
+			String visit_year = visit_date.substring(0, 4);
+			String visit_month = visit_date.substring(5, 7);
+			String tempFolder = PropertiesUtil.getProperty("tempUploadFolder");
+			String fileFolder = PropertiesUtil.getProperty("clientVisitImg");
+			File sourceFile = new File(tempFolder + File.separator + incoming.getVisit_img());
+			File destfile = new File(fileFolder + File.separator + visit_year + File.separator + visit_month
+					+ File.separator + incoming.getVisit_img());
+			try {
+				FileUtils.copyFile(sourceFile, destfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sourceFile.delete();
+		}
 		incomingCallDao.insert(incoming);
 		return SUCCESS;
 	}
@@ -309,5 +367,19 @@ public class ClientRelationServiceImpl implements ClientRelationService {
 	@Override
 	public ClientRelationBean selectSummaryByEmployeePk(String employee_pk) {
 		return dao.selectSummaryByEmployeePk(employee_pk);
+	}
+
+	@Autowired
+	private ClientEmployeeTypeCountDAO clientEmployeeTypeCountDao;
+
+	@Override
+	public ClientEmployeeTypeCountBean selectTypeCount(ClientEmployeeTypeCountBean bean) {
+		return clientEmployeeTypeCountDao.selectSumByParam(bean);
+
+	}
+
+	@Override
+	public ScoreRankDto selectRankScore(ScoreRankDto rank_option) {
+		return dao.selectRankScore(rank_option);
 	}
 }

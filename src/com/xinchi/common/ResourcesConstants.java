@@ -10,6 +10,11 @@ import com.xinchi.bean.TaskBean;
 public class ResourcesConstants {
 	public static String SIMPLETINY = "SIMPLETINY";
 
+	public static String API_APP_CODE = "f18ab727493f4cfa9135f90e67ef73f0";
+
+	public static String SIMPLETINY_RECEIVE = "收入";
+	public static String SIMPLETINY_PAY = "支出";
+
 	public static String PLACE_HOLDER = "&&^^@@@";
 
 	public static String DELIMITER = "@@";
@@ -22,6 +27,10 @@ public class ResourcesConstants {
 	public static String USER_STATUS_REJECT = "R";
 
 	public static String LOGIN_SESSION_KEY = "user";
+
+	public static String NAVIGATION_SESSION_KEY = "navigation";
+
+	public static String NAVIGATION_HTML_SESSION_KEY = "navigation_html";
 
 	public static String REBOOT_TIMER_KEY = "reboot";
 
@@ -65,6 +74,8 @@ public class ResourcesConstants {
 	public static String USER_ROLE_ACCOUNTING = "ACCOUNTING";
 	public static String USER_ROLE_CASHIER = "CASHIER";
 	public static String USER_ROLE_TICKET = "TICKET";
+	public static String USER_ROLE_SALE_ASSISTANT = "SASSISTANT";
+	public static String USER_ROLE_PRODUCT_ASSISTANT = "PASSISTANT";
 
 	// 团队状态
 	public static String TEAM_STATUS_BEFORE = "未出团";
@@ -202,6 +213,7 @@ public class ResourcesConstants {
 	// 支付单号计数
 	public static String COUNT_TYPE_PAY_ORDER = "PAY_ORDER_NUMBER";
 	public static String COUNT_TYPE_PRODUCT = "PRODUCT_NUMBER";
+	public static String COUNT_TYPE_FAKE_PHONE = "FAKE_NUMBER";
 
 	// ************************* 支付种类 *************************
 	// 地接款
@@ -264,6 +276,12 @@ public class ResourcesConstants {
 
 	public static String CLIENT_RELATION_LEVEL_01 = "新增级";
 
+	// 订单决算类型
+	public static String FINAL_TYPE_NO_CHANGE = "1";
+	public static String FINAL_TYPE_CHANGE = "2";
+	public static String FINAL_TYPE_COMPLAIN = "3";
+	public static String FINAL_TYPE_CANCEL = "4";
+
 	// 文件下载类型
 
 	// 出团通知
@@ -276,6 +294,8 @@ public class ResourcesConstants {
 	public static String FILE_REPLACE_HOLDER_NONE = "无";
 
 	public static String FILE_REPLACE_HOLDER_NO_CLIENT = "未审核客户";
+
+	public static String FILE_TICKET_NAME = "TICKET_NAME";
 
 	// ************************* 基础数据 类型*********************************
 	// 产品线
@@ -294,6 +314,8 @@ public class ResourcesConstants {
 	public static String BASE_DATA_PK_CLEAN_BAD = "pk_clean_bad";
 	// 销售信用
 	public static String BASE_DATA_PK_SSCREDIT = "pk_scredit";
+	// 产品每周上架次数限制，p for product,cnt for count
+	public static String BASE_DATA_PK_LIMIT_PRODUCT_URGENT_COUNT = "pk_p_urgent_cnt_limit";
 
 	// 未确认
 	public static String NAME_CONFIRM_STATUS_NO = "1";
@@ -314,8 +336,13 @@ public class ResourcesConstants {
 	public static String ORDER_OPERATE_STATUS_AIR = "A";
 	// 产品订单状态
 	public static String ORDER_OPERATE_STATUS_ORDERED = "P";
-	// 操作中/已操作
-	public static String ORDER_OPERATE_STATUS_YES = "I";
+	// 操作中
+	public static String ORDER_OPERATE_STATUS_OPERATING = "I";
+	// 已操作
+	public static String ORDER_OPERATE_STATUS_YES = "Y";
+	// 已决算
+	public static String ORDER_OPERATE_STATUS_FINAL = "F";
+
 	// 票务端
 	// 未操作
 	public static String AIR_OPERATE_STATUS_NO = "N";
@@ -361,5 +388,12 @@ public class ResourcesConstants {
 	// ************************* 虚拟账户*********************************
 	// 单机票虚拟产品经理 员工号
 	public static String UNREAL_USER_NUMBER_ONLY_TICKET = "OT";
+	
+	
+	//WeChat
+	public static String STOKEN="E7BxCszYpwqYCNKeC9wCih";
+	public static String SENCODINGAESKEY="Gr1LhiFMnUsukwpF1elJRrDdUJwdeQHODrei30ob61g";
+	public static String SCORPID="wwa7854bfa8dde7156";
+	public static String SECRETID="2SVv-JYFk4J8elNjicF7lEkzTHLUBI1DqErDyaxKo2s";
 
 }

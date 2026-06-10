@@ -15,10 +15,14 @@ public interface TicketService extends BaseService {
 	 */
 	public String changFlight(String json);
 
+	public String rollBackTicketChange(String change_pk);
+
 	public AirTicketChangeLogBean searchFlightChangeLogByPassengerPk(String passenger_pk);
 
 	public List<AirTicketChangeLogBean> searchTicketChangeByPage(Page page);
 
 	public String toggleLockOrder(String team_number, String lock_flg);
+
+	public AirTicketChangeLogBean searchFlightChangeLogByPk(String change_pk);
 
 }

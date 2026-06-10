@@ -30,6 +30,9 @@
 		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
 		<result column="fax" property="fax" jdbcType="VARCHAR" />
 		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="pick_date" property="pick_date" jdbcType="VARCHAR" />
+		<result column="treat_comment" property="treat_comment" jdbcType="VARCHAR" />
+		<result column="payable_comment" property="payable_comment" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="InfoResultMap" extends="BaseResultMap" type="com.xinchi.bean.OrderSupplierBean">
@@ -59,6 +62,7 @@
 			<result column="update_time" property="update_time" jdbcType="VARCHAR" />
 		</collection>
 	</resultMap>
+
 	<sql id="Base_Column_List">
 
 		order_pk,
@@ -81,7 +85,10 @@
 		tourist_info,
 		confirm_file_templet,
 		create_time,
-		update_time
+		update_time,
+		pick_date,
+		payable_comment,
+		treat_comment
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -118,6 +125,7 @@
 		where order_supplier_pk = #{pk,jdbcType=CHAR}
 		order by info_index
 	</select>
+	
 	<insert id="insert" parameterType="com.xinchi.bean.OrderSupplierBean">
 
 		insert into order_supplier
@@ -186,6 +194,15 @@
 			<if test="update_time != null">
 				update_time,
 			</if>
+			<if test="pick_date != null">
+				pick_date,
+			</if>
+			<if test="payable_comment != null">
+				payable_comment,
+			</if>
+			<if test="treat_comment != null">
+				treat_comment,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="order_pk != null">
@@ -250,6 +267,15 @@
 			</if>
 			<if test="update_time != null">
 				#{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_date != null">
+				#{pick_date,jdbcType=VARCHAR},
+			</if>
+			<if test="payable_comment != null">
+				#{payable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				#{treat_comment,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -317,6 +343,15 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pick_date != null">
+				pick_date = #{pick_date,jdbcType=VARCHAR},
+			</if>
+			<if test="payable_comment != null">
+				payable_comment = #{payable_comment,jdbcType=VARCHAR},
+			</if>
+			<if test="treat_comment != null">
+				treat_comment = #{treat_comment,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}

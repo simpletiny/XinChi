@@ -65,4 +65,8 @@ public interface AirTicketPayableService extends BaseService {
 	public List<AirOtherPaymentDto> searchDepositDeducts(AirServiceFeeDto summary_option);
 
 	public List<AirOtherPaymentDto> searchNoneBussinessPayment(AirServiceFeeDto summary_option);
+
+	public List<AirServiceFeeDto> searchServiceFeeSummary(AirServiceFeeDto summary_option);
+
+	public List<AirServiceFeeDto> searchAirTicketDeductSummary(AirServiceFeeDto summary_option);
 }

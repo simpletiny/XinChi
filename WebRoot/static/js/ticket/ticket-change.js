@@ -84,6 +84,43 @@ var ChangeContext = function() {
 		});
 	};
 
+	self.rollBackChange = function() {
+		if (self.chosenChanges().length < 1) {
+			fail_msg("请选择航变！");
+			return;
+		} else if (self.chosenChanges().length > 1) {
+			fail_msg("取消只能选择一个！");
+			return;
+		} else {
+			let param = "change_pk=" + self.chosenChanges()[0];
+			$.layer({
+				area : ['auto', 'auto'],
+				dialog : {
+					msg : '确认要取消此航变吗？',
+					btns : 2,
+					type : 4,
+					btn : ['确认', '取消'],
+					yes : function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "POST",
+							url : self.apiurl + 'ticket/rollBackTicketChange',
+							async : false,
+							data : param
+						}).success(function(str) {
+							if (str == "success") {
+								success_msg("取消成功！")
+								self.refresh();
+							} else {
+								fail_msg(str);
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
 	self.search = function() {
 
 	};

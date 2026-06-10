@@ -40,4 +40,10 @@ public class ReceivedMatchServiceImpl implements ReceivedMatchService {
 		return dao.selectByDetailPk(detailId);
 	}
 
+	@Override
+	public List<ReceivedMatchBean> selectByReceivedPk(String received_pk) {
+
+		return dao.selectByReceivedPk(received_pk);
+	}
+
 }

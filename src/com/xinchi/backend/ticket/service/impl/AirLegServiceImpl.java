@@ -78,4 +78,15 @@ public class AirLegServiceImpl implements AirLegService {
 		return SUCCESS;
 	}
 
+	@Override
+	public String changeUse(List<String> leg_pks, String use_flg) {
+		AirLegBean leg = new AirLegBean();
+		for (String pk : leg_pks) {
+			leg.setPk(pk);
+			leg.setUse_flg(use_flg);
+			dao.update(leg);
+		}
+		return SUCCESS;
+	}
+
 }

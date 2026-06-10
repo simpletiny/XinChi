@@ -27,6 +27,12 @@
 	color: red;
 }
 
+.service-summary:after {
+	content: "(月份为首航月份)";
+	font-size: 30%;
+	color: red;
+}
+
 .deposit-deduct:after {
 	content: "(月份为归属月份)";
 	color: red;
@@ -38,13 +44,17 @@
 	color: red;
 	font-size: 30%;
 }
+
+.ip {
+	line-height: 2.5
+}
 </style>
 </head>
 <body>
 	<div class="main-body">
 		<jsp:include page="../layout.jsp" />
 		<div class="subtitle">
-			<h2>票务财务汇总</h2>
+			<h2>账目汇总</h2>
 		</div>
 
 		<div class="main-container">
@@ -56,10 +66,11 @@
 
 						<label class="col-md-1 control-label">月份</label>
 						<div class="col-md-2" style="float: left">
-							<input type="text" class="form-control month-picker-st" placeholder="月份" name="summary_option.first_month" />
+							<input type="text" class="form-control month-picker-st" data-bind="value:moment().format('YYYY-MM')"
+								placeholder="月份" name="summary_option.first_month" />
 						</div>
 						<label class="col-md-1 control-label">产品经理</label>
-						<div class="col-md-2"> 
+						<div class="col-md-2">
 							<select class="form-control" style="height: 34px" id="select-sales"
 								data-bind="event:{change: function() { refresh() }},options: users,  optionsText: 'user_name', optionsValue: 'user_number',, optionsCaption: '--全部--'"
 								name="summary_option.product_manager_number"></select>
@@ -69,7 +80,109 @@
 						</div>
 					</div>
 				</form>
-				<h1 class="service-fee">手续费</h1>
+				<h1 class="service-summary">供应商数据汇总</h1>
+				<hr></hr>
+				<div class="list-result">
+					<table class="table table-striped table-hover" id="main-table-4">
+						<thead>
+							<tr role="row">
+								<th>供应商</th>
+								<th>实出票数</th>
+								<th>航变数</th>
+								<th>应付手续费</th>
+								<th>已付手续费</th>
+								<th>首航月份</th>
+								<th>首航段</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: service_fee_summary">
+							<tr>
+								<td data-bind="text: $data.supplier_name"></td>
+								<td data-bind="text: $data.ticket_count"></td>
+								<td data-bind="text: $data.change_cnt"></td>
+								<td class="rmb" data-bind="text: $data.sum_fee"></td>
+								<td class="rmb" data-bind="text: $data.paid_fee"></td>
+								<td data-bind="text: $data.first_month"></td>
+								<td data-bind="text: $data.from_to_city"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h1 class="deposit-summary">供应商押金汇总</h1>
+				<hr></hr>
+				<div class="input-row clearfloat">
+					<div class="col-md-4">
+						<label class="l">押金总额</label>
+						<div class="ip rmb" data-bind="text:deposit().sum_money"></div>
+					</div>
+					<div class="col-md-4">
+						<label class="l">在押总额</label>
+						<div class="ip rmb" data-bind="text:deposit().balance_money"></div>
+					</div>
+					<div class="col-md-4">
+						<label class="l">已清总额</label>
+						<div class="ip rmb" data-bind="text:deposit().clear_money"></div>
+					</div>
+				</div>
+				<div class="list-result">
+					<table class="table table-striped table-hover" id="main-table-3">
+						<thead>
+							<tr role="row">
+								<th>供应商</th>
+								<th>押金总额</th>
+								<th>在押</th>
+								<th>已清</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: deposits">
+							<tr>
+								<td data-bind="text: $data.supplier_short_name"></td>
+								<td class="rmb" data-bind="text: $data.sum_money"></td>
+								<td class="rmb" data-bind="text: $data.balance_money"></td>
+								<td class="rmb" data-bind="text: $data.clear_money"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h1 class="service-deduct-summary">供应商扣款汇总</h1>
+				<hr></hr>
+				<div class="list-result">
+					<table class="table table-striped table-hover" id="main-table-5">
+						<thead>
+							<tr role="row">
+								<th>供应商</th>
+								<th>扣款金额</th>
+								<th>归属月份</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: service_deduct_summary">
+							<tr>
+								<td data-bind="text: $data.supplier_name"></td>
+								<td class="rmb" data-bind="text: $data.deduct_money"></td>
+								<td data-bind="text: $data.first_month"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h1 class="deposit-deduct">产品经理扣款汇总</h1>
+				<hr></hr>
+				<div class="list-result">
+					<table class="table table-striped table-hover" id="main-table-2">
+						<thead>
+							<tr role="row">
+								<th>扣款总额</th>
+								<th>产品经理</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: deposit_deducts">
+							<tr>
+								<td class="rmb" data-bind="text: $data.money"></td>
+								<td data-bind="text: $data.product_manager_name"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h1 class="service-fee">产品经理手续费汇总</h1>
 				<hr></hr>
 				<div class="list-result">
 					<table class="table table-striped table-hover" id="main-table-1">
@@ -91,24 +204,8 @@
 						</tbody>
 					</table>
 				</div>
-				<h1 class="deposit-deduct">押金扣款</h1>
-				<hr></hr>
-				<div class="list-result">
-					<table class="table table-striped table-hover" id="main-table-2">
-						<thead>
-							<tr role="row">
-								<th>扣款总额</th>
-								<th>产品经理</th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: deposit_deducts">
-							<tr>
-								<td class="rmb" data-bind="text: $data.money"></td>
-								<td data-bind="text: $data.product_manager_name"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+
+
 				<h1 class="none-business-payment">无业务收支</h1>
 				<hr></hr>
 				<div class="list-result">
@@ -131,6 +228,8 @@
 						</tbody>
 					</table>
 				</div>
+
+
 			</div>
 		</div>
 	</div>
@@ -141,6 +240,6 @@
 	<script src="<%=basePath%>static/vendor/jquery-ui.min.js"></script>
 	<script src="<%=basePath%>static/vendor/datetimepicker/MonthPicker.min.js"></script>
 	<script src="<%=basePath%>static/js/datepicker.js"></script>
-	<script src="<%=basePath%>static/js/ticket/ticket-payable-summary.js?v1.001"></script>
+	<script src="<%=basePath%>static/js/ticket/ticket-payable-summary.js?v1.003"></script>
 </body>
 </html>

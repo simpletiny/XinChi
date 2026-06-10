@@ -36,8 +36,12 @@
 		<result column="market_level" property="market_level" jdbcType="VARCHAR" />
 		<result column="useful_time" property="useful_time" jdbcType="VARCHAR" />
 		<result column="head_photo" property="head_photo" jdbcType="VARCHAR" />
+		<result column="body_public_flg" property="body_public_flg" jdbcType="VARCHAR" />
+		<result column="employee_area" property="employee_area" jdbcType="VARCHAR" />
+		<result column="employee_county" property="employee_county" jdbcType="VARCHAR" />
 		<result column="last_order_period" property="last_order_period" jdbcType="INTEGER" />
 		<result column="year_oder_count" property="year_oder_count" jdbcType="INTEGER" />
+		<result column="binding_status" property="binding_status" jdbcType="CHAR" />
 	</resultMap>
 	<resultMap id="AdminResultMap" extends="BaseResultMap" type="com.xinchi.bean.ClientEmployeeBean">
 		<collection column="pk" property="employee_users" ofType="com.xinchi.bean.ClientEmployeeUserBean" select="selectEmployeeUserByEmployeePk">
@@ -97,7 +101,10 @@
 		market_level,
 		review_flg,
 		quit_flg,
-		head_photo
+		head_photo,
+		employee_county,
+		employee_area,
+		binding_status
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -133,13 +140,24 @@
 		A.market_level,
 		A.review_flg,
 		A.quit_flg,
-		A.head_photo
-		from client_employee
+		A.head_photo,
+		A.employee_area,
+		A.employee_county,
+		A.binding_status
+		from
+		client_employee
 		A LEFT JOIN
 		client B ON
 		A.financial_body_pk =
 		B.pk
 		where A.pk = #{pk,jdbcType=CHAR}
+	</select>
+	<select id="selectByClientPk" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		*
+		from client_employee
+		where financial_body_pk =
+		#{client_pk,jdbcType=CHAR}
 	</select>
 	<select id="selectByPks" resultMap="BaseResultMap">
 		select
@@ -150,7 +168,6 @@
 			#{item}
 		</foreach>
 	</select>
-
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from client_employee
 		where pk = #{pk,jdbcType=CHAR}
@@ -248,6 +265,13 @@
 			<if test="quit_flg != null">
 				quit_flg,
 			</if>
+			<if test="employee_area != null">
+				employee_area,
+			</if>
+			<if test="employee_county != null">
+				employee_county,
+			</if>
+
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null">
@@ -336,6 +360,12 @@
 			</if>
 			<if test="quit_flg != null">
 				#{quit_flg,jdbcType=CHAR},
+			</if>
+			<if test="employee_area != null">
+				#{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				#{employee_county,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -443,6 +473,15 @@
 			<if test="quit_flg != null">
 				quit_flg = #{quit_flg,jdbcType=VARCHAR},
 			</if>
+			<if test="employee_area != null">
+				employee_area = #{employee_area,jdbcType=VARCHAR},
+			</if>
+			<if test="employee_county != null">
+				employee_county = #{employee_county,jdbcType=VARCHAR},
+			</if>
+			<if test="binding_status != null">
+				binding_status = #{binding_status,jdbcType=CHAR},
+			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
 	</update>
@@ -469,6 +508,7 @@
 		B.client_area as area,
 		C.user_names AS
 		sales_name,
+		C.user_pks AS sales,
 		A.create_user,
 		A.update_user,
 		A.pk,
@@ -484,12 +524,16 @@
 		A.dimission_flg,
 		A.review_flg,
 		A.quit_flg,
-		A.head_photo
+		A.head_photo,
+		A.employee_county,
+		A.employee_area,
+		A.binding_status
 		from
 		client_employee
 		A LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk =
+		LEFT JOIN
+		view_client_employee_user C ON A.pk =
 		C.employee_pk
 		<where>
 			<if test="sales != null">
@@ -528,9 +572,11 @@
 
 		<where>
 			and ((cellphone = #{cellphone,jdbcType=VARCHAR} OR cellphone1 = #{cellphone,jdbcType=VARCHAR} OR cellphone =
-			#{cellphone1,jdbcType=VARCHAR} OR cellphone1 = #{cellphone1,jdbcType=VARCHAR})
+			#{cellphone1,jdbcType=VARCHAR} OR
+			cellphone1 = #{cellphone1,jdbcType=VARCHAR})
 			OR (wechat = #{wechat,jdbcType=VARCHAR}
-			OR wechat1 = #{wechat,jdbcType=VARCHAR} OR wechat = #{wechat1,jdbcType=VARCHAR} OR wechat1 =
+			OR wechat1 = #{wechat,jdbcType=VARCHAR} OR wechat =
+			#{wechat1,jdbcType=VARCHAR} OR wechat1 =
 			#{wechat1,jdbcType=VARCHAR}))
 			and pk != #{pk,jdbcType=VARCHAR}
 			and review_flg='Y'
@@ -545,7 +591,8 @@
 		SUM(strong_cnt) AS strong_cnt,
 		SUM(middle_cnt) AS middle_cnt,
 		SUM(weak_cnt) AS weak_cnt,
-		SUM(bad_cnt) AS bad_cnt,
+		SUM(bad_cnt) AS
+		bad_cnt,
 		SUM(unknow_cnt) AS unknow_cnt
 		from view_relation_level
 		<where>
@@ -555,7 +602,8 @@
 	<select id="selectRelationCntAdmin" parameterType="java.lang.String" resultMap="RelationLevelMap">
 		SELECT
 		COUNT(pk) AS sum_cnt,
-		COUNT(IF(relation_level IN ('朋友级' , '商务级'),1,NULL)) AS strong_cnt,
+		COUNT(IF(relation_level IN ('朋友级' ,
+		'商务级'),1,NULL)) AS strong_cnt,
 		COUNT(IF(relation_level = '市场级',1,NULL)) AS
 		middle_cnt,
 		COUNT(IF(relation_level = '新增级',1,NULL)) AS weak_cnt,
@@ -610,7 +658,7 @@
 		A.fax,
 		A.id,
 		A.financial_body_pk,
-		IFNULL(B.client_short_name,A.financial_body_name) AS
+		if(A.review_flg='N',A.financial_body_name,B.client_short_name) AS
 		financial_body_name,
 		B.client_area as area,
 		C.user_names AS
@@ -633,23 +681,38 @@
 		C.useful_time AS
 		useful_time,
 		A.head_photo,
+		A.employee_area,
+		A.employee_county,
 		D.last_order_period AS last_order_period,
-		D.year_order_count AS year_order_count
+		D.year_order_count AS year_order_count,
+		B.public_flg AS body_public_flg,
+		A.binding_status
 		from
 		client_employee
-		A LEFT
+		A
+		LEFT
 		JOIN client B ON A.financial_body_pk = B.pk
-		LEFT JOIN view_client_employee_user C ON A.pk =
+		LEFT JOIN
+		view_client_employee_user C
+		ON A.pk =
 		C.employee_pk
 		LEFT JOIN
 		client_relation D ON A.pk = D.client_employee_pk
-
 		<where>
 			<if test="params.bo.name != null and params.bo.name !=''">
 				and A.name like CONCAT('%',#{params.bo.name,jdbcType=VARCHAR},'%')
 			</if>
+			<if test="params.bo.nick_name != null and params.bo.nick_name !=''">
+				and A.nick_name like CONCAT('%',#{params.bo.nick_name,jdbcType=VARCHAR},'%')
+			</if>
 			<if test="params.bo.area != null and params.bo.area !=''">
 				and B.client_area = #{params.bo.area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.employee_area != null and params.bo.employee_area !=''">
+				and A.employee_area = #{params.bo.employee_area,jdbcType=VARCHAR}
+			</if>
+			<if test="params.bo.employee_county != null and params.bo.employee_county !=''">
+				and A.employee_county = #{params.bo.employee_county,jdbcType=VARCHAR}
 			</if>
 			<if test="params.bo.financial_body_name != null and params.bo.financial_body_name !=''">
 				and B.client_short_name like CONCAT('%',#{params.bo.financial_body_name,jdbcType=VARCHAR},'%')
@@ -669,6 +732,12 @@
 					#{params.bo.public_flgs[${index}]}
 				</foreach>
 			</if>
+			<if test="params.bo.binding_statuses != null and params.bo.binding_statuses.size()>0">
+				and A.binding_status in
+				<foreach item="item" index="index" collection="params.bo.binding_statuses" open="(" separator="," close=")">
+					#{params.bo.binding_statuses[${index}]}
+				</foreach>
+			</if>
 			<if test="params.bo.review_flg != null and params.bo.review_flg !=''">
 				and A.review_flg = #{params.bo.review_flg,jdbcType=CHAR}
 			</if>
@@ -680,13 +749,14 @@
 				and (A.wechat = #{params.bo.wechat,jdbcType=CHAR} OR A.wechat1 = #{params.bo.wechat,jdbcType=CHAR})
 			</if>
 		</where>
-		ORDER BY ISNULL(D.last_order_period), D.last_order_period,B.client_short_name,A.name
+		ORDER BY A.name,ISNULL(D.last_order_period), D.last_order_period,B.client_short_name
 	</select>
 	<select id="selectEmployeeUserByEmployeePk" parameterType="java.lang.String" resultType="com.xinchi.bean.ClientEmployeeUserBean">
 		select
 		A.employee_pk,A.user_pk,if(ISNULL(B.user_name),'公开',B.user_name) AS
 		user_name,A.pk,A.create_time,A.create_user,A.update_time,A.update_user
-		from client_employee_user A LEFT
+		from
+		client_employee_user A LEFT
 		JOIN user_base B
 		ON
 		A.user_pk= B.pk

@@ -4,10 +4,13 @@
 	<resultMap id="BaseResultMap" type="com.xinchi.bean.AirLegBean">
 		<result column="pk" property="pk" jdbcType="CHAR" />
 		<result column="from_city" property="from_city" jdbcType="VARCHAR" />
+		<result column="from_place" property="from_place" jdbcType="VARCHAR" />
 		<result column="to_city" property="to_city" jdbcType="VARCHAR" />
+		<result column="to_place" property="to_place" jdbcType="VARCHAR" />
 		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
 		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
 		<result column="hot_flg" property="hot_flg" jdbcType="CHAR" />
+		<result column="use_flg" property="use_flg" jdbcType="CHAR" />
 		<result column="sort_index" property="sort_index" jdbcType="INTEGER" />
 		<result column="create_time" property="create_time" jdbcType="VARCHAR" />
 		<result column="update_time" property="update_time" jdbcType="VARCHAR" />
@@ -16,13 +19,16 @@
 	<sql id="Base_Column_List">
 		pk,
 		from_city,
+		from_place,
 		to_city,
+		to_place,
 		create_user,
 		update_user,
 		hot_flg,
 		sort_index,
 		create_time,
-		update_time
+		update_time,
+		use_flg
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -47,8 +53,14 @@
 			<if test="from_city != null">
 				from_city,
 			</if>
+			<if test="from_place != null">
+				from_place,
+			</if>
 			<if test="to_city != null">
 				to_city,
+			</if>
+			<if test="to_place != null">
+				to_place,
 			</if>
 			<if test="create_user != null">
 				create_user,
@@ -76,8 +88,14 @@
 			<if test="from_city != null">
 				#{from_city,jdbcType=VARCHAR},
 			</if>
+			<if test="from_place != null">
+				#{from_place,jdbcType=VARCHAR},
+			</if>
 			<if test="to_city != null">
 				#{to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="to_place != null">
+				#{to_place,jdbcType=VARCHAR},
 			</if>
 			<if test="create_user != null">
 				#{create_user,jdbcType=VARCHAR},
@@ -110,8 +128,14 @@
 			<if test="from_city != null">
 				from_city = #{from_city,jdbcType=VARCHAR},
 			</if>
+			<if test="from_place != null">
+				from_place = #{from_place,jdbcType=VARCHAR},
+			</if>
 			<if test="to_city != null">
 				to_city = #{to_city,jdbcType=VARCHAR},
+			</if>
+			<if test="to_place != null">
+				to_place = #{to_place,jdbcType=VARCHAR},
 			</if>
 			<if test="create_user != null">
 				create_user = #{create_user,jdbcType=VARCHAR},
@@ -127,6 +151,9 @@
 			</if>
 			<if test="update_time != null">
 				update_time = #{update_time,jdbcType=VARCHAR},
+			</if>
+			<if test="use_flg != null">
+				use_flg = #{use_flg,jdbcType=CHAR},
 			</if>
 		</set>
 		where pk = #{pk,jdbcType=CHAR}
@@ -155,9 +182,17 @@
 			<if test="params.bo.to_city != null and params.bo.to_city !=''">
 				and to_city like concat('%', #{params.bo.to_city,jdbcType=VARCHAR},'%')
 			</if>
-			<if test="params.bo.city != null and params.bo.city !=''">
-				and (from_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%') OR to_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%'))
+			<if test="params.bo.use_flgs != null and params.bo.use_flgs !=''">
+				and use_flg in 
+				<foreach item="item" index="index" collection="params.bo.use_flgs" open="(" separator="," close=")">
+					#{params.bo.use_flgs[${index}]}
+				</foreach>
 			</if>
+			<if test="params.bo.city != null and params.bo.city !=''">
+				and (from_city like concat('%', #{params.bo.city,jdbcType=VARCHAR},'%') OR to_city like concat('%',
+				#{params.bo.city,jdbcType=VARCHAR},'%'))
+			</if>
+
 		</where>
 		ORDER BY hot_flg DESC
 	</select>

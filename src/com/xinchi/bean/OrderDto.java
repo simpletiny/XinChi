@@ -61,9 +61,14 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String people_count;
 	private String product_manager_number;
 	private String product_manager;
-	private String confirm_file;
+	private String budget_confirm_file;
+	private String final_confirm_file;
+	private String assistant_number;
+	private String assistant_name;
 
 	private String lock_flg;
+
+	private String as_adult_flg;
 
 	private String cancel_flg;
 
@@ -79,8 +84,11 @@ public class OrderDto extends SupperBO implements Serializable {
 	private String passenger_captain;
 	private String treat_comment;
 	private String receivable_comment;
+	private String final_receivable_comment;
 	private String client_name;
 	private String operate_flg;
+
+	private String final_status;
 	// private String ticket_number;
 	// private String start_city;
 	// private String start_airport;
@@ -103,8 +111,9 @@ public class OrderDto extends SupperBO implements Serializable {
 	private BigDecimal complain_money;
 	private String complain_reason;
 	private String complain_solution;
-	private String voucher_file;
+	private String final_voucher_file;
 	// search option
+	private String departure_month;
 	private String passenger_name;
 	private String passenger_cellphone;
 	private String radio_date;
@@ -127,6 +136,8 @@ public class OrderDto extends SupperBO implements Serializable {
 	private BigDecimal payable;
 	private List<String> team_numbers;
 	private String supplier_employee_pk;
+	private String final_comment;
+	private String hotel_comment;
 
 	public String getTeam_number() {
 		return team_number;
@@ -352,14 +363,6 @@ public class OrderDto extends SupperBO implements Serializable {
 		this.product_manager = product_manager;
 	}
 
-	public String getConfirm_file() {
-		return confirm_file;
-	}
-
-	public void setConfirm_file(String confirm_file) {
-		this.confirm_file = confirm_file;
-	}
-
 	public String getDeparture_date_from() {
 		return departure_date_from;
 	}
@@ -560,14 +563,6 @@ public class OrderDto extends SupperBO implements Serializable {
 		this.complain_solution = complain_solution;
 	}
 
-	public String getVoucher_file() {
-		return voucher_file;
-	}
-
-	public void setVoucher_file(String voucher_file) {
-		this.voucher_file = voucher_file;
-	}
-
 	public String getSale_number() {
 		return sale_number;
 	}
@@ -718,6 +713,94 @@ public class OrderDto extends SupperBO implements Serializable {
 
 	public void setDo_confirm_date(String do_confirm_date) {
 		this.do_confirm_date = do_confirm_date;
+	}
+
+	public String getFinal_comment() {
+		return final_comment;
+	}
+
+	public void setFinal_comment(String final_comment) {
+		this.final_comment = final_comment;
+	}
+
+	public String getAssistant_number() {
+		return assistant_number;
+	}
+
+	public void setAssistant_number(String assistant_number) {
+		this.assistant_number = assistant_number;
+	}
+
+	public String getAssistant_name() {
+		return assistant_name;
+	}
+
+	public void setAssistant_name(String assistant_name) {
+		this.assistant_name = assistant_name;
+	}
+
+	public String getHotel_comment() {
+		return hotel_comment;
+	}
+
+	public void setHotel_comment(String hotel_comment) {
+		this.hotel_comment = hotel_comment;
+	}
+
+	public String getBudget_confirm_file() {
+		return budget_confirm_file;
+	}
+
+	public String getFinal_confirm_file() {
+		return final_confirm_file;
+	}
+
+	public void setBudget_confirm_file(String budget_confirm_file) {
+		this.budget_confirm_file = budget_confirm_file;
+	}
+
+	public void setFinal_confirm_file(String final_confirm_file) {
+		this.final_confirm_file = final_confirm_file;
+	}
+
+	public String getFinal_voucher_file() {
+		return final_voucher_file;
+	}
+
+	public void setFinal_voucher_file(String final_voucher_file) {
+		this.final_voucher_file = final_voucher_file;
+	}
+
+	public String getAs_adult_flg() {
+		return as_adult_flg;
+	}
+
+	public void setAs_adult_flg(String as_adult_flg) {
+		this.as_adult_flg = as_adult_flg;
+	}
+
+	public String getFinal_receivable_comment() {
+		return final_receivable_comment;
+	}
+
+	public void setFinal_receivable_comment(String final_receivable_comment) {
+		this.final_receivable_comment = final_receivable_comment;
+	}
+
+	public String getFinal_status() {
+		return final_status;
+	}
+
+	public void setFinal_status(String final_status) {
+		this.final_status = final_status;
+	}
+
+	public String getDeparture_month() {
+		return departure_month;
+	}
+
+	public void setDeparture_month(String departure_month) {
+		this.departure_month = departure_month;
 	}
 
 }
